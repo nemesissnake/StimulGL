@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "parallelportplugin", "Plugins\ParallelPortDevice\parallelportplugin.vcproj", "{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC} = {44216F98-423E-3FF8-BFF4-8B464627E2EC}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StimulGL", "StimulGL\StimulGL.vcproj", "{44216F98-423E-3FF8-BFF4-8B464627E2EC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Retinotopic_Mappingplugin", "Plugins\Retinotopic_Mapping\Retinotopic_Mappingplugin.vcproj", "{DA71630D-A6A7-4923-B2E5-040788C37A43}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_extensionname_plugin", "Plugins\ExtensionPluginTemplate\_extensionname_plugin.vcproj", "{DF78AA1A-8166-47A0-AE13-51D55E460FDC}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Debug|Win32.Build.0 = Debug|Win32
+		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Debug|x64.ActiveCfg = Debug|x64
+		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Debug|x64.Build.0 = Debug|x64
+		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Release|Win32.ActiveCfg = Release|Win32
+		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Release|Win32.Build.0 = Release|Win32
+		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Release|x64.ActiveCfg = Release|x64
+		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Release|x64.Build.0 = Release|x64
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Debug|Win32.Build.0 = Debug|Win32
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Debug|x64.ActiveCfg = Debug|x64
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Debug|x64.Build.0 = Debug|x64
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Release|Win32.ActiveCfg = Release|Win32
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Release|Win32.Build.0 = Release|Win32
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Release|x64.ActiveCfg = Release|x64
+		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Release|x64.Build.0 = Release|x64
+		{DA71630D-A6A7-4923-B2E5-040788C37A43}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DA71630D-A6A7-4923-B2E5-040788C37A43}.Debug|Win32.Build.0 = Debug|Win32
+		{DA71630D-A6A7-4923-B2E5-040788C37A43}.Debug|x64.ActiveCfg = Debug|x64
+		{DA71630D-A6A7-4923-B2E5-040788C37A43}.Debug|x64.Build.0 = Debug|x64
+		{DA71630D-A6A7-4923-B2E5-040788C37A43}.Release|Win32.ActiveCfg = Release|Win32
+		{DA71630D-A6A7-4923-B2E5-040788C37A43}.Release|Win32.Build.0 = Release|Win32
+		{DA71630D-A6A7-4923-B2E5-040788C37A43}.Release|x64.ActiveCfg = Release|x64
+		{DA71630D-A6A7-4923-B2E5-040788C37A43}.Release|x64.Build.0 = Release|x64
+		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Debug|Win32.Build.0 = Debug|Win32
+		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Debug|x64.ActiveCfg = Debug|x64
+		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Debug|x64.Build.0 = Debug|x64
+		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|Win32.ActiveCfg = Release|Win32
+		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|Win32.Build.0 = Release|Win32
+		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|x64.ActiveCfg = Release|x64
+		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|x64.Build.0 = Release|x64
+		{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}.Debug|Win32.ActiveCfg = Debug
+		{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}.Debug|x64.ActiveCfg = Debug
+		{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}.Release|Win32.ActiveCfg = Release
+		{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}.Release|x64.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		QtVersion = $(DefaultQtVersion)
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+	GlobalSection(Qt) = preSolution
+		Integration = True
+	EndGlobalSection
+EndGlobal

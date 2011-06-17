@@ -1,0 +1,37 @@
+HowTo create your own Extension plugin by Example:
+
+Requirements:
+- Visual Studio 2008
+- QT 4.7.3 (Win32 and x64 compiled version), the below example expects these to be at "C:\Qt\4.7.3" and "4.7.3_X64"
+
+
+Setup:
+- Copy/Paste the folder "ExtensionPluginTemplate", rename the new folder to your own <ExtensionName> (do not use blank spaces!)
+- Replace the substring "_extensionname_" from all file/(folder)-names with the <ExtensionName>
+	ie. _extensionname__plugin_global.h becomes Retinotopic_Mapping_plugin_global.h if <ExtensionName> = "Retinotopic_Mapping"
+- Replace all substrings "_extensionname_" found in the content of all files to <ExtensionName>
+	ie. You can use UltraEdits replace in files to do this quickly
+- Replace all substrings "_authorname_" found in the content of all files to <AuthorName>
+- Replace all substrings "_organizationname_" found in the content of all files your <OrganizationName>
+
+Testing:
+- Open the <ExtensionName>Plugin.sln with Visual Studio 2008
+- Build the solution
+
+ 	MainPluginName = "_extensionname_ plugin";
+	MainPluginAuthorName = "_authorname_";
+	MainPluginOrganizationName = "_organizationname_";
+
+check needed include and lib files
+
+
+ophalen huidige pluginInterface.h!!
+
+Retinotopic_Mapping
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+
