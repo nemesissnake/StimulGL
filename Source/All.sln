@@ -12,8 +12,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Retinotopic_Mappingplugin",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_extensionname_plugin", "Plugins\ExtensionPluginTemplate\_extensionname_plugin.vcproj", "{DF78AA1A-8166-47A0-AE13-51D55E460FDC}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -54,10 +52,6 @@ Global
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|Win32.Build.0 = Release|Win32
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|x64.ActiveCfg = Release|x64
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|x64.Build.0 = Release|x64
-		{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}.Debug|Win32.ActiveCfg = Debug
-		{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}.Debug|x64.ActiveCfg = Debug
-		{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}.Release|Win32.ActiveCfg = Release
-		{62B8A4EA-6F54-4782-85DB-BF704C24CBB0}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
