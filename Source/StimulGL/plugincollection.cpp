@@ -48,7 +48,7 @@ bool PluginCollection::Cleanup()
 		delete PlgInterfaces.at(i);
 	}
 	PlgNames.clear();
-	NrofPlugins==0;
+	NrofPlugins=0;
 	return true;
 }
 
