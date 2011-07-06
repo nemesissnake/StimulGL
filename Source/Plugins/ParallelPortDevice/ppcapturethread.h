@@ -25,8 +25,8 @@ public:
 	ppCaptureThread(short baseAddress, short mask, DetectionMethod method,int postLHDelay = 0, int postHLDelay = 0 ,QObject *parent = 0);
 	~ppCaptureThread();
 
-	public slots:
-		void stop();
+public slots:
+	void stop();
 
 private:
 	bool isRunning;

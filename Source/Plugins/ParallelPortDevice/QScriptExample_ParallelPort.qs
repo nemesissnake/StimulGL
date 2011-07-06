@@ -4,10 +4,12 @@ var nTriggerCounter = 0;
 function myFinalCleanup()//Cleanup
 {
 	PPDevice.StopGenerateThread();
-	PPDevice.StopCaptureThread();
+	PPDevice.StopCaptureThread();	
 	//PPDevice.GenerateThreadStarted.disconnect(this, this.mySignalFunction);
 	//PPDevice.GenerateThreadTriggered.disconnect(this, this.mySignalFunction);
+	PPDevice.CaptureThreadStarted.disconnect(this, this.mySignalFunction);
 	PPDevice.CaptureThreadTriggered.disconnect(this, this.mySignalFunction);
+	PPDevice.CaptureThreadStopped.disconnect(this, this.mySignalFunction);
 	PPDevice = null;
 	mySignalFunction = null;
 	PauseMills = null;
@@ -23,8 +25,14 @@ function mySignalFunction()
 	
 	nTriggerCounter++;
 	Log("nTriggerCounter = " + nTriggerCounter);
+	if (nTriggerCounter==4)
+	{
+		PPDevice.StopCaptureThread();
+	}	
 	if (nTriggerCounter==5)
+	{
 		myFinalCleanup();
+	}
 }
 
 function PauseMills(millis)
@@ -60,7 +68,9 @@ for (i=0;i<5;i++) //Create a simple for-loop
 //PPDevice.GenerateThreadTriggered.connect(this, this.mySignalFunction);
 //PPDevice.PortWrite(0); 
 //PPDevice.ConfigurePortForInput();
+PPDevice.CaptureThreadStarted.connect(this, this.mySignalFunction);
 PPDevice.CaptureThreadTriggered.connect(this, this.mySignalFunction);
+PPDevice.CaptureThreadStopped.connect(this, this.mySignalFunction);
 PPDevice.StartGenerateThread(4370, 2, 1, 1, 0, 500, 1000);//(const short baseAddress,const short method, const short outputMask, const short activeValue, const short inActiveValue, const int activePulseTime, const int repetitionTime);
 PPDevice.StartCaptureThread(4370, 1, 2, 0, 100);//(const short baseAddress, const short mask, const short method, const int postLHDelay = 0, const int postHLDelay = 0);
 //Pause(4000);

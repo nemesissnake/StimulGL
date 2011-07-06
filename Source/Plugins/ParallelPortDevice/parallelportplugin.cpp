@@ -13,9 +13,10 @@ ParallelPortPlugin::ParallelPortPlugin(short BaseAddress, QObject *parent)
 	PPortObject = new ParallelPort(nBaseAddress,parent);
 	PPortDiagObject = new PPort_Dialog();
 	MainPluginName = "Parallel port plugin";
+	MainPluginAuthorName = "Sven Gijsen";
 	MainPluginOrganizationName = "MBIC";
 	MainPluginVersion = "1.0.0";
-	MainPluginTitle = MainPluginName + "(v" + MainPluginVersion + ")";	
+	MainPluginTitle = MainPluginName + "(v" + MainPluginVersion + ")" + " by " + MainPluginAuthorName;
 }
 
 ParallelPortPlugin::~ParallelPortPlugin()

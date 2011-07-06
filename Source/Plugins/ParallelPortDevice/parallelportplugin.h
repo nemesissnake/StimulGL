@@ -34,6 +34,7 @@ public:
 private:
 	QString MainPluginName;
 	QString MainPluginOrganizationName;
+	QString MainPluginAuthorName;
 	QString MainPluginVersion;
 	QString MainPluginTitle;
 

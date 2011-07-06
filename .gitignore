@@ -21,9 +21,14 @@ Thumbs.db
 *.log
 [Bb]in
 [Dd]ebug*/
-*.lib
 *.sbr
 obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+Makefile*
+Install/logfile.txt
+Install/plugins/Win32/*.dll
+Install/plugins/Win32/script/*.dll
+Install/plugins/x64/*.dll
+Install/plugins/x64/script/*.dll

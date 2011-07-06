@@ -22,16 +22,13 @@ Testing:
 	MainPluginAuthorName = "_authorname_";
 	MainPluginOrganizationName = "_organizationname_";
 
-check needed include and lib files
-
-
-ophalen huidige pluginInterface.h!!
-
-Retinotopic_Mapping
-
-
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
-
+- Check needed include and lib files.
+- This project makes use of a pluginInterface.h file witch should be the same version as used in the StimulGL program project.
+- If you create a ExtensionInterface plugin you do not need to adjust anything if you create a DeviceInterface plugin the you should 
+  change the:
+    class <ExtensionName>Plugin : public QObject, ExtensionInterface
+    to:
+    class <ExtensionName>Plugin : public QObject, DeviceInterface
+    in the file plugininterface.h! and 
+    ExtensionInterface_H to DeviceInterface_H in the file plugininterface.h! and
+    Q_INTERFACES(ExtensionInterface) to Q_INTERFACES(DeviceInterface) in the file <ExtensionName>Plugin.h
