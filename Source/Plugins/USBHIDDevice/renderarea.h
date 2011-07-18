@@ -2,6 +2,7 @@
 #define RENDERAREA_H
 
 #include <QWidget>
+#include "Global.h"
 //#include <QBrush>
 //#include <QPen>
 //#include <QPixmap>
@@ -15,7 +16,7 @@ public:
 	~RenderArea();
 
 public slots:
-	//void setShape(Shape shape);
+	void UpdatePosition(float XPos, float YPos, bool bShowRef = false);
 	void setAntialiased(bool antialiased);
 
 protected:
@@ -25,7 +26,10 @@ private:
 	//Shape shape;
 	//QPen pen;
 	//QBrush brush;
-	bool bAntialiased;	
+	bool m_bAntialiased;
+	bool m_bShowRefLines;
+	float m_fXPos;
+	float m_fYPos;
 };
 
 #endif // RENDERAREA_H

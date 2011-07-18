@@ -57,6 +57,8 @@ public slots:
 	bool initialize(MainAppInfo::MainProgramModeFlags mainFlags = 0);
 
 private slots:
+	void setupContextMenus();
+	void DebugcontextMenuEvent(const QPoint &pos);
 	void write2Debugger(const QString &text2Write = "");
 	void clearDebugger();
 	void setupScriptEngine();
@@ -127,6 +129,7 @@ private:
 	QAction *newSVGAction;
 	QAction *cutAction;
 	QAction *copyAction;
+	QAction *clearDebuggerAction;
 	QAction *pasteAction;
 	QAction *goToLineAction;
 	QAction *findAction;

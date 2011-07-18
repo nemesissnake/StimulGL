@@ -4,8 +4,11 @@
 RenderArea::RenderArea(QWidget *parent)	: QWidget(parent)
 {
 	//shape = Polygon;
-	bAntialiased = false;
+	m_bAntialiased = false;
+	m_bShowRefLines = false;
 	//transformed = false;
+	m_fXPos = 0.0f;
+	m_fYPos = 0.0f;
 	
 	setBackgroundRole(QPalette::Base);
 	setAutoFillBackground(true);
@@ -24,32 +27,47 @@ RenderArea::~RenderArea()
 
 void RenderArea::setAntialiased(bool antialiased)
 {
-	this->bAntialiased = antialiased;
+	this->m_bAntialiased = antialiased;
+	update();
+}
+
+void RenderArea::UpdatePosition(float XPos, float YPos, bool bShowRef)
+{//In Range 0 ... RESSCALEFACTOR
+	m_fXPos = XPos;
+	m_fYPos = YPos;
+	m_bShowRefLines = bShowRef;
 	update();
 }
 
 void RenderArea::paintEvent(QPaintEvent * /* event */)
 {
-	QPoint CrossHair((width()/100)*70 ,(height()/100)*30);
-	QRect rectCrossHair(CrossHair.x()-2,CrossHair.y()-2,4,4);
-
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing, false);
 	QPen pen(Qt::black, 1, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin);
 	painter.setPen(pen);
 	painter.setBrush(Qt::NoBrush);
-	QRect rect(10, 10, width()-20, height()-20);	
-	painter.drawRect(rect);
+
+	QPoint CrossHair(((((float)(width()/RESSCALEFACTOR))*m_fXPos)+0.5f) ,((((float)(height()/RESSCALEFACTOR)))*m_fYPos)+0.5f);
+	QRect rectCrossHair(CrossHair.x()-2,CrossHair.y()-2,4,4);
+	QRect rectBox(0, 0, width()-1, height()-1);	
+	painter.drawRect(rectBox);
 	//painter.drawLine(rect.bottomLeft(), rect.topRight());
 	//painter.drawText(rect, Qt::AlignCenter, tr("Qt by\nNokia"));
-	
+	//SQRRTTWO
 	painter.drawRect(rectCrossHair);
 	//painter.drawLine(CrossHair,CrossHair);
 	//painter.drawLine(CrossHair,CrossHair);
 	painter.setPen(palette().dark().color());
-	rect.adjust(10,10,-10,-10);
-	painter.drawRect(rect);
-	painter.drawRect(QRect(0, 0, width() - 1, height() - 1));
+	if(m_bShowRefLines)
+	{
+		float XOffset = (1-INVSQRRTTWO)*(0.5*width());
+		float YOffset = (1-INVSQRRTTWO)*(0.5*height());
+		QRect rectRefLines(XOffset, YOffset, width()-(2*XOffset), height()-(2*YOffset));
+		painter.drawRect(rectRefLines);
+	}
+	//rect.adjust(10,10,-10,-10);
+	//painter.drawRect(rect);
+	//painter.drawRect(QRect(0, 0, width() - 1, height() - 1));
 
 
 

@@ -5,7 +5,7 @@ Q_DECLARE_METATYPE(USBHIDDevice*)
 
 USBHIDDevicePlugin::USBHIDDevicePlugin(QObject *parent)
 {
-	USBHIDDeviceObject = new USBHIDDevice(parent);
+	USBHIDDeviceObject = new USBHIDDevice(0x181b, 0x4002, parent);
 	USBHIDDeviceDiagObject = new USBHIDDevice_Dialog();	
 	MainPluginName = "USBHIDDevice Plugin";
 	MainPluginAuthorName = "Sven Gijsen";

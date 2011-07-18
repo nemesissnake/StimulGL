@@ -152,9 +152,9 @@ bool ParallelPort::StartCaptureThread(const short baseAddress, const short mask,
 
 	captureThread = new ppCaptureThread(baseAddress,mask,CapDecMethod,postLHDelay,postHLDelay,this);
 
-	connect(captureThread, SIGNAL(recieveThreadTriggered(short)), this, SIGNAL(CaptureThreadTriggered(short)));
-	connect(captureThread, SIGNAL(recieveThreadStarted(QString)), this, SIGNAL(CaptureThreadStarted(QString)));
-	connect(captureThread, SIGNAL(recieveThreadStopped(QString)), this, SIGNAL(CaptureThreadStopped(QString)));
+	connect(captureThread, SIGNAL(recieveThreadTriggered(short)), this, SIGNAL(CaptureThreadTriggered(short))Qt::DirectConnection);
+	connect(captureThread, SIGNAL(recieveThreadStarted(QString)), this, SIGNAL(CaptureThreadStarted(QString))Qt::DirectConnection);
+	connect(captureThread, SIGNAL(recieveThreadStopped(QString)), this, SIGNAL(CaptureThreadStopped(QString))Qt::DirectConnection);
 	captureThread->start();
 	return true;
 }

@@ -34,6 +34,19 @@ MainWindow::~MainWindow()
 #endif
 }
 
+void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
+{
+	QMenu menu(this);
+	menu.addAction(clearDebuggerAction);
+	menu.exec(outputWindowList->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::setupContextMenus()
+{
+	outputWindowList->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(outputWindowList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(DebugcontextMenuEvent(QPoint)));
+}
+
 bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 {
 	//Default					= 0x00000,
@@ -64,6 +77,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	setupToolBars();
 	updateMenuControls(0);
 	parseRemainingGlobalSettings();
+	setupContextMenus();
 	if (startUpFiles.count()> 0) { openFiles(NULL,startUpFiles);}
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash)==false)
 	{
@@ -284,6 +298,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	nextMarkerAction->setEnabled(hasMdiChild);
 	prevMarkerAction->setEnabled(hasMdiChild);
 	remAllMarkerAction->setEnabled(hasMdiChild);
+
+	clearDebuggerAction->setEnabled(true);
 
 	goToLineAction->setEnabled(hasMdiChild);
 	goToMatchingBraceAction->setEnabled(hasMdiChild);
@@ -507,6 +523,14 @@ void MainWindow::createDefaultMenus()
 	//searchAction->setStatusTip(tr("Search through the current document."));
 	//connect(searchAction, SIGNAL(triggered()), this, SLOT(search()));
 	//editMenu->addAction(searchAction);
+
+	editMenu->addSeparator();
+
+	clearDebuggerAction = new QAction(QObject::tr("Clear Output"), 0);
+	//clearDebuggerAction->setShortcut(QKeySequence(""));
+	clearDebuggerAction->setStatusTip(tr("Clear the Debugger Output window."));
+	connect(clearDebuggerAction, SIGNAL(triggered()), this, SLOT(clearDebugger()));
+	editMenu->addAction(clearDebuggerAction);
 
 	editMenu->addSeparator();
 

@@ -32,3 +32,6 @@ Install/plugins/Win32/*.dll
 Install/plugins/Win32/script/*.dll
 Install/plugins/x64/*.dll
 Install/plugins/x64/script/*.dll
+InstallJammer/build
+Source/StimulGL/log.txt
+Source/StimulGL/HIDLog.txt
