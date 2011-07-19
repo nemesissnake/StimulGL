@@ -23,6 +23,7 @@ contains(QMAKE_HOST.os,Windows){
             INCLUDEPATH += x64/Debug
             MOC_DIR += x64/Debug
             OBJECTS_DIR += x64/Debug
+            LIBS += -L"$$_PRO_FILE_PWD_/" -lhidapid_x64
             #message("x64_Debug")
         }
         CONFIG(release, debug|release) {
@@ -31,6 +32,7 @@ contains(QMAKE_HOST.os,Windows){
             INCLUDEPATH += x64/Release
             MOC_DIR += x64/Release
             OBJECTS_DIR += x64/Release
+            LIBS += -L"$$_PRO_FILE_PWD_/" -lhidapi_x64
             #message("x64_Release")
         }
     }
@@ -43,6 +45,7 @@ contains(QMAKE_HOST.os,Windows){
                 INCLUDEPATH += Win32/Debug
                 MOC_DIR += Win32/Debug
                 OBJECTS_DIR += Win32/Debug
+                LIBS += -L"$$_PRO_FILE_PWD_/" -lhidapid_win32
                 #message("Win32_Debug")
             }
             CONFIG(release, debug|release) {
@@ -51,6 +54,7 @@ contains(QMAKE_HOST.os,Windows){
                 INCLUDEPATH += Win32/Release
                 MOC_DIR += Win32/Release
                 OBJECTS_DIR += Win32/Release
+                LIBS += -L"$$_PRO_FILE_PWD_/" -lhidapi_win32
                 #message("Win32_Release")
             }
         }

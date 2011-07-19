@@ -9,11 +9,20 @@
 
 HEADERS += ./USBHIDDevice.h \
     ./USBHIDDevice_dialog.h \
+    ./hidcalibratedialog.h \
     ./USBHIDDeviceplugin.h \
     ./plugininterface.h \
-    ./StdAfx.h
+    ./StdAfx.h \
+    renderarea.h \
+    hidcapturethread.h \
+    hidapi.h \
+    Global.h
 SOURCES += ./USBHIDDevice.cpp \
     ./USBHIDDevice_dialog.cpp \
+    ./hidcalibratedialog.cpp \
     ./USBHIDDeviceplugin.cpp \
-    ./StdAfx.cpp
-FORMS += ./USBHIDDevice_dialog.ui
+    ./StdAfx.cpp \
+    renderarea.cpp \
+    hidcapturethread.cpp
+FORMS += ./USBHIDDevice_dialog.ui \
+    ./hidcalibratedialog.ui
