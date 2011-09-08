@@ -18,6 +18,7 @@ signals:
 public:
 	_extensionname_(QObject *parent = 0);
 	~_extensionname_();
+	_extensionname_(const _extensionname_& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 

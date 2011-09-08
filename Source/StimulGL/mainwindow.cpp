@@ -5,11 +5,14 @@
 #include "mainwindow.h"
 #include "mainappinfo.h"
 #include "svgview.h"
-#include "aboutqtdialog.h" 
+#include "aboutqtdialog.h"  
 #include "sleepthread.h"
 #include "optionpage.h"
 #include <QPluginLoader>
 #include <QFileInfo>
+
+#include "..\Plugins\ParallelPortDevice\parallelport.h"
+#include "..\Plugins\ExperimentManager\ExperimentManager.h"
 
 MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 {
@@ -768,11 +771,14 @@ void MainWindow::setupDynamicPluginMenus()
 {
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllPlugins) == false)
 	{
-		//foreach (QObject *plugin, QPluginLoader::staticInstances())
-		//{
-		//	PopPluginIntoMenu(plugin);
-		//}
-		showSplashMessage("Loading Plugins...");
+		showSplashMessage("Loading Static Plugins...");
+		Q_IMPORT_PLUGIN(parallelportplugin)// see below
+		Q_IMPORT_PLUGIN(experimentmanagerplugin)// see below
+		foreach (QObject *plugin, QPluginLoader::staticInstances())
+		{
+			popPluginIntoMenu(plugin);
+		}
+		showSplashMessage("Loading Dynamic Plugins...");
 		foreach (QString fileName, QDir(MainAppInfo::pluginsDirPath()).entryList(QDir::Files)) {
 			QPluginLoader loader(QDir(MainAppInfo::pluginsDirPath()).absoluteFilePath(fileName));
 			QObject *plugin = loader.instance();//The QObject provided by the plugin, if it was compiled against an incompatible version of the Qt library, QPluginLoader::instance() returns a null pointer.
@@ -782,6 +788,14 @@ void MainWindow::setupDynamicPluginMenus()
 			}
 		}
 	}
+	////example 1(static plugin):
+	//see line Q_IMPORT_PLUGIN(parallelportplugin)
+	//ParallelPort *a = new ParallelPort(888,NULL); //see Q_DECLARE_METATYPE(ParallelPort*), must include header etc
+	//a->IsPortEcp();
+	//delete a;
+	//ExperimentManager *b = new ExperimentManager(this);
+	//b->openExperiment();
+	//delete b;
 }
 
 bool MainWindow::popPluginIntoMenu(QObject *plugin)

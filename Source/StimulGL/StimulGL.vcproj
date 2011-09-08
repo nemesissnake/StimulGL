@@ -77,10 +77,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="Qtmaind.lib gdi32.lib user32.lib QtSvgd4.lib QtXmld4.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtScriptd4.lib QtScriptToolsd4.lib QtSqld4.lib qscintilla2d.lib"
+				AdditionalDependencies="Qtmaind.lib gdi32.lib user32.lib QtSvgd4.lib QtXmld4.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtScriptd4.lib QtScriptToolsd4.lib QtSqld4.lib qscintilla2d.lib parallelportplugin_$(PlatformName)_$(ConfigurationName).lib ExperimentManagerplugin_$(PlatformName)_$(ConfigurationName).lib"
 				OutputFile="$(ProjectDir)..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).exe"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(QTDIR)\lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)\lib&quot;;&quot;$(ProjectDir)..\..\StaticLibs\$(PlatformName)&quot;"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=""
@@ -171,10 +171,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="QtSvgd4.lib QtXmld4.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib Qtmaind.lib QtScriptd4.lib QtScriptToolsd4.lib QtSqld4.lib qscintilla2d.lib"
+				AdditionalDependencies="Qtmaind.lib QtSvgd4.lib QtXmld4.lib QtOpenGLd4.lib QtGuid4.lib QtCored4.lib QtScriptd4.lib QtScriptToolsd4.lib QtSqld4.lib qscintilla2d.lib parallelportplugin_$(PlatformName)_$(ConfigurationName).lib ExperimentManagerplugin_$(PlatformName)_$(ConfigurationName).lib"
 				OutputFile="$(ProjectDir)..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).exe"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(QTDIR)\lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)\lib&quot;;&quot;$(ProjectDir)..\..\StaticLibs\$(PlatformName)&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -266,11 +266,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="Qtmain.lib gdi32.lib user32.lib QtSvg4.lib QtXml4.lib QtOpenGL4.lib QtGui4.lib QtCore4.lib QtScript4.lib QtScriptTools4.lib QtSql4.lib qscintilla2.lib"
+				AdditionalDependencies="Qtmain.lib gdi32.lib user32.lib QtSvg4.lib QtXml4.lib QtOpenGL4.lib QtGui4.lib QtCore4.lib QtScript4.lib QtScriptTools4.lib QtSql4.lib qscintilla2.lib parallelportplugin_$(PlatformName)_$(ConfigurationName).lib ExperimentManagerplugin_$(PlatformName)_$(ConfigurationName).lib"
 				OutputFile="$(ProjectDir)..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(QTDIR)\lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)\lib&quot;;&quot;$(ProjectDir)..\..\StaticLibs\$(PlatformName)&quot;"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
 				SubSystem="2"
@@ -360,11 +360,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="QtSvg4.lib QtXml4.lib QtOpenGL4.lib QtGui4.lib QtCore4.lib Qtmain4.lib QtScript4.lib QtScriptTools4.lib QtSql4.lib qscintilla2.lib libgles_cm.lib"
+				AdditionalDependencies="QtSvg4.lib QtXml4.lib QtOpenGL4.lib QtGui4.lib QtCore4.lib Qtmain.lib QtScript4.lib QtScriptTools4.lib QtSql4.lib qscintilla2.lib parallelportplugin_$(PlatformName)_$(ConfigurationName).lib ExperimentManagerplugin_$(PlatformName)_$(ConfigurationName).lib"
 				OutputFile="$(ProjectDir)..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="$(QTDIR)\lib"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)\lib&quot;;&quot;$(ProjectDir)..\..\StaticLibs\$(PlatformName)&quot;"
 				GenerateDebugInformation="false"
 				ProgramDatabaseFile=""
 				SubSystem="2"
@@ -3171,7 +3171,7 @@
 		/>
 		<Global
 			Name="QtVersion x64"
-			Value="4.7.3 X64"
+			Value="4.7.3 (64bit)"
 		/>
 		<Global
 			Name="RccDir"

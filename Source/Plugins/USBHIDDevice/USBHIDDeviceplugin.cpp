@@ -2,6 +2,7 @@
 #include "USBHIDDevice.h"
 
 Q_DECLARE_METATYPE(USBHIDDevice*)
+Q_DECLARE_METATYPE(USBHIDDevice)
 
 USBHIDDevicePlugin::USBHIDDevicePlugin(QObject *parent)
 {
@@ -31,6 +32,7 @@ bool USBHIDDevicePlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<USBHIDDevice*>(), USBHIDDeviceProto);
 	QScriptValue USBHIDDeviceCtor = engine.newFunction(USBHIDDevice::ctor__extensionname, USBHIDDeviceProto);
 	engine.globalObject().setProperty("USBHIDDevice", USBHIDDeviceCtor);
+	int nRes = qRegisterMetaType<USBHIDDevice>("USBHIDDevice");
 	return true;
 }
 

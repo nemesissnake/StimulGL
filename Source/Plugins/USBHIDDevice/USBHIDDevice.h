@@ -28,7 +28,8 @@ signals:
 	void CaptureThreadButtonTriggered(unsigned char, unsigned char);//NewValue, WhichBitsChanged
 
 public:
-	USBHIDDevice(unsigned short vendor_id, unsigned short product_id, QObject *parent = 0);
+	USBHIDDevice(unsigned short vendor_id = 0x181b, unsigned short product_id = 0x4002, QObject *parent = 0);
+	USBHIDDevice(const USBHIDDevice& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	~USBHIDDevice();
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);

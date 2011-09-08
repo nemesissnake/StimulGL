@@ -16,10 +16,10 @@
 #include <QHeaderView>
 
 aboutQTDialog::aboutQTDialog(const QString &title,const QStringList &pluginFileNames,const QString &path, const QStringList &fileNames, QWidget *parent) : 
-QDialog(parent),
-label(new QLabel),
-treeWidget(new QTreeWidget),
-okButton(new QPushButton(tr("OK")))
+	QDialog(parent),
+	label(new QLabel),
+	treeWidget(new QTreeWidget),
+	okButton(new QPushButton(tr("OK")))
 {
 	treeWidget->setAlternatingRowColors(false);
 	treeWidget->setSelectionMode(QAbstractItemView::NoSelection);
@@ -47,13 +47,14 @@ okButton(new QPushButton(tr("OK")))
 	setWindowTitle("About " + title);
 	//findPlugins(title,path, fileNames);
 
+	foreach (QObject *plugin, QPluginLoader::staticInstances())
+		populateTreeWidget(plugin, tr("%1 (Static Plugin)")
+		.arg(plugin->metaObject()->className()));
+
+
 	label->setText(title + tr(" found the following plugins\n"
-		"(looked in %1):")
+		"(Dynamic plugins looked for in %1):")
 		.arg(QDir::toNativeSeparators(path)));
-
-
-
-
 	foreach (QString pluginName,pluginFileNames)
 		populateTreeWidget(0, tr("%1 (Device Plugin)").arg(pluginName));
 

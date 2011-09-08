@@ -35,3 +35,7 @@ Install/plugins/x64/script/*.dll
 InstallJammer/build
 Source/StimulGL/log.txt
 Source/StimulGL/HIDLog.txt
+DoxyGen
+Install/*.dll
+All-build-desktop
+StaticLibs

@@ -34,7 +34,7 @@ QString MainAppInfo::pluginsDirPath()
 QStringList MainAppInfo::getQTScriptBindingList()	
 {
 #ifdef WIN32
-	return	QStringList() << "qt.core" << "qt.gui"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";//<< "qt.network" does work...
+	return	QStringList() << "qt.core" << "qt.gui" << "qt.opengl"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";//<< "qt.network" does work...
 #else//64 bit
 	return	QStringList() << "qt.core" << "qt.gui"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";
 #endif

@@ -2,6 +2,7 @@
 #include "_extensionname_.h"
 
 Q_DECLARE_METATYPE(_extensionname_*)
+Q_DECLARE_METATYPE(_extensionname_)
 
 _extensionname_Plugin::_extensionname_Plugin(QObject *parent)
 {
@@ -31,6 +32,7 @@ bool _extensionname_Plugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<_extensionname_*>(), _extensionname_Proto);
 	QScriptValue _extensionname_Ctor = engine.newFunction(_extensionname_::ctor__extensionname, _extensionname_Proto);
 	engine.globalObject().setProperty("_extensionname_", _extensionname_Ctor);
+	int nRes = qRegisterMetaType<_extensionname_>("_extensionname_");
 	return true;
 }
 

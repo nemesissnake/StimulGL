@@ -60,15 +60,16 @@ public:
 
 	enum DocType 
 	{
-		DOCTYPE_UNDEFINED = 0x00000,
-		DOCTYPE_QSCRIPT   = 0x00001,
-		DOCTYPE_SVG		  = 0x00002
+		DOCTYPE_UNDEFINED		= 0x00000,
+		DOCTYPE_QSCRIPT			= 0x00001,
+		DOCTYPE_SVG				= 0x00002,
+		DOCTYPE_PLUGIN_WIDGET	= 0x00003
 	};
 	Q_DECLARE_FLAGS(DocTypes, DocType)
 
 	static QString MainProgramName()		{return "StimulGL";}
 	static QString MainOrganizationName()	{return "MBIC";}
-	static QString MainProgramVersion()		{return "1.0.0";}
+	static QString MainProgramVersion()		{return "1.0.0.0";}
 	static QString MainProgramTitle()		{return (MainProgramName() + "(v" + MainProgramVersion() + ")");}
 	static QString appDirPath()				{return QCoreApplication::applicationDirPath();}
 	static QString appLogFilePath()			{return (appDirPath() + "/logfile.txt");}

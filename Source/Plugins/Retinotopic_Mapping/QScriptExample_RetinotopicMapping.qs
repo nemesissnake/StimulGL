@@ -47,7 +47,7 @@ function myTrigger2()
 if(RetinotopicMappingObject.setExperimentFileName(strScriptPath + "/" + "Retinotopic_mapping_files/eccentricity_mapping.exp"))
 {
 	Log("The ExperimentFileName = " + RetinotopicMappingObject.getExperimentFileName());
-	if(RetinotopicMappingObject.setExperimentType(::bgf))
+	if(RetinotopicMappingObject.setExperimentType(1))
 		Log("The experiment Type has been set(eccentricity_mapping = 0)");
 }
 //Set to use FullScreen mode

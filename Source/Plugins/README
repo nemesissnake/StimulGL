@@ -32,3 +32,26 @@ Testing:
     in the file plugininterface.h! and 
     ExtensionInterface_H to DeviceInterface_H in the file plugininterface.h! and
     Q_INTERFACES(ExtensionInterface) to Q_INTERFACES(DeviceInterface) in the file <ExtensionName>Plugin.h
+    
+    
+Howto integrate a staic plugin(lib)(VS2008 description)
+- see above
+From the Plugin Project
+- change the projects configuration type to "Static Library (.lib)"
+- Preprocessor definitions: 
+	- Remove the QT_DLL
+	- Add the QT_STATICPLUGIN
+- Change the Library output file to:
+	$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).lib
+- Change the Post Build event to(or only the below line):
+	xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\StaticLibs\$(PlatformName)\" /i /d /y
+From the StimulGL project
+- Add the following to the Linker->Input->Additional Dependencies:
+	<ExtensionName>plugin_$(PlatformName)_$(ConfigurationName).lib (replace <ExtensionName> with your own name!)
+- Add the following include to the mainwindow.cpp document:
+	#include "..\Plugins\<ExtensionName>\<MainHeaderFile>.h"	(replace <ExtensionName> and <MainHeaderFile> with your own name!)
+- Add the following line to the void MainWindow::setupDynamicPluginMenus() procedure (just before the line "foreach (QObject *plugin, QPluginLoader::staticInstances())":
+	Q_IMPORT_PLUGIN(<ExtensionName>plugin)	(replace <ExtensionName> with your own name!)
+- You might also need to change the solution project dependencies, StimulGL should the depend on the new library, this to make sure that the new library is build first.
+	Also make StimulGL as the startup project!
+- Validate the static load through the help->about StimulGL menu

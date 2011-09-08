@@ -23,7 +23,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -50,7 +50,7 @@
 				AdditionalOptions="-Zm200 -w34100 -w34189 -Zm200 -w34100 -w34189 -w34100 -w34189"
 				Optimization="4"
 				AdditionalIncludeDirectories="&quot;$(QTDIR)\include\QtScript&quot;;&quot;$(QTDIR)\include\QtScriptTools&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;&quot;$(QTDIR)\include&quot;;&quot;$(QTDIR)\include\ActiveQt&quot;;&quot;.\debug&quot;;&quot;.&quot;;&quot;$(QTDIR)\mkspecs\win32-msvc2005&quot;;&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot;;&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot;"
-				PreprocessorDefinitions="_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_PLUGIN;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;QT_SCRIPT_LIB;QT_SCRIPTTOOLS_LIB"
+				PreprocessorDefinitions="_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_STATICPLUGIN;QT_PLUGIN;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;QT_SCRIPT_LIB;QT_SCRIPTTOOLS_LIB"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="1"
 				RuntimeLibrary="3"
@@ -76,25 +76,13 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				AdditionalDependencies="QtGuid4.lib QtCored4.lib QtScriptd4.lib QtScriptToolsd4.lib inpout32.lib"
-				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).dll"
-				SuppressStartupBanner="true"
+				Name="VCLibrarianTool"
+				AdditionalDependencies="inpout32.lib"
+				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).lib"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile=""
-				SubSystem="2"
-				LinkTimeCodeGeneration="0"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -106,18 +94,15 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="echo POSTBUILDSTEP for $(ProjectName)&#x0D;&#x0A;&#x0D;&#x0A;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\..\..\Install\plugins\$(PlatformName)\&quot; /i /d /y&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)$(OutDir)&quot; /i /d /y&#x0D;&#x0A;REM if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM echo GAC of: &quot;$(SolutionDir)$(OutDir)$(TargetFileName)&quot;&#x0D;&#x0A;REM gacutil.exe /nologo /i &quot;$(SolutionDir)$(OutDir)$(TargetFileName)&quot; /f&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM Exit properly because the build will not fail&#x0D;&#x0A;REM unless the final step exits with an error code&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK&#x0D;&#x0A;"
+				CommandLine="echo POSTBUILDSTEP for $(ProjectName)&#x0D;&#x0A;&#x0D;&#x0A;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\..\..\StaticLibs\$(PlatformName)\&quot; /i /d /y&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
 			OutputDirectory="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -145,7 +130,7 @@
 				AdditionalOptions="-Zm200 -w34100 -w34189 -Zm200 -w34100 -w34189 -w34100 -w34189"
 				Optimization="4"
 				AdditionalIncludeDirectories="&quot;$(QTDIR)\include\QtScript&quot;;&quot;$(QTDIR)\include\QtScriptTools&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;&quot;$(QTDIR)\include&quot;;&quot;$(QTDIR)\include\ActiveQt&quot;;&quot;.\debug&quot;;&quot;.&quot;;&quot;$(QTDIR)\mkspecs\win32-msvc2005&quot;;&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot;;&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot;"
-				PreprocessorDefinitions="_WINDOWS;UNICODE;WIN64;QT_LARGEFILE_SUPPORT;QT_DLL;QT_PLUGIN;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;QT_SCRIPT_LIB;QT_SCRIPTTOOLS_LIB"
+				PreprocessorDefinitions="_WINDOWS;UNICODE;WIN64;QT_LARGEFILE_SUPPORT;QT_STATICPLUGIN;QT_PLUGIN;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;QT_SCRIPT_LIB;QT_SCRIPTTOOLS_LIB"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="1"
 				RuntimeLibrary="3"
@@ -171,26 +156,13 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				AdditionalDependencies="QtGuid4.lib QtCored4.lib QtScriptd4.lib QtScriptToolsd4.lib inpoutx64.lib odbc32.lib odbccp32.lib"
-				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).dll"
-				SuppressStartupBanner="true"
+				Name="VCLibrarianTool"
+				AdditionalDependencies="inpoutx64.lib"
+				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).lib"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile=""
-				SubSystem="2"
-				LinkTimeCodeGeneration="0"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -202,18 +174,15 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="echo POSTBUILDSTEP for $(ProjectName)&#x0D;&#x0A;&#x0D;&#x0A;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\..\..\Install\plugins\$(PlatformName)\&quot; /i /d /y&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)$(OutDir)&quot; /i /d /y&#x0D;&#x0A;REM if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM echo GAC of: &quot;$(SolutionDir)$(OutDir)$(TargetFileName)&quot;&#x0D;&#x0A;REM gacutil.exe /nologo /i &quot;$(SolutionDir)$(OutDir)$(TargetFileName)&quot; /f&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM Exit properly because the build will not fail&#x0D;&#x0A;REM unless the final step exits with an error code&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK&#x0D;&#x0A;"
+				CommandLine="echo POSTBUILDSTEP for $(ProjectName)&#x0D;&#x0A;&#x0D;&#x0A;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\..\..\StaticLibs\$(PlatformName)\&quot; /i /d /y&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -241,7 +210,7 @@
 				Optimization="2"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(QTDIR)\include\QtScript&quot;;&quot;$(QTDIR)\include\QtScriptTools&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;&quot;$(QTDIR)\include&quot;;&quot;$(QTDIR)\include\ActiveQt&quot;;&quot;.\debug&quot;;&quot;.&quot;;&quot;$(QTDIR)\mkspecs\win32-msvc2005&quot;;&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot;;&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot;"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_PLUGIN,QT_GUI_LIB,QT_CORE_LIB,QT_THREAD_SUPPORT,NDEBUG"
+				PreprocessorDefinitions="QT_NO_DEBUG;NDEBUG;_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_STATICPLUGIN;QT_PLUGIN;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -266,26 +235,13 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				AdditionalDependencies="QtGui4.lib QtCore4.lib QtScript4.lib QtScriptTools4.lib inpout32.lib"
-				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).dll"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
+				Name="VCLibrarianTool"
+				AdditionalDependencies="inpout32.lib"
+				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).lib"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
-				GenerateDebugInformation="false"
-				ProgramDatabaseFile=""
-				SubSystem="2"
-				LinkTimeCodeGeneration="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -297,18 +253,15 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="echo POSTBUILDSTEP for $(ProjectName)&#x0D;&#x0A;&#x0D;&#x0A;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\..\..\Install\plugins\$(PlatformName)\&quot; /i /d /y&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)$(OutDir)&quot; /i /d /y&#x0D;&#x0A;REM if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM echo GAC of: &quot;$(SolutionDir)$(OutDir)$(TargetFileName)&quot;&#x0D;&#x0A;REM gacutil.exe /nologo /i &quot;$(SolutionDir)$(OutDir)$(TargetFileName)&quot; /f&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM Exit properly because the build will not fail&#x0D;&#x0A;REM unless the final step exits with an error code&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK&#x0D;&#x0A;"
+				CommandLine="echo POSTBUILDSTEP for $(ProjectName)&#x0D;&#x0A;&#x0D;&#x0A;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\..\..\StaticLibs\$(PlatformName)\&quot; /i /d /y&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
 			OutputDirectory="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)"
-			ConfigurationType="2"
+			ConfigurationType="4"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			>
@@ -337,7 +290,7 @@
 				Optimization="2"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="&quot;$(QTDIR)\include\QtScript&quot;;&quot;$(QTDIR)\include\QtScriptTools&quot;;&quot;$(QTDIR)\include\QtCore&quot;;&quot;$(QTDIR)\include\QtGui&quot;;&quot;$(QTDIR)\include&quot;;&quot;$(QTDIR)\include\ActiveQt&quot;;&quot;.\debug&quot;;&quot;.&quot;;&quot;$(QTDIR)\mkspecs\win32-msvc2005&quot;;&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot;;&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot;"
-				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,_WINDOWS,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_PLUGIN,QT_GUI_LIB,QT_CORE_LIB,QT_THREAD_SUPPORT,NDEBUG"
+				PreprocessorDefinitions="QT_NO_DEBUG;NDEBUG;_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_STATICPLUGIN;QT_PLUGIN;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT"
 				GeneratePreprocessedFile="0"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
@@ -362,27 +315,13 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				IgnoreImportLibrary="true"
-				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				AdditionalDependencies="QtGui4.lib QtCore4.lib QtScript4.lib QtScriptTools4.lib inpoutx64.lib odbc32.lib odbccp32.lib"
-				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).dll"
-				LinkIncremental="1"
-				SuppressStartupBanner="true"
+				Name="VCLibrarianTool"
+				AdditionalDependencies="inpoutx64.lib"
+				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).lib"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"
-				GenerateDebugInformation="false"
-				ProgramDatabaseFile=""
-				SubSystem="2"
-				LinkTimeCodeGeneration="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
-				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -394,11 +333,8 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="echo POSTBUILDSTEP for $(ProjectName)&#x0D;&#x0A;&#x0D;&#x0A;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\..\..\Install\plugins\$(PlatformName)\&quot; /i /d /y&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM xcopy &quot;$(TargetDir)$(TargetName).pdb&quot; &quot;$(SolutionDir)$(OutDir)&quot; /i /d /y&#x0D;&#x0A;REM if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM echo GAC of: &quot;$(SolutionDir)$(OutDir)$(TargetFileName)&quot;&#x0D;&#x0A;REM gacutil.exe /nologo /i &quot;$(SolutionDir)$(OutDir)$(TargetFileName)&quot; /f&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;REM Exit properly because the build will not fail&#x0D;&#x0A;REM unless the final step exits with an error code&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK&#x0D;&#x0A;"
+				CommandLine="echo POSTBUILDSTEP for $(ProjectName)&#x0D;&#x0A;&#x0D;&#x0A;xcopy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)..\..\..\StaticLibs\$(PlatformName)\&quot; /i /d /y&#x0D;&#x0A;if errorlevel 1 goto BuildEventFailed&#x0D;&#x0A;goto BuildEventOK&#x0D;&#x0A;&#x0D;&#x0A;:BuildEventFailed&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) FAILED&#x0D;&#x0A;exit 1&#x0D;&#x0A;&#x0D;&#x0A;:BuildEventOK&#x0D;&#x0A;echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -501,7 +437,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\parallelport.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\parallelport.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -512,7 +448,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\parallelport.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\parallelport.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -523,7 +459,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\parallelport.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\parallelport.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -534,7 +470,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\parallelport.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\parallelport.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -549,7 +485,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;parallelportplugin.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;parallelportplugin.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -560,7 +496,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;parallelportplugin.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;parallelportplugin.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -571,7 +507,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;parallelportplugin.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;parallelportplugin.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -582,7 +518,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;parallelportplugin.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;parallelportplugin.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -601,7 +537,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppcapturethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppcapturethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -612,7 +548,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppcapturethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppcapturethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -623,7 +559,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppcapturethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppcapturethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -634,7 +570,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppcapturethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppcapturethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -649,7 +585,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppgeneratethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppgeneratethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -660,7 +596,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppgeneratethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppgeneratethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -671,7 +607,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppgeneratethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppgeneratethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -682,7 +618,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppgeneratethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\ppgeneratethread.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -697,7 +633,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\pport_dialog.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\pport_dialog.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -708,7 +644,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\pport_dialog.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -D_WINDOWS -DUNICODE -DWIN64 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\pport_dialog.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -719,7 +655,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\pport_dialog.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\pport_dialog.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -730,7 +666,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Moc&apos;ing $(InputFileName)..."
-						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -D_WINDLL  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\pport_dialog.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;   -DQT_NO_DEBUG -DNDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_STATICPLUGIN -DQT_PLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT  &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2005&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;.\pport_dialog.h&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;&#x0D;&#x0A;"
 						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
 						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
@@ -1413,7 +1349,7 @@
 		/>
 		<Global
 			Name="QtVersion x64"
-			Value="4.7.3 X64"
+			Value="4.7.3 (64bit)"
 		/>
 		<Global
 			Name="RccDir"

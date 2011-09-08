@@ -1,8 +1,8 @@
 #include "InpOut32.h"
 #include <windows.h>
 
-//Functions exported from DLL.
-//Original InpOut32 function support
+////Functions exported from DLL.
+////Original InpOut32 function support
 void	_stdcall Out32(short PortAddress, short data);
 short	_stdcall Inp32(short PortAddress);
 

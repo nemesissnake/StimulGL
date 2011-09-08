@@ -6,6 +6,7 @@
 #include "parallelportplugin.h"
 
 Q_DECLARE_METATYPE(ParallelPort*)
+Q_DECLARE_METATYPE(ParallelPort)
 
 ParallelPortPlugin::ParallelPortPlugin(short BaseAddress, QObject *parent)
 {
@@ -85,6 +86,7 @@ bool ParallelPortPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue ParallelPortCtor = engine.newFunction(ctor_ParallelPort, ParallelPortProto);
 	engine.globalObject().setProperty("ParallelPort", ParallelPortCtor);
 
+	int nRes = qRegisterMetaType<ParallelPort>("ParallelPort");
 	//QScriptEngine eng;
 	//QScriptValue obj = engine.newObject();
 	//ParallelPortProto.setProperty("BaseAddress", engine.newFunction(getSetBaseAddress), 

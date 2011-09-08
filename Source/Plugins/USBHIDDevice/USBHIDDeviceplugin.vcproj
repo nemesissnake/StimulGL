@@ -1585,7 +1585,7 @@
 		/>
 		<Global
 			Name="QtVersion x64"
-			Value="4.7.3 X64"
+			Value="4.7.3 (64bit)"
 		/>
 		<Global
 			Name="RccDir"

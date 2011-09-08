@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="9,00"
 	Name="_extensionname_plugin"
-	ProjectGUID="{DF78AA1A-8166-47A0-AE13-51D55E460FDC}"
+	ProjectGUID="{404F3214-07EA-4DFA-BCB9-9EBC65171B08}"
 	RootNamespace="_extensionname_plugin"
 	Keyword="Qt4VSv1.0"
 	TargetFrameworkVersion="131072"
@@ -1033,7 +1033,7 @@
 		/>
 		<Global
 			Name="QtVersion x64"
-			Value="4.7.3 X64"
+			Value="4.7.3 (64bit)"
 		/>
 		<Global
 			Name="RccDir"
