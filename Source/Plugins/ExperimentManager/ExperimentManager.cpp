@@ -1,6 +1,9 @@
 #include "ExperimentManager.h"
 #include <QFileDialog>
+#include <QWaitCondition>
 //#include "..\ParallelPortDevice\parallelport.h"
+
+//#include "glwidget.h"
 
 QScriptValue ExperimentManager::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
 {
@@ -33,7 +36,7 @@ ExperimentManager::~ExperimentManager()
 
 void ExperimentManager::RegisterMetaTypes()
 {
-	qRegisterMetaType<RetinoMap_glwidget>("RetinoMap_glwidget");
+	//qRegisterMetaType<RetinoMap_glwidget>("RetinoMap_glwidget");
 }
 
 //void ExperimentManager::Init()
@@ -209,8 +212,23 @@ bool ExperimentManager::runExperiment()
 		return false;
 	}
 
-	//stimContainerDlg = new ContainerDlg();//parent parameter?
-	//stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
+
+
+	ContainerDlg *stimContainerDlg;
+	stimContainerDlg = new ContainerDlg();//parent parameter?
+	stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
+
+
+	//void AppWindow::newThread()
+	//{
+	//	QWidgetList windows = ws->windowList();
+	ThreadedGLWidgetWrapper *widget = new ThreadedGLWidgetWrapper(stimContainerDlg);
+	//widget->setCaption("Thread #");// + QString::number(windows.count() + 1));
+	//widget->show();
+	//widget->startRendering();
+	//}
+
+
 	////retinoMapWdg = new RetinoMap_glwidget(stimContainerDlg);
 	////retinoMapWdg->setObjectName("RetinoMap_RenderWidgetGL");
 	//stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool Retinotopic_Mapping::eventFilter(QObject *target, QEvent *event)
@@ -221,21 +239,50 @@ bool ExperimentManager::runExperiment()
 	//	return false;
 	//}
 	//int swap_interval = retinoMapWdg->format().swapInterval(); // support for vertical retrace sync?
-	//QVBoxLayout *mainLayout = new QVBoxLayout;
-	//mainLayout->setAlignment(Qt::AlignCenter);
-	//mainLayout->setMargin(0);
-	//mainLayout->addWidget(retinoMapWdg);
-	//stimContainerDlg->setLayout(mainLayout);
+	QVBoxLayout *mainLayout = new QVBoxLayout;
+	mainLayout->setAlignment(Qt::AlignCenter);
+	mainLayout->setMargin(0);
+	mainLayout->addWidget(widget);
+	stimContainerDlg->setLayout(mainLayout);
 	//retinoMapWdg->setFixedSize(1000,1000);
 	//retinoMapWdg->setDebugMode(true);
 	//retinoMapWdg->startAnimationTimer(50);
 	//if(m_RunFullScreen)
-	//	stimContainerDlg->showFullScreen();
+	//stimContainerDlg->showFullScreen();
 	//else
-	//	stimContainerDlg->show();
+		stimContainerDlg->show();
 	//QDesktopWidget *dt = QApplication::desktop();
 	//QCursor::setPos(dt->width(), dt->height()/2); // not at bottom because then mouse movement on Mac would show dock		
 	//return retinoMapWdg->start();
+	widget->startRendering();
+
+	SleeperThread::msleep(10000);
+
+	//void AppWindow::killThread()
+	//{
+	//	GLWidget *widget = (GLWidget *)ws->activeWindow();    
+		if (widget) {
+			widget->stopRendering();
+			delete widget;
+		}
+	//}
+	stimContainerDlg->close();
+	delete stimContainerDlg;
+
+	return true;
+
+	//void AppWindow::closeEvent(QCloseEvent *evt)
+	//{
+	//	QWidgetList windows = ws->windowList();
+	//	for (int i = 0; i < int(windows.count()); ++i) {
+	//		GLWidget *window = (GLWidget *)windows.at(i);
+	//		window->stopRendering();
+	//	}
+	//	QMainWindow::closeEvent(evt);
+	//}
+
+
+
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
 		return false;
@@ -246,7 +293,7 @@ void ExperimentManager::abortExperiment()
 {
 	if(!stopExperimentObjects())
 		qDebug() << "ExperimentManager::abortExperiment Could not stop the Experiment Objects";
-	cleanupExperiment();
+	//cleanupExperiment();
 	QThread::currentThread()->setPriority(QThread::NormalPriority);
 }
 
@@ -293,6 +340,7 @@ bool ExperimentManager::changeExperimentObjectsSignalSlots(bool bDisconnect)
 			if(bDisconnect)
 			{
 				disconnect(lExperimentObjectList[i].pObject, SIGNAL(UserWantsToClose(void)), this, SLOT(abortExperiment(void)));
+				disconnect(lExperimentObjectList[i].pObject, SIGNAL(StateHasChanged(ExperimentObjectState)), this, SLOT(changeExperimentObjectState(ExperimentObjectState)));
 			}
 			else
 			{

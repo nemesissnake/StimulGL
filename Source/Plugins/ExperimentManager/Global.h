@@ -8,16 +8,4 @@ enum ExperimentObjectState
 	ExperimentObject_Stopped		= 2	
 };
 
-class GLWidget_Global
-{
-public:
-	static QGLFormat getDefaultGLFormat()
-	{
-		QGLFormat StimulGLQGLFormat;
-		StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
-		StimulGLQGLFormat.setSampleBuffers(true);
-		return StimulGLQGLFormat;
-	}
-};
-
 #endif //GLWIDGET_GLOBAL_H

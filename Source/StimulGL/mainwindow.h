@@ -227,6 +227,7 @@ private:
 	void setAppDirectories();
 	void createDockWindows();
 	void setupStatusBar();
+	bool setDefaultGLFormat();
     void createDefaultMenus();
 	void setupHelpMenu();
     void setupDynamicPluginMenus();

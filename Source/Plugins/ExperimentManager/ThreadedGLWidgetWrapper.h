@@ -11,11 +11,14 @@
 #include <QBoxLayout>
 #include "Global.h"
 
-class QPaintEvent;
-class QWidget;
-class ContainerDlg;
+#include "glthread.h"
+class GLThread;
 
-class GLWidgetWrapper : public QGLWidget
+//class QPaintEvent;
+//class QWidget;
+//class TreadedContainerDlg;
+
+class ThreadedGLWidgetWrapper : public QGLWidget
 {
 	Q_OBJECT
 
@@ -24,10 +27,12 @@ signals:
 	void StateHasChanged(ExperimentObjectState);
 
 public:
-	GLWidgetWrapper(QWidget *parent = NULL);
-	~GLWidgetWrapper();
+	ThreadedGLWidgetWrapper(QWidget *parent = NULL);
+	~ThreadedGLWidgetWrapper();
 
 	void setBlockTrials();
+	void startRendering();    
+	void stopRendering();
 
 public slots:
 	//Can be overridden
@@ -40,11 +45,18 @@ protected:
 	void finalizePaintEvent();
 	void SetupLayout(QWidget* layoutWidget);
 
+//Threaded overridden code
+	void resizeEvent(QResizeEvent *evt);
+	void paintEvent(QPaintEvent *);
+	void closeEvent(QCloseEvent *evt);
+
+	GLThread glt;
+
 	//Can be overridden
 	virtual void init();
 	virtual void initBlockTrial();
 	virtual bool loadBlockTrial();
-	virtual void paintEvent(QPaintEvent *event);
+	//virtual void paintEvent(QPaintEvent *event);
 
 	//Example using standard OpenGL rendering commands...
 	//void initializeGL()
@@ -100,7 +112,7 @@ protected:
 	int nMinScreenUpdateTime;
 	int nFrameCounter;
 	QTime totalRunningTime;
-	ContainerDlg *stimContainerDlg;
+	//TreadedContainerDlg *stimContainerDlg;
 	QVBoxLayout *mainLayout;
 
 private:
@@ -113,6 +125,19 @@ private:
 	int nextTimeThresholdTRs;
 };
 
+class TreadedContainerDlg : public QDialog
+{
+	Q_OBJECT
 
+public:
+	TreadedContainerDlg(QWidget *parent = NULL);
+	TreadedContainerDlg::~TreadedContainerDlg();
+
+	private slots:
+		void reject();
+
+protected:
+	void closeEvent(QCloseEvent *e);
+};
 
 #endif // GLWIDGET_H

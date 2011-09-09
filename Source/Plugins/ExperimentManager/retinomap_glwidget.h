@@ -58,7 +58,5 @@ public:
 	//QPen m_pTextPen;
 	//QString m_sTextContent;
 };
-
 Q_DECLARE_METATYPE(RetinoMap_glwidget)
-
 #endif // RETINOMAP_GLWIDGET_H

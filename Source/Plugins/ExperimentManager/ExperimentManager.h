@@ -11,18 +11,17 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include "experimenttree.h"
-#include "GLWidgetWrapper.h"
-//#include "mouse_glwidget.h"
-#include "retinomap_glwidget.h"
+#include "Global.h"
+//#include "retinomap_glwidget.h"
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
 
-//Q_DECLARE_FLAGS(DetectionMethods, DetectionMethod)
+#include "ThreadedGLWidgetWrapper.h"
+//#include "glwidget.h"
 
-class GLWidget;
 class GLWidgetWrapper;
-class RetinoMap_glwidget;
+//class RetinoMap_glwidget;
 class ExperimentTree;
 
 class ExperimentManager : public QObject, protected QScriptable
@@ -76,6 +75,30 @@ private:
 	QString m_ExpFileName;
 	QString m_ExpFolder;
 	ExperimentTree *currentExperimentTree;
+};
+
+class SleeperThread : public QThread
+{
+public:
+	static void msleep(unsigned long msecs)
+	{
+		QThread::msleep(msecs);
+	}
+};
+
+class ContainerDlg : public QDialog
+{
+	Q_OBJECT
+
+public:
+	ContainerDlg(QWidget *parent = NULL);
+	ContainerDlg::~ContainerDlg();
+
+	private slots:
+		void reject();
+
+protected:
+	void closeEvent(QCloseEvent *e);
 };
 
 #endif // ExperimentManager_H

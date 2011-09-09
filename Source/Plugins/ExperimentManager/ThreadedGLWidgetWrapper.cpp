@@ -1,12 +1,12 @@
 #include <QtGui>
 #include <stdlib.h>
 #include <math.h>
-#include "GLWidgetWrapper.h"
+#include "ThreadedGLWidgetWrapper.h"
 
-GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
+ThreadedGLWidgetWrapper::ThreadedGLWidgetWrapper(QWidget *parent) : QGLWidget(parent), glt(this)
 {
 	init();
-	stimContainerDlg = NULL;
+	//stimContainerDlg = NULL;
 	bForceToStop = false;
 	bDebugMode = false;
 	#ifdef Q_WS_MACX
@@ -21,18 +21,19 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	setFixedSize(rScreenResolution.width(), rScreenResolution.height());
 	//setMinimumSize(200, 200);
 	setWindowTitle(tr("Painting a Scene"));
+	//resize(320, 240);
 
-	//stimContainerDlg = new ContainerDlg();//parent parameter?
+	//stimContainerDlg = new TreadedContainerDlg();//parent parameter?
 	//stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
 	//retinoMapWdg = new RetinoMap_glwidget(stimContainerDlg);
 	//retinoMapWdg->setObjectName("RetinoMap_RenderWidgetGL");
 	//stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool Retinotopic_Mapping::eventFilter(QObject *target, QEvent *event)
+	parent->installEventFilter(this);
 	mainLayout = NULL;
 }
 
-GLWidgetWrapper::~GLWidgetWrapper()
+ThreadedGLWidgetWrapper::~ThreadedGLWidgetWrapper()
 {
-	//delete dDesktopWidget;
 	//if (stimContainerDlg)
 	//{
 	//	stimContainerDlg->close();
@@ -49,10 +50,42 @@ GLWidgetWrapper::~GLWidgetWrapper()
 	}
 }
 
-bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
+void ThreadedGLWidgetWrapper::startRendering()
+{
+	glt.start();
+}
+
+void ThreadedGLWidgetWrapper::stopRendering()
+{
+	glt.stop();
+	glt.wait();
+}
+
+void ThreadedGLWidgetWrapper::resizeEvent(QResizeEvent *evt)
+{
+	glt.resizeViewport(evt->size());
+}
+
+void ThreadedGLWidgetWrapper::paintEvent(QPaintEvent *)
+{
+	// Handled by the GLThread.
+}
+
+//void ThreadedGLWidgetWrapper::paintEvent(QPaintEvent *event)
+//{
+//	nFrameCounter += 1;	
+//}
+
+void ThreadedGLWidgetWrapper::closeEvent(QCloseEvent *evt)
+{
+	stopRendering();
+	QGLWidget::closeEvent(evt);
+}
+
+bool ThreadedGLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 {
 	//if (target == stimContainerDlg) 
-	{
+	//{
 		if (event->type() == QEvent::KeyPress) 
 		{
 			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
@@ -73,12 +106,12 @@ bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 			//	return true;
 			//}
 		}
-	}
+	//}
 	//return QDialog::eventFilter(target, event);
 	return true;
 }
 
-void GLWidgetWrapper::SetupLayout(QWidget* layoutWidget)
+void ThreadedGLWidgetWrapper::SetupLayout(QWidget* layoutWidget)
 {
 	mainLayout = new QVBoxLayout;
 	mainLayout->setAlignment(Qt::AlignCenter);
@@ -91,12 +124,12 @@ void GLWidgetWrapper::SetupLayout(QWidget* layoutWidget)
 	//	stimContainerDlg->show();
 }
 
-void GLWidgetWrapper::setDebugMode(bool bMode)
+void ThreadedGLWidgetWrapper::setDebugMode(bool bMode)
 {
 	bDebugMode = bMode;
 }
 
-void GLWidgetWrapper::init()
+void ThreadedGLWidgetWrapper::init()
 {
 	currentBlockTrial = -1;
 	completedTR = 0;
@@ -107,7 +140,7 @@ void GLWidgetWrapper::init()
 	nextTimeThresholdTRs = 0;
 }
 
-bool GLWidgetWrapper::start()
+bool ThreadedGLWidgetWrapper::start()
 {
 	init();
 	totalRunningTime.start();
@@ -118,37 +151,32 @@ bool GLWidgetWrapper::start()
 	return true;
 }
 
-bool GLWidgetWrapper::stop()
+bool ThreadedGLWidgetWrapper::stop()
 {
 	stopTriggerTimer();
 	bForceToStop = true;
 	return true;
 }
 
-void GLWidgetWrapper::startTriggerTimer(int msTime)
+void ThreadedGLWidgetWrapper::startTriggerTimer(int msTime)
 {
 	tTriggerTimer.setSingleShot(false);
 	connect(&tTriggerTimer, SIGNAL(timeout()), this, SLOT(incrementTriggerCount()));
 	tTriggerTimer.start(msTime);
 }
 
-void GLWidgetWrapper::stopTriggerTimer()
+void ThreadedGLWidgetWrapper::stopTriggerTimer()
 {
 	tTriggerTimer.stop();
 	disconnect(&tTriggerTimer, SIGNAL(timeout()), this, SLOT(incrementTriggerCount()));
 }
 
-void GLWidgetWrapper::paintEvent(QPaintEvent *event)
-{
-	nFrameCounter += 1;	
-}
-
-void GLWidgetWrapper::incrementTriggerCount()
+void ThreadedGLWidgetWrapper::incrementTriggerCount()
 {
 	m_TriggerCount++;
 }
 
-void GLWidgetWrapper::initBlockTrial()
+void ThreadedGLWidgetWrapper::initBlockTrial()
 {
 	bForceToStop = false;
 	nFrameCounter = 0;
@@ -159,13 +187,13 @@ void GLWidgetWrapper::initBlockTrial()
 #endif
 }
 
-bool GLWidgetWrapper::loadBlockTrial()
+bool ThreadedGLWidgetWrapper::loadBlockTrial()
 {
 
 	return true;
 }
 
-bool GLWidgetWrapper::checkForNextBlockTrial()
+bool ThreadedGLWidgetWrapper::checkForNextBlockTrial()
 {
 	if (bForceToStop)
 		return false;
@@ -191,7 +219,7 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 	}
 	if(goToNextBlockTrial)//When we init/start or switch from a Block Trial 
 	{
-		//qDebug() << "GLWidgetWrapper::goToNextBlockTrial(current=" << currentBlockTrial << ", total_elapsed_time=" << total_elapsed_time << ")";
+		//qDebug() << "ThreadedGLWidgetWrapper::goToNextBlockTrial(current=" << currentBlockTrial << ", total_elapsed_time=" << total_elapsed_time << ")";
 		currentBlockTrial++;//Increment the Block Trial Counter
 		if(currentBlockTrial >= 100)//---->>//BlockTrialFiles.size())//No more Block Trials left?
 		{
@@ -214,7 +242,7 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 	return false;
 }
 
-void GLWidgetWrapper::animate()
+void ThreadedGLWidgetWrapper::animate()
 {
 	nElapsedFrameTime = tFrameTime.elapsed();//Calculate the elapsed time since started
 	tFrameTime.restart();
@@ -230,7 +258,7 @@ void GLWidgetWrapper::animate()
 	//}
 }
 
-void GLWidgetWrapper::finalizePaintEvent()
+void ThreadedGLWidgetWrapper::finalizePaintEvent()
 {
 	while(1)//Don't go too fast...
 	{

@@ -390,6 +390,15 @@ void MainWindow::CursorPositionChanged(int line, int col)
 	StatusPositionLabel->setText(tr("Row: %1, Col: %2").arg(line+1).arg(col+1));
 }
 
+bool MainWindow::setDefaultGLFormat()
+{
+	QGLFormat StimulGLQGLFormat;
+	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
+	StimulGLQGLFormat.setSampleBuffers(true);
+	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
+	return true;
+}
+
 void MainWindow::createDefaultMenus()
 {
 	fileMenu = new QMenu(tr("&File"), this);
