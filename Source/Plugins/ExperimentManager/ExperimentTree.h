@@ -1,31 +1,11 @@
 #ifndef EXPERIMENTTREE_H
 #define EXPERIMENTTREE_H
 
-#define ID_TAG				"ID"
-#define OBJECT_TAG			"object"
-#define CLASS_TAG			"class"
-#define NAME_TAG			"name"
-
 #include <QDomDocument>
 #include <QHash>
 #include <QIcon>
 #include <QTreeWidget>
-
-enum EXML_TAG_SECTIONS
-{
-	EXML_Declarations,
-	EXML_Actions,
-	EXML_Object,
-	EXML_Event
-};
-
-struct EXML_DocVersion 
-{
-	int major;
-	int minor;
-	int version;
-	int build;
-};
+#include "Global.h"
 
 class ExperimentTree : public QTreeWidget
 {
@@ -38,7 +18,7 @@ public:
 	bool read(QIODevice *device);
 	bool write(QIODevice *device);
 
-	bool getDocumentElements(const QString &sElementTagName,QDomNodeList &ResultDomNodeList);
+	bool getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList);
 
 private slots:
 	void updateDomElement(QTreeWidgetItem *item, int column);

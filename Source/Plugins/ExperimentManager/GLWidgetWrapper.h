@@ -14,6 +14,7 @@
 class QPaintEvent;
 class QWidget;
 class ContainerDlg;
+class QDomNodeList;
 
 class GLWidgetWrapper : public QGLWidget
 {
@@ -21,7 +22,7 @@ class GLWidgetWrapper : public QGLWidget
 
 signals:
 	void UserWantsToClose(void);
-	void StateHasChanged(ExperimentObjectState);
+	void WidgetStateHasChanged(ExperimentObjectState);
 
 public:
 	GLWidgetWrapper(QWidget *parent = NULL);
@@ -34,11 +35,16 @@ public slots:
 	virtual bool start();
 	virtual bool stop();
 	void setDebugMode(bool bMode);
+	virtual bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList);
 
 protected:
 	bool checkForNextBlockTrial();
+	bool getBlockTrialParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result);
+
 	void finalizePaintEvent();
 	void SetupLayout(QWidget* layoutWidget);
+	
+	void closeEvent(QCloseEvent *evt);
 
 	//Can be overridden
 	virtual void init();
@@ -106,11 +112,27 @@ protected:
 private:
 	QTimer tTriggerTimer;
 	QTimer tStimTimer;
-	//QDesktopWidget* dDesktopWidget;
+	QDomNodeList *pExpBlockTrialDomNodeList;
 	int currentBlockTrial;
+	int currentBlock;
 	int completedTR;
 	int m_TriggerCount;
 	int nextTimeThresholdTRs;
+};
+
+class ContainerDlg : public QDialog
+{
+	Q_OBJECT
+
+public:
+	ContainerDlg(QWidget *parent = NULL);
+	ContainerDlg::~ContainerDlg();
+
+	private slots:
+		void reject();
+
+protected:
+	void closeEvent(QCloseEvent *e);
 };
 
 

@@ -2,7 +2,6 @@
 #include <QFileDialog>
 #include <QWaitCondition>
 //#include "..\ParallelPortDevice\parallelport.h"
-
 //#include "glwidget.h"
 
 QScriptValue ExperimentManager::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
@@ -36,7 +35,12 @@ ExperimentManager::~ExperimentManager()
 
 void ExperimentManager::RegisterMetaTypes()
 {
-	//qRegisterMetaType<RetinoMap_glwidget>("RetinoMap_glwidget");
+	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
+}
+
+QString ExperimentManager::getCurrentDateTimeStamp()
+{
+	return (QDateTime::currentDateTime().toString(DATETIMESTAMPFORMAT));
 }
 
 //void ExperimentManager::Init()
@@ -206,71 +210,54 @@ bool ExperimentManager::runExperiment()
 	QThread::currentThread()->setPriority(QThread::HighPriority);  
 	// QThread::TimeCriticalPriority);
 #endif
-
 	if (!createExperimentObjects())
 	{
 		return false;
 	}
 
-
-
-	ContainerDlg *stimContainerDlg;
-	stimContainerDlg = new ContainerDlg();//parent parameter?
-	stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-
-
-	//void AppWindow::newThread()
-	//{
-	//	QWidgetList windows = ws->windowList();
-	ThreadedGLWidgetWrapper *widget = new ThreadedGLWidgetWrapper(stimContainerDlg);
-	//widget->setCaption("Thread #");// + QString::number(windows.count() + 1));
-	//widget->show();
-	//widget->startRendering();
-	//}
-
-
-	////retinoMapWdg = new RetinoMap_glwidget(stimContainerDlg);
-	////retinoMapWdg->setObjectName("RetinoMap_RenderWidgetGL");
+	//ContainerDlg *stimContainerDlg;
+	//stimContainerDlg = new ContainerDlg();//parent parameter?
+	//stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
 	//stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool Retinotopic_Mapping::eventFilter(QObject *target, QEvent *event)
-	//if(!retinoMapWdg->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
-	//{
-	//	qDebug() << "No Double Buffering available!";
-	//	stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
-	//	return false;
+	//QVBoxLayout *mainLayout = new QVBoxLayout;
+	//mainLayout->setAlignment(Qt::AlignCenter);
+	//mainLayout->setMargin(0);
+	//mainLayout->addWidget(widget);
+	//stimContainerDlg->setLayout(mainLayout);
+	////stimContainerDlg->show();
+	//stimContainerDlg->showFullScreen();
+
+	//ContainerDlg *stimContainerDlg;
+	//stimContainerDlg = new ContainerDlg();//parent parameter?
+	//stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
+	//ThreadedGLWidgetWrapper *widget = new ThreadedGLWidgetWrapper(stimContainerDlg);
+	//QVBoxLayout *mainLayout = new QVBoxLayout;
+	//mainLayout->setAlignment(Qt::AlignCenter);
+	//mainLayout->setMargin(0);
+	//mainLayout->addWidget(widget);
+	//stimContainerDlg->setLayout(mainLayout);
+	////stimContainerDlg->show();
+	//stimContainerDlg->showFullScreen();
+	//widget->startRendering();
+	//SleeperThread::msleep(10000);
+	//if (widget) {
+	//	widget->stopRendering();
+	//	delete widget;
 	//}
-	//int swap_interval = retinoMapWdg->format().swapInterval(); // support for vertical retrace sync?
-	QVBoxLayout *mainLayout = new QVBoxLayout;
-	mainLayout->setAlignment(Qt::AlignCenter);
-	mainLayout->setMargin(0);
-	mainLayout->addWidget(widget);
-	stimContainerDlg->setLayout(mainLayout);
+	//stimContainerDlg->close();
+	//delete stimContainerDlg;
+	//return true;
+
 	//retinoMapWdg->setFixedSize(1000,1000);
 	//retinoMapWdg->setDebugMode(true);
 	//retinoMapWdg->startAnimationTimer(50);
 	//if(m_RunFullScreen)
 	//stimContainerDlg->showFullScreen();
-	//else
-		stimContainerDlg->show();
+	//else		
 	//QDesktopWidget *dt = QApplication::desktop();
 	//QCursor::setPos(dt->width(), dt->height()/2); // not at bottom because then mouse movement on Mac would show dock		
 	//return retinoMapWdg->start();
-	widget->startRendering();
-
-	SleeperThread::msleep(10000);
-
-	//void AppWindow::killThread()
-	//{
-	//	GLWidget *widget = (GLWidget *)ws->activeWindow();    
-		if (widget) {
-			widget->stopRendering();
-			delete widget;
-		}
 	//}
-	stimContainerDlg->close();
-	delete stimContainerDlg;
-
-	return true;
-
 	//void AppWindow::closeEvent(QCloseEvent *evt)
 	//{
 	//	QWidgetList windows = ws->windowList();
@@ -281,12 +268,13 @@ bool ExperimentManager::runExperiment()
 	//	QMainWindow::closeEvent(evt);
 	//}
 
-
-
+	emit ExperimentStateHasChanged(Experiment_Initialized,getCurrentDateTimeStamp());
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
 		return false;
 	}
+	emit ExperimentStateHasChanged(Experiment_Started,getCurrentDateTimeStamp());
+	return true;
 }
 
 void ExperimentManager::abortExperiment()
@@ -315,8 +303,11 @@ void ExperimentManager::cleanupExperimentObjects()
 	{
 		for (int i=0;i<nCount;i++)
 		{
-			QMetaType::destroy(lExperimentObjectList[i].nMetaID, lExperimentObjectList[i].pObject);
-			lExperimentObjectList[i].pObject = NULL;
+			if ((lExperimentObjectList[i].pObject))// && (lExperimentObjectList[i].nState != ExperimentObject_Aborted) && (lExperimentObjectList[i].nState != ExperimentObject_IsAborting))
+			{
+				QMetaType::destroy(lExperimentObjectList[i].nMetaID, lExperimentObjectList[i].pObject);
+				lExperimentObjectList[i].pObject = NULL;
+			}
 			lExperimentObjectList[i].nMetaID = -1;
 			lExperimentObjectList[i].nObjectID = -1;
 			lExperimentObjectList[i].sObjectName = "";
@@ -325,7 +316,7 @@ void ExperimentManager::cleanupExperimentObjects()
 	}
 }
 
-bool ExperimentManager::changeExperimentObjectsSignalSlots(bool bDisconnect)
+bool ExperimentManager::changeExperimentObjectsSignalSlots(bool bDisconnect, int nSpecificIndex)
 {
 	if (!currentExperimentTree)
 	{
@@ -337,17 +328,41 @@ bool ExperimentManager::changeExperimentObjectsSignalSlots(bool bDisconnect)
 	{
 		for (int i=0;i<nCount;i++)
 		{
-			if(bDisconnect)
+			if ((nSpecificIndex != -1) && (nSpecificIndex < nCount))
+				i = nSpecificIndex;//set i to the index
+			
+
+
+			//QString sSlotFullName = "WidgetStateHasChanged";//FUNC_WIDGETSTATECHANGED_FULL;//FUNC_USERCLOSE_FULL;
+			const QMetaObject* metaObject = lExperimentObjectList.at(i).pObject->metaObject();
+			if (metaObject->indexOfSignal(metaObject->normalizedSignature(FUNC_USERCLOSE_FULL)) != -1)//Is the signal present?
 			{
-				disconnect(lExperimentObjectList[i].pObject, SIGNAL(UserWantsToClose(void)), this, SLOT(abortExperiment(void)));
-				disconnect(lExperimentObjectList[i].pObject, SIGNAL(StateHasChanged(ExperimentObjectState)), this, SLOT(changeExperimentObjectState(ExperimentObjectState)));
+				if (bDisconnect)
+				{
+					disconnect(lExperimentObjectList[i].pObject, SIGNAL(UserWantsToClose(void)), this, SLOT(abortExperiment(void)));
+				}
+				else
+				{
+					connect(lExperimentObjectList[i].pObject, SIGNAL(UserWantsToClose(void)), this, SLOT(abortExperiment(void)));
+				}
 			}
-			else
+
+			if (metaObject->indexOfSignal(metaObject->normalizedSignature(FUNC_WIDGETSTATECHANGED_FULL)) != -1)//Is the signal present?
 			{
-				connect(lExperimentObjectList[i].pObject, SIGNAL(UserWantsToClose(void)), this, SLOT(abortExperiment(void)));
-				connect(lExperimentObjectList[i].pObject, SIGNAL(StateHasChanged(ExperimentObjectState)), this, SLOT(changeExperimentObjectState(ExperimentObjectState)));
-				//connect(lExperimentObjectList[i].pObject, SIGNAL(UserWantsToClose(void)), this, SLOT(abortExperiment(void)));
+				if (bDisconnect)
+				{
+					disconnect(lExperimentObjectList[i].pObject, SIGNAL(WidgetStateHasChanged(ExperimentObjectState)), this, SLOT(changeExperimentObjectState(ExperimentObjectState)));
+				} 
+				else
+				{
+					connect(lExperimentObjectList[i].pObject, SIGNAL(WidgetStateHasChanged(ExperimentObjectState)), this, SLOT(changeExperimentObjectState(ExperimentObjectState)));
+				}
+					
 			}
+
+
+			if ((nSpecificIndex != -1) && (nSpecificIndex < nCount))
+				break;//Only one adjustment needed!
 		}
 	}
 	return true;
@@ -360,41 +375,36 @@ void ExperimentManager::changeExperimentObjectState(ExperimentObjectState nState
 		qDebug() << "invokeExperimentObjectSlot::No Experiment loaded!";
 	}
 	int nCount = lExperimentObjectList.count();
+	int nActiveExperimentObjects = 0;
 	if (nCount>0)
 	{
 		for (int i=0;i<nCount;i++)
 		{
 			if (QObject::sender() == lExperimentObjectList.at(i).pObject)
 			{
-				lExperimentObjectList[i].nState = nState;
-				return;
+				//We automatically close and delete the object after a "Abort" command...
+				if(nState == ExperimentObject_Abort)
+				{
+					if (lExperimentObjectList[i].nState != ExperimentObject_IsAborting)//Multiple Abort events could occur, catch only first one
+					{
+						lExperimentObjectList[i].pObject->deleteLater();
+						lExperimentObjectList[i].nState = ExperimentObject_IsAborting;
+					}
+				}
+				if(nState == ExperimentObject_Aborted)
+				{
+					changeExperimentObjectsSignalSlots(true,i);
+					lExperimentObjectList[i].pObject = NULL;
+				}
+				lExperimentObjectList[i].nState = nState;//Set the new object state				
 			}
-			
-			//////Query the properties(only Q_PROPERTY)
-			////QStringList properties;
-			////QString nolist;
-			////for(int i = metaObject->propertyOffset(); i < metaObject->propertyCount(); ++i)
-			////{
-			////	properties << QString::fromLatin1(metaObject->property(i).name());
-			////	nolist = QString::fromLatin1(metaObject->property(i).name());
-			////}
-			//////Query the methods(only public slots!)
-			////QStringList methods;
-			////for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
-			////	methods << QString::fromLatin1(metaObject->method(i).signature());
-
-			//if (!(metaObject->indexOfMethod(sSlotFullName.toLatin1()) == -1))//Is the slot present?
-			//{
-			//	//Invoke the start() slot
-			//	if(!metaObject->invokeMethod(lExperimentObjectList.at(i).pObject, sSlotName.toLatin1(), Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))//, Q_ARG(QString, "sqrt"), Q_ARG(int, 42), Q_ARG(double, 9.7));
-			//		//if(!QMetaObject::invokeMethod(lExperimentObjectList[i].pObject, sMethod.toLatin1(), Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))//, Q_ARG(QString, "sqrt"), Q_ARG(int, 42), Q_ARG(double, 9.7));
-			//	{
-			//		qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << sSlotFullName << ")!";		
-			//		return false;
-			//	}
-			//}
-
+			if (!((lExperimentObjectList[i].nState == ExperimentObject_Initialized)||(lExperimentObjectList[i].nState == ExperimentObject_Stopped)||(lExperimentObjectList[i].nState == ExperimentObject_Aborted)))
+			{
+				nActiveExperimentObjects++;
+			}			
 		}
+		if(nActiveExperimentObjects == 0)
+			emit ExperimentStateHasChanged(Experiment_Stopped,getCurrentDateTimeStamp());
 	}
 }
 
@@ -413,7 +423,7 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 			//Get the meta object
 			bool bRetVal;
 			QString sSlotFullName = sSlotName + "()";
-			const QMetaObject* metaObject = lExperimentObjectList.at(i).pObject->metaObject();
+			const QMetaObject* metaObject = lExperimentObjectList[i].pObject->metaObject();
 			////Query the properties(only Q_PROPERTY)
 			//QStringList properties;
 			//QString nolist;
@@ -449,15 +459,15 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 
 bool ExperimentManager::stopExperimentObjects()
 {
-	bool bRetVal = invokeExperimentObjectsSlots(QString("stop"));
-	changeExperimentObjectsSignalSlots(true);
+	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_STOP));
+	//changeExperimentObjectsSignalSlots(true);
 	return bRetVal;
 }
 
 bool ExperimentManager::startExperimentObjects(bool bRunFullScreen)
 {
 	changeExperimentObjectsSignalSlots(false);
-	bool bRetVal = invokeExperimentObjectsSlots(QString("start"));
+	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_START));
 	return bRetVal;
 }
 
@@ -468,22 +478,46 @@ bool ExperimentManager::createExperimentObjects()
 		qDebug() << "createExperimentObjects::No Experiment loaded!";
 		return false;
 	}
+	QStringList strList;
 	cleanupExperimentObjects();
-	if (currentExperimentTree->getDocumentElements(OBJECT_TAG,ExperimentObjectDomNodeList))
+	strList.clear();
+	strList.append(ROOT_TAG);
+	strList.append(DECLARATIONS_TAG);
+	strList.append(OBJECT_TAG);
+	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList))
 	{
 		int nNrOfObjects = ExperimentObjectDomNodeList.count();
+		int nNrOfBlockTrials = 0;
 		QDomNode tmpNode;
 		QDomElement tmpElement;
 		QString tmpString;
 
+		if (nNrOfObjects>0)
+		{
+			strList.clear();
+			strList.append(ROOT_TAG);
+			strList.append(ACTIONS_TAG);
+			strList.append(BLOCKTRIALS_TAG);
+			strList.append(BLOCK_TAG);
+			if (currentExperimentTree->getDocumentElements(strList,ExperimentBlockTrialsDomNodeList))
+			{
+				nNrOfBlockTrials = ExperimentBlockTrialsDomNodeList.count();
+			}
+		}
 		for(int i=0;i<nNrOfObjects;i++)
 		{
 			tmpNode = ExperimentObjectDomNodeList.at(i);
 			if (tmpNode.isElement()) 
 			{
-				tmpString = ID_TAG;
-				tmpElement = tmpNode.firstChildElement(tmpString);
-				int nID = tmpElement.text().toInt();
+				QString tmpString1 = "";
+				tmpElement = tmpNode.toElement();
+				if(!tmpElement.hasAttribute(ID_TAG))
+					break;
+				tmpString1 =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+				if (tmpString1.isEmpty())
+					break;
+				//tmpElement = tmpNode.firstChildElement(tmpString);
+				int nID = tmpString1.toInt();//tmpElement.text().toInt();
 				if (!(nID >= 0))
 					break;
 				tmpString = CLASS_TAG;
@@ -505,8 +539,24 @@ bool ExperimentManager::createExperimentObjects()
 					tmpElement.nMetaID = metaID;
 					tmpElement.sObjectName = sName;
 					tmpElement.pObject = static_cast< QObject* > ( QMetaType::construct(metaID) );
-					tmpElement.nState = ExperimentObject_Initialized;
-					lExperimentObjectList.append(tmpElement);
+					
+					const QMetaObject* metaObject = tmpElement.pObject->metaObject();
+
+					//QStringList properties;
+					//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+					//	properties << QString::fromLatin1(metaObject->method(i).signature());
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETBLOCKTRIALDOMNODELIST_FULL)) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						bool bRetVal = true;
+						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETBLOCKTRIALDOMNODELIST, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentBlockTrialsDomNodeList))))
+						{
+							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
+							return false;
+						}		
+					}
+					tmpElement.nState = ExperimentObject_Initialized;//This is still an inactive state!
+					lExperimentObjectList.append(tmpElement);					
 				}
 			}
 		}
@@ -567,9 +617,10 @@ void ExperimentManager::changeToOpenGLView(QGraphicsView *GraphView)
 
 ContainerDlg::ContainerDlg(QWidget *parent) : QDialog(parent)
 {
-	QPalette pal = palette();
-	pal.setColor(QPalette::Window, QColor(16, 16, 16));
-	setPalette(pal);
+	//Setting a black background
+	//QPalette pal = palette();
+	//pal.setColor(QPalette::Window, QColor(16, 16, 16));
+	//setPalette(pal);
 }
 
 ContainerDlg::~ContainerDlg()

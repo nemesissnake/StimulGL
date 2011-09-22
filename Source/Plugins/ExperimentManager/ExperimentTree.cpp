@@ -1,21 +1,6 @@
 #include <QtGui>
 #include "experimenttree.h"
 
-#define MODULE_NAME			"Experiment Parser"
-#define ROOT_TAG			"EXML"
-#define VERSION_TAG			"version"
-#define BOOKMARK_TAG		"bookmark"
-#define HREF_TAG			"href"
-#define FOLDER_TAG			"folder"
-#define TITLE_TAG			"title"
-#define BOOL_NO_TAG			"no"
-#define BOOL_YES_TAG		"yes"
-#define FOLDED_TAG			"folded"
-
-#define DECLARATIONS_TAG	"declarations"
-#define ACTIONS_TAG			"actions"
-#define EVENT_TAG			"event"
-
 ExperimentTree::ExperimentTree(QWidget *parent) : QTreeWidget(parent)
 {
 	nXMLDocumentVersion.major = 1;
@@ -222,7 +207,6 @@ void ExperimentTree::parseRootElement(const QDomElement &element, EXML_TAG_SECTI
 		{
 			parseElement(child,EXML_Event, parentItem);
 			//QTreeWidgetItem *childItem = createItem(child, item);
-			//tmpString1 = child.firstChildElement(ID_TAG).text();
 			//if (tmpString1.isEmpty())
 			//	//title = QObject::tr(FOLDER_TAG);
 
@@ -243,7 +227,9 @@ void ExperimentTree::parseRootElement(const QDomElement &element, EXML_TAG_SECTI
 
 void ExperimentTree::parseElement(const QDomElement &element, EXML_TAG_SECTIONS tSection, QTreeWidgetItem *parentItem)
 {
-	tmpString1 = element.firstChildElement(ID_TAG).text();
+	if(!element.hasAttribute(ID_TAG))
+		return;
+	tmpString1 =element.attribute(ID_TAG,"");//Correct ObjectID?
 	if (tmpString1.isEmpty())
 	{
 		return;//No ID Tag found!
@@ -264,7 +250,9 @@ void ExperimentTree::parseElement(const QDomElement &element, EXML_TAG_SECTIONS 
 
 void ExperimentTree::parseProperties(const QDomElement &element, EXML_TAG_SECTIONS tSection, QTreeWidgetItem *parentItem)
 {
-	tmpString1 = element.firstChildElement(ID_TAG).text();
+	if(!element.hasAttribute(ID_TAG))
+		return;
+	tmpString1 =element.attribute(ID_TAG,"");//Correct ObjectID?
 	if (!tmpString1.isEmpty())
 	{
 		QTreeWidgetItem *childItem = createItem(element, parentItem);
@@ -309,7 +297,6 @@ void ExperimentTree::parseProperties(const QDomElement &element, EXML_TAG_SECTIO
 	//	return;
 	//}
 
-	//tmpString1 = element.firstChildElement(ID_TAG).text();
 	//if (tmpString1.isEmpty())
 	//{
 	//	return;//No ID Tag found!
@@ -341,36 +328,44 @@ QTreeWidgetItem *ExperimentTree::createItem(const QDomElement &element, QTreeWid
 	return item;
 }
 
-bool ExperimentTree::getDocumentElements(const QString &sElementTagName,QDomNodeList &ResultDomNodeList)
+bool ExperimentTree::getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList)
 {
-	ResultDomNodeList = domDocument.elementsByTagName(sElementTagName);
+	int nDepth = sElementTagName.count();
+	if(nDepth<=0)
+		return false;
+
+	QDomElement tmpElem;
+	for (int i=0;i<nDepth;i++)
+	{
+		if (i==(nDepth-1))//last one?
+		{
+			ResultDomNodeList = tmpElem.elementsByTagName(sElementTagName[i]);//Return all the elements from this level
+			//ElemRoot = domDocument.elementsByTagName(sElementTagName[i]);
+		}
+		else if(i==0)//first one
+		{
+			//QDomNodeList ElemList = domDocument.elementsByTagName(sElementTagName[i]);
+			//if(ElemList.count()>0)
+			//{							
+			//	tmpElem = ElemList.at(0).toElement();//Only first one for now!
+			//}
+			//else
+			//	return false;
+			tmpElem = domDocument.firstChildElement(sElementTagName[i]);//Only first one for now!
+		}
+		else
+		{
+			tmpElem = tmpElem.firstChildElement(sElementTagName[i]);//Only first one for now!
+		}
+		//ResultDomNodeList = domDocument.elementsByTagName(sElementTagName);
+		//ResultDomNodeList = ResultDomNodeList.e
+	}
+	//ResultDomNodeList = ElemRoot.elementsByTagName(nDepth)
+	//QDomDocument doc = // ...
+	//	QDomElement root = doc.firstChildElement("database");
+	//QDomElement elt = root.firstChildElement("entry");
+	//for (; !elt.isNull(); elt = elt.nextSiblingElement("entry")) {
+	//	// ...
+	//}
 	return (ResultDomNodeList.count() > 0);		
-	//QDomNodeList list = domDocument.elementsByTagName(sElementTagName);
-	//int b = list.count();
-	//for(int i=0;i<list.count();i++)
-	//{
-	//	QDomNode n = list.at(i);
-	//	while (!n.isNull()) 
-	//	{
-	//		if (n.isElement()) 
-	//		{
-	//			QDomElement e = n.toElement();
-	//			if (e.tagName() == a)
-	//			{
-	//				QString aa("ID");
-	//				hh = e.firstChildElement(aa).text();
-	//				QDomNode ee = e.namedItem(aa);
-	//				if(!ee.isNull())
-	//				{
-	//					QDomElement de = ee.toElement();
-	//					hh = ee.nodeName() + ":" + de.tagName() + ":" + de.attribute("ID","defvalue");
-	//					//qDebug()qPrintable
-	//				}
-	//			}
-	//			//qDebug() << "Element name: " << e.tagName() << endl;
-	//			break;
-	//		}
-	//		n = n.nextSibling();
-	//	}
-	//	//bool c = list.at(i).hasChildNodes();
 }

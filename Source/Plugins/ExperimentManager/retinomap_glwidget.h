@@ -14,7 +14,8 @@ public:
 
 public slots:
 	bool start();
-	//bool stop();
+	bool stop();
+	bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList);
 
 protected:
 	//void init();
@@ -36,8 +37,8 @@ public:
 	QTime trialTime;
 	int flickr_speed;
 	int flickr_switch;
-	float xwidth;
-	float ywidth;
+	int xwidth;
+	int ywidth;
 	float xstart_rel;
 	float ystart_rel;
 	float startAngle;

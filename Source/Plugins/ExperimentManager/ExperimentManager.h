@@ -12,16 +12,16 @@
 #include <QApplication>
 #include "experimenttree.h"
 #include "Global.h"
-//#include "retinomap_glwidget.h"
+#include "retinomap_glwidget.h"
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
 
-#include "ThreadedGLWidgetWrapper.h"
+//#include "ThreadedGLWidgetWrapper.h"
 //#include "glwidget.h"
 
-class GLWidgetWrapper;
-//class RetinoMap_glwidget;
+//class GLWidgetWrapper;
+class RetinoMap_glwidget;
 class ExperimentTree;
 
 class ExperimentManager : public QObject, protected QScriptable
@@ -29,6 +29,7 @@ class ExperimentManager : public QObject, protected QScriptable
 	Q_OBJECT
 
 signals:
+	void ExperimentStateHasChanged(int nExperimentMainState, QString timeTextStamp);//Should be type of ExperimentMainState
 
 public:
 	ExperimentManager(QObject *parent = 0);
@@ -56,6 +57,7 @@ public slots:
 	void changeExperimentObjectState(ExperimentObjectState nState);
 	bool setFullScreenMode(const bool bFullScreen);
 	bool setDebugMode(const bool bDebugMode);
+	QString getCurrentDateTimeStamp();
 
 private:
 	void RegisterMetaTypes();
@@ -63,13 +65,14 @@ private:
 	bool createExperimentObjects();
 	bool startExperimentObjects(bool bRunFullScreen = true);
 	bool stopExperimentObjects();
-	bool changeExperimentObjectsSignalSlots(bool bDisconnect = false);
+	bool changeExperimentObjectsSignalSlots(bool bDisconnect = false, int nSpecificIndex = -1);
 	void cleanupExperimentObjects();
 
 	QDomNodeList ExperimentObjectDomNodeList;
+	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	QList<objectElement> lExperimentObjectList;
 
-	short m_ExampleProperty;
+//	short m_ExampleProperty;
 	bool m_RunFullScreen;
 	bool m_DebugMode;
 	QString m_ExpFileName;
@@ -86,13 +89,13 @@ public:
 	}
 };
 
-class ContainerDlg : public QDialog
+class ThreadedContainerDlg : public QDialog
 {
 	Q_OBJECT
 
 public:
-	ContainerDlg(QWidget *parent = NULL);
-	ContainerDlg::~ContainerDlg();
+	ThreadedContainerDlg(QWidget *parent = NULL);
+	ThreadedContainerDlg::~ThreadedContainerDlg();
 
 	private slots:
 		void reject();

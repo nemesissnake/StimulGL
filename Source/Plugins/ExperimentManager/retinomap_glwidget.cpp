@@ -1,4 +1,5 @@
 #include "retinomap_glwidget.h"
+#include <QDomNodeList>
 //#include <QPaintEvent>
 
 RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent)
@@ -30,9 +31,29 @@ bool RetinoMap_glwidget::start()
 	if(!this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
 	{
 		//qDebug() << "RetinoMap_glwidget::start::No Double Buffering available!";
-		//stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
+		stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
 		return false;
 	}
+	return true;
+}
+
+bool RetinoMap_glwidget::stop()
+{
+	//Virtual, don't forget to call the base member first!
+	if(!GLWidgetWrapper::stop())
+		return false;
+	//Additional code:
+
+	return true;
+}
+
+bool RetinoMap_glwidget::setBlockTrialDomNodeList(QDomNodeList *pDomNodeList)
+{
+	//Virtual, don't forget to call the base member first!
+	if(!GLWidgetWrapper::setBlockTrialDomNodeList(pDomNodeList))
+		return false;
+	//Additional code:
+
 	return true;
 }
 
@@ -42,16 +63,6 @@ bool RetinoMap_glwidget::start()
 //	GLWidgetWrapper::init();
 //	//Additional code:
 //
-//}
-
-//bool RetinoMap_glwidget::stop()
-//{
-//	//Virtual, don't forget to call the base member first!
-//	if(!GLWidgetWrapper::stop())
-//		return false;
-//	//Additional code:
-//
-//	return true;
 //}
 
 //bool RetinoMap_glwidget::loadBlockTrial()
@@ -69,14 +80,18 @@ void RetinoMap_glwidget::initBlockTrial()
 	//Virtual, don't forget to call the base member first!
 	GLWidgetWrapper::initBlockTrial();
 	//Additional code:
-
+	QString tmpParamValue;
 	background = QBrush(QColor(87, 87, 87)); // to do change into variable settings for user
 	textPen = QPen(Qt::white);
 	textFont.setPixelSize(20);
 	textContent = "";
 	xwidth = 1024;
 	ywidth = 768;
-	x_size_stim = 760;//BlockTrialParamTable[0].at(6).toInt(); // read by user TODO
+	if (getBlockTrialParameter(1,0,"stimulus pixel no x",tmpParamValue))
+	{
+		x_size_stim = tmpParamValue.toFloat();
+	}
+	//x_size_stim = getBlockTrialParameter(0,"test"//760;//BlockTrialParamTable[0].at(6).toInt(); // read by user TODO
 	y_size_stim = 760;//BlockTrialParamTable[0].at(7).toInt(); // read by user TODO
 	cycle_dur = 32;//BlockTrialParamTable[0].at(0).toFloat();
 	flickr_speed = 1000 / 5;//BlockTrialParamTable[0].at(5).toInt();
