@@ -1,6 +1,5 @@
 #include "retinomap_glwidget.h"
 #include <QDomNodeList>
-//#include <QPaintEvent>
 
 RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent)
 {
@@ -10,21 +9,38 @@ RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent
 
 RetinoMap_glwidget::~RetinoMap_glwidget()
 {
-
 }
 
 void RetinoMap_glwidget::initialize()
 {
 	//Place your custom initialization code here:
 
+	x_size_stim = 760;
+	y_size_stim = 760;
+	cycle_dur = 32;
+	flickr_speed = 200;
+	flickr_switch = 0;
+	textContent = "";
+	background = QBrush(QColor(87, 87, 87));//to do change into variable settings for user
+	textPen = QPen(Qt::white);
+	textFont.setPixelSize(20);
+	wedge_deg = 22.5;
+	wedge_nr_checks = 4;
+	wedge_nr_rings = 20;
+	rot_dir = -1;
+	cort_mag_factor = 0.2;
+	cent_gap = 20.0;//aperture in the middle left blank
+	draw_page;
+	disp_page;
+	nFlickSpeed = 5;
+	fix_color = QColor(255, 0, 0);
+	fix_width =  8;
 }
-
-//////////////////////////////////////////////////////////////////////////Virtual overridden member functions
 
 bool RetinoMap_glwidget::start()
 {
 	//Virtual, don't forget to call the base member first!
-	if(!GLWidgetWrapper::start())
+	if(!GLWidgetWrapper::start()) 
 		return false;
 	//Additional code:
 
@@ -80,21 +96,25 @@ void RetinoMap_glwidget::initBlockTrial()
 	//Virtual, don't forget to call the base member first!
 	GLWidgetWrapper::initBlockTrial();
 	//Additional code:
+
 	QString tmpParamValue;
-	background = QBrush(QColor(87, 87, 87)); // to do change into variable settings for user
-	textPen = QPen(Qt::white);
-	textFont.setPixelSize(20);
+	//background = QBrush(QColor(87, 87, 87)); // to do change into variable settings for user
+	//textPen = QPen(Qt::white);
+	//textFont.setPixelSize(20);
 	textContent = "";
 	xwidth = 1024;
 	ywidth = 768;
-	if (getBlockTrialParameter(1,0,"stimulus pixel no x",tmpParamValue))
-	{
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_XPIXEL_AMOUNT,tmpParamValue))
 		x_size_stim = tmpParamValue.toFloat();
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_YPIXEL_AMOUNT,tmpParamValue))
+		y_size_stim = tmpParamValue.toFloat();
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_CYCLEDURATION_TR,tmpParamValue))
+		cycle_dur = tmpParamValue.toFloat();
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_FLICKRSPEED_HZ,tmpParamValue))
+	{
+		if(tmpParamValue.toFloat()>0)
+			flickr_speed = 100/tmpParamValue.toFloat();
 	}
-	//x_size_stim = getBlockTrialParameter(0,"test"//760;//BlockTrialParamTable[0].at(6).toInt(); // read by user TODO
-	y_size_stim = 760;//BlockTrialParamTable[0].at(7).toInt(); // read by user TODO
-	cycle_dur = 32;//BlockTrialParamTable[0].at(0).toFloat();
-	flickr_speed = 1000 / 5;//BlockTrialParamTable[0].at(5).toInt();
 	flickr_switch = 0;
 	//if(ExpType < 1) // for eccentricity // TODO
 	//{
@@ -115,8 +135,7 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 	GLWidgetWrapper::paintEvent(event);
 	//Additional code:
 
-	//if(BlockTrialParamTable.size() == 0)
-	//	return;
+	QString tmpParamValue;
 	QPainter painter;
 	painter.begin(this);
 	painter.setRenderHint(QPainter::Antialiasing);
@@ -138,33 +157,44 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 	QColor color1 = QColor(255, 255, 255);
 	QColor color2 = QColor(0, 0, 0);
 	// access trial/block parameters
-	float wedge_deg = 22.5;//BlockTrialParamTable[0].at(1).toFloat();
-	float wedge_nr_checks = 4;//BlockTrialParamTable[0].at(2).toFloat();
-	float wedge_nr_rings = 20;//BlockTrialParamTable[0].at(3).toFloat();
-	int rot_dir = -1;//BlockTrialParamTable[0].at(4).toInt();
-	float cort_mag_factor = 0.2;//BlockTrialParamTable[0].at(8).toFloat();
-	int cent_gap = 20.0; // aperture in the middle left blank
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_WEDGESPAN_DEGREES,tmpParamValue))
+		wedge_deg = tmpParamValue.toFloat();
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_CHECK_AMOUNT,tmpParamValue))
+		wedge_nr_checks = tmpParamValue.toFloat();
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_RING_AMOUNT,tmpParamValue))
+		wedge_nr_rings = tmpParamValue.toFloat();
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_ROTATION_DIRECTION,tmpParamValue))
+		rot_dir = tmpParamValue.toInt();
+	if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_CORTMAG_FACTOR,tmpParamValue))
+		cort_mag_factor = tmpParamValue.toFloat();
+		
+	//cent_gap = 20.0; // aperture in the middle left blank
 	Qt::PenStyle style = Qt::SolidLine; // Qt::NoPen
 	Qt::PenCapStyle cap = Qt::FlatCap;
-	int draw_page, disp_page;
 	draw_page = nFrameCounter % 2;
 	disp_page = (nFrameCounter+1) % 2;
-	int i,k; 
 	if(trialTime.elapsed() >= flickr_speed)//Can we change the flickr?
 	{
 		if(flickr_switch == 0)
 			flickr_switch = 1;
 		else
 			flickr_switch = 0;
-		flickr_speed += 1000 / 5;//BlockTrialParamTable[0].at(5).toInt();//Calculate the next flickr moment in time
+		
+		if (getBlockTrialParameter(1,0,RETINOMAP_WIDGET_FLICKRSPEED_HZ,tmpParamValue))
+		{
+			if (tmpParamValue.toInt()>0)
+			{
+				flickr_speed += 1000 / tmpParamValue.toInt();//5;//BlockTrialParamTable[0].at(5).toInt();//Calculate the next flickr moment in time
+			}
+		}
 	}
 	//if(ExpType > 0) // polar angle
 	//{
-		float xWedge = wedge_deg / wedge_nr_checks * 16.0f;
-		float yWedge = ((y_size_stim - cent_gap)) * cort_mag_factor;
-		float cur_ysize = y_size_stim - (yWedge / 2.0f);
-		float cur_xpt = (xwidth - cur_ysize) / 2.0f;
-		float cur_ypt = (ywidth - cur_ysize) / 2.0f;
+		xWedge = wedge_deg / wedge_nr_checks * 16.0f;
+		yWedge = ((y_size_stim - cent_gap)) * cort_mag_factor;
+		cur_ysize = y_size_stim - (yWedge / 2.0f);
+		cur_xpt = (xwidth - cur_ysize) / 2.0f;
+		cur_ypt = (ywidth - cur_ysize) / 2.0f;
 		if(rot_dir == -1)
 		{
 			startAngle = ((360.0f) / (cycle_dur * 1000 * TR)) * trialTime.elapsed();
@@ -173,10 +203,10 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 		{
 			startAngle = ((360.0f) / (cycle_dur * 1000 * TR)) * -(trialTime.elapsed());
 		}
-		for(i=1; i<wedge_nr_rings+1;i++)
+		for(int i=1; i<wedge_nr_rings+1;i++)
 		{
-			float startAngle_temp = startAngle * 16.0f;
-			for(k=0; k<wedge_nr_checks;k++)
+			startAngle_temp = startAngle * 16.0f;
+			for(int k=0; k<wedge_nr_checks;k++)
 			{
 				if(flickr_switch==1)
 				{
@@ -205,9 +235,9 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 			}
 			cur_ysize = cur_ysize - (yWedge / 2.0f);
 			if(i==wedge_nr_rings-1)
-			{yWedge = (cur_ysize-cent_gap);}
+				yWedge = (cur_ysize-cent_gap);
 			else
-			{yWedge = (cur_ysize-cent_gap) * cort_mag_factor;}
+				yWedge = (cur_ysize-cent_gap) * cort_mag_factor;
 			cur_ysize = cur_ysize - (yWedge / 2.0f);
 			cur_xpt = (xwidth - cur_ysize) / 2.0f;
 			cur_ypt = (ywidth - cur_ysize) / 2.0f;
@@ -259,8 +289,6 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 
 	if(1) // show fix cross
 	{
-		QColor fix_color = QColor(255, 0, 0);
-		int fix_width =  8;
 		painter.setPen(QPen(fix_color, fix_width, style, Qt::RoundCap));
 		painter.drawPoint(xwidth/2, ywidth/2);
 	}
