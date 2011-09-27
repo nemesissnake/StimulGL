@@ -7,7 +7,6 @@
 QScriptValue ExperimentManager::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
 {
 	//this function gets called first whenever a new object is constructed trough the script
-
 	//	if (context->isCalledAsConstructor()) {
 	//		// initialize the new object
 	//		//context->thisObject().setProperty("bar", ...);
@@ -15,12 +14,15 @@ QScriptValue ExperimentManager::ctor__extensionname(QScriptContext* context, QSc
 	//		// return a non-object value to indicate that the
 	//		// thisObject() should be the result of the "new Foo()" expression
 	//		//return engine->undefinedValue();
-
 	return engine->newQObject(new ExperimentManager(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 
 ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
 {
+	//qDebug("ExperimentManager Main Constructor.");
+	//qWarning("");
+	//qCritical("");
+	//qFatal("");
 	m_RunFullScreen = true;
 	m_ExpFileName = "";
 	m_DebugMode = false;
@@ -179,6 +181,7 @@ bool ExperimentManager::openExperiment(QString strFile, bool bViewEditTree)
 		//	tr("Cannot read file %1:\n%2.")
 		//	.arg(fileName)
 		//	.arg(file.errorString()));
+		emit WriteToLogOutput("Could not open experiment file!");
 		return false;
 	}
 
@@ -210,6 +213,10 @@ bool ExperimentManager::runExperiment()
 	QThread::currentThread()->setPriority(QThread::HighPriority);  
 	// QThread::TimeCriticalPriority);
 #endif
+	if (!configureExperiment())
+	{
+		return false;
+	}	
 	if (!createExperimentObjects())
 	{
 		return false;
@@ -305,6 +312,11 @@ void ExperimentManager::cleanupExperimentObjects()
 		{
 			if ((lExperimentObjectList[i].pObject))// && (lExperimentObjectList[i].nState != ExperimentObject_Aborted) && (lExperimentObjectList[i].nState != ExperimentObject_IsAborting))
 			{
+				//if (!(lExperimentObjectList[i].pObject->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(SIGNAL_LOGTOMANAGER)) == -1))//Is the signal present?
+				//{
+				//	//Disconnect the signal
+				//	disconnect(lExperimentObjectList[i].pObject, SIGNAL(LogToExperimentManager(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
+				//}
 				QMetaType::destroy(lExperimentObjectList[i].nMetaID, lExperimentObjectList[i].pObject);
 				lExperimentObjectList[i].pObject = NULL;
 			}
@@ -471,6 +483,78 @@ bool ExperimentManager::startExperimentObjects(bool bRunFullScreen)
 	return bRetVal;
 }
 
+bool ExperimentManager::configureExperiment()
+{
+	if (!currentExperimentTree)
+	{
+		qDebug() << "configureExperiment::No Experiment loaded!";
+		return false;
+	}
+	//Default Settings
+	strcExperimentConfiguration.bDebugMode = false;
+	strcExperimentConfiguration.nExperimentID = 0;
+	strcExperimentConfiguration.nExperimentName = "";
+
+	QStringList strList;
+	strList.append(ROOT_TAG);
+	strList.append(EXPERIMENT_TAG);
+	QDomNodeList tmpList;
+	if (currentExperimentTree->getDocumentElements(strList,tmpList))
+	{
+		int nNrOfObjects = tmpList.count();
+		QDomNode tmpNode;
+		QDomElement tmpElement;
+		QString tmpString = "";
+
+		if (nNrOfObjects>0)
+		{
+			tmpNode = tmpList.at(0);//We'll only use the first one by now and ignore the rest
+			if (tmpNode.isElement()) 
+			{
+				tmpElement = tmpNode.toElement();
+				if(tmpElement.hasAttribute(ID_TAG))
+				{
+					tmpString = tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					if (!tmpString.isEmpty())
+						strcExperimentConfiguration.nExperimentID =  tmpString.toInt();				
+				}
+
+				tmpElement = tmpNode.firstChildElement(NAME_TAG);
+				tmpString = tmpElement.text();
+				if (!tmpString.isEmpty())
+					strcExperimentConfiguration.nExperimentName =  tmpString;
+
+				tmpElement = tmpNode.firstChildElement(DEBUGMODE_TAG);
+				tmpString = tmpElement.text();
+				if (!tmpString.isEmpty())
+				{
+					if (tmpString == BOOL_TRUE_TAG)
+						strcExperimentConfiguration.bDebugMode = true;
+					else
+						strcExperimentConfiguration.bDebugMode = false;
+				}
+				else
+				{
+					strcExperimentConfiguration.bDebugMode = false;
+				}
+
+				fix above and hereafter search for a member and call him to set the experiment object!
+
+				//	strcExperimentConfiguration.nExperimentName =  tmpString;
+				//tmpElement = tmpNode.toElement();
+
+
+			}
+
+		}
+
+	}
+
+	
+	//strcExperimentConfiguration	ExperimentConfiguration
+	return true;
+}
+
 bool ExperimentManager::createExperimentObjects()
 {
 	if (!currentExperimentTree)
@@ -545,6 +629,13 @@ bool ExperimentManager::createExperimentObjects()
 					//QStringList properties;
 					//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
 					//	properties << QString::fromLatin1(metaObject->method(i).signature());
+
+					if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature(SIGNAL_LOGTOMANAGER)) == -1))//Is the signal present?
+					{
+						//Connect the signal
+						connect(tmpElement.pObject, SIGNAL(LogToExperimentManager(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
+					}
+
 					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETBLOCKTRIALDOMNODELIST_FULL)) == -1))//Is the slot present?
 					{
 						//Invoke the slot
@@ -555,6 +646,18 @@ bool ExperimentManager::createExperimentObjects()
 							return false;
 						}		
 					}
+
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETOBJECTID_FULL)) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						bool bRetVal = true;
+						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
+						{
+							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETOBJECTID << "()" << ")!";		
+							return false;
+						}		
+					}					
+
 					tmpElement.nState = ExperimentObject_Initialized;//This is still an inactive state!
 					lExperimentObjectList.append(tmpElement);					
 				}

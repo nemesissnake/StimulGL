@@ -30,6 +30,7 @@ class ExperimentManager : public QObject, protected QScriptable
 
 signals:
 	void ExperimentStateHasChanged(int nExperimentMainState, QString timeTextStamp);//Should be type of ExperimentMainState
+	void WriteToLogOutput(const QString &strText2Write);
 
 public:
 	ExperimentManager(QObject *parent = 0);
@@ -62,6 +63,7 @@ public slots:
 private:
 	void RegisterMetaTypes();
 	bool invokeExperimentObjectsSlots(const QString &sSlotName);
+	bool configureExperiment();
 	bool createExperimentObjects();
 	bool startExperimentObjects(bool bRunFullScreen = true);
 	bool stopExperimentObjects();
@@ -78,6 +80,7 @@ private:
 	QString m_ExpFileName;
 	QString m_ExpFolder;
 	ExperimentTree *currentExperimentTree;
+	ExperimentConfiguration strcExperimentConfiguration;
 };
 
 class SleeperThread : public QThread

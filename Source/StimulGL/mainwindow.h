@@ -55,11 +55,11 @@ public slots:
 	void abortScript();
 	//void debugScript();
 	bool initialize(MainAppInfo::MainProgramModeFlags mainFlags = 0);
+	void write2OutputWindow(const QString &text2Write = "");
 
 private slots:
 	void setupContextMenus();
 	void DebugcontextMenuEvent(const QPoint &pos);
-	void write2Debugger(const QString &text2Write = "");
 	void clearDebugger();
 	void setupScriptEngine();
 	void setScriptRunningStatus(MainAppInfo::ActiveScriptMode state);

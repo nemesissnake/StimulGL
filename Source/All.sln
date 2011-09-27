@@ -14,11 +14,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USBHIDDeviceplugin", "Plugi
 		{44216F98-423E-3FF8-BFF4-8B464627E2EC} = {44216F98-423E-3FF8-BFF4-8B464627E2EC}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "_extensionname_plugin", "Plugins\ExtensionPluginTemplate\_extensionname_plugin.vcproj", "{404F3214-07EA-4DFA-BCB9-9EBC65171B08}"
-	ProjectSection(ProjectDependencies) = postProject
-		{44216F98-423E-3FF8-BFF4-8B464627E2EC} = {44216F98-423E-3FF8-BFF4-8B464627E2EC}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExperimentManagerplugin", "Plugins\ExperimentManager\ExperimentManager.vcproj", "{DF78AA1A-8166-47A0-AE13-51D55E460FDC}"
 EndProject
 Global
@@ -51,14 +46,6 @@ Global
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52}.Release|Win32.Build.0 = Release|Win32
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52}.Release|x64.ActiveCfg = Release|x64
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52}.Release|x64.Build.0 = Release|x64
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|Win32.ActiveCfg = Debug|Win32
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|Win32.Build.0 = Debug|Win32
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|x64.ActiveCfg = Debug|x64
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|x64.Build.0 = Debug|x64
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|Win32.ActiveCfg = Release|Win32
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|Win32.Build.0 = Release|Win32
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|x64.ActiveCfg = Release|x64
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|x64.Build.0 = Release|x64
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Debug|Win32.Build.0 = Debug|Win32
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Debug|x64.ActiveCfg = Debug|x64

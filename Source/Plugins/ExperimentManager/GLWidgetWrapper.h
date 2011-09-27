@@ -34,58 +34,29 @@ public slots:
 	//Can be overridden
 	virtual bool start();
 	virtual bool stop();
-	void setDebugMode(bool bMode);
 	virtual bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList);
+	virtual bool setObjectID(int nObjID);
+	
+	void setDebugMode(bool bMode);
+	QRectF getScreenResolution();
+	int getObjectID();	
 
 protected:
 	bool checkForNextBlockTrial();
 	bool getBlockTrialParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result);
-
 	void finalizePaintEvent();
-	void SetupLayout(QWidget* layoutWidget);
-	
+	void SetupLayout(QWidget* layoutWidget);	
 	void closeEvent(QCloseEvent *evt);
+	bool isDebugMode() {return bDebugMode;}
+	int getFrameNumber() {return nFrameCounter;}
+	int getCurrentBlockTrial() {return nCurrentBlockTrial;}
+	int getElapsedFrameTime() {return nElapsedFrameTime;}
+	int getCompletedTriggers() {return nCompletedTriggers;}
 
-	//Can be overridden
 	virtual void init();
 	virtual void initBlockTrial();
 	virtual bool loadBlockTrial();
 	virtual void paintEvent(QPaintEvent *event);
-
-	//Example using standard OpenGL rendering commands...
-	//void initializeGL()
-	//{
-	//	// Set up the rendering context, define display lists etc.:
-	//	...
-	//		glClearColor(0.0, 0.0, 0.0, 0.0);
-	//	glEnable(GL_DEPTH_TEST);
-	//	...
-	//}
-
-	//void resizeGL(int w, int h)
-	//{
-	//	// setup viewport, projection etc.:
-	//	glViewport(0, 0, (GLint)w, (GLint)h);
-	//	...
-	//		glFrustum(...);
-	//	...
-	//}
-
-	//void paintGL()
-	//{
-	//	// draw the scene:
-	//	...
-	//		glRotatef(...);
-	//	glMaterialfv(...);
-	//	glBegin(GL_QUADS);
-	//	glVertex3f(...);
-	//	glVertex3f(...);
-	//	...
-	//		glEnd();
-	//	...
-	//}
-	//-->updateGL() function
-	//see http://doc.qt.nokia.com/stable/qglwidget.html#details
 
 protected slots:
 	void incrementTriggerCount();
@@ -95,29 +66,30 @@ private:
 	void startTriggerTimer(int msTime);
 	void stopTriggerTimer();
 	bool eventFilter(QObject *target, QEvent *event);
+	bool updateExperimentBlockTrialStructure();
+	bool cleanupExperimentBlockTrialStructure();
 
-protected:
-	bool bForceToStop;
+private:
 	bool bDebugMode;
+	int nFrameCounter;
+	int nCurrentBlockTrial;
 	int nElapsedFrameTime;
+	int nCompletedTriggers;
+	ContainerDlg *stimContainerDlg;
+	bool bForceToStop;
 	int nPaintUpdateTime;
 	QTime tFrameTime;
 	QRectF rScreenResolution;
 	int nMinScreenUpdateTime;
-	int nFrameCounter;
-	QTime totalRunningTime;
-	ContainerDlg *stimContainerDlg;
+	QTime tTotalRunningTime;
 	QVBoxLayout *mainLayout;
-
-private:
+	int nObjectID;
 	QTimer tTriggerTimer;
 	QTimer tStimTimer;
 	QDomNodeList *pExpBlockTrialDomNodeList;
-	int currentBlockTrial;
-	int currentBlock;
-	int completedTR;
-	int m_TriggerCount;
-	int nextTimeThresholdTRs;
+	int nTriggerCount;
+	int nNextTimeThresholdTRs;
+	ExperimentBlockTrialStructure strcExperimentBlockTrials;
 };
 
 class ContainerDlg : public QDialog

@@ -9,6 +9,7 @@ function ExperimentStateChanged()
 	if(arguments[0] == 2)//Experiment Stopped
 	{
 		ExperimentManagerObj.ExperimentStateHasChanged.disconnect(this, this.ExperimentStateChanged);
+		ExperimentManagerObj.WriteToLogOutput.disconnect(this, this.Log);
 		ExperimentManagerObj = null;
 		ExperimentStateChanged = null;
 		Log("Experiment stopped");
@@ -16,7 +17,8 @@ function ExperimentStateChanged()
 }
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
-ExperimentManagerObj.openExperiment("C:\\Users\\John\\Desktop\\polar_mapping.exml", false);
+ExperimentManagerObj.WriteToLogOutput.connect(this, this.Log);
+ExperimentManagerObj.openExperiment("D:\\Projects\\StimulGL\\Install\\examples\\polar_mapping.exml", false);
 ExperimentManagerObj.runExperiment();
 
 

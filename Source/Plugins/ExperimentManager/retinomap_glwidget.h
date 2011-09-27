@@ -17,15 +17,19 @@ class RetinoMap_glwidget : public GLWidgetWrapper
 {
 	Q_OBJECT
 
+signals:
+	void LogToExperimentManager(const QString &strText2Write);
+
 public:
 	RetinoMap_glwidget(QWidget *parent = NULL);
 	~RetinoMap_glwidget();
 	RetinoMap_glwidget(const RetinoMap_glwidget& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 public slots:
-	bool start();
-	bool stop();
-	bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList);
+	//bool start();
+	//bool stop();
+	//bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList);
+	bool setObjectID(int nObjID);
 
 protected:
 	//void init();
@@ -42,6 +46,7 @@ private:
 	//QPen circlePen;
 	QPen textPen;
 	QString textContent;
+	QRectF rectScreenRes;
 
 public:
 	QTime trialTime;
@@ -73,6 +78,7 @@ public:
 	float startAngle_temp;
 	QColor fix_color;
 	int fix_width;
+	int nRetinoID;
 };
 Q_DECLARE_METATYPE(RetinoMap_glwidget)
 #endif // RETINOMAP_GLWIDGET_H

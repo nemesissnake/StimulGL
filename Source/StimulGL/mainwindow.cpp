@@ -727,7 +727,7 @@ void MainWindow::setupHelpMenu()
 	menuBar()->addMenu(helpMenu);//the help menu..........................................................
 }
 
-void MainWindow::write2Debugger(const QString &text2Write)
+void MainWindow::write2OutputWindow(const QString &text2Write)
 {
 	outputWindowList->addItem(text2Write);
 }
@@ -990,12 +990,12 @@ void MainWindow::executeScript()
 	{
 		if (!AppScriptEngine->eng->canEvaluate(DocManager->getDocHandler(activeMdiChild())->text()))
 		{
-			write2Debugger("... DebugScript -> Script syntax error ...");
+			write2OutputWindow("... DebugScript -> Script syntax error ...");
 		}
 	}
 	
 	//{
-		write2Debugger("... Script started Evaluating on " + t.currentTime().toString() + "...");
+		write2OutputWindow("... Script started Evaluating on " + t.currentTime().toString() + "...");
 		t.start();
 
 		//AppScriptEngine->executeScript(DocManager->getDocHandler(activeMdiChild())->text());
@@ -1006,15 +1006,15 @@ void MainWindow::executeScript()
 		strResult = result.toString();
 		if (result.isError()) 
 		{
-			write2Debugger("... Script stopped Evaluating due to error on line " + result.property("lineNumber").toString() + ": --> " + result.toString() + "...");
+			write2OutputWindow("... Script stopped Evaluating due to error on line " + result.property("lineNumber").toString() + ": --> " + result.toString() + "...");
 			DocManager->getDocHandler(activeMdiChild())->setCursorPosition(result.property("lineNumber").toInteger()-1,0);
 			return;
 		}
 		else
 		{
 			int timeElapsed = t.elapsed();
-			write2Debugger("... Total Time(ms): " + QString::number(timeElapsed));
-			write2Debugger("... Script fully Evaluated on " + t.currentTime().toString() + " ...");
+			write2OutputWindow("... Total Time(ms): " + QString::number(timeElapsed));
+			write2OutputWindow("... Script fully Evaluated on " + t.currentTime().toString() + " ...");
 		}
 	//}	
 	AppScriptEngine->eng->collectGarbage();

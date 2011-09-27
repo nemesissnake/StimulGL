@@ -18,18 +18,16 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	#endif
 	setAutoFillBackground(false);
 	setAutoBufferSwap(false); // in order to have control over time point for buffer swap
-	//dDesktopWidget = QApplication::desktop();
 	rScreenResolution = QApplication::desktop()->screenGeometry();//dDesktopWidget->screenGeometry();//availableGeometry();
 	setFixedSize(rScreenResolution.width(), rScreenResolution.height());
 	//setMinimumSize(200, 200);
 	setWindowTitle(tr("Painting a Scene"));
 
-	stimContainerDlg = new ContainerDlg();//parent parameter?
+	stimContainerDlg = new ContainerDlg();
 	stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-	//retinoMapWdg = new RetinoMap_glwidget(stimContainerDlg);
-	//retinoMapWdg->setObjectName("RetinoMap_RenderWidgetGL");
 	stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool Retinotopic_Mapping::eventFilter(QObject *target, QEvent *event)
 	mainLayout = NULL;
+	nObjectID = -1;
 }
 
 GLWidgetWrapper::~GLWidgetWrapper()
@@ -44,7 +42,28 @@ GLWidgetWrapper::~GLWidgetWrapper()
 		stimContainerDlg->close();
 		stimContainerDlg = NULL;
 	}
+	cleanupExperimentBlockTrialStructure();
 	emit WidgetStateHasChanged(ExperimentObject_Aborted);
+}
+
+QRectF GLWidgetWrapper::getScreenResolution()
+{
+	return rScreenResolution;
+}
+
+int GLWidgetWrapper::getObjectID()
+{
+	return nObjectID;
+}
+
+bool GLWidgetWrapper::setObjectID(int nObjID)
+{
+	if(nObjID >= 0)
+	{
+		nObjectID = nObjID;
+		return true;
+	}
+	return false;
 }
 
 bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
@@ -60,19 +79,11 @@ bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 				if((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->modifiers() & Qt::AltModifier))
 				{
 					emit UserWantsToClose();
-					//abortExperiment();
 				}
 				break;
 			}
-
-			//if(keyEvent->text() == ui.USBCharEdit->text()) // for fMRI triggering via USB port (simulated keyboard)
-			//{
-			//	updateTriggerCount();
-			//	return true;
-			//}
 		}
 	}
-	//return QDialog::eventFilter(target, event);
 	return true;
 }
 
@@ -81,9 +92,90 @@ bool GLWidgetWrapper::setBlockTrialDomNodeList(QDomNodeList *pDomNodeList)
 	if(pDomNodeList)
 	{
 		pExpBlockTrialDomNodeList = pDomNodeList;
-		return true;
+		if (updateExperimentBlockTrialStructure())
+			return true;
 	}
 	return false;
+}
+
+bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
+{
+	if(cleanupExperimentBlockTrialStructure() == false)
+		return false;
+	if(pExpBlockTrialDomNodeList == NULL)
+		return false;
+	if (pExpBlockTrialDomNodeList->count() == 0)
+		return false;
+
+	strcExperimentBlockTrials.nNrOfBlocks = pExpBlockTrialDomNodeList->count();
+	if (!(strcExperimentBlockTrials.nNrOfBlocks > 0))
+		return false;
+
+	bool bUpdateSucceeded = false;
+	QDomElement tmpElement;
+
+	for(int i=0;i<strcExperimentBlockTrials.nNrOfBlocks;i++)//Loop through the blocks
+	{
+		bUpdateSucceeded = false;
+		if(pExpBlockTrialDomNodeList->at(i).hasChildNodes())
+		{
+			tmpElement = pExpBlockTrialDomNodeList->at(i).toElement();
+			if(tmpElement.hasAttribute(ID_TAG))
+			{
+				BlockTrialStructure tmpBlockTrialStruct;
+				tmpBlockTrialStruct.nBlockID = tmpElement.attribute(ID_TAG,"").toInt();//Copy the BlockID
+
+				tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(BLOCKNUMBER_TAG);
+				if(!tmpElement.isNull())//Is there a block_number defined?
+				{
+					tmpBlockTrialStruct.nBlockNumber = tmpElement.text().toInt();//Copy the BlockNumber
+					if (tmpBlockTrialStruct.nBlockNumber>=0)
+					{
+						tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(TRIALAMOUNT_TAG);
+						if(!tmpElement.isNull())//Is there a TrialAmount defined?
+						{
+							tmpBlockTrialStruct.nNrOfTrials = tmpElement.text().toInt();//Copy the TrialAmount
+							if (tmpBlockTrialStruct.nNrOfTrials<0)
+							{
+								tmpBlockTrialStruct.nNrOfTrials = 1;//Error set it to Default
+							}
+						}
+						else
+						{
+							tmpBlockTrialStruct.nNrOfTrials = 1;//Default if not defined
+						}
+						tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(NAME_TAG);
+						if(!tmpElement.isNull())//Is there a Name defined?
+						{
+							tmpBlockTrialStruct.nBlockName = tmpElement.text();//Copy the Name
+						}
+						else
+						{
+							tmpBlockTrialStruct.nBlockName = "";
+						}
+						strcExperimentBlockTrials.lBlockTrialStructure.append(tmpBlockTrialStruct);
+						bUpdateSucceeded = true;
+					}
+				}
+			}
+		}
+		if(!bUpdateSucceeded)
+		{
+			cleanupExperimentBlockTrialStructure();
+			return false;
+		}
+	}
+	return true;
+}
+
+bool GLWidgetWrapper::cleanupExperimentBlockTrialStructure()
+{
+	//for (int i;i<strcExperimentBlockTrials.lBlockTrialStructure.count();i++)
+	//{
+		strcExperimentBlockTrials.lBlockTrialStructure.clear();
+	//}
+	strcExperimentBlockTrials.nNrOfBlocks = 0;
+	return true;
 }
 
 bool GLWidgetWrapper::getBlockTrialParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result)
@@ -93,14 +185,14 @@ bool GLWidgetWrapper::getBlockTrialParameter(int nBlockNumber, int nObjectID, QS
 	if (pExpBlockTrialDomNodeList->count() == 0)
 		return false;
 
-	int nBlockTrialCount = pExpBlockTrialDomNodeList->count();
-	if (!(nBlockTrialCount > 0))
+	int nBlockCount = pExpBlockTrialDomNodeList->count();
+	if (!(nBlockCount > 0))
 		return false;
 
 	QDomElement tmpElement;
 	QDomNode tmpNode;
 
-	for(int i=0;i<nBlockTrialCount;i++)//Loop through the blocks
+	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
 	{
 		if(pExpBlockTrialDomNodeList->at(i).hasChildNodes())
 		{
@@ -155,34 +247,7 @@ bool GLWidgetWrapper::getBlockTrialParameter(int nBlockNumber, int nObjectID, QS
 						}
 					}
 					else
-						return false;//Nothing defined
-
-
-					//tmpNode = d.firstChild();
-					//while (!n.isNull()) {
-					//	if (n.isElement()) {
-					//		QDomElement e = n.toElement();
-					//		cout << "Element name: " << e.tagName() << endl;
-					//		break;
-					//	}
-					//	n = n.nextSibling();
-					//}				
-					//tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(OBJECT_TAG);
-					//if(!tmpElement.isNull())
-					//{
-					//	//aa = tmpElement.tagName();//object
-					//	//aa = tmpElement.nodeName();//object
-					//	QDomNamedNodeMap NamedNodeMap = tmpElement.attributes();//pExpBlockTrialDomNodeList->at(i).toElement().attributes();
-					//	int nCount = NamedNodeMap.count();//
-					//	//for (int j=0;j<nCount;j++)
-					//	//{
-					//	//	aa = NamedNodeMap.item(i).nodeValue();
-					//	//}
-					//	if (NamedNodeMap.contains(ID_TAG))//
-					//	{
-					//		//aa = NamedNodeMap.namedItem(ID_TAG).nodeValue();
-					//	}
-					//	//aa=aa;					
+						return false;//Nothing defined		
 				}
 				else
 					continue;//Search next block
@@ -192,78 +257,6 @@ bool GLWidgetWrapper::getBlockTrialParameter(int nBlockNumber, int nObjectID, QS
 		}
 	}
 	return false;
-
-
-	//	QDomNode DomNode = pExpBlockTrialDomNodeList->at(i);
-	//	while (!DomNode.isNull()) 
-	//	{
-	//		if (DomNode.isElement()) 
-	//		{
-	//			QDomElement e = DomNode.toElement();
-	//			if (e.tagName() == a)
-	//			{
-	//				QString aa("ID");
-	//				hh = e.firstChildElement(aa).text();
-	//				QDomNode ee = e.namedItem(aa);
-	//				if(!ee.isNull())
-	//				{
-	//					QDomElement de = ee.toElement();
-	//					hh = ee.nodeName() + ":" + de.tagName() + ":" + de.attribute("ID","defvalue");
-	//					//qDebug()qPrintable
-	//				}
-	//			}
-	//			//qDebug() << "Element name: " << e.tagName() << endl;
-	//			break;
-	//		}
-	//		DomNode = DomNode.nextSibling();
-	//	}
-	////	//bool c = list.at(i).hasChildNodes();
-	//}
-
-
-	//			int metaID = QMetaType::type(sClass.toLatin1());
-	//			if (metaID > 0)//(id != -1) 
-	//			{
-	//				objectElement tmpElement;
-	//				tmpElement.nObjectID = nID;
-	//				tmpElement.nMetaID = metaID;
-	//				tmpElement.sObjectName = sName;
-	//				tmpElement.pObject = static_cast< QObject* > ( QMetaType::construct(metaID) );
-
-	//				//tmpElement.pObject
-	//				const QMetaObject* metaObject = tmpElement.pObject->metaObject();
-	//				////Query the properties(only Q_PROPERTY)
-	//				//QStringList properties;
-	//				//QString nolist;
-	//				//for(int i = metaObject->propertyOffset(); i < metaObject->propertyCount(); ++i)
-	//				//{
-	//				//	properties << QString::fromLatin1(metaObject->property(i).name());
-	//				//	nolist = QString::fromLatin1(metaObject->property(i).name());
-	//				//}
-	//				////Query the methods(only public slots!)
-	//				//QStringList methods;
-	//				//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
-	//				//	methods << QString::fromLatin1(metaObject->method(i).signature());
-
-	//				QStringList properties;
-	//				for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
-	//					properties << QString::fromLatin1(metaObject->method(i).signature());
-	//				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETDOMNODELIST_FULL)) == -1))//Is the slot present?//
-	//				{
-	//					//Invoke the slot
-	//					bool bRetVal = true;
-	//					if(!(metaObject->invokeMethod(tmpElement.pObject, "setDomNodeList", Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentObjectDomNodeList))))
-	//					{
-	//						qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << "setDomNodeList()" << ")!";		
-	//						return false;
-	//					}		
-	//				}
-	//				tmpElement.nState = ExperimentObject_Initialized;//This is still an inactive state!
-	//				lExperimentObjectList.append(tmpElement);					
-	//			}
-	//		}
-	//	}
-	//	return true;
 }
 
 void GLWidgetWrapper::SetupLayout(QWidget* layoutWidget)
@@ -286,20 +279,26 @@ void GLWidgetWrapper::setDebugMode(bool bMode)
 
 void GLWidgetWrapper::init()
 {
-	currentBlock = 0;
-	currentBlockTrial = -1;
-	completedTR = 0;
-	m_TriggerCount = 0;
+	cleanupExperimentBlockTrialStructure();
+	nCurrentBlockTrial = -1;
+	nCompletedTriggers = 0;
+	nTriggerCount = 0;
 	nFrameCounter = 0;
 	nElapsedFrameTime = 0;
 	nPaintUpdateTime = 0;
-	nextTimeThresholdTRs = 0;
+	nNextTimeThresholdTRs = 0;
 }
 
 bool GLWidgetWrapper::start()
 {
+	if(!this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
+	{
+		//qDebug() << "RetinoMap_glwidget::start::No Double Buffering available!";
+		stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
+		return false;
+	}
 	init();
-	totalRunningTime.start();
+	tTotalRunningTime.start();
 	//renderWdg->trialTime.start();
 	//renderWdg->frameTime.start();	
 	checkForNextBlockTrial();
@@ -339,7 +338,7 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 
 void GLWidgetWrapper::incrementTriggerCount()
 {
-	m_TriggerCount++;
+	nTriggerCount++;
 }
 
 void GLWidgetWrapper::initBlockTrial()
@@ -362,35 +361,45 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 {
 	if (bForceToStop)
 		return false;
-	int total_elapsed_time = totalRunningTime.elapsed();//The Total time past since the experiment started
+	int tTotal_elapsed_time = tTotalRunningTime.elapsed();//The Total time past since the experiment started
 	//if(m_TriggerMode == 0)
 	//{
 	//	completedTR = total_elapsed_time / m_TrTime;//The time past in number of Tr's
 	//}
 	//else
 	//{
-		completedTR = m_TriggerCount;
+		nCompletedTriggers = nTriggerCount;
 	//}
 	bool goToNextBlockTrial = false;
 	bool bFirstBlock = false;
-	if(currentBlockTrial == -1) //First Block Trial? (Start/Init)
+	if(nCurrentBlockTrial == -1) //First Block Trial? (Start/Init)
 	{
 		goToNextBlockTrial = true;
 		bFirstBlock = true;
 	}
 	else
 	{
-		goToNextBlockTrial = completedTR > nextTimeThresholdTRs;//Go to next Block Trial when the total completed Tr's is larger than the next Threshold Tr.
+		goToNextBlockTrial = nCompletedTriggers > nNextTimeThresholdTRs;//Go to next Block Trial when the total completed Tr's is larger than the next Threshold Tr.
 	}
 	if(goToNextBlockTrial)//When we init/start or switch from a Block Trial 
 	{
 		//qDebug() << "GLWidgetWrapper::goToNextBlockTrial(current=" << currentBlockTrial << ", total_elapsed_time=" << total_elapsed_time << ")";
-		currentBlockTrial++;//Increment the Block Trial Counter
-		if(currentBlockTrial >= 100)//---->>//BlockTrialFiles.size())//No more Block Trials left?
+		nCurrentBlockTrial++;//Increment the Block Trial Counter
+		if (nCurrentBlockTrial > 0  )
+		{
+			nCurrentBlockTrial = nCurrentBlockTrial;//strcExperimentBlockTrials
+		} 
+		//else
+		//{
+
+		//}
+		
+
+		if(nCurrentBlockTrial >= 100)//---->>//BlockTrialFiles.size())//No more Block Trials left?
 		{
 			return false;
 		}
-		nextTimeThresholdTRs += 2;//----->>> BlockTrialsDurationInTRs[currentBlockTrial];//increment the nextTimeThresholdTRs
+		nNextTimeThresholdTRs += 2;//----->>> BlockTrialsDurationInTRs[currentBlockTrial];//increment the nextTimeThresholdTRs
 		loadBlockTrial();
 		//loadBlockTrialFile(BlockTrialFiles[currentBlockTrial], true);
 		nFrameCounter = 0;

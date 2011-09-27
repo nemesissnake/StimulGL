@@ -5,21 +5,25 @@ This is a comment ()
 Place you own text here..
 -->
 <EXML version="1.0.0.0">
+		<experiment ID="0">
+			<name>PolarMapping Experiment</name>
+			<debugmode>true</debugmode>
+		</experiment>
     <declarations>
-        <object ID="0">            
+        <object ID="0">
+            <class>ParallelPort</class>
+            <name>ParallelPort_Object_1</name>
+            <constructor>
+                <param1/>
+            </constructor>
+        </object>
+        <object ID="1">            
             <class>RetinoMap_glwidget</class>
             <name>RetinoMap_RenderWidgetGL</name>
             <constructor>
                 <param1/>
             </constructor>
         </object> 
-        <object ID="1">
-            <class>ParallelPort</class>
-            <name>ParallelPort_Object_1</name>
-            <constructor>
-                <param1/>
-            </constructor>
-        </object>        
     </declarations>
     <actions>
     	<blocktrials>
@@ -28,50 +32,41 @@ Place you own text here..
 	        <block_number>0</block_number>            
 	        <nr_of_trials>2</nr_of_trials>
 
-	        <object ID="0">
+	        <object ID="1">
 		        <parameter ID="0">
 		        	<name>duration of one cycle in TR</name>
-		        	<type>float</type>
-		        	<value>32</value>
+		        	<value>5</value>
 		        </parameter>
 		        <parameter ID="1">
 		        	<name>wedge span in degrees</name>
-		        	<type>float</type>
 		        	<value>22.5</value>
 						</parameter>		        	
 		        <parameter ID="2">	 	
 		        	<name>nr of checks</name>
-		        	<type>float</type>
 		        	<value>4</value>	        	
 		        </parameter>
 		        <parameter ID="3">	      	
 		        	<name>nr of rings</name>
-		        	<type>float</type>
 		        	<value>20</value>
 		        </parameter>       	
 		        <parameter ID="4">    	
 		        	<name>rotation direction</name>
-		        	<type>int</type>
 		        	<value>-1</value>	        	
 		        </parameter>
 		        <parameter ID="5">   
 		        	<name>flickr speed in Hz</name>
-		        	<type>int</type>
 		        	<value>20</value>
 		        </parameter>	        	
 		        <parameter ID="6">   	
 		        	<name>stimulus pixel no x</name>
-		        	<type>int</type>
 		        	<value>760</value>	        	
 		        </parameter>	
 		        <parameter ID="7">     	
 		        	<name>stimulus pixel no y</name>
-		        	<type>int</type>
 		        	<value>760</value>	
 		        </parameter>        	
 		        <parameter ID="8">	    	
 		        	<name>cortical mag factor</name>
-		        	<type>float</type>
 		        	<value>0.2</value>	        	
 		        </parameter>    
 		    	</object>   
@@ -82,50 +77,41 @@ Place you own text here..
 	        <block_number>1</block_number>            
 	        <nr_of_trials>2</nr_of_trials>
 
-	        <object ID="0">
+	        <object ID="1">
 		        <parameter ID="0">
 		        	<name>duration of one cycle in TR</name>
-		        	<type>float</type>
-		        	<value>32</value>
+		        	<value>5</value>
 		        </parameter>
 		        <parameter ID="1">
 		        	<name>wedge span in degrees</name>
-		        	<type>float</type>
-		        	<value>22.5</value>
+		        	<value>10.2</value>
 						</parameter>		        	
 		        <parameter ID="2">	 	
 		        	<name>nr of checks</name>
-		        	<type>float</type>
 		        	<value>4</value>	        	
 		        </parameter>
 		        <parameter ID="3">	      	
 		        	<name>nr of rings</name>
-		        	<type>float</type>
 		        	<value>20</value>
 		        </parameter>       	
 		        <parameter ID="4">    	
 		        	<name>rotation direction</name>
-		        	<type>int</type>
 		        	<value>-1</value>	        	
 		        </parameter>
 		        <parameter ID="5">   
 		        	<name>flickr speed in Hz</name>
-		        	<type>int</type>
 		        	<value>20</value>
 		        </parameter>	        	
 		        <parameter ID="6">   	
 		        	<name>stimulus pixel no x</name>
-		        	<type>int</type>
 		        	<value>760</value>	        	
 		        </parameter>	
 		        <parameter ID="7">     	
 		        	<name>stimulus pixel no y</name>
-		        	<type>int</type>
 		        	<value>760</value>	
 		        </parameter>        	
 		        <parameter ID="8">	    	
 		        	<name>cortical mag factor</name>
-		        	<type>float</type>
 		        	<value>0.2</value>	        	
 		        </parameter>    
 		    	</object>   
