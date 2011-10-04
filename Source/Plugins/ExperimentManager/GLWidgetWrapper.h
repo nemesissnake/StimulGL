@@ -9,6 +9,7 @@
 #include <QPaintEvent>
 #include <QKeyEvent>
 #include <QBoxLayout>
+#include <QCustomEvent>
 #include "Global.h"
 
 class QPaintEvent;
@@ -22,7 +23,8 @@ class GLWidgetWrapper : public QGLWidget
 
 signals:
 	void UserWantsToClose(void);
-	void WidgetStateHasChanged(ExperimentObjectState);
+	void ObjectShouldStop(void);
+	void ObjectStateHasChanged(ExperimentSubObjectState);
 
 public:
 	GLWidgetWrapper(QWidget *parent = NULL);
@@ -34,49 +36,59 @@ public slots:
 	//Can be overridden
 	virtual bool start();
 	virtual bool stop();
-	virtual bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList);
+	virtual bool abort();
+	virtual bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList = NULL);
 	virtual bool setObjectID(int nObjID);
+	virtual bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
 	
-	void setDebugMode(bool bMode);
 	QRectF getScreenResolution();
 	int getObjectID();	
 
 protected:
 	bool checkForNextBlockTrial();
-	bool getBlockTrialParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result);
+	bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result);
 	void finalizePaintEvent();
-	void SetupLayout(QWidget* layoutWidget);	
-	void closeEvent(QCloseEvent *evt);
-	bool isDebugMode() {return bDebugMode;}
+	void setupLayout(QWidget* layoutWidget);	
+	bool isDebugMode();
 	int getFrameNumber() {return nFrameCounter;}
-	int getCurrentBlockTrial() {return nCurrentBlockTrial;}
+	int getCurrentExperimentTrial() {return nCurrentExperimentTrial;}
+	int getCurrentExperimentBlock() {return nCurrentExperimentBlock;}
+	int getCurrentExperimentTriggers() {return nCurrentExperimentReceivedTriggers;}
 	int getElapsedFrameTime() {return nElapsedFrameTime;}
-	int getCompletedTriggers() {return nCompletedTriggers;}
+	//bool getExperimentTriggerCount(int &nExperimentTriggerCount);
+
+	void closeEvent(QCloseEvent *evt);
+	void customEvent(QEvent *event);
 
 	virtual void init();
 	virtual void initBlockTrial();
-	virtual bool loadBlockTrial();
+	//virtual bool loadBlockTrial();
 	virtual void paintEvent(QPaintEvent *event);
 
 protected slots:
-	void incrementTriggerCount();
+	void incrementTrigger();
 	void animate();
 
 private:
 	void startTriggerTimer(int msTime);
 	void stopTriggerTimer();
 	bool eventFilter(QObject *target, QEvent *event);
+
 	bool updateExperimentBlockTrialStructure();
 	bool cleanupExperimentBlockTrialStructure();
+	void changeSubObjectState(ExperimentSubObjectState newSubObjectState);
+	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
 
 private:
-	bool bDebugMode;
 	int nFrameCounter;
-	int nCurrentBlockTrial;
+	int nCurrentExperimentReceivedTriggers;				//The current experiment number of trigger received since it started
+	int nCurrentExperimentTrial;						//The current experiment trial within the block 
+	int nCurrentExperimentBlock;						//The current experiment block
+	int nTotalProcessedExperimentTrials;				//The total number of trials processed within experiment, might be that this Trial is not fully processed.
 	int nElapsedFrameTime;
-	int nCompletedTriggers;
 	ContainerDlg *stimContainerDlg;
 	bool bForceToStop;
+	bool bExperimentShouldStop;
 	int nPaintUpdateTime;
 	QTime tFrameTime;
 	QRectF rScreenResolution;
@@ -87,9 +99,12 @@ private:
 	QTimer tTriggerTimer;
 	QTimer tStimTimer;
 	QDomNodeList *pExpBlockTrialDomNodeList;
-	int nTriggerCount;
-	int nNextTimeThresholdTRs;
+	//int nTriggerCount;
+	int nNextThresholdTriggerCount;//When we should switch to the next block
 	ExperimentBlockTrialStructure strcExperimentBlockTrials;
+	ExperimentConfiguration *pExpConf;
+	QEvent::Type tEventObjectStopped;
+	ExperimentSubObjectState currentSubObjectState;
 };
 
 class ContainerDlg : public QDialog

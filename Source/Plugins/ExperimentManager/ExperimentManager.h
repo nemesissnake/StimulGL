@@ -41,7 +41,7 @@ public:
 		int nMetaID;
 		QObject *pObject;
 		QString sObjectName;
-		ExperimentObjectState nState;
+		ExperimentSubObjectState nState;
 	} objectElement;
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
@@ -55,7 +55,8 @@ public slots:
 	bool saveExperiment(QString strFile = "");
 	bool runExperiment();
 	void abortExperiment();
-	void changeExperimentObjectState(ExperimentObjectState nState);
+	void stopExperiment();
+	void changeExperimentSubObjectState(ExperimentSubObjectState nState);
 	bool setFullScreenMode(const bool bFullScreen);
 	bool setDebugMode(const bool bDebugMode);
 	QString getCurrentDateTimeStamp();
@@ -65,21 +66,27 @@ private:
 	bool invokeExperimentObjectsSlots(const QString &sSlotName);
 	bool configureExperiment();
 	bool createExperimentObjects();
+	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);
 	bool startExperimentObjects(bool bRunFullScreen = true);
 	bool stopExperimentObjects();
+	bool abortExperimentObjects();
 	bool changeExperimentObjectsSignalSlots(bool bDisconnect = false, int nSpecificIndex = -1);
 	void cleanupExperimentObjects();
+	void changeCurrentExperimentState(ExperimentState expCurrState);
+	QObject *getObjectElementById(int nID);
+	ExperimentState getCurrentExperimentState() {return experimentCurrentState;}
 
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	QList<objectElement> lExperimentObjectList;
 
 //	short m_ExampleProperty;
+	ExperimentState experimentCurrentState;
 	bool m_RunFullScreen;
 	bool m_DebugMode;
 	QString m_ExpFileName;
 	QString m_ExpFolder;
-	ExperimentTree *currentExperimentTree;
+	ExperimentTree *currentExperimentTree;	
 	ExperimentConfiguration strcExperimentConfiguration;
 };
 
@@ -92,19 +99,19 @@ public:
 	}
 };
 
-class ThreadedContainerDlg : public QDialog
-{
-	Q_OBJECT
-
-public:
-	ThreadedContainerDlg(QWidget *parent = NULL);
-	ThreadedContainerDlg::~ThreadedContainerDlg();
-
-	private slots:
-		void reject();
-
-protected:
-	void closeEvent(QCloseEvent *e);
-};
+//class ThreadedContainerDlg : public QDialog
+//{
+//	Q_OBJECT
+//
+//public:
+//	ThreadedContainerDlg(QWidget *parent = NULL);
+//	ThreadedContainerDlg::~ThreadedContainerDlg();
+//
+//	private slots:
+//		void reject();
+//
+//protected:
+//	void closeEvent(QCloseEvent *e);
+//};
 
 #endif // ExperimentManager_H

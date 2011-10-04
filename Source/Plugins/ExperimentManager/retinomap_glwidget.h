@@ -26,10 +26,13 @@ public:
 	RetinoMap_glwidget(const RetinoMap_glwidget& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 public slots:
-	//bool start();
+	bool start();
+	//bool abort();
 	//bool stop();
-	//bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList);
+	//bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList = NULL);
+	//bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
 	bool setObjectID(int nObjID);
+	void testSlot();//const QString &strText
 
 protected:
 	//void init();

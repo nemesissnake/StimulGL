@@ -10,10 +10,10 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	stimContainerDlg = NULL;
 	pExpBlockTrialDomNodeList = NULL;
 	bForceToStop = false;
-	bDebugMode = false;
+	bExperimentShouldStop = false;
 	#ifdef Q_WS_MACX
 		nMinScreenUpdateTime = 1; // make param in interface and recommend per platform
-	#else
+	#elseabot
 		nMinScreenUpdateTime = 1; // on Win (with recent OGL drivers), "swapBuffers" will wait for n retraces as indicated by "setSwapInterval" command (works like DX "flip")
 	#endif
 	setAutoFillBackground(false);
@@ -28,6 +28,8 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool Retinotopic_Mapping::eventFilter(QObject *target, QEvent *event)
 	mainLayout = NULL;
 	nObjectID = -1;
+	pExpConf = NULL;
+	tEventObjectStopped = (QEvent::Type)(QEvent::User + 1);	
 }
 
 GLWidgetWrapper::~GLWidgetWrapper()
@@ -43,7 +45,22 @@ GLWidgetWrapper::~GLWidgetWrapper()
 		stimContainerDlg = NULL;
 	}
 	cleanupExperimentBlockTrialStructure();
-	emit WidgetStateHasChanged(ExperimentObject_Aborted);
+	changeSubObjectState(Experiment_SubObject_Stopped);
+}
+
+void GLWidgetWrapper::init()
+{
+	cleanupExperimentBlockTrialStructure();
+	nCurrentExperimentTrial = -1;
+	nCurrentExperimentBlock = 0;
+	nTotalProcessedExperimentTrials = 0;
+	nCurrentExperimentReceivedTriggers = 0;
+	//nTriggerCount = 0;
+	nFrameCounter = 0;
+	nElapsedFrameTime = 0;
+	nPaintUpdateTime = 0;
+	nNextThresholdTriggerCount = 0;
+	changeSubObjectState(Experiment_SubObject_Initialized);
 }
 
 QRectF GLWidgetWrapper::getScreenResolution()
@@ -64,6 +81,18 @@ bool GLWidgetWrapper::setObjectID(int nObjID)
 		return true;
 	}
 	return false;
+}
+
+void GLWidgetWrapper::customEvent(QEvent *event)
+{
+	if (event->type() == tEventObjectStopped) 
+	{
+		emit ObjectShouldStop();
+	} 
+	else 
+	{
+		GLWidgetWrapper::customEvent(event);
+	}
 }
 
 bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
@@ -98,6 +127,16 @@ bool GLWidgetWrapper::setBlockTrialDomNodeList(QDomNodeList *pDomNodeList)
 	return false;
 }
 
+bool GLWidgetWrapper::setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct)
+{
+	if(pExpConfStruct)
+	{
+		pExpConf = pExpConfStruct;
+		return true;
+	}
+	return false;
+}
+
 bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
 {
 	if(cleanupExperimentBlockTrialStructure() == false)
@@ -114,7 +153,8 @@ bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
 	bool bUpdateSucceeded = false;
 	QDomElement tmpElement;
 
-	for(int i=0;i<strcExperimentBlockTrials.nNrOfBlocks;i++)//Loop through the blocks
+	//Loop through the blocks
+	for(int i=0;i<strcExperimentBlockTrials.nNrOfBlocks;i++)
 	{
 		bUpdateSucceeded = false;
 		if(pExpBlockTrialDomNodeList->at(i).hasChildNodes())
@@ -123,6 +163,7 @@ bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
 			if(tmpElement.hasAttribute(ID_TAG))
 			{
 				BlockTrialStructure tmpBlockTrialStruct;
+				TrialStructure tmpTrialStruct;
 				tmpBlockTrialStruct.nBlockID = tmpElement.attribute(ID_TAG,"").toInt();//Copy the BlockID
 
 				tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(BLOCKNUMBER_TAG);
@@ -144,6 +185,28 @@ bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
 						{
 							tmpBlockTrialStruct.nNrOfTrials = 1;//Default if not defined
 						}
+
+						tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(TRIGGERAMOUNT_TAG);
+						int nTriggerAmount = 1;//Default
+						if(!tmpElement.isNull())//Is there a TriggerAmount defined?
+						{
+							if (!tmpElement.text().isEmpty())
+							{
+								if (tmpElement.text().toInt() > 0)
+								{
+									nTriggerAmount = tmpElement.text().toInt();
+								}
+							}
+						}
+
+						for (int j=0;j<tmpBlockTrialStruct.nNrOfTrials;j++)
+						{
+							tmpTrialStruct.nTrialID = j;
+							tmpTrialStruct.nTrialNumber = j;
+							tmpTrialStruct.nNrOfTriggers = nTriggerAmount;//Default if not defined
+							tmpBlockTrialStruct.lTrialStructure.append(tmpTrialStruct);
+						}							
+
 						tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(NAME_TAG);
 						if(!tmpElement.isNull())//Is there a Name defined?
 						{
@@ -154,6 +217,10 @@ bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
 							tmpBlockTrialStruct.nBlockName = "";
 						}
 						strcExperimentBlockTrials.lBlockTrialStructure.append(tmpBlockTrialStruct);
+						
+						//Loop through the trials
+						//??
+
 						bUpdateSucceeded = true;
 					}
 				}
@@ -168,6 +235,27 @@ bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
 	return true;
 }
 
+//bool GLWidgetWrapper::getExperimentTriggerCount(int &nTriggerCount)
+//{
+//	int nBlockAmount = strcExperimentBlockTrials.nNrOfBlocks;
+//	if(nBlockAmount > 0)
+//	{
+//		int nTrialAmount = 0;
+//		for (int i=0;i<nBlockAmount;i++)
+//		{
+//			if (strcExperimentBlockTrials.lBlockTrialStructure.at(i).nNrOfTrials > 0)
+//			{
+//				nTrialAmount = nTrialAmount + strcExperimentBlockTrials.lBlockTrialStructure.at(i).nNrOfTrials;
+//			}
+//			else
+//				return false;
+//		}
+//		nTriggerCount = nTrialAmount;
+//		return true;
+//	}
+//	return false;
+//}
+
 bool GLWidgetWrapper::cleanupExperimentBlockTrialStructure()
 {
 	//for (int i;i<strcExperimentBlockTrials.lBlockTrialStructure.count();i++)
@@ -178,7 +266,7 @@ bool GLWidgetWrapper::cleanupExperimentBlockTrialStructure()
 	return true;
 }
 
-bool GLWidgetWrapper::getBlockTrialParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result)
+bool GLWidgetWrapper::getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result)
 {
 	if(pExpBlockTrialDomNodeList == NULL)
 		return false;
@@ -211,30 +299,36 @@ bool GLWidgetWrapper::getBlockTrialParameter(int nBlockNumber, int nObjectID, QS
 							{
 								if(nObjectID == tmpObjectNodeList.item(j).toElement().attribute(ID_TAG,"").toInt())//Correct ObjectID?
 								{
-									QDomNodeList tmpParameterNodeList = tmpObjectNodeList.item(j).toElement().elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
-									int nParameterListCount = tmpParameterNodeList.count();
-									if (nParameterListCount>0)
+									if(tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG).isElement())
 									{
-										for (int k=0;k<nParameterListCount;k++)//For each parameter
+										tmpElement = tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG);
+										QDomNodeList tmpParameterNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
+										int nParameterListCount = tmpParameterNodeList.count();
+										if (nParameterListCount>0)
 										{
-											tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
-											if(!tmpElement.isNull())
+											for (int k=0;k<nParameterListCount;k++)//For each parameter
 											{
-												if(strParamName == tmpElement.text())//Correct Parameter Name?
+												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
+												if(!tmpElement.isNull())
 												{
-													tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
-													if(!tmpElement.isNull())
+													if(strParamName == tmpElement.text())//Correct Parameter Name?
 													{
-														Result = tmpElement.text();
-														return true;
+														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
+														if(!tmpElement.isNull())
+														{
+															Result = tmpElement.text();
+															return true;
+														}
+														else
+															return false;
 													}
-													else
-														return false;
 												}
+												else
+													continue;//Next parameter maybe?
 											}
-											else
-												continue;//Next parameter maybe?
 										}
+										else
+											return false;
 									}
 									else
 										return false;
@@ -259,7 +353,7 @@ bool GLWidgetWrapper::getBlockTrialParameter(int nBlockNumber, int nObjectID, QS
 	return false;
 }
 
-void GLWidgetWrapper::SetupLayout(QWidget* layoutWidget)
+void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 {
 	mainLayout = new QVBoxLayout;
 	mainLayout->setAlignment(Qt::AlignCenter);
@@ -272,23 +366,6 @@ void GLWidgetWrapper::SetupLayout(QWidget* layoutWidget)
 	//	stimContainerDlg->show();
 }
 
-void GLWidgetWrapper::setDebugMode(bool bMode)
-{
-	bDebugMode = bMode;
-}
-
-void GLWidgetWrapper::init()
-{
-	cleanupExperimentBlockTrialStructure();
-	nCurrentBlockTrial = -1;
-	nCompletedTriggers = 0;
-	nTriggerCount = 0;
-	nFrameCounter = 0;
-	nElapsedFrameTime = 0;
-	nPaintUpdateTime = 0;
-	nNextTimeThresholdTRs = 0;
-}
-
 bool GLWidgetWrapper::start()
 {
 	if(!this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
@@ -297,13 +374,21 @@ bool GLWidgetWrapper::start()
 		stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
 		return false;
 	}
-	init();
 	tTotalRunningTime.start();
 	//renderWdg->trialTime.start();
 	//renderWdg->frameTime.start();	
 	checkForNextBlockTrial();
 	startTriggerTimer(2000);
 	return true;
+}
+
+bool GLWidgetWrapper::isDebugMode() 
+{
+	if (pExpConf)
+	{
+		return pExpConf->bDebugMode;
+	}
+	return false;
 }
 
 void GLWidgetWrapper::closeEvent(QCloseEvent *evt)
@@ -313,22 +398,29 @@ void GLWidgetWrapper::closeEvent(QCloseEvent *evt)
 
 bool GLWidgetWrapper::stop()
 {
+	bExperimentShouldStop = true;
 	stopTriggerTimer();
+	return true;
+}
+
+bool GLWidgetWrapper::abort()
+{
 	bForceToStop = true;
+	stopTriggerTimer();
 	return true;
 }
 
 void GLWidgetWrapper::startTriggerTimer(int msTime)
 {
 	tTriggerTimer.setSingleShot(false);
-	connect(&tTriggerTimer, SIGNAL(timeout()), this, SLOT(incrementTriggerCount()));
+	connect(&tTriggerTimer, SIGNAL(timeout()), this, SLOT(incrementTrigger()));
 	tTriggerTimer.start(msTime);
 }
 
 void GLWidgetWrapper::stopTriggerTimer()
 {
 	tTriggerTimer.stop();
-	disconnect(&tTriggerTimer, SIGNAL(timeout()), this, SLOT(incrementTriggerCount()));
+	disconnect(&tTriggerTimer, SIGNAL(timeout()), this, SLOT(incrementTrigger()));
 }
 
 void GLWidgetWrapper::paintEvent(QPaintEvent *event)
@@ -336,14 +428,15 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 	nFrameCounter += 1;	
 }
 
-void GLWidgetWrapper::incrementTriggerCount()
+void GLWidgetWrapper::incrementTrigger()
 {
-	nTriggerCount++;
+	nCurrentExperimentReceivedTriggers++;
 }
 
 void GLWidgetWrapper::initBlockTrial()
 {
 	bForceToStop = false;
+	bExperimentShouldStop = false;
 	nFrameCounter = 0;
 #ifdef Q_WS_MACX
 	nMinScreenUpdateTime = 1; // make param in interface and recommend per platform
@@ -352,65 +445,96 @@ void GLWidgetWrapper::initBlockTrial()
 #endif
 }
 
-bool GLWidgetWrapper::loadBlockTrial()
-{
-	return true;
-}
+//bool GLWidgetWrapper::loadBlockTrial()
+//{
+//	return true;
+//}
 
 bool GLWidgetWrapper::checkForNextBlockTrial()
 {
-	if (bForceToStop)
+	if ((bForceToStop)||(bExperimentShouldStop))
 		return false;
-	int tTotal_elapsed_time = tTotalRunningTime.elapsed();//The Total time past since the experiment started
+	//int tTotal_elapsed_time = tTotalRunningTime.elapsed();//The Total time past since the experiment started
 	//if(m_TriggerMode == 0)
 	//{
 	//	completedTR = total_elapsed_time / m_TrTime;//The time past in number of Tr's
 	//}
 	//else
 	//{
-		nCompletedTriggers = nTriggerCount;
+		//nCompletedTriggers = nTriggerCount;
 	//}
+	//nCompletedTriggers = nTriggerCount;
 	bool goToNextBlockTrial = false;
-	bool bFirstBlock = false;
-	if(nCurrentBlockTrial == -1) //First Block Trial? (Start/Init)
+	bool bInitBeforeFirstExperimentTrial = false;
+	if(nCurrentExperimentTrial == -1) //First Experiment Trial? (Start/Init), occurs before the start of the Trigger(timer).
 	{
+		nTotalProcessedExperimentTrials = 0;
 		goToNextBlockTrial = true;
-		bFirstBlock = true;
+		nCurrentExperimentBlock = 0;
+		bInitBeforeFirstExperimentTrial = true;
 	}
 	else
 	{
-		goToNextBlockTrial = nCompletedTriggers > nNextTimeThresholdTRs;//Go to next Block Trial when the total completed Tr's is larger than the next Threshold Tr.
+		goToNextBlockTrial = nCurrentExperimentReceivedTriggers >= nNextThresholdTriggerCount;//Go to next Block Trial?
 	}
 	if(goToNextBlockTrial)//When we init/start or switch from a Block Trial 
 	{
 		//qDebug() << "GLWidgetWrapper::goToNextBlockTrial(current=" << currentBlockTrial << ", total_elapsed_time=" << total_elapsed_time << ")";
-		nCurrentBlockTrial++;//Increment the Block Trial Counter
-		if (nCurrentBlockTrial > 0  )
+		//int nTotalExperimentTrialAmount = 0;
+		//if (getExperimentTriggerCount(nTotalExperimentTrialAmount))
+		//{
+		//	if(nTotalProcessedExperimentTrials > nTotalExperimentTrialAmount)//No more Experiment Trials left?
+		//	{
+		//		QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped));//,Qt::HighEventPriority);
+		//		//bExperimentShouldStop = true;
+		//		return false;
+		//	}
+		//}
+
+		if((nCurrentExperimentTrial+1) >= strcExperimentBlockTrials.lBlockTrialStructure[nCurrentExperimentBlock].nNrOfTrials)//End of this Block(No more Trials)?
+		{			
+			if ((nCurrentExperimentBlock+1) >= strcExperimentBlockTrials.nNrOfBlocks)//No more blocks?
+			{
+					QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped));//,Qt::HighEventPriority);
+					bExperimentShouldStop = true;
+					return false;
+			} 
+			else
+			{
+				nCurrentExperimentTrial = 0;//Reset the Experiment Trial Counter
+				nCurrentExperimentBlock++;//Increment the Experiment Block Counter
+			}
+		}
+		else
 		{
-			nCurrentBlockTrial = nCurrentBlockTrial;//strcExperimentBlockTrials
-		} 
-		//else
+			nCurrentExperimentTrial++;//Increment the Experiment Trial Counter
+		}
+				
+
+		//if (!bFirstBlock)
 		//{
 
+		//else
+		//{
+		//	qDebug() << "GLWidgetWrapper::checkForNextBlockTrial() Could not getExperimentTriggerAmount()";				
+		//	bForceToStop = true;
+		//	return false;
 		//}
-		
-
-		if(nCurrentBlockTrial >= 100)//---->>//BlockTrialFiles.size())//No more Block Trials left?
-		{
-			return false;
-		}
-		nNextTimeThresholdTRs += 2;//----->>> BlockTrialsDurationInTRs[currentBlockTrial];//increment the nextTimeThresholdTRs
-		loadBlockTrial();
+		//}
+		nNextThresholdTriggerCount += strcExperimentBlockTrials.lBlockTrialStructure[nCurrentExperimentBlock].lTrialStructure[nCurrentExperimentTrial].nNrOfTriggers;//increment the nextTimeThresholdTRs
+		//loadBlockTrial();
 		//loadBlockTrialFile(BlockTrialFiles[currentBlockTrial], true);
 		nFrameCounter = 0;
 		initBlockTrial();
 		tFrameTime.restart();
-		if (bFirstBlock)
+		if (bInitBeforeFirstExperimentTrial)
 		{
-			emit WidgetStateHasChanged(ExperimentObject_Started);
+			changeSubObjectState(Experiment_SubObject_Started);
 		}
 
 		tStimTimer.singleShot(10, this, SLOT(animate()));
+		if(!bInitBeforeFirstExperimentTrial)
+			nTotalProcessedExperimentTrials++;
 		return true;
 	}
 	return false;
@@ -418,18 +542,33 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 
 void GLWidgetWrapper::animate()
 {
-	nElapsedFrameTime = tFrameTime.elapsed();//Calculate the elapsed time since started
-	tFrameTime.restart();
-	repaint();
-	//update();
-	//	elapsed = frameTime.elapsed();//Calculate the elapsed time since started
-	//	frameTime.restart();
-	//	repaint();//calls the below void GLWidget::paintEvent(QPaintEvent *event)
-	//You should usually use 'update', as this will allow multiple queued paint events to be 'collapsed' into a single event. 
-	//The update method will call updateGL for QGLWidgets. The 'repaint' method should be used if you want an immediate repaint.
-	//If you have hooked up a timer to periodically call 'update', then failure to repaint regularly usually indicates 
-	//that you're putting stress on the CPU.
+	//if (((bForceToStop)||(bExperimentShouldStop)) == false)
+	//{
+		if(getSubObjectState() == Experiment_SubObject_Started)
+		{
+			nElapsedFrameTime = tFrameTime.elapsed();//Calculate the elapsed time since started
+			tFrameTime.restart();
+			repaint();
+			//update();
+			//	elapsed = frameTime.elapsed();//Calculate the elapsed time since started
+			//	frameTime.restart();
+			//	repaint();//calls the below void GLWidget::paintEvent(QPaintEvent *event)
+			//You should usually use 'update', as this will allow multiple queued paint events to be 'collapsed' into a single event. 
+			//The update method will call updateGL for QGLWidgets. The 'repaint' method should be used if you want an immediate repaint.
+			//If you have hooked up a timer to periodically call 'update', then failure to repaint regularly usually indicates 
+			//that you're putting stress on the CPU.
+			//}
+		}
 	//}
+}
+
+void GLWidgetWrapper::changeSubObjectState(ExperimentSubObjectState newSubObjectState)
+{
+	if(newSubObjectState != currentSubObjectState)
+	{
+		currentSubObjectState = newSubObjectState;
+		emit ObjectStateHasChanged(currentSubObjectState);
+	}
 }
 
 void GLWidgetWrapper::finalizePaintEvent()
@@ -446,11 +585,19 @@ void GLWidgetWrapper::finalizePaintEvent()
 		nPaintUpdateTime = tFrameTime.elapsed();
 		if(bForceToStop)
 		{
-			//this->setUpdatesEnabled(false);
-			emit WidgetStateHasChanged(ExperimentObject_Abort);
+			changeSubObjectState(Experiment_SubObject_Abort);
 			return;
 		}
-		// if next trial/block reached, the function will prepare for it and calls "onAnimate()" when ready, otherwise we compute next frame
-		QTimer::singleShot(10, this, SLOT(animate()));
+		else if (bExperimentShouldStop)
+		{
+			changeSubObjectState(Experiment_SubObject_Stop);
+			//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
+			return;
+		}
+		else
+		{
+			// if next trial/block reached, the function will prepare for it and calls "onAnimate()" when ready, otherwise we compute next frame
+			QTimer::singleShot(10, this, SLOT(animate()));
+		}
 	}
 }

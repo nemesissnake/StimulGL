@@ -1,14 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE EXML>
 <!-- 
-This is a comment ()
+This is a comment example
 Place you own text here..
+Attributes only apply to readonly non user data, like the ID
 -->
 <EXML version="1.0.0.0">
-		<experiment ID="0">
-			<name>PolarMapping Experiment</name>
-			<debugmode>true</debugmode>
-		</experiment>
+    <defines>
+			<experiment ID="0">
+				<name>PolarMapping Experiment</name>
+				<debugmode>true</debugmode>
+			</experiment>
+		</defines>
+		
     <declarations>
         <object ID="0">
             <class>ParallelPort</class>
@@ -25,99 +29,151 @@ Place you own text here..
             </constructor>
         </object> 
     </declarations>
+    
+    <connections>
+        <object ID="0">
+        	<type>signal</type>
+        	<signature>CaptureThreadTriggered(short)</signature>
+          <target ID="1">
+          	<type>slot</type>     
+          	<signature>incrementTrigger()</signature>      
+          </target>
+        </object>
+    </connections>
+    
+    <initializations>
+        <object ID="0">
+        	<type>slot</type>
+        	<signature>StartCaptureThread</signature>
+        	<parameters>
+		      	<parameter ID="0">
+		        	<name>baseAddress</name>
+		        	<value>4370</value>
+		        	<type>const short</type>
+		        </parameter>
+		        <parameter ID="1">
+		        	<name>mask</name>
+		        	<value>1</value>
+		        	<type>const short</type>		        	
+						</parameter>		        	
+		        <parameter ID="2">	 	
+		        	<name>method</name>
+		        	<value>2</value>	 
+		        	<type>const short</type>		        	       	
+		        </parameter>
+		        <parameter ID="3">	      	
+		        	<name>postLHDelay</name>
+		        	<value>0</value>
+		        	<type>const int</type>		        	
+		        </parameter>       	
+		        <parameter ID="4">    	
+		        	<name>postHLDelay</name>
+		        	<value>100</value>	
+		        	<type>const int</type>		        	        	
+		        </parameter>        	
+        	</parameters>
+        </object>
+    </initializations>        
+     
     <actions>
-    	<blocktrials>
+    	<blocks>
 		   	<block ID="0">
 	        <name>FixationBlock</name>
 	        <block_number>0</block_number>            
-	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_trials>1</nr_of_trials>
+	        <nr_of_triggers>1</nr_of_triggers>	        
 
 	        <object ID="1">
-		        <parameter ID="0">
-		        	<name>duration of one cycle in TR</name>
-		        	<value>5</value>
-		        </parameter>
-		        <parameter ID="1">
-		        	<name>wedge span in degrees</name>
-		        	<value>22.5</value>
-						</parameter>		        	
-		        <parameter ID="2">	 	
-		        	<name>nr of checks</name>
-		        	<value>4</value>	        	
-		        </parameter>
-		        <parameter ID="3">	      	
-		        	<name>nr of rings</name>
-		        	<value>20</value>
-		        </parameter>       	
-		        <parameter ID="4">    	
-		        	<name>rotation direction</name>
-		        	<value>-1</value>	        	
-		        </parameter>
-		        <parameter ID="5">   
-		        	<name>flickr speed in Hz</name>
-		        	<value>20</value>
-		        </parameter>	        	
-		        <parameter ID="6">   	
-		        	<name>stimulus pixel no x</name>
-		        	<value>760</value>	        	
-		        </parameter>	
-		        <parameter ID="7">     	
-		        	<name>stimulus pixel no y</name>
-		        	<value>760</value>	
-		        </parameter>        	
-		        <parameter ID="8">	    	
-		        	<name>cortical mag factor</name>
-		        	<value>0.2</value>	        	
-		        </parameter>    
+	        	<parameters>
+			        <parameter ID="0">
+			        	<name>duration of one cycle in TR</name>
+			        	<value>5</value>
+			        </parameter>
+			        <parameter ID="1">
+			        	<name>wedge span in degrees</name>
+			        	<value>22.5</value>
+							</parameter>		        	
+			        <parameter ID="2">	 	
+			        	<name>nr of checks</name>
+			        	<value>4</value>	        	
+			        </parameter>
+			        <parameter ID="3">	      	
+			        	<name>nr of rings</name>
+			        	<value>20</value>
+			        </parameter>       	
+			        <parameter ID="4">    	
+			        	<name>rotation direction</name>
+			        	<value>-1</value>	        	
+			        </parameter>
+			        <parameter ID="5">   
+			        	<name>flickr speed in Hz</name>
+			        	<value>20</value>
+			        </parameter>	        	
+			        <parameter ID="6">   	
+			        	<name>stimulus pixel no x</name>
+			        	<value>760</value>	        	
+			        </parameter>	
+			        <parameter ID="7">     	
+			        	<name>stimulus pixel no y</name>
+			        	<value>760</value>	
+			        </parameter>        	
+			        <parameter ID="8">	    	
+			        	<name>cortical mag factor</name>
+			        	<value>0.2</value>	        	
+			        </parameter> 
+			    	</parameters>    
 		    	</object>   
 	    	</block>
     	
 			  <block ID="1">
 	        <name>FixationBlock</name>
 	        <block_number>1</block_number>            
-	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_trials>1</nr_of_trials>
+	        <nr_of_triggers>1</nr_of_triggers>
 
 	        <object ID="1">
-		        <parameter ID="0">
-		        	<name>duration of one cycle in TR</name>
-		        	<value>5</value>
-		        </parameter>
-		        <parameter ID="1">
-		        	<name>wedge span in degrees</name>
-		        	<value>10.2</value>
-						</parameter>		        	
-		        <parameter ID="2">	 	
-		        	<name>nr of checks</name>
-		        	<value>4</value>	        	
-		        </parameter>
-		        <parameter ID="3">	      	
-		        	<name>nr of rings</name>
-		        	<value>20</value>
-		        </parameter>       	
-		        <parameter ID="4">    	
-		        	<name>rotation direction</name>
-		        	<value>-1</value>	        	
-		        </parameter>
-		        <parameter ID="5">   
-		        	<name>flickr speed in Hz</name>
-		        	<value>20</value>
-		        </parameter>	        	
-		        <parameter ID="6">   	
-		        	<name>stimulus pixel no x</name>
-		        	<value>760</value>	        	
-		        </parameter>	
-		        <parameter ID="7">     	
-		        	<name>stimulus pixel no y</name>
-		        	<value>760</value>	
-		        </parameter>        	
-		        <parameter ID="8">	    	
-		        	<name>cortical mag factor</name>
-		        	<value>0.2</value>	        	
-		        </parameter>    
+			    	<parameters>	        
+			        <parameter ID="0">
+			        	<name>duration of one cycle in TR</name>
+			        	<value>5</value>
+			        </parameter>
+			        <parameter ID="1">
+			        	<name>wedge span in degrees</name>
+			        	<value>10.2</value>
+							</parameter>		        	
+			        <parameter ID="2">	 	
+			        	<name>nr of checks</name>
+			        	<value>4</value>	        	
+			        </parameter>
+			        <parameter ID="3">	      	
+			        	<name>nr of rings</name>
+			        	<value>20</value>
+			        </parameter>       	
+			        <parameter ID="4">    	
+			        	<name>rotation direction</name>
+			        	<value>-1</value>	        	
+			        </parameter>
+			        <parameter ID="5">   
+			        	<name>flickr speed in Hz</name>
+			        	<value>20</value>
+			        </parameter>	        	
+			        <parameter ID="6">   	
+			        	<name>stimulus pixel no x</name>
+			        	<value>760</value>	        	
+			        </parameter>	
+			        <parameter ID="7">     	
+			        	<name>stimulus pixel no y</name>
+			        	<value>760</value>	
+			        </parameter>        	
+			        <parameter ID="8">	    	
+			        	<name>cortical mag factor</name>
+			        	<value>0.2</value>	        	
+			        </parameter>   
+		      	</parameters> 
 		    	</object>   
 	    	</block>
 	
-    	</blocktrials>
+    	</blocks>
     </actions>
 
 </EXML>

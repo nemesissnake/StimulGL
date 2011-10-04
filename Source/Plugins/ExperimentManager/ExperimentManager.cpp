@@ -28,6 +28,8 @@ ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
 	m_DebugMode = false;
 	currentExperimentTree = NULL;
 	RegisterMetaTypes();
+	changeCurrentExperimentState(Experiment_Constructed);
+	changeCurrentExperimentState(Experiment_Initialized);
 }
 
 ExperimentManager::~ExperimentManager()
@@ -44,59 +46,6 @@ QString ExperimentManager::getCurrentDateTimeStamp()
 {
 	return (QDateTime::currentDateTime().toString(DATETIMESTAMPFORMAT));
 }
-
-//void ExperimentManager::Init()
-//{
-	//StimGLGraphScene->Init();
-//}
-
-//void ExperimentManager::Show()
-//{
-	//GraphView = new QGraphicsView(StimGLGraphScene);
-	//GraphView->setWindowModality(Qt::WindowModal);
-	//connect(StimGLGraphScene, SIGNAL(UserWantsToClose(void)), this, SLOT(on_GraphScene_Closed(void)));
-	//GraphView->showFullScreen();
-//}
-
-//void ExperimentManager::setExampleProperty( short sExampleProperty )
-//{
-//	m_ExampleProperty = sExampleProperty;
-//	emit ExampleSignalTriggered(m_ExampleProperty);//Signal that the value has been changed
-//}
-
-//short ExperimentManager::getExampleProperty() const
-//{
-//	return m_ExampleProperty;
-//}
-
-//bool ExperimentManager::eventFilter(QObject *target, QEvent *event)
-//{
-//	if (target == stimContainerDlg) 
-//	{
-//		if (event->type() == QEvent::KeyPress) 
-//		{
-//			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-//			switch (keyEvent->key())
-//			{
-//			case Qt::Key_Escape:
-//				if((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->modifiers() & Qt::AltModifier))
-//				{
-//					emit UserWantsToClose();
-//					abortExperiment();
-//				}
-//				break;
-//			}
-//
-//			//if(keyEvent->text() == ui.USBCharEdit->text()) // for fMRI triggering via USB port (simulated keyboard)
-//			//{
-//			//	updateTriggerCount();
-//			//	return true;
-//			//}
-//		}
-//	}
-//	//return QDialog::eventFilter(target, event);
-//	return true;
-//}
 
 QString ExperimentManager::getExperimentFileName()
 {
@@ -199,6 +148,15 @@ bool ExperimentManager::openExperiment(QString strFile, bool bViewEditTree)
 	return false;
 }
 
+void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrState)
+{
+	if (expCurrState != getCurrentExperimentState())
+	{
+		experimentCurrentState = expCurrState;
+		emit ExperimentStateHasChanged(expCurrState,getCurrentDateTimeStamp());
+	}
+}
+
 bool ExperimentManager::runExperiment()
 {
 	if (!currentExperimentTree)
@@ -206,6 +164,12 @@ bool ExperimentManager::runExperiment()
 		qDebug() << "runExperiment::No Experiment loaded!";
 		return false;
 	}
+	if(getCurrentExperimentState() != Experiment_Initialized)
+	{
+		qDebug() << "runExperiment::Wrong state, could not start experiment!";
+		return false;
+	}
+	changeCurrentExperimentState(Experiment_IsStarting);
 	//m_ForceExperimentToStop = false;
 #ifdef Q_OS_WIN
 	bool ret = SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
@@ -215,10 +179,18 @@ bool ExperimentManager::runExperiment()
 #endif
 	if (!configureExperiment())
 	{
+		changeCurrentExperimentState(Experiment_Initialized);
 		return false;
 	}	
 	if (!createExperimentObjects())
 	{
+		changeCurrentExperimentState(Experiment_Initialized);
+		return false;
+	}
+
+	if(!connectExperimentObjects())
+	{
+		changeCurrentExperimentState(Experiment_Initialized);
 		return false;
 	}
 
@@ -274,22 +246,36 @@ bool ExperimentManager::runExperiment()
 	//	}
 	//	QMainWindow::closeEvent(evt);
 	//}
-
-	emit ExperimentStateHasChanged(Experiment_Initialized,getCurrentDateTimeStamp());
+	
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
+		changeCurrentExperimentState(Experiment_Initialized);
 		return false;
 	}
-	emit ExperimentStateHasChanged(Experiment_Started,getCurrentDateTimeStamp());
+	changeCurrentExperimentState(Experiment_Started);
 	return true;
 }
 
 void ExperimentManager::abortExperiment()
 {
-	if(!stopExperimentObjects())
-		qDebug() << "ExperimentManager::abortExperiment Could not stop the Experiment Objects";
-	//cleanupExperiment();
-	QThread::currentThread()->setPriority(QThread::NormalPriority);
+	if(getCurrentExperimentState()==Experiment_Started)
+	{
+		changeCurrentExperimentState(Experiment_IsStopping);
+		if(!abortExperimentObjects())
+			qDebug() << "ExperimentManager::abortExperiment Could not abort the Experiment Objects";
+		QThread::currentThread()->setPriority(QThread::NormalPriority);
+	}
+}
+
+void ExperimentManager::stopExperiment()
+{
+	if(getCurrentExperimentState()==Experiment_Started)
+	{
+		changeCurrentExperimentState(Experiment_IsStopping);
+		if(!stopExperimentObjects())
+			qDebug() << "ExperimentManager::stopExperiment Could not stop the Experiment Objects";
+		QThread::currentThread()->setPriority(QThread::NormalPriority);
+	}
 }
 
 bool ExperimentManager::cleanupExperiment()
@@ -310,7 +296,7 @@ void ExperimentManager::cleanupExperimentObjects()
 	{
 		for (int i=0;i<nCount;i++)
 		{
-			if ((lExperimentObjectList[i].pObject))// && (lExperimentObjectList[i].nState != ExperimentObject_Aborted) && (lExperimentObjectList[i].nState != ExperimentObject_IsAborting))
+			if ((lExperimentObjectList[i].pObject))
 			{
 				//if (!(lExperimentObjectList[i].pObject->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(SIGNAL_LOGTOMANAGER)) == -1))//Is the signal present?
 				//{
@@ -343,31 +329,42 @@ bool ExperimentManager::changeExperimentObjectsSignalSlots(bool bDisconnect, int
 			if ((nSpecificIndex != -1) && (nSpecificIndex < nCount))
 				i = nSpecificIndex;//set i to the index
 			
-
-
-			//QString sSlotFullName = "WidgetStateHasChanged";//FUNC_WIDGETSTATECHANGED_FULL;//FUNC_USERCLOSE_FULL;
 			const QMetaObject* metaObject = lExperimentObjectList.at(i).pObject->metaObject();
-			if (metaObject->indexOfSignal(metaObject->normalizedSignature(FUNC_USERCLOSE_FULL)) != -1)//Is the signal present?
+
+			//QString sSlotFullName = "ObjectStateHasChanged";//FUNC_WIDGETSTATECHANGED_FULL;//FUNC_USERCLOSE_FULL;
+			if (metaObject->indexOfSignal(metaObject->normalizedSignature(SIGNAL_USERCLOSE_FULL)) != -1)//Is the signal present?
 			{
 				if (bDisconnect)
 				{
 					disconnect(lExperimentObjectList[i].pObject, SIGNAL(UserWantsToClose(void)), this, SLOT(abortExperiment(void)));
 				}
 				else
-				{
+				{//For now the complete experiment including all object is aborted whenever the UserWantsToClose Signal gets activated
 					connect(lExperimentObjectList[i].pObject, SIGNAL(UserWantsToClose(void)), this, SLOT(abortExperiment(void)));
 				}
 			}
 
-			if (metaObject->indexOfSignal(metaObject->normalizedSignature(FUNC_WIDGETSTATECHANGED_FULL)) != -1)//Is the signal present?
+			if (metaObject->indexOfSignal(metaObject->normalizedSignature(SIGNAL_OBJECTSTOP_FULL)) != -1)//Is the signal present?
 			{
 				if (bDisconnect)
 				{
-					disconnect(lExperimentObjectList[i].pObject, SIGNAL(WidgetStateHasChanged(ExperimentObjectState)), this, SLOT(changeExperimentObjectState(ExperimentObjectState)));
+					disconnect(lExperimentObjectList[i].pObject, SIGNAL(ObjectShouldStop(void)), this, SLOT(stopExperiment(void)));
+				}
+				else
+				{//For now the complete experiment including all object is aborted whenever the ObjectShouldStop Signal gets activated
+					connect(lExperimentObjectList[i].pObject, SIGNAL(ObjectShouldStop(void)), this, SLOT(stopExperiment(void)));
+				}
+			}
+
+			if (metaObject->indexOfSignal(metaObject->normalizedSignature(FUNC_OBJECTSTATECHANGED_FULL)) != -1)//Is the signal present?
+			{
+				if (bDisconnect)
+				{
+					disconnect(lExperimentObjectList[i].pObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
 				} 
 				else
 				{
-					connect(lExperimentObjectList[i].pObject, SIGNAL(WidgetStateHasChanged(ExperimentObjectState)), this, SLOT(changeExperimentObjectState(ExperimentObjectState)));
+					connect(lExperimentObjectList[i].pObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
 				}
 					
 			}
@@ -380,7 +377,7 @@ bool ExperimentManager::changeExperimentObjectsSignalSlots(bool bDisconnect, int
 	return true;
 }
 
-void ExperimentManager::changeExperimentObjectState(ExperimentObjectState nState)
+void ExperimentManager::changeExperimentSubObjectState(ExperimentSubObjectState nState)
 {
 	if (!currentExperimentTree)
 	{
@@ -395,28 +392,42 @@ void ExperimentManager::changeExperimentObjectState(ExperimentObjectState nState
 			if (QObject::sender() == lExperimentObjectList.at(i).pObject)
 			{
 				//We automatically close and delete the object after a "Abort" command...
-				if(nState == ExperimentObject_Abort)
+				if(nState == Experiment_SubObject_Abort)
 				{
-					if (lExperimentObjectList[i].nState != ExperimentObject_IsAborting)//Multiple Abort events could occur, catch only first one
+					if (lExperimentObjectList[i].nState != Experiment_SubObject_IsAborting)//Multiple Abort events could occur, catch only first one
 					{
+						connectExperimentObjects(true,lExperimentObjectList[i].nObjectID);//disconnect!
 						lExperimentObjectList[i].pObject->deleteLater();
-						lExperimentObjectList[i].nState = ExperimentObject_IsAborting;
+						lExperimentObjectList[i].nState = Experiment_SubObject_IsAborting;
 					}
 				}
-				if(nState == ExperimentObject_Aborted)
+				else if(nState == Experiment_SubObject_Stop)
+				{
+					if (lExperimentObjectList[i].nState != Experiment_SubObject_IsStopping)//Multiple Stop events could occur, catch only first one
+					{
+						connectExperimentObjects(true,lExperimentObjectList[i].nObjectID);//disconnect!
+						lExperimentObjectList[i].pObject->deleteLater();
+						lExperimentObjectList[i].nState = Experiment_SubObject_IsStopping;
+					}
+				}
+				else if(nState == Experiment_SubObject_Stopped)
 				{
 					changeExperimentObjectsSignalSlots(true,i);
 					lExperimentObjectList[i].pObject = NULL;
+					lExperimentObjectList[i].nState = nState;
 				}
-				lExperimentObjectList[i].nState = nState;//Set the new object state				
+				else//All other cases
+				{
+					lExperimentObjectList[i].nState = nState;//Set the new object state
+				}
 			}
-			if (!((lExperimentObjectList[i].nState == ExperimentObject_Initialized)||(lExperimentObjectList[i].nState == ExperimentObject_Stopped)||(lExperimentObjectList[i].nState == ExperimentObject_Aborted)))
+			if (!((lExperimentObjectList[i].nState == Experiment_SubObject_Initialized)||(lExperimentObjectList[i].nState == Experiment_SubObject_Stopped)))
 			{
 				nActiveExperimentObjects++;
 			}			
 		}
-		if(nActiveExperimentObjects == 0)
-			emit ExperimentStateHasChanged(Experiment_Stopped,getCurrentDateTimeStamp());
+		if(nActiveExperimentObjects == 0)//No more active object? Then the experiment ended
+			changeCurrentExperimentState(Experiment_Stopped);
 	}
 }
 
@@ -469,10 +480,15 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 	}
 }
 
+bool ExperimentManager::abortExperimentObjects()
+{
+	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_ABORT));
+	return bRetVal;
+}
+
 bool ExperimentManager::stopExperimentObjects()
 {
 	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_STOP));
-	//changeExperimentObjectsSignalSlots(true);
 	return bRetVal;
 }
 
@@ -497,6 +513,7 @@ bool ExperimentManager::configureExperiment()
 
 	QStringList strList;
 	strList.append(ROOT_TAG);
+	strList.append(DEFINES_TAG);
 	strList.append(EXPERIMENT_TAG);
 	QDomNodeList tmpList;
 	if (currentExperimentTree->getDocumentElements(strList,tmpList))
@@ -537,23 +554,277 @@ bool ExperimentManager::configureExperiment()
 				{
 					strcExperimentConfiguration.bDebugMode = false;
 				}
-
-				fix above and hereafter search for a member and call him to set the experiment object!
-
-				//	strcExperimentConfiguration.nExperimentName =  tmpString;
-				//tmpElement = tmpNode.toElement();
-
-
 			}
-
 		}
-
 	}
-
-	
-	//strcExperimentConfiguration	ExperimentConfiguration
 	return true;
 }
+
+bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID)
+{//nObjectID only implemented when bDisconnect = true!
+	if (!currentExperimentTree)
+	{
+		qDebug() << "connectExperimentObjects::No Experiment loaded!";
+		return false;
+	}
+	QStringList strList;
+	strList.clear();
+	strList.append(ROOT_TAG);
+	strList.append(CONNECTIONS_TAG);
+	strList.append(OBJECT_TAG);
+	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList))
+	{
+		int nNrOfObjects = ExperimentObjectDomNodeList.count();
+		QDomNode tmpNode;
+		QDomElement tmpElement;
+		QDomNodeList tmpObjectNodeList;
+		QString tmpString;
+
+		int nSourceObjectID = -1;
+		int nTargetObjectID = -1;
+		QString sSourceType = "";
+		QString sSourceSignature = "";
+		QString sTargetType = "";
+		QString sTargetSignature = "";
+		QObject *pSourceObject = NULL;
+		QObject *pTargetObject = NULL;
+
+		for(int i=0;i<nNrOfObjects;i++)
+		{
+			tmpNode = ExperimentObjectDomNodeList.at(i);
+			if (tmpNode.isElement()) 
+			{
+				tmpString = "";
+				tmpElement = tmpNode.toElement();
+				if(!tmpElement.hasAttribute(ID_TAG))
+					break;
+				tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+				if (tmpString.isEmpty())
+					break;
+				nSourceObjectID = tmpString.toInt();
+				if (!(nSourceObjectID >= 0))
+					break;
+				pSourceObject = getObjectElementById(nSourceObjectID);
+				if (pSourceObject == NULL)
+					continue;
+
+				tmpElement = tmpNode.firstChildElement(CONNECTIONS_TYPE_TAG);
+				tmpString = tmpElement.text();
+				if (tmpString.isEmpty())
+					break;
+				if (!(tmpString == CONNECTIONS_TYPE_SIGNAL_TAG))
+					break;
+				sSourceType = tmpString;
+
+				tmpElement = tmpNode.firstChildElement(CONNECTIONS_SIGNATURE_TAG);
+				tmpString = tmpElement.text();
+				if (tmpString.isEmpty())
+					break;
+				sSourceSignature = tmpString;
+
+
+
+				tmpObjectNodeList = tmpNode.toElement().elementsByTagName(CONNECTIONS_TARGET_TAG);//Retrieve all the targets
+				int nTargetCount = tmpObjectNodeList.count();
+				if (nTargetCount>0)
+				{
+					for (int j=0;j<nTargetCount;j++)//For each object
+					{
+						tmpString = "";
+						tmpNode = tmpObjectNodeList.at(j);
+						tmpElement = tmpNode.toElement();
+						if(!tmpElement.hasAttribute(ID_TAG))
+							continue;
+						tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+						if (tmpString.isEmpty())
+							continue;
+						nTargetObjectID = tmpString.toInt();
+						if (!(nTargetObjectID >= 0))
+							continue;
+						pTargetObject = getObjectElementById(nTargetObjectID);
+						if (pTargetObject == NULL)
+							continue;
+
+						tmpElement = tmpNode.firstChildElement(CONNECTIONS_TYPE_TAG);
+						tmpString = tmpElement.text();
+						if (tmpString.isEmpty())
+							continue;
+						if (!((tmpString == CONNECTIONS_TYPE_SIGNAL_TAG) || (tmpString == CONNECTIONS_TYPE_SLOT_TAG)))
+							continue;
+						sTargetType = tmpString;
+
+						tmpElement = tmpNode.firstChildElement(CONNECTIONS_SIGNATURE_TAG);
+						tmpString = tmpElement.text();
+						if (tmpString.isEmpty())
+							continue;
+						sTargetSignature = tmpString;
+
+						const QMetaObject* targetMetaObject = pTargetObject->metaObject();
+						const QMetaObject* sourceMetaObject = pSourceObject->metaObject();
+						int nSourceID = -1;
+						int nTargetID = -1;
+
+						if (!bDisconnect)
+						{
+							if (sTargetType == CONNECTIONS_TYPE_SIGNAL_TAG)
+							{
+								if (sSourceType == CONNECTIONS_TYPE_SIGNAL_TAG)
+								{
+									nSourceID = sourceMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sSourceSignature.toLatin1()));
+									if (!(nSourceID == -1))//Is the signal present?
+									{
+										nTargetID = targetMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
+										if (!(nTargetID == -1))//Is the signal present?
+										{
+											QMetaObject::connect(pSourceObject, nSourceID, pTargetObject, nTargetID);
+										}
+									}
+								} 
+							} 
+							else if(sTargetType == CONNECTIONS_TYPE_SLOT_TAG)
+							{
+								if (sSourceType == CONNECTIONS_TYPE_SIGNAL_TAG)
+								{
+									nSourceID = sourceMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sSourceSignature.toLatin1()));
+									if (!(nSourceID == -1))//Is the signal present?
+									{
+										nTargetID = targetMetaObject->indexOfMethod(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
+										if (!(nTargetID == -1))//Is the method present?
+										{
+											QMetaObject::connect(pSourceObject, nSourceID, pTargetObject, nTargetID);
+										}
+									}
+								} 
+							}							
+						} 
+						else
+						{
+							if ((nObjectID == -1) ||((nSourceObjectID == nObjectID) || (nTargetObjectID == nObjectID)))
+							{
+								if (sTargetType == CONNECTIONS_TYPE_SIGNAL_TAG)
+								{
+									if (sSourceType == CONNECTIONS_TYPE_SIGNAL_TAG)
+									{
+										nSourceID = sourceMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sSourceSignature.toLatin1()));
+										if (!(nSourceID == -1))//Is the signal present?
+										{
+											nTargetID = targetMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
+											if (!(nTargetID == -1))//Is the signal present?
+											{
+												QMetaObject::disconnect(pSourceObject, nSourceID, pTargetObject, nTargetID);
+											}
+										}
+									} 
+								} 
+								else if(sTargetType == CONNECTIONS_TYPE_SLOT_TAG)
+								{
+									if (sSourceType == CONNECTIONS_TYPE_SIGNAL_TAG)
+									{
+										nSourceID = sourceMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sSourceSignature.toLatin1()));
+										if (!(nSourceID == -1))//Is the signal present?
+										{
+											nTargetID = targetMetaObject->indexOfMethod(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
+											if (!(nTargetID == -1))//Is the method present?
+											{
+												QMetaObject::disconnect(pSourceObject, nSourceID, pTargetObject, nTargetID);
+											}
+										}
+									} 
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+QObject *ExperimentManager::getObjectElementById(int nID)
+{
+	if (nID >= 0)
+	{
+		int nObjectCount = lExperimentObjectList.count();
+		if (nObjectCount>0)
+		{
+			for (int i=0;i<nObjectCount;i++)
+			{
+				if (lExperimentObjectList.at(i).nObjectID == nID)
+				{
+					return(lExperimentObjectList.at(i).pObject);
+				}
+			}
+		}
+	}
+	return NULL;
+}
+				//int metaID = QMetaType::type(sClass.toLatin1());
+				//if (metaID > 0)//(id != -1) 
+				//{
+				//	bool bRetVal = true;
+				//	objectElement tmpElement;
+				//	tmpElement.nObjectID = nID;
+				//	tmpElement.nMetaID = metaID;
+				//	tmpElement.sObjectName = sName;
+				//	tmpElement.pObject = static_cast< QObject* > ( QMetaType::construct(metaID) );
+
+				//	const QMetaObject* metaObject = tmpElement.pObject->metaObject();
+
+				//	//QStringList properties;
+				//	//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+				//	//	properties << QString::fromLatin1(metaObject->method(i).signature());
+
+				//	if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature(SIGNAL_LOGTOMANAGER)) == -1))//Is the signal present?
+				//	{
+				//		//Connect the signal
+				//		connect(tmpElement.pObject, SIGNAL(LogToExperimentManager(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
+				//	}
+
+				//	if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETOBJECTID_FULL)) == -1))//Is the slot present?
+				//	{
+				//		//Invoke the slot
+				//		bRetVal = true;
+				//		if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
+				//		{
+				//			qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETOBJECTID << "()" << ")!";		
+				//			return false;
+				//		}		
+				//	}
+
+				//	if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTCONFIGURATION_FULL)) == -1))//Is the slot present?
+				//	{
+				//		//Invoke the slot
+				//		bRetVal = true;
+				//		if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTCONFIGURATION, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(ExperimentConfiguration*, &strcExperimentConfiguration))))
+				//		{
+				//			qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTCONFIGURATION << "()" << ")!";		
+				//			return false;
+				//		}		
+				//	}	
+
+				//	if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETBLOCKTRIALDOMNODELIST_FULL)) == -1))//Is the slot present?
+				//	{
+				//		//Invoke the slot
+				//		bRetVal = true;
+				//		if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETBLOCKTRIALDOMNODELIST, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentBlockTrialsDomNodeList))))
+				//		{
+				//			qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
+				//			return false;
+				//		}		
+				//	}
+
+				//	tmpElement.nState = Experiment_SubObject_Initialized;//This is still an inactive state!
+				//	lExperimentObjectList.append(tmpElement);					
+				//}
+//			}
+//		}
+//		return true;
+//	}
+//	return false;
+//}
+
 
 bool ExperimentManager::createExperimentObjects()
 {
@@ -618,6 +889,7 @@ bool ExperimentManager::createExperimentObjects()
 				int metaID = QMetaType::type(sClass.toLatin1());
 				if (metaID > 0)//(id != -1) 
 				{
+					bool bRetVal = true;
 					objectElement tmpElement;
 					tmpElement.nObjectID = nID;
 					tmpElement.nMetaID = metaID;
@@ -636,10 +908,32 @@ bool ExperimentManager::createExperimentObjects()
 						connect(tmpElement.pObject, SIGNAL(LogToExperimentManager(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
 					}
 
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETOBJECTID_FULL)) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						bRetVal = true;
+						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
+						{
+							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETOBJECTID << "()" << ")!";		
+							return false;
+						}		
+					}
+
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTCONFIGURATION_FULL)) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						bRetVal = true;
+						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTCONFIGURATION, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(ExperimentConfiguration*, &strcExperimentConfiguration))))
+						{
+							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTCONFIGURATION << "()" << ")!";		
+							return false;
+						}		
+					}	
+
 					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETBLOCKTRIALDOMNODELIST_FULL)) == -1))//Is the slot present?
 					{
 						//Invoke the slot
-						bool bRetVal = true;
+						bRetVal = true;
 						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETBLOCKTRIALDOMNODELIST, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentBlockTrialsDomNodeList))))
 						{
 							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
@@ -647,18 +941,7 @@ bool ExperimentManager::createExperimentObjects()
 						}		
 					}
 
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETOBJECTID_FULL)) == -1))//Is the slot present?
-					{
-						//Invoke the slot
-						bool bRetVal = true;
-						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
-						{
-							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETOBJECTID << "()" << ")!";		
-							return false;
-						}		
-					}					
-
-					tmpElement.nState = ExperimentObject_Initialized;//This is still an inactive state!
+					tmpElement.nState = Experiment_SubObject_Initialized;//This is still an inactive state!
 					lExperimentObjectList.append(tmpElement);					
 				}
 			}

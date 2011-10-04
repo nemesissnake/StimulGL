@@ -4,11 +4,16 @@
 RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent)
 {
 	initialize();
-	GLWidgetWrapper::SetupLayout(this);
+	GLWidgetWrapper::setupLayout(this);
 }
 
 RetinoMap_glwidget::~RetinoMap_glwidget()
 {
+}
+
+void RetinoMap_glwidget::testSlot()//const QString &strText
+{
+
 }
 
 void RetinoMap_glwidget::initialize()
@@ -59,10 +64,20 @@ void RetinoMap_glwidget::initialize()
 //	return true;
 //}
 
-//bool RetinoMap_glwidget::start()
+bool RetinoMap_glwidget::start()
+{
+	//Virtual, don't forget to call the base member first!
+	if(!GLWidgetWrapper::start()) 
+		return false;
+	//Additional code:
+	emit LogToExperimentManager("Started");
+	return true;
+}
+
+//bool RetinoMap_glwidget::abort()
 //{
 //	//Virtual, don't forget to call the base member first!
-//	if(!GLWidgetWrapper::start()) 
+//	if(!GLWidgetWrapper::abort()) 
 //		return false;
 //	//Additional code:
 //
@@ -89,6 +104,16 @@ void RetinoMap_glwidget::initialize()
 //	return true;
 //}
 
+//bool RetinoMap_glwidget::setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct)
+//{
+//	//Virtual, don't forget to call the base member first!
+//	if(!GLWidgetWrapper::setExperimentConfiguration(pExpConfStruct))
+//		return false;
+//	//Additional code:
+//
+//	return true;
+//}
+
 bool RetinoMap_glwidget::setObjectID(int nObjID)
 {
 	//Virtual, don't forget to call the base member first!
@@ -109,13 +134,13 @@ void RetinoMap_glwidget::initBlockTrial()
 	QString tmpParamValue;
 	xwidth = rectScreenRes.width();
 	ywidth = rectScreenRes.height();
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_XPIXEL_AMOUNT,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_XPIXEL_AMOUNT,tmpParamValue))
 		x_size_stim = tmpParamValue.toFloat();
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_YPIXEL_AMOUNT,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_YPIXEL_AMOUNT,tmpParamValue))
 		y_size_stim = tmpParamValue.toFloat();
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_CYCLEDURATION_TR,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_CYCLEDURATION_TR,tmpParamValue))
 		cycle_dur = tmpParamValue.toFloat();
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_FLICKRSPEED_HZ,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_FLICKRSPEED_HZ,tmpParamValue))
 	{
 		if(tmpParamValue.toFloat()>0)
 			flickr_speed = 100/tmpParamValue.toFloat();
@@ -154,7 +179,7 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 		painter.drawText(QRect(10, 0, 200, 100), Qt::AlignLeft, textContent);
 		//if(pMainObject->currentBlockTrial < pMainObject->BlockTrialFiles.size())
 		//{
-		textContent = QString::number(getCompletedTriggers()) + " " + QString::number(getCurrentBlockTrial());
+		textContent = QString::number(getCurrentExperimentTriggers()) + " " + QString::number(getCurrentExperimentTrial()) + " " + QString::number(getCurrentExperimentBlock());
 		painter.drawText(QRect(10, 50, 200, 100), Qt::AlignLeft, textContent);
 		//}
 	}
@@ -162,15 +187,15 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 	QColor color1 = QColor(255, 255, 255);
 	QColor color2 = QColor(0, 0, 0);
 	// access trial/block parameters
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_WEDGESPAN_DEGREES,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_WEDGESPAN_DEGREES,tmpParamValue))
 		wedge_deg = tmpParamValue.toFloat();
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_CHECK_AMOUNT,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_CHECK_AMOUNT,tmpParamValue))
 		wedge_nr_checks = tmpParamValue.toFloat();
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_RING_AMOUNT,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_RING_AMOUNT,tmpParamValue))
 		wedge_nr_rings = tmpParamValue.toFloat();
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_ROTATION_DIRECTION,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_ROTATION_DIRECTION,tmpParamValue))
 		rot_dir = tmpParamValue.toInt();
-	if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_CORTMAG_FACTOR,tmpParamValue))
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_CORTMAG_FACTOR,tmpParamValue))
 		cort_mag_factor = tmpParamValue.toFloat();
 		
 	//cent_gap = 20.0; // aperture in the middle left blank
@@ -185,7 +210,7 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 		else
 			flickr_switch = 0;
 		
-		if (getBlockTrialParameter(getCurrentBlockTrial(),nRetinoID,RETINOMAP_WIDGET_FLICKRSPEED_HZ,tmpParamValue))
+		if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_FLICKRSPEED_HZ,tmpParamValue))
 		{
 			if (tmpParamValue.toInt()>0)
 			{
