@@ -67,6 +67,8 @@ private:
 	bool configureExperiment();
 	bool createExperimentObjects();
 	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);
+	bool initializeExperimentObjects(bool bFinalize = false);
+	bool finalizeExperimentObjects();
 	bool startExperimentObjects(bool bRunFullScreen = true);
 	bool stopExperimentObjects();
 	bool abortExperimentObjects();
@@ -75,6 +77,8 @@ private:
 	void changeCurrentExperimentState(ExperimentState expCurrState);
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrentExperimentState() {return experimentCurrentState;}
+	//bool getGenericArgument(QString strMetaType,QString strValue, QGenericArgument &genArg);
+	//QGenericArgument getGenericArgument(QString *strMetaType,QString *strValue, bool &bSucceeded);
 
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;

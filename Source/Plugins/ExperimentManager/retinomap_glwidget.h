@@ -12,6 +12,7 @@
 #define RETINOMAP_WIDGET_XPIXEL_AMOUNT		"stimulus pixel no x"
 #define RETINOMAP_WIDGET_YPIXEL_AMOUNT		"stimulus pixel no y"
 #define RETINOMAP_WIDGET_CORTMAG_FACTOR		"cortical mag factor"
+#define RETINOMAP_WIDGET_TRDURATION_MSEC	"TR duration in msec"
 
 class RetinoMap_glwidget : public GLWidgetWrapper
 {
@@ -26,12 +27,12 @@ public:
 	RetinoMap_glwidget(const RetinoMap_glwidget& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 public slots:
-	bool start();
-	//bool abort();
-	//bool stop();
+	bool startExperimentObject();
+	//bool abortExperimentObject();
+	//bool stopExperimentObject();
 	//bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList = NULL);
 	//bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
-	bool setObjectID(int nObjID);
+	bool setExperimentObjectID(int nObjID);
 	void testSlot();//const QString &strText
 
 protected:
@@ -61,7 +62,7 @@ public:
 	float ystart_rel;
 	float startAngle;
 	float cycle_dur;
-	float TR;
+	int TR_duration;
 	float x_size_stim;
 	float y_size_stim;
 	float wedge_deg;
@@ -70,8 +71,8 @@ public:
 	int rot_dir;
 	float cort_mag_factor;
 	int cent_gap;
-	int draw_page;
-	int disp_page;
+	//int draw_page;
+	//int disp_page;
 	int nFlickSpeed;
 	float xWedge;
 	float yWedge;

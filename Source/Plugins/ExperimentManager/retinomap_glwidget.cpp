@@ -36,9 +36,10 @@ void RetinoMap_glwidget::initialize()
 	wedge_nr_rings = 20;
 	rot_dir = -1;
 	cort_mag_factor = 0.2;
+	TR_duration = 2000;
 	cent_gap = 20.0;//aperture in the middle left blank
-	draw_page;
-	disp_page;
+	//draw_page;
+	//disp_page;
 	nFlickSpeed = 5;
 	fix_color = QColor(255, 0, 0);
 	fix_width =  8;
@@ -46,10 +47,10 @@ void RetinoMap_glwidget::initialize()
 	nRetinoID = -1;
 }
 
-//void RetinoMap_glwidget::init()
+//void RetinoMap_glwidget::initExperimentObject()
 //{
 //	//Virtual, don't forget to call the base member first!
-//	GLWidgetWrapper::init();
+//	GLWidgetWrapper::initExperimentObject();
 //	//Additional code:
 //
 //}
@@ -64,30 +65,30 @@ void RetinoMap_glwidget::initialize()
 //	return true;
 //}
 
-bool RetinoMap_glwidget::start()
+bool RetinoMap_glwidget::startExperimentObject()
 {
 	//Virtual, don't forget to call the base member first!
-	if(!GLWidgetWrapper::start()) 
+	if(!GLWidgetWrapper::startExperimentObject()) 
 		return false;
 	//Additional code:
 	emit LogToExperimentManager("Started");
 	return true;
 }
 
-//bool RetinoMap_glwidget::abort()
+//bool RetinoMap_glwidget::abortExperimentObject()
 //{
 //	//Virtual, don't forget to call the base member first!
-//	if(!GLWidgetWrapper::abort()) 
+//	if(!GLWidgetWrapper::abortExperimentObject()) 
 //		return false;
 //	//Additional code:
 //
 //	return true;
 //}
 
-//bool RetinoMap_glwidget::stop()
+//bool RetinoMap_glwidget::stopExperimentObject()
 //{
 //	//Virtual, don't forget to call the base member first!
-//	if(!GLWidgetWrapper::stop())
+//	if(!GLWidgetWrapper::stopExperimentObject())
 //		return false;
 //	//Additional code:
 //
@@ -114,10 +115,10 @@ bool RetinoMap_glwidget::start()
 //	return true;
 //}
 
-bool RetinoMap_glwidget::setObjectID(int nObjID)
+bool RetinoMap_glwidget::setExperimentObjectID(int nObjID)
 {
 	//Virtual, don't forget to call the base member first!
-	if(!GLWidgetWrapper::setObjectID(nObjID))
+	if(!GLWidgetWrapper::setExperimentObjectID(nObjID))
 		return false;
 	//Additional code:
 
@@ -197,12 +198,14 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 		rot_dir = tmpParamValue.toInt();
 	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_CORTMAG_FACTOR,tmpParamValue))
 		cort_mag_factor = tmpParamValue.toFloat();
+	if (getExperimentBlockParameter(getCurrentExperimentBlock(),nRetinoID,RETINOMAP_WIDGET_TRDURATION_MSEC,tmpParamValue))
+		TR_duration = tmpParamValue.toInt();	
 		
 	//cent_gap = 20.0; // aperture in the middle left blank
 	Qt::PenStyle style = Qt::SolidLine; // Qt::NoPen
 	Qt::PenCapStyle cap = Qt::FlatCap;
-	draw_page = getFrameNumber() % 2;
-	disp_page = (getFrameNumber()+1) % 2;
+	//draw_page = getFrameNumber() % 2;
+	//disp_page = (getFrameNumber()+1) % 2;
 	if(trialTime.elapsed() >= flickr_speed)//Can we change the flickr?
 	{
 		if(flickr_switch == 0)
@@ -227,11 +230,11 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 		cur_ypt = (ywidth - cur_ysize) / 2.0f;
 		if(rot_dir == -1)
 		{
-			startAngle = ((360.0f) / (cycle_dur * 1000 * TR)) * trialTime.elapsed();
+			startAngle = ((360.0f) / (cycle_dur * TR_duration)) * trialTime.elapsed();
 		}
 		else
 		{
-			startAngle = ((360.0f) / (cycle_dur * 1000 * TR)) * -(trialTime.elapsed());
+			startAngle = ((360.0f) / (cycle_dur * TR_duration)) * -(trialTime.elapsed());
 		}
 		for(int i=1; i<wedge_nr_rings+1;i++)
 		{
@@ -276,8 +279,8 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 	//else // eccentricity
 	//{
 	//	float xWedge = wedge_deg / wedge_nr_checks * 16.0f;
-	//	float yWedge = ((y_size_stim - cent_gap)) * cort_mag_factor - (((y_size_stim - cent_gap) / (cycle_dur * 1000 * TR)) * trialTime.elapsed()) * cort_mag_factor;
-	//	float cur_ysize = (y_size_stim - yWedge/2.0f) - (((y_size_stim - cent_gap) / (cycle_dur * 1000 * TR)) * trialTime.elapsed());
+	//	float yWedge = ((y_size_stim - cent_gap)) * cort_mag_factor - (((y_size_stim - cent_gap) / (cycle_dur * TR_duration)) * trialTime.elapsed()) * cort_mag_factor;
+	//	float cur_ysize = (y_size_stim - yWedge/2.0f) - (((y_size_stim - cent_gap) / (cycle_dur * TR_duration)) * trialTime.elapsed());
 	//	float cur_xpt = (xwidth - cur_ysize) / 2.0f;
 	//	float cur_ypt = (ywidth - cur_ysize) / 2.0f;
 	//	for(i=1; i<wedge_nr_rings+1;i++)

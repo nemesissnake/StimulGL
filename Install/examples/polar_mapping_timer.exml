@@ -8,15 +8,15 @@ Attributes only apply to readonly non user data, like the ID
 <EXML version="1.0.0.0">
     <defines>
 			<experiment ID="0">
-				<name>PolarMapping Experiment with a parallel port trigger</name>
+				<name>PolarMapping Experiment with a QTimer</name>
 				<debugmode>true</debugmode>
 			</experiment>
 		</defines>
 		
     <declarations>
         <object ID="0">
-            <class>ParallelPort</class>
-            <name>ParallelPort_Object_1</name>
+            <class>TriggerTimer</class>
+            <name>Timer_Object_1</name>
             <constructor>
                 <param1/>
             </constructor>
@@ -33,7 +33,7 @@ Attributes only apply to readonly non user data, like the ID
     <connections>
         <object ID="0">
         	<type>signal</type>
-        	<signature>CaptureThreadTriggered(short)</signature>
+        	<signature>timeout()</signature>
           <target ID="1">
           	<type>slot</type>     
           	<signature>incrementTrigger()</signature>      
@@ -44,33 +44,13 @@ Attributes only apply to readonly non user data, like the ID
     <initializations>
         <object ID="0">
         	<type>slot</type>
-        	<signature>StartCaptureThread</signature>
+        	<signature>start</signature>
         	<parameters>
 		      	<parameter ID="0">
-		        	<name>baseAddress</name>
-		        	<value>4369</value>
-		        	<type>const short</type>
-		        </parameter>
-		        <parameter ID="1">
-		        	<name>mask</name>
-		        	<value>32</value>
-		        	<type>const short</type>		        	
-						</parameter>		        	
-		        <parameter ID="2">	 	
-		        	<name>method</name>
-		        	<value>2</value>	 
-		        	<type>const short</type>		        	       	
-		        </parameter>
-		        <parameter ID="3">	      	
-		        	<name>postLHDelay</name>
-		        	<value>100</value>
-		        	<type>const int</type>		        	
-		        </parameter>       	
-		        <parameter ID="4">    	
-		        	<name>postHLDelay</name>
-		        	<value>100</value>	
-		        	<type>const int</type>		        	        	
-		        </parameter>        	
+		        	<name>msec</name>
+		        	<value>4000</value>
+		        	<type>int</type>
+		        </parameter>  	
         	</parameters>
         </object>
     </initializations>        
@@ -81,7 +61,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>FixationBlock</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>1</nr_of_triggers>	        
+	        <nr_of_triggers>2</nr_of_triggers>	        
 
 	        <object ID="1">
 	        	<parameters>
@@ -91,23 +71,23 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="1">
 			        	<name>wedge span in degrees</name>
-			        	<value>11.25</value>
+			        	<value>0</value>
 							</parameter>		        	
 			        <parameter ID="2">	 	
 			        	<name>nr of checks</name>
-			        	<value>8</value>	        	
+			        	<value>2</value>	        	
 			        </parameter>
 			        <parameter ID="3">	      	
 			        	<name>nr of rings</name>
-			        	<value>10</value>
+			        	<value>2</value>
 			        </parameter>       	
 			        <parameter ID="4">    	
 			        	<name>rotation direction</name>
-			        	<value>1</value>	        	
+			        	<value>-1</value>	        	
 			        </parameter>
 			        <parameter ID="5">   
 			        	<name>flickr speed in Hz</name>
-			        	<value>10</value>
+			        	<value>2</value>
 			        </parameter>	        	
 			        <parameter ID="6">   	
 			        	<name>stimulus pixel no x</name>
@@ -124,26 +104,26 @@ Attributes only apply to readonly non user data, like the ID
 			        <parameter ID="9">
 			        	<name>TR duration in msec</name>
 			        	<value>2000</value>
-			        </parameter>			        
+			        </parameter>				        
 			    	</parameters>    
 		    	</object>   
 	    	</block>
-    	
-			  <block ID="1">
-	        <name>FixationBlock</name>
+	    	
+		   	<block ID="1">
+	        <name>PolarBlock</name>
 	        <block_number>1</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>1</nr_of_triggers>
+	        <nr_of_trials>3</nr_of_trials>
+	        <nr_of_triggers>32</nr_of_triggers>	        
 
 	        <object ID="1">
-			    	<parameters>	        
+	        	<parameters>
 			        <parameter ID="0">
 			        	<name>duration of one cycle in TR</name>
-			        	<value>5</value>
+			        	<value>32</value>
 			        </parameter>
 			        <parameter ID="1">
 			        	<name>wedge span in degrees</name>
-			        	<value>10.2</value>
+			        	<value>22.5</value>
 							</parameter>		        	
 			        <parameter ID="2">	 	
 			        	<name>nr of checks</name>
@@ -159,7 +139,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="5">   
 			        	<name>flickr speed in Hz</name>
-			        	<value>20</value>
+			        	<value>5</value>
 			        </parameter>	        	
 			        <parameter ID="6">   	
 			        	<name>stimulus pixel no x</name>
@@ -172,12 +152,12 @@ Attributes only apply to readonly non user data, like the ID
 			        <parameter ID="8">	    	
 			        	<name>cortical mag factor</name>
 			        	<value>0.2</value>	        	
-			        </parameter>  
+			        </parameter> 
 			        <parameter ID="9">
 			        	<name>TR duration in msec</name>
 			        	<value>2000</value>
-			        </parameter>			         
-		      	</parameters> 
+			        </parameter>				        
+			    	</parameters>    
 		    	</object>   
 	    	</block>
 	
@@ -187,7 +167,7 @@ Attributes only apply to readonly non user data, like the ID
     <finalizations>
         <object ID="0">
         	<type>slot</type>
-        	<signature>StopCaptureThread</signature>
+        	<signature>stop()</signature>
         </object>
     </finalizations>     
 

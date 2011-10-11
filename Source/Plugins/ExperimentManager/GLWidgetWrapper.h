@@ -34,11 +34,11 @@ public:
 
 public slots:
 	//Can be overridden
-	virtual bool start();
-	virtual bool stop();
-	virtual bool abort();
+	virtual bool startExperimentObject();
+	virtual bool stopExperimentObject();
+	virtual bool abortExperimentObject();
 	virtual bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList = NULL);
-	virtual bool setObjectID(int nObjID);
+	virtual bool setExperimentObjectID(int nObjID);
 	virtual bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
 	
 	QRectF getScreenResolution();
@@ -60,7 +60,7 @@ protected:
 	void closeEvent(QCloseEvent *evt);
 	void customEvent(QEvent *event);
 
-	virtual void init();
+	virtual void initExperimentObject();
 	virtual void initBlockTrial();
 	//virtual bool loadBlockTrial();
 	virtual void paintEvent(QPaintEvent *event);

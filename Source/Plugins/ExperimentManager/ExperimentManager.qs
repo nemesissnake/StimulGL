@@ -25,7 +25,7 @@ function ExperimentStateChanged()
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
 ExperimentManagerObj.WriteToLogOutput.connect(this, this.Log);
-ExperimentManagerObj.openExperiment("D:\\Projects\\StimulGL\\Install\\examples\\polar_mapping.exml", false);
+ExperimentManagerObj.openExperiment("D:\\Projects\\StimulGL\\Install\\examples\\polar_mapping_timer.exml", false);//polar_mapping.exml
 ExperimentManagerObj.runExperiment();
 
 

@@ -79,7 +79,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				AdditionalOptions="&quot;/MANIFESTDEPENDENCY:type=&apos;win32&apos; name=&apos;Microsoft.Windows.Common-Controls&apos; version=&apos;6.0.0.0&apos; publicKeyToken=&apos;6595b64144ccf1df&apos; language=&apos;*&apos; processorArchitecture=&apos;*&apos;&quot;"
-				AdditionalDependencies="QtGuid4.lib QtCored4.lib QtScriptd4.lib QtScriptToolsd4.lib QtOpenGLd4.lib libgles_cm.lib"
+				AdditionalDependencies="QtGuid4.lib QtCored4.lib QtScriptd4.lib QtScriptToolsd4.lib QtOpenGLd4.lib"
 				OutputFile="$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).dll"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="$(QTDIR)\lib"

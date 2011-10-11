@@ -6,7 +6,7 @@
 
 GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 {
-	init();
+	initExperimentObject();
 	stimContainerDlg = NULL;
 	pExpBlockTrialDomNodeList = NULL;
 	bForceToStop = false;
@@ -48,7 +48,7 @@ GLWidgetWrapper::~GLWidgetWrapper()
 	changeSubObjectState(Experiment_SubObject_Stopped);
 }
 
-void GLWidgetWrapper::init()
+void GLWidgetWrapper::initExperimentObject()
 {
 	cleanupExperimentBlockTrialStructure();
 	nCurrentExperimentTrial = -1;
@@ -73,7 +73,7 @@ int GLWidgetWrapper::getObjectID()
 	return nObjectID;
 }
 
-bool GLWidgetWrapper::setObjectID(int nObjID)
+bool GLWidgetWrapper::setExperimentObjectID(int nObjID)
 {
 	if(nObjID >= 0)
 	{
@@ -366,7 +366,7 @@ void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 	//	stimContainerDlg->show();
 }
 
-bool GLWidgetWrapper::start()
+bool GLWidgetWrapper::startExperimentObject()
 {
 	if(!this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
 	{
@@ -378,7 +378,7 @@ bool GLWidgetWrapper::start()
 	//renderWdg->trialTime.start();
 	//renderWdg->frameTime.start();	
 	checkForNextBlockTrial();
-	startTriggerTimer(2000);
+	//startTriggerTimer(2000);
 	return true;
 }
 
@@ -396,14 +396,14 @@ void GLWidgetWrapper::closeEvent(QCloseEvent *evt)
 	QGLWidget::closeEvent(evt);
 }
 
-bool GLWidgetWrapper::stop()
+bool GLWidgetWrapper::stopExperimentObject()
 {
 	bExperimentShouldStop = true;
 	stopTriggerTimer();
 	return true;
 }
 
-bool GLWidgetWrapper::abort()
+bool GLWidgetWrapper::abortExperimentObject()
 {
 	bForceToStop = true;
 	stopTriggerTimer();

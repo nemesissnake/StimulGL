@@ -1,4 +1,5 @@
 #include "ExperimentManager.h"
+#include "metaextensions.h"
 #include <QFileDialog>
 #include <QWaitCondition>
 //#include "..\ParallelPortDevice\parallelport.h"
@@ -40,6 +41,7 @@ ExperimentManager::~ExperimentManager()
 void ExperimentManager::RegisterMetaTypes()
 {
 	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
+	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
 }
 
 QString ExperimentManager::getCurrentDateTimeStamp()
@@ -169,14 +171,16 @@ bool ExperimentManager::runExperiment()
 		qDebug() << "runExperiment::Wrong state, could not start experiment!";
 		return false;
 	}
-	changeCurrentExperimentState(Experiment_IsStarting);
-	//m_ForceExperimentToStop = false;
+
 #ifdef Q_OS_WIN
 	bool ret = SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 #else
 	QThread::currentThread()->setPriority(QThread::HighPriority);  
 	// QThread::TimeCriticalPriority);
 #endif
+
+	changeCurrentExperimentState(Experiment_IsStarting);
+
 	if (!configureExperiment())
 	{
 		changeCurrentExperimentState(Experiment_Initialized);
@@ -194,64 +198,18 @@ bool ExperimentManager::runExperiment()
 		return false;
 	}
 
-	//ContainerDlg *stimContainerDlg;
-	//stimContainerDlg = new ContainerDlg();//parent parameter?
-	//stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-	//stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool Retinotopic_Mapping::eventFilter(QObject *target, QEvent *event)
-	//QVBoxLayout *mainLayout = new QVBoxLayout;
-	//mainLayout->setAlignment(Qt::AlignCenter);
-	//mainLayout->setMargin(0);
-	//mainLayout->addWidget(widget);
-	//stimContainerDlg->setLayout(mainLayout);
-	////stimContainerDlg->show();
-	//stimContainerDlg->showFullScreen();
+	if(!initializeExperimentObjects())
+	{
+		changeCurrentExperimentState(Experiment_Initialized);
+		return false;
+	}
 
-	//ContainerDlg *stimContainerDlg;
-	//stimContainerDlg = new ContainerDlg();//parent parameter?
-	//stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-	//ThreadedGLWidgetWrapper *widget = new ThreadedGLWidgetWrapper(stimContainerDlg);
-	//QVBoxLayout *mainLayout = new QVBoxLayout;
-	//mainLayout->setAlignment(Qt::AlignCenter);
-	//mainLayout->setMargin(0);
-	//mainLayout->addWidget(widget);
-	//stimContainerDlg->setLayout(mainLayout);
-	////stimContainerDlg->show();
-	//stimContainerDlg->showFullScreen();
-	//widget->startRendering();
-	//SleeperThread::msleep(10000);
-	//if (widget) {
-	//	widget->stopRendering();
-	//	delete widget;
-	//}
-	//stimContainerDlg->close();
-	//delete stimContainerDlg;
-	//return true;
-
-	//retinoMapWdg->setFixedSize(1000,1000);
-	//retinoMapWdg->setDebugMode(true);
-	//retinoMapWdg->startAnimationTimer(50);
-	//if(m_RunFullScreen)
-	//stimContainerDlg->showFullScreen();
-	//else		
-	//QDesktopWidget *dt = QApplication::desktop();
-	//QCursor::setPos(dt->width(), dt->height()/2); // not at bottom because then mouse movement on Mac would show dock		
-	//return retinoMapWdg->start();
-	//}
-	//void AppWindow::closeEvent(QCloseEvent *evt)
-	//{
-	//	QWidgetList windows = ws->windowList();
-	//	for (int i = 0; i < int(windows.count()); ++i) {
-	//		GLWidget *window = (GLWidget *)windows.at(i);
-	//		window->stopRendering();
-	//	}
-	//	QMainWindow::closeEvent(evt);
-	//}
-	
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
 		changeCurrentExperimentState(Experiment_Initialized);
 		return false;
 	}
+
 	changeCurrentExperimentState(Experiment_Started);
 	return true;
 }
@@ -482,12 +440,14 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 
 bool ExperimentManager::abortExperimentObjects()
 {
+	finalizeExperimentObjects();
 	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_ABORT));
 	return bRetVal;
 }
 
 bool ExperimentManager::stopExperimentObjects()
 {
+	finalizeExperimentObjects();
 	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_STOP));
 	return bRetVal;
 }
@@ -498,6 +458,8 @@ bool ExperimentManager::startExperimentObjects(bool bRunFullScreen)
 	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_START));
 	return bRetVal;
 }
+
+//	short *aa;
 
 bool ExperimentManager::configureExperiment()
 {
@@ -558,6 +520,309 @@ bool ExperimentManager::configureExperiment()
 		}
 	}
 	return true;
+}
+
+//bool ExperimentManager::getGenericArgument(QString strMetaType,QString strValue, QGenericArgument &genArg)
+//{
+//	QByteArray normType = QMetaObject::normalizedType(strMetaType.toLatin1());
+//	int typeId = QMetaType::type(normType);
+//
+//	switch (typeId)//QMetaType::Type
+//	{
+//	case QMetaType::Bool: 
+//		genArg = Q_ARG(bool,strValue.toInt());
+//		break;
+//	case QMetaType::Int: 
+//		genArg = Q_ARG(int,strValue.toInt());
+//		break;
+//	case QMetaType::Short: 
+//		genArg = Q_ARG(short,strValue.toShort());
+//		break;
+//	default:
+//		return false;
+//	}
+//	return true;
+//}
+
+//QGenericArgument ExperimentManager::getGenericArgument(QString *strMetaType,QString *strValue, bool &bSucceeded)
+//{
+//	QByteArray normType = QMetaObject::normalizedType(strMetaType->toLatin1());
+//	int typeId = QMetaType::type(normType);
+//	QGenericArgument tmpGenArg;
+//
+//	switch (typeId)//QMetaType::Type
+//	{
+//	case QMetaType::Bool: 
+//		tmpGenArg = Q_ARG(bool,strValue->toInt());
+//		break;
+//	case QMetaType::Int: 
+//		tmpGenArg = Q_ARG(int,strValue->toInt());
+//		break;
+//	case QMetaType::Short: 
+//		tmpGenArg = Q_ARG(short,strValue->toShort());
+//		break;
+//	default:
+//		bSucceeded = false;
+//		return NULL;
+//	}
+//	bSucceeded = true;
+//	return tmpGenArg;
+//}
+
+bool ExperimentManager::finalizeExperimentObjects()
+{
+	return initializeExperimentObjects(true);
+}
+
+bool ExperimentManager::initializeExperimentObjects(bool bFinalize)
+{
+	if (!currentExperimentTree)
+	{
+		qDebug() << "initializeExperimentObjects(" << bFinalize << ")::No Experiment loaded!";
+		return false;
+	}
+	QStringList strList;
+	strList.clear();
+	strList.append(ROOT_TAG);
+	if (bFinalize)
+		strList.append(FINALIZATIONS_TAG); 
+	else
+		strList.append(INITIALIZATIONS_TAG);
+	strList.append(OBJECT_TAG);
+	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList))
+	{
+		int nNrOfObjects = ExperimentObjectDomNodeList.count();
+		QDomNode tmpNode;
+		QDomElement tmpElement;
+		QDomNodeList tmpObjectNodeList;
+		QString tmpString;
+
+		int nObjectID = -1;
+		int nParameterID = -1;
+		QObject *pSourceObject = NULL;
+		QString sType = "";
+		QString sSignature = "";
+		QList<QString> sParameterNames;
+		QList<QString> sParameterValues;
+		QList<QString> sParameterTypes;
+
+		for(int i=0;i<nNrOfObjects;i++)
+		{
+			tmpNode = ExperimentObjectDomNodeList.at(i);
+			if (tmpNode.isElement()) 
+			{
+				tmpString = "";
+				tmpElement = tmpNode.toElement();
+				if(!tmpElement.hasAttribute(ID_TAG))
+					break;
+				tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+				if (tmpString.isEmpty())
+					break;
+				nObjectID = tmpString.toInt();
+				if (!(nObjectID >= 0))
+					break;
+				pSourceObject = getObjectElementById(nObjectID);
+				if (pSourceObject == NULL)
+					continue;
+
+				tmpElement = tmpNode.firstChildElement(INIT_FINIT_TYPE_TAG);
+				tmpString = tmpElement.text();
+				if (tmpString.isEmpty())
+					break;
+				if (!(tmpString == INIT_FINIT_TYPE_SLOT_TAG))
+					break;
+				sType = tmpString;
+
+				tmpElement = tmpNode.firstChildElement(INIT_FINIT_SIGNATURE_TAG);
+				tmpString = tmpElement.text();
+				if (tmpString.isEmpty())
+					break;
+				sSignature = tmpString;
+
+				const QMetaObject* sourceMetaObject = pSourceObject->metaObject();
+
+				tmpElement = tmpNode.firstChildElement(PARAMETERS_TAG);
+				if(tmpElement.isElement())
+				{
+					tmpObjectNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
+					int nParameterCount = tmpObjectNodeList.count();
+					if (nParameterCount>0)
+					{
+						for (int j=0;j<nParameterCount;j++)//For each parameter
+						{
+							tmpString = "";
+							tmpNode = tmpObjectNodeList.at(j);
+							tmpElement = tmpNode.toElement();
+							if(!tmpElement.hasAttribute(ID_TAG))
+								continue;
+							tmpString =tmpElement.attribute(ID_TAG,"");//Correct ParameterID?
+							if (tmpString.isEmpty())
+								continue;
+							nParameterID = tmpString.toInt();
+							if (!(nParameterID >= 0))
+								continue;
+
+							tmpElement = tmpNode.firstChildElement(NAME_TAG);
+							tmpString = tmpElement.text();
+							if (tmpString.isEmpty())
+								continue;
+
+							tmpElement = tmpNode.firstChildElement(VALUE_TAG);
+							tmpString = tmpElement.text();
+							if (tmpString.isEmpty())
+								continue;
+
+							tmpElement = tmpNode.firstChildElement(MEMBER_TYPE_TAG);
+							tmpString = tmpElement.text();
+							if (tmpString.isEmpty())
+								continue;
+
+							sParameterNames.append(tmpNode.firstChildElement(NAME_TAG).text());
+							sParameterTypes.append(tmpNode.firstChildElement(MEMBER_TYPE_TAG).text());
+							sParameterValues.append(tmpNode.firstChildElement(VALUE_TAG).text());					
+						}// end of parameter loop
+						int nArgCount = sParameterNames.count();						
+						QByteArray normType;
+						bool bSucceeded;
+						int typeId;
+						//QGenericArgument sArguments[MAX_INVOKE_ARG_COUNT];// this doesn't work! weird bug??
+						QGenericArgument sArguments0;
+						QGenericArgument sArguments1;
+						QGenericArgument sArguments2;
+						QGenericArgument sArguments3;
+						QGenericArgument sArguments4;
+						QGenericArgument sArguments5;
+						QGenericArgument sArguments6;
+						QGenericArgument sArguments7;
+						QGenericArgument sArguments8;
+						QGenericArgument sArguments9;
+
+						for(int k=0;k<MAX_INVOKE_ARG_COUNT;k++)//max arguments
+						{							
+							//sArguments.append(QGenericArgument());	
+							if (k<nArgCount)
+							{
+								bSucceeded = false;
+								normType = QMetaObject::normalizedType(sParameterTypes[k].toLatin1());
+								typeId = QMetaType::type(normType);								
+
+								switch (typeId)//QMetaType::Type
+								{
+								case QMetaType::Bool: 
+									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+									if(k==0)
+										sArguments0 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==1)
+										sArguments1 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==2)
+										sArguments2 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==3)
+										sArguments3 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==4)
+										sArguments4 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==5)
+										sArguments5 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==6)
+										sArguments6 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==7)
+										sArguments7 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==8)
+										sArguments8 = Q_ARG(bool,sParameterValues[k].toInt());
+									else if(k==9)
+										sArguments9 = Q_ARG(bool,sParameterValues[k].toInt());
+									
+									bSucceeded = true;
+									break;
+								case QMetaType::Int: 
+									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+									if(k==0)
+										sArguments0 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==1)
+										sArguments1 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==2)
+										sArguments2 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==3)
+										sArguments3 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==4)
+										sArguments4 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==5)
+										sArguments5 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==6)
+										sArguments6 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==7)
+										sArguments7 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==8)
+										sArguments8 = Q_ARG(int,sParameterValues[k].toInt());
+									else if(k==9)
+										sArguments9 = Q_ARG(int,sParameterValues[k].toInt());
+
+									bSucceeded = true;
+									break;
+								case QMetaType::Short: 
+									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+									if(k==0)
+										sArguments0 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==1)
+										sArguments1 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==2)
+										sArguments2 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==3)
+										sArguments3 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==4)
+										sArguments4 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==5)
+										sArguments5 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==6)
+										sArguments6 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==7)
+										sArguments7 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==8)
+										sArguments8 = Q_ARG(short,sParameterValues[k].toShort());
+									else if(k==9)
+										sArguments9 = Q_ARG(short,sParameterValues[k].toShort());
+
+									bSucceeded = true;
+									break;
+								default:
+									bSucceeded = false;
+								}
+								if (bSucceeded == false)
+								{
+									qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not create a generic argument!";
+									return false;
+								}
+							}
+						}
+						if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1(),sArguments0,sArguments1,sArguments2,sArguments3,sArguments4,sArguments5,sArguments6,sArguments7,sArguments8,sArguments9)))
+						{
+							qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
+							return false;
+						}
+						continue;
+					}
+					else//No parameters?
+					{
+						if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1())))
+						{
+							qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
+							return false;
+						}
+						continue;
+					}
+				}
+				else//No Parameters?
+				{
+					if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1())))
+					{
+						qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
+					}
+					continue;
+				}
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID)
