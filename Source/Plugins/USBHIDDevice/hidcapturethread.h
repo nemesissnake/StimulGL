@@ -2,7 +2,6 @@
 #define HIDCAPTURETHREAD_H
 
 #define PACKET_SIZE 4
-#define DATETIMEFORMAT "yyyyMMddHHmmsszzz"
 
 #include <QThread>
 #include <QDateTime>

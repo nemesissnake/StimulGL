@@ -39,3 +39,4 @@ DoxyGen
 Install/*.dll
 All-build-desktop
 StaticLibs
+Install/outputs/

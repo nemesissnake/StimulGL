@@ -13,6 +13,8 @@
 #include "experimenttree.h"
 #include "Global.h"
 #include "retinomap_glwidget.h"
+#include "mainappinfo.h"
+
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
@@ -41,7 +43,8 @@ public:
 		int nMetaID;
 		QObject *pObject;
 		QString sObjectName;
-		ExperimentSubObjectState nState;
+		ExperimentSubObjectState nCurrentState;
+		//objectStateHistory sStateHistory;
 	} objectElement;
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);

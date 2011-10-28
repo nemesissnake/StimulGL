@@ -31,6 +31,13 @@ QString MainAppInfo::pluginsDirPath()
 	return pluginsDir.absolutePath();
 }
 
+QString MainAppInfo::outputsDirPath()
+{
+	QDir pluginsDir = appDebugDirPath();
+	pluginsDir.cd("outputs");
+	return pluginsDir.absolutePath();
+}
+
 QStringList MainAppInfo::getQTScriptBindingList()	
 {
 #ifdef WIN32

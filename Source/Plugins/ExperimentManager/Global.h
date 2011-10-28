@@ -1,6 +1,8 @@
 #ifndef EXPMANAGER_GLOBAL_H
 #define EXPMANAGER_GLOBAL_H
 
+#include "mainappinfo.h"
+
 enum ExperimentState //The state of the main experiment object
 {
 	Experiment_Constructed	= 0,
@@ -57,6 +59,11 @@ typedef struct{
 } ExperimentConfiguration;
 
 typedef struct{
+	QList<ExperimentSubObjectState> nState;
+	QList<QString> sDateTimeStamp;
+} ExperimentSubObjectStateHistory;
+
+typedef struct{
 	int nTrialID;
 	int nTrialNumber;
 	//QString nBlockName;
@@ -91,7 +98,6 @@ typedef struct{
 #define FUNC_STOP								"stopExperimentObject"
 #define FUNC_ABORT								"abortExperimentObject"
 #define SIGNAL_LOGTOMANAGER						"LogToExperimentManager(QString)"//Don't change see also connect function!
-#define DATETIMESTAMPFORMAT						"yyyyMMddHHmmsszzz"
 #define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
 #define TRIGGERTIMER_NAME						"TriggerTimer"
 #define MODULE_NAME								"Experiment Parser"

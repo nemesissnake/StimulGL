@@ -33,8 +33,7 @@ void ppCaptureThread::run()
 	currentValue = (portDev.PortRead() & nMask);
 	oldValue = currentValue;
 	isRunning = true;
-	emit recieveThreadStarted(QDateTime::currentDateTime().toString("yyyyMMddHHmmsszzz"));
-
+	emit recieveThreadStarted(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	switch (dMethod)
 	{
 	case MaskedValueChanged :
@@ -101,7 +100,7 @@ void ppCaptureThread::run()
 
 	abortRunning = false;
 	isRunning = false;
-	emit recieveThreadStopped(QDateTime::currentDateTime().toString("yyyyMMddHHmmsszzz"));
+	emit recieveThreadStopped(	QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	return;
 }
 

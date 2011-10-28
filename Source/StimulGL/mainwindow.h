@@ -12,7 +12,7 @@
 #include <QDir>
 #include <QtGui>
 #include <QTime>
-#include <QDateTime> //QDateTime::currentDateTime().toString("yyyyMMddHHmmsszzz")!!!!!
+#include <QDateTime> //QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat())!!!!!
 
 #include "documentmanager.h"
 #include "plugininterface.h"

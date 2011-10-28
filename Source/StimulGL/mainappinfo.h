@@ -74,6 +74,7 @@ public:
 	static QString appDirPath()				{return QCoreApplication::applicationDirPath();}
 	static QString appLogFilePath()			{return (appDirPath() + "/logfile.txt");}
 	static QString pluginsDirPath();
+	static QString outputsDirPath();
 
 	static QString getFileExtList()			{return QString ("QT Script files (*.qs);;SVG files (*.svg *.svgz *.svg.gz);;Any files (*)");}
 	static QStringList getQTScriptBindingList();

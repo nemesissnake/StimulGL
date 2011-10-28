@@ -6,6 +6,7 @@
 #include "InpOut32.h"
 #include "ppCaptureThread.h"
 #include "ppGenerateThread.h"
+#include "mainappinfo.h"
 
 class ParallelPort : public QObject, protected QScriptable
 {

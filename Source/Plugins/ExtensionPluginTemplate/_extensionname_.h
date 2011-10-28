@@ -6,6 +6,7 @@
 #include <QString>
 #include <QtScript>
 #include <QScriptable>
+#include "mainappinfo.h"
 
 class _extensionname_ : public QObject, protected QScriptable
 {

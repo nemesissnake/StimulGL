@@ -56,6 +56,7 @@ protected:
 	int getCurrentExperimentTriggers() {return nCurrentExperimentReceivedTriggers;}
 	int getElapsedFrameTime() {return nElapsedFrameTime;}
 	//bool getExperimentTriggerCount(int &nExperimentTriggerCount);
+	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
 
 	void closeEvent(QCloseEvent *evt);
 	void customEvent(QEvent *event);
@@ -105,6 +106,7 @@ private:
 	ExperimentConfiguration *pExpConf;
 	QEvent::Type tEventObjectStopped;
 	ExperimentSubObjectState currentSubObjectState;
+	ExperimentSubObjectStateHistory subObjectStateHistory;
 };
 
 class ContainerDlg : public QDialog

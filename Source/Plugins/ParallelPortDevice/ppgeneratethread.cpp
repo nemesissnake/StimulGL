@@ -35,7 +35,7 @@ void ppGenerateThread::run()
 	currentValue = portDev.PortRead();
 	newActiveMaskedValue = ((currentValue & (255 - nOutputMask)) | (nActiveValue & nOutputMask));
 	isRunning = true;
-	emit generateThreadStarted(QDateTime::currentDateTime().toString("yyyyMMddHHmmsszzz"));
+	emit generateThreadStarted(	QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	
 	switch (dMethod)
 	{
@@ -92,6 +92,6 @@ void ppGenerateThread::run()
 
 	abortRunning = false;
 	isRunning = false;
-	emit generateThreadStopped(QDateTime::currentDateTime().toString("yyyyMMddHHmmsszzz"));
+	emit generateThreadStopped(	QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	return;
 }

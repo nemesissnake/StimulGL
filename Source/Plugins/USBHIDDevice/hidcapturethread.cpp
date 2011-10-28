@@ -126,7 +126,7 @@ bool HIDCaptureThread::OutputCapturedData()
 		qsDataPacket.append(QString("%02\t").arg(m_HIDData[2]));
 		//qsDataPacket.append(QString("%02").arg(m_HIDData[3]));
 	}
-	qsDataPacket.append(QDateTime::currentDateTime().toString(DATETIMEFORMAT));
+	qsDataPacket.append(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	QTextStream stream( m_pFile );
 	stream << qsDataPacket << "\n";
 	return true;
@@ -164,7 +164,7 @@ void HIDCaptureThread::run()
 	bool bButtonValueChanged = false;
 	strcJoystickPosition currentJoyPos;
 	m_bIsRunning = true;
-	emit receiveThreadStarted(QDateTime::currentDateTime().toString("yyyyMMddHHmmsszzz"));
+	emit receiveThreadStarted(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 
 	int res;
 	unsigned char buf[255];
@@ -192,7 +192,7 @@ void HIDCaptureThread::run()
 		handle = hid_open(m_VendorID, m_ProductID, NULL);
 		if (!handle) {
 			//printf("unable to open device\n");
-			emit receiveThreadStopped(QDateTime::currentDateTime().toString("yyyyMMddHHmmsszzz"));
+			emit receiveThreadStopped(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 			qCritical("HIDCaptureThread: Could not open HID Device");
 			m_bIsRunning = false;
 			return;
@@ -343,7 +343,7 @@ void HIDCaptureThread::run()
 	CloseOutputFile();
 	m_bAbortRunning = false;
 	m_bIsRunning = false;
-	emit receiveThreadStopped(QDateTime::currentDateTime().toString("yyyyMMddHHmmsszzz"));
+	emit receiveThreadStopped(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	return;
 }
 

@@ -391,6 +391,22 @@ bool GLWidgetWrapper::isDebugMode()
 	return false;
 }
 
+QString GLWidgetWrapper::getLastLoggedObjectStateTime(ExperimentSubObjectState state)
+{
+	int nHistoryCount = subObjectStateHistory.nState.count();
+	if (nHistoryCount > 0)
+	{
+		for (int i=nHistoryCount-1;i>0;i--)
+		{
+			if (subObjectStateHistory.nState.at(i) == state)
+			{
+				return subObjectStateHistory.sDateTimeStamp.at(i);
+			}
+		}
+	} 
+	return "";
+}
+
 void GLWidgetWrapper::closeEvent(QCloseEvent *evt)
 {
 	QGLWidget::closeEvent(evt);
@@ -567,6 +583,8 @@ void GLWidgetWrapper::changeSubObjectState(ExperimentSubObjectState newSubObject
 	if(newSubObjectState != currentSubObjectState)
 	{
 		currentSubObjectState = newSubObjectState;
+		subObjectStateHistory.nState.append(currentSubObjectState);
+		subObjectStateHistory.sDateTimeStamp.append(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 		emit ObjectStateHasChanged(currentSubObjectState);
 	}
 }

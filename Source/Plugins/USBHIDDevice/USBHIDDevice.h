@@ -12,6 +12,7 @@
 #include "hidcalibratedialog.h"
 #include "hidcapturethread.h"
 #include "Global.h"
+#include "mainappinfo.h"
 
 class HIDCalibrateDialog;
 class USBHIDDevice : public QObject, protected QScriptable
