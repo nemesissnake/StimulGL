@@ -4,28 +4,50 @@
 #include "GLWidgetWrapper.h"
 //#include "screenshot.h"
 
-#define RETINOMAP_WIDGET_PATTERN_POLARANGLE			"polarangle"
-#define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY		"eccentricity"
-#define RETINOMAP_WIDGET_PATTERN_MOVINGBAR			"movingbar"
-#define RETINOMAP_WIDGET_PATTERN_FIXATION			"fixation"
-#define RETINOMAP_WIDGET_PATTERN					"Retino pattern"
-#define RETINOMAP_WIDGET_CYCLEDURATION_TR			"duration of one cycle in TR"
-#define RETINOMAP_WIDGET_WEDGESPAN_DEGREES			"wedge span in degrees"
-#define RETINOMAP_WIDGET_CHECK_AMOUNT				"nr of checks"
-#define RETINOMAP_WIDGET_RING_AMOUNT				"nr of rings"
-#define RETINOMAP_WIDGET_ROTATION_DIRECTION			"rotation direction"
-#define RETINOMAP_WIDGET_FLICKRSPEED_HZ				"flickr speed in Hz"
-#define RETINOMAP_WIDGET_XPIXEL_AMOUNT				"stimulus pixel no x"
-#define RETINOMAP_WIDGET_YPIXEL_AMOUNT				"stimulus pixel no y"
-#define RETINOMAP_WIDGET_CORTMAG_FACTOR				"cortical mag factor"
-#define RETINOMAP_WIDGET_TRDURATION_MSEC			"TR duration in msec"
-#define RETINOMAP_WIDGET_SHOWFIXPOINT				"show fixation point"
-#define RETINOMAP_WIDGET_MOVINGBAR_ANGLE			"angle"
-#define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE			"coverage"
-#define RETINOMAP_WIDGET_BOOL_TRUE					"true"
-#define RETINOMAP_WIDGET_BOOL_FALSE					"false"
-#define RETINOMAP_WIDGET_GAP_DIAMETER				"gap diameter"
-#define RETINOMAP_WIDGET_OUTPUTTRIGGERFRAME			"output trigger frame"
+//Below defines must be all in lower case!
+//Shared defines
+#define RETINOMAP_WIDGET_PATTERN_POLARANGLE				"polarangle"
+#define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY			"eccentricity"
+#define RETINOMAP_WIDGET_PATTERN_MOVINGBAR				"movingbar"
+#define RETINOMAP_WIDGET_PATTERN_FIXATION				"fixation"
+#define RETINOMAP_WIDGET_PATTERN						"retinopattern"
+#define RETINOMAP_WIDGET_CYCLE_TRIGGER_AMOUNT			"cycletriggeramount"
+#define RETINOMAP_WIDGET_SHOWFIXPOINT					"showfixpoint"
+#define RETINOMAP_WIDGET_BOOL_TRUE						"true"
+#define RETINOMAP_WIDGET_BOOL_FALSE						"false"
+#define RETINOMAP_WIDGET_GAP_DIAMETER					"gapdiameter"
+#define RETINOMAP_WIDGET_FLICKRSPEED_HZ					"flickrfrequency"
+#define RETINOMAP_WIDGET_WIDTH_PIXEL_AMOUNT				"stimuluswidthspan"
+#define RETINOMAP_WIDGET_HEIGHT_PIXEL_AMOUNT			"stimulusheightspan"
+#define RETINOMAP_WIDGET_CORTMAG_FACTOR					"corticalmagnitudefactor"
+#define RETINOMAP_WIDGET_TRIGGERDURATION_MSEC			"triggerduration"
+#define RETINOMAP_WIDGET_DISCRETETRIGGERSTEPS			"discretetriggersteps"
+#define RETINOMAP_WIDGET_OUTPUTTRIGGERFRAME				"outputtriggerframe"
+#define RETINOMAP_WIDGET_OUTPUTFRAMETYPE				"outputframetype"
+#define RETINOMAP_WIDGET_OUTPUTTYPE_FRAME				"frame"
+#define RETINOMAP_WIDGET_OUTPUTTYPE_MASK				"mask"
+#define RETINOMAP_WIDGET_ANTIALIASING					"antialiasing"
+//PolarAngle specific defines
+#define RETINOMAP_WIDGET_POLAR_RING_AMOUNT				"polarringamount"
+#define RETINOMAP_WIDGET_POLAR_ROTATION_DIRECTION		"polarrotationdirection"
+#define RETINOMAP_WIDGET_POLAR_WEDGE_SPAN				"polarwedgespan"
+#define RETINOMAP_WIDGET_POLAR_CHECK_AMOUNT				"polarcheckamount"
+//Eccentricity specific defines
+#define RETINOMAP_WIDGET_ECCENTRICITY_DIRECTION			"eccentricitydirection"
+#define RETINOMAP_WIDGET_ECCENTRICITY_CHECK_AMOUNT		"eccentricitycheckamount"
+#define RETINOMAP_WIDGET_ECCENTRICITY_RING_AMOUNT		"eccentricityringamount"
+//MovingBar specific defines
+#define RETINOMAP_WIDGET_MOVINGBAR_ANGLE				"movingbarangle"
+#define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE				"movingbarcoverage"
+#define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION			"movingbardirection"
+#define RETINOMAP_WIDGET_MOVINGBAR_WIDTH_CHECK_AMOUNT	"movingbarwidthcheckamount"
+#define RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT	"movingbarheightcheckamount"
+
+enum RetinoMapOutputType //The output format type
+{
+	RetinoMap_OutputType_Frame	= 0,
+	RetinoMap_OutputType_Mask	= 1
+};
 
 enum RetinoMapExperimentType //The state of the main experiment object
 {
@@ -49,6 +71,7 @@ public:
 
 public slots:
 	bool startExperimentObject();
+	bool initExperimentObject();
 	//bool abortExperimentObject();
 	//bool stopExperimentObject();
 	//bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList = NULL);
@@ -56,14 +79,14 @@ public slots:
 	bool setExperimentObjectID(int nObjID);
 
 protected:
-	//void init();
 	void initBlockTrial();
-	//bool loadBlockTrial();
 	void paintEvent(QPaintEvent *event);
 
 private:
 	void initialize();
+	void parseExperimentObjectBlockParameters(bool bInit = false);
 
+	int nRetinoID;								//This variable stores the ObjectID used to identify the object
 	RetinoMapExperimentType currentExpType;		//The experiment type used, see RetinoMapExperimentType
 	bool firstBlockTrialPaintFrame;				//To determine whether it's the first frame to paint from a new Block trial
 	QTime trialTime;							//The elapsed trial time
@@ -77,42 +100,55 @@ private:
 	int flickrThreshold;						//Variable for keeping track of the next flickr switch threshold time
 	int flickrSpeedFreq;						//The flickr speed frequency
 	int flickrSwitch;							//Variable to store the current flickr state
-	float blockDurationInTriggers;				//The total block duration in amount of triggers
-	int triggerDuration;						//The duration of one trigger in mSec
+	float cycleTriggerAmount;					//The total block duration in amount of triggers
+	int triggerDurationMsec;					//The duration of one trigger in mSec
 	float stimWidthPixelAmount;					//The amount of visible stimuli pixels(height)
-	float totalWedgeScreenSpanSize;				//The amount of visible stimuli pixels(width)
+	float stimHeigthPixelAmount;				//The amount of visible stimuli pixels(width)
 	QColor fixationColor;						//The color of the fixation dot/cross
 	int fixationWidth;							//The width of the fixation dot/cross
 	bool showFixationPoint;						//Should we show an fixation point?
 	bool outputTriggerFrame;					//Defines whether we should output(write to a png file) the first frame
-	int nRetinoID;								//This variable stores the ObjectID used to identify the object
+	bool discreteTriggerSteps;					//Defines whether the stimuli should run smooth or in discrete steps according to each trigger received
+	bool antiAliasing;							//Defines whether the anti-aliasing filter should be used for painting to the screen
 	int lastTriggerNumber;						//To keep track of the last trigger number
 	QTime debugTime;							//For debugging purpose...
 	int debugElapsedTime;						//For debugging purpose...
-	int debugTestSamples;						//For debugging purpose...
-	int debugUsedTestSamples;					//For debugging purpose...
-	int debugTotalElapsedTime;					//For debugging purpose...
+	//int debugTestSamples;						//For debugging purpose...
+	//int debugUsedTestSamples;					//For debugging purpose...
+	//int debugTotalElapsedTime;				//For debugging purpose...
 	int debugInitBlockTrialTime;				//For debugging purpose...
 	QString debugString;						//For debugging purpose...
 
-	float totalWedgeDeg;
-	int wedgeNrChecks;
-	int wedgeNrRings;
-	int rotationDirection;
+	float polarWedgeSpan;
+	int polarWedgeNrChecks;
+	int polarWedgeNrRings;
+	int polarRotationDirection;
+
+	int eccentricityNrChecks;
+	int eccentricityNrRings;
+	int eccentricityDirection;
+
 	float cortMagFactor;
-	int centerGapWidth;
+	int gapDiameter;
 	float wedgeSpanAngle;
 	float currentWedgeDiameter;
 	float currentCompleteWedgeDiameter;
 	float currentSize;
+	float currentOuterCompleteRingDiameter;
 	float currentXPoint;
 	float currentYPoint;
 	float currentStartAngle;
-	float fAngle;
-	float fScreenCoverageRange;
 
-	QPixmap *StimulusResultImageFrame;//QImage *StimulusResultImageFrame;
+	float movingBarAngle;
+	float movingBarCoverage;
+	int movingBarWidthCheckAmount;
+	int movingBarHeightCheckAmount;
+	int movingBarDirection;
 
+	RetinoMapOutputType retinoOutputType;
+
+	QPixmap *StimulusResultImageFrame;
+	QPixmap *StimulusActivationMap;
 	//Screenshot *screenShotWidget;	
 };
 Q_DECLARE_METATYPE(RetinoMap_glwidget)

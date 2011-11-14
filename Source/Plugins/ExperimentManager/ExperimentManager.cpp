@@ -44,6 +44,94 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
 }
 
+bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue)
+{
+	if (nObjectID >= 0)
+	{
+		int nObjectCount = lExperimentObjectList.count();
+		if (nObjectCount>0)
+		{
+			for (int i=0;i<nObjectCount;i++)
+			{
+				if (lExperimentObjectList[i].nObjectID == nObjectID)
+				{
+					lExperimentObjectList[i].ExpBlockParams->insert(sName,sValue);
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString &sValue)
+{
+	if (nObjectID >= 0)
+	{
+		int nObjectCount = lExperimentObjectList.count();
+		if (nObjectCount>0)
+		{
+			for (int i=0;i<nObjectCount;i++)
+			{
+				if (lExperimentObjectList[i].nObjectID == nObjectID)
+				{
+					//QHash<QString, QString> test;
+					//test = *lExperimentObjectList[i].ExpBlockParams;
+					//QString stest = "";
+					if (lExperimentObjectList[i].ExpBlockParams->contains(sName))
+					{
+						sValue = lExperimentObjectList[i].ExpBlockParams->value(sName,sValue);//svalue
+						return true;
+					}
+					return false;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nObjectID,QHash<QString, QString> *expBlockTrialStruct)
+{
+	if (nObjectID >= 0)
+	{
+		int nObjectCount = lExperimentObjectList.count();
+		if (nObjectCount>0)
+		{
+			for (int i=0;i<nObjectCount;i++)
+			{
+				if (lExperimentObjectList[i].nObjectID == nObjectID)
+				{
+					lExperimentObjectList[i].ExpBlockParams = expBlockTrialStruct;
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool ExperimentManager::logExperimentObjectData(const int nObjectID,const int nTimerID, const QString data2Log)
+{
+	//_sven_expDataLogger->setLogVars("Object" + QString::number(nObjectID),data2Log,nTimerID);
+	//if (nObjectID >= 0)
+	//{
+		//int nObjectCount = lExperimentObjectList.count();
+		//if (nObjectCount>0)
+		//{
+		//	for (int i=0;i<nObjectCount;i++)
+		//	{
+		//		if (lExperimentObjectList.at(i).nObjectID == nID)
+		//		{
+		//			lExperimentObjectList.at(i).ExpBlockParams.value(sName,sValue);
+		//			return true;
+		//		}
+		//	}
+		//}
+	//}
+	return true;
+}
+
 QString ExperimentManager::getCurrentDateTimeStamp()
 {
 	return (QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
@@ -198,7 +286,13 @@ bool ExperimentManager::runExperiment()
 		return false;
 	}
 
-	if(!initializeExperimentObjects())
+	if(!initializeExperiment())
+	{
+		changeCurrentExperimentState(Experiment_Initialized);
+		return false;
+	}
+
+	if(!initExperimentObjects())
 	{
 		changeCurrentExperimentState(Experiment_Initialized);
 		return false;
@@ -447,21 +541,27 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 bool ExperimentManager::abortExperimentObjects()
 {
 	finalizeExperimentObjects();
-	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_ABORT));
+	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_OBJECT_ABORT));
 	return bRetVal;
 }
 
 bool ExperimentManager::stopExperimentObjects()
 {
 	finalizeExperimentObjects();
-	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_STOP));
+	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_OBJECT_STOP));
+	return bRetVal;
+}
+
+bool ExperimentManager::initExperimentObjects()
+{
+	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_OBJECT_INIT));
 	return bRetVal;
 }
 
 bool ExperimentManager::startExperimentObjects(bool bRunFullScreen)
 {
 	changeExperimentObjectsSignalSlots(false);
-	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_START));
+	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_OBJECT_START));
 	return bRetVal;
 }
 
@@ -476,6 +576,7 @@ bool ExperimentManager::configureExperiment()
 	strcExperimentConfiguration.bDebugMode = false;
 	strcExperimentConfiguration.nExperimentID = 0;
 	strcExperimentConfiguration.nExperimentName = "";
+	strcExperimentConfiguration.pExperimentManager = this;
 
 	QStringList strList;
 	strList.append(ROOT_TAG);
@@ -575,10 +676,10 @@ bool ExperimentManager::configureExperiment()
 
 bool ExperimentManager::finalizeExperimentObjects()
 {
-	return initializeExperimentObjects(true);
+	return initializeExperiment(true);
 }
 
-bool ExperimentManager::initializeExperimentObjects(bool bFinalize)
+bool ExperimentManager::initializeExperiment(bool bFinalize)
 {
 	if (!currentExperimentTree)
 	{
@@ -1023,6 +1124,25 @@ QObject *ExperimentManager::getObjectElementById(int nID)
 				if (lExperimentObjectList.at(i).nObjectID == nID)
 				{
 					return(lExperimentObjectList.at(i).pObject);
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
+QHash<QString, QString> *ExperimentManager::getObjectBlockParamListById(int nID)
+{
+	if (nID >= 0)
+	{
+		int nObjectCount = lExperimentObjectList.count();
+		if (nObjectCount>0)
+		{
+			for (int i=0;i<nObjectCount;i++)
+			{
+				if (lExperimentObjectList.at(i).nObjectID == nID)
+				{
+					return(lExperimentObjectList.at(i).ExpBlockParams);
 				}
 			}
 		}

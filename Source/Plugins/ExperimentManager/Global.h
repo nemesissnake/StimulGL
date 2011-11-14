@@ -2,6 +2,19 @@
 #define EXPMANAGER_GLOBAL_H
 
 #include "mainappinfo.h"
+class ExperimentManager;
+class ExperimentLogger;
+
+enum ExperimentTimerType //The type of a experiment timer, used for logging(flags, combinations possible)
+{
+	Experiment_Timer_None		= 0,
+	Experiment_Timer_Experiment	= 1,
+	Experiment_Timer_Frame		= 2
+	//Experiment_Timer_Experiment	= 4,
+	//Experiment_Timer_Experiment	= 8,
+	//Experiment_Timer_Experiment	= 16,
+	//Experiment_Timer_Experiment	= 32
+};
 
 enum ExperimentState //The state of the main experiment object
 {
@@ -56,6 +69,7 @@ typedef struct{
 	//int nExperimentNumber;
 	QString nExperimentName;
 	bool bDebugMode;
+	ExperimentManager *pExperimentManager;
 } ExperimentConfiguration;
 
 typedef struct{
@@ -85,6 +99,8 @@ typedef struct{
 	QList<BlockTrialStructure> lBlockTrialStructure;
 } ExperimentBlockTrialStructure;
 
+//typedef QHash<QString, QString> ExperimentBlockParameterStructure;
+
 #define SIGNAL_USERCLOSE_FULL					"UserWantsToClose(void)"
 #define SIGNAL_OBJECTSTOP_FULL					"ObjectShouldStop(void)"
 #define FUNC_OBJECTSTATECHANGED_FULL			"ObjectStateHasChanged(ExperimentSubObjectState)"
@@ -94,14 +110,16 @@ typedef struct{
 #define FUNC_SETOBJECTID_FULL					"setExperimentObjectID(int)"
 #define FUNC_SETEXPERIMENTCONFIGURATION			"setExperimentConfiguration"
 #define FUNC_SETEXPERIMENTCONFIGURATION_FULL	"setExperimentConfiguration(ExperimentConfiguration*)"
-#define FUNC_START								"startExperimentObject"
-#define FUNC_STOP								"stopExperimentObject"
-#define FUNC_ABORT								"abortExperimentObject"
+#define FUNC_OBJECT_INIT						"initExperimentObject"
+#define FUNC_OBJECT_START						"startExperimentObject"
+#define FUNC_OBJECT_STOP						"stopExperimentObject"
+#define FUNC_OBJECT_ABORT						"abortExperimentObject"
 #define SIGNAL_LOGTOMANAGER						"LogToExperimentManager(QString)"//Don't change see also connect function!
 #define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
 #define TRIGGERTIMER_NAME						"TriggerTimer"
 #define MODULE_NAME								"Experiment Parser"
 #define MAX_INVOKE_ARG_COUNT					10
+#define MIN_SCREEN_UPDATE_TIME					10
 
 #define ROOT_TAG						"EXML"
 #define VERSION_TAG						"version"

@@ -40,3 +40,4 @@ Install/*.dll
 All-build-desktop
 StaticLibs
 Install/outputs/
+Install/documents/~$*.doc

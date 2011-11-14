@@ -33,7 +33,12 @@ QString MainAppInfo::pluginsDirPath()
 
 QString MainAppInfo::outputsDirPath()
 {
-	QDir pluginsDir = appDebugDirPath();
+	QDir pluginsDir = appDirPath();
+	if(QDir(appDirPath() + QString("/outputs/")).exists()==false)
+	{
+		QDir().mkdir(QString(appDirPath()) + QString("/outputs/"));
+	}
+
 	pluginsDir.cd("outputs");
 	return pluginsDir.absolutePath();
 }

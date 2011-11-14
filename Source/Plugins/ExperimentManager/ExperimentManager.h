@@ -11,6 +11,7 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include "experimenttree.h"
+//#include "experimentlogger.h"
 #include "Global.h"
 #include "retinomap_glwidget.h"
 #include "mainappinfo.h"
@@ -44,11 +45,13 @@ public:
 		QObject *pObject;
 		QString sObjectName;
 		ExperimentSubObjectState nCurrentState;
+		QHash<QString, QString> *ExpBlockParams;
 		//objectStateHistory sStateHistory;
 	} objectElement;
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 	bool cleanupExperiment();
+	QHash<QString, QString> *getObjectBlockParamListById(int nID);
 
 public slots:
 	void changeToOpenGLView(QGraphicsView *GraphView);
@@ -63,6 +66,10 @@ public slots:
 	bool setFullScreenMode(const bool bFullScreen);
 	bool setDebugMode(const bool bDebugMode);
 	QString getCurrentDateTimeStamp();
+	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue);
+	bool getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString &sValue);
+	bool setExperimentObjectBlockParameterStructure(const int nObjectID, QHash<QString, QString> *expBlockTrialStruct);
+	bool logExperimentObjectData(const int nObjectID,const int nTimerID, const QString data2Log);
 
 private:
 	void RegisterMetaTypes();
@@ -70,9 +77,10 @@ private:
 	bool configureExperiment();
 	bool createExperimentObjects();
 	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);
-	bool initializeExperimentObjects(bool bFinalize = false);
+	bool initializeExperiment(bool bFinalize = false);
 	bool finalizeExperimentObjects();
 	bool startExperimentObjects(bool bRunFullScreen = true);
+	bool initExperimentObjects();
 	bool stopExperimentObjects();
 	bool abortExperimentObjects();
 	bool changeExperimentObjectsSignalSlots(bool bDisconnect = false, int nSpecificIndex = -1);
@@ -95,6 +103,9 @@ private:
 	QString m_ExpFolder;
 	ExperimentTree *currentExperimentTree;	
 	ExperimentConfiguration strcExperimentConfiguration;
+
+	ExperimentLogger *expDataLogger;
+	int nExperimentTimerIndex;
 };
 
 class SleeperThread : public QThread

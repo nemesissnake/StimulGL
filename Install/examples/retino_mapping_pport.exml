@@ -74,71 +74,71 @@ Attributes only apply to readonly non user data, like the ID
         	</parameters>
         </object>
     </initializations>        
-     
+
     <actions>
     	<blocks>
     	
 		   	<block ID="0">
-	        <name>MovingBar</name>
+	        <name>MovingBar_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
 	        <nr_of_triggers>5</nr_of_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
-			        	<name>duration of one cycle in TR</name>
+			        	<name>CycleTriggerAmount</name>
 			        	<value>5</value>
 			        </parameter>
 			        <parameter ID="1">
-			        	<name>wedge span in degrees</name>
-			        	<value>360</value>
-							</parameter>		        	
+			        	<name>RetinoPattern</name>
+			        	<value>movingbar</value>
+			        </parameter>				        
 			        <parameter ID="2">	 	
-			        	<name>nr of checks</name>			        	 
+			        	<name>MovingBarWidthCheckAmount</name>			        	 
 			        	<value>100</value>	        	
 			        </parameter>
 			        <parameter ID="3">	      	
-			        	<name>nr of rings</name>
+			        	<name>MovingBarHeightCheckAmount</name>
 			        	<value>4</value>
 			        </parameter>       	
 			        <parameter ID="4">    	
-			        	<name>rotation direction</name>
+			        	<name>MovingBarDirection</name>
 			        	<value>-1</value>	        	
 			        </parameter>
 			        <parameter ID="5">   
-			        	<name>flickr speed in Hz</name>
+			        	<name>FlickrFrequency</name>
 			        	<value>4</value>
 			        </parameter>	        	
 			        <parameter ID="6">   	
-			        	<name>stimulus pixel no x</name>
+			        	<name>StimulusWidthSpan</name>
 			        	<value>500</value>	        	
 			        </parameter>	
 			        <parameter ID="7">     	
-			        	<name>stimulus pixel no y</name>
+			        	<name>StimulusHeightSpan</name>
 			        	<value>500</value>	
-			        </parameter>        	
-			        <parameter ID="8">	    	
-			        	<name>cortical mag factor</name>
-			        	<value>0.2</value>	        	
-			        </parameter> 
-			        <parameter ID="10">
-			        	<name>Retino pattern</name>
-			        	<value>movingbar</value>
-			        </parameter>	        			        
-  		        <parameter ID="11">
-			        	<name>angle</name>
+			        </parameter>        			        
+  		        <parameter ID="8">
+			        	<name>MovingBarAngle</name>
 			        	<value>25</value>
 			        </parameter>		
-			        <parameter ID="12">
-			        	<name>coverage</name>
+			        <parameter ID="9">
+			        	<name>MovingBarCoverage</name>
 			        	<value>0.2</value>
 			        </parameter>
-			        <parameter ID="13">
-			        	<name>show fixation point</name>
+			        <parameter ID="10">
+			        	<name>ShowFixPoint</name>
 			        	<value>true</value>
 			        </parameter>		
-			        <parameter ID="14">
-			        	<name>output trigger frame</name>
+			        <parameter ID="11">
+			        	<name>TriggerDuration</name>
+			        	<value>1000</value>
+			        </parameter>			        
+			        <parameter ID="12">
+			        	<name>OutputTriggerFrame</name>
+			        	<value>true</value>
+			        </parameter>			        	        			        
+			        <parameter ID="13">
+			        	<name>DiscreteTriggerSteps</name>
 			        	<value>true</value>
 			        </parameter>			        	        			        
 			    	</parameters>
@@ -146,26 +146,26 @@ Attributes only apply to readonly non user data, like the ID
 	    	</block>	    	    	
     	
 		   	<block ID="1">
-	        <name>Fixation</name>
+	        <name>Fixation_Block</name>
 	        <block_number>1</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
 	        <nr_of_triggers>1</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
-			        	<name>Retino pattern</name>
+			        	<name>RetinoPattern</name>
 			        	<value>fixation</value>
 			        </parameter>
 			        <parameter ID="1">
-			        	<name>show fixation point</name>
+			        	<name>ShowFixPoint</name>
 			        	<value>true</value>
 			        </parameter>
 			        <parameter ID="2">
-			        	<name>TR duration in msec</name>
+			        	<name>TriggerDuration</name>
 			        	<value>1000</value>
 			        </parameter>	
 			        <parameter ID="3">
-			        	<name>output trigger frame</name>
+			        	<name>OutputTriggerFrame</name>
 			        	<value>false</value>
 			        </parameter>			        		        	             
 			    	</parameters>    
@@ -180,98 +180,98 @@ Attributes only apply to readonly non user data, like the ID
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
-			        	<name>duration of one cycle in TR</name>
+			        	<name>CycleTriggerAmount</name>
 			        	<value>2</value>
 			        </parameter>
+			        <parameter ID="1">
+			        	<name>GapDiameter</name>
+			        	<value>100</value>
+			        </parameter>			        
 			        <parameter ID="2">	 	
-			        	<name>nr of checks</name>			        	 
+			        	<name>EccentricityCheckAmount</name>			        	 
 			        	<value>30</value>	        	
 			        </parameter>
 			        <parameter ID="3">	      	
-			        	<name>nr of rings</name>
+			        	<name>EccentricityRingAmount</name>
 			        	<value>4</value>
 			        </parameter>       	
 			        <parameter ID="4">    	
-			        	<name>rotation direction</name>
+			        	<name>EccentricityDirection</name>
 			        	<value>-1</value>	        	
 			        </parameter>
 			        <parameter ID="5">   
-			        	<name>flickr speed in Hz</name>
+			        	<name>FlickrFrequency</name>
 			        	<value>4</value>
 			        </parameter>	        	
 			        <parameter ID="6">   	
-			        	<name>stimulus pixel no x</name>
+			        	<name>StimulusWidthSpan</name>
 			        	<value>600</value>	        	
 			        </parameter>	
 			        <parameter ID="7">     	
-			        	<name>stimulus pixel no y</name>
+			        	<name>StimulusHeightSpan</name>
 			        	<value>600</value>	
 			        </parameter>        	
 			        <parameter ID="8">	    	
-			        	<name>cortical mag factor</name>
+			        	<name>CorticalMagnitudeFactor</name>
 			        	<value>0.2</value>	        	
 			        </parameter> 
-			        <parameter ID="10">
-			        	<name>Retino pattern</name>
+			        <parameter ID="9">
+			        	<name>RetinoPattern</name>
 			        	<value>eccentricity</value>
 			        </parameter>
-			        <parameter ID="11">
-			        	<name>gap diameter</name>
-			        	<value>100</value>
-			        </parameter>				        
 			    	</parameters>    
 		    	</object>   
 	    	</block>		 	 
 
 		   	<block ID="3">
-	        <name>PolarAngleBlock</name>
+	        <name>PolarAngle_Block</name>
 	        <block_number>3</block_number>            
-	        <nr_of_trials>2</nr_of_trials>
-	        <nr_of_triggers>4</nr_of_triggers>
+	        <nr_of_trials>1</nr_of_trials>
+	        <nr_of_triggers>8</nr_of_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
-			        	<name>duration of one cycle in TR</name>
-			        	<value>4</value>
+			        	<name>CycleTriggerAmount</name>
+			        	<value>8</value>
 			        </parameter>
 			        <parameter ID="1">
-			        	<name>wedge span in degrees</name>
+			        	<name>PolarWedgeSpan</name>
 			        	<value>22.5</value>
 							</parameter>		        	
 			        <parameter ID="2">	 	
-			        	<name>nr of checks</name>
+			        	<name>PolarCheckAmount</name>
 			        	<value>4</value>	        	
 			        </parameter>
 			        <parameter ID="3">	      	
-			        	<name>nr of rings</name>
+			        	<name>PolarRingAmount</name>
 			        	<value>25</value>
 			        </parameter>       	
 			        <parameter ID="4">    	
-			        	<name>rotation direction</name>
+			        	<name>PolarRotationDirection</name>
 			        	<value>-1</value>	        	
 			        </parameter>
 			        <parameter ID="5">   
-			        	<name>flickr speed in Hz</name>
+			        	<name>FlickrFrequency</name>
 			        	<value>2</value>
 			        </parameter>	        	
 			        <parameter ID="6">   	
-			        	<name>stimulus pixel no x</name>
+			        	<name>StimulusWidthSpan</name>
 			        	<value>500</value>	        	
 			        </parameter>	
 			        <parameter ID="7">     	
-			        	<name>stimulus pixel no y</name>
+			        	<name>StimulusHeightSpan</name>
 			        	<value>500</value>	
 			        </parameter>        	
 			        <parameter ID="8">	    	
-			        	<name>cortical mag factor</name>
+			        	<name>CorticalMagnitudeFactor</name>
 			        	<value>0.2</value>	        	
 			        </parameter> 
 			        <parameter ID="10">
-			        	<name>Retino pattern</name>
-			        	<value>polarangle</value>
+			        	<name>RetinoPattern</name>
+			        	<value>PolarAngle</value>
 			        </parameter>	
 			        <parameter ID="11">
-			        	<name>gap diameter</name>
+			        	<name>GapDiameter</name>
 			        	<value>20</value>
 			        </parameter>			        
 			    	</parameters>    
@@ -279,14 +279,14 @@ Attributes only apply to readonly non user data, like the ID
 	    	</block>
    	
 		   	<block ID="4">
-	        <name>Extended</name>
+	        <name>Extended_Block</name>
 	        <block_number>4</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>1</nr_of_triggers>	 
+	        <nr_of_triggers>4</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">    	
-			        	<name>rotation direction</name>
+			        	<name>PolarRotationDirection</name>
 			        	<value>1</value>	        	
 			        </parameter>
 			    	</parameters>    

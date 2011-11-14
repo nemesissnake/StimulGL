@@ -25,7 +25,7 @@ function ExperimentStateChanged()
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
 ExperimentManagerObj.WriteToLogOutput.connect(this, this.Log);
-ExperimentManagerObj.openExperiment("D:\\Projects\\StimulGL\\Install\\examples\\retino_mapping_timer.exml", false);//ecc_mapping_timer,polar_mapping_timer.exml,polar_mapping.exml
+ExperimentManagerObj.openExperiment("D:\\Projects\\StimulGL\\Install\\examples\\retino_mapping_timer.exml", false);//retino_mapping_pport.exml
 ExperimentManagerObj.runExperiment();
 
 
