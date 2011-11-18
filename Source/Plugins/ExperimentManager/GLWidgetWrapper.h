@@ -25,17 +25,13 @@ signals:
 	void UserWantsToClose(void);
 	void ObjectShouldStop(void);
 	void ObjectStateHasChanged(ExperimentSubObjectState);
+	void LogToOutputWindow(const QString &strText2Write);
 
 public:
 	GLWidgetWrapper(QWidget *parent = NULL);
 	~GLWidgetWrapper();
 
 	void setBlockTrials();
-
-	//QHash<QString, QString> ExperimentParameters;
-	//ExperimentLogger *expDataLogger;
-	//int nExperimentTimerIndex;
-	//int nFrameTimerIndex;
 
 public slots:
 	//Can be overridden
@@ -59,13 +55,13 @@ protected:
 	void finalizePaintEvent();
 	void setupLayout(QWidget* layoutWidget);	
 	bool isDebugMode();
-	int getFrameNumber() {return nFrameCounter;}
+	int getCurrentExperimentBlockTrialFrame() {return nBlockTrialFrameCounter;}
 	int getCurrentExperimentTrial() {return nCurrentExperimentTrial;}
 	int getCurrentExperimentBlock() {return nCurrentExperimentBlock;}
 	int getCurrentExperimentTrigger() {return nCurrentExperimentTrigger;}
 	int getCurrentExperimentBlockTrialTrigger() {return nCurrentExperimentBlockTrialReceivedTriggers;}
 	int getExperimentBlockTrialTriggerAmount(int nBlock, int nTrial);
-	int getElapsedFrameTime() {return 0;}//_sven_expDataLogger->elapsedTimerTime(nFrameTimerIndex);}
+	//int getElapsedFrameTime();
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
 
 	void closeEvent(QCloseEvent *evt);
@@ -91,7 +87,7 @@ private:
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
 
 private:
-	int nFrameCounter;
+	int nBlockTrialFrameCounter;
 	int nCurrentExperimentReceivedTriggers;				//The current experiment number of trigger received since it started, internal use!
 	int nCurrentExperimentTrigger;						//The current experiment trigger
 	int nCurrentExperimentTrial;						//The current experiment trial within the block 
@@ -109,12 +105,13 @@ private:
 	QDomNodeList *pExpBlockTrialDomNodeList;
 	int nNextThresholdTriggerCount;//When we should switch to the next block
 	ExperimentBlockTrialStructure strcExperimentBlockTrials;
-	ExperimentConfiguration *pExpConf;
 	QEvent::Type tEventObjectStopped;
 	ExperimentSubObjectState currentSubObjectState;
 	ExperimentSubObjectStateHistory subObjectStateHistory;
-	QHash<QString, QString> *ExpBlockParams;
 	int nFrameTimerIndex;
+	int nTrialTimerIndex;
+	QHash<QString, QString> *ExpBlockParams;
+	ExperimentConfiguration *pExpConf;
 };
 
 class ContainerDlg : public QDialog

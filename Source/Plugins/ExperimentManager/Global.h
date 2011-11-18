@@ -2,8 +2,8 @@
 #define EXPMANAGER_GLOBAL_H
 
 #include "mainappinfo.h"
+#include "RandomGenerator.h"
 class ExperimentManager;
-class ExperimentLogger;
 
 enum ExperimentTimerType //The type of a experiment timer, used for logging(flags, combinations possible)
 {
@@ -114,13 +114,15 @@ typedef struct{
 #define FUNC_OBJECT_START						"startExperimentObject"
 #define FUNC_OBJECT_STOP						"stopExperimentObject"
 #define FUNC_OBJECT_ABORT						"abortExperimentObject"
-#define SIGNAL_LOGTOMANAGER						"LogToExperimentManager(QString)"//Don't change see also connect function!
 #define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
 #define TRIGGERTIMER_NAME						"TriggerTimer"
 #define MODULE_NAME								"Experiment Parser"
 #define MAX_INVOKE_ARG_COUNT					10
 #define MIN_SCREEN_UPDATE_TIME					10
+#define MAX_SCREEN_UPDATE_TIME					20
 
+#define ARGB_FORMAT_HEADER				0xCAFE1234
+#define DOUBLE_PI_VALUE					3.141592653589793238462643383279502884197
 #define ROOT_TAG						"EXML"
 #define VERSION_TAG						"version"
 #define BOOKMARK_TAG					"bookmark"

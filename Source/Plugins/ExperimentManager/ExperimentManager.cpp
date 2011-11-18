@@ -28,6 +28,7 @@ ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
 	m_ExpFileName = "";
 	m_DebugMode = false;
 	currentExperimentTree = NULL;
+	expDataLogger = NULL;
 	RegisterMetaTypes();
 	changeCurrentExperimentState(Experiment_Constructed);
 	changeCurrentExperimentState(Experiment_Initialized);
@@ -113,23 +114,48 @@ bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nOb
 
 bool ExperimentManager::logExperimentObjectData(const int nObjectID,const int nTimerID, const QString data2Log)
 {
-	//_sven_expDataLogger->setLogVars("Object" + QString::number(nObjectID),data2Log,nTimerID);
-	//if (nObjectID >= 0)
-	//{
-		//int nObjectCount = lExperimentObjectList.count();
-		//if (nObjectCount>0)
-		//{
-		//	for (int i=0;i<nObjectCount;i++)
-		//	{
-		//		if (lExperimentObjectList.at(i).nObjectID == nID)
-		//		{
-		//			lExperimentObjectList.at(i).ExpBlockParams.value(sName,sValue);
-		//			return true;
-		//		}
-		//	}
-		//}
-	//}
-	return true;
+	if (expDataLogger)
+	{
+		expDataLogger->setLogVars("Object(" + QString::number(nObjectID) + ")",data2Log,nTimerID);
+		return true;
+	}
+	return false;
+}
+
+int ExperimentManager::createExperimentTimer()
+{
+	if (expDataLogger)
+	{
+		return expDataLogger->createTimer();
+	}
+	return -1;
+}
+
+bool ExperimentManager::startExperimentTimer(int nIndex)
+{
+	if (expDataLogger)
+	{
+		return expDataLogger->startTimer(nIndex);
+	}
+	return false;
+}
+
+int ExperimentManager::restartExperimentTimer(int nIndex)
+{
+	if ((expDataLogger) && (nIndex >= 0))
+	{
+		return expDataLogger->restartTimer(nIndex);
+	}
+	return -1;
+}
+
+int ExperimentManager::elapsedExperimentTimerTime(int nIndex)
+{
+	if ((expDataLogger) && (nIndex >= 0))
+	{
+		return expDataLogger->elapsedTimerTime(nIndex);
+	}
+	return -1;
 }
 
 QString ExperimentManager::getCurrentDateTimeStamp()
@@ -175,7 +201,6 @@ bool ExperimentManager::saveExperiment(QString strFile)
 
 	if (fileName.isEmpty())
 		return false;
-	//fileName = "D:\\save.exml";//"C:\\Users\\John\\Desktop\\experiment_example1_save.exml";
 
 	QFile file(fileName);
 	if (!file.open(QFile::WriteOnly | QFile::Text)) 
@@ -212,7 +237,6 @@ bool ExperimentManager::openExperiment(QString strFile, bool bViewEditTree)
 	
 	if (fileName.isEmpty())
 		return false;
-	//fileName = "C:/Users/John/Desktop/experiment_example1.exml";
 
 	QFile file(fileName);
 	if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -245,6 +269,12 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 		experimentCurrentState = expCurrState;
 		emit ExperimentStateHasChanged(expCurrState,getCurrentDateTimeStamp());
 	}
+	if(expCurrState == Experiment_Stopped)
+	{
+		WriteAndCloseExperimentOutputData();
+		cleanupExperiment();
+	}
+
 }
 
 bool ExperimentManager::runExperiment()
@@ -292,12 +322,17 @@ bool ExperimentManager::runExperiment()
 		return false;
 	}
 
+	initializeDataLogger();//below should be after createExperimentObjects()
+
 	if(!initExperimentObjects())
 	{
 		changeCurrentExperimentState(Experiment_Initialized);
 		return false;
 	}
-
+	
+	if (expDataLogger)
+		expDataLogger->startTimer(nExperimentTimerIndex);
+	
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
 		changeCurrentExperimentState(Experiment_Initialized);
@@ -310,6 +345,15 @@ bool ExperimentManager::runExperiment()
 
 	changeCurrentExperimentState(Experiment_Started);
 	return true;
+}
+
+void ExperimentManager::initializeDataLogger()
+{
+	if(expDataLogger == NULL)
+	{
+		expDataLogger = new ExperimentLogger(this);
+		nExperimentTimerIndex = createExperimentTimer();
+	}
 }
 
 void ExperimentManager::abortExperiment()
@@ -334,6 +378,19 @@ void ExperimentManager::stopExperiment()
 	}
 }
 
+bool ExperimentManager::WriteAndCloseExperimentOutputData()
+{
+	if (expDataLogger)
+	{
+		QString strTemp = MainAppInfo::outputsDirPath() + "/TimingOut.txt";
+		expDataLogger->WriteToOutput(strTemp);
+		delete expDataLogger;
+		expDataLogger = NULL;
+		return true;
+	}
+	return false;
+}
+
 bool ExperimentManager::cleanupExperiment()
 {
 	cleanupExperimentObjects();
@@ -354,11 +411,13 @@ void ExperimentManager::cleanupExperimentObjects()
 		{
 			if ((lExperimentObjectList[i].pObject))
 			{
-				//if (!(lExperimentObjectList[i].pObject->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(SIGNAL_LOGTOMANAGER)) == -1))//Is the signal present?
+				//if (!(lExperimentObjectList[i].pObject->metaObject()->indexOfSignal(QMetaObject::normalizedSignature("LogToOutputWindow(QString)")) == -1))//Is the signal present?
 				//{
 				//	//Disconnect the signal
-				//	disconnect(lExperimentObjectList[i].pObject, SIGNAL(LogToExperimentManager(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
+				//	disconnect(lExperimentObjectList[i].pObject, SIGNAL(LogToOutputWindow(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
 				//}
+				//The same for "LogExpObjData(int,int,QString)"??
+				//logExperimentObjectData(const int nObjectID,const int nTimerID, const QString data2Log);
 				QMetaType::destroy(lExperimentObjectList[i].nMetaID, lExperimentObjectList[i].pObject);
 				lExperimentObjectList[i].pObject = NULL;
 			}
@@ -626,53 +685,6 @@ bool ExperimentManager::configureExperiment()
 	}
 	return true;
 }
-
-//bool ExperimentManager::getGenericArgument(QString strMetaType,QString strValue, QGenericArgument &genArg)
-//{
-//	QByteArray normType = QMetaObject::normalizedType(strMetaType.toLatin1());
-//	int typeId = QMetaType::type(normType);
-//
-//	switch (typeId)//QMetaType::Type
-//	{
-//	case QMetaType::Bool: 
-//		genArg = Q_ARG(bool,strValue.toInt());
-//		break;
-//	case QMetaType::Int: 
-//		genArg = Q_ARG(int,strValue.toInt());
-//		break;
-//	case QMetaType::Short: 
-//		genArg = Q_ARG(short,strValue.toShort());
-//		break;
-//	default:
-//		return false;
-//	}
-//	return true;
-//}
-
-//QGenericArgument ExperimentManager::getGenericArgument(QString *strMetaType,QString *strValue, bool &bSucceeded)
-//{
-//	QByteArray normType = QMetaObject::normalizedType(strMetaType->toLatin1());
-//	int typeId = QMetaType::type(normType);
-//	QGenericArgument tmpGenArg;
-//
-//	switch (typeId)//QMetaType::Type
-//	{
-//	case QMetaType::Bool: 
-//		tmpGenArg = Q_ARG(bool,strValue->toInt());
-//		break;
-//	case QMetaType::Int: 
-//		tmpGenArg = Q_ARG(int,strValue->toInt());
-//		break;
-//	case QMetaType::Short: 
-//		tmpGenArg = Q_ARG(short,strValue->toShort());
-//		break;
-//	default:
-//		bSucceeded = false;
-//		return NULL;
-//	}
-//	bSucceeded = true;
-//	return tmpGenArg;
-//}
 
 bool ExperimentManager::finalizeExperimentObjects()
 {
@@ -1226,11 +1238,18 @@ bool ExperimentManager::createExperimentObjects()
 					//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
 					//	properties << QString::fromLatin1(metaObject->method(i).signature());
 
-					if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature(SIGNAL_LOGTOMANAGER)) == -1))//Is the signal present?
+					bool bResult = false;
+					if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogToOutputWindow(QString)")) == -1))//Is the signal present?
 					{
 						//Connect the signal
-						connect(tmpElement.pObject, SIGNAL(LogToExperimentManager(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
+						bResult = connect(tmpElement.pObject, SIGNAL(LogToOutputWindow(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
 					}
+
+					//if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogExpObjData(int,int,QString)")) == -1))//Is the signal present?
+					//{
+					//	//Connect the signal
+					//	bResult = connect(tmpElement.pObject, SIGNAL(LogExpObjData(int,int,QString)), this, SLOT(logExperimentObjectData(int,int,QString)));//Qt::QueuedConnection --> makes it asynchronyous
+					//}
 
 					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETOBJECTID_FULL)) == -1))//Is the slot present?
 					{

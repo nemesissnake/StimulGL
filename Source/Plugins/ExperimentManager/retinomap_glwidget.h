@@ -2,17 +2,18 @@
 #define RETINOMAP_GLWIDGET_H
 
 #include "GLWidgetWrapper.h"
-//#include "screenshot.h"
 
 //Below defines must be all in lower case!
 //Shared defines
 #define RETINOMAP_WIDGET_PATTERN_POLARANGLE				"polarangle"
 #define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY			"eccentricity"
 #define RETINOMAP_WIDGET_PATTERN_MOVINGBAR				"movingbar"
+#define RETINOMAP_WIDGET_PATTERN_MOVINGDOTS				"movingdots"
 #define RETINOMAP_WIDGET_PATTERN_FIXATION				"fixation"
 #define RETINOMAP_WIDGET_PATTERN						"retinopattern"
 #define RETINOMAP_WIDGET_CYCLE_TRIGGER_AMOUNT			"cycletriggeramount"
 #define RETINOMAP_WIDGET_SHOWFIXPOINT					"showfixpoint"
+#define RETINOMAP_WIDGET_FIXSIZE						"fixationsize"
 #define RETINOMAP_WIDGET_BOOL_TRUE						"true"
 #define RETINOMAP_WIDGET_BOOL_FALSE						"false"
 #define RETINOMAP_WIDGET_GAP_DIAMETER					"gapdiameter"
@@ -26,6 +27,9 @@
 #define RETINOMAP_WIDGET_OUTPUTFRAMETYPE				"outputframetype"
 #define RETINOMAP_WIDGET_OUTPUTTYPE_FRAME				"frame"
 #define RETINOMAP_WIDGET_OUTPUTTYPE_MASK				"mask"
+#define RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT				"outputframeformat"
+#define RETINOMAP_WIDGET_OUTPUTFORMAT_DAT				"dat"
+#define RETINOMAP_WIDGET_OUTPUTFORMAT_PNG				"png"
 #define RETINOMAP_WIDGET_ANTIALIASING					"antialiasing"
 //PolarAngle specific defines
 #define RETINOMAP_WIDGET_POLAR_RING_AMOUNT				"polarringamount"
@@ -42,11 +46,29 @@
 #define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION			"movingbardirection"
 #define RETINOMAP_WIDGET_MOVINGBAR_WIDTH_CHECK_AMOUNT	"movingbarwidthcheckamount"
 #define RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT	"movingbarheightcheckamount"
+//MovingDots specific defines
+#define	RETINOMAP_WIDGET_MOVINGDOTS_MOVESPEED			"movingdotsmovespeed"
+#define RETINOMAP_WIDGET_MOVINGDOTS_NROFDOTS			"movingdotsnrofdots"
+#define RETINOMAP_WIDGET_MOVINGDOTS_DOTSIZE				"movingdotsdotsize"
+#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD			"movingdotshemifield"
+#define RETINOMAP_WIDGET_MOVINGDOTS_PIXELFROMCENTER		"movingdotspixelfromcenter"
+#define RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY			"movingdotsstationairy"
+//#define RETINOMAP_WIDGET_MOVINGDOTS_RETINALPOSITION	"movingdotsretinalposition"
+#define RETINOMAP_WIDGET_MOVINGDOTS_FIELDWIDTH			"movingdotsfieldwidth"
+#define RETINOMAP_WIDGET_MOVINGDOTS_FIELDHEIGHT			"movingdotsfieldheight"
 
-enum RetinoMapOutputType //The output format type
+#define RETINOMAP_WIDGET_OUTPUT_SUBFOLDER				"/RetinoWidget/"
+
+enum RetinoMapOutputType //The output type
 {
 	RetinoMap_OutputType_Frame	= 0,
 	RetinoMap_OutputType_Mask	= 1
+};
+
+enum RetinoMapOutputFormat //The output format
+{
+	RetinoMap_OutputFormat_PNG	= 0,
+	RetinoMap_OutputFormat_DAT	= 1
 };
 
 enum RetinoMapExperimentType //The state of the main experiment object
@@ -54,15 +76,13 @@ enum RetinoMapExperimentType //The state of the main experiment object
 	RetinoMap_Fixation		= 0,
 	RetinoMap_PolarAngle	= 1,
 	RetinoMap_Eccentricity	= 2,
-	RetinoMap_MovingBar		= 3
+	RetinoMap_MovingBar		= 3,
+	RetinoMap_MovingDots	= 4
 };
 
 class RetinoMap_glwidget : public GLWidgetWrapper
 {
 	Q_OBJECT
-
-signals:
-	void LogToExperimentManager(const QString &strText2Write);
 
 public:
 	RetinoMap_glwidget(QWidget *parent = NULL);
@@ -75,7 +95,7 @@ public slots:
 	//bool abortExperimentObject();
 	//bool stopExperimentObject();
 	//bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList = NULL);
-	//bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
+	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
 	bool setExperimentObjectID(int nObjID);
 
 protected:
@@ -85,6 +105,7 @@ protected:
 private:
 	void initialize();
 	void parseExperimentObjectBlockParameters(bool bInit = false);
+	void initializeMovingDotsStructures();
 
 	int nRetinoID;								//This variable stores the ObjectID used to identify the object
 	RetinoMapExperimentType currentExpType;		//The experiment type used, see RetinoMapExperimentType
@@ -95,6 +116,8 @@ private:
 	QBrush brushBackground;						//The background brush
 	QFont textFont;								//The font used for text(debug mode)
 	QPen textPen;								//The pen used for text(debug mode)
+	QColor whiteColor;							//The color used for the activation map (active)
+	QColor blackColor;							//The color used for the activation map (inactive)
 	QString textContent;						//Variable to store the text string
 	QRectF rectScreenRes;						//The screen resolution
 	int flickrThreshold;						//Variable for keeping track of the next flickr switch threshold time
@@ -105,29 +128,27 @@ private:
 	float stimWidthPixelAmount;					//The amount of visible stimuli pixels(height)
 	float stimHeigthPixelAmount;				//The amount of visible stimuli pixels(width)
 	QColor fixationColor;						//The color of the fixation dot/cross
-	int fixationWidth;							//The width of the fixation dot/cross
+	int fixationSize;							//The width of the fixation dot/cross
 	bool showFixationPoint;						//Should we show an fixation point?
 	bool outputTriggerFrame;					//Defines whether we should output(write to a png file) the first frame
 	bool discreteTriggerSteps;					//Defines whether the stimuli should run smooth or in discrete steps according to each trigger received
 	bool antiAliasing;							//Defines whether the anti-aliasing filter should be used for painting to the screen
 	int lastTriggerNumber;						//To keep track of the last trigger number
-	QTime debugTime;							//For debugging purpose...
-	int debugElapsedTime;						//For debugging purpose...
-	//int debugTestSamples;						//For debugging purpose...
-	//int debugUsedTestSamples;					//For debugging purpose...
-	//int debugTotalElapsedTime;				//For debugging purpose...
-	int debugInitBlockTrialTime;				//For debugging purpose...
-	QString debugString;						//For debugging purpose...
 
-	float polarWedgeSpan;
-	int polarWedgeNrChecks;
-	int polarWedgeNrRings;
-	int polarRotationDirection;
-
-	int eccentricityNrChecks;
-	int eccentricityNrRings;
-	int eccentricityDirection;
-
+	QColor color1;
+	QColor color2;
+	Qt::PenStyle style;
+	Qt::PenCapStyle flatCap;
+	Qt::PenCapStyle roundCap;
+	QString tmpParamValue;
+	float fStimulusDiameter;
+	float fTrialTimeProgress; 
+	bool bCreateActivationMap;
+	int currExpTrigger;
+	int currExpBlockTrialTrigger;
+	int currExpBlockTrialFrame;
+	int currExpTrial;
+	int currExpBlock;
 	float cortMagFactor;
 	int gapDiameter;
 	float wedgeSpanAngle;
@@ -138,18 +159,59 @@ private:
 	float currentXPoint;
 	float currentYPoint;
 	float currentStartAngle;
+	//QTime debugTime;							//For debugging purpose...
+	//int debugElapsedTime;						//For debugging purpose...
+	//int debugTestSamples;						//For debugging purpose...
+	//int debugUsedTestSamples;					//For debugging purpose...
+	//int debugTotalElapsedTime;				//For debugging purpose...
+	//int debugInitBlockTrialTime;				//For debugging purpose...
+	//QString debugString;						//For debugging purpose...
 
+	//Polar
+	float polarWedgeSpan;
+	int polarWedgeNrChecks;
+	int polarWedgeNrRings;
+	int polarRotationDirection;
+
+	//Eccentricity
+	int eccentricityNrChecks;
+	int eccentricityNrRings;
+	int eccentricityDirection;
+
+	//MovingBar
 	float movingBarAngle;
 	float movingBarCoverage;
 	int movingBarWidthCheckAmount;
 	int movingBarHeightCheckAmount;
 	int movingBarDirection;
 
-	RetinoMapOutputType retinoOutputType;
+	//MovingDots
+	float movingDotsMoveSpeed;
+	QVector<float> movingDotsBGXDir;
+	QVector<float> movingDotsBGYDir;
+	int movingDotsDotSize;
+	int movingDotsXWidth;
+	int movingDotsYWidth;
+	int movingDotsXStartRel;
+	int movingDotsYStartRel;
+	int movingDotsNrOfDots;
+	int movingDotsIsStationary;
+	int movingDotsHemifield;
+	int movingDotsPixelFromCenter;
+	int movingDotsFieldWidth;
+	int movingDotsFieldHeight;
+	QVector< QVector <float> > movingDotsXValue;
+	QVector< QVector <float> > movingDotsYValue;
+	QVector< QVector <float> > movingDotsXValueMirror;
+	//int movingDotsRetPosition;
 
+	RetinoMapOutputType retinoOutputType;
+	RetinoMapOutputFormat retinoOutputFormat;
 	QPixmap *StimulusResultImageFrame;
 	QPixmap *StimulusActivationMap;
-	//Screenshot *screenShotWidget;	
+	QPainter *activationPainter;
+	ExperimentConfiguration *currExpConfStruct;
+	RandomGenerator *randGen;
 };
 Q_DECLARE_METATYPE(RetinoMap_glwidget)
 #endif // RETINOMAP_GLWIDGET_H

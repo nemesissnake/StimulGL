@@ -41,3 +41,4 @@ All-build-desktop
 StaticLibs
 Install/outputs/
 Install/documents/~$*.doc
+Install/documents/*.tmp

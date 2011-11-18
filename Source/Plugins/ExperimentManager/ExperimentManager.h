@@ -15,6 +15,7 @@
 #include "Global.h"
 #include "retinomap_glwidget.h"
 #include "mainappinfo.h"
+#include "experimentlogger.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -69,9 +70,16 @@ public slots:
 	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue);
 	bool getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString &sValue);
 	bool setExperimentObjectBlockParameterStructure(const int nObjectID, QHash<QString, QString> *expBlockTrialStruct);
+	
 	bool logExperimentObjectData(const int nObjectID,const int nTimerID, const QString data2Log);
+	int createExperimentTimer();
+	bool startExperimentTimer(int nIndex);
+	int restartExperimentTimer(int nIndex);
+	int elapsedExperimentTimerTime(int nIndex);
 
 private:
+	bool WriteAndCloseExperimentOutputData();
+	void initializeDataLogger();
 	void RegisterMetaTypes();
 	bool invokeExperimentObjectsSlots(const QString &sSlotName);
 	bool configureExperiment();

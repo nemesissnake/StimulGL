@@ -1,7 +1,6 @@
 #include "experimentlogger.h"
 
-ExperimentLogger::ExperimentLogger(QObject *parent)
-	: QObject(parent)
+ExperimentLogger::ExperimentLogger(QObject *parent) : QObject(parent)
 {
 	//internalLoggedDataStructure = new LoggedData();
 }
@@ -16,16 +15,16 @@ ExperimentLogger::~ExperimentLogger()
 
 bool ExperimentLogger::setLogVars(const QString &strWho, const QString &strWhere, const int &nTimerIndex)
 {
-	sWho.append(strWho);
-	int nElapsed = tTimers.at(nTimerIndex).elapsed();
-	if ((nTimerIndex == 1) && (nElapsed > 19))
+	sWho.append(strWho + ",Timer(" + QString::number(nTimerIndex) + ")");
+	if (nTimerIndex >= 0)
 	{
-		sWhen.append(QString::number(nElapsed) + "(" +QString::number(nTimerIndex) + ") ------------------------------->!");
-	} 
+		int nElapsed = tTimers.at(nTimerIndex).elapsed();
+		sWhen.append(QString::number(nElapsed));
+	}
 	else
-	{	
-		sWhen.append(QString::number(nElapsed) + "(" +QString::number(nTimerIndex) + ")");
-	}	
+	{
+		sWhen.append("-");
+	}
 	sWhere.append(strWhere);
 	return true;
 }
