@@ -16,6 +16,9 @@
 #define RETINOMAP_WIDGET_FIXSIZE						"fixationsize"
 #define RETINOMAP_WIDGET_BOOL_TRUE						"true"
 #define RETINOMAP_WIDGET_BOOL_FALSE						"false"
+#define RETINOMAP_WIDGET_POS_LEFT						"left"
+#define RETINOMAP_WIDGET_POS_RIGHT						"right"
+#define RETINOMAP_WIDGET_POS_BOTH						"both"
 #define RETINOMAP_WIDGET_GAP_DIAMETER					"gapdiameter"
 #define RETINOMAP_WIDGET_FLICKRSPEED_HZ					"flickrfrequency"
 #define RETINOMAP_WIDGET_WIDTH_PIXEL_AMOUNT				"stimuluswidthspan"
@@ -58,6 +61,13 @@
 #define RETINOMAP_WIDGET_MOVINGDOTS_FIELDHEIGHT			"movingdotsfieldheight"
 
 #define RETINOMAP_WIDGET_OUTPUT_SUBFOLDER				"/RetinoWidget/"
+
+enum RetinoMapHemifieldPos //The position within the hemifield
+{
+	RetinoMap_HemifieldPos_Left		= 0,
+	RetinoMap_HemifieldPos_Right	= 1,
+	RetinoMap_HemifieldPos_Both		= 2
+};
 
 enum RetinoMapOutputType //The output type
 {
@@ -195,8 +205,8 @@ private:
 	int movingDotsXStartRel;
 	int movingDotsYStartRel;
 	int movingDotsNrOfDots;
-	int movingDotsIsStationary;
-	int movingDotsHemifield;
+	bool movingDotsIsStationary;
+	RetinoMapHemifieldPos movingDotsHemifieldPos;
 	int movingDotsPixelFromCenter;
 	int movingDotsFieldWidth;
 	int movingDotsFieldHeight;

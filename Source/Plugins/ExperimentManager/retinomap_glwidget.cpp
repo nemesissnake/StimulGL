@@ -166,22 +166,36 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		retinoOutputFormat = RetinoMap_OutputFormat_DAT;
 		switch (retinoOutputFormat)
 		{
-			case RetinoMap_OutputFormat_DAT:
-				insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT,RETINOMAP_WIDGET_OUTPUTFORMAT_DAT);
-				break;
-			case RetinoMap_OutputFormat_PNG:
-				insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT,RETINOMAP_WIDGET_OUTPUTFORMAT_PNG);
-				break;
+		case RetinoMap_OutputFormat_DAT:
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT,RETINOMAP_WIDGET_OUTPUTFORMAT_DAT);
+			break;
+		case RetinoMap_OutputFormat_PNG:
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT,RETINOMAP_WIDGET_OUTPUTFORMAT_PNG);
+			break;
 		}
 
 		movingDotsMoveSpeed = 1;// in case you want to specify the move speed of dots to be homogeneous
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_MOVESPEED,QString::number(movingDotsMoveSpeed));
-		movingDotsHemifield = 0;// 0 for both movingDotsHemifields, 1 for right, 2 for left
-		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD,QString::number(movingDotsHemifield));
+		movingDotsHemifieldPos = RetinoMap_HemifieldPos_Both;
+		switch (movingDotsHemifieldPos)
+		{
+		case RetinoMap_HemifieldPos_Left:
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD,RETINOMAP_WIDGET_POS_LEFT);
+			break;
+		case RetinoMap_HemifieldPos_Right:
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD,RETINOMAP_WIDGET_POS_RIGHT);
+			break;
+		case RetinoMap_HemifieldPos_Both:
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD,RETINOMAP_WIDGET_POS_BOTH);
+			break;
+		}
 		movingDotsPixelFromCenter = 100;
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_PIXELFROMCENTER,QString::number(movingDotsPixelFromCenter));
-		movingDotsIsStationary = 1;
-		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY,QString::number(movingDotsIsStationary));
+		movingDotsIsStationary = false;
+		if (movingDotsIsStationary)
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY,RETINOMAP_WIDGET_BOOL_TRUE);
+		else
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY,RETINOMAP_WIDGET_BOOL_FALSE);
 		movingDotsDotSize = 12;
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_DOTSIZE,QString::number(movingDotsDotSize));
 		movingDotsNrOfDots = 1000;
@@ -273,9 +287,19 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			break;
 		case RetinoMap_MovingDots :
 			movingDotsMoveSpeed = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_MOVESPEED,QString::number(movingDotsMoveSpeed)).toFloat();
-			movingDotsHemifield = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD,QString::number(movingDotsHemifield)).toInt();
+			tmpString = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD,RETINOMAP_WIDGET_POS_BOTH);
+			if (tmpString == RETINOMAP_WIDGET_POS_LEFT)
+				movingDotsHemifieldPos = RetinoMap_HemifieldPos_Left;
+			else if (tmpString == RETINOMAP_WIDGET_POS_RIGHT)
+				movingDotsHemifieldPos = RetinoMap_HemifieldPos_Right;
+			else //if (tmpString == RETINOMAP_WIDGET_POS_BOTH)
+				movingDotsHemifieldPos = RetinoMap_HemifieldPos_Both;
 			movingDotsPixelFromCenter = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_PIXELFROMCENTER,QString::number(movingDotsPixelFromCenter)).toInt();
-			movingDotsIsStationary = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY,QString::number(movingDotsIsStationary)).toInt();
+			tmpString = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY,RETINOMAP_WIDGET_BOOL_FALSE);
+			if (tmpString == RETINOMAP_WIDGET_BOOL_TRUE)
+				movingDotsIsStationary = true;
+			else //if(tmpString == RETINOMAP_WIDGET_BOOL_FALSE)
+				movingDotsIsStationary = false;			
 			movingDotsDotSize = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_DOTSIZE,QString::number(movingDotsDotSize)).toInt();
 			movingDotsNrOfDots = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_NROFDOTS,QString::number(movingDotsNrOfDots)).toInt();
 			//movingDotsRetPosition = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_RETINALPOSITION,QString::number(movingDotsRetPosition)).toInt();
@@ -411,32 +435,20 @@ void RetinoMap_glwidget::initBlockTrial()
 
 void RetinoMap_glwidget::initializeMovingDotsStructures()
 {
-	switch(movingDotsHemifield)
+	switch(movingDotsHemifieldPos)
 	{
-	case 0 : //Left + Right
-		//movingDotsXStartRel = ((rectScreenRes.width()/2)-stimWidthPixelAmount) - movingDotsPixelFromCenter;
+	case RetinoMap_HemifieldPos_Both:
 		movingDotsXStartRel = ((stimWidthPixelAmount/2)-movingDotsFieldWidth) - movingDotsPixelFromCenter;
-		//movingDotsXWidth = stimWidthPixelAmount;
-		//movingDotsYWidth = stimHeigthPixelAmount;
-
 		break;
-	case 1 : //Center
-		//movingDotsXStartRel = (rectScreenRes.width()/2) + movingDotsPixelFromCenter;
+	case RetinoMap_HemifieldPos_Right:
 		movingDotsXStartRel = (stimWidthPixelAmount/2) + movingDotsPixelFromCenter;
-		//movingDotsXWidth = stimWidthPixelAmount;
-		//movingDotsYWidth = stimHeigthPixelAmount;
 		break;
-	case 2 : //Left
-		//movingDotsXStartRel = ((rectScreenRes.width()/2)-stimWidthPixelAmount) - movingDotsPixelFromCenter;
+	case RetinoMap_HemifieldPos_Left:
 		movingDotsXStartRel = ((stimWidthPixelAmount/2)-movingDotsFieldWidth) - movingDotsPixelFromCenter;
-		//movingDotsXWidth = stimWidthPixelAmount;
-		//movingDotsYWidth = stimHeigthPixelAmount;
 		break;
 	}
 	movingDotsXWidth = movingDotsFieldWidth;
 	movingDotsYWidth = movingDotsFieldHeight;
-
-	//movingDotsYStartRel = ((rectScreenRes.height()-stimHeigthPixelAmount)/2);
 	movingDotsYStartRel = ((stimHeigthPixelAmount-movingDotsFieldHeight)/2);
 
 	movingDotsXValue.resize(2); 
@@ -826,7 +838,7 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 
 		for(i=0; i<movingDotsNrOfDots; i++)
 		{
-			if(movingDotsIsStationary==1)
+			if(movingDotsIsStationary)
 			{
 				movingDotsXValue[draw_page][i] = movingDotsXValue[disp_page][i];
 				movingDotsYValue[draw_page][i] = movingDotsYValue[disp_page][i];
@@ -851,7 +863,7 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 			}
 		}
 
-		if(movingDotsHemifield==0)//Left + Right?
+		if(movingDotsHemifieldPos == RetinoMap_HemifieldPos_Both)
 		{
 			movingDotsXValueMirror.resize(2); 
 			movingDotsXValueMirror[0].resize(movingDotsNrOfDots); 
@@ -863,7 +875,7 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 		}
 		for(i=0; i<movingDotsNrOfDots; i++)
 		{
-			if(movingDotsHemifield==0)//Left + Right?
+			if(movingDotsHemifieldPos== RetinoMap_HemifieldPos_Both)
 			{
 				//if(1) // draw with float points
 				//{
@@ -876,7 +888,7 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 				//	// imgPainter.drawPoint(movingDotsXValue[draw_page][i], movingDotsYValue[draw_page][i]); // Jan - I deleted this line, otherwise next line would be called always (outside of if/else)
 				//	imgPainter.drawPoint(movingDotsXValueMirror[draw_page][i], movingDotsYValue[draw_page][i]);
 			}
-			else//Left | Center
+			else
 			{
 				//if(1) // draw with float points
 				//{

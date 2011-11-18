@@ -146,7 +146,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="5">
 			        	<name>MovingDotsHemifield</name>
-			        	<value>2</value>
+			        	<value>Right</value>
 			        </parameter>
 			        <parameter ID="6">
 			        	<name>MovingDotsPixelFromCenter</name>
@@ -166,7 +166,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="10">
 			        	<name>MovingDotsStationairy</name>
-			        	<value>1</value>
+			        	<value>False</value>
 			        </parameter>
 			    	</parameters>
 		    	</object>   
@@ -181,7 +181,7 @@ Attributes only apply to readonly non user data, like the ID
 	        	<parameters>
 			        <parameter ID="0">
 			        	<name>MovingDotsHemifield</name>
-			        	<value>1</value>
+			        	<value>Left</value>
 			        </parameter>	        	
 			    	</parameters>    
 		    	</object>   
@@ -196,7 +196,7 @@ Attributes only apply to readonly non user data, like the ID
 	        	<parameters>
 			        <parameter ID="0">
 			        	<name>MovingDotsHemifield</name>
-			        	<value>0</value>
+			        	<value>Both</value>
 			        </parameter>	        	
 			    	</parameters>    
 		    	</object>   
