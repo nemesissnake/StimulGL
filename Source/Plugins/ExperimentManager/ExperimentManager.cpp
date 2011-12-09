@@ -140,7 +140,7 @@ bool ExperimentManager::startExperimentTimer(int nIndex)
 	return false;
 }
 
-int ExperimentManager::restartExperimentTimer(int nIndex)
+double ExperimentManager::restartExperimentTimer(int nIndex)
 {
 	if ((expDataLogger) && (nIndex >= 0))
 	{
@@ -149,7 +149,7 @@ int ExperimentManager::restartExperimentTimer(int nIndex)
 	return -1;
 }
 
-int ExperimentManager::elapsedExperimentTimerTime(int nIndex)
+double ExperimentManager::elapsedExperimentTimerTime(int nIndex)
 {
 	if ((expDataLogger) && (nIndex >= 0))
 	{
@@ -291,7 +291,8 @@ bool ExperimentManager::runExperiment()
 	}
 
 #ifdef Q_OS_WIN
-	bool ret = SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+	//bool ret = 
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 #else
 	QThread::currentThread()->setPriority(QThread::HighPriority);  
 	// QThread::TimeCriticalPriority);
@@ -382,7 +383,7 @@ bool ExperimentManager::WriteAndCloseExperimentOutputData()
 {
 	if (expDataLogger)
 	{
-		QString strTemp = MainAppInfo::outputsDirPath() + "/TimingOut.txt";
+		QString strTemp = MainAppInfo::outputsDirPath() + "/" + DEFAULT_OUTPUTFILE;
 		expDataLogger->WriteToOutput(strTemp);
 		delete expDataLogger;
 		expDataLogger = NULL;

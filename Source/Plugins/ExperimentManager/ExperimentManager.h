@@ -74,8 +74,8 @@ public slots:
 	bool logExperimentObjectData(const int nObjectID,const int nTimerID, const QString data2Log);
 	int createExperimentTimer();
 	bool startExperimentTimer(int nIndex);
-	int restartExperimentTimer(int nIndex);
-	int elapsedExperimentTimerTime(int nIndex);
+	double restartExperimentTimer(int nIndex);
+	double elapsedExperimentTimerTime(int nIndex);
 
 private:
 	bool WriteAndCloseExperimentOutputData();

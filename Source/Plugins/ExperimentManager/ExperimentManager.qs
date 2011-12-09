@@ -9,9 +9,9 @@ function ExperimentStateChanged()
 //	Experiment_IsStopping	= 4,
 //	Experiment_Stopped		= 5	
 	
-	Log("mySignalFunction arguments count: " + arguments.length);
-	for (var i = 0; i < arguments.length; ++i)
-		Log("mySignalFunction first argument: " + arguments[i]); 	
+//	Log("mySignalFunction arguments count: " + arguments.length);
+//	for (var i = 0; i < arguments.length; ++i)
+//		Log("mySignalFunction first argument: " + arguments[i]); 	
 	
 	if(arguments[0] == 5)//Experiment Stopped
 	{
@@ -25,7 +25,7 @@ function ExperimentStateChanged()
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
 ExperimentManagerObj.WriteToLogOutput.connect(this, this.Log);
-ExperimentManagerObj.openExperiment("D:\\Projects\\StimulGL\\Install\\examples\\retino_mapping_timer.exml", false);//retino_mapping_pport.exml
+ExperimentManagerObj.openExperiment("D:\\Projects\\StimulGL\\Install\\examples\\retino_mapping_timer.exml", false);//retino_mapping_movdots_timer.exml, retino_mapping_polar_timer, retino_mapping_movbar_timer.exml
 ExperimentManagerObj.runExperiment();
 
 

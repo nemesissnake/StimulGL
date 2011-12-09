@@ -8,8 +8,8 @@ Attributes only apply to readonly non user data, like the ID
 <EXML version="1.0.0.0">
     <defines>
 			<experiment ID="0">
-				<name>EccentricityMapping Experiment with a QTimer</name>
-				<debugmode>true</debugmode>
+				<name>Retinotopic Mapping Experiment with the use of a QTimer</name>
+				<debugmode>false</debugmode>
 			</experiment>
 		</defines>
 		
@@ -57,7 +57,7 @@ Attributes only apply to readonly non user data, like the ID
      
     <actions>
     	<blocks>
-    	    	
+
 		   	<block ID="0">
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
@@ -85,21 +85,17 @@ Attributes only apply to readonly non user data, like the ID
 			        	<name>OutputFrameType</name>
 			        	<value>Mask</value>
 			        </parameter>			        			        	        			        
-			        <parameter ID="5">
-			        	<name>DiscreteTriggerSteps</name>
-			        	<value>false</value>
-			        </parameter>	
 			        <parameter ID="6">
 			        	<name>AntiAliasing</name>
 			        	<value>true</value>
 			        </parameter>	
 			        <parameter ID="7">   	
 			        	<name>StimulusWidthSpan</name>
-			        	<value>1050</value>	        	
+			        	<value>768</value>
 			        </parameter>	
 			        <parameter ID="8">     	
 			        	<name>StimulusHeightSpan</name>
-			        	<value>1050</value>	
+			        	<value>768</value>	
 			        </parameter>
 			        <parameter ID="9">
 			        	<name>OutputFrameFormat</name>
@@ -112,110 +108,173 @@ Attributes only apply to readonly non user data, like the ID
 			        <parameter ID="11">
 			        	<name>CycleTriggerAmount</name>
 			        	<value>1</value>
-			        </parameter>			        		        		        	        		        	        
+			        </parameter>	
+			        <parameter ID="12">
+			        	<name>DisplayRefreshRate</name>
+			        	<value>30</value>
+			        </parameter>			        
 			    	</parameters>    
 		    	</object>   
 	    	</block>
 	    	
-		   	<block ID="1">
-	        <name>MovingDots_Block</name>
+	    	<block ID="1">
+	        <name>PolarAngle_Block</name>
 	        <block_number>1</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>4</nr_of_triggers>
+	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_triggers>2</nr_of_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
 			        	<name>CycleTriggerAmount</name>
-			        	<value>4</value>
+			        	<value>2</value>
 			        </parameter>
 			        <parameter ID="1">
-			        	<name>RetinoPattern</name>
-			        	<value>movingdots</value>
-			        </parameter>				        
-			        <parameter ID="2">
-			        	<name>ShowFixPoint</name>
-			        	<value>true</value>
-			        </parameter>
-							<parameter ID="3">
-			        	<name>MovingDotsNrOfDots</name>
-			        	<value>200</value>
-			        </parameter>			        
-			        <parameter ID="4">
-			        	<name>MovingDotsDotSize</name>
-			        	<value>5</value>
-			        </parameter>
-			        <parameter ID="5">
-			        	<name>MovingDotsHemifield</name>
-			        	<value>Right</value>
-			        </parameter>
-			        <parameter ID="6">
-			        	<name>MovingDotsPixelFromCenter</name>
+			        	<name>EmptyTriggerSteps</name>
 			        	<value>0</value>
+			        </parameter>			        
+			        <parameter ID="2">
+			        	<name>PolarWedgeSpan</name>
+			        	<value>22.5</value>
+							</parameter>		        	
+			        <parameter ID="3">	 	
+			        	<name>PolarCheckAmount</name>
+			        	<value>10</value>	        	
 			        </parameter>
-			        <parameter ID="7">   	
-			        	<name>MovingDotsFieldWidth</name>
-			        	<value>400</value>	        	
+			        <parameter ID="4">	      	
+			        	<name>PolarRingAmount</name>
+			        	<value>5</value>
+			        </parameter>       	
+			        <parameter ID="5">    	
+			        	<name>PolarRotationDirection</name>
+			        	<value>-1</value>	        	
+			        </parameter>
+			        <parameter ID="6">   
+			        	<name>FlickrFrequency</name>
+			        	<value>15</value>
+			        </parameter>	        	
+			        <parameter ID="7">	    	
+			        	<name>CorticalMagnitudeFactor</name>
+			        	<value>0.2</value>	        	
+			        </parameter> 
+			        <parameter ID="8">
+			        	<name>RetinoPattern</name>
+			        	<value>PolarAngle</value>
 			        </parameter>	
-			        <parameter ID="8">     	
-			        	<name>MovingDotsFieldHeight</name>
-			        	<value>600</value>	
-			        </parameter>			        			        			        
 			        <parameter ID="9">
-			        	<name>MovingDotsMoveSpeed</name>
-			        	<value>4</value>
+			        	<name>GapDiameter</name>
+			        	<value>20</value>
 			        </parameter>
-			        <parameter ID="10">
-			        	<name>MovingDotsStationairy</name>
-			        	<value>False</value>
+	    				<parameter ID="10">
+			        	<name>DiscreteTriggerSteps</name>
+			        	<value>true</value>
+			        </parameter>			        
+			        <parameter ID="11">
+			        	<name>RandomizeTriggerSteps</name>
+			        	<value>false</value>
+			        </parameter>			                
+			        <parameter ID="12">
+			        	<name>DisableCortMagFac</name>
+			        	<value>false</value>
 			        </parameter>
-			    	</parameters>
+			    	</parameters>			    	 
 		    	</object>   
-	    	</block>	    	    
-	    	
-		   	<block ID="2">
+	    	</block>	    	
+	    		    	
+	    	<block ID="2">
 	        <name>Extended_Block</name>
 	        <block_number>2</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>4</nr_of_triggers>	 
+	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_triggers>2</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
-			        	<name>MovingDotsHemifield</name>
-			        	<value>Left</value>
-			        </parameter>	        	
+			        	<name>EmptyTriggerSteps</name>
+			        	<value>1</value>
+			        </parameter>        	
 			    	</parameters>    
 		    	</object>   
-	    	</block>	  
-	    	
-		   	<block ID="3">
-	        <name>Extended_Block</name>
-	        <block_number>3</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>4</nr_of_triggers>	 
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>MovingDotsHemifield</name>
-			        	<value>Both</value>
-			        </parameter>	        	
-			    	</parameters>    
-		    	</object>   
-	    	</block>	    	  	   	
+	    	</block>	    	
 
-		   	<block ID="4">
-	        <name>EccentricityBlock</name>
-	        <block_number>4</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>4</nr_of_triggers>
+		   	<block ID="3">
+	        <name>MovingBar_Block</name>
+	        <block_number>3</block_number>            
+	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_triggers>12</nr_of_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
 			        	<name>CycleTriggerAmount</name>
-			        	<value>4</value>
+			        	<value>12</value>
+			        </parameter>
+			        <parameter ID="1">
+			        	<name>EmptyTriggerSteps</name>
+			        	<value>0</value>
+			        </parameter>				        
+			        <parameter ID="2">
+			        	<name>RetinoPattern</name>
+			        	<value>movingbar</value>
+			        </parameter>				        
+			        <parameter ID="3">	 	
+			        	<name>MovingBarWidthCheckAmount</name>			        	 
+			        	<value>100</value>	        	
+			        </parameter>
+			        <parameter ID="4">	      	
+			        	<name>MovingBarHeightCheckAmount</name>
+			        	<value>5</value>
+			        </parameter>       	
+			        <parameter ID="5">    	
+			        	<name>MovingBarDirection</name>
+			        	<value>-1</value>	        	
+			        </parameter>
+			        <parameter ID="6">   
+			        	<name>FlickrFrequency</name>
+			        	<value>10</value>
+			        </parameter>	        	
+  		        <parameter ID="7">
+			        	<name>MovingBarAngle</name>
+			        	<value>60</value>
+			        </parameter>		
+			        <parameter ID="8">
+			        	<name>MovingBarCoverage</name>
+			        	<value>0.8</value>
+			        </parameter>
+			        <parameter ID="9">
+			        	<name>ShowFixPoint</name>
+			        	<value>true</value>
+			        </parameter>       
+			    	</parameters>
+		    	</object>   
+	    	</block>
+
+	    	<block ID="4">
+	        <name>Extended_Block</name>
+	        <block_number>4</block_number>            
+	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <object ID="1">
+	        	<parameters>
+			        <parameter ID="0">    	
+			        	<name>MovingBarDirection</name>
+			        	<value>1</value>	        	
+			        </parameter>	        	
+			    	</parameters>    
+		    	</object>   
+	    	</block>
+
+		   	<block ID="3">
+	        <name>EccentricityBlock</name>
+	        <block_number>5</block_number>            
+	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_triggers>12</nr_of_triggers>
+	        <object ID="1">
+	        	<parameters>
+			        <parameter ID="0">
+			        	<name>CycleTriggerAmount</name>
+			        	<value>12</value>
 			        </parameter>
 			        <parameter ID="1">
 			        	<name>GapDiameter</name>
-			        	<value>250</value>
+			        	<value>25</value>
 			        </parameter>			        
 			        <parameter ID="2">	 	
 			        	<name>EccentricityCheckAmount</name>			        	 
@@ -227,125 +286,50 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>       	
 			        <parameter ID="4">    	
 			        	<name>EccentricityDirection</name>
-			        	<value>-1</value>	        	
+			        	<value>1</value>	        	
 			        </parameter>
 			        <parameter ID="5">   
 			        	<name>FlickrFrequency</name>
-			        	<value>4</value>
+			        	<value>10</value>
 			        </parameter>	        	
-			        <parameter ID="8">	    	
+			        <parameter ID="6">	    	
 			        	<name>CorticalMagnitudeFactor</name>
-			        	<value>0.3</value>	        	
+			        	<value>0.25</value>	        	
 			        </parameter> 
-			        <parameter ID="9">
+			        <parameter ID="7">
 			        	<name>RetinoPattern</name>
 			        	<value>eccentricity</value>
 			        </parameter>
+			        <parameter ID="8">
+			        	<name>EccentricityDisableCortMagFac</name>
+			        	<value>false</value>
+			        </parameter>			        			        
 			    	</parameters>    
 		    	</object>   
 	    	</block>	 
 	    	
-		   	<block ID="5">
-	        <name>PolarAngle_Block</name>
+	    	<block ID="5">
+	        <name>Extended_Block</name>
 	        <block_number>5</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>4</nr_of_triggers>
+	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_triggers>12</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
-			        <parameter ID="0">
-			        	<name>CycleTriggerAmount</name>
-			        	<value>4</value>
-			        </parameter>
-			        <parameter ID="1">
-			        	<name>PolarWedgeSpan</name>
-			        	<value>12.25</value>
-							</parameter>		        	
-			        <parameter ID="2">	 	
-			        	<name>PolarCheckAmount</name>
-			        	<value>5</value>	        	
-			        </parameter>
-			        <parameter ID="3">	      	
-			        	<name>PolarRingAmount</name>
-			        	<value>25</value>
-			        </parameter>       	
-			        <parameter ID="4">    	
-			        	<name>PolarRotationDirection</name>
-			        	<value>-1</value>	        	
-			        </parameter>
-			        <parameter ID="5">   
-			        	<name>FlickrFrequency</name>
-			        	<value>2</value>
+			        <parameter ID="0">    	
+			        	<name>EccentricityDisableCortMagFac</name>
+			        	<value>true</value>	        	
 			        </parameter>	        	
-			        <parameter ID="8">	    	
-			        	<name>CorticalMagnitudeFactor</name>
-			        	<value>0.2</value>	        	
-			        </parameter> 
-			        <parameter ID="10">
-			        	<name>RetinoPattern</name>
-			        	<value>PolarAngle</value>
-			        </parameter>	
-			        <parameter ID="11">
-			        	<name>GapDiameter</name>
-			        	<value>20</value>
-			        </parameter>			        
 			    	</parameters>    
 		    	</object>   
-	    	</block>
-	    	
-		   	<block ID="6">
-	        <name>MovingBar_Block</name>
-	        <block_number>6</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>4</nr_of_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>CycleTriggerAmount</name>
-			        	<value>4</value>
-			        </parameter>
-			        <parameter ID="1">
-			        	<name>RetinoPattern</name>
-			        	<value>movingbar</value>
-			        </parameter>				        
-			        <parameter ID="2">	 	
-			        	<name>MovingBarWidthCheckAmount</name>			        	 
-			        	<value>100</value>	        	
-			        </parameter>
-			        <parameter ID="3">	      	
-			        	<name>MovingBarHeightCheckAmount</name>
-			        	<value>5</value>
-			        </parameter>       	
-			        <parameter ID="4">    	
-			        	<name>MovingBarDirection</name>
-			        	<value>-1</value>	        	
-			        </parameter>
-			        <parameter ID="5">   
-			        	<name>FlickrFrequency</name>
-			        	<value>4</value>
-			        </parameter>	        	
-  		        <parameter ID="8">
-			        	<name>MovingBarAngle</name>
-			        	<value>60</value>
-			        </parameter>		
-			        <parameter ID="9">
-			        	<name>MovingBarCoverage</name>
-			        	<value>0.9</value>
-			        </parameter>
-			        <parameter ID="10">
-			        	<name>ShowFixPoint</name>
-			        	<value>true</value>
-			        </parameter>       
-			    	</parameters>
-		    	</object>   
-	    	</block>	    	 	    	
-
+	    	</block>	    	
+   	
     	</blocks>
     </actions>
     
     <finalizations>
         <object ID="0">
         	<type>slot</type>
-        	<signature>stop()</signature>
+        	<signature>stop</signature>
         </object>
     </finalizations>     
 

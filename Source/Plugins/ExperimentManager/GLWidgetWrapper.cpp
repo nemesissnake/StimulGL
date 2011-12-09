@@ -20,7 +20,9 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	setAutoFillBackground(false);
 	setAutoBufferSwap(false); // in order to have control over time point for buffer swap
 	rScreenResolution = QApplication::desktop()->screenGeometry();//dDesktopWidget->screenGeometry();//availableGeometry();
-	setFixedSize(rScreenResolution.width(), rScreenResolution.height());
+	//setFixedSize(rScreenResolution.width(), rScreenResolution.height());
+	setStimuliResolution(rScreenResolution.width(), rScreenResolution.height());
+	//setFixedSize(768,768);
 	//setMinimumSize(200, 200);
 	setWindowTitle(tr("Painting a Scene"));
 
@@ -34,6 +36,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	ExpBlockParams = NULL;
 	nFrameTimerIndex = -1;
 	nTrialTimerIndex = -1;
+	setVerticalSyncSwap();
 }
 
 GLWidgetWrapper::~GLWidgetWrapper()
@@ -56,6 +59,15 @@ GLWidgetWrapper::~GLWidgetWrapper()
 	cleanupExperimentBlockTrialStructure();
 	changeSubObjectState(Experiment_SubObject_Stopped);
 }
+
+void GLWidgetWrapper::setVerticalSyncSwap()
+{
+	QGLFormat StimulGLQGLFormat;
+	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
+	StimulGLQGLFormat.setSampleBuffers(true);
+	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
+}
+
 
 bool GLWidgetWrapper::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue)
 {
@@ -92,7 +104,15 @@ void GLWidgetWrapper::init()
 
 QRectF GLWidgetWrapper::getScreenResolution()
 {
+	//int a = this->format().swapInterval();
+	//a = a;
 	return rScreenResolution;
+	//return QRectF(0.0f,0.0f,768.0f,768.0f);
+}
+
+void GLWidgetWrapper::setStimuliResolution(int w, int h)
+{
+	setFixedSize(w,h);
 }
 
 int GLWidgetWrapper::getObjectID()
@@ -515,6 +535,11 @@ bool GLWidgetWrapper::initExperimentObject()
 {
 	nFrameTimerIndex = pExpConf->pExperimentManager->createExperimentTimer();
 	nTrialTimerIndex = pExpConf->pExperimentManager->createExperimentTimer();
+
+	nRefreshRate = 0;
+	dAdditionalRefreshDelayTime = 0.0;
+	insertExperimentObjectBlockParameter(nObjectID,RETINOMAP_WIDGET_DISPLAY_REFRESHRATE,QString::number(nRefreshRate));
+
 	return true;
 }
 
@@ -598,12 +623,13 @@ void GLWidgetWrapper::initBlockTrial()
 	bForceToStop = false;
 	bExperimentShouldStop = false;
 	nBlockTrialFrameCounter = 0;
-#ifdef Q_WS_MACX
-	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // make param in interface and recommend per platform
-#else
-	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // on Win (with recent OGL drivers), "swapBuffers" will wait for n retraces as indicated by "setSwapInterval" command (works like DX "flip")
-#endif
+//#ifdef Q_WS_MACX
+//	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // make param in interface and recommend per platform
+//#else
+//	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // on Win (with recent OGL drivers), "swapBuffers" will wait for n retraces as indicated by "setSwapInterval" command (works like DX "flip")
+//#endif
 	getExperimentBlockParameters(getCurrentExperimentBlock(),nObjectID,ExpBlockParams);//Should be moved to the manager?!
+	nRefreshRate = getExperimentObjectBlockParameter(nObjectID,RETINOMAP_WIDGET_DISPLAY_REFRESHRATE,QString::number(nRefreshRate)).toInt();
 }
 
 //bool GLWidgetWrapper::loadBlockTrial()
@@ -731,25 +757,66 @@ void GLWidgetWrapper::changeSubObjectState(ExperimentSubObjectState newSubObject
 
 void GLWidgetWrapper::finalizePaintEvent() 
 {
+	double dCurrentTime;
+	double dFramePeriodTime;
+	dAdditionalRefreshDelayTime = dFramePeriodTime/5.0f;
 	//if(isDebugMode())
 	//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,nFrameTimerIndex,"finalizePaintEvent():ElapsedFrameTime");//Here we log the measured frame time (swapBuffers() + initBlockTrial() + paintEvent())
-	int nTemp;
-	while(1)//Don't go too fast...
+	if (nRefreshRate > 0)
 	{
-		nTemp = pExpConf->pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);
-		if(nTemp > nMinScreenUpdateTime)
-			break;
-		else
-			Sleep(1);//nMinScreenUpdateTime-nTemp);
+		dFramePeriodTime = 1000.0f/nRefreshRate; //DisplayRefreshRate
+		double dWaitTime = 0;
+		dCurrentTime = pExpConf->pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);	
+		while((dCurrentTime)<dFramePeriodTime)//Don't go too fast...//((dCurrentTime+dAdditionalRefreshDelayTime)<dFramePeriodTime)//Don't go too fast...
+		{
+			dWaitTime = dFramePeriodTime - dCurrentTime;// + dAdditionalRefreshDelayTime;
+			if(isDebugMode())
+				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,"finalizePaintEvent():Sleeping(" + QString::number(dWaitTime) + ")...");			
+			ExperimentTimer::SleepMSecAccurate(dWaitTime);
+			//Sleep(nSTime);
+			dCurrentTime = pExpConf->pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);
+		}
 	}
-	swapBuffers();
-	nBlockTrialFrameCounter++;
-	nTemp = pExpConf->pExperimentManager->restartExperimentTimer(nFrameTimerIndex);
+	dCurrentTime = pExpConf->pExperimentManager->restartExperimentTimer(nFrameTimerIndex);
 	if(isDebugMode())
-	{
+		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,"finalizePaintEvent():Going to Swap");
+	swapBuffers();
+	if(isDebugMode())
 		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,"finalizePaintEvent():BlockTrial Buffer Swapped");
-		if(nTemp > MAX_SCREEN_UPDATE_TIME)
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,"finalizePaintEvent()::***Paint routine took to long(" + QString::number(nTemp) + " mSecs),(Block=" + QString::number(nCurrentExperimentBlock) + ", Trial=" + QString::number(nCurrentExperimentTrial) +", Trigger=" + QString::number(nCurrentExperimentBlockTrialReceivedTriggers) + ")");
+	nBlockTrialFrameCounter++;
+	
+	
+	
+	//dCurrentTime = pExpConf->pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);
+	//if (nRefreshRate > 0)
+	//{
+	//	if(dCurrentTime < dFramePeriodTime)
+	//	{
+	//		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,"Too Fast: Additional Time = " + QString::number(dFramePeriodTime - dCurrentTime));
+	//		ExperimentTimer::SleepMSecAccurate(dFramePeriodTime - dCurrentTime);
+	//	}
+	//	//if(dCurrentTime < (dFramePeriodTime-(dFramePeriodTime/20.0f)))//5% Change, too fast
+	//	//{
+	//	//	dAdditionalRefreshDelayTime = dAdditionalRefreshDelayTime + (dFramePeriodTime - (dFramePeriodTime/40.0f) - dCurrentTime);
+	//	//	if(isDebugMode())
+	//	//		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,"Too Fast: Additional Time = " + QString::number(dAdditionalRefreshDelayTime));
+	//	//}
+	//	//else if(dCurrentTime > (dFramePeriodTime+(dFramePeriodTime/20.0f)))//5% Change, too slow
+	//	//{
+	//	//	if(dCurrentTime < ((2*dFramePeriodTime)-2.0f))
+	//	//	{
+	//	//		dAdditionalRefreshDelayTime = dAdditionalRefreshDelayTime - (dFramePeriodTime + (dFramePeriodTime/40.0f) - dCurrentTime);
+	//	//		if(isDebugMode())
+	//	//			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,"Too Slow: Additional Time = " + QString::number(dAdditionalRefreshDelayTime));
+	//	//	}
+	//	//	if(isDebugMode())
+	//	//		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,"finalizePaintEvent()::***Paint routine took to long(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(nCurrentExperimentBlock) + ", Trial=" + QString::number(nCurrentExperimentTrial) +", Trigger=" + QString::number(nCurrentExperimentBlockTrialReceivedTriggers) + ", Frame=" + QString::number(nBlockTrialFrameCounter) + ")");
+	//	//}
+	//}
+	if(isDebugMode() && (nRefreshRate > 0))
+	{
+		if (dCurrentTime > (dFramePeriodTime+1.0f))
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,"finalizePaintEvent()::***Paint routine took to long(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(nCurrentExperimentBlock) + ", Trial=" + QString::number(nCurrentExperimentTrial) +", Trigger=" + QString::number(nCurrentExperimentBlockTrialReceivedTriggers) + ", Frame=" + QString::number(nBlockTrialFrameCounter) + ")");
 	}
 	if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial, otherwise directly call onAnimate()
 	{

@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QFile>
 #include <QTextStream>
-#include <QTime>
+//#include <QTime>
+#include "ExperimentTimer.h"
 
 class ExperimentLogger : public QObject
 {
@@ -22,11 +23,11 @@ public:
 
 	int createTimer();
 	bool startTimer(int nIndex);
-	int restartTimer(int nIndex);
-	int elapsedTimerTime(int nIndex);
+	double restartTimer(int nIndex);
+	double elapsedTimerTime(int nIndex);
 
 	bool setLogVars(const QString &strWho, const QString &strWhere, const int &nTimerIndex);
-	bool getLogVars(QString &strWho, QString &strWhen, QString &strWhere);
+	//bool getLogVars(QString &strWho, QString &strWhen, QString &strWhere);
 	bool WriteToOutput(const QString &fileName);
 	void Test();
 
@@ -36,7 +37,7 @@ private:
 	QList<QString> sWhen;
 	QList<QString> sWhere;
 
-	QList<QTime> tTimers;
+	QList<ExperimentTimer*> tTimers;//QTime> tTimers;
 };
 
 #endif // EXPERIMENTLOGGER_H

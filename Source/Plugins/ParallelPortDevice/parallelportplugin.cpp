@@ -86,7 +86,8 @@ bool ParallelPortPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue ParallelPortCtor = engine.newFunction(ctor_ParallelPort, ParallelPortProto);
 	engine.globalObject().setProperty("ParallelPort", ParallelPortCtor);
 
-	int nRes = qRegisterMetaType<ParallelPort>("ParallelPort");
+	//int nRes = 
+	qRegisterMetaType<ParallelPort>("ParallelPort");
 	//QScriptEngine eng;
 	//QScriptValue obj = engine.newObject();
 	//ParallelPortProto.setProperty("BaseAddress", engine.newFunction(getSetBaseAddress), 

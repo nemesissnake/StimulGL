@@ -27,7 +27,7 @@ enum ExperimentState //The state of the main experiment object
 };
 
 enum ExperimentSubObjectState //The state of an experiment (sub)object
-{
+{	
 	Experiment_SubObject_Initialized	= 0,
 	Experiment_SubObject_Started		= 1,
 	Experiment_SubObject_Abort			= 2,
@@ -82,6 +82,7 @@ typedef struct{
 	int nTrialNumber;
 	//QString nBlockName;
 	int nNrOfTriggers;
+	//RandomGenerator *randEmptyStimGenerator;//This can hold some trial specific Information that can also be randomized
 } TrialStructure;
 
 typedef struct{
@@ -118,9 +119,10 @@ typedef struct{
 #define TRIGGERTIMER_NAME						"TriggerTimer"
 #define MODULE_NAME								"Experiment Parser"
 #define MAX_INVOKE_ARG_COUNT					10
-#define MIN_SCREEN_UPDATE_TIME					10
-#define MAX_SCREEN_UPDATE_TIME					20
+//#define MIN_SCREEN_UPDATE_TIME					10
+//#define MAX_SCREEN_UPDATE_TIME					16.6667f
 
+#define DEFAULT_OUTPUTFILE				"Out.txt"
 #define ARGB_FORMAT_HEADER				0xCAFE1234
 #define DOUBLE_PI_VALUE					3.141592653589793238462643383279502884197
 #define ROOT_TAG						"EXML"

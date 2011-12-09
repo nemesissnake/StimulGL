@@ -43,6 +43,7 @@ public slots:
 	virtual bool setExperimentObjectID(int nObjID);
 	virtual bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
 	
+	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
 	int getObjectID();
 	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue);
@@ -78,6 +79,7 @@ protected slots:
 private:
 	//void startTriggerTimer(int msTime);
 	//void stopTriggerTimer();
+	void setVerticalSyncSwap();
 	void init();
 	bool eventFilter(QObject *target, QEvent *event);
 	int getRelativeBlockTrialTrigger(int nAbsoluteTrigger);		//Returns the relative (within a BlockTrial) trigger from a absolute (within the whole Experiment) trigger
@@ -93,12 +95,14 @@ private:
 	int nCurrentExperimentTrial;						//The current experiment trial within the block 
 	int nCurrentExperimentBlockTrialReceivedTriggers;	//The current experiment number of trigger received within the current block trial
 	int nCurrentExperimentBlock;						//The current experiment block
-	int nTotalProcessedExperimentTrials;				//The total number of trials processed within experiment, might be that this Trial is not fully processed.
+	int nTotalProcessedExperimentTrials;				//The total number of trials processed within experiment, might be that this Trial is not fully processed
+	int nRefreshRate;									//The refresh rate of the screen
+	double dAdditionalRefreshDelayTime;
 	ContainerDlg *stimContainerDlg;
 	bool bForceToStop;
 	bool bExperimentShouldStop;
 	QRectF rScreenResolution;
-	int nMinScreenUpdateTime;
+	//int nMinScreenUpdateTime;
 	QVBoxLayout *mainLayout;
 	int nObjectID;
 	QTimer tStimTimer;

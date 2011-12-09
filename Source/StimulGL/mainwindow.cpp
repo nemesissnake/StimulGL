@@ -86,6 +86,11 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	{
 		MainSplashScreen->finish(this);
 	}
+#ifdef Q_OS_WIN
+	if (timeBeginPeriod(1) == TIMERR_NOCANDO)
+		qWarning() << "Could not start the time period!";
+#endif
+	setDefaultGLFormat();
 	statusBar()->showMessage(tr("Ready..."), 2000);
 	//if (QApplication::desktop()->numScreens() > 1) {
 	//	QLabel *label = new QLabel("Hello");
@@ -1676,6 +1681,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	}
 	if(Plugins)
 		delete Plugins;
+#ifdef Q_OS_WIN
+	timeEndPeriod(1);
+#endif
 }
 
 QString MainWindow::activeMdiChildFilePath()

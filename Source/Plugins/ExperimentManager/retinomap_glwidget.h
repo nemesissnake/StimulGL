@@ -2,9 +2,11 @@
 #define RETINOMAP_GLWIDGET_H
 
 #include "GLWidgetWrapper.h"
+#include <QPointF>
 
 //Below defines must be all in lower case!
 //Shared defines
+#define RETINOMAP_WIDGET_DISPLAY_REFRESHRATE			"displayrefreshrate"
 #define RETINOMAP_WIDGET_PATTERN_POLARANGLE				"polarangle"
 #define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY			"eccentricity"
 #define RETINOMAP_WIDGET_PATTERN_MOVINGBAR				"movingbar"
@@ -26,6 +28,8 @@
 #define RETINOMAP_WIDGET_CORTMAG_FACTOR					"corticalmagnitudefactor"
 #define RETINOMAP_WIDGET_TRIGGERDURATION_MSEC			"triggerduration"
 #define RETINOMAP_WIDGET_DISCRETETRIGGERSTEPS			"discretetriggersteps"
+#define RETINOMAP_WIDGET_RANDOMIZETRIGGERSTEPS			"randomizetriggersteps"
+#define RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS				"emptytriggersteps"
 #define RETINOMAP_WIDGET_OUTPUTTRIGGERFRAME				"outputtriggerframe"
 #define RETINOMAP_WIDGET_OUTPUTFRAMETYPE				"outputframetype"
 #define RETINOMAP_WIDGET_OUTPUTTYPE_FRAME				"frame"
@@ -34,6 +38,7 @@
 #define RETINOMAP_WIDGET_OUTPUTFORMAT_DAT				"dat"
 #define RETINOMAP_WIDGET_OUTPUTFORMAT_PNG				"png"
 #define RETINOMAP_WIDGET_ANTIALIASING					"antialiasing"
+#define RETINOMAP_WIDGET_DISABLECORTMAGFAC				"disablecortmagfac"
 //PolarAngle specific defines
 #define RETINOMAP_WIDGET_POLAR_RING_AMOUNT				"polarringamount"
 #define RETINOMAP_WIDGET_POLAR_ROTATION_DIRECTION		"polarrotationdirection"
@@ -47,6 +52,7 @@
 #define RETINOMAP_WIDGET_MOVINGBAR_ANGLE				"movingbarangle"
 #define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE				"movingbarcoverage"
 #define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION			"movingbardirection"
+#define RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR			"movingbarincludeoppositedirection"
 #define RETINOMAP_WIDGET_MOVINGBAR_WIDTH_CHECK_AMOUNT	"movingbarwidthcheckamount"
 #define RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT	"movingbarheightcheckamount"
 //MovingDots specific defines
@@ -89,6 +95,13 @@ enum RetinoMapExperimentType //The state of the main experiment object
 	RetinoMap_MovingBar		= 3,
 	RetinoMap_MovingDots	= 4
 };
+
+typedef struct{
+	QList<QPointF> Pos;
+	QList<QPointF> OldPos;
+	QList<QLineF> Mov;
+	QList<float> MirrorXPos;
+} MovingDotsStructure;
 
 class RetinoMap_glwidget : public GLWidgetWrapper
 {
@@ -133,7 +146,7 @@ private:
 	int flickrThreshold;						//Variable for keeping track of the next flickr switch threshold time
 	int flickrSpeedFreq;						//The flickr speed frequency
 	int flickrSwitch;							//Variable to store the current flickr state
-	float cycleTriggerAmount;					//The total block duration in amount of triggers
+	int cycleTriggerAmount;						//The total block duration in amount of triggers
 	int triggerDurationMsec;					//The duration of one trigger in mSec
 	float stimWidthPixelAmount;					//The amount of visible stimuli pixels(height)
 	float stimHeigthPixelAmount;				//The amount of visible stimuli pixels(width)
@@ -142,9 +155,12 @@ private:
 	bool showFixationPoint;						//Should we show an fixation point?
 	bool outputTriggerFrame;					//Defines whether we should output(write to a png file) the first frame
 	bool discreteTriggerSteps;					//Defines whether the stimuli should run smooth or in discrete steps according to each trigger received
+	bool randomizeTriggerSteps;					//Defines whether the stimuli should randomize after each trigger received
 	bool antiAliasing;							//Defines whether the anti-aliasing filter should be used for painting to the screen
 	int lastTriggerNumber;						//To keep track of the last trigger number
+	int emptyTriggerSteps;						//Defines the number of Trigger steps in which no stimuli should be presented
 
+	QColor dotColor;
 	QColor color1;
 	QColor color2;
 	Qt::PenStyle style;
@@ -156,7 +172,10 @@ private:
 	bool bCreateActivationMap;
 	int currExpTrigger;
 	int currExpBlockTrialTrigger;
+	int currExpBlockTrialTriggerAmount;
 	int currExpBlockTrialFrame;
+	int currExpBlockTrialCycle;
+	bool nextNewCycleEntered;
 	int currExpTrial;
 	int currExpBlock;
 	float cortMagFactor;
@@ -169,6 +188,9 @@ private:
 	float currentXPoint;
 	float currentYPoint;
 	float currentStartAngle;
+	bool disableCortMagFac;
+	int emptyTriggerLastIndex;
+	int emptyTriggerStepCount;
 	//QTime debugTime;							//For debugging purpose...
 	//int debugElapsedTime;						//For debugging purpose...
 	//int debugTestSamples;						//For debugging purpose...
@@ -194,6 +216,7 @@ private:
 	int movingBarWidthCheckAmount;
 	int movingBarHeightCheckAmount;
 	int movingBarDirection;
+	bool movingBarIncludeOppositeDirection;
 
 	//MovingDots
 	float movingDotsMoveSpeed;
@@ -213,15 +236,19 @@ private:
 	QVector< QVector <float> > movingDotsXValue;
 	QVector< QVector <float> > movingDotsYValue;
 	QVector< QVector <float> > movingDotsXValueMirror;
-	//int movingDotsRetPosition;
+	
+	MovingDotsStructure movingDots;
 
 	RetinoMapOutputType retinoOutputType;
 	RetinoMapOutputFormat retinoOutputFormat;
 	QPixmap *StimulusResultImageFrame;
 	QPixmap *StimulusActivationMap;
 	QPainter *activationPainter;
+	QPainter stimuliPainter;
+	QPainter imgPainter;
 	ExperimentConfiguration *currExpConfStruct;
-	RandomGenerator *randGen;
+	RandomGenerator *randStimStateGenerator;		//To hold the Stimuli Trigger Step
+	RandomGenerator *randEmptyStimGenerator;		//To hold the Empty Block Trials
 };
 Q_DECLARE_METATYPE(RetinoMap_glwidget)
 #endif // RETINOMAP_GLWIDGET_H
