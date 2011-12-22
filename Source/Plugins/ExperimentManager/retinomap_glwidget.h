@@ -6,7 +6,7 @@
 
 //Below defines must be all in lower case!
 //Shared defines
-#define RETINOMAP_WIDGET_DISPLAY_REFRESHRATE			"displayrefreshrate"
+#define GLWWRAP_WIDGET_DISPLAY_REFRESHRATE				"displayrefreshrate"
 #define RETINOMAP_WIDGET_PATTERN_POLARANGLE				"polarangle"
 #define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY			"eccentricity"
 #define RETINOMAP_WIDGET_PATTERN_MOVINGBAR				"movingbar"
@@ -49,7 +49,7 @@
 #define RETINOMAP_WIDGET_ECCENTRICITY_CHECK_AMOUNT		"eccentricitycheckamount"
 #define RETINOMAP_WIDGET_ECCENTRICITY_RING_AMOUNT		"eccentricityringamount"
 //MovingBar specific defines
-#define RETINOMAP_WIDGET_MOVINGBAR_ANGLE				"movingbarangle"
+#define RETINOMAP_WIDGET_MOVINGBAR_ANGLE				"movingbarangle" 
 #define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE				"movingbarcoverage"
 #define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION			"movingbardirection"
 #define RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR			"movingbarincludeoppositedirection"
@@ -129,12 +129,13 @@ private:
 	void initialize();
 	void parseExperimentObjectBlockParameters(bool bInit = false);
 	void initializeMovingDotsStructures();
+	QImage RetinoMap_glwidget::fractalFillCheckeredImage(float fWidth, float fHeigth, float fSize, int nflickr);
 
 	int nRetinoID;								//This variable stores the ObjectID used to identify the object
 	RetinoMapExperimentType currentExpType;		//The experiment type used, see RetinoMapExperimentType
 	bool firstBlockTrialPaintFrame;				//To determine whether it's the first frame to paint from a new Block trial
-	QTime trialTime;							//The elapsed trial time
-	int elapsedTrialTime;						//The elapsed trial time(snapshot)
+	//QTime trialTime;							//The elapsed trial time
+	//int elapsedTrialTime;						//The elapsed trial time(snapshot)
 	QColor colorBackground;						//The color of the background
 	QBrush brushBackground;						//The background brush
 	QFont textFont;								//The font used for text(debug mode)
@@ -160,6 +161,8 @@ private:
 	int lastTriggerNumber;						//To keep track of the last trigger number
 	int emptyTriggerSteps;						//Defines the number of Trigger steps in which no stimuli should be presented
 
+	ExperimentSnapshotStructure expSnapshot;
+
 	QColor dotColor;
 	QColor color1;
 	QColor color2;
@@ -170,14 +173,8 @@ private:
 	float fStimulusDiameter;
 	float fTrialTimeProgress; 
 	bool bCreateActivationMap;
-	int currExpTrigger;
-	int currExpBlockTrialTrigger;
-	int currExpBlockTrialTriggerAmount;
-	int currExpBlockTrialFrame;
 	int currExpBlockTrialCycle;
 	bool nextNewCycleEntered;
-	int currExpTrial;
-	int currExpBlock;
 	float cortMagFactor;
 	int gapDiameter;
 	float wedgeSpanAngle;

@@ -20,6 +20,7 @@ public:
 
 	void   start();                             // start timer
 	void   stop();                              // stop the timer
+	void restart();								// restart the timer
 	double getElapsedTime();                    // get elapsed time in second
 	double getElapsedTimeInSec();               // get elapsed time in second (same as getElapsedTime)
 	double getElapsedTimeInMilliSec();          // get elapsed time in milli-second

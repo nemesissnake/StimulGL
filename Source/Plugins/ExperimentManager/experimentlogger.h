@@ -4,18 +4,20 @@
 #include <QObject>
 #include <QFile>
 #include <QTextStream>
-//#include <QTime>
 #include "ExperimentTimer.h"
 
 class ExperimentLogger : public QObject
 {
 	Q_OBJECT
 
-	//typedef struct{
-	//	QList<QString> sWho;
-	//	QList<QString> sWhen;
-	//	QList<QString> sWhere;
-	//} LoggedData;
+	typedef struct{
+		QList<int> nObject;
+		QList<int> nTimer;
+		QList<QString> sFunction;
+		QList<QString> sTag;
+		QList<QString> sMessage;
+		QList<double> dTime;
+	} LoggedData;
 
 public:
 	ExperimentLogger(QObject *parent = NULL);
@@ -26,18 +28,18 @@ public:
 	double restartTimer(int nIndex);
 	double elapsedTimerTime(int nIndex);
 
-	bool setLogVars(const QString &strWho, const QString &strWhere, const int &nTimerIndex);
+	bool setLogVars(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction = "", const QString &strTag = "", const QString &strMessage = "");
 	//bool getLogVars(QString &strWho, QString &strWhen, QString &strWhere);
 	bool WriteToOutput(const QString &fileName);
 	void Test();
 
 private:
-	//LoggedData *internalLoggedDataStructure;
-	QList<QString> sWho;
-	QList<QString> sWhen;
-	QList<QString> sWhere;
+	LoggedData *internalLoggedDataStructure;
+	//QList<QString> sWho;
+	//QList<QString> sWhen;
+	//QList<QString> sWhere;
 
-	QList<ExperimentTimer*> tTimers;//QTime> tTimers;
+	QList<ExperimentTimer*> tTimers;
 };
 
 #endif // EXPERIMENTLOGGER_H

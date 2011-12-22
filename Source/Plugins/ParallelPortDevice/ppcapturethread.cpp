@@ -10,12 +10,16 @@ ppCaptureThread::ppCaptureThread(short baseAddress, short mask, DetectionMethod 
 	nMask = mask;
 	nPostLHDelay = postLHDelay;
 	nPostHLDelay = postHLDelay;
+	portDev = new ParallelPort(nBaseAddress,this);
 }
 
 ppCaptureThread::~ppCaptureThread()
 {
-
-
+	if (portDev)
+	{
+		delete portDev;
+		portDev = NULL;
+	}
 }
 
 void ppCaptureThread::stop()
@@ -28,9 +32,11 @@ void ppCaptureThread::run()
 	short currentValue;
 	short oldValue;
 	QString result = "";
-	ParallelPort portDev(nBaseAddress,this);
+	//ParallelPort portDev(nBaseAddress,this);
+	//portDev = new ParallelPort(nBaseAddress,this);
+	//portDev->setBaseAddress()
 
-	currentValue = (portDev.PortRead() & nMask);
+	currentValue = (portDev->PortRead() & nMask);
 	oldValue = currentValue;
 	isRunning = true;
 	emit recieveThreadStarted(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
@@ -59,7 +65,7 @@ void ppCaptureThread::run()
 				}
 				oldValue = currentValue;
 			}
-			currentValue = (portDev.PortRead() & nMask);
+			currentValue = (portDev->PortRead() & nMask);
 		} while (abortRunning==false);
 		break;	
 	case MaskedValueChangedHigh :
@@ -75,7 +81,7 @@ void ppCaptureThread::run()
 				}
 				oldValue = currentValue;
 			}
-			currentValue = (portDev.PortRead() & nMask);
+			currentValue = (portDev->PortRead() & nMask);
 		} while (abortRunning==false);
 		break;
 	case MaskedValueChangedLow :
@@ -91,13 +97,12 @@ void ppCaptureThread::run()
 				}
 				oldValue = currentValue;
 			}
-			currentValue = (portDev.PortRead() & nMask);
+			currentValue = (portDev->PortRead() & nMask);
 		} while (abortRunning==false);
 		break;
 	default :
 		break;	
 	}
-
 	abortRunning = false;
 	isRunning = false;
 	emit recieveThreadStopped(	QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));

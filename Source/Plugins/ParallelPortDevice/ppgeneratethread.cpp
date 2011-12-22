@@ -12,12 +12,16 @@ ppGenerateThread::ppGenerateThread(short baseAddress, GenerationMethod method, s
 	nInActiveValue = inActiveValue;
 	nActivePulseTime =activePulseTime;
 	nRepetitionTime = repetitionTime;
+	portDev = new ParallelPort(nBaseAddress,this);
 }
 
 ppGenerateThread::~ppGenerateThread()
 {
-
-
+	if (portDev)
+	{
+		delete portDev;
+		portDev = NULL;
+	}
 }
 
 void ppGenerateThread::stop()
@@ -30,9 +34,9 @@ void ppGenerateThread::run()
 	short currentValue;
 	short newActiveMaskedValue;
 	short newInActiveMaskedValue;
-	ParallelPort portDev(nBaseAddress,this);
+	//ParallelPort portDev(nBaseAddress,this);
 
-	currentValue = portDev.PortRead();
+	currentValue = portDev->PortRead();
 	newActiveMaskedValue = ((currentValue & (255 - nOutputMask)) | (nActiveValue & nOutputMask));
 	isRunning = true;
 	emit generateThreadStarted(	QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
@@ -42,7 +46,7 @@ void ppGenerateThread::run()
 	case Value :	
 		if (newActiveMaskedValue != currentValue)
 		{
-			portDev.PortWrite(newActiveMaskedValue);			
+			portDev->PortWrite(newActiveMaskedValue);			
 		}
 		emit generateThreadTriggered(newActiveMaskedValue);
 		break;	
@@ -50,13 +54,13 @@ void ppGenerateThread::run()
 		newInActiveMaskedValue = ((currentValue & (255 - nOutputMask)) | (nInActiveValue & nOutputMask));
 		if (newInActiveMaskedValue != currentValue)
 		{
-			portDev.PortWrite(newInActiveMaskedValue);
+			portDev->PortWrite(newInActiveMaskedValue);
 			//emit generateThreadTriggered(newInActiveMaskedValue);
 		}
-		portDev.PortWrite(newActiveMaskedValue);
+		portDev->PortWrite(newActiveMaskedValue);
 		emit generateThreadTriggered(newActiveMaskedValue);
 		QThread::msleep(nActivePulseTime);
-		portDev.PortWrite(newInActiveMaskedValue);
+		portDev->PortWrite(newInActiveMaskedValue);
 		//emit generateThreadTriggered(newInActiveMaskedValue);
 		break;
 	case Periodical:
@@ -72,15 +76,15 @@ void ppGenerateThread::run()
 		}
 		if (newInActiveMaskedValue != currentValue)
 		{
-			portDev.PortWrite(newInActiveMaskedValue);
+			portDev->PortWrite(newInActiveMaskedValue);
 			//emit generateThreadTriggered(newInActiveMaskedValue);
 		}
 		do 
 		{
-			portDev.PortWrite(newActiveMaskedValue);
+			portDev->PortWrite(newActiveMaskedValue);
 			emit generateThreadTriggered(newActiveMaskedValue);
 			QThread::msleep(nActivePulseTime);
-			portDev.PortWrite(newInActiveMaskedValue);
+			portDev->PortWrite(newInActiveMaskedValue);
 			//emit generateThreadTriggered(newInActiveMaskedValue);
 			if (abortRunning) break;
 			QThread::msleep(nInActivePulseTime);

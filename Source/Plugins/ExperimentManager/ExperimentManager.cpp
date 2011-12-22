@@ -112,11 +112,11 @@ bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nOb
 	return false;
 }
 
-bool ExperimentManager::logExperimentObjectData(const int nObjectID,const int nTimerID, const QString data2Log)
+bool ExperimentManager::logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage)
 {
 	if (expDataLogger)
 	{
-		expDataLogger->setLogVars("Object(" + QString::number(nObjectID) + ")",data2Log,nTimerID);
+		expDataLogger->setLogVars(nObjectIndex, nTimerIndex, strFunction, strTag, strMessage);
 		return true;
 	}
 	return false;
@@ -383,7 +383,7 @@ bool ExperimentManager::WriteAndCloseExperimentOutputData()
 {
 	if (expDataLogger)
 	{
-		QString strTemp = MainAppInfo::outputsDirPath() + "/" + DEFAULT_OUTPUTFILE;
+		QString strTemp = MainAppInfo::outputsDirPath() + "/" + QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()) + QString("_") + DEFAULT_OUTPUTFILE;
 		expDataLogger->WriteToOutput(strTemp);
 		delete expDataLogger;
 		expDataLogger = NULL;
@@ -901,6 +901,31 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 
 									bSucceeded = true;
 									break;
+								case QMetaType::Double:
+									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+									if(k==0)
+										sArguments0 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==1)
+										sArguments1 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==2)
+										sArguments2 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==3)
+										sArguments3 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==4)
+										sArguments4 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==5)
+										sArguments5 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==6)
+										sArguments6 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==7)
+										sArguments7 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==8)
+										sArguments8 = Q_ARG(double,sParameterValues[k].toDouble());
+									else if(k==9)
+										sArguments9 = Q_ARG(double,sParameterValues[k].toDouble());
+
+									bSucceeded = true;
+									break;
 								default:
 									bSucceeded = false;
 								}
@@ -911,8 +936,14 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 								}
 							}
 						}
+
+
+
 						if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1(),sArguments0,sArguments1,sArguments2,sArguments3,sArguments4,sArguments5,sArguments6,sArguments7,sArguments8,sArguments9)))
 						{
+							//QStringList methods;
+							//for(int i = sourceMetaObject->methodOffset(); i < sourceMetaObject->methodCount(); ++i)
+							//	methods << QString::fromLatin1(sourceMetaObject->method(i).signature());
 							qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
 							return false;
 						}

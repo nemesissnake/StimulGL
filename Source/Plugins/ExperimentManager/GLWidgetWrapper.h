@@ -4,13 +4,14 @@
 #include <QDialog>
 #include <QGLWidget>
 #include <QTimer>
-#include <QTime>
 #include <QDesktopWidget>
 #include <QPaintEvent>
 #include <QKeyEvent>
 #include <QBoxLayout>
 #include <QCustomEvent>
+#include <QMutex>
 #include "Global.h"
+#include "ExperimentTimer.h"
 
 class QPaintEvent;
 class QWidget;
@@ -56,12 +57,7 @@ protected:
 	void finalizePaintEvent();
 	void setupLayout(QWidget* layoutWidget);	
 	bool isDebugMode();
-	int getCurrentExperimentBlockTrialFrame() {return nBlockTrialFrameCounter;}
-	int getCurrentExperimentTrial() {return nCurrentExperimentTrial;}
-	int getCurrentExperimentBlock() {return nCurrentExperimentBlock;}
-	int getCurrentExperimentTrigger() {return nCurrentExperimentTrigger;}
-	int getCurrentExperimentBlockTrialTrigger() {return nCurrentExperimentBlockTrialReceivedTriggers;}
-	int getExperimentBlockTrialTriggerAmount(int nBlock, int nTrial);
+	bool getCurrentExperimentProgressSnapshot(ExperimentSnapshotStructure *expSnapshotstrc);
 	//int getElapsedFrameTime();
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
 
@@ -77,8 +73,12 @@ protected slots:
 	void animate();
 
 private:
-	//void startTriggerTimer(int msTime);
-	//void stopTriggerTimer();
+	//int getCurrentExperimentBlockTrialFrame() {return nBlockTrialFrameCounter;}
+	//int getCurrentExperimentTrial() {return nCurrentExperimentTrial;}
+	//int getCurrentExperimentBlock() {return nCurrentExperimentBlock;}
+	//int getCurrentExperimentTrigger() {return nCurrentExperimentTrigger;}
+	//int getCurrentExperimentBlockTrialTrigger() {return nCurrentExperimentBlockTrialReceivedTriggers;}
+	//int getExperimentBlockTrialTriggerAmount(int nBlock, int nTrial);
 	void setVerticalSyncSwap();
 	void init();
 	bool eventFilter(QObject *target, QEvent *event);
@@ -89,13 +89,15 @@ private:
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
 
 private:
-	int nBlockTrialFrameCounter;
-	int nCurrentExperimentReceivedTriggers;				//The current experiment number of trigger received since it started, internal use!
-	int nCurrentExperimentTrigger;						//The current experiment trigger
-	int nCurrentExperimentTrial;						//The current experiment trial within the block 
-	int nCurrentExperimentBlockTrialReceivedTriggers;	//The current experiment number of trigger received within the current block trial
-	int nCurrentExperimentBlock;						//The current experiment block
-	int nTotalProcessedExperimentTrials;				//The total number of trials processed within experiment, might be that this Trial is not fully processed
+	QMutex mutExpSnapshot;
+	ExperimentSnapshotFullStructure expFullStruct;
+	//int nBlockTrialFrameCounter;
+	int nCurrentExperimentReceivedTriggers;			//The current experiment number of trigger received since it started, internal use!
+	//int nCurrentExperimentTrigger;					//The current experiment trigger
+	//int nCurrentExperimentTrial;						//The current experiment trial within the block 
+	//int nCurrentExperimentBlockTrialReceivedTriggers;	//The current experiment number of trigger received within the current block trial
+	//int nCurrentExperimentBlock;						//The current experiment block
+	//int nTotalProcessedExperimentTrials;				//The total number of trials processed within experiment, might be that this Trial is not fully processed
 	int nRefreshRate;									//The refresh rate of the screen
 	double dAdditionalRefreshDelayTime;
 	ContainerDlg *stimContainerDlg;
@@ -107,7 +109,7 @@ private:
 	int nObjectID;
 	QTimer tStimTimer;
 	QDomNodeList *pExpBlockTrialDomNodeList;
-	int nNextThresholdTriggerCount;//When we should switch to the next block
+	//int nNextThresholdTriggerCount;//When we should switch to the next block
 	ExperimentBlockTrialStructure strcExperimentBlockTrials;
 	QEvent::Type tEventObjectStopped;
 	ExperimentSubObjectState currentSubObjectState;
@@ -116,6 +118,7 @@ private:
 	int nTrialTimerIndex;
 	QHash<QString, QString> *ExpBlockParams;
 	ExperimentConfiguration *pExpConf;
+	ExperimentTimer expTrialTimer;
 };
 
 class ContainerDlg : public QDialog

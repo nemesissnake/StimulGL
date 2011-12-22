@@ -2,34 +2,36 @@
 
 ExperimentLogger::ExperimentLogger(QObject *parent) : QObject(parent)
 {
-	//internalLoggedDataStructure = new LoggedData();
+	internalLoggedDataStructure = NULL;
 }
 
 ExperimentLogger::~ExperimentLogger()
 {
-	//if (internalLoggedDataStructure)
-	//{
-	//	delete internalLoggedDataStructure;
-	//}
+	if (internalLoggedDataStructure)
+	{
+		delete internalLoggedDataStructure;
+	}
 	for (int i=0;i<tTimers.count();i++)
 	{
 		delete tTimers[i];
 	}
 }
 
-bool ExperimentLogger::setLogVars(const QString &strWho, const QString &strWhere, const int &nTimerIndex)
+bool ExperimentLogger::setLogVars(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage)
 {
-	sWho.append(strWho + ",Timer(" + QString::number(nTimerIndex) + ")");
+	if (internalLoggedDataStructure == NULL)
+	{
+		internalLoggedDataStructure = new LoggedData();
+	}
+	internalLoggedDataStructure->nObject.append(nObjectIndex);
+	internalLoggedDataStructure->nTimer.append(nTimerIndex);
+	internalLoggedDataStructure->sFunction.append(strFunction);
+	internalLoggedDataStructure->sTag.append(strTag);
+	internalLoggedDataStructure->sMessage.append(strMessage);
 	if (nTimerIndex >= 0)
-	{
-		double dElapsed = tTimers.at(nTimerIndex)->getElapsedTimeInMilliSec();
-		sWhen.append(QString::number(dElapsed));
-	}
+		internalLoggedDataStructure->dTime.append(tTimers.at(nTimerIndex)->getElapsedTimeInMilliSec());
 	else
-	{
-		sWhen.append("-");
-	}
-	sWhere.append(strWhere);
+		internalLoggedDataStructure->dTime.append(0.0f);
 	return true;
 }
 
@@ -42,58 +44,23 @@ bool ExperimentLogger::WriteToOutput(const QString &fileName)
 	if (!file.open(QFile::WriteOnly | QFile::Text | QIODevice::Truncate)) 
 		return false;
 	QTextStream out(&file);//QDataStream
-	for (int count=0; count < sWhen.count(); count++)
-		out << sWho.at(count) << "\t" << sWhere.at(count) << "\t" << sWhen.at(count) << "\n";
+	out << "Object" << "\t" << "Timer" << "\t" << "Function" << "\t" << "Tag" << "\t" << "Message" << "\t" << "Time" << "\n";
+	int nCount = internalLoggedDataStructure->nObject.count();
+	for (int i=0; i < nCount; i++)
+		out << internalLoggedDataStructure->nObject.at(i) << "\t" <<
+				internalLoggedDataStructure->nTimer.at(i) << "\t" <<
+				internalLoggedDataStructure->sFunction.at(i) << "\t" <<
+				internalLoggedDataStructure->sTag.at(i) << "\t" <<
+				internalLoggedDataStructure->sMessage.at(i) << "\t" <<
+				internalLoggedDataStructure->dTime.at(i) << "\n";
 	file.close();
 	return true;
 }
 
 int ExperimentLogger::createTimer()
 {
-	//tTimers.append(QTime());
-	////tTotalRunningTime.restart();
-	//return tTimers.count()-1;
-
 	tTimers.append(new ExperimentTimer());
-	//tTotalRunningTime.restart();
 	return tTimers.count()-1;
-
-
-////	double start;
-////	double stop;
-//	double tick1;
-//	double tick2;
-////	// first, use std clock() function to measure elapsed time ////////////////
-////	start = stop = tick1 = tick2 = (double)clock(); // start timer and remember initial ticks
-////	while((stop-start)/CLOCKS_PER_SEC < 1)    // loop for 1 sec	
-////	{
-////		//cout << (tick2 - tick1) / CLOCKS_PER_SEC * 1000 << " ms." << endl;
-////		// reset timer
-////		tick1 = tick2;
-////		tick2 = stop = (double)clock();
-////	}
-////	// pause until user input
-//////	cout << "\n\nPress Enter key to run Timer class...\n\n";
-////	char c;
-//////	cin.get(c);
-//	// second, use Timer::getElapsedTime() ////////////////////////////////////
-//	ExperimentTimer *t;
-//	t = new ExperimentTimer();
-//	// start timer
-//	t->start();
-//	tick1 = tick2 = t->getElapsedTimeInMilliSec();
-//	while(t->getElapsedTime() < 1)       // loop for 1 sec
-//	{
-//		//cout << (tick2 - tick1) << " ms." << endl;
-//
-//		tick1 = tick2;
-//		tick2 = t->getElapsedTimeInMilliSec();
-//	}
-//	//cout << CLOCKS_PER_SEC << endl;
-//	//cout << CLK_TCK << endl;
-//	//cout << clock()/CLOCKS_PER_SEC << endl;
-//	delete t;
-//	return 0;
 }
 
 bool ExperimentLogger::startTimer(int nIndex)

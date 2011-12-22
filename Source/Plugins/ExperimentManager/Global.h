@@ -100,6 +100,23 @@ typedef struct{
 	QList<BlockTrialStructure> lBlockTrialStructure;
 } ExperimentBlockTrialStructure;
 
+typedef struct{
+	int currExpBlockTrialFrame;
+	int currExpTrigger;					//The current experiment trigger
+	int currExpBlockTrialTrigger;		//This is different!! It is now the current trigger within a Block Trial
+	int currExpTrial;					//The current experiment trial within the block 	
+	int currExpBlock;					//The current experiment block
+	int currExpBlockTrialTriggerAmount;
+	double elapsedTrialTime;
+	//int currExpBlockTrialCycle;--> inside widget
+} ExperimentSnapshotStructure;
+
+typedef struct{
+	ExperimentSnapshotStructure parentStruct;
+	int nTotalProcessedExperimentTrials;		//The total number of trials processed within experiment, might be that this Trial is not fully processed
+	int nNextThresholdTriggerCount;				//When we should switch to the next block
+} ExperimentSnapshotFullStructure;
+
 //typedef QHash<QString, QString> ExperimentBlockParameterStructure;
 
 #define SIGNAL_USERCLOSE_FULL					"UserWantsToClose(void)"

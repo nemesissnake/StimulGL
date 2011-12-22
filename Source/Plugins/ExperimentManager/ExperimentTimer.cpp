@@ -58,6 +58,12 @@ ExperimentTimer::~ExperimentTimer()
 
 }
 
+void ExperimentTimer::restart()
+{
+	stop();
+	start();
+}
+
 void ExperimentTimer::start()
 {
 	stopped = 0; // reset stop flag

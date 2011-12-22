@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QDateTime>
 
+class ParallelPort;
 class ppCaptureThread : public QThread
 {
 	Q_OBJECT
@@ -36,6 +37,7 @@ private:
 	short nMask;
 	int nPostLHDelay;
 	int nPostHLDelay; 
+	ParallelPort *portDev;
 
 signals:
 	void recieveThreadTriggered(short Value);

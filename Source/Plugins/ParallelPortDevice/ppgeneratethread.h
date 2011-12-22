@@ -4,6 +4,7 @@
 #include <QThread>
 #include <QDateTime>
 
+class ParallelPort;
 class ppGenerateThread : public QThread
 {
 	Q_OBJECT
@@ -37,6 +38,7 @@ private:
 	short nInActiveValue;
 	int nActivePulseTime;
 	int nRepetitionTime;
+	ParallelPort *portDev;
 
 signals:
 	void generateThreadTriggered(short Value);

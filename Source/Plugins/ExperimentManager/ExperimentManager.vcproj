@@ -745,10 +745,10 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						Description=""
-						CommandLine=""
-						AdditionalDependencies=""
-						Outputs=""
+						Description="Moc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_PLUGIN -DQT_STATICPLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -DQT_OPENGL_LIB &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtOpenGL&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2008&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(SolutionDir)\StimulGL&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -756,10 +756,10 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						Description=""
-						CommandLine=""
-						AdditionalDependencies=""
-						Outputs=""
+						Description="Moc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_PLUGIN -DQT_STATICPLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtOpenGL&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2008&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(SolutionDir)\StimulGL&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -767,10 +767,10 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						Description=""
-						CommandLine=""
-						AdditionalDependencies=""
-						Outputs=""
+						Description="Moc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_PLUGIN -DQT_STATICPLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtOpenGL&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2008&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(SolutionDir)\StimulGL&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -778,10 +778,10 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						Description=""
-						CommandLine=""
-						AdditionalDependencies=""
-						Outputs=""
+						Description="Moc&apos;ing $(InputFileName)..."
+						CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_PLUGIN -DQT_STATICPLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB &quot;-I$(QTDIR)\include\QtScript&quot; &quot;-I$(QTDIR)\include\QtScriptTools&quot; &quot;-I$(QTDIR)\include\QtCore&quot; &quot;-I$(QTDIR)\include\QtGui&quot; &quot;-I$(QTDIR)\include\QtOpenGL&quot; &quot;-I$(QTDIR)\include&quot; &quot;-I$(QTDIR)\include\ActiveQt&quot; &quot;-I$(QTDIR)\include\QtXml&quot; &quot;-I.\debug&quot; &quot;-I.&quot; &quot;-I$(QTDIR)\mkspecs\win32-msvc2008&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc&quot; &quot;-I.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles&quot; &quot;-I$(SolutionDir)\StimulGL&quot;&#x0D;&#x0A;"
+						AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+						Outputs="&quot;.\..\..\..\Build_VS2008\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_$(InputName).cpp&quot;"
 					/>
 				</FileConfiguration>
 			</File>
@@ -1149,6 +1149,34 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\..\Build_VS2008\Qt\Win32\Debug\Moc\moc_metaextensions.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\..\Build_VS2008\Qt\Win32\Debug\Moc\moc_RandomGenerator.cpp"
 					>
 					<FileConfiguration
@@ -1408,6 +1436,34 @@
 				</File>
 				<File
 					RelativePath="..\..\..\Build_VS2008\Qt\x64\Debug\Moc\moc_GLWidgetWrapper.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\Build_VS2008\Qt\x64\Debug\Moc\moc_metaextensions.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -1721,6 +1777,34 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\..\Build_VS2008\Qt\Win32\Release\Moc\moc_metaextensions.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\..\Build_VS2008\Qt\Win32\Release\Moc\moc_RandomGenerator.cpp"
 					>
 					<FileConfiguration
@@ -1980,6 +2064,34 @@
 				</File>
 				<File
 					RelativePath="..\..\..\Build_VS2008\Qt\x64\Release\Moc\moc_GLWidgetWrapper.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\Build_VS2008\Qt\x64\Release\Moc\moc_metaextensions.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"

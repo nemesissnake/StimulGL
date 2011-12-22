@@ -9,7 +9,7 @@ Attributes only apply to readonly non user data, like the ID
     <defines>
 			<experiment ID="0">
 				<name>Retinotopic Mapping Experiment with the use of a QTimer</name>
-				<debugmode>false</debugmode>
+				<debugmode>true</debugmode>
 			</experiment>
 		</defines>
 		
@@ -44,7 +44,7 @@ Attributes only apply to readonly non user data, like the ID
     <initializations>
         <object ID="0">
         	<type>slot</type>
-        	<signature>start</signature>
+        	<signature>startTimer</signature>
         	<parameters>
 		      	<parameter ID="0">
 		        	<name>msec</name>
@@ -62,7 +62,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>1</nr_of_triggers>	 
+	        <nr_of_triggers>12</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -75,7 +75,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="2">
 			        	<name>TriggerDuration</name>
-			        	<value>1000</value>
+			        	<value>2000</value>
 			        </parameter>
 			        <parameter ID="3">
 			        	<name>OutputTriggerFrame</name>
@@ -85,19 +85,19 @@ Attributes only apply to readonly non user data, like the ID
 			        	<name>OutputFrameType</name>
 			        	<value>Mask</value>
 			        </parameter>			        			        	        			        
-			        <parameter ID="6">
+			        <parameter ID="5">
 			        	<name>AntiAliasing</name>
 			        	<value>true</value>
 			        </parameter>	
-			        <parameter ID="7">   	
+			        <parameter ID="6">   	
 			        	<name>StimulusWidthSpan</name>
-			        	<value>768</value>
+			        	<value>1024</value>
 			        </parameter>	
-			        <parameter ID="8">     	
+			        <parameter ID="7">     	
 			        	<name>StimulusHeightSpan</name>
 			        	<value>768</value>	
 			        </parameter>
-			        <parameter ID="9">
+			        <parameter ID="8">
 			        	<name>OutputFrameFormat</name>
 			        	<value>Dat</value>
 			        </parameter>
@@ -110,8 +110,8 @@ Attributes only apply to readonly non user data, like the ID
 			        	<value>1</value>
 			        </parameter>	
 			        <parameter ID="12">
-			        	<name>DisplayRefreshRate</name>
-			        	<value>30</value>
+			        	<name>DisplayRefreshRatesssss</name>
+			        	<value>0</value>
 			        </parameter>			        
 			    	</parameters>    
 		    	</object>   
@@ -120,65 +120,106 @@ Attributes only apply to readonly non user data, like the ID
 	    	<block ID="1">
 	        <name>PolarAngle_Block</name>
 	        <block_number>1</block_number>            
-	        <nr_of_trials>2</nr_of_trials>
-	        <nr_of_triggers>2</nr_of_triggers>
+	        <nr_of_trials>3</nr_of_trials>
+	        <nr_of_triggers>72</nr_of_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
-			        	<name>CycleTriggerAmount</name>
-			        	<value>2</value>
-			        </parameter>
+			        	<name>ShowFixPoint</name>
+			        	<value>true</value>
+			        </parameter>	        	
 			        <parameter ID="1">
+			        	<name>CycleTriggerAmount</name>
+			        	<value>12</value>
+			        </parameter>
+			        <parameter ID="2">
 			        	<name>EmptyTriggerSteps</name>
 			        	<value>0</value>
 			        </parameter>			        
-			        <parameter ID="2">
+			        <parameter ID="3">
 			        	<name>PolarWedgeSpan</name>
-			        	<value>22.5</value>
+			        	<value>30</value>
 							</parameter>		        	
-			        <parameter ID="3">	 	
+			        <parameter ID="4">	 	
 			        	<name>PolarCheckAmount</name>
-			        	<value>10</value>	        	
+			        	<value>15</value>	        	
 			        </parameter>
-			        <parameter ID="4">	      	
+			        <parameter ID="5">	      	
 			        	<name>PolarRingAmount</name>
-			        	<value>5</value>
+			        	<value>10</value>
 			        </parameter>       	
-			        <parameter ID="5">    	
+			        <parameter ID="6">    	
 			        	<name>PolarRotationDirection</name>
-			        	<value>-1</value>	        	
+			        	<value>1</value>	        	
 			        </parameter>
-			        <parameter ID="6">   
+			        <parameter ID="7">   
 			        	<name>FlickrFrequency</name>
-			        	<value>15</value>
+			        	<value>10</value>
 			        </parameter>	        	
-			        <parameter ID="7">	    	
+			        <parameter ID="8">	    	
 			        	<name>CorticalMagnitudeFactor</name>
-			        	<value>0.2</value>	        	
+			        	<value>0</value>	        	
 			        </parameter> 
-			        <parameter ID="8">
+			        <parameter ID="9">
 			        	<name>RetinoPattern</name>
 			        	<value>PolarAngle</value>
 			        </parameter>	
-			        <parameter ID="9">
+			        <parameter ID="10">
 			        	<name>GapDiameter</name>
 			        	<value>20</value>
 			        </parameter>
-	    				<parameter ID="10">
+	    				<parameter ID="11">
 			        	<name>DiscreteTriggerSteps</name>
 			        	<value>true</value>
 			        </parameter>			        
-			        <parameter ID="11">
+			        <parameter ID="12">
 			        	<name>RandomizeTriggerSteps</name>
-			        	<value>false</value>
+			        	<value>true</value>
 			        </parameter>			                
 			        <parameter ID="12">
 			        	<name>DisableCortMagFac</name>
-			        	<value>false</value>
+			        	<value>true</value>
 			        </parameter>
 			    	</parameters>			    	 
 		    	</object>   
-	    	</block>	    	
+	    	</block>
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
 	    		    	
 	    	<block ID="2">
 	        <name>Extended_Block</name>
@@ -329,7 +370,7 @@ Attributes only apply to readonly non user data, like the ID
     <finalizations>
         <object ID="0">
         	<type>slot</type>
-        	<signature>stop</signature>
+        	<signature>stopTimer</signature>
         </object>
     </finalizations>     
 
