@@ -595,6 +595,13 @@ void RetinoMap_glwidget::initializeMovingDotsStructures()
 	}
 }
 
+bool RetinoMap_glwidget::paintWidget(QObject *paintEventObject)
+{
+	QPaintEvent *event = reinterpret_cast<QPaintEvent *>(paintEventObject);//qobject_cast<QPaintEvent *>(paintEventObject);
+	int a = 3;
+	return true;
+}
+
 void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 {
 	//Virtual, don't forget to call the base member first!

@@ -121,6 +121,8 @@ public slots:
 	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
 	bool setExperimentObjectID(int nObjID);
 
+	bool paintWidget(QObject *paintEventObject);
+
 protected:
 	void initBlockTrial();
 	void paintEvent(QPaintEvent *event);

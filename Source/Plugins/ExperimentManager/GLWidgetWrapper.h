@@ -33,6 +33,7 @@ public:
 	~GLWidgetWrapper();
 
 	void setBlockTrials();
+	bool unlockExperimentObject();
 
 public slots:
 	//Can be overridden
@@ -89,10 +90,11 @@ private:
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
 
 private:
+	bool bCurrentSubObjectIsLocked;						//The user first has to unlock the experiment (press a key) before starting, overcomes paint delay en refresh bug.
 	QMutex mutExpSnapshot;
 	ExperimentSnapshotFullStructure expFullStruct;
 	//int nBlockTrialFrameCounter;
-	int nCurrentExperimentReceivedTriggers;			//The current experiment number of trigger received since it started, internal use!
+	int nCurrentExperimentReceivedTriggers;				//The current experiment number of trigger received since it started, internal use!
 	//int nCurrentExperimentTrigger;					//The current experiment trigger
 	//int nCurrentExperimentTrial;						//The current experiment trial within the block 
 	//int nCurrentExperimentBlockTrialReceivedTriggers;	//The current experiment number of trigger received within the current block trial
