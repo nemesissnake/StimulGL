@@ -49,15 +49,18 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 {
 	if (nObjectID >= 0)
 	{
-		int nObjectCount = lExperimentObjectList.count();
-		if (nObjectCount>0)
+		if (!lExperimentObjectList.isEmpty())
 		{
-			for (int i=0;i<nObjectCount;i++)
+			int nObjectCount = lExperimentObjectList.count();
+			if (nObjectCount>0)
 			{
-				if (lExperimentObjectList[i].nObjectID == nObjectID)
+				for (int i=0;i<nObjectCount;i++)
 				{
-					lExperimentObjectList[i].ExpBlockParams->insert(sName,sValue);
-					return true;
+					if (lExperimentObjectList[i].nObjectID == nObjectID)
+					{
+						lExperimentObjectList[i].ExpBlockParams->insert(sName,sValue);
+						return true;
+					}
 				}
 			}
 		}
@@ -69,22 +72,25 @@ bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,co
 {
 	if (nObjectID >= 0)
 	{
-		int nObjectCount = lExperimentObjectList.count();
-		if (nObjectCount>0)
+		if (!lExperimentObjectList.isEmpty())
 		{
-			for (int i=0;i<nObjectCount;i++)
+			int nObjectCount = lExperimentObjectList.count();
+			if (nObjectCount>0)
 			{
-				if (lExperimentObjectList[i].nObjectID == nObjectID)
+				for (int i=0;i<nObjectCount;i++)
 				{
-					//QHash<QString, QString> test;
-					//test = *lExperimentObjectList[i].ExpBlockParams;
-					//QString stest = "";
-					if (lExperimentObjectList[i].ExpBlockParams->contains(sName))
+					if (lExperimentObjectList[i].nObjectID == nObjectID)
 					{
-						sValue = lExperimentObjectList[i].ExpBlockParams->value(sName,sValue);//svalue
-						return true;
+						//QHash<QString, QString> test;
+						//test = *lExperimentObjectList[i].ExpBlockParams;
+						//QString stest = "";
+						if (lExperimentObjectList[i].ExpBlockParams->contains(sName))
+						{
+							sValue = lExperimentObjectList[i].ExpBlockParams->value(sName,sValue);//svalue
+							return true;
+						}
+						return false;
 					}
-					return false;
 				}
 			}
 		}
@@ -96,15 +102,18 @@ bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nOb
 {
 	if (nObjectID >= 0)
 	{
-		int nObjectCount = lExperimentObjectList.count();
-		if (nObjectCount>0)
+		if (!lExperimentObjectList.isEmpty())
 		{
-			for (int i=0;i<nObjectCount;i++)
+			int nObjectCount = lExperimentObjectList.count();
+			if (nObjectCount>0)
 			{
-				if (lExperimentObjectList[i].nObjectID == nObjectID)
+				for (int i=0;i<nObjectCount;i++)
 				{
-					lExperimentObjectList[i].ExpBlockParams = expBlockTrialStruct;
-					return true;
+					if (lExperimentObjectList[i].nObjectID == nObjectID)
+					{
+						lExperimentObjectList[i].ExpBlockParams = expBlockTrialStruct;
+						return true;
+					}
 				}
 			}
 		}
@@ -405,6 +414,8 @@ bool ExperimentManager::cleanupExperiment()
 
 void ExperimentManager::cleanupExperimentObjects()
 {
+	if (lExperimentObjectList.isEmpty())
+		return;
 	int nCount = lExperimentObjectList.count();
 	if (nCount>0)
 	{
@@ -437,6 +448,8 @@ bool ExperimentManager::changeExperimentObjectsSignalSlots(bool bDisconnect, int
 		qDebug() << "connectExperimentObjectsSignalSlots::No Experiment loaded!";
 		return false;
 	}
+	if (lExperimentObjectList.isEmpty())
+		return true;
 	int nCount = lExperimentObjectList.count();
 	if (nCount>0)
 	{
@@ -499,6 +512,8 @@ void ExperimentManager::changeExperimentSubObjectState(ExperimentSubObjectState 
 	{
 		qDebug() << "invokeExperimentObjectSlot::No Experiment loaded!";
 	}
+	if (lExperimentObjectList.isEmpty())
+		return;
 	int nCount = lExperimentObjectList.count();
 	int nActiveExperimentObjects = 0;
 	if (nCount>0)
@@ -556,6 +571,9 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 		qDebug() << "invokeExperimentObjectSlot::No Experiment loaded!";
 		return false;
 	}
+	if (lExperimentObjectList.isEmpty())
+		return true;
+	
 	int nCount = lExperimentObjectList.count();
 	if (nCount>0)
 	{
@@ -592,10 +610,7 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 		}
 		return true;
 	}
-	else
-	{
-		return true;
-	}
+	return true;
 }
 
 bool ExperimentManager::abortExperimentObjects()
@@ -1160,6 +1175,8 @@ QObject *ExperimentManager::getObjectElementById(int nID)
 {
 	if (nID >= 0)
 	{
+		if (lExperimentObjectList.isEmpty())
+			return NULL;
 		int nObjectCount = lExperimentObjectList.count();
 		if (nObjectCount>0)
 		{
@@ -1179,6 +1196,8 @@ QHash<QString, QString> *ExperimentManager::getObjectBlockParamListById(int nID)
 {
 	if (nID >= 0)
 	{
+		if (lExperimentObjectList.isEmpty())
+			return NULL;
 		int nObjectCount = lExperimentObjectList.count();
 		if (nObjectCount>0)
 		{
@@ -1283,13 +1302,24 @@ bool ExperimentManager::createExperimentObjects()
 					//	bResult = connect(tmpElement.pObject, SIGNAL(LogExpObjData(int,int,QString)), this, SLOT(logExperimentObjectData(int,int,QString)));//Qt::QueuedConnection --> makes it asynchronyous
 					//}
 
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETOBJECTID_FULL)) == -1))//Is the slot present?
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETMETAOBJECT_FULL)) == -1))//Is the slot present?
 					{
 						//Invoke the slot
 						bRetVal = true;
-						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
+						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETMETAOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal))))
 						{
-							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETOBJECTID << "()" << ")!";		
+							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETMETAOBJECT << "()" << ")!";		
+							return false;
+						}		
+					}
+
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTOBJECTID_FULL)) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						bRetVal = true;
+						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
+						{
+							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTOBJECTID << "()" << ")!";		
 							return false;
 						}		
 					}

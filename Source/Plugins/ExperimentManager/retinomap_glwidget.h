@@ -113,19 +113,12 @@ public:
 	RetinoMap_glwidget(const RetinoMap_glwidget& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 public slots:
-	bool startExperimentObject();
-	bool initExperimentObject();
-	//bool abortExperimentObject();
-	//bool stopExperimentObject();
-	//bool setBlockTrialDomNodeList(QDomNodeList *pDomNodeList = NULL);
-	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
-	bool setExperimentObjectID(int nObjID);
-
-	bool paintWidget(QObject *paintEventObject);
-
-protected:
-	void initBlockTrial();
-	void paintEvent(QPaintEvent *event);
+	bool startObject();
+	bool initObject();
+	bool setObjectConfiguration(QObject *pExpConfStruct = NULL);//ExperimentConfiguration *pExpConfStruct = NULL);
+	bool setObjectID(int nObjID);
+	bool initObjectBlockTrial();
+	bool paintObject(QObject *paintEventObject = NULL);
 
 private:
 	void initialize();

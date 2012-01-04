@@ -365,110 +365,34 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 	}
 }
 
-//void RetinoMap_glwidget::initExperimentObject()
-//{
-//	//Virtual, don't forget to call the base member first!
-//	GLWidgetWrapper::initExperimentObject();
-//	//Additional code:	
-//}
-
-//bool RetinoMap_glwidget::loadBlockTrial()
-//{
-//	//Virtual, don't forget to call the base member first!
-//	if (!GLWidgetWrapper::loadBlockTrial())
-//		return false;
-//	//Additional code:
-//	
-//	return true;
-//}
-
-bool RetinoMap_glwidget::initExperimentObject()
+bool RetinoMap_glwidget::initObject()
 {
-	//Virtual, don't forget to call the base member first!
-	if(!GLWidgetWrapper::initExperimentObject()) 
-		return false;
-	//Additional code:
-	
 	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","swapInterval() = " + QString::number(this->format().swapInterval()));
 	parseExperimentObjectBlockParameters(true);
 	return true;
 }
 
-bool RetinoMap_glwidget::startExperimentObject()
+bool RetinoMap_glwidget::startObject()
 {
-	//Virtual, don't forget to call the base member first!
-	if(!GLWidgetWrapper::startExperimentObject()) 
-		return false;
-	//Additional code:
-	//if (isDebugMode())
-	//{
-	//	screenShotWidget = new Screenshot();
-	//	screenShotWidget->show();
-	//}
 	lastTriggerNumber = -1;
 	emit LogToOutputWindow("Started");
 	return true;
 }
 
-//bool RetinoMap_glwidget::abortExperimentObject()
-//{
-//	//Virtual, don't forget to call the base member first!
-//	if(!GLWidgetWrapper::abortExperimentObject()) 
-//		return false;
-//	//Additional code:
-//
-//	return true;
-//}
-
-//bool RetinoMap_glwidget::stopExperimentObject()
-//{
-//	//Virtual, don't forget to call the base member first!
-//	if(!GLWidgetWrapper::stopExperimentObject())
-//		return false;
-//	//Additional code:
-//
-//	return true;
-//}
-
-//bool RetinoMap_glwidget::setBlockTrialDomNodeList(QDomNodeList *pDomNodeList)
-//{
-//	//Virtual, don't forget to call the base member first!
-//	if(!GLWidgetWrapper::setBlockTrialDomNodeList(pDomNodeList))
-//		return false;
-//	//Additional code:
-//
-//	return true;
-//}
-
-bool RetinoMap_glwidget::setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct)
+bool RetinoMap_glwidget::setObjectConfiguration(QObject *pExpConfStruct)//ExperimentConfiguration *pExpConfStruct)
 {
-	//Virtual, don't forget to call the base member first!
-	if(!GLWidgetWrapper::setExperimentConfiguration(pExpConfStruct))
-		return false;
-	//Additional code:
-	currExpConfStruct = pExpConfStruct;
-
+	currExpConfStruct = reinterpret_cast<ExperimentConfiguration *>(pExpConfStruct);
 	return true;
 }
 
-bool RetinoMap_glwidget::setExperimentObjectID(int nObjID)
+bool RetinoMap_glwidget::setObjectID(int nObjID)
 {
-	//Virtual, don't forget to call the base member first!
-	if(!GLWidgetWrapper::setExperimentObjectID(nObjID))
-		return false;
-	//Additional code:
-
-	nRetinoID = getObjectID();//Because we need it often we'll buffer it here
+	nRetinoID = nObjID;//or use getObjectID();//Because we need it often we'll buffer it here
 	return true;
 }
 
-void RetinoMap_glwidget::initBlockTrial()
+bool RetinoMap_glwidget::initObjectBlockTrial()
 {
-	//debugTime.start();
-	//Virtual, don't forget to call the base member first!
-	GLWidgetWrapper::initBlockTrial();
-	//Additional code:
-
 	//int currentExpBlock = getCurrentExperimentBlock();
 	//QString tmpParamValue;
 	//debugString = "";
@@ -487,6 +411,7 @@ void RetinoMap_glwidget::initBlockTrial()
 	emptyTriggerLastIndex = -1;
 	//debugInitBlockTrialTime = debugTime.restart();
 	//startTrialTimer.start();trialTime.start();
+	return true;
 }
 
 QImage RetinoMap_glwidget::fractalFillCheckeredImage(float fWidth, float fHeigth, float fSize, int nflickr)
@@ -595,19 +520,9 @@ void RetinoMap_glwidget::initializeMovingDotsStructures()
 	}
 }
 
-bool RetinoMap_glwidget::paintWidget(QObject *paintEventObject)
+bool RetinoMap_glwidget::paintObject(QObject *paintEventObject)
 {
 	QPaintEvent *event = reinterpret_cast<QPaintEvent *>(paintEventObject);//qobject_cast<QPaintEvent *>(paintEventObject);
-	int a = 3;
-	return true;
-}
-
-void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
-{
-	//Virtual, don't forget to call the base member first!
-	GLWidgetWrapper::paintEvent(event);
-	//Additional code:
-
 	bool bRenderStimuli = true;
 	QString tmpStr = "";
 	tmpParamValue = "";
@@ -1503,11 +1418,12 @@ void RetinoMap_glwidget::paintEvent(QPaintEvent *event)
 		//}
 	}
 	stimuliPainter.end();
-	if(isDebugMode())
-	{
-		currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","painter.end()");
-		//emit LogExpObjData(nRetinoID,0,"paintEvent():painter.end()2");//0 is the default experiment timer
-	}
+	//if(isDebugMode())
+	//{
+	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","painter.end()");
+	//	//emit LogExpObjData(nRetinoID,0,"paintEvent():painter.end()2");//0 is the default experiment timer
+	//}
 	nextNewCycleEntered = false;
-	GLWidgetWrapper::finalizePaintEvent();
+	return true;
 }
+

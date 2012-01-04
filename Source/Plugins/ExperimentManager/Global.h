@@ -118,14 +118,29 @@ typedef struct{
 } ExperimentSnapshotFullStructure;
 
 //typedef QHash<QString, QString> ExperimentBlockParameterStructure;
+#define FUNC_PAINTOBJECT						"paintObject"
+#define FUNC_PAINTOBJECT_FULL					"paintObject(QObject *)"
+#define FUNC_SETOBJECTID						"setObjectID"
+#define FUNC_SETOBJECTID_FULL					"setObjectID(int)"
+#define FUNC_INITOBJECT							"initObject"
+#define FUNC_INITOBJECT_FULL					"initObject()"
+#define FUNC_STARTOBJECT						"startObject"
+#define FUNC_STARTOBJECT_FULL					"startObject()"
+#define FUNC_SETOBJECTCONFIGURATION				"setObjectConfiguration"
+#define FUNC_SETOBJECTCONFIGURATION_FULL		"setObjectConfiguration(QObject *)"
+#define FUNC_INITOBJECTBLOCKTRIAL				"initObjectBlockTrial"
+#define FUNC_INITOBJECTBLOCKTRIAL_FULL			"initObjectBlockTrial()"
 
 #define SIGNAL_USERCLOSE_FULL					"UserWantsToClose(void)"
 #define SIGNAL_OBJECTSTOP_FULL					"ObjectShouldStop(void)"
 #define FUNC_OBJECTSTATECHANGED_FULL			"ObjectStateHasChanged(ExperimentSubObjectState)"
 #define FUNC_SETBLOCKTRIALDOMNODELIST			"setBlockTrialDomNodeList"
 #define FUNC_SETBLOCKTRIALDOMNODELIST_FULL		"setBlockTrialDomNodeList(QDomNodeList*)"
-#define FUNC_SETOBJECTID						"setExperimentObjectID"
-#define FUNC_SETOBJECTID_FULL					"setExperimentObjectID(int)"
+
+#define FUNC_SETMETAOBJECT						"setExperimentMetaObject"
+#define FUNC_SETMETAOBJECT_FULL					"setExperimentMetaObject()"
+#define FUNC_SETEXPERIMENTOBJECTID				"setExperimentObjectID"
+#define FUNC_SETEXPERIMENTOBJECTID_FULL			"setExperimentObjectID(int)"
 #define FUNC_SETEXPERIMENTCONFIGURATION			"setExperimentConfiguration"
 #define FUNC_SETEXPERIMENTCONFIGURATION_FULL	"setExperimentConfiguration(ExperimentConfiguration*)"
 #define FUNC_OBJECT_INIT						"initExperimentObject"

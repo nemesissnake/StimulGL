@@ -33,17 +33,18 @@ public:
 	~GLWidgetWrapper();
 
 	void setBlockTrials();
-	bool unlockExperimentObject();
 
 public slots:
 	//Can be overridden
-	virtual bool initExperimentObject();
-	virtual bool startExperimentObject();
-	virtual bool stopExperimentObject();
-	virtual bool abortExperimentObject();
-	virtual bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList = NULL);
-	virtual bool setExperimentObjectID(int nObjID);
-	virtual bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
+	//virtual 
+	bool initExperimentObject();
+	bool startExperimentObject();
+	bool stopExperimentObject();
+	bool abortExperimentObject();
+	bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList = NULL);
+	bool setExperimentObjectID(int nObjID);	//Necessary to set the ID!
+	bool setExperimentMetaObject();					//Necessary to set the MetaObject!
+	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
 	
 	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
@@ -65,13 +66,13 @@ protected:
 	void closeEvent(QCloseEvent *evt);
 	void customEvent(QEvent *event);
 
-	virtual void initBlockTrial();
-	//virtual bool loadBlockTrial();
-	virtual void paintEvent(QPaintEvent *event);
+	void initBlockTrial();
+	void paintEvent(QPaintEvent *event);
 
 protected slots:
 	void incrementTrigger();
 	void animate();
+	void proceedPaintEventLoop();;
 
 private:
 	//int getCurrentExperimentBlockTrialFrame() {return nBlockTrialFrameCounter;}
@@ -80,6 +81,8 @@ private:
 	//int getCurrentExperimentTrigger() {return nCurrentExperimentTrigger;}
 	//int getCurrentExperimentBlockTrialTrigger() {return nCurrentExperimentBlockTrialReceivedTriggers;}
 	//int getExperimentBlockTrialTriggerAmount(int nBlock, int nTrial);
+	bool unlockExperimentObject();
+	bool setExperimentObjectReadyToUnlock();
 	void setVerticalSyncSwap();
 	void init();
 	bool eventFilter(QObject *target, QEvent *event);
@@ -90,8 +93,10 @@ private:
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
 
 private:
-	bool bCurrentSubObjectIsLocked;						//The user first has to unlock the experiment (press a key) before starting, overcomes paint delay en refresh bug.
+	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
+	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
 	QMutex mutExpSnapshot;
+	QMutex mutRecursivePaint;
 	ExperimentSnapshotFullStructure expFullStruct;
 	//int nBlockTrialFrameCounter;
 	int nCurrentExperimentReceivedTriggers;				//The current experiment number of trigger received since it started, internal use!
@@ -121,6 +126,7 @@ private:
 	QHash<QString, QString> *ExpBlockParams;
 	ExperimentConfiguration *pExpConf;
 	ExperimentTimer expTrialTimer;
+	const QMetaObject* thisMetaObject;
 };
 
 class ContainerDlg : public QDialog

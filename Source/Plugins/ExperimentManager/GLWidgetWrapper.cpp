@@ -8,6 +8,7 @@
 GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 {
 	init();
+	thisMetaObject = NULL;
 	stimContainerDlg = NULL;
 	pExpBlockTrialDomNodeList = NULL;
 	bForceToStop = false;
@@ -37,6 +38,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	nFrameTimerIndex = -1;
 	nTrialTimerIndex = -1;
 	bCurrentSubObjectIsLocked = true;
+	bCurrentSubObjectReadyToUnlock = false;
 	setVerticalSyncSwap();
 }
 
@@ -132,12 +134,29 @@ int GLWidgetWrapper::getObjectID()
 	return nObjectID;
 }
 
+bool GLWidgetWrapper::setExperimentMetaObject()
+{
+	thisMetaObject = this->metaObject();
+	return true;
+}
+
 bool GLWidgetWrapper::setExperimentObjectID(int nObjID)
 {
 	if(nObjID >= 0)
 	{
 		nObjectID = nObjID;
-		return true;
+		bool bRetVal;
+		if (thisMetaObject)
+		{
+			if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETOBJECTID_FULL)) == -1))//Is the slot present?
+			{
+				//Invoke the slot
+				if(!(thisMetaObject->invokeMethod(this, FUNC_SETOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int,nObjID))))
+				{
+					qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETOBJECTID_FULL << ")!";		
+				}		
+			}
+		}
 	}
 	return false;
 }
@@ -161,16 +180,20 @@ bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 		if (event->type() == QEvent::KeyPress) 
 		{
 			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+
 			switch (keyEvent->key())
 			{
-			case Qt::Key_Tab:
-				unlockExperimentObject();
-				break;
-			case Qt::Key_Escape:
-				if((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->modifiers() & Qt::AltModifier))
+			case Qt::Key_A://Key_Escape:	//To abort the experiment
+				if((keyEvent->modifiers() & Qt::ControlModifier))// && (keyEvent->modifiers() & Qt::AltModifier))
 				{
 					emit UserWantsToClose();
 				}
+				break;
+			//case Qt::Key_Tab:
+			//	setExperimentObjectReadyToUnlock();
+			//	break;
+			case Qt::Key_Alt:	//To start the experiment
+				setExperimentObjectReadyToUnlock();					
 				break;
 			}
 		}
@@ -194,6 +217,18 @@ bool GLWidgetWrapper::setExperimentConfiguration(ExperimentConfiguration *pExpCo
 	if(pExpConfStruct)
 	{
 		pExpConf = pExpConfStruct;
+		bool bRetVal;
+		if (thisMetaObject)
+		{
+			if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETOBJECTCONFIGURATION_FULL)) == -1))//Is the slot present?
+			{
+				//Invoke the slot
+				if(!(thisMetaObject->invokeMethod(this, FUNC_SETOBJECTCONFIGURATION, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QObject*,(QObject*)pExpConfStruct))))
+				{
+					qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETOBJECTCONFIGURATION << ")!";		
+				}		
+			}
+		}
 		return true;
 	}
 	return false;
@@ -573,14 +608,40 @@ bool GLWidgetWrapper::startExperimentObject()
 	pExpConf->pExperimentManager->startExperimentTimer(nFrameTimerIndex);//Starts the Frame timer
 	pExpConf->pExperimentManager->startExperimentTimer(nTrialTimerIndex);//Starts the Trial timer
 	checkForNextBlockTrial();
+	bool bRetVal;
+	if (thisMetaObject)
+	{
+		if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_STARTOBJECT_FULL)) == -1))//Is the slot present?
+		{
+			//Invoke the slot
+			if(!(thisMetaObject->invokeMethod(this, FUNC_STARTOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal))))
+			{
+				qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_STARTOBJECT_FULL << ")!";		
+			}		
+		}
+	}
+	return true;
+}
+
+bool GLWidgetWrapper::setExperimentObjectReadyToUnlock()
+{
+	if (bCurrentSubObjectReadyToUnlock == false)
+	{
+		bCurrentSubObjectReadyToUnlock = true;
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Ready to Unlock the Experiment Object");
+	}
 	return true;
 }
 
 bool GLWidgetWrapper::unlockExperimentObject()
 {
-	bCurrentSubObjectIsLocked = false;
-	if(isDebugMode())
-		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Unlocked the Experiment Object");
+	if (bCurrentSubObjectIsLocked)
+	{
+		bCurrentSubObjectIsLocked = false;
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Unlocked the Experiment Object");
+	}
 	return true;
 }
 
@@ -589,10 +650,22 @@ bool GLWidgetWrapper::initExperimentObject()
 	nFrameTimerIndex = pExpConf->pExperimentManager->createExperimentTimer();
 	nTrialTimerIndex = pExpConf->pExperimentManager->createExperimentTimer();
 	bCurrentSubObjectIsLocked = true;
+	bCurrentSubObjectReadyToUnlock = false;
 	nRefreshRate = 0;
 	dAdditionalRefreshDelayTime = 0.0;
 	insertExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_DISPLAY_REFRESHRATE,QString::number(nRefreshRate));
-
+	bool bRetVal;
+	if (thisMetaObject)
+	{
+		if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_INITOBJECT_FULL)) == -1))//Is the slot present?
+		{
+			//Invoke the slot
+			if(!(thisMetaObject->invokeMethod(this, FUNC_INITOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal))))
+			{
+				qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_INITOBJECT_FULL << ")!";		
+			}		
+		}
+	}
 	return true;
 }
 
@@ -612,17 +685,20 @@ bool GLWidgetWrapper::isDebugMode()
 
 QString GLWidgetWrapper::getLastLoggedObjectStateTime(ExperimentSubObjectState state)
 {
-	int nHistoryCount = subObjectStateHistory.nState.count();
-	if (nHistoryCount > 0)
+	if (!subObjectStateHistory.nState.isEmpty())
 	{
-		for (int i=nHistoryCount-1;i>0;i--)
+		int nHistoryCount = subObjectStateHistory.nState.count();
+		if (nHistoryCount > 0)
 		{
-			if (subObjectStateHistory.nState.at(i) == state)
+			for (int i=nHistoryCount-1;i>0;i--)
 			{
-				return subObjectStateHistory.sDateTimeStamp.at(i);
+				if (subObjectStateHistory.nState.at(i) == state)
+				{
+					return subObjectStateHistory.sDateTimeStamp.at(i);
+				}
 			}
-		}
-	} 
+		} 
+	}
 	return "";
 }
 
@@ -662,27 +738,51 @@ bool GLWidgetWrapper::abortExperimentObject()
 
 void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 {
-	const QMetaObject* metaObject = this->metaObject();
-	int nRetVal;
-	bool bRetVal = false;
-	//QStringList properties;
-	//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
-	//	properties << QString::fromLatin1(metaObject->method(i).signature());
-	if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature("paintWidget(QObject *)")) == -1))//Is the slot present?
-	{
-		//Invoke the slot
-		nRetVal = 0;
-		//QObject* tempO = new QObject();
-		if(!(metaObject->invokeMethod(this, "paintWidget", Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QObject*, (QObject*)event))))
-		{
-			qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << "paintWidget" << "()" << ")!";		
-		}		
-	}
-
-
-
 	if(isDebugMode())
 		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Starting to paint the widget");
+	if (bCurrentSubObjectIsLocked == false)
+	{
+		bool bRetVal = false;
+		if (thisMetaObject)
+		{
+			if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PAINTOBJECT_FULL)) == -1))//Is the slot present?
+			{
+				//Invoke the slot
+				if(!(thisMetaObject->invokeMethod(this, FUNC_PAINTOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QObject*, (QObject*)event))))
+				{
+					qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_PAINTOBJECT_FULL << ")!";		
+				}		
+			}
+		}
+	}
+	else
+	{
+		QPainter lockedPainter(this);
+		QFont textFont("arial", 22, QFont::Bold, false);
+		QString strText;
+		if (bCurrentSubObjectReadyToUnlock == false)
+			strText = "Experiment ready, press 'Alt' to proceed";
+		else
+			strText = "Waiting for a trigger to start...";
+		//lockedPainter.begin(this);
+		const QRectF windowRect = lockedPainter.window();
+		const int nBorder = 25;
+		QPainterPath textPath;
+		textPath.addText(0,0,textFont,strText);
+		const QRectF textPathRect = textPath.boundingRect();
+		lockedPainter.setRenderHint(QPainter::Antialiasing);
+		lockedPainter.fillRect(windowRect,QColor(87,87,87));
+		lockedPainter.setWindow ( textPathRect.x() - nBorder , textPathRect.y() - (windowRect.height()/2) , textPathRect.width() + (nBorder*2) , windowRect.height());//translate text rect to rect window button
+		lockedPainter.setPen(Qt::NoPen);
+		lockedPainter.setBrush(Qt::white);
+		lockedPainter.drawPath(textPath);
+		//tmpMatrix = lockedPainter.deviceMatrix();
+		lockedPainter.end();
+		
+	}
+	if(isDebugMode())
+		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","painter.end()");
+	finalizePaintEvent();
 }
 
 void GLWidgetWrapper::incrementTrigger()
@@ -695,6 +795,11 @@ void GLWidgetWrapper::incrementTrigger()
 	}
 	else
 	{
+		if (bCurrentSubObjectReadyToUnlock == true)
+		{
+			bCurrentSubObjectReadyToUnlock = false;
+			unlockExperimentObject();
+		}
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Triggered!, No increment because Object is still locked"));	
 	}
@@ -721,7 +826,19 @@ void GLWidgetWrapper::initBlockTrial()
 	if(bDoUnlock)
 		mutExpSnapshot.unlock();
 	getExperimentBlockParameters(tmpExpBlock,nObjectID,ExpBlockParams);//Should be moved to the manager?!
-	nRefreshRate = getExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_DISPLAY_REFRESHRATE,QString::number(nRefreshRate)).toInt();	
+	nRefreshRate = getExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_DISPLAY_REFRESHRATE,QString::number(nRefreshRate)).toInt();
+	bool bRetVal;
+	if (thisMetaObject)
+	{
+		if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_INITOBJECTBLOCKTRIAL_FULL)) == -1))//Is the slot present?
+		{
+			//Invoke the slot
+			if(!(thisMetaObject->invokeMethod(this, FUNC_INITOBJECTBLOCKTRIAL, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal))))
+			{
+				qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_INITOBJECTBLOCKTRIAL_FULL << ")!";		
+			}		
+		}
+	}
 }
 
 //bool GLWidgetWrapper::loadBlockTrial()
@@ -785,7 +902,7 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 		{
 			if(isDebugMode())
 				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","New BlockTrial Prepared, going to call animate()");
-			tStimTimer.singleShot(1, this, SLOT(animate()));
+			animate();//tStimTimer.singleShot(1, this, SLOT(animate()));
 			if(!bFirstCheckAfterExperimentStarted)
 				expFullStruct.nTotalProcessedExperimentTrials++;
 		}
@@ -838,26 +955,25 @@ int GLWidgetWrapper::getRelativeBlockTrialTrigger(int nAbsoluteTrigger)
 
 void GLWidgetWrapper::animate()
 {
-	//if (((bForceToStop)||(bExperimentShouldStop)) == false)
-	//{
-		if(getSubObjectState() == Experiment_SubObject_Started)
-		{
-			if(isDebugMode())
-				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
-			//repaint();
-			update();
-			if(isDebugMode())
-				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","update() called");
-			//	elapsed = frameTime.elapsed();//Calculate the elapsed time since started
-			//	frameTime.restart();
-			//	repaint();//calls the below void GLWidget::paintEvent(QPaintEvent *event)
-			//You should usually use 'update', as this will allow multiple queued paint events to be 'collapsed' into a single event. 
-			//The update method will call updateGL for QGLWidgets. The 'repaint' method should be used if you want an immediate repaint.
-			//If you have hooked up a timer to periodically call 'update', then failure to repaint regularly usually indicates 
-			//that you're putting stress on the CPU.
-			//}
-		}
-	//}
+	if(getSubObjectState() == Experiment_SubObject_Started)
+	{
+		//mutRecursivePaint.tryLock();
+		//mutRecursivePaint.lock();
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
+		//repaint();
+		update();
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","update() called");
+		//mutRecursivePaint.unlock();
+		//	elapsed = frameTime.elapsed();//Calculate the elapsed time since started
+		//	frameTime.restart();
+		//	repaint();//calls the below void GLWidget::paintEvent(QPaintEvent *event)
+		//You should usually use 'update', as this will allow multiple queued paint events to be 'collapsed' into a single event. 
+		//The update method will call updateGL for QGLWidgets. The 'repaint' method should be used if you want an immediate repaint.
+		//If you have hooked up a timer to periodically call 'update', then failure to repaint regularly usually indicates 
+		//that you're putting stress on the CPU.
+	}
 }
 
 void GLWidgetWrapper::changeSubObjectState(ExperimentSubObjectState newSubObjectState)
@@ -875,6 +991,7 @@ void GLWidgetWrapper::finalizePaintEvent()
 {
 	double dCurrentTime;
 	double dFramePeriodTime;
+	bool bObjectIsLocked = bCurrentSubObjectIsLocked;//buffer it..
 
 	if (nRefreshRate > 0)
 	{
@@ -884,25 +1001,28 @@ void GLWidgetWrapper::finalizePaintEvent()
 		while((dCurrentTime)<dFramePeriodTime)//Don't go too fast...//((dCurrentTime+dAdditionalRefreshDelayTime)<dFramePeriodTime)//Don't go too fast...
 		{
 			dWaitTime = dFramePeriodTime - dCurrentTime;// + dAdditionalRefreshDelayTime;
-			if(isDebugMode())
-				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Too fast --> Sleeping(" + QString::number(dWaitTime) + ")...");			
+			if(isDebugMode())// && (bObjectIsLocked==false))
+				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Too fast --> Sleeping(" + QString::number(dWaitTime) + ")...") + QString::number(bObjectIsLocked);			
 			ExperimentTimer::SleepMSecAccurate(dWaitTime);
 			//Sleep(nSTime);
 			dCurrentTime = pExpConf->pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);
 		}
 	}
 	dCurrentTime = pExpConf->pExperimentManager->restartExperimentTimer(nFrameTimerIndex);
-	if(isDebugMode())
-		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to Swap");
+	if(isDebugMode())// && (bObjectIsLocked==false))
+		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to Swap" + QString::number(bObjectIsLocked));
 	swapBuffers();
-	if(isDebugMode())
-		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","BlockTrial Buffer Swapped");
+	if(isDebugMode())// && (bObjectIsLocked==false))
+		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","BlockTrial Buffer Swapped" + QString::number(bObjectIsLocked));
 
 	qApp->processEvents(); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
 
 	mutExpSnapshot.lock();
-	expFullStruct.parentStruct.currExpBlockTrialFrame++;
-	if(isDebugMode() && (nRefreshRate > 0))
+	if (bObjectIsLocked==false)
+	{
+		expFullStruct.parentStruct.currExpBlockTrialFrame++;
+	}
+	if((nRefreshRate > 0) && (bObjectIsLocked==false)) //&& isDebugMode())
 	{
 		if (dCurrentTime > (dFramePeriodTime+1.0f))
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took to long(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
@@ -913,6 +1033,30 @@ void GLWidgetWrapper::finalizePaintEvent()
 	//		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took to long(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
 	//}
 	mutExpSnapshot.unlock(); 
+	tStimTimer.singleShot(1, this, SLOT(proceedPaintEventLoop()));
+	//if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial, otherwise directly call onAnimate()
+	//{
+	//	if(bForceToStop)
+	//	{
+	//		changeSubObjectState(Experiment_SubObject_Abort);
+	//		return;
+	//	}
+	//	else if (bExperimentShouldStop)
+	//	{
+	//		changeSubObjectState(Experiment_SubObject_Stop);
+	//		//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
+	//		return;
+	//	}
+	//	else
+	//	{
+	//		// if next trial/block reached, the function will prepare for it and calls "onAnimate()" when ready, otherwise we compute next frame
+	//		animate();//tStimTimer.singleShot(1, this, SLOT(animate()));//animate();
+	//	}
+	//}
+}
+
+void GLWidgetWrapper::proceedPaintEventLoop() 
+{//Should only be called with the use of a signal, not in a paintEvent loop!
 	if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial, otherwise directly call onAnimate()
 	{
 		if(bForceToStop)
@@ -929,7 +1073,7 @@ void GLWidgetWrapper::finalizePaintEvent()
 		else
 		{
 			// if next trial/block reached, the function will prepare for it and calls "onAnimate()" when ready, otherwise we compute next frame
-			animate();
+			animate();//tStimTimer.singleShot(1, this, SLOT(animate()));//animate();
 		}
 	}
 }
