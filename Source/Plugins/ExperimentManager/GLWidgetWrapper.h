@@ -72,7 +72,7 @@ protected:
 protected slots:
 	void incrementTrigger();
 	void animate();
-	void proceedPaintEventLoop();;
+	//void proceedPaintEventLoop();;
 
 private:
 	//int getCurrentExperimentBlockTrialFrame() {return nBlockTrialFrameCounter;}

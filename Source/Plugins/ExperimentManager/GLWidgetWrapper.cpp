@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <QDomDocument>
+#include <QEventLoop>
 #include "GLWidgetWrapper.h"
 #include "ExperimentManager.h"
 
@@ -901,8 +902,8 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 		if (bCurrentSubObjectIsLocked == false)
 		{
 			if(isDebugMode())
-				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","New BlockTrial Prepared, going to call animate()");
-			animate();//tStimTimer.singleShot(1, this, SLOT(animate()));
+				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","New BlockTrial Prepared, going to qeueu animate()");
+			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
 			if(!bFirstCheckAfterExperimentStarted)
 				expFullStruct.nTotalProcessedExperimentTrials++;
 		}
@@ -957,8 +958,9 @@ void GLWidgetWrapper::animate()
 {
 	if(getSubObjectState() == Experiment_SubObject_Started)
 	{
+		//bool tmpA = mutRecursivePaint.tryLock();		
 		//mutRecursivePaint.tryLock();
-		//mutRecursivePaint.lock();
+		mutRecursivePaint.lock();
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
 		//repaint();
@@ -973,6 +975,7 @@ void GLWidgetWrapper::animate()
 		//The update method will call updateGL for QGLWidgets. The 'repaint' method should be used if you want an immediate repaint.
 		//If you have hooked up a timer to periodically call 'update', then failure to repaint regularly usually indicates 
 		//that you're putting stress on the CPU.
+		mutRecursivePaint.unlock();
 	}
 }
 
@@ -1017,6 +1020,13 @@ void GLWidgetWrapper::finalizePaintEvent()
 
 	qApp->processEvents(); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
 
+	//QEventLoop loop;
+	//QObject::connect(this, SIGNAL(readyRead()), &loop, SLOT(quit()));
+	//// Execute the event loop here, now we will wait here until readyRead() signal is emitted
+	//// which in turn will trigger event loop quit.
+	//loop.exec();
+	//loop.Execute();
+
 	mutExpSnapshot.lock();
 	if (bObjectIsLocked==false)
 	{
@@ -1033,35 +1043,14 @@ void GLWidgetWrapper::finalizePaintEvent()
 	//		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took to long(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
 	//}
 	mutExpSnapshot.unlock(); 
-	tStimTimer.singleShot(1, this, SLOT(proceedPaintEventLoop()));
-	//if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial, otherwise directly call onAnimate()
-	//{
-	//	if(bForceToStop)
-	//	{
-	//		changeSubObjectState(Experiment_SubObject_Abort);
-	//		return;
-	//	}
-	//	else if (bExperimentShouldStop)
-	//	{
-	//		changeSubObjectState(Experiment_SubObject_Stop);
-	//		//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
-	//		return;
-	//	}
-	//	else
-	//	{
-	//		// if next trial/block reached, the function will prepare for it and calls "onAnimate()" when ready, otherwise we compute next frame
-	//		animate();//tStimTimer.singleShot(1, this, SLOT(animate()));//animate();
-	//	}
-	//}
-}
-
-void GLWidgetWrapper::proceedPaintEventLoop() 
-{//Should only be called with the use of a signal, not in a paintEvent loop!
-	if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial, otherwise directly call onAnimate()
+	//QMetaObject::invokeMethod( this, "proceedPaintEventLoop",Qt::QueuedConnection);
+	//tStimTimer.singleShot(1, this, SLOT(proceedPaintEventLoop()));
+	if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial
 	{
 		if(bForceToStop)
 		{
 			changeSubObjectState(Experiment_SubObject_Abort);
+			//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
 			return;
 		}
 		else if (bExperimentShouldStop)
@@ -1072,8 +1061,29 @@ void GLWidgetWrapper::proceedPaintEventLoop()
 		}
 		else
 		{
-			// if next trial/block reached, the function will prepare for it and calls "onAnimate()" when ready, otherwise we compute next frame
-			animate();//tStimTimer.singleShot(1, this, SLOT(animate()));//animate();
+			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
 		}
 	}
 }
+
+//void GLWidgetWrapper::proceedPaintEventLoop() 
+//{//Should only be called with the use of a signal, not in a paintEvent loop!
+//	if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial
+//	{
+//		if(bForceToStop)
+//		{
+//			changeSubObjectState(Experiment_SubObject_Abort);
+//			return;
+//		}
+//		else if (bExperimentShouldStop)
+//		{
+//			changeSubObjectState(Experiment_SubObject_Stop);
+//			//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
+//			return;
+//		}
+//		else
+//		{
+//			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
+//		}
+//	}
+//}

@@ -42,7 +42,6 @@ Global
 		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Release|x64.ActiveCfg = Release|x64
 		{4B2670C4-91ED-3CF9-8A23-EA8396B214F2}.Release|x64.Build.0 = Release|x64
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52}.Debug|Win32.ActiveCfg = Debug|Win32
-		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52}.Debug|Win32.Build.0 = Debug|Win32
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52}.Debug|x64.ActiveCfg = Debug|x64
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52}.Debug|x64.Build.0 = Debug|x64
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52}.Release|Win32.ActiveCfg = Release|Win32
@@ -58,7 +57,6 @@ Global
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|x64.ActiveCfg = Release|x64
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Release|x64.Build.0 = Release|x64
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|Win32.ActiveCfg = Debug|Win32
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|Win32.Build.0 = Debug|Win32
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|x64.ActiveCfg = Debug|x64
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|x64.Build.0 = Debug|x64
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|Win32.ActiveCfg = Release|Win32
@@ -70,7 +68,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		QtVersion = $(DefaultQtVersion)
+		QtVersion = Qt 4.8.0 (x64)
 	EndGlobalSection
 	GlobalSection(Qt) = preSolution
 		Integration = True

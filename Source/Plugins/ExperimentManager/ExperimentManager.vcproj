@@ -2278,11 +2278,11 @@
 		/>
 		<Global
 			Name="QtVersion Win32"
-			Value="4.8.0 (32bit)"
+			Value="Qt 4.8.0 (Win32)"
 		/>
 		<Global
 			Name="QtVersion x64"
-			Value="4.8.0 (64bit)"
+			Value="Qt 4.8.0 (x64)"
 		/>
 		<Global
 			Name="RccDir"
