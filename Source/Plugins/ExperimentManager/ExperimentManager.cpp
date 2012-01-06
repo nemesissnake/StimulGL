@@ -121,11 +121,11 @@ bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nOb
 	return false;
 }
 
-bool ExperimentManager::logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage)
+bool ExperimentManager::logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage, const QString &strValue)
 {
 	if (expDataLogger)
 	{
-		expDataLogger->setLogVars(nObjectIndex, nTimerIndex, strFunction, strTag, strMessage);
+		expDataLogger->setLogVars(nObjectIndex, nTimerIndex, strFunction, strTag, strMessage, strValue);
 		return true;
 	}
 	return false;

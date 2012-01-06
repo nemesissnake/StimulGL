@@ -9,7 +9,7 @@ Attributes only apply to readonly non user data, like the ID
     <defines>
 			<experiment ID="0">
 				<name>Retinotopic Mapping Experiment with the use of a QTimer</name>
-				<debugmode>true</debugmode>
+				<debugmode>false</debugmode>
 			</experiment>
 		</defines>
 		

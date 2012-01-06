@@ -95,6 +95,7 @@ private:
 private:
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
+	double dWaitTime;
 	QMutex mutExpSnapshot;
 	QMutex mutRecursivePaint;
 	ExperimentSnapshotFullStructure expFullStruct;
@@ -106,6 +107,7 @@ private:
 	//int nCurrentExperimentBlock;						//The current experiment block
 	//int nTotalProcessedExperimentTrials;				//The total number of trials processed within experiment, might be that this Trial is not fully processed
 	int nRefreshRate;									//The refresh rate of the screen
+	double dLastPreSwapTime;
 	double dAdditionalRefreshDelayTime;
 	ContainerDlg *stimContainerDlg;
 	bool bForceToStop;

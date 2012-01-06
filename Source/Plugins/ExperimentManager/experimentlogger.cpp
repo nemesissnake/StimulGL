@@ -20,7 +20,7 @@ ExperimentLogger::~ExperimentLogger()
 	}
 }
 
-bool ExperimentLogger::setLogVars(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage)
+bool ExperimentLogger::setLogVars(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage, const QString &strValue)
 {
 	if (internalLoggedDataStructure == NULL)
 	{
@@ -31,6 +31,7 @@ bool ExperimentLogger::setLogVars(const int &nObjectIndex, const int &nTimerInde
 	internalLoggedDataStructure->sFunction.append(strFunction);
 	internalLoggedDataStructure->sTag.append(strTag);
 	internalLoggedDataStructure->sMessage.append(strMessage);
+	internalLoggedDataStructure->sValue.append(strValue);
 	if (nTimerIndex >= 0)
 		internalLoggedDataStructure->dTime.append(tTimers.at(nTimerIndex)->getElapsedTimeInMilliSec());
 	else
@@ -49,7 +50,7 @@ bool ExperimentLogger::WriteToOutput(const QString &fileName)
 		if (!file.open(QFile::WriteOnly | QFile::Text | QIODevice::Truncate)) 
 			return false;
 		QTextStream out(&file);//QDataStream
-		out << "Object" << "\t" << "Timer" << "\t" << "Function" << "\t" << "Tag" << "\t" << "Message" << "\t" << "Time" << "\n";
+		out << "Object" << "\t" << "Timer" << "\t" << "Function" << "\t" << "Tag" << "\t" << "Message" << "\t" << "Value" << "\n" << "Time" << "\n";
 		int nCount = 0;
 		nCount = internalLoggedDataStructure->nObject.count();
 		if(nCount > 0)
@@ -60,6 +61,7 @@ bool ExperimentLogger::WriteToOutput(const QString &fileName)
 						internalLoggedDataStructure->sFunction.at(i) << "\t" <<
 						internalLoggedDataStructure->sTag.at(i) << "\t" <<
 						internalLoggedDataStructure->sMessage.at(i) << "\t" <<
+						internalLoggedDataStructure->sValue.at(i) << "\t" <<
 						internalLoggedDataStructure->dTime.at(i) << "\n";
 		}
 		file.close();

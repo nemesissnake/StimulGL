@@ -16,6 +16,7 @@ class ExperimentLogger : public QObject
 		QList<QString> sFunction;
 		QList<QString> sTag;
 		QList<QString> sMessage;
+		QList<QString> sValue;
 		QList<double> dTime;
 	} LoggedData;
 
@@ -28,7 +29,7 @@ public:
 	double restartTimer(int nIndex);
 	double elapsedTimerTime(int nIndex);
 
-	bool setLogVars(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction = "", const QString &strTag = "", const QString &strMessage = "");
+	bool setLogVars(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction = "", const QString &strTag = "", const QString &strMessage = "",const QString &strValue = "");
 	//bool getLogVars(QString &strWho, QString &strWhen, QString &strWhere);
 	bool WriteToOutput(const QString &fileName);
 	void Test();

@@ -71,7 +71,7 @@ public slots:
 	bool getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString &sValue);
 	bool setExperimentObjectBlockParameterStructure(const int nObjectID, QHash<QString, QString> *expBlockTrialStruct);
 	
-	bool logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction = "", const QString &strTag = "", const QString &strMessage = "");
+	bool logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction = "", const QString &strTag = "", const QString &strMessage = "", const QString &strValue = "");
 	int createExperimentTimer();
 	bool startExperimentTimer(int nIndex);
 	double restartExperimentTimer(int nIndex);

@@ -367,7 +367,7 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 
 bool RetinoMap_glwidget::initObject()
 {
-	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","swapInterval() = " + QString::number(this->format().swapInterval()));
+	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
 	parseExperimentObjectBlockParameters(true);
 	return true;
 }
@@ -522,6 +522,8 @@ void RetinoMap_glwidget::initializeMovingDotsStructures()
 
 bool RetinoMap_glwidget::paintObject(QObject *paintEventObject)
 {
+	if(isDebugMode())
+		currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","Starting to paint the object");
 	QPaintEvent *event = reinterpret_cast<QPaintEvent *>(paintEventObject);//qobject_cast<QPaintEvent *>(paintEventObject);
 	bool bRenderStimuli = true;
 	QString tmpStr = "";
@@ -572,7 +574,7 @@ bool RetinoMap_glwidget::paintObject(QObject *paintEventObject)
 					else
 						tmpStr = tmpStr + QString(",") + randEmptyStimGenerator->at(j);
 				}
-				currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","EmptyRandomList = " + tmpStr);
+				currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","EmptyRandomList = ",tmpStr);
 			}
 			emptyTriggerStepCount = emptyTriggerSteps;
 		}
@@ -596,7 +598,7 @@ bool RetinoMap_glwidget::paintObject(QObject *paintEventObject)
 				else
 					tmpStr = tmpStr + QString(",") + randStimStateGenerator->at(j);
 			}
-			currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","StimRandomList = " + tmpStr);
+			currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","StimRandomList = ",tmpStr);
 		}	
 		if (discreteTriggerSteps)
 		{	
@@ -1424,6 +1426,8 @@ bool RetinoMap_glwidget::paintObject(QObject *paintEventObject)
 	//	//emit LogExpObjData(nRetinoID,0,"paintEvent():painter.end()2");//0 is the default experiment timer
 	//}
 	nextNewCycleEntered = false;
+	if(isDebugMode())
+		currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","Finished painting the object");
 	return true;
 }
 
