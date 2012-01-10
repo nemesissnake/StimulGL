@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE EXML>
+<!-- 
+This is a comment example
+Place you own text here..
+Attributes only apply to readonly non user data, like the ID
+-->
+<EXML version="1.0.0.0">
+    <defines>
+			<experiment ID="0">
+				<name>Retinotopic Mapping Experiment with the use of a QTimer</name>
+				<debugmode>true</debugmode>
+			</experiment>
+		</defines>
+		
+    <declarations>
+    
+        <object ID="0">
+            <class>ParallelPort</class>
+            <name>ParallelPort_Object_1</name>
+            <constructor>
+                <param1/>
+            </constructor>
+        </object>    
+<!--
+
+        <object ID="0">
+            <class>TriggerTimer</class>
+            <name>Timer_Object_1</name>
+            <constructor>
+                <param1/>
+            </constructor>
+        </object>
+-->
+        <object ID="1">            
+            <class>RetinoMap_glwidget</class>
+            <name>RetinoMap_RenderWidgetGL</name>
+            <constructor>
+                <param1/>
+            </constructor>
+        </object> 
+    </declarations>
+    
+    <connections>
+ 
+        <object ID="0">
+        	<type>signal</type>
+        	<signature>CaptureThreadTriggered(short)</signature>
+          <target ID="1">
+          	<type>slot</type>     
+          	<signature>incrementTrigger()</signature>      
+          </target>
+        </object>
+<!--        
+
+
+        <object ID="0">
+        	<type>signal</type>
+        	<signature>timeout()</signature>
+          <target ID="1">
+          	<type>slot</type>     
+          	<signature>incrementTrigger()</signature>      
+          </target>
+        </object>
+-->
+    </connections>
+    
+    <initializations>
+       
+    
+        <object ID="0">
+        	<type>slot</type>
+        	<signature>StartCaptureThread</signature>
+        	<parameters>
+		      	<parameter ID="0">
+		        	<name>baseAddress</name>
+		        	<value>4369</value>
+		        	<type>const short</type>
+		        </parameter>
+		        <parameter ID="1">
+		        	<name>mask</name>
+		        	<value>32</value>
+		        	<type>const short</type>		        	
+						</parameter>		        	
+		        <parameter ID="2">	 	
+		        	<name>method</name>
+		        	<value>2</value>	 
+		        	<type>const short</type>		        	       	
+		        </parameter>
+		        <parameter ID="3">	      	
+		        	<name>postLHDelay</name>
+		        	<value>100</value>
+		        	<type>const int</type>		        	
+		        </parameter>       	
+		        <parameter ID="4">    	
+		        	<name>postHLDelay</name>
+		        	<value>100</value>	
+		        	<type>const int</type>		        	        	
+		        </parameter>        	
+        	</parameters>
+        </object>  
+<!-- 
+     
+        <object ID="0">
+        	<type>slot</type>
+        	<signature>startTimer</signature>
+        	<parameters>
+		      	<parameter ID="0">
+		        	<name>msec</name>
+		        	<value>200</value>
+		        	<type>double</type>
+		        </parameter>  	
+        	</parameters>
+        </object>
+--> 
+    </initializations>        
+     
+    <actions>
+    	<blocks>
+
+<!--																																												***** RUN 0 *****     -->
+
+		   	<block ID="0">
+	        <name>Fixation_Block</name>
+	        <block_number>0</block_number>            
+	        <nr_of_trials>1</nr_of_trials>
+	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <object ID="1">
+	        	<parameters>
+			        <parameter ID="0">
+			        	<name>RetinoPattern</name>
+			        	<value>fixation</value>
+			        </parameter>
+			        <parameter ID="1">
+			        	<name>ShowFixPoint</name>
+			        	<value>true</value>
+			        </parameter>
+			        <parameter ID="2">
+			        	<name>TriggerDuration</name>
+			        	<value>200</value>
+			        </parameter>
+			        <parameter ID="3">
+			        	<name>OutputTriggerFrame</name>
+			        	<value>false</value>
+			        </parameter>
+			        <parameter ID="4">
+			        	<name>OutputFrameType</name>
+			        	<value>Mask</value>
+			        </parameter>			        			        	        			        
+			        <parameter ID="5">
+			        	<name>AntiAliasing</name>
+			        	<value>true</value>
+			        </parameter>	
+			        <parameter ID="6">   	
+			        	<name>StimulusWidthSpan</name>
+			        	<value>768</value>
+			        </parameter>	
+			        <parameter ID="7">     	
+			        	<name>StimulusHeightSpan</name>
+			        	<value>768</value>	
+			        </parameter>
+			        <parameter ID="8">
+			        	<name>OutputFrameFormat</name>
+			        	<value>PNG</value>
+			        </parameter>
+			        <parameter ID="10">
+			        	<name>FixationSize</name>
+			        	<value>8</value>
+			        </parameter>	
+			        <parameter ID="11">
+			        	<name>CycleTriggerAmount</name>
+			        	<value>1</value>
+			        </parameter>	
+			        <parameter ID="12">
+			        	<name>DisplayRefreshRate</name>
+			        	<value>60</value>
+			        </parameter>			        
+			    	</parameters>    
+		    	</object>   
+	    	</block>
+	    		    	
+	    
+<!--																																												*****  END  *****     -->
+	    	    	
+    	</blocks>
+    </actions>
+    
+    <finalizations>
+<!--
+        <object ID="0">
+        	<type>slot</type>
+        	<signature>stopTimer</signature>
+        </object>
+-->
+        <object ID="0">
+        	<type>slot</type>
+        	<signature>StopCaptureThread</signature>
+        </object>
+
+    </finalizations>    
+
+</EXML>

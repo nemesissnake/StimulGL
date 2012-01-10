@@ -90,10 +90,11 @@ enum RetinoMapOutputFormat //The output format
 enum RetinoMapExperimentType //The state of the main experiment object
 {
 	RetinoMap_Fixation		= 0,
-	RetinoMap_PolarAngle	= 1,
-	RetinoMap_Eccentricity	= 2,
-	RetinoMap_MovingBar		= 3,
-	RetinoMap_MovingDots	= 4
+	RetinoMap_LockedState	= 1,
+	RetinoMap_PolarAngle	= 2,
+	RetinoMap_Eccentricity	= 3,
+	RetinoMap_MovingBar		= 4,
+	RetinoMap_MovingDots	= 5
 };
 
 typedef struct{
@@ -118,7 +119,7 @@ public slots:
 	bool setObjectConfiguration(QObject *pExpConfStruct = NULL);//ExperimentConfiguration *pExpConfStruct = NULL);
 	bool setObjectID(int nObjID);
 	bool initObjectBlockTrial();
-	bool paintObject(QObject *paintEventObject = NULL);
+	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
 
 private:
 	void initialize();
@@ -155,7 +156,7 @@ private:
 	bool antiAliasing;							//Defines whether the anti-aliasing filter should be used for painting to the screen
 	int lastTriggerNumber;						//To keep track of the last trigger number
 	int emptyTriggerSteps;						//Defines the number of Trigger steps in which no stimuli should be presented
-
+	bool bNoChangesSinceLastFrame;
 	ExperimentSnapshotStructure expSnapshot;
 
 	QColor dotColor;
@@ -236,8 +237,8 @@ private:
 	QPixmap *StimulusResultImageFrame;
 	QPixmap *StimulusActivationMap;
 	QPainter *activationPainter;
-	QPainter stimuliPainter;
-	QPainter imgPainter;
+	QPainter *stimuliPainter;
+	QPainter *imgPainter;
 	ExperimentConfiguration *currExpConfStruct;
 	RandomGenerator *randStimStateGenerator;		//To hold the Stimuli Trigger Step
 	RandomGenerator *randEmptyStimGenerator;		//To hold the Empty Block Trials

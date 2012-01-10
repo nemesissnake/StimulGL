@@ -13,6 +13,16 @@
 #include "Global.h"
 #include "ExperimentTimer.h"
 
+enum GLWidgetPaintFlags //An optional paint flag that can be forwarded to the FUNC_PAINTOBJECT_FULL routine 
+{
+	GLWidgetPaintFlags_NoFlag		= 0,
+	GLWidgetPaintFlags_LockedState	= 1,
+	GLWidgetPaintFlags_Reserved1	= 2, //This one is reserved for future implementation
+	GLWidgetPaintFlags_Reserved2	= 4, //This one is reserved for future implementation
+	GLWidgetPaintFlags_Reserved3	= 8, //This one is reserved for future implementation
+	GLWidgetPaintFlags_Reserved4	= 16 //This one is reserved for future implementation
+};
+
 class QPaintEvent;
 class QWidget;
 class ContainerDlg;
@@ -129,6 +139,7 @@ private:
 	ExperimentConfiguration *pExpConf;
 	ExperimentTimer expTrialTimer;
 	const QMetaObject* thisMetaObject;
+	QPainter *lockedPainter;
 };
 
 class ContainerDlg : public QDialog

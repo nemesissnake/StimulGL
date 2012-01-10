@@ -17,6 +17,7 @@ ppGenerateThread::ppGenerateThread(short baseAddress, GenerationMethod method, s
 
 ppGenerateThread::~ppGenerateThread()
 {
+	this->stop();
 	if (portDev)
 	{
 		delete portDev;
@@ -26,11 +27,29 @@ ppGenerateThread::~ppGenerateThread()
 
 void ppGenerateThread::stop()
 {
-	abortRunning = true;
+	if (isRunning)
+	{
+		//this->terminate();
+		abortRunning = true;
+		int nRetries = 25;
+		while (isRunning && (nRetries > 0))
+		{
+			QThread::msleep(1);
+			nRetries--;
+		}
+		QThread::msleep(0);//Just to let the other thread completely finish
+		QThread::msleep(0);//Just to let the other thread completely finish
+		//if (nRetries > 0)
+		//{
+		//couldn't stop the thread, should we implement a false boolean return so that TerminateThread can be called?
+		//}		
+	}	
 }
 
 void ppGenerateThread::run()
 {
+	isRunning = true;
+
 	short currentValue;
 	short newActiveMaskedValue;
 	short newInActiveMaskedValue;
@@ -38,7 +57,6 @@ void ppGenerateThread::run()
 
 	currentValue = portDev->PortRead();
 	newActiveMaskedValue = ((currentValue & (255 - nOutputMask)) | (nActiveValue & nOutputMask));
-	isRunning = true;
 	emit generateThreadStarted(	QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	
 	switch (dMethod)
@@ -95,7 +113,7 @@ void ppGenerateThread::run()
 	}
 
 	abortRunning = false;
-	isRunning = false;
 	emit generateThreadStopped(	QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
+	isRunning = false;
 	return;
 }

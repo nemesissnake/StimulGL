@@ -50,7 +50,7 @@ bool ExperimentLogger::WriteToOutput(const QString &fileName)
 		if (!file.open(QFile::WriteOnly | QFile::Text | QIODevice::Truncate)) 
 			return false;
 		QTextStream out(&file);//QDataStream
-		out << "Object" << "\t" << "Timer" << "\t" << "Function" << "\t" << "Tag" << "\t" << "Message" << "\t" << "Value" << "\n" << "Time" << "\n";
+		out << "Object" << "\t" << "Timer" << "\t" << "Function" << "\t" << "Tag" << "\t" << "Message" << "\t" << "Value" << "\t" << "Time" << "\n";
 		int nCount = 0;
 		nCount = internalLoggedDataStructure->nObject.count();
 		if(nCount > 0)

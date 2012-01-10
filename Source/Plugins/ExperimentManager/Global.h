@@ -119,7 +119,7 @@ typedef struct{
 
 //typedef QHash<QString, QString> ExperimentBlockParameterStructure;
 #define FUNC_PAINTOBJECT						"paintObject"
-#define FUNC_PAINTOBJECT_FULL					"paintObject(QObject *)"
+#define FUNC_PAINTOBJECT_FULL					"paintObject(int,QObject *)"
 #define FUNC_SETOBJECTID						"setObjectID"
 #define FUNC_SETOBJECTID_FULL					"setObjectID(int)"
 #define FUNC_INITOBJECT							"initObject"

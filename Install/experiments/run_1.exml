@@ -9,7 +9,7 @@ Attributes only apply to readonly non user data, like the ID
     <defines>
 			<experiment ID="0">
 				<name>Retinotopic Mapping Experiment with the use of a QTimer</name>
-				<debugmode>false</debugmode>
+				<debugmode>true</debugmode>
 			</experiment>
 		</defines>
 		
@@ -170,7 +170,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>	
 			        <parameter ID="12">
 			        	<name>DisplayRefreshRate</name>
-			        	<value>30</value>
+			        	<value>60</value>
 			        </parameter>			        
 			    	</parameters>    
 		    	</object>   

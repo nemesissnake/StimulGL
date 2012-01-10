@@ -3,11 +3,22 @@
 ParallelPort::ParallelPort(short BaseAddress, QObject *parent) : QObject(parent)
 {
 	nBaseAddress = BaseAddress;
+	generateThread = NULL;
+	captureThread = NULL;
 }
 
 ParallelPort::~ParallelPort()
 {
-
+	if (captureThread)
+	{
+		delete captureThread;
+		captureThread = NULL;
+	}
+	if (generateThread)
+	{
+		delete generateThread;
+		generateThread = NULL;
+	}
 }
 
 void ParallelPort::setBaseAddress( short BaseAddress )

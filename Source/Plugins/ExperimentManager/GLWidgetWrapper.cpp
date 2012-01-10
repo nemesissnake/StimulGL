@@ -9,6 +9,7 @@
 GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 {
 	init();
+	lockedPainter = NULL;
 	thisMetaObject = NULL;
 	stimContainerDlg = NULL;
 	pExpBlockTrialDomNodeList = NULL;
@@ -30,6 +31,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 
 	stimContainerDlg = new ContainerDlg();
 	stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
+	stimContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
 	stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool Retinotopic_Mapping::eventFilter(QObject *target, QEvent *event)
 	mainLayout = NULL;
 	nObjectID = -1;
@@ -60,6 +62,11 @@ GLWidgetWrapper::~GLWidgetWrapper()
 	{
 		delete ExpBlockParams;
 		ExpBlockParams = NULL;
+	}
+	if (lockedPainter)
+	{
+		delete lockedPainter;
+		lockedPainter = NULL;
 	}
 	cleanupExperimentBlockTrialStructure();
 	changeSubObjectState(Experiment_SubObject_Stopped);
@@ -594,7 +601,12 @@ void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 	mainLayout->addWidget(layoutWidget);
 	stimContainerDlg->setLayout(mainLayout);
 	//if(m_RunFullScreen)
+	//stimContainerDlg->setWindowModality(true);
 		stimContainerDlg->showFullScreen();
+
+		//stimContainerDlg->raise();
+		//stimContainerDlg->activateWindow();
+		//stimContainerDlg->repaint();
 	//else
 	//	stimContainerDlg->show();
 }
@@ -607,6 +619,21 @@ bool GLWidgetWrapper::startExperimentObject()
 		stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
 		return false;
 	}
+	//else
+	//{
+	//	QGLFormat newFormat;
+	//	newFormat.setDoubleBuffer(false);
+	//	this->setFormat(newFormat);
+	//	if(this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
+	//	{
+	//		bool a = true;
+	//	}
+	//	else
+	//	{
+	//		bool b = true;
+	//	}
+	//}
+
 	pExpConf->pExperimentManager->startExperimentTimer(nFrameTimerIndex);//Starts the Frame timer
 	pExpConf->pExperimentManager->startExperimentTimer(nTrialTimerIndex);//Starts the Trial timer
 	checkForNextBlockTrial();
@@ -622,6 +649,10 @@ bool GLWidgetWrapper::startExperimentObject()
 			}		
 		}
 	}
+	//if (stimContainerDlg->isActiveWindow() == false)
+	//{
+		//stimContainerDlg->activateWindow();
+	//}	
 	return true;
 }
 
@@ -740,17 +771,25 @@ bool GLWidgetWrapper::abortExperimentObject()
 
 void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 {
+	int nPaintFlags;
 	if(isDebugMode())
 		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Starting to paint the widget");
 	if (bCurrentSubObjectIsLocked == false)
 	{
-		bool bRetVal = false;
+		nPaintFlags = (int)GLWidgetPaintFlags_NoFlag;
+	//}
+	//else
+	//{
+	//	nPaintFlags = (int)GLWidgetPaintFlags_LockedState;
+	//}
+
+		bool bRetVal = false;		
 		if (thisMetaObject)
 		{
 			if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PAINTOBJECT_FULL)) == -1))//Is the slot present?
 			{
 				//Invoke the slot
-				if(!(thisMetaObject->invokeMethod(this, FUNC_PAINTOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QObject*, (QObject*)event))))
+				if(!(thisMetaObject->invokeMethod(this, FUNC_PAINTOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int,nPaintFlags),Q_ARG(QObject*, (QObject*)event))))
 				{
 					qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_PAINTOBJECT_FULL << ")!";		
 				}		
@@ -759,27 +798,61 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 	}
 	else
 	{
-		QPainter lockedPainter(this);
+		if(isDebugMode()) 
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Starting to paint the initial widget");
+		//Above is fast when(step 1 is slow):
+		//QPainter lockedPainter(this);
+		
+		//QPainter lockedPainter;
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","pre Step 1");
+
+		if (lockedPainter == NULL)
+		{
+			//makeCurrent();
+			lockedPainter = new QPainter(this);//Constructor automatically calls begin()
+		}
+		else
+		{
+			lockedPainter->begin(this);
+		}
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 1");
+
 		QFont textFont("arial", 22, QFont::Bold, false);
 		QString strText;
 		if (bCurrentSubObjectReadyToUnlock == false)
 			strText = "Experiment ready, press 'Alt' to proceed";
 		else
 			strText = "Waiting for a trigger to start...";
-		//lockedPainter.begin(this);
-		const QRectF windowRect = lockedPainter.window();
+		//lockedPainter->begin(this);
+		const QRectF windowRect = lockedPainter->window();
+
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 2");
+
 		const int nBorder = 25;
 		QPainterPath textPath;
 		textPath.addText(0,0,textFont,strText);
 		const QRectF textPathRect = textPath.boundingRect();
-		lockedPainter.setRenderHint(QPainter::Antialiasing);
-		lockedPainter.fillRect(windowRect,QColor(87,87,87));
-		lockedPainter.setWindow ( textPathRect.x() - nBorder , textPathRect.y() - (windowRect.height()/2) , textPathRect.width() + (nBorder*2) , windowRect.height());//translate text rect to rect window button
-		lockedPainter.setPen(Qt::NoPen);
-		lockedPainter.setBrush(Qt::white);
-		lockedPainter.drawPath(textPath);
-		//tmpMatrix = lockedPainter.deviceMatrix();
-		lockedPainter.end();
+		lockedPainter->setRenderHint(QPainter::Antialiasing);
+		lockedPainter->fillRect(windowRect,QColor(87,87,87));
+
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 3");
+
+		lockedPainter->setWindow ( textPathRect.x() - nBorder , textPathRect.y() - (windowRect.height()/2) , textPathRect.width() + (nBorder*2) , windowRect.height());//translate text rect to rect window button
+		lockedPainter->setPen(Qt::NoPen);
+		lockedPainter->setBrush(Qt::white);
+		lockedPainter->drawPath(textPath);
+
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 4");
+
+		//tmpMatrix = lockedPainter->deviceMatrix();
+		lockedPainter->end();
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Finished painting the initial widget");
 		
 	}
 	if(isDebugMode())
@@ -809,6 +882,7 @@ void GLWidgetWrapper::incrementTrigger()
 
 void GLWidgetWrapper::initBlockTrial()
 {
+	//stimContainerDlg->activateWindow();
 	bForceToStop = false;
 	bExperimentShouldStop = false;
 //#ifdef Q_WS_MACX
@@ -850,6 +924,7 @@ void GLWidgetWrapper::initBlockTrial()
 
 bool GLWidgetWrapper::checkForNextBlockTrial()
 {
+	//stimContainerDlg->activateWindow();
 	if ((bForceToStop)||(bExperimentShouldStop))
 		return false;	
 	bool goToNextBlockTrial = false;
@@ -910,7 +985,8 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 		}
 		else
 		{
-			//tStimTimer.singleShot(1, this, SLOT(repaint()));
+			//QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
+			tStimTimer.singleShot(1, this, SLOT(repaint()));
 		}
 		expTrialTimer.restart();
 		mutExpSnapshot.unlock();

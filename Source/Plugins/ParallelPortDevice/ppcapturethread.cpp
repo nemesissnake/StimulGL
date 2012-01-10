@@ -15,6 +15,7 @@ ppCaptureThread::ppCaptureThread(short baseAddress, short mask, DetectionMethod 
 
 ppCaptureThread::~ppCaptureThread()
 {
+	this->stop();
 	if (portDev)
 	{
 		delete portDev;
@@ -24,11 +25,29 @@ ppCaptureThread::~ppCaptureThread()
 
 void ppCaptureThread::stop()
 {
-	abortRunning = true;
+	if (isRunning)
+	{
+		//this->terminate();
+		abortRunning = true;
+		int nRetries = 25;
+		while (isRunning && (nRetries > 0))
+		{
+			QThread::msleep(1);
+			nRetries--;
+		}
+		QThread::msleep(0);//Just to let the other thread completely finish
+		QThread::msleep(0);//Just to let the other thread completely finish
+		//if (nRetries > 0)
+		//{
+			//couldn't stop the thread, should we implement a false boolean return so that TerminateThread can be called?
+		//}		
+	}	
 }
 
 void ppCaptureThread::run()
 {
+	isRunning = true;
+	
 	short currentValue;
 	short oldValue;
 	QString result = "";
@@ -38,7 +57,6 @@ void ppCaptureThread::run()
 
 	currentValue = (portDev->PortRead() & nMask);
 	oldValue = currentValue;
-	isRunning = true;
 	emit recieveThreadStarted(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	switch (dMethod)
 	{
@@ -65,7 +83,8 @@ void ppCaptureThread::run()
 				}
 				oldValue = currentValue;
 			}
-			currentValue = (portDev->PortRead() & nMask);
+			if (abortRunning==false)
+				currentValue = (portDev->PortRead() & nMask);
 		} while (abortRunning==false);
 		break;	
 	case MaskedValueChangedHigh :
@@ -81,7 +100,8 @@ void ppCaptureThread::run()
 				}
 				oldValue = currentValue;
 			}
-			currentValue = (portDev->PortRead() & nMask);
+			if (abortRunning==false)
+				currentValue = (portDev->PortRead() & nMask);
 		} while (abortRunning==false);
 		break;
 	case MaskedValueChangedLow :
@@ -97,15 +117,16 @@ void ppCaptureThread::run()
 				}
 				oldValue = currentValue;
 			}
-			currentValue = (portDev->PortRead() & nMask);
+			if (abortRunning==false)
+				currentValue = (portDev->PortRead() & nMask);
 		} while (abortRunning==false);
 		break;
 	default :
 		break;	
 	}
-	abortRunning = false;
-	isRunning = false;
+	abortRunning = false;	
 	emit recieveThreadStopped(	QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
+	isRunning = false;
 	return;
 }
 
