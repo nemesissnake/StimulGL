@@ -5,16 +5,17 @@ This is a comment example
 Place you own text here..
 Attributes only apply to readonly non user data, like the ID
 -->
+
 <EXML version="1.0.0.0">
     <defines>
 			<experiment ID="0">
 				<name>Retinotopic Mapping Experiment with the use of a QTimer</name>
-				<debugmode>true</debugmode>
+				<debugmode>false</debugmode>
 			</experiment>
 		</defines>
 		
     <declarations>
-    
+<!--    
         <object ID="0">
             <class>ParallelPort</class>
             <name>ParallelPort_Object_1</name>
@@ -22,8 +23,7 @@ Attributes only apply to readonly non user data, like the ID
                 <param1/>
             </constructor>
         </object>    
-<!--
-
+-->
         <object ID="0">
             <class>TriggerTimer</class>
             <name>Timer_Object_1</name>
@@ -31,7 +31,7 @@ Attributes only apply to readonly non user data, like the ID
                 <param1/>
             </constructor>
         </object>
--->
+
         <object ID="1">            
             <class>RetinoMap_glwidget</class>
             <name>RetinoMap_RenderWidgetGL</name>
@@ -42,7 +42,7 @@ Attributes only apply to readonly non user data, like the ID
     </declarations>
     
     <connections>
- 
+<!-- 
         <object ID="0">
         	<type>signal</type>
         	<signature>CaptureThreadTriggered(short)</signature>
@@ -51,9 +51,7 @@ Attributes only apply to readonly non user data, like the ID
           	<signature>incrementTrigger()</signature>      
           </target>
         </object>
-<!--        
-
-
+-->
         <object ID="0">
         	<type>signal</type>
         	<signature>timeout()</signature>
@@ -62,19 +60,17 @@ Attributes only apply to readonly non user data, like the ID
           	<signature>incrementTrigger()</signature>      
           </target>
         </object>
--->
     </connections>
     
-    <initializations>
-       
-    
+    <initializations>       
+<!--    
         <object ID="0">
         	<type>slot</type>
         	<signature>StartCaptureThread</signature>
         	<parameters>
 		      	<parameter ID="0">
 		        	<name>baseAddress</name>
-		        	<value>4369</value>
+		        	<value>889</value>
 		        	<type>const short</type>
 		        </parameter>
 		        <parameter ID="1">
@@ -98,9 +94,8 @@ Attributes only apply to readonly non user data, like the ID
 		        	<type>const int</type>		        	        	
 		        </parameter>        	
         	</parameters>
-        </object>  
-<!-- 
-     
+        </object>   
+-->     
         <object ID="0">
         	<type>slot</type>
         	<signature>startTimer</signature>
@@ -112,19 +107,17 @@ Attributes only apply to readonly non user data, like the ID
 		        </parameter>  	
         	</parameters>
         </object>
---> 
+ 
     </initializations>        
      
     <actions>
     	<blocks>
 
-<!--																																												***** RUN 0 *****     -->
-
 		   	<block ID="0">
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -173,30 +166,113 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>	
 			        <parameter ID="12">
 			        	<name>DisplayRefreshRate</name>
-			        	<value>60</value>
+			        	<value>30</value>
 			        </parameter>			        
 			    	</parameters>    
 		    	</object>   
 	    	</block>
-	    		    	
-	    
-<!--																																												*****  END  *****     -->
-	    	    	
+	    	
+	    	<block ID="1">
+	        <name>PolarAngle_Block</name>
+	        <block_number>1</block_number>            
+	        <nr_of_trials>3</nr_of_trials>
+	        <nr_of_triggers>72</nr_of_triggers>
+	        <object ID="1">
+	        	<parameters>
+			        <parameter ID="0">
+			        	<name>ShowFixPoint</name>
+			        	<value>true</value>
+			        </parameter>	        	
+			        <parameter ID="1">
+			        	<name>CycleTriggerAmount</name>
+			        	<value>12</value>
+			        </parameter>
+			        <parameter ID="2">
+			        	<name>EmptyTriggerSteps</name>
+			        	<value>3</value>
+			        </parameter>			        
+			        <parameter ID="3">
+			        	<name>PolarWedgeSpan</name>
+			        	<value>30</value>
+							</parameter>		        	
+			        <parameter ID="4">	 	
+			        	<name>PolarCheckAmount</name>
+			        	<value>5</value>	        	
+			        </parameter>
+			        <parameter ID="5">	      	
+			        	<name>PolarRingAmount</name>
+			        	<value>10</value>
+			        </parameter>       	
+			        <parameter ID="6">    	
+			        	<name>PolarRotationDirection</name>
+			        	<value>1</value>	        	
+			        </parameter>
+			        <parameter ID="7">   
+			        	<name>FlickrFrequency</name>
+			        	<value>7.5</value>
+			        </parameter>	        	
+			        <parameter ID="8">	    	
+			        	<name>CorticalMagnitudeFactor</name>
+			        	<value>0</value>	        	
+			        </parameter> 
+			        <parameter ID="9">
+			        	<name>RetinoPattern</name>
+			        	<value>PolarAngle</value>
+			        </parameter>	
+			        <parameter ID="10">
+			        	<name>GapDiameter</name>
+			        	<value>0</value>
+			        </parameter>
+	    				<parameter ID="11">
+			        	<name>DiscreteTriggerSteps</name>
+			        	<value>true</value>
+			        </parameter>			        
+			        <parameter ID="12">
+			        	<name>RandomizeTriggerSteps</name>
+			        	<value>false</value>
+			        </parameter>			                
+			        <parameter ID="12">
+			        	<name>DisableCortMagFac</name>
+			        	<value>true</value>
+			        </parameter>
+			    	</parameters>			    	 
+		    	</object>   
+	    	</block>	    	
+	    	
+		   	<block ID="2">
+	        <name>Fixation_Block</name>
+	        <block_number>2</block_number>            
+	        <nr_of_trials>1</nr_of_trials>
+	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <object ID="1">
+	        	<parameters>
+			        <parameter ID="0">
+			        	<name>RetinoPattern</name>
+			        	<value>fixation</value>
+			        </parameter>
+			        <parameter ID="1">
+			        	<name>ShowFixPoint</name>
+			        	<value>true</value>
+			        </parameter>
+			    	</parameters>    
+		    	</object>   
+	    	</block>	
+ 	
     	</blocks>
     </actions>
     
     <finalizations>
-<!--
+
         <object ID="0">
         	<type>slot</type>
         	<signature>stopTimer</signature>
         </object>
--->
+<!--
         <object ID="0">
         	<type>slot</type>
         	<signature>StopCaptureThread</signature>
         </object>
-
+-->
     </finalizations>    
 
 </EXML>

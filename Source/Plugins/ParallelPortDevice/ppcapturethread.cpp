@@ -84,7 +84,11 @@ void ppCaptureThread::run()
 				oldValue = currentValue;
 			}
 			if (abortRunning==false)
+			{
+				QThread::msleep(1);
+				QThread::msleep(1);			
 				currentValue = (portDev->PortRead() & nMask);
+			}
 		} while (abortRunning==false);
 		break;	
 	case MaskedValueChangedHigh :
@@ -101,7 +105,11 @@ void ppCaptureThread::run()
 				oldValue = currentValue;
 			}
 			if (abortRunning==false)
+			{
+				QThread::msleep(1);
+				QThread::msleep(1);
 				currentValue = (portDev->PortRead() & nMask);
+			}
 		} while (abortRunning==false);
 		break;
 	case MaskedValueChangedLow :
@@ -118,7 +126,11 @@ void ppCaptureThread::run()
 				oldValue = currentValue;
 			}
 			if (abortRunning==false)
+			{
+				QThread::msleep(1);
+				QThread::msleep(1);			
 				currentValue = (portDev->PortRead() & nMask);
+			}
 		} while (abortRunning==false);
 		break;
 	default :

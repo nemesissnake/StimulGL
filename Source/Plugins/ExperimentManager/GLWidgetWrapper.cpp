@@ -800,13 +800,8 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 	{
 		if(isDebugMode()) 
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Starting to paint the initial widget");
-		//Above is fast when(step 1 is slow):
-		//QPainter lockedPainter(this);
-		
-		//QPainter lockedPainter;
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","pre Step 1");
-
+		//if(isDebugMode())
+		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","pre Step 1");
 		if (lockedPainter == NULL)
 		{
 			//makeCurrent();
@@ -816,9 +811,8 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 		{
 			lockedPainter->begin(this);
 		}
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 1");
-
+		//if(isDebugMode())
+		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 1");
 		QFont textFont("arial", 22, QFont::Bold, false);
 		QString strText;
 		if (bCurrentSubObjectReadyToUnlock == false)
@@ -827,32 +821,26 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 			strText = "Waiting for a trigger to start...";
 		//lockedPainter->begin(this);
 		const QRectF windowRect = lockedPainter->window();
-
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 2");
-
+		//if(isDebugMode())
+		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 2");
 		const int nBorder = 25;
 		QPainterPath textPath;
 		textPath.addText(0,0,textFont,strText);
 		const QRectF textPathRect = textPath.boundingRect();
 		lockedPainter->setRenderHint(QPainter::Antialiasing);
 		lockedPainter->fillRect(windowRect,QColor(87,87,87));
-
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 3");
-
+		//if(isDebugMode())
+		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 3");
 		lockedPainter->setWindow ( textPathRect.x() - nBorder , textPathRect.y() - (windowRect.height()/2) , textPathRect.width() + (nBorder*2) , windowRect.height());//translate text rect to rect window button
 		lockedPainter->setPen(Qt::NoPen);
 		lockedPainter->setBrush(Qt::white);
 		lockedPainter->drawPath(textPath);
-
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 4");
-
+		//if(isDebugMode())
+		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 4");
 		//tmpMatrix = lockedPainter->deviceMatrix();
 		lockedPainter->end();
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Finished painting the initial widget");
+		//if(isDebugMode())
+		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Finished painting the initial widget");
 		
 	}
 	if(isDebugMode())
@@ -865,7 +853,7 @@ void GLWidgetWrapper::incrementTrigger()
 	if (bCurrentSubObjectIsLocked == false)
 	{
 		nCurrentExperimentReceivedTriggers++;
-		if(isDebugMode())
+		//if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Triggered!, Received="),QString::number(nCurrentExperimentReceivedTriggers));
 	}
 	else
@@ -1153,6 +1141,8 @@ void GLWidgetWrapper::finalizePaintEvent()
 	{
 		if (dCurrentTime > (dFramePeriodTime*1.5f))
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took too long(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")",QString::number(dCurrentTime));
+		else if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")",QString::number(dCurrentTime));
 	}
 	mutExpSnapshot.unlock(); 
 	//QMetaObject::invokeMethod( this, "proceedPaintEventLoop",Qt::QueuedConnection);

@@ -51,9 +51,9 @@
 //MovingBar specific defines
 #define RETINOMAP_WIDGET_MOVINGBAR_ANGLE				"movingbarangle" 
 #define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE				"movingbarcoverage"
+#define RETINOMAP_WIDGET_MOVINGBAR_HEIGHT				"movingbarheight"
 #define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION			"movingbardirection"
 #define RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR			"movingbarincludeoppositedirection"
-#define RETINOMAP_WIDGET_MOVINGBAR_WIDTH_CHECK_AMOUNT	"movingbarwidthcheckamount"
 #define RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT	"movingbarheightcheckamount"
 //MovingDots specific defines
 #define	RETINOMAP_WIDGET_MOVINGDOTS_MOVESPEED			"movingdotsmovespeed"
@@ -140,8 +140,8 @@ private:
 	QColor blackColor;							//The color used for the activation map (inactive)
 	QString textContent;						//Variable to store the text string
 	QRectF rectScreenRes;						//The screen resolution
-	int flickrThreshold;						//Variable for keeping track of the next flickr switch threshold time
-	int flickrSpeedFreq;						//The flickr speed frequency
+	float flickrThreshold;						//Variable for keeping track of the next flickr switch threshold time
+	float flickrSpeedFreq;						//The flickr speed frequency
 	int flickrSwitch;							//Variable to store the current flickr state
 	int cycleTriggerAmount;						//The total block duration in amount of triggers
 	int triggerDurationMsec;					//The duration of one trigger in mSec
@@ -206,6 +206,7 @@ private:
 	//MovingBar
 	float movingBarAngle;
 	float movingBarCoverage;
+	float movingBarHeight;
 	int movingBarWidthCheckAmount;
 	int movingBarHeightCheckAmount;
 	int movingBarDirection;

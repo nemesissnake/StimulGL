@@ -25,20 +25,13 @@ function ExperimentStateChanged()
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
 ExperimentManagerObj.WriteToLogOutput.connect(this, this.Log);
-ExperimentManagerObj.openExperiment("D:/Projects/StimulGL/Install/experiments/run_1_triggered.exml",false);//test  run_1 "D:\\Projects\\StimulGL\\Install\\examples\\retino_mapping_timer.exml", false);//retino_mapping_movdots_timer.exml, retino_mapping_polar_timer, retino_mapping_movbar_timer.exml
+ExperimentManagerObj.openExperiment("D:/Projects/StimulGL/Install/experiments/test.exml",false);//test  run_1 "D:\\Projects\\StimulGL\\Install\\examples\\retino_mapping_timer.exml", false);//retino_mapping_movdots_timer.exml, retino_mapping_polar_timer, retino_mapping_movbar_timer.exml
 ExperimentManagerObj.runExperiment();
 
-
-
-
-//ExperimentStateHasChanged(Experiment_Stopped);
-
-//
-//ExperimentManagerObj.saveExperiment("C:\\Users\\John\\Desktop\\experiment_example1.exml");
-//ExperimentManagerObj.animate();
-//ExperimentManagerObj.startAnimationTimer(100);
-//ExperimentManagerObj = null;
-//ExperimentManagerObj.runExperiment();
-//var a = new QGLWidget();
-
-
+//test.exml
+//Polar1.exml
+//Polar2.exml
+//Eccentricity1.exml
+//Eccentricity2.exml
+//MovingBar1.exml
+//MovingBar2.exml

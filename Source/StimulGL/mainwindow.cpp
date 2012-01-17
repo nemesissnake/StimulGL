@@ -965,6 +965,7 @@ void MainWindow::executeScript()
 					SVGPreviewer->openFile(DocManager->getFileName(activeMdiChild()));
 					//SVGPreviewer->openFile(activeMdiChildFilePath()); abov code worked, this one didn't received an empty path...
 					SVGPreviewer->showMaximized();
+					//SVGPreviewer->showFullScreen();
 				}
 			}
 			else {

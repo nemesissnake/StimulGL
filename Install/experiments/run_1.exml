@@ -9,7 +9,7 @@ Attributes only apply to readonly non user data, like the ID
     <defines>
 			<experiment ID="0">
 				<name>Retinotopic Mapping Experiment with the use of a QTimer</name>
-				<debugmode>true</debugmode>
+				<debugmode>false</debugmode>
 			</experiment>
 		</defines>
 		
@@ -121,7 +121,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -170,7 +170,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>	
 			        <parameter ID="12">
 			        	<name>DisplayRefreshRate</name>
-			        	<value>60</value>
+			        	<value>15</value>
 			        </parameter>			        
 			    	</parameters>    
 		    	</object>   
@@ -193,7 +193,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="2">
 			        	<name>EmptyTriggerSteps</name>
-			        	<value>2</value>
+			        	<value>3</value>
 			        </parameter>			        
 			        <parameter ID="3">
 			        	<name>PolarWedgeSpan</name>
@@ -201,7 +201,7 @@ Attributes only apply to readonly non user data, like the ID
 							</parameter>		        	
 			        <parameter ID="4">	 	
 			        	<name>PolarCheckAmount</name>
-			        	<value>10</value>	        	
+			        	<value>5</value>	        	
 			        </parameter>
 			        <parameter ID="5">	      	
 			        	<name>PolarRingAmount</name>
@@ -213,11 +213,11 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="7">   
 			        	<name>FlickrFrequency</name>
-			        	<value>20</value>
+			        	<value>7.5</value>
 			        </parameter>	        	
 			        <parameter ID="8">	    	
 			        	<name>CorticalMagnitudeFactor</name>
-			        	<value>0.2</value>	        	
+			        	<value>0</value>	        	
 			        </parameter> 
 			        <parameter ID="9">
 			        	<name>RetinoPattern</name>
@@ -225,7 +225,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>	
 			        <parameter ID="10">
 			        	<name>GapDiameter</name>
-			        	<value>10</value>
+			        	<value>0</value>
 			        </parameter>
 	    				<parameter ID="11">
 			        	<name>DiscreteTriggerSteps</name>
@@ -247,7 +247,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>2</block_number>
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -279,7 +279,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="2">
 			        	<name>EmptyTriggerSteps</name>
-			        	<value>2</value>
+			        	<value>3</value>
 			        </parameter>			        
 			        <parameter ID="3">
 			        	<name>PolarWedgeSpan</name>
@@ -287,7 +287,7 @@ Attributes only apply to readonly non user data, like the ID
 							</parameter>		        	
 			        <parameter ID="4">	 	
 			        	<name>PolarCheckAmount</name>
-			        	<value>10</value>	        	
+			        	<value>5</value>	        	
 			        </parameter>
 			        <parameter ID="5">	      	
 			        	<name>PolarRingAmount</name>
@@ -299,11 +299,11 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="7">   
 			        	<name>FlickrFrequency</name>
-			        	<value>5</value>
+			        	<value>7.5</value>
 			        </parameter>	        	
 			        <parameter ID="8">	    	
 			        	<name>CorticalMagnitudeFactor</name>
-			        	<value>0.2</value>	        	
+			        	<value>0</value>	        	
 			        </parameter> 
 			        <parameter ID="9">
 			        	<name>RetinoPattern</name>
@@ -311,7 +311,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>	
 			        <parameter ID="10">
 			        	<name>GapDiameter</name>
-			        	<value>10</value>
+			        	<value>0</value>
 			        </parameter>
 	    				<parameter ID="11">
 			        	<name>DiscreteTriggerSteps</name>
@@ -333,7 +333,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>4</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -354,7 +354,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>5</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -382,15 +382,15 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="1">
 			        	<name>GapDiameter</name>
-			        	<value>10</value>
+			        	<value>0</value>
 			        </parameter>			        
 			        <parameter ID="2">	 	
 			        	<name>EccentricityCheckAmount</name>			        	 
-			        	<value>20</value>	        	
+			        	<value>30</value>	        	
 			        </parameter>
 			        <parameter ID="3">	      	
 			        	<name>EccentricityRingAmount</name>
-			        	<value>3</value>
+			        	<value>2</value>
 			        </parameter>       	
 			        <parameter ID="4">    	
 			        	<name>EccentricityDirection</name>
@@ -398,18 +398,18 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="5">   
 			        	<name>FlickrFrequency</name>
-			        	<value>5</value>
+			        	<value>7.5</value>
 			        </parameter>	        	
 			        <parameter ID="6">	    	
 			        	<name>CorticalMagnitudeFactor</name>
-			        	<value>0.2</value>	        	
+			        	<value>0.08333333333</value>	        	
 			        </parameter> 
 			        <parameter ID="7">
 			        	<name>RetinoPattern</name>
 			        	<value>eccentricity</value>
 			        </parameter>
 			        <parameter ID="8">
-			        	<name>EccentricityDisableCortMagFac</name>
+			        	<name>DisableCortMagFac</name>
 			        	<value>true</value>
 			        </parameter>
 	    				<parameter ID="9">
@@ -422,7 +422,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="11">
 			        	<name>EmptyTriggerSteps</name>
-			        	<value>2</value>
+			        	<value>3</value>
 			        </parameter>			        	        	        			        
 			    	</parameters>    
 		    	</object>   
@@ -432,7 +432,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>7</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -460,15 +460,15 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="1">
 			        	<name>GapDiameter</name>
-			        	<value>10</value>
+			        	<value>0</value>
 			        </parameter>			        
 			        <parameter ID="2">	 	
 			        	<name>EccentricityCheckAmount</name>			        	 
-			        	<value>20</value>	        	
+			        	<value>30</value>	        	
 			        </parameter>
 			        <parameter ID="3">	      	
 			        	<name>EccentricityRingAmount</name>
-			        	<value>3</value>
+			        	<value>2</value>
 			        </parameter>       	
 			        <parameter ID="4">    	
 			        	<name>EccentricityDirection</name>
@@ -476,18 +476,18 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="5">   
 			        	<name>FlickrFrequency</name>
-			        	<value>5</value>
+			        	<value>7.5</value>
 			        </parameter>	        	
 			        <parameter ID="6">	    	
 			        	<name>CorticalMagnitudeFactor</name>
-			        	<value>0.2</value>	        	
+			        	<value>0.08333333333</value>	        	
 			        </parameter> 
 			        <parameter ID="7">
 			        	<name>RetinoPattern</name>
 			        	<value>eccentricity</value>
 			        </parameter>
 			        <parameter ID="8">
-			        	<name>EccentricityDisableCortMagFac</name>
+			        	<name>DisableCortMagFac</name>
 			        	<value>true</value>
 			        </parameter>
 	    				<parameter ID="9">
@@ -500,7 +500,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="11">
 			        	<name>EmptyTriggerSteps</name>
-			        	<value>2</value>
+			        	<value>3</value>
 			        </parameter>			        	        	        			        
 			    	</parameters>    
 		    	</object>   
@@ -510,7 +510,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>9</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -531,7 +531,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>10</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -559,35 +559,31 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="1">
 			        	<name>EmptyTriggerSteps</name>
-			        	<value>0</value>
+			        	<value>3</value>
 			        </parameter>				        
 			        <parameter ID="2">
 			        	<name>RetinoPattern</name>
 			        	<value>movingbar</value>
 			        </parameter>				        
-			        <parameter ID="3">	 	
-			        	<name>MovingBarWidthCheckAmount</name>			        	 
-			        	<value>40</value>	        	
-			        </parameter>
 			        <parameter ID="4">	      	
 			        	<name>MovingBarHeightCheckAmount</name>
 			        	<value>3</value>
 			        </parameter>       	
 			        <parameter ID="5">
 			        	<name>MovingBarIncludeOppositeDirection</name>
-			        	<value>true</value>
+			        	<value>false</value>
 			        </parameter>
 			        <parameter ID="6">   
 			        	<name>FlickrFrequency</name>
-			        	<value>5</value>
+			        	<value>7.5</value>
 			        </parameter>
 			        <parameter ID="7">    	
 			        	<name>MovingBarDirection</name>
-			        	<value>-1</value>	        	
+			        	<value>1</value>	        	
 			        </parameter>			        	        	
 			        <parameter ID="8">
 			        	<name>MovingBarCoverage</name>
-			        	<value>0.8</value>
+			        	<value>0.707106781</value>
 			        </parameter>
 			        <parameter ID="9">
 			        	<name>ShowFixPoint</name>
@@ -604,7 +600,11 @@ Attributes only apply to readonly non user data, like the ID
   		        <parameter ID="12">
 			        	<name>MovingBarAngle</name>
 			        	<value>120</value>
-			        </parameter>				        
+			        </parameter>
+			        <parameter ID="13">    	
+			        	<name>MovingBarHeight</name>
+			        	<value>12.0</value>	        	
+			        </parameter>			        				        
 			    	</parameters>
 		    	</object>   
 	    	</block>
@@ -778,7 +778,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>23</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -806,27 +806,23 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="1">
 			        	<name>EmptyTriggerSteps</name>
-			        	<value>0</value>
+			        	<value>3</value>
 			        </parameter>				        
 			        <parameter ID="2">
 			        	<name>RetinoPattern</name>
 			        	<value>movingbar</value>
 			        </parameter>				        
-			        <parameter ID="3">	 	
-			        	<name>MovingBarWidthCheckAmount</name>			        	 
-			        	<value>80</value>	        	
-			        </parameter>
 			        <parameter ID="4">	      	
 			        	<name>MovingBarHeightCheckAmount</name>
-			        	<value>5</value>
+			        	<value>3</value>
 			        </parameter>       	
 			        <parameter ID="5">
 			        	<name>MovingBarIncludeOppositeDirection</name>
-			        	<value>true</value>
+			        	<value>false</value>
 			        </parameter>
 			        <parameter ID="6">   
 			        	<name>FlickrFrequency</name>
-			        	<value>5</value>
+			        	<value>7.5</value>
 			        </parameter>	        	
 			        <parameter ID="7">    	
 			        	<name>MovingBarDirection</name>
@@ -834,7 +830,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>		
 			        <parameter ID="8">
 			        	<name>MovingBarCoverage</name>
-			        	<value>0.8</value>
+			        	<value>0.707106781</value>
 			        </parameter>
 			        <parameter ID="9">
 			        	<name>ShowFixPoint</name>
@@ -851,7 +847,11 @@ Attributes only apply to readonly non user data, like the ID
   		        <parameter ID="12">
 			        	<name>MovingBarAngle</name>
 			        	<value>210</value>
-			        </parameter>			        
+			        </parameter>	
+			        <parameter ID="13">    	
+			        	<name>MovingBarHeight</name>
+			        	<value>12.0</value>	        	
+			        </parameter>			        		        
 			    	</parameters>
 		    	</object>   
 	    	</block>
@@ -1025,7 +1025,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>36</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>	 
+	        <nr_of_triggers>8</nr_of_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
