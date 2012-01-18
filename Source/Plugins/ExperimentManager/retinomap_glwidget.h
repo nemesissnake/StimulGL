@@ -171,6 +171,7 @@ private:
 	bool bCreateActivationMap;
 	int currExpBlockTrialCycle;
 	bool nextNewCycleEntered;
+	bool nextNewBlockEntered;
 	float cortMagFactor;
 	int gapDiameter;
 	float wedgeSpanAngle;
@@ -241,8 +242,9 @@ private:
 	QPainter *stimuliPainter;
 	QPainter *imgPainter;
 	ExperimentConfiguration *currExpConfStruct;
-	RandomGenerator *randStimStateGenerator;		//To hold the Stimuli Trigger Step
-	RandomGenerator *randEmptyStimGenerator;		//To hold the Empty Block Trials
+	RandomGenerator *randStimStateGenerator;		 //To hold the Stimuli Trigger Step
+	RandomGenerator *randEmptyStimGenerator;		 //To hold the Empty Block Trials
+	RandomGenerator *previousRandEmptyStimGenerator; //To hold the processed Empty Block Trials
 };
 Q_DECLARE_METATYPE(RetinoMap_glwidget)
 #endif // RETINOMAP_GLWIDGET_H
