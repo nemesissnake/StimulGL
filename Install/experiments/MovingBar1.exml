@@ -172,7 +172,7 @@ Attributes only apply to readonly non user data, like the ID
 		    	</object>   
 	    	</block>
 	    	
-		   	<block ID="1">
+		<block ID="1">
 	        <name>MovingBar_Block</name>
 	        <block_number>1</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
@@ -195,10 +195,6 @@ Attributes only apply to readonly non user data, like the ID
 			        	<name>MovingBarHeightCheckAmount</name>
 			        	<value>3</value>
 			        </parameter>       	
-			        <parameter ID="5">
-			        	<name>MovingBarIncludeOppositeDirection</name>
-			        	<value>false</value>
-			        </parameter>
 			        <parameter ID="6">   
 			        	<name>FlickrFrequency</name>
 			        	<value>7.5</value>

@@ -136,11 +136,11 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_COVERAGE,QString::number(movingBarCoverage));
 		movingBarHeight = 10.0;
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_HEIGHT,QString::number(movingBarHeight));
-		movingBarIncludeOppositeDirection = false;
-		if (movingBarIncludeOppositeDirection)
-			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR,RETINOMAP_WIDGET_BOOL_TRUE);
-		else
-			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR,RETINOMAP_WIDGET_BOOL_FALSE);
+		//movingBarIncludeOppositeDirection = false;
+		//if (movingBarIncludeOppositeDirection)
+		//	insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR,RETINOMAP_WIDGET_BOOL_TRUE);
+		//else
+		//	insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR,RETINOMAP_WIDGET_BOOL_FALSE);
 		movingBarHeightCheckAmount = 4;
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT,QString::number(movingBarHeightCheckAmount));
 		movingBarDirection = 1;
@@ -353,11 +353,11 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			movingBarHeight = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_HEIGHT,QString::number(movingBarHeight)).toFloat();
 			movingBarHeightCheckAmount = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT,QString::number(movingBarHeightCheckAmount)).toInt();
 			movingBarDirection = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_DIRECTION,QString::number(movingBarDirection)).toInt();
-			tmpString = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR,RETINOMAP_WIDGET_BOOL_FALSE);
-			if (tmpString == RETINOMAP_WIDGET_BOOL_TRUE)
-				movingBarIncludeOppositeDirection = true;
-			else //if(tmpString == RETINOMAP_WIDGET_BOOL_FALSE)
-				movingBarIncludeOppositeDirection = false;	
+			//tmpString = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR,RETINOMAP_WIDGET_BOOL_FALSE);
+			//if (tmpString == RETINOMAP_WIDGET_BOOL_TRUE)
+			//	movingBarIncludeOppositeDirection = true;
+			//else //if(tmpString == RETINOMAP_WIDGET_BOOL_FALSE)
+			//	movingBarIncludeOppositeDirection = false;	
 			break;
 		case RetinoMap_MovingDots :
 			movingDotsMoveSpeed = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_MOVESPEED,QString::number(movingDotsMoveSpeed)).toFloat();
@@ -686,10 +686,10 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					//To use a full scale spread we'll use the following:
 					numberOfSteps = cycleTriggerAmount;
 				}
-				else if ((currentExpType == RetinoMap_MovingBar) && (movingBarIncludeOppositeDirection))
-				{
-					numberOfSteps = cycleTriggerAmount-2;
-				}
+				//else if ((currentExpType == RetinoMap_MovingBar) && (movingBarIncludeOppositeDirection))
+				//{
+				//	numberOfSteps = cycleTriggerAmount-2;
+				//}
 				else
 				{
 					//0-->1 travels from 0 to 100(which is not 0!) procent
@@ -702,9 +702,9 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 				else
 					nTrialIndex = expSnapshot.currExpBlockTrialTrigger%cycleTriggerAmount;
 
-				if ((currentExpType == RetinoMap_MovingBar) && (movingBarIncludeOppositeDirection) && ((nTrialIndex*2)>=cycleTriggerAmount))
-					fTrialTimeProgress = (float)(nTrialIndex-1) / numberOfSteps;
-				else
+				//if ((currentExpType == RetinoMap_MovingBar) && (movingBarIncludeOppositeDirection) && ((nTrialIndex*2)>=cycleTriggerAmount))
+				//	fTrialTimeProgress = (float)(nTrialIndex-1) / numberOfSteps;
+				//else
 					fTrialTimeProgress = (float)(nTrialIndex) / numberOfSteps;
 			}
 			else
@@ -832,11 +832,11 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			currentYPoint = (nStimFrameHeight - currentSize) / 2.0f;
 			if(polarRotationDirection == 1)//Clockwise
 			{
-				startAngle = -360.0f * fTrialTimeProgress;
+				startAngle = (-360.0f * fTrialTimeProgress) - (360.0f/cycleTriggerAmount);
 			}
 			else//Counterclockwise 
 			{
-				startAngle = 360.0f * fTrialTimeProgress;
+				startAngle = (360.0f * fTrialTimeProgress);
 			}
 			if(bCreateActivationMap)
 			{
@@ -1052,26 +1052,26 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			currentSize = (movingBarCoverage * fStimulusDiameter)/(movingBarHeight*movingBarHeightCheckAmount);
 			if(movingBarDirection == -1)//Down->Up (When 0 <= movingBarAngle >= 180 degrees)
 			{				
-				if (movingBarIncludeOppositeDirection)
-				{
-					if (fTrialTimeProgress < 0.5f)
-						fYOffset = (((0.5 * movingBarCoverage * fStimulusDiameter) - (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) - (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * (fTrialTimeProgress*2)));
-					else
-						fYOffset = (((-0.5 * movingBarCoverage * fStimulusDiameter) + (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) + (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * ((fTrialTimeProgress-0.5f)*2)));
-				} 
-				else
+				//if (movingBarIncludeOppositeDirection)
+				//{
+				//	if (fTrialTimeProgress < 0.5f)
+				//		fYOffset = (((0.5 * movingBarCoverage * fStimulusDiameter) - (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) - (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * (fTrialTimeProgress*2)));
+				//	else
+				//		fYOffset = (((-0.5 * movingBarCoverage * fStimulusDiameter) + (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) + (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * ((fTrialTimeProgress-0.5f)*2)));
+				//} 
+				//else
 					fYOffset = (((0.5 * movingBarCoverage * fStimulusDiameter) - (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) - (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * fTrialTimeProgress));
 			}
 			else//Up->Down (When 0 <= movingBarAngle >= 180 degrees)
 			{
-				if (movingBarIncludeOppositeDirection)
-				{
-					if (fTrialTimeProgress < 0.5f)
-						fYOffset = (((-0.5 * movingBarCoverage * fStimulusDiameter) + (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) + (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * (fTrialTimeProgress*2)));
-					else
-						fYOffset = (((0.5 * movingBarCoverage * fStimulusDiameter) - (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) - (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * ((fTrialTimeProgress-0.5f)*2)));
-				} 
-				else
+				//if (movingBarIncludeOppositeDirection)
+				//{
+				//	if (fTrialTimeProgress < 0.5f)
+				//		fYOffset = (((-0.5 * movingBarCoverage * fStimulusDiameter) + (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) + (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * (fTrialTimeProgress*2)));
+				//	else
+				//		fYOffset = (((0.5 * movingBarCoverage * fStimulusDiameter) - (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) - (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * ((fTrialTimeProgress-0.5f)*2)));
+				//} 
+				//else
 					fYOffset = (((-0.5 * movingBarCoverage * fStimulusDiameter) + (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) + (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * fTrialTimeProgress));
 			}
 

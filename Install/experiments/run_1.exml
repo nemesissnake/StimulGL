@@ -569,10 +569,6 @@ Attributes only apply to readonly non user data, like the ID
 			        	<name>MovingBarHeightCheckAmount</name>
 			        	<value>3</value>
 			        </parameter>       	
-			        <parameter ID="5">
-			        	<name>MovingBarIncludeOppositeDirection</name>
-			        	<value>false</value>
-			        </parameter>
 			        <parameter ID="6">   
 			        	<name>FlickrFrequency</name>
 			        	<value>7.5</value>
@@ -816,10 +812,6 @@ Attributes only apply to readonly non user data, like the ID
 			        	<name>MovingBarHeightCheckAmount</name>
 			        	<value>3</value>
 			        </parameter>       	
-			        <parameter ID="5">
-			        	<name>MovingBarIncludeOppositeDirection</name>
-			        	<value>false</value>
-			        </parameter>
 			        <parameter ID="6">   
 			        	<name>FlickrFrequency</name>
 			        	<value>7.5</value>

@@ -53,7 +53,7 @@
 #define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE				"movingbarcoverage"
 #define RETINOMAP_WIDGET_MOVINGBAR_HEIGHT				"movingbarheight"
 #define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION			"movingbardirection"
-#define RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR			"movingbarincludeoppositedirection"
+//#define RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR			"movingbarincludeoppositedirection"
 #define RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT	"movingbarheightcheckamount"
 //MovingDots specific defines
 #define	RETINOMAP_WIDGET_MOVINGDOTS_MOVESPEED			"movingdotsmovespeed"
@@ -211,7 +211,7 @@ private:
 	int movingBarWidthCheckAmount;
 	int movingBarHeightCheckAmount;
 	int movingBarDirection;
-	bool movingBarIncludeOppositeDirection;
+	//bool movingBarIncludeOppositeDirection;
 
 	//MovingDots
 	float movingDotsMoveSpeed;
