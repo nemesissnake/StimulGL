@@ -2,7 +2,7 @@ HowTo create your own Extension plugin by Example:
 
 Requirements:
 - Visual Studio 2008
-- QT 4.7.3 (Win32 and x64 compiled version), the below example expects these to be at "C:\Qt\4.7.3" and "4.7.3_X64"
+- QT 4.8.0 (Win32 and x64 compiled version), the below example expects these to be at "C:\Qt\4.8.0\win32" and "C:\Qt\4.8.0\x64"
 
 
 Setup:

@@ -1,10 +1,10 @@
 #include "RandomGenerator.h"
 #include <QTime>
 
-RandomGenerator::RandomGenerator(QObject *parent)
-	: QObject(parent)
+RandomGenerator::RandomGenerator(QObject *parent):QObject(parent)
 {
-	qsrand(QTime::currentTime().msec());
+	nPrevRandInitResult = QTime::currentTime().msec();
+	InitRandomizer();
 }
 
 RandomGenerator::~RandomGenerator()
@@ -12,8 +12,15 @@ RandomGenerator::~RandomGenerator()
 
 }
 
+void RandomGenerator::InitRandomizer()
+{
+	nPrevRandInitResult = (nPrevRandInitResult - 1) + QTime::currentTime().msec();
+	qsrand(nPrevRandInitResult);
+}
+
 int RandomGenerator::randomizeInt(int Min, int Max)
 {
+	InitRandomizer();
 	if (Min > Max)
 	{
 		return ((qrand()%(Min-Max+1))+Max);
@@ -24,6 +31,7 @@ int RandomGenerator::randomizeInt(int Min, int Max)
 
 bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QStringList *sList)
 {
+	InitRandomizer();
 	bool bRetVal = false;
 	int nListCount = this->count();
 	int i,j;
@@ -108,12 +116,25 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 				int nRandom = qrand() % nListCount;
 				this->swap(i,nRandom);
 			}
-			//recover the preserved items
-			for(j=0;j<sList->count();j++)
+
+			int nRecoverCount = sList->count();
+			if (nRecoverCount > 0)
 			{
-				nIndexFound = this->indexOf(tmpCopyLst.at(sList->at(j).toInt()));
-				if(nIndexFound >= 0)//is the preserved item still in the current list?
-					this->swap(sList->at(j).toInt(),nIndexFound);				
+				//recover the preserved items
+				for(j=0;j<nRecoverCount;j++)
+				{
+					nIndexFound = this->indexOf(tmpCopyLst.at(sList->at(j).toInt()));
+					if(nIndexFound >= 0)//is the preserved item still in the current list?
+						this->swap(sList->at(j).toInt(),nIndexFound);				
+				}
+				if (nRecoverCount > 1)
+				{
+					//randomize the recovered values
+					for(i=(nRecoverCount-1);i>0;--i)
+					{
+						this->swap(sList->at(i).toInt(),sList->at(qrand() % nRecoverCount).toInt());
+					}
+				}
 			}
 			bRetVal = true;
 			break;

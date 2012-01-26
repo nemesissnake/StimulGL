@@ -175,8 +175,8 @@ Attributes only apply to readonly non user data, like the ID
 		   	<block ID="1">
 	        <name>EccentricityBlock</name>
 	        <block_number>1</block_number>            
-	        <nr_of_trials>5</nr_of_trials>
-	        <nr_of_triggers>48</nr_of_triggers>
+	        <nr_of_trials>6</nr_of_trials>
+	        <nr_of_triggers>36</nr_of_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -225,7 +225,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="11">
 			        	<name>EmptyTriggerSteps</name>
-			        	<value>3</value>
+			        	<value>4</value>
 			        </parameter>			        	        	        			        
 			    	</parameters>    
 		    	</object>   

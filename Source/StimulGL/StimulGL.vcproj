@@ -1140,6 +1140,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\StimulGL.h"
+				>
+			</File>
+			<File
 				RelativePath="svgview.h"
 				>
 				<FileConfiguration

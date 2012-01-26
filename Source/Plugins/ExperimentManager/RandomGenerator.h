@@ -27,6 +27,8 @@ public slots:
 	bool randomizeList(RandomGenerator_RandomizeMethod rMethod = RandomGenerator_RandomizeStandard, QStringList *sList = NULL);//Randomizes the class inherited QStringList
 
 private:
+	void RandomGenerator::InitRandomizer();
+	int nPrevRandInitResult;
 
 };
 

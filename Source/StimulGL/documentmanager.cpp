@@ -1,5 +1,6 @@
 #include "documentmanager.h"
 #include "mainappinfo.h"
+#include "StimulGL.h"
 #include <QColor>
 
 DocumentManager::DocumentManager(QObject *parent)
@@ -176,6 +177,7 @@ bool DocumentManager::getLexer(QsciLexer *lexer, const QString &lexerName, QObje
 
 CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocIndex)//QMdiSubWindow *subWindow)
 {
+	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
 	custQsci->setCustomLexer();
 
@@ -196,7 +198,8 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 	custQsci->setMarkerForegroundColor(QColor(100, 100, 100));
 	custQsci->setMarkerBackgroundColor(QColor(160,180,200));
 	custQsci->setSelectionBackgroundColor(QColor(150,150,155));//selected text
-	custQsci->setSelectionForegroundColor(QColor(0,0,0));
+	custQsci->setSelectionForegroundColor(QColor(100,100,100));
+	custQsci->setPaper(cPaper);//Here we make the paper background color light Grey instead of White (Better for the subject watching...)
 
 	NrOfLinesChangedMapper = new QSignalMapper(this);
 	NrOfLinesChangedMapper->setMapping(custQsci, custQsci);//QScintillaChildren.at(DocCount)
@@ -216,6 +219,7 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 			QDir dir(MainAppInfo::apiDirPath());
 			QsciLexer *Qjslexer = new QsciLexerJavaScript(custQsci);
 			custQsci->setLexer(Qjslexer);
+			Qjslexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
 			fileName = "qscript.api";
 			if ( dir.entryList(QDir::Files).contains(fileName) ) 
 			{
@@ -268,8 +272,39 @@ void DocumentManager::onMarginClicked (int margin, int line, Qt::KeyboardModifie
 	{
 		tmpScintilla->toggleMarker(line);
 	}
+	changeColors(tmpScintilla);
 }
 
+void DocumentManager::changeColors(CustomQsciScintilla *currScintilla)
+{
+	QColor tmpColorRed(255,0,0);
+	QColor tmpColorGreen(0,255,0);
+	QColor tmpColorBlue(0,0,255);
+
+	//currScintilla->setEdgeColor(tmpColorRed);
+	//currScintilla->setIndicatorForegroundColor(tmpColorRed);
+	//currScintilla->setIndicatorOutlineColor(tmpColorRed);
+	//currScintilla->setMarkerBackgroundColor(tmpColorRed);
+	//currScintilla->setMarkerForegroundColor(tmpColorRed);
+	//currScintilla->setMatchedBraceBackgroundColor(tmpColorRed);
+	//currScintilla->setMatchedBraceForegroundColor(tmpColorRed);
+	//currScintilla->setUnmatchedBraceBackgroundColor(tmpColorRed);
+	//currScintilla->setUnmatchedBraceForegroundColor(tmpColorRed);
+	//currScintilla->setWhitespaceBackgroundColor(tmpColorRed);
+	//currScintilla->setWhitespaceForegroundColor(tmpColorRed);
+	//currScintilla->setCaretForegroundColor(tmpColorRed);
+	//currScintilla->setCaretLineBackgroundColor(tmpColorRed);
+	//currScintilla->setColor(tmpColorRed);
+	//currScintilla->setIndentationGuidesBackgroundColor(tmpColorRed);
+	//currScintilla->setIndentationGuidesForegroundColor(tmpColorRed);
+	//currScintilla->setMarginsBackgroundColor(tmpColorRed);
+	//currScintilla->setMarginsForegroundColor(tmpColorRed);
+	//currScintilla->setPaper(tmpColorRed);
+	//currScintilla->setSelectionBackgroundColor(tmpColorRed);
+	//currScintilla->setSelectionForegroundColor(tmpColorRed);
+	//currScintilla->setDefaultColor(tmpColorRed);
+	currScintilla->setPaper(tmpColorRed);
+}
 
 void DocumentManager::updateLineNumbers(QWidget *tmpSci) 
 {

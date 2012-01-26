@@ -31,7 +31,6 @@ static void MyOutputHandler(QtMsgType type, const char *msg)
 
 class MainAppInfo {
 public:
-
 	enum ActiveScriptMode
 	{
 		NoScript				= 0x00000,

@@ -76,11 +76,6 @@ void RetinoMap_glwidget::initialize()
 	lastTriggerNumber = -1;
 	flickrSwitch = 0;
 	textContent = "";
-	colorBackground = QColor(87,87,87);
-	brushBackground = QBrush(colorBackground);//(87, 87, 87));
-	textPen = QPen(Qt::white);
-	textFont.setPixelSize(20);
-	fixationColor = QColor(255, 0, 0);
 	textContent = "";
 	StimulusResultImageFrame = NULL;
 	StimulusActivationMap = NULL;
@@ -91,13 +86,10 @@ void RetinoMap_glwidget::initialize()
 	randStimStateGenerator = NULL;
 	randEmptyStimGenerator = NULL;
 	previousRandEmptyStimGenerator = NULL;
-	//elapsedTrialTime = 0;
-	//debugString = "";
-	//debugElapsedTime = 0;
-	whiteColor = QColor(255,255,255);
-	blackColor = QColor(0,0,0);
-	color1 = QColor(255, 255, 255);	//For the stimuli
-	color2 = QColor(0, 0, 0);		//For the stimuli
+	textPen = QPen(Qt::white);
+	textFont.setPixelSize(20);
+	whiteColor = QColor(255,255,255);//For the activity maps
+	blackColor = QColor(0,0,0);//For the activity maps
 	style = Qt::SolidLine;
 	flatCap = Qt::FlatCap;
 	roundCap = Qt::RoundCap;
@@ -107,6 +99,7 @@ void RetinoMap_glwidget::initialize()
 
 void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 {	
+	QString tmpString = "";
 	if (bInit)
 	{		
 		//refreshRate = 0;
@@ -164,6 +157,19 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_PATTERN,RETINOMAP_WIDGET_PATTERN_FIXATION);
 			break;
 		}
+		tmpString = QColor(87,87,87).name();//gives "#575757";
+		colorBackground = QColor(tmpString);
+		brushBackground = QBrush(colorBackground);
+		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_BACKGROUNDCOLOR,tmpString);
+		tmpString = QColor(255, 0, 0).name();
+		fixationColor = QColor(tmpString);
+		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXATIONCOLOR,tmpString);
+		tmpString = QColor(255, 255, 255).name();
+		cCheckerColor1 = QColor(tmpString);
+		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR1,tmpString);
+		tmpString = QColor(0, 0, 0).name();
+		cCheckerColor2 = QColor(tmpString);
+		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR2,tmpString);
 		showFixationPoint = true;
 		if (showFixationPoint)
 			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_SHOWFIXPOINT,RETINOMAP_WIDGET_BOOL_TRUE);
@@ -265,7 +271,6 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 	} 
 	else
 	{
-		QString tmpString = "";
 		randStimStateGenerator = new RandomGenerator();//Here we can initialize the generator so each block we have it correctly constructed
 		randEmptyStimGenerator = new RandomGenerator();
 		previousRandEmptyStimGenerator = new RandomGenerator();
@@ -297,6 +302,11 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		triggerDurationMsec = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_TRIGGERDURATION_MSEC,QString::number(triggerDurationMsec)).toInt();
 		emptyTriggerSteps = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS,QString::number(emptyTriggerSteps)).toInt();		
 		gapDiameter = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_GAP_DIAMETER,QString::number(gapDiameter)).toInt();
+		colorBackground = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_BACKGROUNDCOLOR,colorBackground.name()));
+		brushBackground = QBrush(colorBackground);
+		fixationColor = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXATIONCOLOR,fixationColor.name()));
+		cCheckerColor1 = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR1,cCheckerColor1.name()));
+		cCheckerColor2 = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR2,cCheckerColor2.name()));		
 		tmpString = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_OUTPUTTRIGGERFRAME,RETINOMAP_WIDGET_BOOL_FALSE);
 		if (tmpString == RETINOMAP_WIDGET_BOOL_TRUE)
 			outputTriggerFrame = true;
@@ -452,17 +462,17 @@ QImage RetinoMap_glwidget::fractalFillCheckeredImage(float fWidth, float fHeigth
 
 	if (nflickr == 1)
 	{
-		p1.fillRect(0, 0, nSize, nSize, color1);// Qt::gray);
-		p1.fillRect(nSize, 0, nSize, nSize, color2);// Qt::white);
-		p1.fillRect(0, nSize, nSize, nSize, color2);//Qt::white);
-		p1.fillRect(nSize, nSize, nSize, nSize, color1);//Qt::gray);
+		p1.fillRect(0, 0, nSize, nSize, cCheckerColor1);// Qt::gray);
+		p1.fillRect(nSize, 0, nSize, nSize, cCheckerColor2);// Qt::white);
+		p1.fillRect(0, nSize, nSize, nSize, cCheckerColor2);//Qt::white);
+		p1.fillRect(nSize, nSize, nSize, nSize, cCheckerColor1);//Qt::gray);
 	}
 	else
 	{
-		p1.fillRect(0, 0, nSize, nSize, color2);// Qt::gray);
-		p1.fillRect(nSize, 0, nSize, nSize, color1);// Qt::white);
-		p1.fillRect(0, nSize, nSize, nSize, color1);//Qt::white);
-		p1.fillRect(nSize, nSize, nSize, nSize, color2);//Qt::gray);
+		p1.fillRect(0, 0, nSize, nSize, cCheckerColor2);// Qt::gray);
+		p1.fillRect(nSize, 0, nSize, nSize, cCheckerColor1);// Qt::white);
+		p1.fillRect(0, nSize, nSize, nSize, cCheckerColor1);//Qt::white);
+		p1.fillRect(nSize, nSize, nSize, nSize, cCheckerColor2);//Qt::gray);
 	}
 
 	QPainter p(&image);
@@ -579,7 +589,6 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1))-1;
 	else if((elapsedTrialTime <= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger))))&&(currentExpType != RetinoMap_Fixation))
 		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger))+1;
-
 	//debugElapsedTime = debugTime.restart();
 	if (currExpBlockTrialCycle < (int)(expSnapshot.currExpBlockTrialTrigger/cycleTriggerAmount))
 	{
@@ -592,11 +601,8 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		nextNewBlockEntered = true;
 		randStimStateGenerator->clear();
 	}
-
-
 	//if(isDebugMode())
 	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(0));//nPaintIndex++));
-
 	if (currentExpType != RetinoMap_Fixation)
 	{
 		if (randEmptyStimGenerator->isEmpty() && (currExpBlockTrialCycle == 0))//Initialize the "Empty" random list
@@ -853,22 +859,22 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					{
 						if((k+i)%2==0)
 						{
-							imgPainter->setPen(QPen(color1, currentWedgeDiameter, style, flatCap));
+							imgPainter->setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
 						}
 						else
 						{
-							imgPainter->setPen(QPen(color2, currentWedgeDiameter, style, flatCap));
+							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
 					else
 					{
 						if((k+i)%2!=0)
 						{
-							imgPainter->setPen(QPen(color1, currentWedgeDiameter, style, flatCap));
+							imgPainter->setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
 						}
 						else
 						{
-							imgPainter->setPen(QPen(color2, currentWedgeDiameter, style, flatCap));
+							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
 					//if((i==1) || (i==5) || (i==10)) //(i%2)==0)
@@ -962,22 +968,22 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					{
 						if((k+i)%2==0)
 						{
-							imgPainter->setPen(QPen(color1, currentWedgeDiameter, style, flatCap));
+							imgPainter->setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
 						}
 						else
 						{
-							imgPainter->setPen(QPen(color2, currentWedgeDiameter, style, flatCap));
+							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
 					else
 					{
 						if((k+i)%2!=0)
 						{
-							imgPainter->setPen(QPen(color1, currentWedgeDiameter, style, flatCap));
+							imgPainter->setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
 						}
 						else
 						{
-							imgPainter->setPen(QPen(color2, currentWedgeDiameter, style, flatCap));
+							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
 					if(k==0)//draw a full complete ring

@@ -4,6 +4,7 @@
 
 #include "mainwindow.h"
 #include "mainappinfo.h"
+#include "StimulGL.h"
 #include "svgview.h"
 #include "aboutqtdialog.h"  
 #include "sleepthread.h"
@@ -745,8 +746,10 @@ void MainWindow::clearDebugger()
 void MainWindow::createDockWindows()
 {
 	debugLogDock = new QDockWidget(tr("Output"), this);
-	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);
+	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);	
 	outputWindowList = new QListWidget(debugLogDock);
+	QString tmpColor = QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
+	outputWindowList->setStyleSheet("* { background-color:rgb(" + tmpColor + "); padding: 10px ; color:rgb(136,0,21)}");
 	debugLogDock->setWidget(outputWindowList);
 	addDockWidget(Qt::RightDockWidgetArea, debugLogDock);
 	//viewMenu->addAction(debugLogDock->toggleViewAction());

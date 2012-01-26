@@ -39,6 +39,10 @@
 #define RETINOMAP_WIDGET_OUTPUTFORMAT_PNG				"png"
 #define RETINOMAP_WIDGET_ANTIALIASING					"antialiasing"
 #define RETINOMAP_WIDGET_DISABLECORTMAGFAC				"disablecortmagfac"
+#define RETINOMAP_WIDGET_CHECKERCOLOR1					"checkercolor1"
+#define RETINOMAP_WIDGET_CHECKERCOLOR2					"checkercolor2"
+#define RETINOMAP_WIDGET_BACKGROUNDCOLOR				"backgroundcolor"
+#define RETINOMAP_WIDGET_FIXATIONCOLOR					"fixationcolor"
 //PolarAngle specific defines
 #define RETINOMAP_WIDGET_POLAR_RING_AMOUNT				"polarringamount"
 #define RETINOMAP_WIDGET_POLAR_ROTATION_DIRECTION		"polarrotationdirection"
@@ -160,8 +164,8 @@ private:
 	ExperimentSnapshotStructure expSnapshot;
 
 	QColor dotColor;
-	QColor color1;
-	QColor color2;
+	QColor cCheckerColor1;
+	QColor cCheckerColor2;
 	Qt::PenStyle style;
 	Qt::PenCapStyle flatCap;
 	Qt::PenCapStyle roundCap;

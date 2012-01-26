@@ -31,18 +31,18 @@ void ExperimentManager_Dialog::cleanUp()
 
 void ExperimentManager_Dialog::exampleButton_Pressed()
 {
-//	QMessageBox msgBox;
-//	msgBox.setText("Example button pressed.");
-//	msgBox.exec();
+	QMessageBox msgBox;
+	msgBox.setText("This Gui has not been implemented jet.");
+	msgBox.exec();
 
-	StimGLScene = new StimulGLGraphScene(this);
-	if(StimGLScene->Init())
-	{
-		GraphView = new QGraphicsView(StimGLScene);
-		GraphView->setWindowModality(Qt::WindowModal);
-		//connect(StimGLScene, SIGNAL(UserWantsToClose(void)), this, SLOT(on_GraphScene_Closed(void)));
-		GraphView->showFullScreen();
-	}
+	//StimGLScene = new StimulGLGraphScene(this);
+	//if(StimGLScene->Init())
+	//{
+	//	GraphView = new QGraphicsView(StimGLScene);
+	//	GraphView->setWindowModality(Qt::WindowModal);
+	//	//connect(StimGLScene, SIGNAL(UserWantsToClose(void)), this, SLOT(on_GraphScene_Closed(void)));
+	//	GraphView->showFullScreen();
+	//}
 }
 
 //void ExperimentManager_Dialog::on_GraphScene_Closed()
