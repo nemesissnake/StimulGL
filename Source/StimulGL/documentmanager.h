@@ -59,8 +59,6 @@ private:
 	void setFileName(int DocIndex, QString fileName);
 	bool getLexer(QsciLexer *lexer, const QString &lexerName, QObject *parent = 0);
 
-	void changeColors(CustomQsciScintilla *currScintilla = NULL);
-
 private slots:
 	void documentWasModified(QWidget *subWindow);
 	void updateLineNumbers(QWidget *tmpSci);

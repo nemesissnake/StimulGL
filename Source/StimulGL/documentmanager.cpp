@@ -272,38 +272,6 @@ void DocumentManager::onMarginClicked (int margin, int line, Qt::KeyboardModifie
 	{
 		tmpScintilla->toggleMarker(line);
 	}
-	changeColors(tmpScintilla);
-}
-
-void DocumentManager::changeColors(CustomQsciScintilla *currScintilla)
-{
-	QColor tmpColorRed(255,0,0);
-	QColor tmpColorGreen(0,255,0);
-	QColor tmpColorBlue(0,0,255);
-
-	//currScintilla->setEdgeColor(tmpColorRed);
-	//currScintilla->setIndicatorForegroundColor(tmpColorRed);
-	//currScintilla->setIndicatorOutlineColor(tmpColorRed);
-	//currScintilla->setMarkerBackgroundColor(tmpColorRed);
-	//currScintilla->setMarkerForegroundColor(tmpColorRed);
-	//currScintilla->setMatchedBraceBackgroundColor(tmpColorRed);
-	//currScintilla->setMatchedBraceForegroundColor(tmpColorRed);
-	//currScintilla->setUnmatchedBraceBackgroundColor(tmpColorRed);
-	//currScintilla->setUnmatchedBraceForegroundColor(tmpColorRed);
-	//currScintilla->setWhitespaceBackgroundColor(tmpColorRed);
-	//currScintilla->setWhitespaceForegroundColor(tmpColorRed);
-	//currScintilla->setCaretForegroundColor(tmpColorRed);
-	//currScintilla->setCaretLineBackgroundColor(tmpColorRed);
-	//currScintilla->setColor(tmpColorRed);
-	//currScintilla->setIndentationGuidesBackgroundColor(tmpColorRed);
-	//currScintilla->setIndentationGuidesForegroundColor(tmpColorRed);
-	//currScintilla->setMarginsBackgroundColor(tmpColorRed);
-	//currScintilla->setMarginsForegroundColor(tmpColorRed);
-	//currScintilla->setPaper(tmpColorRed);
-	//currScintilla->setSelectionBackgroundColor(tmpColorRed);
-	//currScintilla->setSelectionForegroundColor(tmpColorRed);
-	//currScintilla->setDefaultColor(tmpColorRed);
-	currScintilla->setPaper(tmpColorRed);
 }
 
 void DocumentManager::updateLineNumbers(QWidget *tmpSci) 
