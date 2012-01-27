@@ -838,7 +838,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			currentYPoint = (nStimFrameHeight - currentSize) / 2.0f;
 			if(polarRotationDirection == 1)//Clockwise
 			{
-				startAngle = (-360.0f * fTrialTimeProgress) - (polarWedgeSpan);//360.0f/cycleTriggerAmount);
+				startAngle = (-360.0f * fTrialTimeProgress) - (polarWedgeSpan);
 			}
 			else//Counterclockwise 
 			{
@@ -925,6 +925,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	case RetinoMap_Eccentricity:
 		if (bRenderStimuli)
 		{		
+			QPen oldPen;
 			wedgeSpanAngle = 360.0f / eccentricityNrChecks * 16.0f;
 			if (disableCortMagFac)
 			{
@@ -957,7 +958,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			{
 				activationPainter->setPen(QPen(whiteColor, currentCompleteWedgeDiameter, style, flatCap));
 				float fTemp = currentOuterCompleteRingDiameter - (currentWedgeDiameter*eccentricityNrRings);
-				activationPainter->drawArc((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp, 0.0f, 5760.0f);			
+				activationPainter->drawEllipse((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp);			
 			}
 			for(int i=1;i<eccentricityNrRings+1;i++)
 			{
@@ -986,15 +987,41 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
-					if(k==0)//draw a full complete ring
+					/*
+					if((k==0) && (i==1))//draw a full complete ring
 					{
+						//imgPainter->setPen(QPen(QColor(255,0,0), currentCompleteWedgeDiameter, style, flatCap));//cCheckerColor1
+						//imgPainter->drawEllipse(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, 360.0f * 16.0f);
+
+						imgPainter->setPen(QPen(QColor(255,0,0), currentCompleteWedgeDiameter, style, flatCap));
+						float fTemp = currentOuterCompleteRingDiameter - (currentWedgeDiameter*eccentricityNrRings);
+						imgPainter->drawArc((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp, 0.0f, 5760.0f);
+
 						imgPainter->drawArc(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, 360.0f * 16.0f);
+					}					
+					else if((k+i)%2!=0)//old --> else if (k%2!=0)//Only odds
+					{
+						imgPainter->drawArc(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, wedgeSpanAngle);
+					}
+					*/
+
+					if(k==0)//first checker? 
+					{
+						if(i==1)//first ring?
+						{//draw a full complete ring
+							oldPen = imgPainter->pen();
+							imgPainter->setPen(QPen(cCheckerColor1, currentCompleteWedgeDiameter, style, flatCap));
+							float fTemp = currentOuterCompleteRingDiameter - (currentWedgeDiameter*eccentricityNrRings);
+							//imgPainter->drawArc((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp, 0.0f, 5760.0f);
+							imgPainter->drawEllipse((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp);
+							imgPainter->setPen(oldPen);
+						}
+						imgPainter->drawEllipse(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter);
 					}					
 					else if (k%2!=0)
 					{
 						imgPainter->drawArc(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, wedgeSpanAngle);
 					}
-
 					startAngle = startAngle + wedgeSpanAngle;
 				}
 				//if(isDebugMode() && (debugUsedTestSamples==debugTestSamples))
