@@ -838,7 +838,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			currentYPoint = (nStimFrameHeight - currentSize) / 2.0f;
 			if(polarRotationDirection == 1)//Clockwise
 			{
-				startAngle = (-360.0f * fTrialTimeProgress) - (360.0f/cycleTriggerAmount);
+				startAngle = (-360.0f * fTrialTimeProgress) - (polarWedgeSpan);//360.0f/cycleTriggerAmount);
 			}
 			else//Counterclockwise 
 			{

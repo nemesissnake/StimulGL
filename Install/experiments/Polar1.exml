@@ -134,7 +134,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="3">
 			        	<name>OutputTriggerFrame</name>
-			        	<value>false</value>
+			        	<value>true</value>
 			        </parameter>
 			        <parameter ID="4">
 			        	<name>OutputFrameType</name>
