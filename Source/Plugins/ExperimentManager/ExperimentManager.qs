@@ -25,11 +25,9 @@ function ExperimentStateChanged()
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
 ExperimentManagerObj.WriteToLogOutput.connect(this, this.Log);
-ExperimentManagerObj.openExperiment("C:\\Users\\John\\Desktop\\Polar_Angle_Mapping.exml",false);//test  run_1 "D:\\Projects\\StimulGL\\Install\\examples\\retino_mapping_timer.exml", false);//retino_mapping_movdots_timer.exml, retino_mapping_polar_timer, retino_mapping_movbar_timer.exml
-//ExperimentManagerObj.openExperiment("D:/Projects/StimulGL/Install/experiments/Polar1.exml",false);//test  run_1 "D:\\Projects\\StimulGL\\Install\\examples\\retino_mapping_timer.exml", false);//retino_mapping_movdots_timer.exml, retino_mapping_polar_timer, retino_mapping_movbar_timer.exml
+ExperimentManagerObj.openExperiment("C:\\Program Files (x86)\\StimulGL\\experiments\\Polar1.exml",false);
 ExperimentManagerObj.runExperiment();
 
-//test.exml
 //Polar1.exml
 //Polar2.exml
 //Eccentricity1.exml

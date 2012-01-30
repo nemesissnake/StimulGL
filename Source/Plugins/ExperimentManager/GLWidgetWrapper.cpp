@@ -104,10 +104,14 @@ void GLWidgetWrapper::init()
 {
 	cleanupExperimentBlockTrialStructure();
 	mutExpSnapshot.lock();
-	nCurrentExperimentReceivedTriggers = 0;
+	nCurrentExperimentReceivedExternalTriggers = 0;
+	nCurrentExperimentProcessedExternalTriggers = 0;
+	nCurrentExperimentLastProcExternalTriggers = -1;
+	nCurrentExperimentReceivedInternalTriggers = 0;
 	expFullStruct.parentStruct.currExpTrial = -1;
 	expFullStruct.parentStruct.currExpBlock = 0;
-	expFullStruct.parentStruct.currExpTrigger = 0;
+	expFullStruct.parentStruct.currExpInternalTrigger = 0;
+	expFullStruct.parentStruct.currExpExternalTrigger = 0;
 	expFullStruct.parentStruct.currExpBlockTrialTrigger = 0;
 	expFullStruct.parentStruct.currExpBlockTrialFrame = 0;
 	expFullStruct.nTotalProcessedExperimentTrials = 0;
@@ -305,11 +309,25 @@ bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
 							}
 						}
 
+						tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(SUBTRIGGERAMOUNT_TAG);
+						int nSubTriggerAmount = 1;//Default
+						if(!tmpElement.isNull())//Is there a SubTriggerAmount defined?
+						{
+							if (!tmpElement.text().isEmpty())
+							{
+								if (tmpElement.text().toInt() > 0)
+								{
+									nSubTriggerAmount = tmpElement.text().toInt();
+								}
+							}
+						}
+
 						for (int j=0;j<tmpBlockTrialStruct.nNrOfTrials;j++)
 						{
 							tmpTrialStruct.nTrialID = j;
 							tmpTrialStruct.nTrialNumber = j;
-							tmpTrialStruct.nNrOfTriggers = nTriggerAmount;//Default if not defined
+							tmpTrialStruct.nNrOfInternalTriggers = nTriggerAmount;//Default if not defined
+							tmpTrialStruct.nNrOfExternalSubTriggers = nSubTriggerAmount;//Default if not defined
 							tmpBlockTrialStruct.lTrialStructure.append(tmpTrialStruct);
 						}							
 
@@ -348,7 +366,8 @@ bool GLWidgetWrapper::getCurrentExperimentProgressSnapshot(ExperimentSnapshotStr
 		mutExpSnapshot.lock();
 		expSnapshotstrc->elapsedTrialTime = expTrialTimer.getElapsedTimeInMilliSec();
 		expSnapshotstrc->currExpBlockTrialFrame = expFullStruct.parentStruct.currExpBlockTrialFrame;
-		expSnapshotstrc->currExpTrigger = expFullStruct.parentStruct.currExpTrigger;
+		expSnapshotstrc->currExpInternalTrigger = expFullStruct.parentStruct.currExpInternalTrigger;
+		expSnapshotstrc->currExpExternalTrigger = expFullStruct.parentStruct.currExpExternalTrigger;		
 		expSnapshotstrc->currExpBlockTrialTrigger = expFullStruct.parentStruct.currExpBlockTrialTrigger;
 		expSnapshotstrc->currExpTrial = expFullStruct.parentStruct.currExpTrial;
 		expSnapshotstrc->currExpBlock = expFullStruct.parentStruct.currExpBlock;
@@ -357,12 +376,12 @@ bool GLWidgetWrapper::getCurrentExperimentProgressSnapshot(ExperimentSnapshotStr
 		{
 			if (strcExperimentBlockTrials.lBlockTrialStructure.at(expSnapshotstrc->currExpBlock).nNrOfTrials > expSnapshotstrc->currExpTrial)
 			{
-				expSnapshotstrc->currExpBlockTrialTriggerAmount = strcExperimentBlockTrials.lBlockTrialStructure.at(expSnapshotstrc->currExpBlock).lTrialStructure.at(expSnapshotstrc->currExpTrial).nNrOfTriggers;
+				expSnapshotstrc->currExpBlockTrialInternalTriggerAmount = strcExperimentBlockTrials.lBlockTrialStructure.at(expSnapshotstrc->currExpBlock).lTrialStructure.at(expSnapshotstrc->currExpTrial).nNrOfInternalTriggers;
 			}
 		}
 		else
 		{
-			expSnapshotstrc->currExpBlockTrialTriggerAmount = -1;
+			expSnapshotstrc->currExpBlockTrialInternalTriggerAmount = -1;
 		}
 		//elapsedTrialTime = trialTime.elapsed();
 		mutExpSnapshot.unlock();
@@ -848,13 +867,13 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 	finalizePaintEvent();
 }
 
-void GLWidgetWrapper::incrementTrigger()
+void GLWidgetWrapper::incrementExternalTrigger()
 {
 	if (bCurrentSubObjectIsLocked == false)
 	{
-		nCurrentExperimentReceivedTriggers++;
-		//if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Triggered!, Received="),QString::number(nCurrentExperimentReceivedTriggers));
+		nCurrentExperimentReceivedExternalTriggers++;//Externally Triggered
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Externally Triggered!, Received="),QString::number(nCurrentExperimentReceivedExternalTriggers));				
 	}
 	else
 	{
@@ -863,8 +882,6 @@ void GLWidgetWrapper::incrementTrigger()
 			bCurrentSubObjectReadyToUnlock = false;
 			unlockExperimentObject();
 		}
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Triggered!, No increment because Object is still locked"));	
 	}
 }
 
@@ -915,20 +932,36 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 	//stimContainerDlg->activateWindow();
 	if ((bForceToStop)||(bExperimentShouldStop))
 		return false;	
+	int nIntExtDiv;//The ratio between external and internal triggers
 	bool goToNextBlockTrial = false;
-	bool bFirstCheckAfterExperimentStarted = false;
+	bool bFirstCheckAfterExperimentStarted = false;	
 	mutExpSnapshot.lock();
-	expFullStruct.parentStruct.currExpTrigger = nCurrentExperimentReceivedTriggers;//Take a snapshot!
-	if(expFullStruct.parentStruct.currExpTrial == -1) //First Experiment Trial? (Start/Init), occurs before the start of the Trigger(timer).
+	if(expFullStruct.parentStruct.currExpTrial == -1)//First Experiment Trial? (Start/Init), occurs before the start of the Trigger(timer)
 	{
 		expFullStruct.nTotalProcessedExperimentTrials = 0;
 		goToNextBlockTrial = true;
-		expFullStruct.parentStruct.currExpBlock = 0;
-		bFirstCheckAfterExperimentStarted = true;
+		expFullStruct.parentStruct.currExpBlock = 0;//currExpBlockTrialTrigger
+		bFirstCheckAfterExperimentStarted = true;		
 	}
+	expFullStruct.parentStruct.currExpExternalTrigger = nCurrentExperimentReceivedExternalTriggers;//Take a snapshot!
+	if (bFirstCheckAfterExperimentStarted)
+	{
+		nIntExtDiv = strcExperimentBlockTrials.lBlockTrialStructure[0].lTrialStructure[0].nNrOfExternalSubTriggers;
+	} 
 	else
 	{
-		goToNextBlockTrial = expFullStruct.parentStruct.currExpTrigger >= expFullStruct.nNextThresholdTriggerCount;//Go to next Block Trial?
+		nIntExtDiv = strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].lTrialStructure[expFullStruct.parentStruct.currExpTrial].nNrOfExternalSubTriggers;
+	}
+	if ((nCurrentExperimentReceivedExternalTriggers!=0) && ((nCurrentExperimentReceivedExternalTriggers-nCurrentExperimentProcessedExternalTriggers)%nIntExtDiv == 0) && (nCurrentExperimentLastProcExternalTriggers != nCurrentExperimentReceivedExternalTriggers))
+	{
+		nCurrentExperimentProcessedExternalTriggers = nCurrentExperimentReceivedExternalTriggers;
+		nCurrentExperimentLastProcExternalTriggers = nCurrentExperimentReceivedExternalTriggers;
+		nCurrentExperimentReceivedInternalTriggers++;
+	}
+	expFullStruct.parentStruct.currExpInternalTrigger = nCurrentExperimentReceivedInternalTriggers;//Take a snapshot!	
+	if(bFirstCheckAfterExperimentStarted == false)
+	{
+		goToNextBlockTrial = expFullStruct.parentStruct.currExpInternalTrigger >= expFullStruct.nNextThresholdTriggerCount;//Go to next Block Trial?
 	}
 	if(goToNextBlockTrial)//When we init/start or switch from a Block Trial 
 	{
@@ -954,7 +987,7 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 			expFullStruct.parentStruct.currExpTrial++;//Increment the Experiment Trial Counter
 			expFullStruct.parentStruct.currExpBlockTrialTrigger = 0;
 		}
-		expFullStruct.nNextThresholdTriggerCount += strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].lTrialStructure[expFullStruct.parentStruct.currExpTrial].nNrOfTriggers;//increment the nextTimeThresholdTRs
+		expFullStruct.nNextThresholdTriggerCount += strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].lTrialStructure[expFullStruct.parentStruct.currExpTrial].nNrOfInternalTriggers;//increment the nextTimeThresholdTRs
 		expFullStruct.parentStruct.currExpBlockTrialFrame = 0;
 		//if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Starting to Init new BlockTrial"),QString("Block=") + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
@@ -982,7 +1015,7 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 	}
 	else
 	{
-		expFullStruct.parentStruct.currExpBlockTrialTrigger = getRelativeBlockTrialTrigger(expFullStruct.parentStruct.currExpTrigger);
+		expFullStruct.parentStruct.currExpBlockTrialTrigger = getRelativeBlockTrialTrigger(expFullStruct.parentStruct.currExpInternalTrigger);
 		mutExpSnapshot.unlock();
 		return false;
 	}
@@ -1002,7 +1035,7 @@ int GLWidgetWrapper::getRelativeBlockTrialTrigger(int nAbsoluteTrigger)
 	{
 		for (int j=0;j<strcExperimentBlockTrials.lBlockTrialStructure.at(i).nNrOfTrials;j++)
 		{
-			if ((nTriggersOutsideCurrentBlockTrial + (strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfTriggers))>nAbsoluteTrigger)
+			if ((nTriggersOutsideCurrentBlockTrial + (strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfInternalTriggers))>nAbsoluteTrigger)
 			{
 				if (bDoUnlock)
 					mutExpSnapshot.unlock();
@@ -1010,7 +1043,7 @@ int GLWidgetWrapper::getRelativeBlockTrialTrigger(int nAbsoluteTrigger)
 			}
 			else
 			{
-				nTriggersOutsideCurrentBlockTrial = nTriggersOutsideCurrentBlockTrial + strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfTriggers;
+				nTriggersOutsideCurrentBlockTrial = nTriggersOutsideCurrentBlockTrial + strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfInternalTriggers;
 			}
 		}
 	}

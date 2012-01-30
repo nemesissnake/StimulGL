@@ -26,7 +26,7 @@
 #define RETINOMAP_WIDGET_WIDTH_PIXEL_AMOUNT				"stimuluswidthspan"
 #define RETINOMAP_WIDGET_HEIGHT_PIXEL_AMOUNT			"stimulusheightspan"
 #define RETINOMAP_WIDGET_CORTMAG_FACTOR					"corticalmagnitudefactor"
-#define RETINOMAP_WIDGET_TRIGGERDURATION_MSEC			"triggerduration"
+#define RETINOMAP_WIDGET_TRIGGERDURATION_MSEC			"internaltriggerduration"
 #define RETINOMAP_WIDGET_DISCRETETRIGGERSTEPS			"discretetriggersteps"
 #define RETINOMAP_WIDGET_RANDOMIZETRIGGERSTEPS			"randomizetriggersteps"
 #define RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS				"emptytriggersteps"

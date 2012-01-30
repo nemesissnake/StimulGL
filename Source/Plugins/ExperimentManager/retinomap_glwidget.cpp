@@ -64,9 +64,10 @@ void RetinoMap_glwidget::initialize()
 	expSnapshot.currExpBlock = 0;
 	expSnapshot.currExpBlockTrialFrame = 0;
 	expSnapshot.currExpBlockTrialTrigger = 0;
-	expSnapshot.currExpBlockTrialTriggerAmount = 0;
+	expSnapshot.currExpBlockTrialInternalTriggerAmount = 0;
 	expSnapshot.currExpTrial = 0;
-	expSnapshot.currExpTrigger = 0;
+	expSnapshot.currExpInternalTrigger = 0;
+	expSnapshot.currExpExternalTrigger = 0;
 	expSnapshot.elapsedTrialTime = 0;
 
 	bNoChangesSinceLastFrame = false;
@@ -567,7 +568,6 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","Starting to paint the object");
 	QPaintEvent *event = reinterpret_cast<QPaintEvent *>(paintEventObject);//qobject_cast<QPaintEvent *>(paintEventObject);
 	GLWidgetPaintFlags currentPaintFlags = (GLWidgetPaintFlags)paintFlags;
-	//int nPaintIndex = 0;
 	bool bRenderStimuli = true;
 	QString tmpStr = "";
 	tmpParamValue = "";
@@ -589,7 +589,6 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1))-1;
 	else if((elapsedTrialTime <= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger))))&&(currentExpType != RetinoMap_Fixation))
 		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger))+1;
-	//debugElapsedTime = debugTime.restart();
 	if (currExpBlockTrialCycle < (int)(expSnapshot.currExpBlockTrialTrigger/cycleTriggerAmount))
 	{
 		currExpBlockTrialCycle++;
@@ -987,24 +986,6 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
-					/*
-					if((k==0) && (i==1))//draw a full complete ring
-					{
-						//imgPainter->setPen(QPen(QColor(255,0,0), currentCompleteWedgeDiameter, style, flatCap));//cCheckerColor1
-						//imgPainter->drawEllipse(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, 360.0f * 16.0f);
-
-						imgPainter->setPen(QPen(QColor(255,0,0), currentCompleteWedgeDiameter, style, flatCap));
-						float fTemp = currentOuterCompleteRingDiameter - (currentWedgeDiameter*eccentricityNrRings);
-						imgPainter->drawArc((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp, 0.0f, 5760.0f);
-
-						imgPainter->drawArc(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, 360.0f * 16.0f);
-					}					
-					else if((k+i)%2!=0)//old --> else if (k%2!=0)//Only odds
-					{
-						imgPainter->drawArc(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, wedgeSpanAngle);
-					}
-					*/
-
 					if(k==0)//first checker? 
 					{
 						if(i==1)//first ring?
@@ -1323,7 +1304,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	imgPainter->end();
 	if (outputTriggerFrame)
 	{
-		if (expSnapshot.currExpTrigger > lastTriggerNumber)
+		if (expSnapshot.currExpInternalTrigger > lastTriggerNumber)
 		{
 			QFile file;
 			QString outputDir = MainAppInfo::outputsDirPath();
@@ -1337,7 +1318,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			{
 				QDir().mkdir(outputDir);
 			}
-			QString fileName = outputDir + QString::number(nRetinoID) + "_" + QString::number(expSnapshot.currExpBlock) + QString("_") + QString::number(expSnapshot.currExpTrial) + QString("_") + QString::number(expSnapshot.currExpTrigger);
+			QString fileName = outputDir + QString::number(nRetinoID) + "_" + QString::number(expSnapshot.currExpBlock) + QString("_") + QString::number(expSnapshot.currExpTrial) + QString("_") + QString::number(expSnapshot.currExpInternalTrigger);
 
 			switch (retinoOutputType)
 			{
@@ -1454,7 +1435,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		//float fAverageElapsed = debugTotalElapsedTime/debugUsedTestSamples;
 		//textContent = QString("Average elapsed time: %1").arg(fAverageElapsed); //+ ": " + debugString; //"Retinotopic Mapping";
 		//painter.drawText(QRect(10, 0, rectScreenRes.width(), 100), Qt::AlignLeft, textContent);//Takes about 5ms additional total drawing time!
-		textContent = "TriggerNr:" + QString::number(expSnapshot.currExpTrigger) + ", TrialNr:" + QString::number(expSnapshot.currExpTrial) + ", BlockNr:" + QString::number(expSnapshot.currExpBlock);
+		textContent = "ExternalTriggerNr:" + QString::number(expSnapshot.currExpExternalTrigger) + ", InternalTriggerNr:" + QString::number(expSnapshot.currExpInternalTrigger) + ", TrialNr:" + QString::number(expSnapshot.currExpTrial) + ", BlockNr:" + QString::number(expSnapshot.currExpBlock);
 		stimuliPainter->drawText(QRect(10, 50, stimWidthPixelAmount, 100), Qt::AlignLeft, textContent);
 		//debugUsedTestSamples++;
 		//}

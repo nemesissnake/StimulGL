@@ -48,7 +48,7 @@ Attributes only apply to readonly non user data, like the ID
         	<signature>CaptureThreadTriggered(short)</signature>
           <target ID="1">
           	<type>slot</type>     
-          	<signature>incrementTrigger()</signature>      
+          	<signature>incrementExternalTrigger()</signature>      
           </target>
         </object>
 -->
@@ -57,7 +57,7 @@ Attributes only apply to readonly non user data, like the ID
         	<signature>timeout()</signature>
           <target ID="1">
           	<type>slot</type>     
-          	<signature>incrementTrigger()</signature>      
+          	<signature>incrementExternalTrigger()</signature>      
           </target>
         </object>
     </connections>

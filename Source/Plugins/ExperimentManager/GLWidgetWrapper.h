@@ -80,7 +80,7 @@ protected:
 	void paintEvent(QPaintEvent *event);
 
 protected slots:
-	void incrementTrigger();
+	void incrementExternalTrigger();
 	void animate();
 	//void proceedPaintEventLoop();;
 
@@ -110,7 +110,10 @@ private:
 	QMutex mutRecursivePaint;
 	ExperimentSnapshotFullStructure expFullStruct;
 	//int nBlockTrialFrameCounter;
-	int nCurrentExperimentReceivedTriggers;				//The current experiment number of trigger received since it started, internal use!
+	int nCurrentExperimentReceivedExternalTriggers;		//The current experiment number of external triggers recieved since it started, local use!
+	int nCurrentExperimentProcessedExternalTriggers;	//The current experiment processed external triggers, local use!
+	int nCurrentExperimentLastProcExternalTriggers;		//The current experiment last processed external trigger, local use!
+	int nCurrentExperimentReceivedInternalTriggers;		//The current experiment number of internal triggers incremented since it started, local use!
 	//int nCurrentExperimentTrigger;					//The current experiment trigger
 	//int nCurrentExperimentTrial;						//The current experiment trial within the block 
 	//int nCurrentExperimentBlockTrialReceivedTriggers;	//The current experiment number of trigger received within the current block trial

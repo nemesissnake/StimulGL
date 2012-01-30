@@ -81,7 +81,8 @@ typedef struct{
 	int nTrialID;
 	int nTrialNumber;
 	//QString nBlockName;
-	int nNrOfTriggers;
+	int nNrOfInternalTriggers;
+	int nNrOfExternalSubTriggers;//Normally this is 1 which means that each ExternalSubTrigger is valid for 1 InternalTrigger, eg 3 means that only after 3 ExternalSubTriggers 1 InternalTriggers is processed!
 	//RandomGenerator *randEmptyStimGenerator;//This can hold some trial specific Information that can also be randomized
 } TrialStructure;
 
@@ -102,11 +103,12 @@ typedef struct{
 
 typedef struct{
 	int currExpBlockTrialFrame;
-	int currExpTrigger;					//The current experiment trigger
+	int currExpExternalTrigger;			//The current experiment external trigger
+	int currExpInternalTrigger;			//The current experiment internal trigger
 	int currExpBlockTrialTrigger;		//This is different!! It is now the current trigger within a Block Trial
 	int currExpTrial;					//The current experiment trial within the block 	
 	int currExpBlock;					//The current experiment block
-	int currExpBlockTrialTriggerAmount;
+	int currExpBlockTrialInternalTriggerAmount;
 	double elapsedTrialTime;
 	//int currExpBlockTrialCycle;--> inside widget
 } ExperimentSnapshotStructure;
@@ -171,6 +173,7 @@ typedef struct{
 #define BLOCKNUMBER_TAG					"block_number"
 #define TRIALAMOUNT_TAG					"nr_of_trials"
 #define TRIGGERAMOUNT_TAG				"nr_of_triggers"
+#define SUBTRIGGERAMOUNT_TAG			"nr_of_externaltriggers"
 #define DECLARATIONS_TAG				"declarations"
 #define CONNECTIONS_TAG					"connections"
 #define INITIALIZATIONS_TAG				"initializations"
