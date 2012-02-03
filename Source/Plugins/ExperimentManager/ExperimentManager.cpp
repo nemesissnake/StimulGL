@@ -1,11 +1,10 @@
 #include "ExperimentManager.h"
+#include "ImageProcessor.h"
 #include "metaextensions.h"
 #include <QFileDialog>
 #include <QWaitCondition>
-//#include "..\ParallelPortDevice\parallelport.h"
-//#include "glwidget.h"
 
-QScriptValue ExperimentManager::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
+QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
 	//this function gets called first whenever a new object is constructed trough the script
 	//	if (context->isCalledAsConstructor()) {
@@ -40,9 +39,10 @@ ExperimentManager::~ExperimentManager()
 }
 
 void ExperimentManager::RegisterMetaTypes()
-{
+{//To register the Objects to the Meta, so they can be accessed trough an *.exml file
 	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
+	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
 }
 
 bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue)

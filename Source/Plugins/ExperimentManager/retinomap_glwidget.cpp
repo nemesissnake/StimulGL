@@ -943,6 +943,10 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					currentCompleteWedgeDiameter = (((nStimFrameHeight - gapDiameter) * cortMagFactor) - ((nStimFrameHeight - gapDiameter) * fTrialTimeProgress * cortMagFactor)) / 2.0f;
 					currentWedgeDiameter = currentCompleteWedgeDiameter / eccentricityNrRings;
 					currentOuterCompleteRingDiameter = nStimFrameHeight - ((nStimFrameHeight - gapDiameter) * fTrialTimeProgress);
+					//if (fTrialTimeProgress > 0.0)
+					//{
+					//	int aa = 7;
+					//}
 				}
 				else//Increase ring diameter
 				{

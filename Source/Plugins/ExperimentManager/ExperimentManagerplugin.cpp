@@ -1,7 +1,9 @@
 #include "ExperimentManagerplugin.h"
 #include "ExperimentManager.h"
+#include "ImageProcessor.h"
 
 Q_DECLARE_METATYPE(ExperimentManager*)
+//Q_DECLARE_METATYPE(ImageProcessor*)
 
 ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 {
@@ -29,8 +31,15 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 {
 	QScriptValue ExperimentManagerProto = engine.newQObject(ExperimentManagerObject);
 	engine.setDefaultPrototype(qMetaTypeId<ExperimentManager*>(), ExperimentManagerProto);
-	QScriptValue ExperimentManagerCtor = engine.newFunction(ExperimentManager::ctor__extensionname, ExperimentManagerProto);
-	engine.globalObject().setProperty("ExperimentManager", ExperimentManagerCtor);
+	QScriptValue ExperimentManagerCtor = engine.newFunction(ExperimentManager::ctor__experimentManager, ExperimentManagerProto);
+	engine.globalObject().setProperty(EXPERIMENTMANAGER_NAME, ExperimentManagerCtor);
+
+	ImageProcessor ImageProcessorObject;//or use new(), but make sure to use delete afterwards!
+	QScriptValue ImageProcessorProto = engine.newQObject(&ImageProcessorObject);
+	engine.setDefaultPrototype(qMetaTypeId<ImageProcessor*>(), ImageProcessorProto);
+	QScriptValue ImageProcessorCtor = engine.newFunction(ImageProcessor::ctor__imageProcessor, ImageProcessorProto);
+	engine.globalObject().setProperty(IMAGEPROCESSOR_NAME, ImageProcessorCtor);
+
 	return true;
 }
 

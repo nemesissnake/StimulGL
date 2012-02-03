@@ -151,6 +151,8 @@ typedef struct{
 #define FUNC_OBJECT_ABORT						"abortExperimentObject"
 #define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
 #define TRIGGERTIMER_NAME						"TriggerTimer"
+#define IMAGEPROCESSOR_NAME						"ImageProcessor"
+#define EXPERIMENTMANAGER_NAME					"ExperimentManager"
 #define MODULE_NAME								"Experiment Parser"
 #define MAX_INVOKE_ARG_COUNT					10
 //#define MIN_SCREEN_UPDATE_TIME					10

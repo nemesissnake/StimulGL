@@ -11,7 +11,6 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include "experimenttree.h"
-//#include "experimentlogger.h"
 #include "Global.h"
 #include "retinomap_glwidget.h"
 #include "mainappinfo.h"
@@ -21,10 +20,6 @@
 #include <windows.h>
 #endif
 
-//#include "ThreadedGLWidgetWrapper.h"
-//#include "glwidget.h"
-
-//class GLWidgetWrapper;
 class RetinoMap_glwidget;
 class ExperimentTree;
 
@@ -37,7 +32,7 @@ signals:
 	void WriteToLogOutput(const QString &strText2Write);
 
 public:
-	ExperimentManager(QObject *parent = 0);
+	ExperimentManager(QObject *parent = NULL);
 	~ExperimentManager();
 
 	typedef struct{
@@ -50,7 +45,7 @@ public:
 		//objectStateHistory sStateHistory;
 	} objectElement;
 
-	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
+	static QScriptValue ctor__experimentManager(QScriptContext* context, QScriptEngine* engine);
 	bool cleanupExperiment();
 	QHash<QString, QString> *getObjectBlockParamListById(int nID);
 

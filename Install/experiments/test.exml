@@ -113,7 +113,7 @@ Attributes only apply to readonly non user data, like the ID
     <actions>
     	<blocks>
 
-		   	<block ID="0">
+		<block ID="0">
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
@@ -154,7 +154,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="8">
 			        	<name>OutputFrameFormat</name>
-			        	<value>DAT</value>
+			        	<value>PNG</value>
 			        </parameter>
 			        <parameter ID="10">
 			        	<name>FixationSize</name>
@@ -166,7 +166,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>	
 			        <parameter ID="12">
 			        	<name>DisplayRefreshRate</name>
-			        	<value>15</value>
+			        	<value>30</value>
 			        </parameter>			        
 			    	</parameters>    
 		    	</object>   
@@ -221,7 +221,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>	
   		        <parameter ID="12">
 			        	<name>MovingBarAngle</name>
-			        	<value>0</value>
+			        	<value>135</value>
 			        </parameter>
 			        <parameter ID="13">    	
 			        	<name>MovingBarHeight</name>
@@ -231,110 +231,7 @@ Attributes only apply to readonly non user data, like the ID
 		    	</object>   
 	    	</block>
 
-		   	<block ID="2">
-	        <name>MovingBar_Block</name>
-	        <block_number>2</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>MovingBarAngle</name>
-			        	<value>45</value>
-			        </parameter>  		              
-			    	</parameters>
-		    	</object>   
-	    	</block>	    	
-	    	
-		   	<block ID="3">
-	        <name>MovingBar_Block</name>
-	        <block_number>3</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>MovingBarAngle</name>
-			        	<value>90</value>
-			        </parameter>  		              
-			    	</parameters>
-		    	</object>   
-	    	</block>	    	
-	    	
-		   	<block ID="4">
-	        <name>MovingBar_Block</name>
-	        <block_number>4</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>MovingBarAngle</name>
-			        	<value>135</value>
-			        </parameter>  		              
-			    	</parameters>
-		    	</object>   
-	    	</block>  	
-
-		   	<block ID="5">
-	        <name>MovingBar_Block</name>
-	        <block_number>5</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>MovingBarAngle</name>
-			        	<value>180</value>
-			        </parameter>  		              
-			    	</parameters>
-		    	</object>   
-	    	</block>	    	
-
-		   	<block ID="6">
-	        <name>MovingBar_Block</name>
-	        <block_number>6</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>MovingBarAngle</name>
-			        	<value>225</value>
-			        </parameter>  		              
-			    	</parameters>
-		    	</object>   
-	    	</block>	    	
-
-		   	<block ID="7">
-	        <name>MovingBar_Block</name>
-	        <block_number>7</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>MovingBarAngle</name>
-			        	<value>270</value>
-			        </parameter>  		              
-			    	</parameters>
-		    	</object>   
-	    	</block>	    	
-
-		   	<block ID="8">
-	        <name>MovingBar_Block</name>
-	        <block_number>8</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>12</nr_of_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="0">
-			        	<name>MovingBarAngle</name>
-			        	<value>315</value>
-			        </parameter>  		              
-			    	</parameters>
-		    	</object>   
-	    	</block>
+		
 	
     	</blocks>
     </actions>

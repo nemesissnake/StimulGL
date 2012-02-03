@@ -839,7 +839,7 @@
        </rect>
       </property>
       <property name="title">
-       <string>Base Address</string>
+       <string>Capture Address</string>
       </property>
       <widget class="QLineEdit" name="txtCBaseAddress">
        <property name="geometry">
@@ -1537,7 +1537,7 @@
        </rect>
       </property>
       <property name="title">
-       <string>Base Address</string>
+       <string>Generate Address</string>
       </property>
       <widget class="QLineEdit" name="txtGBaseAddress">
        <property name="geometry">

@@ -334,13 +334,24 @@ void PPort_Dialog::on_btnStartCaptureThread_clicked()
 	}
 	if ((UI_InpOutObject.IsPortInput(getCBaseAddress()))==false)
 	{
-		ret = QMessageBox::warning(this, tr("Change to Input Mode?"),
-			tr("The current port is not configured for input, to proceed the port needs to be set to input mode.\n"
-			"Do you want to proceed?"),
+		ret = QMessageBox::warning(this, tr("Try to change to Input Mode?"),
+			tr("The current port is NOT configured for input, if you are trying to read from the Data-port this port first needs to be set to input mode.\n"
+			"Do you want to try this first before aborting the capture?"),
 			QMessageBox::Yes | QMessageBox::No);
 		if (ret == QMessageBox::Yes)
 		{
 			UI_InpOutObject.ConfigurePortForInput(nCBaseAddress);
+			if ((UI_InpOutObject.IsPortInput(getCBaseAddress()))==false)
+			{
+				ret = QMessageBox::warning(this, tr("Failed to configure the Input Mode!"),
+					tr("The mode could not be changed to Input Mode. Maybe your hardware doesn't support it?\n"
+					"Do you still want to proceed?"),
+					QMessageBox::Yes | QMessageBox::No);
+				if (ret == QMessageBox::No)
+				{
+					return;
+				}
+			}
 		}
 		else
 		{
@@ -423,7 +434,7 @@ void PPort_Dialog::on_rbGenMethod_Periodical_toggled(bool)
 	if (ui.rbGenMethod_Periodical->isChecked())	
 	{
 		ui.gb_GenInActVal->setEnabled(true);
-		ui.gb_GenPulseShape->setEnabled(false);
+		ui.gb_GenPulseShape->setEnabled(true);
 		ui.txtRepetitionTime_G->setEnabled(true);
 	}
 }

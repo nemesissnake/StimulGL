@@ -11,6 +11,7 @@
 #include "plugininterface.h"
 #include "ExperimentManager_dialog.h"
 #include "ExperimentManager.h"
+#include "ImageProcessor.h"
 
 QT_BEGIN_NAMESPACE
 QT_END_NAMESPACE
