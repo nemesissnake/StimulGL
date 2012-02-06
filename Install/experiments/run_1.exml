@@ -121,7 +121,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -180,7 +180,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>PolarAngle_Block</name>
 	        <block_number>1</block_number>            
 	        <nr_of_trials>3</nr_of_trials>
-	        <nr_of_triggers>36</nr_of_triggers>
+	        <nr_of_internal_triggers>36</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -247,7 +247,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>2</block_number>
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -266,7 +266,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>PolarAngle_Block</name>
 	        <block_number>3</block_number>            
 	        <nr_of_trials>3</nr_of_trials>
-	        <nr_of_triggers>36</nr_of_triggers>
+	        <nr_of_internal_triggers>36</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -333,7 +333,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>4</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -354,7 +354,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>5</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -373,7 +373,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>EccentricityBlock</name>
 	        <block_number>6</block_number>            
 	        <nr_of_trials>3</nr_of_trials>
-	        <nr_of_triggers>36</nr_of_triggers>
+	        <nr_of_internal_triggers>36</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -432,7 +432,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>7</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -451,7 +451,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>EccentricityBlock</name>
 	        <block_number>8</block_number>            
 	        <nr_of_trials>3</nr_of_trials>
-	        <nr_of_triggers>36</nr_of_triggers>
+	        <nr_of_internal_triggers>36</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -510,7 +510,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>9</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -531,7 +531,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>10</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -550,7 +550,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>11</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -609,7 +609,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>12</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -624,7 +624,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>13</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -639,7 +639,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>14</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -654,7 +654,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>15</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -669,7 +669,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>16</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -684,7 +684,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>17</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -699,7 +699,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>18</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -714,7 +714,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>19</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -729,7 +729,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>20</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -744,7 +744,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>21</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -759,7 +759,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>22</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -774,7 +774,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>23</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -793,7 +793,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>24</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -852,7 +852,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>25</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -867,7 +867,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>26</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -882,7 +882,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>27</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -897,7 +897,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>28</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -912,7 +912,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>29</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -927,7 +927,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>30</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -942,7 +942,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>31</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -957,7 +957,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>32</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -972,7 +972,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>33</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -987,7 +987,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>34</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -1002,7 +1002,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingBar_Block</name>
 	        <block_number>35</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>24</nr_of_triggers>
+	        <nr_of_internal_triggers>24</nr_of_internal_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -1017,7 +1017,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>36</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_triggers>8</nr_of_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">

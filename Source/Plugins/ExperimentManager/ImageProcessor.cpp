@@ -138,14 +138,14 @@ bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int
 			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 			break;
 		}
-	case 2://Smooth + Convert to Mono colored(threshold = 255)
+	case 2://Smooth + Convert to Mono colored (threshold = 255)
 		{
 			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 			QImage tmpImage = tmpPixmap.toImage().convertToFormat(QImage::Format_Mono, Qt::MonoOnly|Qt::ThresholdDither|Qt::AvoidDither);
 			tmpPixmap = tmpPixmap.fromImage(tmpImage);
 			break;	
 		}
-	case 3://Smooth + Convert to Mono colored(threshold = nColorThreshold)
+	case 3://Smooth + Convert to Mono colored (threshold = nColorThreshold)
 		{
 			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 			QImage tmpImage = tmpPixmap.toImage();//.convertToFormat(QImage::Format_Mono, Qt::MonoOnly|Qt::ThresholdDither|Qt::AvoidDither);
