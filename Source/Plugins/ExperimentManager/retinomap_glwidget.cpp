@@ -96,6 +96,7 @@ void RetinoMap_glwidget::initialize()
 	roundCap = Qt::RoundCap;
 	nextNewBlockEntered = false;
 	nextNewCycleEntered = false;
+	fCalculatedCortMagFacTimingConst = 1.0f;
 }
 
 void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
@@ -121,7 +122,12 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		if (disableCortMagFac)
 			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_DISABLECORTMAGFAC,RETINOMAP_WIDGET_BOOL_TRUE);
 		else
-			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_DISABLECORTMAGFAC,RETINOMAP_WIDGET_BOOL_FALSE);		
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_DISABLECORTMAGFAC,RETINOMAP_WIDGET_BOOL_FALSE);
+		enableCortMagTiming = false;
+		if (enableCortMagTiming)
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_ENABLE_CORTMAG_TIMING,RETINOMAP_WIDGET_BOOL_TRUE);
+		else
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_ENABLE_CORTMAG_TIMING,RETINOMAP_WIDGET_BOOL_FALSE);
 		eccentricityDirection = 1;
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_DIRECTION,QString::number(eccentricityDirection));
 		movingBarAngle = 45.0;
@@ -357,6 +363,11 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			eccentricityNrChecks = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_CHECK_AMOUNT,QString::number(eccentricityNrChecks)).toInt();
 			eccentricityNrRings = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_RING_AMOUNT,QString::number(eccentricityNrRings)).toInt();
 			eccentricityDirection = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_DIRECTION,QString::number(eccentricityDirection)).toInt();
+			tmpString = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_ENABLE_CORTMAG_TIMING,RETINOMAP_WIDGET_BOOL_FALSE);
+			if (tmpString == RETINOMAP_WIDGET_BOOL_TRUE)
+				enableCortMagTiming = true;
+			else //if(tmpString == RETINOMAP_WIDGET_BOOL_FALSE)
+				enableCortMagTiming = false;
 			break;
 		case RetinoMap_MovingBar :
 			movingBarAngle = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGBAR_ANGLE,QString::number(movingBarAngle)).toFloat();
@@ -925,34 +936,64 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		if (bRenderStimuli)
 		{		
 			QPen oldPen;
-			wedgeSpanAngle = 360.0f / eccentricityNrChecks * 16.0f;
+			wedgeSpanAngle = 360.0f / eccentricityNrChecks * 16.0f;		
+			if((enableCortMagTiming)&&(cortMagFactor > 0.0f)&&(cortMagFactor < 1.0f))
+			{
+				//Matlab
+				//CortMagFac = 0.2
+				//CycleTriggerAmount = 8
+				//CortMagFacTimingFactor = (100-(1/(((log(-CortMagFac+1)/(10/(CycleTriggerAmount-1)))-1)/-100)))/(CortMagFac*100)
+				//time=[0:0.01:15];
+				//Decrease
+				//y=  ((-100+(CortMagFac*CortMagFacTimingFactor*100))*exp(((CortMagFac*CortMagFacTimingFactor*100)/(-100+(CortMagFac*CortMagFacTimingFactor*100)))*  time)    +100-(CortMagFac*CortMagFacTimingFactor*100))/(100-(CortMagFac*CortMagFacTimingFactor*100));
+				//Increase
+				//y=1-((-100+(CortMagFac*CortMagFacTimingFactor*100))*exp(((CortMagFac*CortMagFacTimingFactor*100)/(-100+(CortMagFac*CortMagFacTimingFactor*100)))*(-time+10))+100-(CortMagFac*CortMagFacTimingFactor*100))/(100-(CortMagFac*CortMagFacTimingFactor*100));
+				//plot(time,y)
+				//additional --> s = solve('CycleTriggerAmount=20','CortMagFac=0.3','t=(10/(CycleTriggerAmount-1))','((-100+(CortMagFac*answer*100))*exp(((CortMagFac*answer*100)/(-100+(CortMagFac*answer*100)))*t)+100-(CortMagFac*answer*100))/(100-(CortMagFac*answer*100))=CortMagFac')
+				if(eccentricityDirection == -1)//Decrease ring diameter
+				{			
+					fCalculatedCortMagFacTimingConst =(100-(1/(((qLn(-cortMagFactor+1)/(10/(float)(cycleTriggerAmount-1)))-1)/-100)))/(cortMagFactor*100);
+					float fTau = (float)(cortMagFactor * fCalculatedCortMagFacTimingConst*100)/(-100 + (cortMagFactor * fCalculatedCortMagFacTimingConst*100));
+					fCortMagTrialTimeProgress = ((-100 + (cortMagFactor * fCalculatedCortMagFacTimingConst*100))*qExp(fTau *(fTrialTimeProgress*10))+100-(cortMagFactor * fCalculatedCortMagFacTimingConst*100))/(100-(cortMagFactor * fCalculatedCortMagFacTimingConst*100));
+				}
+				else
+				{
+					fCalculatedCortMagFacTimingConst =(100-(1/(((qLn(-cortMagFactor+1)/(10/(float)(cycleTriggerAmount-1)))-1)/-100)))/(cortMagFactor*100);
+					float fTau = (float)(cortMagFactor * fCalculatedCortMagFacTimingConst*100)/(-100 + (cortMagFactor * fCalculatedCortMagFacTimingConst*100));
+					fCortMagTrialTimeProgress = 1-((-100 + (cortMagFactor * fCalculatedCortMagFacTimingConst*100))*qExp(fTau *( (fTrialTimeProgress*-10)+10 ))+100-(cortMagFactor * fCalculatedCortMagFacTimingConst*100))/(100-(cortMagFactor * fCalculatedCortMagFacTimingConst*100));
+				}				
+			}
+			else
+			{
+				fCortMagTrialTimeProgress = fTrialTimeProgress;
+			}
 			if (disableCortMagFac)
 			{
 				currentCompleteWedgeDiameter = ((nStimFrameHeight - gapDiameter) * cortMagFactor) / 2.0f;
 				//currentCompleteWedgeDiameter = ((nStimFrameHeight - gapDiameter)) / 2.0f;
 				currentWedgeDiameter = currentCompleteWedgeDiameter / eccentricityNrRings;
 				if(eccentricityDirection == -1)//Decrease ring diameter
-					currentOuterCompleteRingDiameter = nStimFrameHeight - ((nStimFrameHeight - gapDiameter - (2*currentCompleteWedgeDiameter)) * fTrialTimeProgress);
+					currentOuterCompleteRingDiameter = nStimFrameHeight - ((nStimFrameHeight - gapDiameter - (2*currentCompleteWedgeDiameter)) * fCortMagTrialTimeProgress);
 				else//Increase ring diameter
-					currentOuterCompleteRingDiameter = (gapDiameter + (2*currentCompleteWedgeDiameter)) + ((nStimFrameHeight - gapDiameter - (2*currentCompleteWedgeDiameter)) * fTrialTimeProgress);
+					currentOuterCompleteRingDiameter = (gapDiameter + (2*currentCompleteWedgeDiameter)) + ((nStimFrameHeight - gapDiameter - (2*currentCompleteWedgeDiameter)) * fCortMagTrialTimeProgress);
 			} 
 			else
 			{
 				if(eccentricityDirection == -1)//Decrease ring diameter
 				{
-					currentCompleteWedgeDiameter = (((nStimFrameHeight - gapDiameter) * cortMagFactor) - ((nStimFrameHeight - gapDiameter) * fTrialTimeProgress * cortMagFactor)) / 2.0f;
+					currentCompleteWedgeDiameter = (((nStimFrameHeight - gapDiameter) * cortMagFactor) - ((nStimFrameHeight - gapDiameter) * fCortMagTrialTimeProgress * cortMagFactor)) / 2.0f;
 					currentWedgeDiameter = currentCompleteWedgeDiameter / eccentricityNrRings;
-					currentOuterCompleteRingDiameter = nStimFrameHeight - ((nStimFrameHeight - gapDiameter) * fTrialTimeProgress);
-					//if (fTrialTimeProgress > 0.0)
+					currentOuterCompleteRingDiameter = nStimFrameHeight - ((nStimFrameHeight - gapDiameter) * fCortMagTrialTimeProgress);
+					//if (fCortMagTrialTimeProgress > 0.0)
 					//{
 					//	int aa = 7;
 					//}
 				}
 				else//Increase ring diameter
 				{
-					currentCompleteWedgeDiameter = (((nStimFrameHeight - gapDiameter) / 2.0f) * fTrialTimeProgress * cortMagFactor) ;
+					currentCompleteWedgeDiameter = (((nStimFrameHeight - gapDiameter) / 2.0f) * fCortMagTrialTimeProgress * cortMagFactor) ;
 					currentWedgeDiameter = currentCompleteWedgeDiameter / eccentricityNrRings;
-					currentOuterCompleteRingDiameter = gapDiameter + ((nStimFrameHeight - gapDiameter) * fTrialTimeProgress);
+					currentOuterCompleteRingDiameter = gapDiameter + ((nStimFrameHeight - gapDiameter) * fCortMagTrialTimeProgress);
 				}
 			}
 			currentXPoint = (nStimFrameWidth - currentOuterCompleteRingDiameter + currentWedgeDiameter) / 2.0f;

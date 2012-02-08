@@ -117,7 +117,8 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	 
+	        <nr_of_internal_triggers>1</nr_of_internal_triggers>
+		<nr_of_external_triggers>1</nr_of_external_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -158,7 +159,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="10">
 			        	<name>FixationSize</name>
-			        	<value>8</value>
+			        	<value>10</value>
 			        </parameter>	
 			        <parameter ID="11">
 			        	<name>CycleTriggerAmount</name>
@@ -172,65 +173,69 @@ Attributes only apply to readonly non user data, like the ID
 		    	</object>   
 	    	</block>
 	    	
-		<block ID="1">
-	        <name>MovingBar_Block</name>
+		 <block ID="1">
+	        <name>EccentricityBlock</name>
 	        <block_number>1</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_internal_triggers>12</nr_of_internal_triggers>
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>
+	        <nr_of_external_triggers>1</nr_of_external_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
 			        	<name>CycleTriggerAmount</name>
-			        	<value>12</value>
+			        	<value>8</value>
 			        </parameter>
 			        <parameter ID="1">
-			        	<name>EmptyTriggerSteps</name>
+			        	<name>GapDiameter</name>
 			        	<value>0</value>
-			        </parameter>				        
-			        <parameter ID="2">
-			        	<name>RetinoPattern</name>
-			        	<value>movingbar</value>
-			        </parameter>				        
-			        <parameter ID="4">	      	
-			        	<name>MovingBarHeightCheckAmount</name>
-			        	<value>3</value>
+			        </parameter>			        
+			        <parameter ID="2">	 	
+			        	<name>EccentricityCheckAmount</name>			        	 
+			        	<value>30</value>	        	
+			        </parameter>
+			        <parameter ID="3">	      	
+			        	<name>EccentricityRingAmount</name>
+			        	<value>2</value>
 			        </parameter>       	
-			        <parameter ID="6">   
+			        <parameter ID="4">    	
+			        	<name>EccentricityDirection</name>
+			        	<value>-1</value>	        	
+			        </parameter>
+			        <parameter ID="5">   
 			        	<name>FlickrFrequency</name>
 			        	<value>7.5</value>
-			        </parameter>
-			        <parameter ID="7">    	
-			        	<name>MovingBarDirection</name>
-			        	<value>1</value>	        	
-			        </parameter>			        	        	
-			        <parameter ID="8">
-			        	<name>MovingBarCoverage</name>
-			        	<value>0.707106781</value>
-			        </parameter>
-			        <parameter ID="9">
-			        	<name>ShowFixPoint</name>
-			        	<value>true</value>
+			        </parameter>	        	
+			        <parameter ID="6">	    	
+			        	<name>CorticalMagnitudeFactor</name>
+			        	<value>0.3</value>	        	
 			        </parameter> 
-	    				<parameter ID="10">
+			        <parameter ID="7">
+			        	<name>RetinoPattern</name>
+			        	<value>eccentricity</value>
+			        </parameter>
+			        <parameter ID="8">
+			        	<name>DisableCortMagFac</name>
+			        	<value>false</value>
+			        </parameter>
+	    				<parameter ID="9">
 			        	<name>DiscreteTriggerSteps</name>
 			        	<value>true</value>
 			        </parameter>			        
-			        <parameter ID="11">
+			        <parameter ID="10">
 			        	<name>RandomizeTriggerSteps</name>
 			        	<value>false</value>
-			        </parameter>	
-  		        <parameter ID="12">
-			        	<name>MovingBarAngle</name>
-			        	<value>135</value>
 			        </parameter>
-			        <parameter ID="13">    	
-			        	<name>MovingBarHeight</name>
-			        	<value>12.0</value>	        	
-			        </parameter>			        
-			    	</parameters>
+			        <parameter ID="11">
+			        	<name>EmptyTriggerSteps</name>
+			        	<value>0</value>
+			        </parameter>	
+			        <parameter ID="12">
+			        	<name>EnableCortMagTiming</name>
+			        	<value>true</value>
+			        </parameter>				
+			    	</parameters>    
 		    	</object>   
 	    	</block>
-
 		
 	
     	</blocks>

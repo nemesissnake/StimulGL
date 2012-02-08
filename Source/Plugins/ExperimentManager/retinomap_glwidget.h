@@ -52,6 +52,7 @@
 #define RETINOMAP_WIDGET_ECCENTRICITY_DIRECTION			"eccentricitydirection"
 #define RETINOMAP_WIDGET_ECCENTRICITY_CHECK_AMOUNT		"eccentricitycheckamount"
 #define RETINOMAP_WIDGET_ECCENTRICITY_RING_AMOUNT		"eccentricityringamount"
+#define RETINOMAP_WIDGET_ECCENTRICITY_ENABLE_CORTMAG_TIMING		"enablecortmagtiming"//Not documented!
 //MovingBar specific defines
 #define RETINOMAP_WIDGET_MOVINGBAR_ANGLE				"movingbarangle" 
 #define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE				"movingbarcoverage"
@@ -171,7 +172,8 @@ private:
 	Qt::PenCapStyle roundCap;
 	QString tmpParamValue;
 	float fStimulusDiameter;
-	float fTrialTimeProgress; 
+	float fTrialTimeProgress;
+	float fCortMagTrialTimeProgress;
 	bool bCreateActivationMap;
 	int currExpBlockTrialCycle;
 	bool nextNewCycleEntered;
@@ -187,6 +189,7 @@ private:
 	float currentYPoint;
 	float currentStartAngle;
 	bool disableCortMagFac;
+	bool enableCortMagTiming;
 	int emptyTriggerLastIndex;
 	int emptyTriggerStepCount;
 	//QTime debugTime;							//For debugging purpose...
@@ -207,6 +210,7 @@ private:
 	int eccentricityNrChecks;
 	int eccentricityNrRings;
 	int eccentricityDirection;
+	float fCalculatedCortMagFacTimingConst;
 
 	//MovingBar
 	float movingBarAngle;
