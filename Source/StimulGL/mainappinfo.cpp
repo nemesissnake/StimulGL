@@ -4,11 +4,19 @@
 QDir MainAppInfo::appDebugDirPath()
 {
 	QDir appDebugDir = QDir(appDirPath());
+	QString strAppDebugDir = appDirPath();
 #if defined(Q_OS_WIN)
 	if (appDebugDir.dirName().toLower() == "debug" || appDebugDir.dirName().toLower() == "release")
+	{
 		appDebugDir.cdUp();
-	if (appDebugDir.dirName().toLower() == "win32" || appDebugDir.dirName().toLower() == "x64")
-		appDebugDir.cdUp();
+		if (appDebugDir.dirName().toLower() == "win32" || appDebugDir.dirName().toLower() == "x64")
+		{
+			appDebugDir.cdUp();
+			appDebugDir.cdUp();
+			appDebugDir.cdUp();
+			appDebugDir.cd("Install");			
+		}
+	}
 #elif defined(Q_OS_MAC)
 	if (appDebugDir.dirName() == "MacOS") {
 		appDebugDir.cdUp();
@@ -16,7 +24,8 @@ QDir MainAppInfo::appDebugDirPath()
 		appDebugDir.cdUp();
 	}
 #endif
-	return appDebugDir.absolutePath();
+	strAppDebugDir = appDebugDir.absolutePath();
+	return strAppDebugDir;
 }
 
 QString MainAppInfo::pluginsDirPath()
@@ -46,9 +55,9 @@ QString MainAppInfo::outputsDirPath()
 QStringList MainAppInfo::getQTScriptBindingList()	
 {
 #ifdef WIN32
-	return	QStringList() << "qt.core" << "qt.gui" << "qt.opengl"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";//<< "qt.network" does work...
+	return	QStringList() << "qt.core" << "qt.gui" << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";//<< "qt.network" does work...
 #else//64 bit
-	return	QStringList() << "qt.core" << "qt.gui"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";
+	return	QStringList() << "qt.core" << "qt.gui" << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";
 #endif
 }
 

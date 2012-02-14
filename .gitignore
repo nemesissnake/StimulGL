@@ -42,3 +42,10 @@ StaticLibs
 Install/outputs/
 Install/documents/~$*.doc
 Install/documents/*.tmp
+Install/binaries*
+Source/ipch/stimulgl-39862f52/stimulgl_win32_debug-338f5dec.ipch
+Source/ipch*
+Source/All.opensdf
+Source/All.sdf
+Install/experiments/run_1.exml
+Install/experiments/test.exml
