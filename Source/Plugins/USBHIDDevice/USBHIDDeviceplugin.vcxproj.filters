@@ -204,6 +204,12 @@
     <ClInclude Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_USBHIDDevice_dialog.h">
       <Filter>Form Files\Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="hidcalibratedialog.h">
@@ -230,5 +236,11 @@
     <CustomBuild Include="USBHIDDevice_dialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="USBHIDDeviceplugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="licenseHeader.licenseheader" />
   </ItemGroup>
 </Project>

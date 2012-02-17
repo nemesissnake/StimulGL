@@ -177,6 +177,12 @@
     <ClInclude Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_pport_dialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="InpOut32.h">
@@ -200,5 +206,11 @@
     <CustomBuild Include="pport_dialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="parallelportplugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="licenseHeader.licenseheader" />
   </ItemGroup>
 </Project>

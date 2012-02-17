@@ -1,7 +1,7 @@
 HowTo create your own Extension plugin by Example:
 
 Requirements:
-- Visual Studio 2008
+- Visual Studio 2010
 - QT 4.8.0 (Win32 and x64 compiled version), the below example expects these to be at "C:\Qt\4.8.0\win32" and "C:\Qt\4.8.0\x64"
 
 
@@ -12,15 +12,14 @@ Setup:
 - Replace all substrings "_extensionname_" found in the content of all files to <ExtensionName>
 	ie. You can use UltraEdits replace in files to do this quickly
 - Replace all substrings "_authorname_" found in the content of all files to <AuthorName>
-- Replace all substrings "_organizationname_" found in the content of all files your <OrganizationName>
+- Open the defines.h file and further configure your custom plugin
 
 Testing:
-- Open the <ExtensionName>Plugin.sln with Visual Studio 2008
+- Open the <ExtensionName>Plugin.sln with Visual Studio 2010
 - Build the solution
 
  	MainPluginName = "_extensionname_ plugin";
 	MainPluginAuthorName = "_authorname_";
-	MainPluginOrganizationName = "_organizationname_";
 
 - Check needed include and lib files.
 - This project makes use of a pluginInterface.h file witch should be the same version as used in the StimulGL program project.
@@ -34,7 +33,7 @@ Testing:
     Q_INTERFACES(ExtensionInterface) to Q_INTERFACES(DeviceInterface) in the file <ExtensionName>Plugin.h
     
     
-Howto integrate a staic plugin(lib)(VS2008 description)
+Howto integrate a staic plugin(lib)(VS2010 description)
 - see above
 From the Plugin Project
 - change the projects configuration type to "Static Library (.lib)"
@@ -42,7 +41,7 @@ From the Plugin Project
 	- Remove the QT_DLL
 	- Add the QT_STATICPLUGIN
 - Change the Library output file to:
-	$(ProjectDir)..\..\..\Build_VS2008\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).lib
+	$(ProjectDir)..\..\..\Build_VS2010\$(ProjectName)\$(PlatformName)\$(ConfigurationName)\$(ProjectName)_$(PlatformName)_$(ConfigurationName).lib
 - Change the Post Build event to(or only the below line):
 	xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\StaticLibs\$(PlatformName)\" /i /d /y
 From the StimulGL project

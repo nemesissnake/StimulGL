@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 TEMPLATE = lib
-QT += core gui script
+QT += core gui script opengl xml xmltools
 DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QT_THREAD_SUPPORT
 INCLUDEPATH += ./debug \
     . \
@@ -12,6 +12,9 @@ INCLUDEPATH += ./debug \
 DEPENDPATH += .
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
+CONFIG += plugin static
+RC_FILE = $$PWD/version.rc
+QMAKE_RC = rc -D_MSC_VER
 include(ExperimentManagerplugin.pri)
 
 contains(QMAKE_HOST.os,Windows){
@@ -19,7 +22,7 @@ contains(QMAKE_HOST.os,Windows){
         #message("$$QMAKE_HOST.arch on $$QMAKE_HOST.os")
         CONFIG(debug, debug|release) {
             DESTDIR = x64/Debug#"$$PWD/x64_Debug"
-            TARGET = ExperimentManagerplugin_x64_Debug
+            TARGET = ExperimentManagerplugin_x64d
             INCLUDEPATH += x64/Debug
             MOC_DIR += x64/Debug
             OBJECTS_DIR += x64/Debug
@@ -27,7 +30,7 @@ contains(QMAKE_HOST.os,Windows){
         }
         CONFIG(release, debug|release) {
             DESTDIR = x64/Release#"$$PWD/x64_Release"
-            TARGET = ExperimentManagerplugin_x64_Release
+            TARGET = ExperimentManagerplugin_x64
             INCLUDEPATH += x64/Release
             MOC_DIR += x64/Release
             OBJECTS_DIR += x64/Release
@@ -39,7 +42,7 @@ contains(QMAKE_HOST.os,Windows){
             #message("$$QMAKE_HOST.arch on $$QMAKE_HOST.os")
             CONFIG(debug, debug|release) {
                 DESTDIR = Win32/Debug#"$$PWD/Win32_Debug"
-                TARGET = ExperimentManagerplugin_Win32_Debug
+                TARGET = ExperimentManagerplugin_Win32d
                 INCLUDEPATH += Win32/Debug
                 MOC_DIR += Win32/Debug
                 OBJECTS_DIR += Win32/Debug
@@ -47,7 +50,7 @@ contains(QMAKE_HOST.os,Windows){
             }
             CONFIG(release, debug|release) {
                 DESTDIR = Win32/Release#"$$PWD/Win32_Release"
-                TARGET = ExperimentManagerplugin_Win32_Release
+                TARGET = ExperimentManagerplugin_Win32
                 INCLUDEPATH += Win32/Release
                 MOC_DIR += Win32/Release
                 OBJECTS_DIR += Win32/Release
@@ -60,3 +63,5 @@ contains(QMAKE_HOST.os,Windows){
     }
 }
 else:error("Your OS is $$QMAKE_HOST.os . The library for this OS hasn't been built.")
+
+OTHER_FILES +=

@@ -10,10 +10,15 @@
 HEADERS += ./_extensionname_.h \
     ./_extensionname__dialog.h \
     ./_extensionname_plugin.h \
+    ./../../StimulGL/mainappinfo.h \
     ./plugininterface.h \
     ./StdAfx.h
 SOURCES += ./_extensionname_.cpp \
     ./_extensionname__dialog.cpp \
     ./_extensionname_plugin.cpp \
+    ./../../StimulGL/mainappinfo.cpp \
     ./StdAfx.cpp
 FORMS += ./_extensionname__dialog.ui
+
+OTHER_FILES += \
+    _extensionname_plugin.rc

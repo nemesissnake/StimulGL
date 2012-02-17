@@ -132,6 +132,12 @@
     <ClInclude Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui__extensionname__dialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="_extensionname_.h">
@@ -146,5 +152,11 @@
     <CustomBuild Include="_extensionname__dialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="_extensionname_plugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="licenseHeader.licenseheader" />
   </ItemGroup>
 </Project>

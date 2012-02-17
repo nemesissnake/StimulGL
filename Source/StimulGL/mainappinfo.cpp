@@ -1,5 +1,27 @@
-#include "mainappinfo.h"
+//StimulGL
+//Copyright (C) 2012  Sven Gijsen
+//
+//This file is part of StimulGL.
+//StimulGL is free software: you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
+
+#include "mainappinfo.h"
+#include <QTextStream>
+
+QFile * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
+//std::ofstream * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
 
 QDir MainAppInfo::appDebugDirPath()
 {
@@ -73,4 +95,64 @@ QString MainAppInfo::apiDirPath()
 	QDir pluginsDir = appDebugDirPath();
 	pluginsDir.cd("apis");
 	return pluginsDir.absolutePath();
+}
+
+void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg) 
+{
+	if(MainAppInfo::mainLogFile == NULL)
+	{
+		MainAppInfo::mainLogFile = new QFile(MainAppInfo::appLogFilePath());
+	}
+	if(!MainAppInfo::mainLogFile->isOpen())
+	{
+		MainAppInfo::mainLogFile->open(QIODevice::WriteOnly | QIODevice::Append);
+		if(!MainAppInfo::mainLogFile->isOpen())
+		{
+            MainAppInfo::mainLogFile = NULL;
+			return;
+		}
+	}
+	QString strMessage;
+	switch (type) {
+	case QtDebugMsg:
+		strMessage = QString("Debug: %1").arg(msg);
+		break;
+	case QtWarningMsg:
+		strMessage = QString("Warning: %1").arg(msg);
+		break;
+	case QtCriticalMsg:
+		strMessage = QString("Critical: %1").arg(msg);
+		break;
+	case QtFatalMsg:
+		strMessage = QString("Fatal: %1").arg(msg);
+		abort();
+	}
+	QTextStream ts(mainLogFile);
+	ts << QDate::currentDate().toString().toAscii().data() << QString("\t") << QTime::currentTime().toString().toAscii().data() << QString("\t") << strMessage << endl;
+
+}
+
+void MainAppInfo::CloseMainLogFile()
+{
+	if(MainAppInfo::mainLogFile != NULL)
+	{
+		if(MainAppInfo::mainLogFile->isOpen())
+		{
+			MainAppInfo::mainLogFile->close();
+		}
+	}	
+}
+
+bool MainAppInfo::InitializeMainAppNaming()
+{
+	QCoreApplication::setOrganizationDomain(MAIN_PROGRAM_COMPANY_NAME);
+	QCoreApplication::setOrganizationName(MAIN_PROGRAM_COMPANY_NAME);
+	QCoreApplication::setApplicationName(MAIN_PROGRAM_INTERNAL_NAME);
+	QCoreApplication::setApplicationVersion(MAIN_PROGRAM_FILE_VERSION_STRING);
+
+	//QString a = QCoreApplication::organizationDomain();
+	//QString b = QCoreApplication::organizationName();
+	//QString c = QCoreApplication::applicationName();
+	//QString d = QCoreApplication::applicationVersion();
+	return true;
 }

@@ -12,6 +12,9 @@ LIBS += -lodbc32 \
 DEPENDPATH += .
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
+CONFIG += plugin static
+RC_FILE = $$PWD/version.rc
+QMAKE_RC = rc -D_MSC_VER
 include(parallelportplugin.pri)
 
 contains(QMAKE_HOST.os,Windows){
@@ -21,7 +24,7 @@ contains(QMAKE_HOST.os,Windows){
 
         CONFIG(debug, debug|release) {
             DESTDIR = x64/Debug#"$$PWD/x64_Debug"
-            TARGET = parallelportplugin_x64_Debug
+            TARGET = parallelportplugin_x64d
             INCLUDEPATH += x64/Debug
             MOC_DIR += x64/Debug
             OBJECTS_DIR += x64/Debug
@@ -29,7 +32,7 @@ contains(QMAKE_HOST.os,Windows){
         }
         CONFIG(release, debug|release) {
             DESTDIR = x64/Release#"$$PWD/x64_Release"
-            TARGET = parallelportplugin_x64_Release
+            TARGET = parallelportplugin_x64
             INCLUDEPATH += x64/Release
             MOC_DIR += x64/Release
             OBJECTS_DIR += x64/Release
@@ -43,7 +46,7 @@ contains(QMAKE_HOST.os,Windows){
 
             CONFIG(debug, debug|release) {
                 DESTDIR = Win32/Debug#"$$PWD/Win32_Debug"
-                TARGET = parallelportplugin_Win32_Debug
+                TARGET = parallelportplugin_Win32d
                 INCLUDEPATH += Win32/Debug ./debug
                 MOC_DIR += Win32/Debug
                 OBJECTS_DIR += Win32/Debug
@@ -51,7 +54,7 @@ contains(QMAKE_HOST.os,Windows){
             }
             CONFIG(release, debug|release) {
                 DESTDIR = Win32/Release#"$$PWD/Win32_Release"
-                TARGET = parallelportplugin_Win32_Release
+                TARGET = parallelportplugin_Win32
                 INCLUDEPATH += Win32/Release
                 MOC_DIR += Win32/Release
                 OBJECTS_DIR += Win32/Release
@@ -64,3 +67,8 @@ contains(QMAKE_HOST.os,Windows){
     }
 }
 else:error("Your OS is $$QMAKE_HOST.os . The library for this OS hasn't been built.")
+
+OTHER_FILES +=
+
+HEADERS += \
+    resource.h

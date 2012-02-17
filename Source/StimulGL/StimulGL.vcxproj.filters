@@ -308,6 +308,12 @@
     <ClInclude Include="..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_scifinddialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="maindefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="Resources\comment.png">
@@ -408,5 +414,11 @@
     <CustomBuild Include="scifinddialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="StimulGL.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="licenseHeader.licenseheader" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,25 @@
+//_extensionname_
+//Copyright (C) 2012  _authorname_
+//
+//This file is part of StimulGL.
+//StimulGL is free software: you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+
 #include "_extensionname_plugin.h"
 #include "_extensionname_.h"
+#include "defines.h"
 
 Q_DECLARE_METATYPE(_extensionname_*)
 Q_DECLARE_METATYPE(_extensionname_)
@@ -8,10 +28,10 @@ _extensionname_Plugin::_extensionname_Plugin(QObject *parent)
 {
 	_extensionname_Object = new _extensionname_(parent);
 	_extensionname_DiagObject = new _extensionname__Dialog();	
-	MainPluginName = "_extensionname_ Plugin";
-	MainPluginAuthorName = "_authorname_";
-	MainPluginOrganizationName = "_organizationname_";
-	MainPluginVersion = "1.0.0";
+	MainPluginName = QString(PLUGIN_INTERNAL_NAME) + " Plugin";
+	MainPluginAuthorName = PLUGIN_AUTHOR_NAME;
+	MainPluginOrganizationName = PLUGIN_COMPANY_NAME;
+	MainPluginVersion = PLUGIN_FILE_VERSION_STRING;
 	MainPluginTitle = MainPluginName + "(v" + MainPluginVersion + ")" + " by " + MainPluginAuthorName;	
 }
 

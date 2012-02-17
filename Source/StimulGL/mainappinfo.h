@@ -1,35 +1,39 @@
+//StimulGL
+//Copyright (C) 2012  Sven Gijsen
+//
+//This file is part of StimulGL.
+//StimulGL is free software: you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+
 #ifndef MAINAPPINFO_H
 #define MAINAPPINFO_H
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QString>
+#include <QCoreApplication>
+#include <QDir>
+#include <QString>
 
 #include <QTime>
 #include <iostream>
 #include <fstream>
 
-static std::ofstream mainLogFile;
-
-static void MyOutputHandler(QtMsgType type, const char *msg) 
-{
-	switch (type) {
-		case QtDebugMsg:
-			mainLogFile << QTime::currentTime().toString().toAscii().data() << " Debug: " << msg << std::endl;
-			break;
-		case QtCriticalMsg:
-			mainLogFile << QTime::currentTime().toString().toAscii().data() << " Critical: " << msg << std::endl;
-			break;
-		case QtWarningMsg:
-			mainLogFile << QTime::currentTime().toString().toAscii().data() << " Warning: " << msg << std::endl;
-			break;
-		case QtFatalMsg:
-			mainLogFile << QTime::currentTime().toString().toAscii().data() <<  " Fatal: " << msg << std::endl;
-			abort();
-	}
-}
+#include "maindefines.h"
 
 class MainAppInfo {
+private:
+	static QFile *mainLogFile;
+	//static std::ofstream *mainLogFile;
 public:
 	enum ActiveScriptMode
 	{
@@ -66,20 +70,24 @@ public:
 	};
 	Q_DECLARE_FLAGS(DocTypes, DocType)
 
-	static QString MainProgramName()		{return "StimulGL";}
-	static QString MainOrganizationName()	{return "MBIC";}
-	static QString MainProgramVersion()		{return "1.0.0.0";}
-	static QString MainProgramTitle()		{return (MainProgramName() + "(v" + MainProgramVersion() + ")");}
+	static bool InitializeMainAppNaming();
+	static QString MainProgramName()		{return MAIN_PROGRAM_INTERNAL_NAME;}
+	static QString MainOrganizationName()	{return MAIN_PROGRAM_COMPANY_NAME;}
+	static QString MainProgramFileVersion()	{return MAIN_PROGRAM_FILE_VERSION_STRING;}
+	static QString MainProgramTitle()		{return MAIN_PROGRAM_FULL_NAME;}//(MainProgramName() + "(v" + MainProgramFileVersion() + ")");}
 	static QString appDirPath()				{return QCoreApplication::applicationDirPath();}
-	static QString appLogFilePath()			{return (appDirPath() + "/logfile.txt");}
+	static QString appLogFilePath()			{return (appDirPath() + "/" + MAIN_PROGRAM_LOGFILE_NAME);}
 	static QString pluginsDirPath();
 	static QString outputsDirPath();
 
-	static QString getFileExtList()			{return QString ("QT Script files (*.qs);;SVG files (*.svg *.svgz *.svg.gz);;Any files (*)");}
+	static QString getFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}
 	static QStringList getQTScriptBindingList();
 	static QString apiDirPath();
-	static QString UntitledDocName()		{return "Untitled";}
-	static QString stdDateTimeFormat()		{return "yyyyMMddHHmmsszzz";}
+	static QString UntitledDocName()		{return MAIN_PROGRAM_UNTITLED_NAME;}
+	static QString stdDateTimeFormat()		{return MAIN_PROGRAM_STANDARD_DATETIME_FORMAT;}
+
+	static void MyOutputHandler(QtMsgType type, const char *msg); 
+	static void CloseMainLogFile();
 
 private:
 	static QDir appDebugDirPath();
@@ -91,8 +99,6 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(MainAppInfo::ActiveScriptModes)
 Q_DECLARE_OPERATORS_FOR_FLAGS(MainAppInfo::DocTypes)
 
 #endif // MAINAPPINFO_H
-
-
 //#ifdef Q_WS_WIN
 //#ifdef Q_WS_X11
 //#ifdef Q_WS_MACX

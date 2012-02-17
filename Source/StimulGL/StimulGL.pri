@@ -21,6 +21,8 @@ HEADERS += ./aboutqtdialog.h \
     ./qtscriptworker.h \
     ./scifinddialog.h \
     ./sleepthread.h \
+    #./../Plugins/ParallelPortDevice/parallelport.h \
+    #./../Plugins/ExperimentManager/ExperimentManager.h \
     ./svgview.h
 SOURCES += ./aboutqtdialog.cpp \
     ./customqsciscintilla.cpp \
@@ -35,6 +37,8 @@ SOURCES += ./aboutqtdialog.cpp \
     ./qtscriptengineagent.cpp \
     ./qtscriptworker.cpp \
     ./scifinddialog.cpp \
+    #./../Plugins/ParallelPortDevice/parallelport.h \
+    #./../Plugins/ExperimentManager/ExperimentManager.h \
     ./svgview.cpp
 FORMS += ./optionpage.ui \
     ./scifinddialog.ui

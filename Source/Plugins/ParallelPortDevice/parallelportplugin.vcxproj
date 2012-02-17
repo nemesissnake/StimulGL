@@ -602,6 +602,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
+    <ClInclude Include="defines.h" />
     <ClInclude Include="plugininterface.h" />
     <CustomBuild Include="ppcapturethread.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ppcapturethread.h...</Message>
@@ -681,6 +682,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -710,6 +712,12 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\uic.exe" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="parallelportplugin.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="licenseHeader.licenseheader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

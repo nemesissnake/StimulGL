@@ -16,8 +16,8 @@
 
 
 TEMPLATE = subdirs
-SUBDIRS += StimulGL/StimulGL.pro \
-    Plugins/ParallelPortDevice/parallelportplugin.pro \
-    Plugins/Retinotopic_Mapping/Retinotopic_Mappingplugin.pro \
-    Plugins/USBHIDDevice/USBHIDDeviceplugin.pro \
-    Plugins/ExtensionPluginTemplate/_extensionname_plugin.pro
+SUBDIRS +=  Plugins/ParallelPortDevice/parallelportplugin.pro \
+            Plugins/ExperimentManager/ExperimentManagerplugin.pro \
+            Plugins/USBHIDDevice/USBHIDDeviceplugin.pro \
+            Plugins/ExtensionPluginTemplate/_extensionname_plugin.pro \
+            StimulGL/StimulGL.pro

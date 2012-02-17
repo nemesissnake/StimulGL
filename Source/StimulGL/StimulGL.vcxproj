@@ -1225,6 +1225,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="maindefines.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="StimulGL.h" />
     <CustomBuild Include="svgview.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing svgview.h...</Message>
@@ -1476,6 +1478,12 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Project>{13ea300a-1ca2-417e-8dc0-c5217d9f9a52}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="StimulGL.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="licenseHeader.licenseheader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

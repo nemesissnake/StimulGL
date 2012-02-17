@@ -1,3 +1,22 @@
+//StimulGL
+//Copyright (C) 2012  Sven Gijsen
+//
+//This file is part of StimulGL.
+//StimulGL is free software: you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+
 /****************************************************************************
 **
 ****************************************************************************/
@@ -10,10 +29,11 @@
 #include "sleepthread.h"
 #include "optionpage.h"
 #include <QPluginLoader>
+#include <QtPlugin>
 #include <QFileInfo>
 
-#include "..\Plugins\ParallelPortDevice\parallelport.h"
-#include "..\Plugins\ExperimentManager\ExperimentManager.h"
+#include "../Plugins/ParallelPortDevice/parallelport.h"
+#include "../Plugins/ExperimentManager/ExperimentManager.h"
 
 MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 {
@@ -22,8 +42,7 @@ MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 	ExtensionPluginsFound = false;
 
 #ifndef QT_NO_DEBUG_OUTPUT	
-	mainLogFile.open(MainAppInfo::appLogFilePath().toStdString().c_str(), std::ios::app);
-	qInstallMsgHandler(MyOutputHandler);
+	qInstallMsgHandler(MainAppInfo::MyOutputHandler);
 	qDebug("SimulGL Main Constructor.");
 #endif
 //When compiling your final application, be sure to add the flags -DQT_NO_DEBUG and -DQT_NO_DEBUG_OUTPUT.  
@@ -31,12 +50,9 @@ MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 //Alternately, you can keep NO_DEBUG_OUTPUT out of the makefile if you still want the logfile.
 }
 
-MainWindow::~MainWindow()
-{
-#ifndef QT_NO_DEBUG_OUTPUT
-	mainLogFile.close();	
-#endif
-}
+//MainWindow::~MainWindow()//see void MainWindow::closeEvent(QCloseEvent *event)!
+//{
+//}
 
 void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
 {
@@ -57,6 +73,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//DisablePlugins			= 0x00001,
 	//DisableSplash				= 0x00002
 	//QWaitCondition sleep;
+	MainAppInfo::InitializeMainAppNaming();
 	StimulGLFlags = mainFlags;
 	AppScriptStatus = MainAppInfo::ActiveScriptMode::NoScript;
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash) == false)
@@ -410,7 +427,7 @@ void MainWindow::createDefaultMenus()
 	fileMenu = new QMenu(tr("&File"), this);
 	editMenu = new QMenu(tr("&Edit"), this);
 	markersMenu = new QMenu(tr("&Markers"), this);
-	viewMenu = new QMenu(tr("&View"), this);
+	//viewMenu = new QMenu(tr("&View"), this);
 	scriptMenu = new QMenu(tr("&Script"), this);
 	toolsMenu = new QMenu(tr("&Tools"), this);
 	windowMenu = new QMenu(tr("&Window"), this);
@@ -672,12 +689,12 @@ void MainWindow::createDefaultMenus()
 	runScriptAction->setData(MainAppInfo::Execute);
 	connect(runScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
 
-	debugScriptAction = scriptMenu->addAction(tr("Debug Script"));//QIcon(":/Resources/runScript.png"),tr("&Run Script"));
-	debugScriptAction->setEnabled(false);//(false);
-	debugScriptAction->setShortcut(QKeySequence(tr("F6")));
-	debugScriptAction->setStatusTip(tr("Open the current script in the Debugger"));
-	debugScriptAction->setData(MainAppInfo::Debug);
-	connect(debugScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
+	//debugScriptAction = scriptMenu->addAction(tr("Debug Script"));//QIcon(":/Resources/runScript.png"),tr("&Run Script"));
+	//debugScriptAction->setEnabled(false);//(false);
+	//debugScriptAction->setShortcut(QKeySequence(tr("F6")));
+	//debugScriptAction->setStatusTip(tr("Open the current script in the Debugger"));
+	//debugScriptAction->setData(MainAppInfo::Debug);
+	//connect(debugScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
 
 	abortScriptAction = scriptMenu->addAction(tr("Abort Script"));//QIcon(":/Resources/runScript.png"),tr("&Run Script"));
 	abortScriptAction->setEnabled(false);//false);
@@ -701,9 +718,10 @@ void MainWindow::createDefaultMenus()
 	//m_outlineAction->setCheckable(true);
 	//m_outlineAction->setChecked(true);
 	//connect(m_outlineAction, SIGNAL(toggled(bool)), SVGPreviewer, SLOT(setViewOutline(bool)));
-	viewMenu->addAction(debugLogDock->toggleViewAction());
-	viewMenu->addAction(debuggerDock->toggleViewAction());
-	menuBar()->addMenu(viewMenu);//the view menu..........................................................
+	
+	//viewMenu->addAction(debugLogDock->toggleViewAction());
+	//viewMenu->addAction(debuggerDock->toggleViewAction());
+	//menuBar()->addMenu(viewMenu);//the view menu..........................................................
 
 	optionsAction = toolsMenu->addAction(tr("O&ptions"));
 	optionsAction->setShortcut(QKeySequence(tr("Ctrl+P")));
@@ -712,8 +730,8 @@ void MainWindow::createDefaultMenus()
 	connect(optionsAction, SIGNAL(triggered()), this, SLOT(openOptionsDialog()));
 	menuBar()->addMenu(toolsMenu);//the tools menu..........................................................
 
-	debuggerMenu = AppScriptEngine->createDebuggerMenu(menuBar());//debugger->createStandardMenu(menuBar());
-	menuBar()->addMenu(debuggerMenu);
+	//debuggerMenu = AppScriptEngine->createDebuggerMenu(menuBar());//debugger->createStandardMenu(menuBar());
+	//menuBar()->addMenu(debuggerMenu);
 }
 
 void MainWindow::setupHelpMenu()
@@ -790,8 +808,8 @@ void MainWindow::setupDynamicPluginMenus()
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllPlugins) == false)
 	{
 		showSplashMessage("Loading Static Plugins...");
-		Q_IMPORT_PLUGIN(parallelportplugin)// see below
-		Q_IMPORT_PLUGIN(experimentmanagerplugin)// see below
+        Q_IMPORT_PLUGIN(parallelportplugin)// see below
+        Q_IMPORT_PLUGIN(experimentmanagerplugin)// see below
 		foreach (QObject *plugin, QPluginLoader::staticInstances())
 		{
 			popPluginIntoMenu(plugin);
@@ -898,35 +916,35 @@ void MainWindow::setScriptRunningStatus(MainAppInfo::ActiveScriptMode state)
 	case MainAppInfo::Debugging:
 		{ 
 			runScriptAction->setEnabled(false);
-			debugScriptAction->setEnabled(false);
+//			debugScriptAction->setEnabled(false);
 			abortScriptAction->setEnabled(true);
 			break; 
 		}	
 	case MainAppInfo::Executing:
 		{ 
 			runScriptAction->setEnabled(false);
-			debugScriptAction->setEnabled(false);
+//			debugScriptAction->setEnabled(false);
 			abortScriptAction->setEnabled(true);			
 			break; 
 		}	
 	case MainAppInfo::NoScript:
 		{ 
 			runScriptAction->setEnabled(false);
-			debugScriptAction->setEnabled(false);
+//			debugScriptAction->setEnabled(false);
 			abortScriptAction->setEnabled(false);			
 			break; 
 		}	
 	case MainAppInfo::Pending:
 		{ 
 			runScriptAction->setEnabled(true);
-			debugScriptAction->setEnabled(true);
+//			debugScriptAction->setEnabled(true);
 			abortScriptAction->setEnabled(false);			
 			break; 
 		}	
 	case MainAppInfo::Stopping:
 		{ 
 			runScriptAction->setEnabled(false);
-			debugScriptAction->setEnabled(false);
+//			debugScriptAction->setEnabled(false);
 			abortScriptAction->setEnabled(true);			
 			break; 
 		}	
@@ -1576,7 +1594,7 @@ void MainWindow::setupToolBars()
 
 	toolsToolBar = addToolBar(tr("Tools"));
 	toolsToolBar->addAction(runScriptAction);
-	toolsToolBar->addAction(debugScriptAction);
+	//toolsToolBar->addAction(debugScriptAction);
 	toolsToolBar->addAction(abortScriptAction);
 }
 
@@ -1684,6 +1702,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		writeMainWindowSettings();
 		event->accept();
 	}
+#ifndef QT_NO_DEBUG_OUTPUT
+	MainAppInfo::CloseMainLogFile();	
+#endif
 	if(Plugins)
 		delete Plugins;
 #ifdef Q_OS_WIN

@@ -10,10 +10,30 @@
 HEADERS += ./ExperimentManager.h \
     ./ExperimentManager_dialog.h \
     ./ExperimentManagerplugin.h \
+    ./../../StimulGL/mainappinfo.h \
     ./plugininterface.h \
-    ./StdAfx.h
+    ./StdAfx.h \
+    metaextensions.h \
+    ImageProcessor.h \
+    GLWidgetWrapper.h \
+    Global.h \
+    ExperimentTree.h \
+    ExperimentTimer.h \
+    experimentlogger.h \
+    retinomap_glwidget.h \
+    RandomGenerator.h \
+    resource.h
 SOURCES += ./ExperimentManager.cpp \
     ./ExperimentManager_dialog.cpp \
     ./ExperimentManagerplugin.cpp \
-    ./StdAfx.cpp
+    ./../../StimulGL/mainappinfo.cpp \
+    ./StdAfx.cpp \
+    RandomGenerator.cpp \
+    metaextensions.cpp \
+    ImageProcessor.cpp \
+    GLWidgetWrapper.cpp \
+    ExperimentTree.cpp \
+    ExperimentTimer.cpp \
+    experimentlogger.cpp \
+    retinomap_glwidget.cpp
 FORMS += ./ExperimentManager_dialog.ui

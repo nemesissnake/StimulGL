@@ -1,3 +1,22 @@
+//StimulGL
+//Copyright (C) 2012  Sven Gijsen
+//
+//This file is part of StimulGL.
+//StimulGL is free software: you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
+
 /****************************************************************************
 **
 **
@@ -14,6 +33,7 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QHeaderView>
+#include "maindefines.h"
 
 aboutQTDialog::aboutQTDialog(const QString &title,const QStringList &pluginFileNames,const QString &path, const QStringList &fileNames, QWidget *parent) : 
 	QDialog(parent),
@@ -21,6 +41,7 @@ aboutQTDialog::aboutQTDialog(const QString &title,const QStringList &pluginFileN
 	treeWidget(new QTreeWidget),
 	okButton(new QPushButton(tr("OK")))
 {
+	labWebsite = new QLabel;
 	treeWidget->setAlternatingRowColors(false);
 	treeWidget->setSelectionMode(QAbstractItemView::NoSelection);
 	treeWidget->setColumnCount(1);
@@ -33,9 +54,10 @@ aboutQTDialog::aboutQTDialog(const QString &title,const QStringList &pluginFileN
 	QGridLayout *mainLayout = new QGridLayout;
 	mainLayout->setColumnStretch(0, 1);
 	mainLayout->setColumnStretch(2, 1);
-	mainLayout->addWidget(label, 0, 0, 1, 3);
-	mainLayout->addWidget(treeWidget, 1, 0, 1, 3);
-	mainLayout->addWidget(okButton, 2, 1);
+	mainLayout->addWidget(labWebsite, 0, 0, 1, 3);
+	mainLayout->addWidget(label, 1, 0, 1, 3);
+	mainLayout->addWidget(treeWidget, 2, 0, 1, 3);
+	mainLayout->addWidget(okButton, 3, 1);
 	setLayout(mainLayout);
 
 	interfaceIcon.addPixmap(style()->standardPixmap(QStyle::SP_DirOpenIcon),
@@ -55,6 +77,26 @@ aboutQTDialog::aboutQTDialog(const QString &title,const QStringList &pluginFileN
 	label->setText(title + tr(" found the following plugins\n"
 		"(Dynamic plugins looked for in %1):")
 		.arg(QDir::toNativeSeparators(path)));
+	QString tmpStr = ("\n");
+	tmpStr.append(MAIN_PROGRAM_INTERNAL_NAME ", " MAIN_PROGRAM_LEGAL_COPYRIGHT ".\n");
+	tmpStr.append(MAIN_PROGRAM_COMPANY_NAME ", " MAIN_PROGRAM_AUTHOR_NAME ".\n\n");
+	tmpStr.append("StimulGL is free software: you can redistribute it and/or modify\n");
+	tmpStr.append("it under the terms of the GNU General Public License as published by\n");
+	tmpStr.append("the Free Software Foundation, either version 3 of the License, or\n");
+	tmpStr.append("(at your option) any later version.\n");
+	tmpStr.append("\n");
+	tmpStr.append("This program is distributed in the hope that it will be useful,\n");
+	tmpStr.append("but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
+	tmpStr.append("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n");
+	tmpStr.append("GNU General Public License for more details.\n");
+	tmpStr.append("\n");
+	tmpStr.append("You should have received a copy of the GNU General Public License\n");
+	tmpStr.append("along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n");
+	tmpStr.append("See https://github.com/svengijsen/StimulGL\n");
+	labWebsite->setText(tmpStr);
+	//labWebsite->setOpenExternalLinks(true);//openExternalLinks
+	//labWebsite->setTextFormat(Qt::RichText);
+	//
 	foreach (QString pluginName,pluginFileNames)
 		populateTreeWidget(0, tr("%1 (Device Plugin)").arg(pluginName));
 
