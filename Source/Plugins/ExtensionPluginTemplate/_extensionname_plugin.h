@@ -17,8 +17,6 @@
 //
 
 
-//This file inherits the Interface description, please don't change
-
 #ifndef _extensionname_PLUGIN_H
 #define _extensionname_PLUGIN_H
 
@@ -27,9 +25,10 @@
 #include <QString>
 #include <Qlibrary>
 
-#include "plugininterface.h"
+#include "../../StimulGL/plugininterface.h"
 #include "_extensionname__dialog.h"
 #include "_extensionname_.h"
+#include "defines.h"
 
 QT_BEGIN_NAMESPACE
 QT_END_NAMESPACE
@@ -44,15 +43,9 @@ public:
 	~_extensionname_Plugin();
 
 	bool ConfigureScriptEngine(QScriptEngine &engine);
-	QString Test(const QString &message);
-	QString GetPluginInformation(void);
+	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};//here we override the virtual function to set a custom value
 
 private:
-	QString MainPluginName;
-	QString MainPluginAuthorName;
-	QString MainPluginOrganizationName;
-	QString MainPluginVersion;
-	QString MainPluginTitle;
 
 	short nExampleProperty;
 	_extensionname_ *_extensionname_Object; 
@@ -60,6 +53,7 @@ private:
 
 public slots:
     bool ShowGUI();
+	bool IsCompatible() {return PluginInterface::IsCompatible();};
 
 signals:
 	void DoSignal();

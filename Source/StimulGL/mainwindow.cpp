@@ -31,6 +31,7 @@
 #include <QPluginLoader>
 #include <QtPlugin>
 #include <QFileInfo>
+#include <QMetaObject>
 
 #include "../Plugins/ParallelPortDevice/parallelport.h"
 #include "../Plugins/ExperimentManager/ExperimentManager.h"
@@ -810,17 +811,57 @@ void MainWindow::setupDynamicPluginMenus()
 		showSplashMessage("Loading Static Plugins...");
         Q_IMPORT_PLUGIN(parallelportplugin)// see below
         Q_IMPORT_PLUGIN(experimentmanagerplugin)// see below
+
+		bool bRetVal = false;
+		const QMetaObject* metaObject = NULL;
+		QString strSlot(FUNC_PLUGIN_ISCOMPATIBLE_FULL);
 		foreach (QObject *plugin, QPluginLoader::staticInstances())
 		{
-			popPluginIntoMenu(plugin);
+			metaObject = plugin->metaObject();
+			if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(strSlot.toLatin1())) == -1))//Is the slot present?
+			{
+				//Invoke the slot
+				metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
+				if (bRetVal)
+					popPluginIntoMenu(plugin);
+				else
+					qDebug() << "setupDynamicPluginMenus(), The Static Plugin is incompatible(" << metaObject->className() << ")!";
+			}
+			else
+			{
+				qDebug() << "setupDynamicPluginMenus(), Could not invoke the Static Plugin slot(" << strSlot << ")!";	
+			}
+			metaObject = NULL;
+			bRetVal = false;
 		}
 		showSplashMessage("Loading Dynamic Plugins...");
-		foreach (QString fileName, QDir(MainAppInfo::pluginsDirPath()).entryList(QDir::Files)) {
+		foreach (QString fileName, QDir(MainAppInfo::pluginsDirPath()).entryList(QDir::Files)) 
+		{
 			QPluginLoader loader(QDir(MainAppInfo::pluginsDirPath()).absoluteFilePath(fileName));
 			QObject *plugin = loader.instance();//The QObject provided by the plugin, if it was compiled against an incompatible version of the Qt library, QPluginLoader::instance() returns a null pointer.
-			if (plugin) {
-				popPluginIntoMenu(plugin);
-				pluginFileNames += fileName;
+			if (plugin) 
+			{
+				metaObject = plugin->metaObject();
+				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(strSlot.toLatin1())) == -1))//Is the slot present?
+				{
+					//Invoke the slot
+					metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
+					if (bRetVal)
+					{
+						if (popPluginIntoMenu(plugin))
+						{
+							pluginFileNames += fileName;
+						}
+					}
+					else
+						qDebug() << "setupDynamicPluginMenus(), The Dynamic Plugin is incompatible(" << metaObject->className() << ")!";
+				}
+				else
+				{
+					qDebug() << "setupDynamicPluginMenus(), Could not invoke the Dynamic Plugin slot(" << strSlot << ")!";	
+				}
+				metaObject = NULL;
+				bRetVal = false;
 			}
 		}
 	}
@@ -832,6 +873,31 @@ void MainWindow::setupDynamicPluginMenus()
 	//ExperimentManager *b = new ExperimentManager(this);
 	//b->openExperiment();
 	//delete b;
+}
+
+bool MainWindow::checkPluginCompatibility(QObject *plugin)
+{
+	bool bRetval = false;
+
+	DeviceInterface *iDevice = qobject_cast<DeviceInterface *>(plugin);
+	if (iDevice) 
+	{
+		bRetval = iDevice->IsCompatible();
+	}
+
+	ExtensionInterface *iExtension = qobject_cast<ExtensionInterface *>(plugin);
+	if (iExtension) 
+	{
+		bRetval = iExtension->IsCompatible();
+	}
+
+	//qobject_cast<DeviceInterface *>(PlgInterfaces.at(index));
+
+	//plugin->ConfigureScriptEngine(* AppScriptEngine->eng);
+	////collection->GetLoaderName(tmpIndex) +")");
+	////collection->GetInterface(tmpIndex)->ConfigureScriptEngine(* AppScriptEngine->eng);
+
+	return bRetval;
 }
 
 bool MainWindow::popPluginIntoMenu(QObject *plugin)
@@ -849,29 +915,37 @@ bool MainWindow::popPluginIntoMenu(QObject *plugin)
 	DeviceInterface *iDevice = qobject_cast<DeviceInterface *>(plugin);//For each plugin (static or dynamic), we check which interfaces it implements using qobject_cast()
 	if (iDevice) 
 	{
-		if (!DevicePluginsFound)
+		if(checkPluginCompatibility(plugin))
 		{
-			devicePluginMenu = pluginsMenu->addMenu(tr("&Device Plugins"));
-			DevicePluginsFound = true;
+			if (!DevicePluginsFound)
+			{
+				devicePluginMenu = pluginsMenu->addMenu(tr("&Device Plugins"));
+				DevicePluginsFound = true;
+			}
+			pluginAction = integratePlugin(plugin,Plugins);
+			devicePluginMenu->addAction(pluginAction);
+			pluginsMenu->addMenu(devicePluginMenu);//the devices menu..........................................................
+			return true;
 		}
-		pluginAction = integratePlugin(plugin,Plugins);
-		devicePluginMenu->addAction(pluginAction);
-		pluginsMenu->addMenu(devicePluginMenu);//the devices menu..........................................................
-		return true;
+		return false;
 	}
 
 	ExtensionInterface *iExtension = qobject_cast<ExtensionInterface *>(plugin);//For each plugin (static or dynamic), we check which interfaces it implements using qobject_cast()
 	if (iExtension) 
 	{
-		if (!ExtensionPluginsFound)
+		if(checkPluginCompatibility(plugin))
 		{
-			extensionPluginMenu = pluginsMenu->addMenu(tr("&Extension Plugins"));
-			ExtensionPluginsFound = true;
+			if (!ExtensionPluginsFound)
+			{
+				extensionPluginMenu = pluginsMenu->addMenu(tr("&Extension Plugins"));
+				ExtensionPluginsFound = true;
+			}
+			pluginAction = integratePlugin(plugin,Plugins);
+			extensionPluginMenu->addAction(pluginAction);
+			pluginsMenu->addMenu(extensionPluginMenu);//the extension menu..........................................................
+			return true;
 		}
-		pluginAction = integratePlugin(plugin,Plugins);
-		extensionPluginMenu->addAction(pluginAction);
-		pluginsMenu->addMenu(extensionPluginMenu);//the extension menu..........................................................
-		return true;
+		return false;
 	}
 	return false;
 }

@@ -28,22 +28,13 @@ _extensionname_Plugin::_extensionname_Plugin(QObject *parent)
 {
 	_extensionname_Object = new _extensionname_(parent);
 	_extensionname_DiagObject = new _extensionname__Dialog();	
-	MainPluginName = QString(PLUGIN_INTERNAL_NAME) + " Plugin";
-	MainPluginAuthorName = PLUGIN_AUTHOR_NAME;
-	MainPluginOrganizationName = PLUGIN_COMPANY_NAME;
-	MainPluginVersion = PLUGIN_FILE_VERSION_STRING;
-	MainPluginTitle = MainPluginName + "(v" + MainPluginVersion + ")" + " by " + MainPluginAuthorName;	
+	strPluginInformation = QString(PLUGIN_INTERNAL_NAME) + " Plugin" + "(v" + PLUGIN_FILE_VERSION_STRING + ")" + " by " + PLUGIN_AUTHOR_NAME;
 }
 
 _extensionname_Plugin::~_extensionname_Plugin()
 {
 	delete _extensionname_DiagObject;
 	delete _extensionname_Object;
-}
-
-QString _extensionname_Plugin::GetPluginInformation()
-{
-	return MainPluginTitle;
 }
 
 bool _extensionname_Plugin::ConfigureScriptEngine(QScriptEngine &engine)
@@ -56,15 +47,10 @@ bool _extensionname_Plugin::ConfigureScriptEngine(QScriptEngine &engine)
 	return true;
 }
 
-QString _extensionname_Plugin::Test(const QString &message)
-{
-    return "I'm oke(" + message + ")" + " --> " + MainPluginTitle;
-}
-
 bool _extensionname_Plugin::ShowGUI()
 {
 	int returnVal;
-	_extensionname_DiagObject->setWindowTitle(MainPluginTitle);
+	_extensionname_DiagObject->setWindowTitle(strPluginInformation);
 	returnVal = _extensionname_DiagObject->exec();
 
 	switch (returnVal) {

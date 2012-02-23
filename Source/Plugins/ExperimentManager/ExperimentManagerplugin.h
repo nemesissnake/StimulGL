@@ -27,10 +27,11 @@
 #include <QString>
 #include <Qlibrary>
 
-#include "plugininterface.h"
+#include "../../StimulGL/plugininterface.h"
 #include "ExperimentManager_dialog.h"
 #include "ExperimentManager.h"
 #include "ImageProcessor.h"
+#include "defines.h"
 
 QT_BEGIN_NAMESPACE
 QT_END_NAMESPACE
@@ -45,25 +46,15 @@ public:
 	~ExperimentManagerPlugin();
 
 	bool ConfigureScriptEngine(QScriptEngine &engine);
-	QString Test(const QString &message);
-	QString GetPluginInformation(void);
+	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};
 
 private:
-	QString MainPluginName;
-	QString MainPluginAuthorName;
-	QString MainPluginOrganizationName;
-	QString MainPluginVersion;
-	QString MainPluginTitle;
-
-	short nExampleProperty;
 	ExperimentManager *ExperimentManagerObject; 
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;
 
 public slots:
     bool ShowGUI();
-
-signals:
-	void DoSignal();
+	bool IsCompatible() {return PluginInterface::IsCompatible();};
 };
 
 #endif//ExperimentManagerPLUGIN_H

@@ -60,9 +60,6 @@
     <ClCompile Include="customqsciscintilla.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="deviceplugin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="documentmanager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -258,24 +255,6 @@
     <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_documentmanager.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_deviceplugin.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_deviceplugin.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_deviceplugin.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_deviceplugin.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_deviceplugin.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_deviceplugin.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_aboutqtdialog.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
@@ -364,9 +343,6 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="customqsciscintilla.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="deviceplugin.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="documentmanager.h">

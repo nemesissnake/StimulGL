@@ -28,22 +28,13 @@ USBHIDDevicePlugin::USBHIDDevicePlugin(QObject *parent)
 {
 	USBHIDDeviceObject = new USBHIDDevice(0x181b, 0x4002, parent);
 	USBHIDDeviceDiagObject = new USBHIDDevice_Dialog();	
-	MainPluginName = QString(PLUGIN_INTERNAL_NAME) + " Plugin";
-	MainPluginAuthorName = PLUGIN_AUTHOR_NAME;
-	MainPluginOrganizationName = PLUGIN_COMPANY_NAME;
-	MainPluginVersion = PLUGIN_FILE_VERSION_STRING;
-	MainPluginTitle = MainPluginName + "(v" + MainPluginVersion + ")" + " by " + MainPluginAuthorName;	
+	strPluginInformation = PLUGIN_INFORMATION;
 }
 
 USBHIDDevicePlugin::~USBHIDDevicePlugin()
 {
 	delete USBHIDDeviceDiagObject;
 	delete USBHIDDeviceObject;
-}
-
-QString USBHIDDevicePlugin::GetPluginInformation()
-{
-	return MainPluginTitle;
 }
 
 bool USBHIDDevicePlugin::ConfigureScriptEngine(QScriptEngine &engine)
@@ -56,15 +47,10 @@ bool USBHIDDevicePlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	return true;
 }
 
-QString USBHIDDevicePlugin::Test(const QString &message)
-{
-    return "I'm oke(" + message + ")" + " --> " + MainPluginTitle;
-}
-
 bool USBHIDDevicePlugin::ShowGUI()
 {
 	int returnVal;
-	USBHIDDeviceDiagObject->setWindowTitle(MainPluginTitle);
+	USBHIDDeviceDiagObject->setWindowTitle(strPluginInformation);
 	returnVal = USBHIDDeviceDiagObject->exec();
 
 	switch (returnVal) {

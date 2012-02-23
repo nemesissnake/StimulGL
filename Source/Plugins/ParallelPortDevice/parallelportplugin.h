@@ -17,11 +17,6 @@
 //
 
 
-/****************************************************************************
-**
-**
-****************************************************************************/
-
 #ifndef PARALLELPORTPLUGIN_H
 #define PARALLELPORTPLUGIN_H
 
@@ -29,15 +24,15 @@
 #include <QtGui>
 #include <QString>
 #include <Qlibrary>
-
-#include "plugininterface.h"
+#include "../../StimulGL/plugininterface.h"
 #include "pport_dialog.h"
 #include "ParallelPort.h"
+#include "defines.h"
 
 QT_BEGIN_NAMESPACE
 QT_END_NAMESPACE
 
-class ParallelPortPlugin : public QObject, DeviceInterface
+class ParallelPortPlugin : public QObject, public DeviceInterface
 {
     Q_OBJECT
     Q_INTERFACES(DeviceInterface)
@@ -47,25 +42,17 @@ public:
 	~ParallelPortPlugin();
 
 	bool ConfigureScriptEngine(QScriptEngine &engine);
-	QString Test(const QString &message);
-	QString GetPluginInformation(void);
+	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};
 
 private:
-	QString MainPluginName;
-	QString MainPluginOrganizationName;
-	QString MainPluginAuthorName;
-	QString MainPluginVersion;
-	QString MainPluginTitle;
-
 	short nBaseAddress;
 	ParallelPort *PPortObject; 
 	PPort_Dialog *PPortDiagObject;
 
 public slots:
     bool ShowGUI();
+	bool IsCompatible() {return PluginInterface::IsCompatible();};
 
-signals:
-	void DoSignal();
 };
 
 #endif//PARALLELPORTPLUGIN_H

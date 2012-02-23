@@ -27,11 +27,10 @@
 #include <QScriptable>
 #include <QDesktopWidget>
 #include <QMouseEvent>
+#include "./../../StimulGL/mainappinfo.h"
 #include "hidapi.h"
 #include "hidcalibratedialog.h"
 #include "hidcapturethread.h"
-#include "Global.h"
-#include "./../../StimulGL/mainappinfo.h"
 
 class HIDCalibrateDialog;
 class USBHIDDevice : public QObject, protected QScriptable

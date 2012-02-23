@@ -257,6 +257,7 @@ private:
 	//void setupSyntaxHighlighting(MdiChild *childWindow,MDIDocumentType tempFileType);
 	void parseRemainingGlobalSettings();
 	void writeMainWindowSettings();
+	bool checkPluginCompatibility(QObject *plugin);
     bool popPluginIntoMenu(QObject *plugin);
 	bool parseFile(const QFile &file);
 	void setCurrentFile(const QString &fileName);

@@ -19,6 +19,7 @@
 
 #include "mainappinfo.h"
 #include <QTextStream>
+#include <QString>
 
 QFile * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
 //std::ofstream * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
@@ -149,10 +150,7 @@ bool MainAppInfo::InitializeMainAppNaming()
 	QCoreApplication::setOrganizationName(MAIN_PROGRAM_COMPANY_NAME);
 	QCoreApplication::setApplicationName(MAIN_PROGRAM_INTERNAL_NAME);
 	QCoreApplication::setApplicationVersion(MAIN_PROGRAM_FILE_VERSION_STRING);
-
-	//QString a = QCoreApplication::organizationDomain();
-	//QString b = QCoreApplication::organizationName();
-	//QString c = QCoreApplication::applicationName();
-	//QString d = QCoreApplication::applicationVersion();
 	return true;
 }
+
+

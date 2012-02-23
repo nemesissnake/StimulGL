@@ -23,28 +23,18 @@
 #include "defines.h"
 
 Q_DECLARE_METATYPE(ExperimentManager*)
-//Q_DECLARE_METATYPE(ImageProcessor*)
 
 ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 {
 	ExperimentManagerObject = new ExperimentManager(parent);
-	ExperimentManagerDiagObject = new ExperimentManager_Dialog();	
-	MainPluginName = QString(PLUGIN_INTERNAL_NAME) + " Plugin";
-	MainPluginAuthorName = PLUGIN_AUTHOR_NAME;
-	MainPluginOrganizationName = PLUGIN_COMPANY_NAME;
-	MainPluginVersion = PLUGIN_FILE_VERSION_STRING;
-	MainPluginTitle = MainPluginName + "(v" + MainPluginVersion + ")" + " by " + MainPluginAuthorName;	
+	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
+	strPluginInformation = PLUGIN_INFORMATION;
 }
 
 ExperimentManagerPlugin::~ExperimentManagerPlugin()
 {
 	delete ExperimentManagerDiagObject;
 	delete ExperimentManagerObject;
-}
-
-QString ExperimentManagerPlugin::GetPluginInformation()
-{
-	return MainPluginTitle;
 }
 
 bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
@@ -59,19 +49,13 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<ImageProcessor*>(), ImageProcessorProto);
 	QScriptValue ImageProcessorCtor = engine.newFunction(ImageProcessor::ctor__imageProcessor, ImageProcessorProto);
 	engine.globalObject().setProperty(IMAGEPROCESSOR_NAME, ImageProcessorCtor);
-
 	return true;
-}
-
-QString ExperimentManagerPlugin::Test(const QString &message)
-{
-    return "I'm oke(" + message + ")" + " --> " + MainPluginTitle;
 }
 
 bool ExperimentManagerPlugin::ShowGUI()
 {
 	int returnVal;
-	ExperimentManagerDiagObject->setWindowTitle(MainPluginTitle);
+	ExperimentManagerDiagObject->setWindowTitle(strPluginInformation);
 	returnVal = ExperimentManagerDiagObject->exec();
 
 	switch (returnVal) {

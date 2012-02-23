@@ -27,9 +27,10 @@
 #include <QString>
 #include <Qlibrary>
 
-#include "plugininterface.h"
+#include "../../StimulGL/plugininterface.h"
 #include "USBHIDDevice_dialog.h"
 #include "USBHIDDevice.h"
+#include "defines.h"
 
 QT_BEGIN_NAMESPACE
 QT_END_NAMESPACE
@@ -44,25 +45,16 @@ public:
 	~USBHIDDevicePlugin();
 
 	bool ConfigureScriptEngine(QScriptEngine &engine);
-	QString Test(const QString &message);
-	QString GetPluginInformation(void);
+	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};
 
 private:
-	QString MainPluginName;
-	QString MainPluginAuthorName;
-	QString MainPluginOrganizationName;
-	QString MainPluginVersion;
-	QString MainPluginTitle;
-
 	short nExampleProperty;
 	USBHIDDevice *USBHIDDeviceObject; 
 	USBHIDDevice_Dialog *USBHIDDeviceDiagObject;
 
 public slots:
     bool ShowGUI();
-
-signals:
-	void DoSignal();
+	bool IsCompatible() {return PluginInterface::IsCompatible();};
 };
 
 #endif//USBHIDDevicePLUGIN_H

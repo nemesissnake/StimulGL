@@ -17,11 +17,6 @@
 //
 
 
-/****************************************************************************
-**
-**
-****************************************************************************/
-
 #include "parallelportplugin.h"
 #include "defines.h"
 
@@ -33,22 +28,13 @@ ParallelPortPlugin::ParallelPortPlugin(short BaseAddress, QObject *parent)
 	nBaseAddress = BaseAddress;
 	PPortObject = new ParallelPort(nBaseAddress,parent);
 	PPortDiagObject = new PPort_Dialog();
-	MainPluginName = QString(PLUGIN_INTERNAL_NAME) + " Plugin";
-	MainPluginAuthorName = PLUGIN_AUTHOR_NAME;
-	MainPluginOrganizationName = PLUGIN_COMPANY_NAME;
-	MainPluginVersion = PLUGIN_FILE_VERSION_STRING;
-	MainPluginTitle = MainPluginName + "(v" + MainPluginVersion + ")" + " by " + MainPluginAuthorName;
+	strPluginInformation = PLUGIN_INFORMATION;
 }
 
 ParallelPortPlugin::~ParallelPortPlugin()
 {
 	delete PPortDiagObject;
 	delete PPortObject;
-}
-
-QString ParallelPortPlugin::GetPluginInformation()
-{
-	return MainPluginTitle;
 }
 
 QScriptValue ctor_ParallelPort(QScriptContext* context, QScriptEngine* engine)
@@ -63,33 +49,6 @@ QScriptValue ctor_ParallelPort(QScriptContext* context, QScriptEngine* engine)
 
 	return engine->newQObject(new ParallelPort(), QScriptEngine::ScriptOwnership);
 } 
-
-//QScriptValue getSetBaseAddress(QScriptContext *ctx, QScriptEngine *eng)
-//{
-//	QScriptValue obj = ctx->thisObject();
-//	QScriptValue data = obj.data();
-//	if (!data.isValid()) {
-//		data = eng->newObject();
-//		obj.setData(data);
-//	}
-//	QScriptValue result;
-//	if (ctx->argumentCount() == 1)//setter
-//	{
-//		QString str = ctx->argument(0).toString();
-//		short val = ctx->argument(0).toInteger();
-//		//str.replace("Roberta", "Ken");
-//		result = QScriptValue(eng, str);
-//		//data.setProperty("BaseAddress", result);
-//				
-//		eng->globalObject.
-//		ParallelPortPlugin::nBaseAddress = val;
-//	} 
-//	else//getter
-//	{
-//		result = data.property("BaseAddress");
-//	}
-//	return result;
-//}
 
 bool ParallelPortPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 {
@@ -112,19 +71,13 @@ bool ParallelPortPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	//QScriptValue obj = engine.newObject();
 	//ParallelPortProto.setProperty("BaseAddress", engine.newFunction(getSetBaseAddress), 
 	//	QScriptValue::PropertyGetter|QScriptValue::PropertySetter);
-
 	return true;
-}
-
-QString ParallelPortPlugin::Test(const QString &message)
-{
-    return "I'm oke(" + message + ")";
 }
 
 bool ParallelPortPlugin::ShowGUI()
 {
 	int returnVal;
-	PPortDiagObject->setWindowTitle(MainPluginTitle);
+	PPortDiagObject->setWindowTitle(strPluginInformation);
 	returnVal = PPortDiagObject->exec();
 
 	switch (returnVal) {
