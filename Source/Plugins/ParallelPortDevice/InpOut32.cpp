@@ -215,6 +215,7 @@ InpOut32::ECP_Mode InpOut32::GetEcpMode(short nBaseAddress)
 		return ECP_MODE_CONFIGURATION;
 		break;
 	}
+    return ECP_MODE_NOTDEFINED;
 }
 
 int InpOut32::GetEppTimeoutBit(short nBaseAddress)

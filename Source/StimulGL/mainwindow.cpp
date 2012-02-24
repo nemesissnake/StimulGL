@@ -16,11 +16,6 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
-/****************************************************************************
-**
-****************************************************************************/
-
 #include "mainwindow.h"
 #include "mainappinfo.h"
 #include "StimulGL.h"
@@ -76,7 +71,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//QWaitCondition sleep;
 	MainAppInfo::InitializeMainAppNaming();
 	StimulGLFlags = mainFlags;
-	AppScriptStatus = MainAppInfo::ActiveScriptMode::NoScript;
+    AppScriptStatus = MainAppInfo::NoScript;
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash) == false)
 	{
 		QPixmap pixmap(":/Resources/splash.png");
@@ -296,13 +291,13 @@ void MainWindow::setupScriptEngine()
 void MainWindow::scriptLoaded(qint64 id)
 {
 	currentRunningScriptID = id;
-	setScriptRunningStatus(MainAppInfo::ActiveScriptMode::Executing);
+    setScriptRunningStatus(MainAppInfo::Executing);
 }
 
 void MainWindow::scriptUnloaded(qint64 id)
 {
 	currentRunningScriptID = 0;
-	setScriptRunningStatus(MainAppInfo::ActiveScriptMode::Pending);
+    setScriptRunningStatus(MainAppInfo::Pending);
 }
 
 void MainWindow::setActiveSubWindow(QWidget *window)
@@ -371,7 +366,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 				//statusBar()->showMessage("DOCTYPE_QSCRIPT");
 				if (currentRunningScriptID == 0)
 				{
-					setScriptRunningStatus(MainAppInfo::ActiveScriptMode::Pending);
+                    setScriptRunningStatus(MainAppInfo::Pending);
 				}
 				printAction->setEnabled(true);
 				break;
@@ -382,7 +377,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 				//setScriptRunningStatus(AppScriptStatus);
 				if (currentRunningScriptID == 0)
 				{
-					setScriptRunningStatus(MainAppInfo::ActiveScriptMode::Pending);
+                    setScriptRunningStatus(MainAppInfo::Pending);
 				}
 				printAction->setEnabled(true);
 				break;
@@ -403,7 +398,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		setWindowTitle(tr("%1").arg(MainAppInfo::MainProgramTitle()));
 		if (currentRunningScriptID == 0)
 		{
-			setScriptRunningStatus(MainAppInfo::ActiveScriptMode::NoScript);
+            setScriptRunningStatus(MainAppInfo::NoScript);
 		}
 		printAction->setEnabled(false);
 	}

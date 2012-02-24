@@ -104,7 +104,7 @@ bool ImageProcessor::ConvertDatToPngFile(QString strSource, QString strDestinati
 		input >> magic >> width >> height;
 		if(magic == ARGB_FORMAT_HEADER)
 		{
-			int nDataSize = width*height*sizeof(QRgb);
+            //int nDataSize = width*height*sizeof(QRgb);
 			QImage tmpImage(width,height,QImage::Format_ARGB32);
 			for (y = 0; y < height; ++y) 
 			{

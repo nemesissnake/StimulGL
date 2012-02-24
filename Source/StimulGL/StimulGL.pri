@@ -9,7 +9,6 @@
 
 HEADERS += ./aboutqtdialog.h \
     ./customqsciscintilla.h \
-    ./deviceplugin.h \
     ./documentmanager.h \
     ./mainappinfo.h \
     ./mainwindow.h \
@@ -21,12 +20,9 @@ HEADERS += ./aboutqtdialog.h \
     ./qtscriptworker.h \
     ./scifinddialog.h \
     ./sleepthread.h \
-    #./../Plugins/ParallelPortDevice/parallelport.h \
-    #./../Plugins/ExperimentManager/ExperimentManager.h \
     ./svgview.h
 SOURCES += ./aboutqtdialog.cpp \
     ./customqsciscintilla.cpp \
-    ./deviceplugin.cpp \
     ./documentmanager.cpp \
     ./main.cpp \
     ./mainappinfo.cpp \
@@ -37,9 +33,10 @@ SOURCES += ./aboutqtdialog.cpp \
     ./qtscriptengineagent.cpp \
     ./qtscriptworker.cpp \
     ./scifinddialog.cpp \
-    #./../Plugins/ParallelPortDevice/parallelport.h \
-    #./../Plugins/ExperimentManager/ExperimentManager.h \
     ./svgview.cpp
 FORMS += ./optionpage.ui \
     ./scifinddialog.ui
 RESOURCES += StimulGL.qrc
+
+OTHER_FILES += \
+    StimulGL.rc

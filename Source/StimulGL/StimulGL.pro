@@ -12,9 +12,6 @@
 #INCLUDEPATH += $$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/Win32/Debug
 #DEPENDPATH += $$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/Win32/Debug
 
-
-#D:\Projects\StimulGL\All-build-desktop\Plugins\ParallelPortDevice\Win32\Debug
-
 TEMPLATE = app
 QT += core gui sql xml script scripttools svg opengl
 DEFINES += QT_LARGEFILE_SUPPORT QT_DLL QT_SVG_LIB QT_XML_LIB QT_OPENGL_LIB
@@ -24,20 +21,21 @@ DEPENDPATH +=   .
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
 LIBS += -lwinmm
-RC_FILE = $$PWD/version.rc
+RC_FILE = $$PWD/StimulGL.rc
 QMAKE_RC = rc -D_MSC_VER
 include(StimulGL.pri)
 
 contains(QMAKE_HOST.os,Windows){
     contains(QMAKE_HOST.arch,x86_64){
-        #message("$$QMAKE_HOST.arch on $$QMAKE_HOST.os")
+        message("$$QMAKE_HOST.arch on $$QMAKE_HOST.os")
+        LIBS += -linpoutx64
         LIBS += -lgdi32 \
                 -luser32
         CONFIG(debug, debug|release){
             LIBS += -lqscintilla2d \
-                    -L$$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/x64/Debug/ -lparallelportplugin_x64_Debug \
-                    -L$$PWD/../../All-build-desktop/Plugins/ExperimentManager/x64/Debug/ -lExperimentManagerplugin_x64_Debug
-            QTPLUGIN += $$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/x64/Debug/parallelportplugin_x64 #Additional 'd' is automatically added!
+                     -L./../Plugins/ParallelPortDevice/x64/Debug/ -lparallelportplugin_x64d \
+                     -L./../Plugins/ExperimentManager/x64/Debug/ -lExperimentManagerplugin_x64d
+            QTPLUGIN += ./../Plugins/ParallelPortDevice/x64/Debug/parallelportplugin_x64 #Additional 'd' is automatically added!
             DESTDIR = x64/Debug
             TARGET = StimulGL_x64_Debug
             INCLUDEPATH += x64/Debug
@@ -47,9 +45,9 @@ contains(QMAKE_HOST.os,Windows){
         }
         CONFIG(release, debug|release){
             LIBS += -lqscintilla2 \
-                    -L$$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/x64/Release/ -lparallelportplugin_x64_Release \
-                    -L$$PWD/../../All-build-desktop/Plugins/ExperimentManager/x64/Release/ -lExperimentManagerplugin_x64_Release
-            QTPLUGIN += $$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/x64/Debug/parallelportplugin_x64 #Additional 'd' is automatically added!
+                     -L./../Plugins/ParallelPortDevice/x64/Release/ -lparallelportplugin_x64 \
+                     -L./../Plugins/ExperimentManager/x64/Release/ -lExperimentManagerplugin_x64
+            QTPLUGIN += ./../Plugins/ParallelPortDevice/x64/Release/parallelportplugin_x64
             DESTDIR = x64/Release
             TARGET = StimulGL_x64_Release
             INCLUDEPATH += x64/Release
@@ -60,15 +58,15 @@ contains(QMAKE_HOST.os,Windows){
     }
     else{
         contains(QMAKE_HOST.arch,x86){
-            #message("$$QMAKE_HOST.arch on $$QMAKE_HOST.os")
+            message("$$QMAKE_HOST.arch on $$QMAKE_HOST.os")
             LIBS += -linpout32
             LIBS += -lgdi32 \
-                -luser32
+                    -luser32
             CONFIG(debug, debug|release){
                 LIBS += -lqscintilla2d \
-                        -L$$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/Win32/Debug/ -lparallelportplugin_Win32d \
-                        -L$$PWD/../../All-build-desktop/Plugins/ExperimentManager/Win32/Debug/ -lExperimentManagerplugin_Win32d
-                QTPLUGIN += $$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/Win32/Debug/parallelportplugin_Win32 #Additional 'd' is automatically added!
+                        -L./../Plugins/ParallelPortDevice/Win32/Debug/ -lparallelportplugin_Win32d \
+                        -L./../Plugins/ExperimentManager/Win32/Debug/ -lExperimentManagerplugin_Win32d
+                QTPLUGIN += ./../Plugins/ParallelPortDevice/Win32/Debug/parallelportplugin_Win32 #Additional 'd' is automatically added!
                 DESTDIR = Win32/Debug
                 TARGET = StimulGL_Win32_Debug
                 INCLUDEPATH += Win32/Debug
@@ -78,9 +76,9 @@ contains(QMAKE_HOST.os,Windows){
             }
             CONFIG(release, debug|release){
                 LIBS += -lqscintilla2 \
-                        -L$$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/Win32/Release/ -lparallelportplugin_Win32 \
-                        -L$$PWD/../../All-build-desktop/Plugins/ExperimentManager/Win32/Release/ -lExperimentManagerplugin_Win32
-                QTPLUGIN += $$PWD/../../All-build-desktop/Plugins/ParallelPortDevice/Win32/Release/parallelportplugin_Win32
+                        -L./../Plugins/ParallelPortDevice/Win32/Release/ -lparallelportplugin_Win32 \
+                        -L./../Plugins/ExperimentManager/Win32/Release/ -lExperimentManagerplugin_Win32
+                QTPLUGIN += ./../Plugins/ParallelPortDevice/Win32/Release/parallelportplugin_Win32
                 DESTDIR = Win32/Release
                 TARGET = StimulGL_Win32_Release
                 INCLUDEPATH += Win32/Release

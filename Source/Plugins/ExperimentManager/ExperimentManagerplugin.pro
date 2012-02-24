@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 TEMPLATE = lib
-QT += core gui script opengl xml xmltools
+QT += core gui script opengl xml
 DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QT_THREAD_SUPPORT
 INCLUDEPATH += ./debug \
     . \
@@ -13,8 +13,8 @@ DEPENDPATH += .
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
 CONFIG += plugin static
-RC_FILE = $$PWD/version.rc
-QMAKE_RC = rc -D_MSC_VER
+#RC_FILE = $$PWD/ExperimentManagerplugin.rc
+#QMAKE_RC = rc -D_MSC_VER
 include(ExperimentManagerplugin.pri)
 
 contains(QMAKE_HOST.os,Windows){
@@ -64,4 +64,5 @@ contains(QMAKE_HOST.os,Windows){
 }
 else:error("Your OS is $$QMAKE_HOST.os . The library for this OS hasn't been built.")
 
-OTHER_FILES +=
+OTHER_FILES += \
+    ExperimentManagerplugin.rc

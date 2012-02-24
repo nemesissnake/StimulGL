@@ -11,7 +11,7 @@ HEADERS += ./USBHIDDevice.h \
     ./USBHIDDevice_dialog.h \
     ./hidcalibratedialog.h \
     ./USBHIDDeviceplugin.h \
-    ./plugininterface.h \
+    ./../../StimulGL/plugininterface.h \
     ./StdAfx.h \
     renderarea.h \
     hidcapturethread.h \
@@ -21,7 +21,6 @@ HEADERS += ./USBHIDDevice.h \
 SOURCES += ./USBHIDDevice.cpp \
     ./USBHIDDevice_dialog.cpp \
     ./hidcalibratedialog.cpp \
-    ./USBHIDDeviceplugin.cpp \
     ./StdAfx.cpp \
     renderarea.cpp \
     hidcapturethread.cpp \

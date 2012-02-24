@@ -11,7 +11,7 @@ HEADERS += ./ExperimentManager.h \
     ./ExperimentManager_dialog.h \
     ./ExperimentManagerplugin.h \
     ./../../StimulGL/mainappinfo.h \
-    ./plugininterface.h \
+    ./../../StimulGL/plugininterface.h \
     ./StdAfx.h \
     metaextensions.h \
     ImageProcessor.h \

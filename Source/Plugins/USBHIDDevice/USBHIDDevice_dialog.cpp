@@ -411,7 +411,7 @@ void USBHIDDevice_Dialog::Initialize()
 		ConnectSignalSlots();
 		UI_USBHIDDeviceObject->SetCalibrationData(m_CalibrationConfiguration);
 		UI_USBHIDDeviceObject->ConfigureHIDFiltering(ui.checkBox_EnableStab->isChecked(),ui.lineEdit_ThresholdValue->text().toInt(),ui.checkBox_EnableFilter->isChecked(),ui.lineEdit_HistorySize->text().toInt());
-		UI_USBHIDDeviceObject->ConfigureHIDTriggers(true,true,255,HIDCaptureThread::DetectionMethod::MaskedValueChanged);
+        UI_USBHIDDeviceObject->ConfigureHIDTriggers(true,true,255,HIDCaptureThread::MaskedValueChanged);
 		UI_USBHIDDeviceObject->WriteCapturedDataToFile(ui.checkBox_ToLog->isChecked(),ui.lineEdit_LogPath->text(),ui.checkBox_WriteHeader->isChecked(),ui.checkBox_WriteFil->isChecked());
 		UI_USBHIDDeviceObject->EmulateHIDMouse(ui.checkBox_MouseEmulation->isChecked(),ui.checkBox_FullScreen->isChecked(),ui.checkBox_LeftMouse->isChecked(),ui.checkBox_RightMouse->isChecked());
 		ChangeCurrentState(ReadyToCapture);

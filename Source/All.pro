@@ -13,6 +13,8 @@
 #message $$QMAKE_HOST.version_string
 #message $$QMAKE_HOST.arc
 #message $$QMAKE_HOST.os
+#message $$PWD/$$buildDir
+#message $$PWD/$$DESTDIR
 
 
 TEMPLATE = subdirs

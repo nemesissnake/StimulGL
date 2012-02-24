@@ -7,12 +7,11 @@ QT += core gui script
 DEFINES += _WINDOWS QT_LARGEFILE_SUPPORT QT_DLL QT_THREAD_SUPPORT
 INCLUDEPATH += ./debug \
     . \
-    $(QTDIR)/mkspecs/win32-msvc2008 \
     ./GeneratedFiles
 DEPENDPATH += .
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
-RC_FILE = $$PWD/version.rc
+RC_FILE = $$PWD/_extensionname_plugin.rc
 QMAKE_RC = rc -D_MSC_VER
 include(_extensionname_plugin.pri)
 

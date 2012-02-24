@@ -12,7 +12,7 @@ INCLUDEPATH += ./debug \
 DEPENDPATH += .
 UI_DIR += ./GeneratedFiles
 RCC_DIR += ./GeneratedFiles
-RC_FILE = $$PWD/version.rc
+RC_FILE = $$PWD/USBHIDDeviceplugin.rc
 QMAKE_RC = rc -D_MSC_VER
 include(USBHIDDeviceplugin.pri)
 
@@ -67,7 +67,8 @@ contains(QMAKE_HOST.os,Windows){
 }
 else:error("Your OS is $$QMAKE_HOST.os . The library for this OS hasn't been built.")
 
-OTHER_FILES +=
+OTHER_FILES += \
+    USBHIDDeviceplugin.rc
 
 HEADERS += \
     resource.h

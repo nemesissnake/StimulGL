@@ -331,10 +331,10 @@ int PPort_Dialog::getCPostHLTiming()
 ppCaptureThread::DetectionMethod PPort_Dialog::getCDetectionMethod()
 {
 	//short tmpMask = 0;
-	if (ui.rbDecMethod_MVC0->isChecked())  return ppCaptureThread::DetectionMethod::MaskedValueChanged;
-	if (ui.rbDecMethodHigh_MVC1->isChecked())  return ppCaptureThread::DetectionMethod::MaskedValueChangedHigh;
-	if (ui.rbDecMethodLow_MVC2->isChecked())  return ppCaptureThread::DetectionMethod::MaskedValueChangedLow;
-	return ppCaptureThread::DetectionMethod::MaskedValueChanged;
+    if (ui.rbDecMethod_MVC0->isChecked())  return ppCaptureThread::MaskedValueChanged;
+    if (ui.rbDecMethodHigh_MVC1->isChecked())  return ppCaptureThread::MaskedValueChangedHigh;
+    if (ui.rbDecMethodLow_MVC2->isChecked())  return ppCaptureThread::MaskedValueChangedLow;
+    return ppCaptureThread::MaskedValueChanged;
 }
 
 void PPort_Dialog::on_btnStartCaptureThread_clicked()
@@ -600,10 +600,10 @@ int PPort_Dialog::getGRepetitionTime()
 
 ppGenerateThread::GenerationMethod PPort_Dialog::getGGenerationMethod()
 {
-	if (ui.rbGenMethod_Value->isChecked())  return ppGenerateThread::GenerationMethod::Value;
-	if (ui.rbGenMethod_Pulse->isChecked())  return ppGenerateThread::GenerationMethod::Pulse;
-	if (ui.rbGenMethod_Periodical->isChecked())  return ppGenerateThread::GenerationMethod::Periodical;
-	return ppGenerateThread::GenerationMethod::Value;
+    if (ui.rbGenMethod_Value->isChecked())  return ppGenerateThread::Value;
+    if (ui.rbGenMethod_Pulse->isChecked())  return ppGenerateThread::Pulse;
+    if (ui.rbGenMethod_Periodical->isChecked())  return ppGenerateThread::Periodical;
+    return ppGenerateThread::Value;
 }
 
 void PPort_Dialog::on_btnStopGenerateThread_clicked()

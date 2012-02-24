@@ -10,7 +10,7 @@
 HEADERS += ./InpOut32.h \
     ./parallelport.h \
     ./parallelportplugin.h \
-    ./plugininterface.h \
+    ./../../StimulGL/plugininterface.h \
     ./ppcapturethread.h \
     ./ppgeneratethread.h \
     ./pport_dialog.h \

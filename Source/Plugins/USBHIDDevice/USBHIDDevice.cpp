@@ -45,7 +45,7 @@ USBHIDDevice::USBHIDDevice(unsigned short vendor_id, unsigned short product_id, 
 	m_bActivateMouseLButtonEmu = false;
 	m_bActivateMouseRButtonEmu = false;
 	m_cButtonMask = 255;
-	m_sButtonDetectDetectionMethod = HIDCaptureThread::DetectionMethod::MaskedValueChanged;
+    m_sButtonDetectDetectionMethod = HIDCaptureThread::MaskedValueChanged;
 	m_VendorId = vendor_id;
 	m_ProductId = product_id;
 	m_bWriteToFile = false;
@@ -241,11 +241,11 @@ void USBHIDDevice::UpdateHIDMouseEmuButtons(unsigned char ButtonByteValue,unsign
 
 			if((ButtonByteValue & 0x01) == 0x01)//Did it Press?
 			{
-				mouseEvent = new QMouseEvent( QEvent::MouseButtonPress, mouseRelPos, Qt::MouseButton::LeftButton, Qt::MouseButton::LeftButton, Qt::NoModifier);
+                mouseEvent = new QMouseEvent( QEvent::MouseButtonPress, mouseRelPos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 			}
 			else//Was it a Release?
 			{
-				mouseEvent = new QMouseEvent( QEvent::MouseButtonRelease, mouseRelPos, Qt::MouseButton::LeftButton, Qt::MouseButton::LeftButton, Qt::NoModifier);
+                mouseEvent = new QMouseEvent( QEvent::MouseButtonRelease, mouseRelPos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
 			}
 			QApplication::postEvent( widgetUnderCursor, mouseEvent );	
 			delete mouseEvent;
@@ -260,11 +260,11 @@ void USBHIDDevice::UpdateHIDMouseEmuButtons(unsigned char ButtonByteValue,unsign
 
 			if((ButtonByteValue & 0x02) == 0x02)//Did it Press?
 			{
-				mouseEvent = new QMouseEvent( QEvent::MouseButtonPress, mouseRelPos, Qt::MouseButton::RightButton, Qt::MouseButton::RightButton, Qt::NoModifier);
+                mouseEvent = new QMouseEvent( QEvent::MouseButtonPress, mouseRelPos, Qt::RightButton, Qt::RightButton, Qt::NoModifier);
 			}
 			else//Was it a Release?
 			{
-				mouseEvent = new QMouseEvent( QEvent::MouseButtonRelease, mouseRelPos, Qt::MouseButton::RightButton, Qt::MouseButton::RightButton, Qt::NoModifier);
+                mouseEvent = new QMouseEvent( QEvent::MouseButtonRelease, mouseRelPos, Qt::RightButton, Qt::RightButton, Qt::NoModifier);
 			}
 			QApplication::postEvent( widgetUnderCursor, mouseEvent );	
 			delete mouseEvent;
@@ -287,11 +287,11 @@ bool USBHIDDevice::StartCaptureThread(bool bIsCalibrationThread)
 {
 	HIDCaptureThread::DetectionMethod CapDecMethod;
 	if (m_sButtonDetectDetectionMethod == 0) 
-	{CapDecMethod = HIDCaptureThread::DetectionMethod::MaskedValueChanged;}
+    {CapDecMethod = HIDCaptureThread::MaskedValueChanged;}
 	else if (m_sButtonDetectDetectionMethod == 1) 
-	{CapDecMethod = HIDCaptureThread::DetectionMethod::MaskedValueChangedHigh;}
+    {CapDecMethod = HIDCaptureThread::MaskedValueChangedHigh;}
 	else 
-	{CapDecMethod = HIDCaptureThread::DetectionMethod::MaskedValueChangedLow;}
+    {CapDecMethod = HIDCaptureThread::MaskedValueChangedLow;}
 	if (HIDCapThread)
 	{
 		delete HIDCapThread;

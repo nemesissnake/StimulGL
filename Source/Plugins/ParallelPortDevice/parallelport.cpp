@@ -150,11 +150,11 @@ bool ParallelPort::StartGenerateThread(const short baseAddress,const short metho
 {
 	ppGenerateThread::GenerationMethod GenMethod;
 	if (method == 0) 
-		{GenMethod = ppGenerateThread::GenerationMethod::Value;}
+        {GenMethod = ppGenerateThread::Value;}
 	else if (method == 1) 
-	{GenMethod = ppGenerateThread::GenerationMethod::Pulse;}
+    {GenMethod = ppGenerateThread::Pulse;}
 	else 
-	{GenMethod = ppGenerateThread::GenerationMethod::Periodical;}
+    {GenMethod = ppGenerateThread::Periodical;}
 
 	generateThread = new ppGenerateThread(baseAddress,GenMethod,outputMask,activeValue,inActiveValue,activePulseTime,repetitionTime,this);
 		
@@ -174,11 +174,11 @@ bool ParallelPort::StartCaptureThread(const short baseAddress, const short mask,
 {
 	ppCaptureThread::DetectionMethod CapDecMethod;
 	if (method == 0) 
-	{CapDecMethod = ppCaptureThread::DetectionMethod::MaskedValueChanged;}
+    {CapDecMethod = ppCaptureThread::MaskedValueChanged;}
 	else if (method == 1) 
-	{CapDecMethod = ppCaptureThread::DetectionMethod::MaskedValueChangedHigh;}
+    {CapDecMethod = ppCaptureThread::MaskedValueChangedHigh;}
 	else 
-	{CapDecMethod = ppCaptureThread::DetectionMethod::MaskedValueChangedLow;}
+    {CapDecMethod = ppCaptureThread::MaskedValueChangedLow;}
 
 	captureThread = new ppCaptureThread(baseAddress,mask,CapDecMethod,postLHDelay,postHLDelay,this);
 
