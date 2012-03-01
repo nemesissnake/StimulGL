@@ -15,13 +15,13 @@ var txt = new String("ECMA string");
 
 //Almost all QT SDK libraries can be used trough automatically loaded script bindings
 //We can even tell the main program to open an QT script binding example
-var strPath = new String(StimQT.getSelectedScriptFileLocation());
+var strPath = new String(StimulGL.getSelectedScriptFileLocation());
 strPath = strPath + "/" + "StandardDialogs.qs"
 Log(strPath);
-StimQT.openFiles(strPath);
-StimQT.executeScript();
-Log(StimQT.getSelectedScriptFileName());
-StimQT.closeSelectedScriptFile();
+StimulGL.openFiles(strPath);
+StimulGL.executeScript();
+Log(StimulGL.getSelectedScriptFileName());
+StimulGL.closeSelectedScriptFile();
 
 //Define a custom function
 function myBeeps(n) 
