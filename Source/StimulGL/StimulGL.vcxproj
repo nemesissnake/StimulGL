@@ -802,6 +802,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="aboutqtdialog.cpp" />
+    <ClCompile Include="assistant.cpp" />
     <ClCompile Include="customqsciscintilla.cpp" />
     <ClCompile Include="documentmanager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -1156,6 +1157,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="assistant.h" />
     <ClInclude Include="maindefines.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StimulGL.h" />

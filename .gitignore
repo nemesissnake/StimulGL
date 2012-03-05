@@ -51,3 +51,7 @@ Install/experiments/run_1.exml
 Install/experiments/test.exml
 Source/All.pro.user*
 All-build-desktop-*
+Install/documents/*
+Source/Plugins/ParallelPortDevice/documents/~$*.doc
+Source/Plugins/USBHIDDevice/documents/~$*.doc
+Source/Plugins/USBHIDDevice/documents/~*.tmp

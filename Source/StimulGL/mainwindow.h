@@ -39,6 +39,7 @@
 #include "qtscriptengine.h"
 #include "mainappinfo.h"
 #include "sciFindDialog.h"
+#include "assistant.h"
 
 class SvgView;
 class DeviceControl;
@@ -85,6 +86,7 @@ private slots:
 	void showPluginGUI();
 	void openOptionsDialog();
 	void aboutStimulGL();
+	void showDocumentation();
 	void openRecentFile();
 	bool closeSubWindow();
 	void newFile();
@@ -127,6 +129,7 @@ private:
 	MainAppInfo::MainProgramModeFlags StimulGLFlags;
 	MainAppInfo::ScriptRunMode StimulGLScriptRunMode;
 	QSplashScreen *MainSplashScreen;
+	Assistant *helpAssistant;
 	QStringList startUpFiles;
     QAction *m_nativeAction;
     QAction *m_glAction;
@@ -175,6 +178,7 @@ private:
 	QAction *prevMarkerAction;
 	QAction *remAllMarkerAction;
 	QAction *aboutStimulGLAct;
+	QAction *assistantAct;
 	QAction *aboutQtAct;
 	QAction *separatorAct;
 

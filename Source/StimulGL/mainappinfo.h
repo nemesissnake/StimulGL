@@ -76,7 +76,8 @@ public:
 	static QString MainProgramFileVersion()	{return MAIN_PROGRAM_FILE_VERSION_STRING;}
 	static QString MainProgramTitle()		{return MAIN_PROGRAM_FULL_NAME;}//(MainProgramName() + "(v" + MainProgramFileVersion() + ")");}
 	static QString appDirPath()				{return QCoreApplication::applicationDirPath();}
-	static QString appLogFilePath()			{return (appDirPath() + "/" + MAIN_PROGRAM_LOGFILE_NAME);}
+	static QString appDocDirPath()			{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}
+	static QString appLogFilePath()			{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_LOGFILE_NAME);}
 	static QString pluginsDirPath();
 	static QString outputsDirPath();
 

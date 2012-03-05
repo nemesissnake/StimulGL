@@ -276,6 +276,9 @@
     <ClCompile Include="..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\qrc_StimulGL.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="assistant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StimulGL.h">
@@ -291,6 +294,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="maindefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="assistant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

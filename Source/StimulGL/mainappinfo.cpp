@@ -32,7 +32,7 @@ QDir MainAppInfo::appDebugDirPath()
 	if (appDebugDir.dirName().toLower() == "debug" || appDebugDir.dirName().toLower() == "release")
 	{
 		appDebugDir.cdUp();
-		if (appDebugDir.dirName().toLower() == "win32" || appDebugDir.dirName().toLower() == "x64")
+		if (appDebugDir.dirName().toLower() == "win32" || appDebugDir.dirName().toLower() == "x64")//This is now unnecessary in VS2010! It is solved by changing the debugpath to the install dir.
 		{
 			appDebugDir.cdUp();
 			appDebugDir.cdUp();

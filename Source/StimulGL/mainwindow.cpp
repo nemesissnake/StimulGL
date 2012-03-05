@@ -36,6 +36,7 @@ MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 	PluginsFound = false;
 	DevicePluginsFound = false;
 	ExtensionPluginsFound = false;
+	helpAssistant = new Assistant;
 
 #ifndef QT_NO_DEBUG_OUTPUT	
 	qInstallMsgHandler(MainAppInfo::MyOutputHandler);
@@ -733,10 +734,17 @@ void MainWindow::createDefaultMenus()
 void MainWindow::setupHelpMenu()
 {
 	helpMenu = menuBar()->addMenu(tr("Help"));
+	
+	assistantAct = new QAction(tr("Help Contents"), this);
+	assistantAct->setStatusTip(tr("Show the StimulGL Documentation"));
+	helpMenu->addAction(assistantAct);
+	assistantAct->setShortcut(QKeySequence::HelpContents);
+	connect(assistantAct, SIGNAL(triggered()), this, SLOT(showDocumentation()));
+	
 	aboutStimulGLAct = new QAction(tr("About StimulGL"), this);
 	aboutStimulGLAct->setStatusTip(tr("Show the StimulGL About Dialog"));
 	helpMenu->addAction(aboutStimulGLAct);
-	aboutStimulGLAct->setShortcut(QKeySequence(tr("F1")));
+	aboutStimulGLAct->setShortcut(QKeySequence(tr("F2")));
 	connect(aboutStimulGLAct, SIGNAL(triggered()), this, SLOT(aboutStimulGL()));
 
 	aboutQtAct = new QAction(tr("About Qt"), this);
@@ -745,6 +753,11 @@ void MainWindow::setupHelpMenu()
 	connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
 	menuBar()->addMenu(helpMenu);//the help menu..........................................................
+}
+
+void MainWindow::showDocumentation()
+{
+	helpAssistant->showDocumentation("index.html");
 }
 
 void MainWindow::write2OutputWindow(const QString &text2Write)
@@ -1771,6 +1784,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		writeMainWindowSettings();
 		event->accept();
 	}
+	delete helpAssistant;
 #ifndef QT_NO_DEBUG_OUTPUT
 	MainAppInfo::CloseMainLogFile();	
 #endif
