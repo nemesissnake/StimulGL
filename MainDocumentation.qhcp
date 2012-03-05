@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QHelpCollectionProject version="1.0">
+    <assistant>
+        <title>StimulGL</title>
+        <applicationIcon>images/handbook.png</applicationIcon>
+        <cacheDirectory>Trolltech/StimulGL</cacheDirectory>
+        <startPage>qthelp://com.trolltech.stimulgl/doc/index.html</startPage>
+        <aboutMenuText>
+            <text>About StimulGL</text>
+        </aboutMenuText>
+        <aboutDialog>
+            <file>about.txt</file>
+            <icon>images/icon.png</icon>
+        </aboutDialog>
+        <enableDocumentationManager>false</enableDocumentationManager>
+        <enableAddressBar>false</enableAddressBar>
+        <enableFilterFunctionality>false</enableFilterFunctionality>
+    </assistant>
+    <docFiles>
+        <generate>
+            <file>
+                <input>MainDocumentation.qhp</input>
+                <output>MainDocumentation.qch</output>
+                </file>
+            </generate>
+        <register>
+            <file>MainDocumentation.qch</file>
+            </register>
+        </docFiles>
+    </QHelpCollectionProject>
