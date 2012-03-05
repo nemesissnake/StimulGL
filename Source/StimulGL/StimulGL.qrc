@@ -1,0 +1,18 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>Resources/splash.png</file>
+    <file>Resources/copy.png</file>
+    <file>Resources/cut.png</file>
+    <file>Resources/new.png</file>
+    <file>Resources/open.png</file>
+    <file>Resources/paste.png</file>
+    <file>Resources/save.png</file>
+    <file>Resources/print.png</file>
+    <file>Resources/runScript.png</file>
+    <file>Resources/config.png</file>
+    <file>Resources/query.png</file>
+    <file>Resources/update.png</file>
+    <file>Resources/comment.png</file>
+    <file>Resources/uncomment.png</file>        
+</qresource>
+</RCC>

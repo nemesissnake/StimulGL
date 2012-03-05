@@ -1,0 +1,3 @@
+This folder contains all the source code, documentation and example (script) files for the StimulGL plugins.
+If you are planning to create your own custom plugin than it's recommended to start reading the documentation from
+the ExtensionPluginTemplate.
