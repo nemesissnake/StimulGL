@@ -33,6 +33,7 @@
 
 MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 {
+	DocManager = NULL;
 	PluginsFound = false;
 	DevicePluginsFound = false;
 	ExtensionPluginsFound = false;
@@ -70,7 +71,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//DisablePlugins			= 0x00001,
 	//DisableSplash				= 0x00002
 	//QWaitCondition sleep;
-	MainAppInfo::InitializeMainAppNaming();
+	MainAppInfo::Initialize();
 	StimulGLFlags = mainFlags;
     AppScriptStatus = MainAppInfo::NoScript;
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash) == false)
@@ -158,6 +159,8 @@ void MainWindow::setupMDI()
 void MainWindow::setupDocumentManager()
 {
 	DocManager = new DocumentManager (this);
+	connect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
+	DocManager->appendKnownFileExtensionList(MainAppInfo::getDefaultFileExtList());
 	connect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));
 }
 
@@ -287,6 +290,33 @@ void MainWindow::setupScriptEngine()
 
 	QScriptValue AppScriptThisObject = AppScriptEngine->eng->newQObject(this);
 	AppScriptEngine->eng->globalObject().setProperty("StimulGL", AppScriptThisObject);
+	
+	//We must declare it so that the type will be known to QMetaType, find "Q_DECLARE_METATYPE(DocFindFlags)"
+	//Q_DECLARE_METATYPE(DocFindFlags)
+	//Next, the DocFindFlags conversion functions. We represent the DocFindFlags value as a script object and just copy the properties, see below after this function body!
+
+	//Now we can register DocFindFlags with the engine:
+	
+	qScriptRegisterMetaType(AppScriptEngine->eng, sciFindDialog::DocFindFlagstoScriptValue, sciFindDialog::DocFindFlagsfromScriptValue);
+	
+	//Working with DocFindFlags values is now easy:
+	////DocFindFlags s = qscriptvalue_cast<DocFindFlags>(AppScriptEngine->eng->currentContext()->argument(0));
+	////DocFindFlags s2;
+	////s2.x = s.x + 10;
+	////s2.y = s.y + 20;
+	////QScriptValue v = engine->toScriptValue(s2);
+	//If you want to be able to construct values of your custom type from script code, you have to register a constructor function for the type. For example:
+	//QScriptValue createMyStruct(QScriptContext *, QScriptEngine *engine)
+	//{
+	//	MyStruct s;
+	//	s.x = 123;
+	//	s.y = 456;
+	//	return engine->toScriptValue(s);
+	//}
+	//QScriptValue ctor = AppScriptEngine->eng.newFunction(createMyStruct);
+	//engine.globalObject().setProperty("MyStruct", ctor);
+	QScriptValue ctor = AppScriptEngine->eng->newFunction(sciFindDialog::DocFindFlagsConstructor);
+	AppScriptEngine->eng->globalObject().setProperty("DocFindFlags", ctor);
 }
 
 void MainWindow::scriptLoaded(qint64 id)
@@ -821,23 +851,41 @@ void MainWindow::setupDynamicPluginMenus()
         Q_IMPORT_PLUGIN(experimentmanagerplugin)// see below
 
 		bool bRetVal = false;
+		QString strRetVal = "";
 		const QMetaObject* metaObject = NULL;
-		QString strSlot(FUNC_PLUGIN_ISCOMPATIBLE_FULL);
+
 		foreach (QObject *plugin, QPluginLoader::staticInstances())
 		{
 			metaObject = plugin->metaObject();
-			if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(strSlot.toLatin1())) == -1))//Is the slot present?
+			//QStringList properties;
+			//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+			//	properties << QString::fromLatin1(metaObject->method(i).signature());
+			if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL).toLatin1())) == -1))//Is the slot present?
 			{
 				//Invoke the slot
 				metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
 				if (bRetVal)
+				{
 					popPluginIntoMenu(plugin);
+					//Additional File Extensions defined?
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILEEXT_FULL).toLatin1())) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILEEXT,Qt::DirectConnection, Q_RETURN_ARG(QString, strRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
+						if (strRetVal != "")
+						{
+							DocManager->appendKnownFileExtensionList(strRetVal);
+						}
+					}
+				}
 				else
+				{
 					qDebug() << "setupDynamicPluginMenus(), The Static Plugin is incompatible(" << metaObject->className() << ")!";
+				}
 			}
 			else
 			{
-				qDebug() << "setupDynamicPluginMenus(), Could not invoke the Static Plugin slot(" << strSlot << ")!";	
+				qDebug() << "setupDynamicPluginMenus(), Could not invoke the Static Plugin slot(" << QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL) << ")!";	
 			}
 			metaObject = NULL;
 			bRetVal = false;
@@ -850,7 +898,10 @@ void MainWindow::setupDynamicPluginMenus()
 			if (plugin) 
 			{
 				metaObject = plugin->metaObject();
-				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(strSlot.toLatin1())) == -1))//Is the slot present?
+				//QStringList properties;
+				//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+				//	properties << QString::fromLatin1(metaObject->method(i).signature());
+				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL).toLatin1())) == -1))//Is the slot present?
 				{
 					//Invoke the slot
 					metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
@@ -859,20 +910,33 @@ void MainWindow::setupDynamicPluginMenus()
 						if (popPluginIntoMenu(plugin))
 						{
 							pluginFileNames += fileName;
+							//Additional File Extensions defined?
+							if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILEEXT_FULL).toLatin1())) == -1))//Is the slot present?
+							{
+								//Invoke the slot
+								metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILEEXT,Qt::DirectConnection, Q_RETURN_ARG(QString, strRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
+								if (strRetVal != "")
+								{
+									DocManager->appendKnownFileExtensionList(strRetVal);
+								}
+							}
 						}
 					}
 					else
+					{
 						qDebug() << "setupDynamicPluginMenus(), The Dynamic Plugin is incompatible(" << metaObject->className() << ")!";
+					}
 				}
 				else
 				{
-					qDebug() << "setupDynamicPluginMenus(), Could not invoke the Dynamic Plugin slot(" << strSlot << ")!";	
+					qDebug() << "setupDynamicPluginMenus(), Could not invoke the Dynamic Plugin slot(" << QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL) << ")!";	
 				}
 				metaObject = NULL;
 				bRetVal = false;
 			}
 		}
 	}
+	DocManager->appendKnownFileExtensionList(MAIN_PROGRAM_ANYFILESEXTENSION_LIST);
 	////example 1(static plugin):
 	//see line Q_IMPORT_PLUGIN(parallelportplugin)
 	//ParallelPort *a = new ParallelPort(888,NULL); //see Q_DECLARE_METATYPE(ParallelPort*), must include header etc
@@ -1043,9 +1107,9 @@ QString MainWindow::getSelectedScriptFileName()
 	return DocManager->getFileName(activeMdiChild(),true);
 }
 
-void MainWindow::closeSelectedScriptFile()
+void MainWindow::closeSelectedScriptFile(bool bAutoSaveChanges)
 {
-	closeSubWindow();
+	closeSubWindow(bAutoSaveChanges);
 }
 
 void MainWindow::executeScript()
@@ -1246,7 +1310,7 @@ void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesTo
 	//					"Any files (*)");
 	if ((fileToLoad.isNull()) && (filesToLoad.count() == 0))
 	{
-		fileNames = QFileDialog::getOpenFileNames(this, tr("Open File(s)"),m_currentPath, MainAppInfo::getFileExtList());
+		fileNames = QFileDialog::getOpenFileNames(this, tr("Open File(s)"),m_currentPath, DocManager->getKnownFileExtensionList());
 	}
 	
 	if (!fileToLoad.isNull())
@@ -1536,11 +1600,12 @@ void MainWindow::save()
 		}
 	}
 }
+
 void MainWindow::saveAs()
 {
 	if (activeMdiChild())
 	{
-		QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),DocManager->getFileName(activeMdiChild()),MainAppInfo::getFileExtList());
+		QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),DocManager->getFileName(activeMdiChild()),DocManager->getKnownFileExtensionList());
 		if (fileName.isEmpty())
 		{
 			return;
@@ -1717,7 +1782,7 @@ void MainWindow::writeMainWindowSettings()
 	settings->setValue("size", size());
 }
 
-bool MainWindow::closeSubWindow()
+bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 {
 	QAction *action = qobject_cast<QAction *>(sender());
 	if (action == 0)//direct function call, exit program
@@ -1725,7 +1790,7 @@ bool MainWindow::closeSubWindow()
 		QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
 		for (int i = 0; i < windows.size(); ++i) {
 			mdiArea->setActiveSubWindow(windows.at(i));
-			if (!DocManager->maybeSave(windows.at(i))) 
+			if (!DocManager->maybeSave(windows.at(i),bAutoSaveChanges)) 
 			{
 				return false;
 			}
@@ -1735,7 +1800,7 @@ bool MainWindow::closeSubWindow()
 	}
 	if (action->data().toString() == "Close")//From menu(Close)
 	{
-		if (!DocManager->maybeSave(activeMdiChild())) 
+		if (!DocManager->maybeSave(activeMdiChild(),bAutoSaveChanges)) 
 		{
 			return false;
 		}
@@ -1748,7 +1813,7 @@ bool MainWindow::closeSubWindow()
 		QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
 		for (int i = 0; i < windows.size(); ++i) {
 			mdiArea->setActiveSubWindow(windows.at(i));
-			if (!DocManager->maybeSave(windows.at(i))) 
+			if (!DocManager->maybeSave(windows.at(i),bAutoSaveChanges)) 
 			{
 				return false;
 			}
@@ -1759,7 +1824,7 @@ bool MainWindow::closeSubWindow()
 	}
 	else //This must be called from the script?
 	{
-		if (!DocManager->maybeSave(activeMdiChild())) 
+		if (!DocManager->maybeSave(activeMdiChild(),bAutoSaveChanges)) 
 		{
 			return false;
 		}
@@ -1793,6 +1858,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 #ifdef Q_OS_WIN
 	timeEndPeriod(1);
 #endif
+	if(DocManager)
+	{
+		disconnect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
+		disconnect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));	
+		delete DocManager;
+	}
 }
 
 QString MainWindow::activeMdiChildFilePath()
@@ -1924,11 +1995,11 @@ void MainWindow::goToLine()
 		tmpSci->gotoLine(line - 1);
 }
 
-void MainWindow::findImpl(bool replc) 
+void MainWindow::findImpl(bool bReplace, bool useParams, QString strFindString, QString strReplaceString, DocFindFlags findFlags, bool bReplaceAll) 
 {
 	CustomQsciScintilla *tmpSci;
 	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	DocFindFlags flags(replc);
+	DocFindFlags flags(bReplace);
 	QString str1, str2;
 	int line1, col1, line2, col2;
 	tmpSci->getSelection(&line1, &col1, &line2, &col2);
@@ -1940,24 +2011,36 @@ void MainWindow::findImpl(bool replc)
 			str1 = tmpSci->wordUnderCursor();
 		}
 	}
-	if ( DocManager->getFindParams(activeMdiChild(),str1, str2, flags) ) {
-		if ( flags.replace ) {
-			tmpSci->replace(str1, str2, flags);
+	if(useParams)
+	{
+		if ( bReplace ){//findFlags.replace ) {
+			tmpSci->replace(strFindString,strReplaceString, findFlags, bReplaceAll);
 		}
 		else {
-			tmpSci->find(str1, flags);
+			tmpSci->find(strFindString, findFlags);
 		}
-	}	
+	}
+	else
+	{
+		if ( DocManager->getFindParams(activeMdiChild(),str1, str2, flags) ) {
+			if ( flags.replace ) {
+				tmpSci->replace(str1, str2, flags, bReplaceAll);
+			}
+			else {
+				tmpSci->find(str1, flags);
+			}
+		}	
+	}
 }
 
-void MainWindow::find() 
+void MainWindow::find(bool useParams, QString strFindString, DocFindFlags findFlags) 
 {
-	findImpl(false);
+	findImpl(false,useParams,strFindString,"",findFlags,false);
 }
 
-void MainWindow::replace() 
+void MainWindow::replace(bool bReplaceAll, bool useParams, QString strFindString, QString strReplaceString, DocFindFlags findFlags) 
 {
-	findImpl(true);
+	findImpl(true,useParams,strFindString,strReplaceString,findFlags,bReplaceAll);
 }
 
 void MainWindow::findNext() 

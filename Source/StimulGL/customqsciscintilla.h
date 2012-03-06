@@ -31,10 +31,14 @@
 #include "scifinddialog.h"
 #include "mainappinfo.h"
 
-class CustomQsciScintilla : public QsciScintilla
+class CustomQsciScintilla : public QsciScintilla//, QObject
 {
+	//Q_OBJECT
+
 	public:
+		//CustomQsciScintilla(){};
 		CustomQsciScintilla(MainAppInfo::DocType docType);
+		//CustomQsciScintilla(const CustomQsciScintilla& other ){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 		~CustomQsciScintilla();
 
 		void setCustomLexer();
@@ -58,7 +62,7 @@ class CustomQsciScintilla : public QsciScintilla
 		QString wordUnderCursor();
 		void find(const QString& str, const DocFindFlags& flags);
 		void startFind(const QString& str, const DocFindFlags& flags); 
-		void replace(const QString& str1, const QString& str2, const DocFindFlags& flags);
+		void replace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool replaceAll = false);
 		void startReplace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool& replaceAll, int& count);
 
 	protected:
@@ -72,7 +76,7 @@ class CustomQsciScintilla : public QsciScintilla
 		long lineColToPos(int line, int col) const;
 		void posToLineCol(long pos, int& line, int& col) const;
 		void stepOver(bool back);
-		bool doReplace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool& replaceAll);
+		int doReplace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool& replaceAll);
 		void replaceSelected(const QString& targetText, bool backwards);
 
 		QObject *manager;

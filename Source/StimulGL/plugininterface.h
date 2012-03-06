@@ -57,6 +57,7 @@
 			}
 			return false;//wrong arguments
 		};
+		virtual QString GetAdditionalFileExtensions() {return QString("");};
 	protected:
 		QString strPluginInformation;
 	};

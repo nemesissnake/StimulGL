@@ -43,7 +43,7 @@ void Assistant::showDocumentation(const QString &page)
         return;
 
     QByteArray ba("SetSource ");
-    ba.append("qthelp://com.trolltech.examples.simpletextviewer/doc/");
+    ba.append("qthelp://com.trolltech.stimulgl/doc/");
     
     proc->write(ba + page.toLocal8Bit() + '\n');
 }
@@ -56,7 +56,15 @@ bool Assistant::startAssistant()
     if (proc->state() != QProcess::Running) 
 	{
 		QString app;
+		QString strHelpPackagePath = MainAppInfo::appDocDirPath() + QLatin1String(MAIN_PROGRAM_DOC_BINARYCOLLFILE);
 		QFile file;
+		//Does the help binary package exist?
+		if(!file.exists(strHelpPackagePath))
+		{
+			QMessageBox::critical(0, QObject::tr(MAIN_PROGRAM_INTERNAL_NAME),
+				QObject::tr("The help file does not exist (%1)").arg(strHelpPackagePath));
+			return false;
+		}
 		//First we check the Qt path
 		app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
 #if !defined(Q_OS_MAC)
@@ -83,8 +91,7 @@ bool Assistant::startAssistant()
 
         QStringList args;
         args << QLatin1String("-collectionFile")
-            << MainAppInfo::appDocDirPath()//<< QLibraryInfo::location(QLibraryInfo::ExamplesPath)
-            + QLatin1String(MAIN_PROGRAM_DOC_BINARYCOLLFILE)
+            << strHelpPackagePath
             << QLatin1String("-enableRemoteControl");
 
         proc->start(app, args);

@@ -144,6 +144,13 @@ void MainAppInfo::CloseMainLogFile()
 	}	
 }
 
+bool MainAppInfo::Initialize()
+{
+	bool bRetval = false;
+	bRetval = InitializeMainAppNaming();
+	return bRetval;
+}
+
 bool MainAppInfo::InitializeMainAppNaming()
 {
 	QCoreApplication::setOrganizationDomain(MAIN_PROGRAM_COMPANY_NAME);

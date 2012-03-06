@@ -24,6 +24,7 @@
 #include <QDialog>
 #include <QLineEdit>
 #include <QTextDocument>
+#include <QtScript>
 #include "ui_scifinddialog.h"
 
 typedef struct _DocFindFlags 
@@ -46,6 +47,11 @@ typedef struct _DocFindFlags
 	bool multiLine;
 } DocFindFlags;
 
+//Add the #include <QtScript>
+//Declare the Type in Meta
+Q_DECLARE_METATYPE(DocFindFlags)
+//Next, the DocFindFlags conversion functions. We represent the DocFindFlags value as a script object and just copy the properties:
+
 class sciFindDialog : public QDialog
 {
 	Q_OBJECT
@@ -65,6 +71,34 @@ public:
 	static bool lastMatchCase() { return matchCase_; }
 	static bool lastRegExpMode() { return regExpMode_; }
 	static bool lastWholeWords() { return wholeWords_; }
+
+	static QScriptValue DocFindFlagstoScriptValue(QScriptEngine *engine, const DocFindFlags &s)
+	{
+		QScriptValue obj = engine->newObject();
+		obj.setProperty("replace", s.replace);
+		obj.setProperty("matchCase", s.matchCase);
+		obj.setProperty("backwards", s.backwards);
+		obj.setProperty("isRegExp", s.isRegExp);
+		obj.setProperty("wholeWords", s.wholeWords);
+		obj.setProperty("multiLine", s.multiLine);
+		return obj;
+	}
+
+	static void DocFindFlagsfromScriptValue(const QScriptValue &obj, DocFindFlags &s)
+	{
+		s.replace = obj.property("replace").toBoolean();
+		s.matchCase = obj.property("matchCase").toBoolean();
+		s.backwards = obj.property("backwards").toBoolean();
+		s.isRegExp = obj.property("isRegExp").toBoolean();
+		s.wholeWords = obj.property("wholeWords").toBoolean();
+		s.multiLine = obj.property("multiLine").toBoolean();
+	}
+
+	static QScriptValue DocFindFlagsConstructor(QScriptContext *, QScriptEngine *engine)
+	{
+		DocFindFlags s;
+		return engine->toScriptValue(s);
+	}
 
 public slots:
 	void setReplaceMode(bool);

@@ -431,6 +431,9 @@ FileGroup ::FE7C119F-2B67-439E-A0DF-FA1E714F2630 -setup Install -active Yes -pla
 File ::947A8FBC-26A7-4FB0-9225-62E21FA8FD5E -name D:/Projects/StimulGL/Source/Plugins/ExperimentManager/ExperimentManager.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::14B056DD-F62C-4170-B39B-4B8A617DDD08 -name D:/Projects/StimulGL/Source/Plugins/ParallelPortDevice/QScriptExample_ParallelPort.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::73202924-9A4C-4EFD-BB06-E6B1B90E03AE -name D:/Projects/StimulGL/Source/Plugins/USBHIDDevice/QScriptExampleUSBHIDDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+FileGroup ::E5DE8D2A-E046-4945-B382-97B2670A7E75 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name Documentation -parent FileGroups
+File ::A218562B-B0CB-4AD4-B326-14DA8E096EF6 -type dir -name D:/Projects/StimulGL/Install/documents -parent E5DE8D2A-E046-4945-B382-97B2670A7E75
+File ::44E7AFA2-1148-47C9-A08E-DB8B5F65CC32 -name MainDocumentation.qhc -parent A218562B-B0CB-4AD4-B326-14DA8E096EF6
 Component ::3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files} -parent Components
 Component ::0D3704F3-F8AB-4DEB-8467-6A1B887C03A5 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name Plugins -parent Components
 Component ::208E9D1B-F040-4304-BD58-5B65FEAC3A7C -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name Scripts -parent Components
@@ -1671,6 +1674,12 @@ E4772ED3-8F45-42C6-A93A-8BFBA05036F7,Text,subst
 
 E4772ED3-8F45-42C6-A93A-8BFBA05036F7,Title,subst
 {1}
+
+E5DE8D2A-E046-4945-B382-97B2670A7E75,Destination
+{<%InstallDir%>}
+
+E5DE8D2A-E046-4945-B382-97B2670A7E75,Name
+{Documentation}
 
 E842A1F1-FE21-4772-A0F9-97B19339723A,Default
 {Yes}

@@ -54,6 +54,7 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
+	//QString GetAdditionalFileExtensions() {return QString("_extensionname_ files (*._extensionname_);;");};
 
 signals:
 	void DoSignal();

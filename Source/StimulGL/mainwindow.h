@@ -71,11 +71,17 @@ public slots:
 	void executeScript();
 	QString getSelectedScriptFileLocation();
 	QString getSelectedScriptFileName();
-	void closeSelectedScriptFile();
+	void closeSelectedScriptFile(bool bAutoSaveChanges = false);
 	void abortScript();
 	//void debugScript();
 	bool initialize(MainAppInfo::MainProgramModeFlags mainFlags = 0);
 	void write2OutputWindow(const QString &text2Write = "");
+	void clearOutputWindow() {clearDebugger();};
+
+	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
+	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
+	void findNext();
+	void findPrev();
 
 private slots:
 	void setupContextMenus();
@@ -88,7 +94,7 @@ private slots:
 	void aboutStimulGL();
 	void showDocumentation();
 	void openRecentFile();
-	bool closeSubWindow();
+	bool closeSubWindow(bool bAutoSaveChanges = false);
 	void newFile();
 	void save();
 	void saveAs();
@@ -96,11 +102,7 @@ private slots:
 	void copy();
 	void paste();
 	void lineComment();
-	void findImpl(bool replc);
-	void find();
-	void replace();
-	void findNext();
-	void findPrev();
+	void findImpl(bool bReplace, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags(), bool bReplaceAll = false);
 	void blockComment();
 	void jumpToMatchingBrace();
 	void selectToMatchingBrace();
@@ -126,6 +128,7 @@ private slots:
 	void scriptUnloaded(qint64 id);
 
 private:
+	QString strAdditionalFileExtensions;
 	MainAppInfo::MainProgramModeFlags StimulGLFlags;
 	MainAppInfo::ScriptRunMode StimulGLScriptRunMode;
 	QSplashScreen *MainSplashScreen;

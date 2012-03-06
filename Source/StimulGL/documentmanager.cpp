@@ -26,12 +26,18 @@ DocumentManager::DocumentManager(QObject *parent)
 	: QObject(parent)
 {
 	DocCount = 0;
+	DocModifiedMapper = NULL;
+	NrOfLinesChangedMapper = NULL;
 	DocModifiedMapper = new QSignalMapper(this);
+	strFileExtensionList = "";
 }
 
 DocumentManager::~DocumentManager()
 {
-
+	if (DocModifiedMapper)
+		delete DocModifiedMapper;
+	if (NrOfLinesChangedMapper)
+		delete NrOfLinesChangedMapper;
 }
 
 CustomQsciScintilla *DocumentManager::getDocHandler(const int &DocIndex)
@@ -198,6 +204,7 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 {
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
+
 	custQsci->setCustomLexer();
 
 	custQsci->setPaper(QColor(255,255,255));
@@ -394,6 +401,12 @@ void DocumentManager::setFileName(int DocIndex, QString fileName)
 	//QScintillaChildren.at(DocIndex)->setWindowTitle(fileName);	
 }
 
+bool DocumentManager::appendKnownFileExtensionList(QString strFileExtLst)
+{
+	strFileExtensionList = strFileExtensionList + strFileExtLst;
+	return true;
+}
+
 bool DocumentManager::saveFile(int DocIndex, QString fileName)
 {
 	if (fileName == "")
@@ -401,7 +414,7 @@ bool DocumentManager::saveFile(int DocIndex, QString fileName)
 		fileName = getFileName(DocIndex);
 		if (fileName == "")//Untitled document
 		{
-			fileName = QFileDialog::getSaveFileName(0, tr("Save As"),qApp->applicationDirPath(),MainAppInfo::getFileExtList());
+			fileName = QFileDialog::getSaveFileName(0, tr("Save As"),qApp->applicationDirPath(),strFileExtensionList);
 			if (fileName.isEmpty())
 			{
 				return false;
@@ -432,7 +445,7 @@ bool DocumentManager::saveFile(QMdiSubWindow *subWindow, QString fileName )
 	return saveFile(getDocIndex(subWindow),fileName);
 }
 
-bool DocumentManager::maybeSave(QMdiSubWindow *subWindow)
+bool DocumentManager::maybeSave(QMdiSubWindow *subWindow, bool bAutoSaveChanges)
 {
 	int i;
 	if(subWindow == 0)
@@ -446,16 +459,23 @@ bool DocumentManager::maybeSave(QMdiSubWindow *subWindow)
 			if (SubWindowChildren.at(i) == subWindow)
 			{
 				if (QScintillaChildren.at(i)->isModified()) {
-					int ret = QMessageBox::warning(0, ChildrenFileNames.at(i),
-						tr("The document has been modified.\n"
-						"Do you want to save your changes?"),
-						QMessageBox::Yes | QMessageBox::Default,
-						QMessageBox::No,
-						QMessageBox::Cancel | QMessageBox::Escape);
-					if (ret == QMessageBox::Yes)
+					if(!bAutoSaveChanges)
+					{
+						int ret = QMessageBox::warning(0, ChildrenFileNames.at(i),
+							tr("The document has been modified.\n"
+							"Do you want to save your changes?"),
+							QMessageBox::Yes | QMessageBox::Default,
+							QMessageBox::No,
+							QMessageBox::Cancel | QMessageBox::Escape);
+						if (ret == QMessageBox::Yes)
+							return saveFile(i);
+						else if (ret == QMessageBox::Cancel)
+							return false;
+					}
+					else
+					{
 						return saveFile(i);
-					else if (ret == QMessageBox::Cancel)
-						return false;
+					}
 				}
 				return true;
 			}

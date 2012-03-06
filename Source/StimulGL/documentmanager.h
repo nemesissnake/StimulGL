@@ -35,6 +35,7 @@ class DocumentManager : public QObject
 signals:
 	//void DocumentChanged();
 	void NrOfLinesChanged(int);
+	void DocumentManagerOutput(QString strText2Output);
 
 public:
 
@@ -58,11 +59,16 @@ public:
 	bool saveFile(int DocIndex, QString fileName = "");
 	bool saveFile(QMdiSubWindow *subWindow,  QString fileName = "");
 	void setModFlagAndTitle(const int &DocIndex,bool hasChanges);
-	bool maybeSave(QMdiSubWindow *subWindow);
+	bool maybeSave(QMdiSubWindow *subWindow,bool bAutoSaveChanges = false);
 	void setAllUnmodified();
 	bool getFindParams(QMdiSubWindow *subWindow,QString& str1, QString& str2, DocFindFlags& flags);
 	QString lastFindText() const;
 	DocFindFlags lastFlags() const; 
+	bool appendKnownFileExtensionList(QString strFileExtLst);
+	QString getKnownFileExtensionList() {return strFileExtensionList;};
+
+public slots:
+	void signalDocManagerOutput(QString strText2Output) {emit DocumentManagerOutput(strText2Output);};
 
 private:
 	int DocCount;
@@ -70,6 +76,7 @@ private:
 	QSignalMapper *DocModifiedMapper;
 	QSignalMapper *NrOfLinesChangedMapper;
 	QStringList ChildrenFileNames;
+	QString strFileExtensionList;
 	QList<MainAppInfo::DocType> ChildrenDocTypes;
 	QList<CustomQsciScintilla *> QScintillaChildren;
 	QList<QMdiSubWindow *> SubWindowChildren;

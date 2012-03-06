@@ -103,7 +103,7 @@ void CustomQsciScintilla::closeEvent(QCloseEvent *event)
 {
 	DocumentManager *tmpDocObject = qobject_cast<DocumentManager *>(manager);
 	QMdiSubWindow *tmpWinObject = qobject_cast<QMdiSubWindow *>(childWindow);
-	if (tmpDocObject->maybeSave(tmpWinObject)) 
+	if (tmpDocObject->maybeSave(tmpWinObject,false)) 
 	{
 		tmpDocObject->remove(tmpWinObject);
 		event->accept();
@@ -629,7 +629,7 @@ void CustomQsciScintilla::prepareForFind(const QString& s, const DocFindFlags& f
 	}
 }
 
-void CustomQsciScintilla::replace(const QString& str1, const QString& str2, const DocFindFlags& flags) 
+void CustomQsciScintilla::replace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool replaceAll) 
 {
 	if ( str1.isEmpty() )
 		return;
@@ -639,21 +639,22 @@ void CustomQsciScintilla::replace(const QString& str1, const QString& str2, cons
 	this->searchSteppedOver_ = false;
 	this->searchStartingScroll_ = this->verticalScrollBar()->value();
 
-	bool replaceAll = false;
 	int count = 0;
 	startReplace(str1, str2, flags, replaceAll, count);
 }
 
 void CustomQsciScintilla::startReplace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool& replaceAll, int& count) //JuffScintilla* edit
-{
+{//return -1 in case of cancel or the amount of replacements (0|1)
 	bool cancelled = false;
+	int nResult;
 	while ( this->findsci(str1, flags) ) {
-		if ( !doReplace(str1, str2, flags, replaceAll) ) {
+		nResult = doReplace(str1, str2, flags, replaceAll);
+		if ( nResult == -1 ) {
 			cancelled = true;
 			break;
 		}
-		else {
-			++count;
+		else if ( nResult >= 0 ) {
+			count = count + nResult;
 		}
 	}
 	if ( !cancelled ) {
@@ -666,14 +667,17 @@ void CustomQsciScintilla::startReplace(const QString& str1, const QString& str2,
 		else {
 			this->setCursorPosition(this->searchStartingLine_, this->searchStartingCol_);
 			this->verticalScrollBar()->setValue(this->searchStartingScroll_);
-			QMessageBox::information(0, "Information", QString("Replacement finished (%1 replacements were made)").arg(count));
+			//QMessageBox::information(0, "Information", QString("Replacement finished (%1 replacements were made)").arg(count));
+			DocumentManager *tmpDocObject = qobject_cast<DocumentManager *>(manager);
+			tmpDocObject->signalDocManagerOutput(QString("Replacement finished (%1 replacements were made)").arg(count));
 			return;
 		}
 	}
 }
 
-bool CustomQsciScintilla::doReplace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool& replaceAll) 
+int CustomQsciScintilla::doReplace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool& replaceAll) 
 {
+	int nReplacements = 0;
 	QString selectedText = this->selectedText();
 	QString targetText(str2);
 	if ( flags.isRegExp ) {
@@ -687,7 +691,7 @@ bool CustomQsciScintilla::doReplace(const QString& str1, const QString& str2, co
 			}
 		}
 		else
-			return false;
+			return -1;
 	}
 	if ( !replaceAll ) {
 		//ask for confirmation if replace all hasn't been chosen yet
@@ -696,23 +700,29 @@ bool CustomQsciScintilla::doReplace(const QString& str1, const QString& str2, co
 		QMessageBox::StandardButton btn = QMessageBox::question(0, QString("Confirmation"), QString("Replace this text?"), QMessageBox::Yes | QMessageBox::No | QMessageBox::YesToAll | QMessageBox::Cancel, QMessageBox::Yes);
 
 		if ( btn == QMessageBox::Cancel )
-			return false;
+			return -1;
+		//else if ( btn == QMessageBox::No ) {
+		//	nSkippedUserReplacements++;
+		//}
 		else if ( btn == QMessageBox::Yes ) {
 			this->replaceSelected(targetText, flags.backwards);
+			nReplacements++;
 			this->selectAll(false);
 		}
 		else if ( btn == QMessageBox::YesToAll ) {
 			this->replaceSelected(targetText, flags.backwards);
+			nReplacements++;
 			this->selectAll(false);
 			replaceAll = true;
 		}
 	}
 	else {
-			//just replace, because there has been chosen "select all"
+		//just replace, because there has been chosen "select all"
 		this->replaceSelected(targetText, flags.backwards);
+		nReplacements++;
 		this->selectAll(false);
 	}
-	return true;
+	return nReplacements;
 }
 
 void CustomQsciScintilla::replaceSelected(const QString& targetText, bool backwards) 

@@ -70,22 +70,23 @@ public:
 	};
 	Q_DECLARE_FLAGS(DocTypes, DocType)
 
+	static bool Initialize();
 	static bool InitializeMainAppNaming();
-	static QString MainProgramName()		{return MAIN_PROGRAM_INTERNAL_NAME;}
-	static QString MainOrganizationName()	{return MAIN_PROGRAM_COMPANY_NAME;}
-	static QString MainProgramFileVersion()	{return MAIN_PROGRAM_FILE_VERSION_STRING;}
-	static QString MainProgramTitle()		{return MAIN_PROGRAM_FULL_NAME;}//(MainProgramName() + "(v" + MainProgramFileVersion() + ")");}
-	static QString appDirPath()				{return QCoreApplication::applicationDirPath();}
-	static QString appDocDirPath()			{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}
-	static QString appLogFilePath()			{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_LOGFILE_NAME);}
+	static QString MainProgramName()				{return MAIN_PROGRAM_INTERNAL_NAME;}
+	static QString MainOrganizationName()			{return MAIN_PROGRAM_COMPANY_NAME;}
+	static QString MainProgramFileVersion()			{return MAIN_PROGRAM_FILE_VERSION_STRING;}
+	static QString MainProgramTitle()				{return MAIN_PROGRAM_FULL_NAME;}//(MainProgramName() + "(v" + MainProgramFileVersion() + ")");}
+	static QString appDirPath()						{return QCoreApplication::applicationDirPath();}
+	static QString appDocDirPath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}
+	static QString appLogFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_LOGFILE_NAME);}
 	static QString pluginsDirPath();
 	static QString outputsDirPath();
 
-	static QString getFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}
+	static QString getDefaultFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}
 	static QStringList getQTScriptBindingList();
 	static QString apiDirPath();
-	static QString UntitledDocName()		{return MAIN_PROGRAM_UNTITLED_NAME;}
-	static QString stdDateTimeFormat()		{return MAIN_PROGRAM_STANDARD_DATETIME_FORMAT;}
+	static QString UntitledDocName()				{return MAIN_PROGRAM_UNTITLED_NAME;}
+	static QString stdDateTimeFormat()				{return MAIN_PROGRAM_STANDARD_DATETIME_FORMAT;}
 
 	static void MyOutputHandler(QtMsgType type, const char *msg); 
 	static void CloseMainLogFile();
