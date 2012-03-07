@@ -2,7 +2,7 @@
 <QHelpCollectionProject version="1.0">
     <assistant>
         <title>StimulGL</title>
-        <applicationIcon>images/handbook.png</applicationIcon>
+        <applicationIcon>images/logo_small.png</applicationIcon>
         <cacheDirectory>Trolltech/StimulGL</cacheDirectory>
         <startPage>qthelp://com.trolltech.stimulgl/doc/index.html</startPage>
         <aboutMenuText>
