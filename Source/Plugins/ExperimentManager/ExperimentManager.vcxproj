@@ -119,7 +119,7 @@
       <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUExperimentManager;QT_DLL;QT_PLUGIN;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUExperimentManager;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Lib>
-      <AdditionalDependencies>glu32.lib;opengl32.lib;QtOpenGLd4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).lib</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
@@ -174,6 +174,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <OutputFile>$(ProjectDir)..\..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).lib</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>echo POSTBUILDSTEP for $(ProjectName)
@@ -224,6 +226,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     <Lib>
       <OutputFile>$(ProjectDir)..\..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).lib</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>echo POSTBUILDSTEP for $(ProjectName)
@@ -276,6 +280,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <OutputFile>$(ProjectDir)..\..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).lib</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>echo POSTBUILDSTEP for $(ProjectName)

@@ -72,11 +72,11 @@ public slots:
 	QString getSelectedScriptFileLocation();
 	QString getSelectedScriptFileName();
 	void closeSelectedScriptFile(bool bAutoSaveChanges = false);
-	void abortScript();
 	//void debugScript();
 	bool initialize(MainAppInfo::MainProgramModeFlags mainFlags = 0);
 	void write2OutputWindow(const QString &text2Write = "");
 	void clearOutputWindow() {clearDebugger();};
+	void cleanupScript();
 
 	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
@@ -84,6 +84,7 @@ public slots:
 	void findPrev();
 
 private slots:
+	void abortScript();
 	void setupContextMenus();
 	void DebugcontextMenuEvent(const QPoint &pos);
 	void clearDebugger();

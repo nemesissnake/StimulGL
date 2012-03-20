@@ -38,6 +38,7 @@
 		virtual bool IsCompatible() 
 		{
 			QString strMainProgramMinimalVersion = GetMinimalMainProgramVersion();
+			//return (MainAppInfo::isCompatibleVersion(GetMinimalMainProgramVersion(),QString(MAIN_PROGRAM_FILE_VERSION_STRING)));			
 			QStringList lstMainProgramCurrentVersion = QString(MAIN_PROGRAM_FILE_VERSION_STRING).split(".");
 			QStringList lstMainProgramMinimalVersion = strMainProgramMinimalVersion.split(".");
 			if ((lstMainProgramCurrentVersion.count() == 4) && (lstMainProgramMinimalVersion.count() == 4))

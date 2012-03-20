@@ -19,6 +19,7 @@
 
 #include <QtGui>
 #include "experimenttree.h"
+#include "defines.h"
 
 ExperimentTree::ExperimentTree(QWidget *parent) : QTreeWidget(parent)
 {
@@ -26,10 +27,10 @@ ExperimentTree::ExperimentTree(QWidget *parent) : QTreeWidget(parent)
 	nXMLDocumentVersion.minor = 0;
 	nXMLDocumentVersion.version = 0;
 	nXMLDocumentVersion.build = 0;
-	nXMLCurrentClassVersion.major = 1;
-	nXMLCurrentClassVersion.minor = 0;
-	nXMLCurrentClassVersion.version = 0;
-	nXMLCurrentClassVersion.build = 0;
+	nXMLCurrentClassVersion.major = PLUGIN_EXMLDOC_MINIMAL_VERSION_MAJOR;
+	nXMLCurrentClassVersion.minor = PLUGIN_EXMLDOC_MINIMAL_VERSION_MINOR;
+	nXMLCurrentClassVersion.version = PLUGIN_EXMLDOC_MINIMAL_VERSION_REVISION;
+	nXMLCurrentClassVersion.build = PLUGIN_EXMLDOC_MINIMAL_VERSION_BUILD;
 
 	QStringList labels;
 	labels << tr("Elements") << tr("Properties");
@@ -73,15 +74,17 @@ bool ExperimentTree::read(QIODevice *device)
 	{
 		if (root.hasAttribute(VERSION_TAG))//Check whether we have a version tag defined
 		{	
-			QStringList lVersion = root.attribute(VERSION_TAG).split(".");
+			QString strCurrentVersion = root.attribute(VERSION_TAG);
+			QString strMinimalVersion = QString::number(nXMLCurrentClassVersion.major) + "." + QString::number(nXMLCurrentClassVersion.minor) + "." + QString::number(nXMLCurrentClassVersion.version) + "." + QString::number(nXMLCurrentClassVersion.build);
+			QStringList lVersion = strCurrentVersion.split(".");
 			nXMLDocumentVersion.major = lVersion[0].toInt();
 			nXMLDocumentVersion.minor = lVersion[1].toInt();
 			nXMLDocumentVersion.version = lVersion[2].toInt();
 			nXMLDocumentVersion.build = lVersion[3].toInt();
 			//Is the documents version compatible with this class?
-			if (!(nXMLDocumentVersion.major == nXMLCurrentClassVersion.major && nXMLDocumentVersion.minor == nXMLCurrentClassVersion.minor && nXMLDocumentVersion.version == nXMLCurrentClassVersion.version && nXMLDocumentVersion.build == nXMLCurrentClassVersion.build))
+			if(!MainAppInfo::isCompatibleVersion(strMinimalVersion,strCurrentVersion))
 			{
-				QMessageBox::information(window(), tr(MODULE_NAME), tr("The file is not an EXML version %1.%2.%3.%4")
+				QMessageBox::information(window(), tr(MODULE_NAME), tr("The defined EXML file is not compatible from EXML version %1.%2.%3.%4")
 				.arg(nXMLCurrentClassVersion.major)
 				.arg(nXMLCurrentClassVersion.minor)
 				.arg(nXMLCurrentClassVersion.version)
@@ -91,7 +94,7 @@ bool ExperimentTree::read(QIODevice *device)
 		}
 		else
 		{
-			QMessageBox::information(window(), tr(MODULE_NAME), tr("The file version could not be determined."));
+			QMessageBox::information(window(), tr(MODULE_NAME), tr("The EXML file version could not be determined."));
 			return false;
 		}
 	}

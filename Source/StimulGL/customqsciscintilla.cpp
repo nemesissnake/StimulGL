@@ -71,7 +71,7 @@ CustomQsciScintilla::CustomQsciScintilla(MainAppInfo::DocType docType)
 			break;
 		}
 	}
-	//this.QsciScintilla();
+	//this->->standardCommands()->clearKeys();
 }
 
 CustomQsciScintilla::~CustomQsciScintilla()

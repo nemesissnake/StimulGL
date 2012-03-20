@@ -35,40 +35,6 @@ private:
 	static QFile *mainLogFile;
 	//static std::ofstream *mainLogFile;
 public:
-	enum ActiveScriptMode
-	{
-		NoScript				= 0x00000,
-		Pending					= 0x00001,
-		Executing				= 0x00002,
-		Debugging				= 0x00003,
-		Stopping				= 0x00004
-	};
-	Q_DECLARE_FLAGS(ActiveScriptModes, ActiveScriptMode)	
-	
-	enum ScriptRunMode
-	{
-		Execute					= 0x00000,
-		Debug					= 0x00001,
-		Abort					= 0x00002
-	};
-	Q_DECLARE_FLAGS(ScriptRunModes, ScriptRunMode)
-
-	enum MainProgramModeFlag
-	{
-		Default					= 0x00000,
-		DisableAllPlugins		= 0x00001,//All Plugins AND QT Script bindings!
-		DisableSplash			= 0x00002
-	};
-	Q_DECLARE_FLAGS(MainProgramModeFlags, MainProgramModeFlag)
-
-	enum DocType 
-	{
-		DOCTYPE_UNDEFINED		= 0x00000,
-		DOCTYPE_QSCRIPT			= 0x00001,
-		DOCTYPE_SVG				= 0x00002,
-		DOCTYPE_PLUGIN_WIDGET	= 0x00003
-	};
-	Q_DECLARE_FLAGS(DocTypes, DocType)
 
 	static bool Initialize();
 	static bool InitializeMainAppNaming();
@@ -88,11 +54,50 @@ public:
 	static QString UntitledDocName()				{return MAIN_PROGRAM_UNTITLED_NAME;}
 	static QString stdDateTimeFormat()				{return MAIN_PROGRAM_STANDARD_DATETIME_FORMAT;}
 
+	static bool isCompatibleVersion(const QString &strMinimalRequiredVersion, const QString &strCurrentVersion);
+
 	static void MyOutputHandler(QtMsgType type, const char *msg); 
 	static void CloseMainLogFile();
 
 private:
 	static QDir appDebugDirPath();
+
+public:
+	enum ActiveScriptMode
+	{
+		NoScript				= 0x00000,
+		Pending					= 0x00001,
+		Executing				= 0x00002,
+		Debugging				= 0x00003,
+		Stopping				= 0x00004
+	};
+	Q_DECLARE_FLAGS(ActiveScriptModes, ActiveScriptMode)	
+
+		enum ScriptRunMode
+	{
+		Execute					= 0x00000,
+		Debug					= 0x00001,
+		Abort					= 0x00002
+	};
+	Q_DECLARE_FLAGS(ScriptRunModes, ScriptRunMode)
+
+		enum MainProgramModeFlag
+	{
+		Default						= 0,
+		DisableAllScriptBindings	= 1,
+		DisableAllPlugins			= 2,
+		DisableSplash				= 4
+	};
+	Q_DECLARE_FLAGS(MainProgramModeFlags, MainProgramModeFlag)
+
+		enum DocType 
+	{
+		DOCTYPE_UNDEFINED		= 0x00000,
+		DOCTYPE_QSCRIPT			= 0x00001,
+		DOCTYPE_SVG				= 0x00002,
+		DOCTYPE_PLUGIN_WIDGET	= 0x00003
+	};
+	Q_DECLARE_FLAGS(DocTypes, DocType)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MainAppInfo::ScriptRunModes)

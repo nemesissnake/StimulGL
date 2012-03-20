@@ -69,10 +69,12 @@ public:
 	QHash<QString, QString> *getObjectBlockParamListById(int nID);
 
 public slots:
+	//void Test();
+
 	void changeToOpenGLView(QGraphicsView *GraphView);
 	bool setExperimentFileName(const QString qstrExpFileName);
 	QString getExperimentFileName();
-	bool openExperiment(QString strFile = "", bool bViewEditTree = true);
+	bool loadExperiment(QString strFile = "", bool bViewEditTree = true);
 	bool saveExperiment(QString strFile = "");
 	bool runExperiment();
 	void abortExperiment();
@@ -90,6 +92,7 @@ public slots:
 	bool startExperimentTimer(int nIndex);
 	double restartExperimentTimer(int nIndex);
 	double elapsedExperimentTimerTime(int nIndex);
+	//void deleteObject();
 
 private:
 	bool WriteAndCloseExperimentOutputData();
@@ -128,6 +131,8 @@ private:
 
 	ExperimentLogger *expDataLogger;
 	int nExperimentTimerIndex;
+	//RandomGenerator *rndGen;
+	//int rndCounter;
 };
 
 class SleeperThread : public QThread

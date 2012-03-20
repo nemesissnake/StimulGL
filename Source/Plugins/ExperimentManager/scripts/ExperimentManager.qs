@@ -1,7 +1,14 @@
 var ExperimentManagerObj = new ExperimentManager();
-//var TriggerTimerObj = new TriggerTimer();
-//var RetinoMap_glwidgetObj = new RetinoMap_glwidget();
-var ImageProcessorObj = new ImageProcessor();
+
+function CleanupScript()
+{
+	ExperimentManagerObj.ExperimentStateHasChanged.disconnect(this, this.ExperimentStateChanged);
+	ExperimentManagerObj.WriteToLogOutput.disconnect(this, this.Log);
+	ExperimentManagerObj = null;
+	ExperimentStateChanged = null;	
+	CleanupScript = null;
+	StimulGL.cleanupScript();
+}
 
 function ExperimentStateChanged()
 {
@@ -18,24 +25,15 @@ function ExperimentStateChanged()
 	
 	if(arguments[0] == 5)//Experiment Stopped
 	{
-		ExperimentManagerObj.ExperimentStateHasChanged.disconnect(this, this.ExperimentStateChanged);
-		ExperimentManagerObj.WriteToLogOutput.disconnect(this, this.Log);
-		ExperimentManagerObj.deletelater();
-		ExperimentStateChanged = null;
-		//TriggerTimerObj = null;
-		//RetinoMap_glwidgetObj = null;
-		ImageProcessorObj.ConvertPngToDatFile("Source", "Dest");
-		ImageProcessorObj.deleteLater();
 		Log("Experiment stopped");
+		CleanupScript();
 	}
 }
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
 ExperimentManagerObj.WriteToLogOutput.connect(this, this.Log);
-ExperimentManagerObj.openExperiment("D:\\Projects\\StimulGL\\Install\\experiments\\test.exml",false);
+ExperimentManagerObj.setExperimentFileName("E:\\Projects\\StimulGL\\Install\\experiments\\MovingDots1.exml");
 ExperimentManagerObj.runExperiment();
-//bool ImageProcessor::ConvertPngToDatFile(QString strSource, QString strDestination)
-
 
 //Polar1.exml
 //Polar2.exml
@@ -43,3 +41,4 @@ ExperimentManagerObj.runExperiment();
 //Eccentricity2.exml
 //MovingBar1.exml
 //MovingBar2.exml
+//MovingDots1.exml

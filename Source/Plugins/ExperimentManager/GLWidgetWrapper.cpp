@@ -853,10 +853,11 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 1");
 		QFont textFont("arial", 22, QFont::Bold, false);
 		QString strText;
+		QString strTextStart = "Experiment ready, ";
 		if (bCurrentSubObjectReadyToUnlock == false)
-			strText = "Experiment ready, press 'Alt' to proceed";
+			strText = strTextStart + "press 'Alt' to proceed or CTRL + 'a' to abort the experiment";
 		else
-			strText = "Waiting for a trigger to start...";
+			strText = strTextStart + "waiting for a trigger to start...";
 		//lockedPainter->begin(this);
 		const QRectF windowRect = lockedPainter->window();
 		//if(isDebugMode())
@@ -869,9 +870,9 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 		lockedPainter->fillRect(windowRect,QColor(87,87,87));
 		//if(isDebugMode())
 		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 3");
-		lockedPainter->setWindow ( textPathRect.x() - nBorder , textPathRect.y() - (windowRect.height()/2) , textPathRect.width() + (nBorder*2) , windowRect.height());//translate text rect to rect window button
 		lockedPainter->setPen(Qt::NoPen);
 		lockedPainter->setBrush(Qt::white);
+		lockedPainter->setWindow ( textPathRect.x() - nBorder , textPathRect.y() - (windowRect.height()/2) , textPathRect.width() + (nBorder*2) , windowRect.height());//translate text rect to rect window button
 		lockedPainter->drawPath(textPath);
 		//if(isDebugMode())
 		//	pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 4");

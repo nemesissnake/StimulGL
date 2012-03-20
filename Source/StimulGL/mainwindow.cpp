@@ -71,6 +71,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//DisablePlugins			= 0x00001,
 	//DisableSplash				= 0x00002
 	//QWaitCondition sleep;
+	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
 	MainAppInfo::Initialize();
 	StimulGLFlags = mainFlags;
     AppScriptStatus = MainAppInfo::NoScript;
@@ -253,8 +254,9 @@ QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine
 
 void MainWindow::setupScriptEngine()
 {
+	//qDebug() << "setupScriptEngine() - start";
 	AppScriptEngine = new QTScriptEngine(this);
-	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllPlugins) == false)
+	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllScriptBindings) == false)
 	{
 		if (!DoNotLoadScriptBindings)
 		{
@@ -290,7 +292,6 @@ void MainWindow::setupScriptEngine()
 
 	QScriptValue AppScriptThisObject = AppScriptEngine->eng->newQObject(this);
 	AppScriptEngine->eng->globalObject().setProperty("StimulGL", AppScriptThisObject);
-	
 	//We must declare it so that the type will be known to QMetaType, find "Q_DECLARE_METATYPE(DocFindFlags)"
 	//Q_DECLARE_METATYPE(DocFindFlags)
 	//Next, the DocFindFlags conversion functions. We represent the DocFindFlags value as a script object and just copy the properties, see below after this function body!
@@ -618,44 +619,44 @@ void MainWindow::createDefaultMenus()
 	connect(goToMatchingBraceAction, SIGNAL(triggered()), this, SLOT(jumpToMatchingBrace()));
 	editMenu->addAction(goToMatchingBraceAction);
 	selToMatchingBraceAction = new QAction(QObject::tr("Select to the matching brace"), 0);
-	selToMatchingBraceAction->setShortcut(QKeySequence("Shift+Ctrl+E"));
+	selToMatchingBraceAction->setShortcut(QKeySequence(tr("Shift+Ctrl+E")));
 	selToMatchingBraceAction->setStatusTip(tr("Select to the matching brace."));
 	connect(selToMatchingBraceAction, SIGNAL(triggered()), this, SLOT(selectToMatchingBrace()));
 	editMenu->addAction(selToMatchingBraceAction);
 	lineCommentAction = new QAction(QObject::tr("(Un)Comment the selected line(s)"), 0);
-	lineCommentAction->setShortcut(QKeySequence("Ctrl+/"));
+	lineCommentAction->setShortcut(QKeySequence(tr("Ctrl+k")));
 	lineCommentAction->setStatusTip(tr("(Un)Comment the selected line(s)."));
 	connect(lineCommentAction, SIGNAL(triggered()), this, SLOT(lineComment()));
 	editMenu->addAction(lineCommentAction);
 	blockCommentAction = new QAction(QObject::tr("(Un)Comment the selected block"), 0);
-	blockCommentAction->setShortcut(QKeySequence("Shift+Ctrl+/"));
+	blockCommentAction->setShortcut(QKeySequence(tr("Ctrl+b")));
 	blockCommentAction->setStatusTip(tr("(Un)Comment the selected block."));
 	connect(blockCommentAction, SIGNAL(triggered()), this, SLOT(blockComment()));
 	editMenu->addAction(blockCommentAction);
 	duplicateLineAction = new QAction(QObject::tr("Duplicate the current line"), 0);
-	duplicateLineAction->setShortcut(QKeySequence("Ctrl+D"));
+	duplicateLineAction->setShortcut(QKeySequence(tr("Ctrl+D")));
 	duplicateLineAction->setStatusTip(tr("Duplicate the selected line."));
 	connect(duplicateLineAction, SIGNAL(triggered()), this, SLOT(duplicateLine()));
 	editMenu->addAction(duplicateLineAction);
 	moveLineUpAction = new QAction(QObject::tr("Move the current line up"), 0);
-	moveLineUpAction->setShortcut(QKeySequence("Ctrl+T"));
+	moveLineUpAction->setShortcut(QKeySequence(tr("Ctrl+T")));
 	moveLineUpAction->setStatusTip(tr("Move the current line up."));
 	connect(moveLineUpAction, SIGNAL(triggered()), this, SLOT(moveLineUp()));
 	editMenu->addAction(moveLineUpAction);
 	deleteCurrentLineAction = new QAction(QObject::tr("Delete the current line"), 0);
-	deleteCurrentLineAction->setShortcut(QKeySequence("Ctrl+L"));
+	deleteCurrentLineAction->setShortcut(QKeySequence(tr("Ctrl+L")));
 	deleteCurrentLineAction->setStatusTip(tr("Delete the current line."));
 	connect(deleteCurrentLineAction, SIGNAL(triggered()), this, SLOT(deleteCurrentLine()));
 	editMenu->addAction(deleteCurrentLineAction);
 	toUpperCaseAction = new QAction(QObject::tr("Change the line to UPPER CASE"), 0);
-	toUpperCaseAction->setShortcut(QKeySequence("Ctrl+U"));
+	toUpperCaseAction->setShortcut(QKeySequence(tr("Ctrl+U")));
 	toUpperCaseAction->setStatusTip(tr("Change the line to UPPER CASE."));
-	connect(toUpperCaseAction, SIGNAL(triggered()), this, SLOT(toUpperCase()));
+	//connect(toUpperCaseAction, SIGNAL(triggered()), this, SLOT(toUpperCase()));
 	editMenu->addAction(toUpperCaseAction);
 	toLowerCaseAction = new QAction(QObject::tr("Change the line to lower case"), 0);
-	toLowerCaseAction->setShortcut(QKeySequence("Ctrl+Shift+U"));
+	toLowerCaseAction->setShortcut(QKeySequence(tr("Ctrl+Shift+U")));
 	toLowerCaseAction->setStatusTip(tr("Change the line to lower case."));
-	connect(toLowerCaseAction, SIGNAL(triggered()), this, SLOT(toLowerCase()));
+	//connect(toLowerCaseAction, SIGNAL(triggered()), this, SLOT(toLowerCase()));
 	editMenu->addAction(toLowerCaseAction);
 	menuBar()->addMenu(editMenu);//the edit menu..........................................................
 
@@ -1236,10 +1237,27 @@ void MainWindow::executeScript()
 //
 //}
 
+void MainWindow::cleanupScript()//Safe way to make sure the script is unloaded/aborted trough the script
+{
+	QTimer::singleShot(10, this, SLOT(abortScript()));
+}
+
 void MainWindow::abortScript()
 {
-	//AppScriptEngine->eng->currentContext()->throwError("bbbb");
+	////AppScriptEngine->eng->currentContext()->throwError("bbbb");
+	//
+	//for (int i=0;i<1;i++)
+	//{
+	//
 	AppScriptEngine->eng->collectGarbage();
+	//qApp->processEvents();
+	//}
+	//if(fff == false)
+	//	QTimer::singleShot(0, this, SLOT(abortScript()));
+	//fff = true;
+
+	//delete AppScriptEngine->eng;
+	
 	//AppScriptEngine->agent->exceptionThrow(currentRunningScriptID,"bbbbbb",true);
 	//AppScriptEngine->agent->scriptUnload(currentRunningScriptID);
 
@@ -1605,7 +1623,8 @@ void MainWindow::saveAs()
 {
 	if (activeMdiChild())
 	{
-		QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),DocManager->getFileName(activeMdiChild()),DocManager->getKnownFileExtensionList());
+		//QString selExt = "SVG files (*.svg *.svgz *.svg.gz)";
+		QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),DocManager->getFileName(activeMdiChild()));//,DocManager->getKnownFileExtensionList(),&selExt);
 		if (fileName.isEmpty())
 		{
 			return;

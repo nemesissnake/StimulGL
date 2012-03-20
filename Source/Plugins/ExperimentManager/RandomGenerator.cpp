@@ -18,43 +18,42 @@
 
 
 #include "RandomGenerator.h"
-#include <QTime>
+#include <QDateTime>
+#include "randomc/mersenne.cpp"
+#include "randomc/mother.cpp"
 
 RandomGenerator::RandomGenerator(QObject *parent):QObject(parent)
 {
-	nPrevRandInitResult = QTime::currentTime().msec();
-	InitRandomizer();
+	tCombinedRandGen == NULL;
+	nSeed = QDateTime::currentDateTime().toString(RANDOMIZE_DATETIME_FORMAT).toInt();
+	tCombinedRandGen = new TRandomCombined<CRandomMersenne,CRandomMother>(nSeed);
 }
 
 RandomGenerator::~RandomGenerator()
 {
-
-}
-
-void RandomGenerator::InitRandomizer()
-{
-	nPrevRandInitResult = (nPrevRandInitResult - 1) + QTime::currentTime().msec();
-	qsrand(nPrevRandInitResult);
-}
-
-int RandomGenerator::randomizeInt(int Min, int Max)
-{
-	InitRandomizer();
-	if (Min > Max)
+	if(tCombinedRandGen != NULL)
 	{
-		return ((qrand()%(Min-Max+1))+Max);
+		delete tCombinedRandGen;
+		tCombinedRandGen = NULL;
 	}
-	return ((qrand()%(Max-Min+1))+Min);
-	//qrand() Returns a value between 0 and RAND_MAX = 0x7fff -> 32767(dec)
 }
+
+//		for (int i = 0; i < 20; i++) {
+//			// generate 20 random floating point numbers and 20 random integers
+//			//printf("\n%14.10f   %2i",  RG.Random(),  RG.IRandom(0,99));
+//			float a = tCombinedRandGen->Random();
+//			int b = tCombinedRandGen->IRandom(0,99);
+//			b = b;
 
 bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QStringList *sList)
 {
-	InitRandomizer();
+	//int a = randomizeInt(0,700);
+	//InitRandomizer();
 	bool bRetVal = false;
 	int nListCount = this->count();
 	int i,j;
 	int nIndexFound;
+	int nRandom;
 
 	switch (rMethod)
 	{
@@ -62,7 +61,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 		////just randomize
 		for(i=(nListCount-1);i>0;--i)
 		{
-			int nRandom = qrand() % nListCount;
+			nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
 			this->swap(i,nRandom);
 		}
 		bRetVal = true;
@@ -71,7 +70,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 		//sList[] contains the values of the indexes that should be preserved(should not be randomized)!
 		for(i=(nListCount-1);i>0;--i)
 		{//first start with an randomize
-			int nRandom = qrand() % nListCount;
+			nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
 			this->swap(i,nRandom);
 		}
 		if (sList == NULL)
@@ -104,7 +103,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 		{//just randomize
 			for(i=(nListCount-1);i>0;--i)
 			{
-				int nRandom = qrand() % nListCount;
+				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
 				this->swap(i,nRandom);
 			}
 			bRetVal = true;
@@ -114,7 +113,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 		{//just randomize
 			for(i=(nListCount-1);i>0;--i)
 			{
-				int nRandom = qrand() % nListCount;
+				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
 				this->swap(i,nRandom);
 			}
 			bRetVal = true;
@@ -132,7 +131,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 			//first start with an randomize
 			for(i=(nListCount-1);i>0;--i)
 			{
-				int nRandom = qrand() % nListCount;
+				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
 				this->swap(i,nRandom);
 			}
 
@@ -151,7 +150,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 					//randomize the recovered values
 					for(i=(nRecoverCount-1);i>0;--i)
 					{
-						this->swap(sList->at(i).toInt(),sList->at(qrand() % nRecoverCount).toInt());
+						this->swap(sList->at(i).toInt(),sList->at(tCombinedRandGen->IRandom(0,nRecoverCount-1)).toInt());
 					}
 				}
 			}

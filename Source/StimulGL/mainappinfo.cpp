@@ -16,7 +16,6 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #include "mainappinfo.h"
 #include <QTextStream>
 #include <QString>
@@ -129,7 +128,7 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg)
 		abort();
 	}
 	QTextStream ts(mainLogFile);
-	ts << QDate::currentDate().toString().toAscii().data() << QString("\t") << QTime::currentTime().toString().toAscii().data() << QString("\t") << strMessage << endl;
+	ts << QDate::currentDate().toString().toAscii().data() << QString("\t") << QTime::currentTime().toString().toAscii().data() << QString("\t") << strMessage << QString("\n"); //endl macro doesn't work?
 
 }
 
@@ -160,4 +159,24 @@ bool MainAppInfo::InitializeMainAppNaming()
 	return true;
 }
 
-
+bool MainAppInfo::isCompatibleVersion(const QString &strMinimalRequiredVersion, const QString &strCurrentVersion)
+{
+	QStringList lstCurrentVersion = strCurrentVersion.split(".");
+	QStringList lstMinimalVersion = strMinimalRequiredVersion.split(".");
+	if ((lstCurrentVersion.count() == 4) && (lstMinimalVersion.count() == 4))
+	{
+		for (int i = 0;i<4;i++)
+		{
+			if(lstCurrentVersion.at(i).toInt() > lstMinimalVersion.at(i).toInt())
+			{
+				return true;//Later version
+			}
+			else if(lstCurrentVersion.at(i).toInt() < lstMinimalVersion.at(i).toInt())
+			{
+				return false;//Earlier version
+			}
+		}
+		return true;//same version
+	}
+	return false;//wrong arguments
+}

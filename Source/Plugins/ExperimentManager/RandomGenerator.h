@@ -21,10 +21,64 @@
 #define RANDOMGENERATOR_H
 
 #include <QObject>
+#include <QString>
 #include <QStringList>
+#include "randomc.h"
+
 #ifdef Q_OS_WIN
 	#include "windows.h"
 #endif
+
+#define RANDOMIZE_DATETIME_FORMAT			"HHmmsszzz"
+
+// This template class combines two different random number generators
+// for improved randomness. R1 and R2 are any two different random number
+// generator classes.
+template <class RG1, class RG2>
+class TRandomCombined : private RG1, private RG2 
+{
+public:
+	TRandomCombined(int seed) : RG1(seed), RG2(seed+1) {};
+
+	void RandomInit(int seed) {        // re-seed
+		RG1::RandomInit(seed);
+		RG2::RandomInit(seed+1);
+	}
+
+	double Random() {
+		double r = RG1::Random() + RG2::Random();
+		if (r >= 1.) r -= 1.;
+		return r;
+	}
+
+	int IRandom(int min, int max)
+	{// output random integer
+		if(min == max)
+			return min;
+		// get integer random number in desired interval
+		int iinterval = max - min + 1;
+		if (iinterval <= 0) 
+			return 0x80000000; // error
+		int r = int(iinterval * Random()); // truncate
+		if (r >= iinterval) 
+			return max;//r = iinterval-1;
+		return min + r;
+	}
+
+	double DRandom(double min, double max)
+	{// output random double
+		if(min == max)
+			return min;
+		// get double random number in desired interval
+		double iinterval = max - min + 1;
+		if (iinterval <= 0) 
+			return 0x80000000; // error
+		double r = double(iinterval * Random()); // truncate
+		if (r >= iinterval) 
+			return max;//	r = iinterval-1;
+		return min + r;
+	}
+};
 
 enum RandomGenerator_RandomizeMethod
 {
@@ -42,13 +96,12 @@ public:
 	~RandomGenerator();
 
 public slots:
-	int randomizeInt(int Min, int Max);					//just for <int> randomization
-	bool randomizeList(RandomGenerator_RandomizeMethod rMethod = RandomGenerator_RandomizeStandard, QStringList *sList = NULL);//Randomizes the class inherited QStringList
+	int randomizeInt(int nMin, int nMax) {return tCombinedRandGen->IRandom(nMin,nMax);};											//just for <int> randomization
+	int randomizeDouble(double nMin, double nMax) {return tCombinedRandGen->DRandom(nMin,nMax);};									//just for <double> randomization
+	bool randomizeList(RandomGenerator_RandomizeMethod rMethod = RandomGenerator_RandomizeStandard, QStringList *sList = NULL);		//Randomizes the class inherited QStringList
 
 private:
-	void RandomGenerator::InitRandomizer();
-	int nPrevRandInitResult;
-
+	TRandomCombined<CRandomMersenne,CRandomMother> *tCombinedRandGen;
+	int nSeed;
 };
-
 #endif // RANDOMGENERATOR_H

@@ -50,12 +50,48 @@ ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
 	RegisterMetaTypes();
 	changeCurrentExperimentState(Experiment_Constructed);
 	changeCurrentExperimentState(Experiment_Initialized);
+	//rndGen = NULL;
+	//rndCounter = 0;
 }
 
 ExperimentManager::~ExperimentManager()
 {
 	cleanupExperiment();
 }
+
+//void ExperimentManager::Test()
+//{
+//	QString a = "";
+//	if (rndGen == NULL)
+//	{
+//		rndGen = new RandomGenerator();
+//		rndCounter++;
+//	}
+//	else
+//	{
+//		//rndGen->clear();
+//	}
+//
+//	for (int j=0;j<100;j++)//Create random Empty trigger steps within the Cycle
+//	{
+//		a = a + "," + QString::number(rndGen->randomizeInt(0,5));
+//	}
+//	emit WriteToLogOutput(a);
+//
+//	QStringList lst;
+//	QStringList preserveIndexlst;
+//	for (int k=0;k<5;k++)
+//	{	
+//		preserveIndexlst.append(QString::number(k));
+//	}
+//	//lst.clear()
+//	for (int i=0;i<25;i++)
+//	{
+//		rndGen->randomizeList(RandomGenerator_RandomizePreservedIndexes,&preserveIndexlst);
+//		lst = *rndGen;
+//		emit WriteToLogOutput(lst.join(","));
+//	}
+//}
 
 void ExperimentManager::RegisterMetaTypes()
 {//To register the Objects to the Meta, so they can be accessed trough an *.exml file
@@ -244,7 +280,7 @@ bool ExperimentManager::saveExperiment(QString strFile)
 	return false;
 }
 
-bool ExperimentManager::openExperiment(QString strFile, bool bViewEditTree)
+bool ExperimentManager::loadExperiment(QString strFile, bool bViewEditTree)
 {
 	if (currentExperimentTree)
 	{
@@ -253,16 +289,18 @@ bool ExperimentManager::openExperiment(QString strFile, bool bViewEditTree)
 	}
 	currentExperimentTree = new ExperimentTree;
 
-	QString fileName;
+	QString fileName = getExperimentFileName();
 	if (strFile.isEmpty())
 	{
-		fileName = QFileDialog::getOpenFileName(NULL, tr("Open Experiment File"), QDir::currentPath(), tr("Experiment Files (*.exml *.xml);;Any file (*)"));
+		if (fileName.isEmpty())
+		{
+			fileName = QFileDialog::getOpenFileName(NULL, tr("Open Experiment File"), QDir::currentPath(), tr("Experiment Files (*.exml *.xml);;Any file (*)"));
+		}
 	}
 	else
 	{
 		fileName = strFile;
 	}
-	
 	if (fileName.isEmpty())
 		return false;
 
@@ -280,6 +318,7 @@ bool ExperimentManager::openExperiment(QString strFile, bool bViewEditTree)
 	{
 		if (bViewEditTree)
 			currentExperimentTree->showMaximized();
+		setExperimentFileName(fileName);
 		return true;
 	}
 	else
@@ -302,15 +341,26 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 		WriteAndCloseExperimentOutputData();
 		cleanupExperiment();
 	}
-
 }
+
+//void ExperimentManager::deleteObject()
+//{
+//	//if (expCurrState != getCurrentExperimentState() Experiment_Stopped)
+//	//{
+//	this->deleteLater();
+//	//}
+//
+//}
 
 bool ExperimentManager::runExperiment()
 {
 	if (!currentExperimentTree)
 	{
-		qDebug() << "runExperiment::No Experiment loaded!";
-		return false;
+		if((loadExperiment("", false) == false) || (!currentExperimentTree))
+		{
+			qDebug() << "runExperiment::No Experiment loaded!";
+			return false;
+		}
 	}
 	if(getCurrentExperimentState() != Experiment_Initialized)
 	{
@@ -361,6 +411,8 @@ bool ExperimentManager::runExperiment()
 	
 	if (expDataLogger)
 		expDataLogger->startTimer(nExperimentTimerIndex);
+
+	logExperimentObjectData(0,nExperimentTimerIndex,__FUNCTION__,"","FileName = ", getExperimentFileName());
 	
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
@@ -760,6 +812,9 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 
 		for(int i=0;i<nNrOfObjects;i++)
 		{
+			sParameterNames.clear();
+			sParameterTypes.clear();
+			sParameterValues.clear();
 			tmpNode = ExperimentObjectDomNodeList.at(i);
 			if (tmpNode.isElement()) 
 			{
@@ -968,6 +1023,10 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 									qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not create a generic argument!";
 									return false;
 								}
+							}
+							else
+							{
+								break;
 							}
 						}
 

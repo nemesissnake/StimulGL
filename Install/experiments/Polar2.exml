@@ -6,24 +6,16 @@ Place you own text here..
 Attributes only apply to readonly non user data, like the ID
 -->
 
-<EXML version="1.0.0.0">
-    <defines>
-			<experiment ID="0">
-				<name>Retinotopic Mapping Experiment with the use of a QTimer</name>
-				<debugmode>false</debugmode>
-			</experiment>
-		</defines>
+<EXML version="2.0.0.1">
+	<defines>
+		<experiment ID="0">
+			<name>Retinotopic Mapping Experiment with the use of a TriggerTimer or ParallelPort</name>
+			<debugmode>false</debugmode>
+		</experiment>
+	</defines>
 		
     <declarations>
-<!--    
-        <object ID="0">
-            <class>ParallelPort</class>
-            <name>ParallelPort_Object_1</name>
-            <constructor>
-                <param1/>
-            </constructor>
-        </object>    
--->
+  
         <object ID="0">
             <class>TriggerTimer</class>
             <name>Timer_Object_1</name>
@@ -39,19 +31,19 @@ Attributes only apply to readonly non user data, like the ID
                 <param1/>
             </constructor>
         </object> 
+	
+        <object ID="2">
+            <class>ParallelPort</class>
+            <name>ParallelPort_Object_1</name>
+            <constructor>
+                <param1/>
+            </constructor>
+        </object>   
+	
     </declarations>
     
     <connections>
-<!-- 
-        <object ID="0">
-        	<type>signal</type>
-        	<signature>CaptureThreadTriggered(short)</signature>
-          <target ID="1">
-          	<type>slot</type>     
-          	<signature>incrementExternalTrigger()</signature>      
-          </target>
-        </object>
--->
+
         <object ID="0">
         	<type>signal</type>
         	<signature>timeout()</signature>
@@ -60,11 +52,21 @@ Attributes only apply to readonly non user data, like the ID
           	<signature>incrementExternalTrigger()</signature>      
           </target>
         </object>
+	
+	<object ID="2">
+		<type>signal</type>
+        	<signature>CaptureThreadTriggered(short)</signature>
+		<target ID="1">
+			<type>slot</type>     
+			<signature>incrementExternalTrigger()</signature>      
+		</target>
+        </object>	
+	
     </connections>
     
     <initializations>       
-<!--    
-        <object ID="0">
+ 
+        <object ID="2">
         	<type>slot</type>
         	<signature>StartCaptureThread</signature>
         	<parameters>
@@ -95,7 +97,7 @@ Attributes only apply to readonly non user data, like the ID
 		        </parameter>        	
         	</parameters>
         </object>   
--->     
+
         <object ID="0">
         	<type>slot</type>
         	<signature>startTimer</signature>
@@ -113,7 +115,7 @@ Attributes only apply to readonly non user data, like the ID
     <actions>
     	<blocks>
 
-		   	<block ID="0">
+	    <block ID="0">
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
@@ -241,7 +243,7 @@ Attributes only apply to readonly non user data, like the ID
 		    	</object>   
 	    	</block>	    	
 	    	
-		   	<block ID="2">
+                <block ID="2">
 	        <name>Fixation_Block</name>
 	        <block_number>2</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
@@ -270,12 +272,12 @@ Attributes only apply to readonly non user data, like the ID
         	<type>slot</type>
         	<signature>stopTimer</signature>
         </object>
-<!--
-        <object ID="0">
+
+        <object ID="2">
         	<type>slot</type>
         	<signature>StopCaptureThread</signature>
         </object>
--->
+
     </finalizations>    
 
 </EXML>
