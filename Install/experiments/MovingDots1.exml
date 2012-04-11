@@ -10,7 +10,7 @@ Attributes only apply to readonly non user data, like the ID
 	<defines>
 		<experiment ID="0">
 			<name>Retinotopic Mapping Experiment with the use of a TriggerTimer or ParallelPort</name>
-			<debugmode>false</debugmode>
+			<debugmode>true</debugmode>
 		</experiment>
 	</defines>
 		
@@ -192,7 +192,7 @@ Attributes only apply to readonly non user data, like the ID
 	    	<block ID="1">
 	        <name>MovingDots_Block</name>
 	        <block_number>1</block_number>            
-	        <nr_of_trials>6</nr_of_trials>
+	        <nr_of_trials>1</nr_of_trials>
 	        <nr_of_internal_triggers>36</nr_of_internal_triggers>
 	        <nr_of_external_triggers>1</nr_of_external_triggers>
 	        <object ID="1">

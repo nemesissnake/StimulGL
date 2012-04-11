@@ -72,6 +72,11 @@ RetinoMap_glwidget::~RetinoMap_glwidget()
 		delete previousRandEmptyStimGenerator;
 		previousRandEmptyStimGenerator = NULL;
 	}
+	//if (mirrorImage)
+	//{
+	//	delete mirrorImage;
+	//	mirrorImage = NULL;
+	//}	
 }
 
 void RetinoMap_glwidget::initialize()
@@ -99,6 +104,7 @@ void RetinoMap_glwidget::initialize()
 	textContent = "";
 	StimulusResultImageFrame = NULL;
 	StimulusActivationMap = NULL;
+	//mirrorImage = NULL;
 	activationPainter = NULL;
 	stimuliPainter = NULL;
 	imgPainter = NULL;
@@ -557,13 +563,13 @@ void RetinoMap_glwidget::initializeMovingDotsStructures()
 	else//(RetinoMap_HemifieldPos_Left || RetinoMap_HemifieldPos_Both)
 	{
 		movingDotsFirstHemiVisibleArea.setP1(QPointF((stimWidthPixelAmount-movingDotsFieldWidth)/2, (stimHeigthPixelAmount-movingDotsFieldHeight)/2));
-		movingDotsFirstHemiVisibleArea.setP2(QPointF((stimWidthPixelAmount/2)-movingDotsPixelFromCenter, stimHeigthPixelAmount-movingDotsFirstHemiVisibleArea.p1().x()));
+		movingDotsFirstHemiVisibleArea.setP2(QPointF((stimWidthPixelAmount/2)-movingDotsPixelFromCenter, stimHeigthPixelAmount-movingDotsFirstHemiVisibleArea.p1().y()));
 	}
 	QPointF tmpPoint;
 	QLineF tmpLine;
 	movingDots.Pos.clear();
 	movingDots.Mov.clear();
-	movingDots.MirrorXPos.clear();
+	//movingDots.MirrorXPos.clear();
 	movingDots.OldPos.clear();
 	for (int i=0; i<movingDotsNrOfDots; i++)
 	{
@@ -576,7 +582,7 @@ void RetinoMap_glwidget::initializeMovingDotsStructures()
 		tmpLine.setAngle(randStimStateGenerator->randomizeInt(movingDotsMinMoveAngle,movingDotsMaxMoveAngle));//The randomized movement direction
 		tmpLine.setLength(randStimStateGenerator->randomizeDouble(movingDotsMinMoveSpeed,movingDotsMaxMoveSpeed));//The randomized speed of the movement  
 		movingDots.Mov.append(tmpLine);
-		movingDots.MirrorXPos.append(0.0f);//The Mirrored X Position
+		//movingDots.MirrorXPos.append(0.0f);//The Mirrored X Position
 	}
 }
 
@@ -604,7 +610,6 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	}
 	getCurrentExperimentProgressSnapshot(&expSnapshot);
 	int elapsedTrialTime = (int)expSnapshot.elapsedTrialTime;
-
 	if((elapsedTrialTime >= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1))))&&(currentExpType != RetinoMap_Fixation))//To make sure that the elapsed TrialTime doesn't exceed the maximum time of one Block-TrialTime
 		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1))-1;
 	else if((elapsedTrialTime <= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger))))&&(currentExpType != RetinoMap_Fixation))
@@ -737,7 +742,9 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					fTrialTimeProgress = (float)(nTrialIndex) / numberOfSteps;
 			}
 			else
+			{
 				fTrialTimeProgress = (float)expSnapshot.currExpBlockTrialTrigger / cycleTriggerAmount;
+			}
 
 			//qDebug() << fTrialTimeProgress;
 		} 
@@ -810,8 +817,8 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 
 	//if(isDebugMode())
 	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(1));
-
-	StimulusResultImageFrame->fill(colorBackground);
+	//if(currentExpType != RetinoMap_MovingDots)
+		StimulusResultImageFrame->fill(colorBackground);
 
 	if (imgPainter == NULL)
 		imgPainter = new QPainter(StimulusResultImageFrame);//Constructor automatically calls begin()
@@ -1189,54 +1196,207 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	{
 		if (bRenderStimuli)
 		{
+
+		//int j;
+		//int nNrOfTestSamples = 200;
+		//int nTestTimerID = currExpConfStruct->pExperimentManager->createExperimentTimer();
+		//currExpConfStruct->pExperimentManager->startExperimentTimer(nTestTimerID);
+		//double dCurrTestTime = 0;//pExpConf->pExperimentManager->restartExperimentTimer(nTimerID);
+		//double dMeanTestTime = 0;
+		//double dMaxTestTime = 0;			
+			
 		//if ((emptyTriggerSteps==0)||(emptyTriggerStepCount<1)||((emptyTriggerStepCount>0)&&(randEmptyStimGenerator->at(0).toInt()!=currExpBlockTrialTrigger%((int)cycleTriggerAmount))))
 		//{
 		//	emptyTriggerStepCount--;
 		//	randEmptyStimGenerator->removeFirst();
 		//if (randEmptyStimGenerator->at(currExpBlockTrialTrigger%((int)cycleTriggerAmount)) == RETINOMAP_WIDGET_BOOL_FALSE)
 		//{
-			int i;
 			imgPainter->setPen(QPen(movingDotsColor, movingDotsDotSize, style, roundCap));
 			//int draw_page, disp_page;
 			//disp_page = expSnapshot.currExpBlockTrialFrame % 2;
 			//draw_page = (expSnapshot.currExpBlockTrialFrame+1) % 2;
-			for(i=0; i<movingDotsNrOfDots; i++)
-			{
-				if(movingDotsIsStationary)
-				{
-					movingDots.Pos[i] = movingDots.OldPos[i];
-				}
-				else
-				{
-					// move dot
-					movingDots.Pos[i] = movingDots.OldPos[i] + movingDots.Mov[i].p2();
-					// check whether dot moves out of display field - x direction					
-					if(movingDots.Pos.at(i).x() >= movingDotsFirstHemiVisibleArea.p2().x())
-						movingDots.Pos[i].setX(movingDots.Pos.at(i).x() - movingDotsFirstHemiVisibleArea.dx());
-					if(movingDots.Pos.at(i).x() <= movingDotsFirstHemiVisibleArea.p1().x())//
-						movingDots.Pos[i].setX(movingDots.Pos.at(i).x() + movingDotsFirstHemiVisibleArea.dx());
-					// check whether dot moves out of display field - y direction
-					if(movingDots.Pos.at(i).y() >= movingDotsFirstHemiVisibleArea.p2().y())
-						movingDots.Pos[i].setY(movingDots.Pos.at(i).y() - movingDotsFirstHemiVisibleArea.dy());
-					if(movingDots.Pos.at(i).y() <= movingDotsFirstHemiVisibleArea.p1().y())//movingDotsYStartRel)
-						movingDots.Pos[i].setY(movingDots.Pos.at(i).y() + movingDotsFirstHemiVisibleArea.dy());
-				}
-			}
 
+			//#pragma omp parallel
+			//qDebug() << __FUNCTION__ << ":: in thread " << omp_get_thread_num() << ", from " << omp_get_num_threads() << "threads.";//Only inside parallel code valid!
+
+			//int nDefaultThreadNum = omp_get_thread_num();
+			//int nDefaultThreadAmount = omp_get_num_threads();
+			//int nCurrentThreadNum = nDefaultThreadNum;
+			//int nCurrentThreadAmount = nDefaultThreadAmount; 
+
+			int i;
+			//for (j=0; j<nNrOfTestSamples; j++)
+			//{
+				//#pragma omp parallel for private(i)
+
+
+				for(i=0; i<movingDotsNrOfDots; i++)
+				{
+					//nCurrentThreadNum = omp_get_thread_num();
+					//nCurrentThreadAmount = omp_get_num_threads(); 
+					//if ((nCurrentThreadNum != nDefaultThreadNum) )// || (nCurrentThreadAmount != nDefaultThreadAmount))
+					//{
+					//	nDefaultThreadNum = nCurrentThreadNum;
+					//	nDefaultThreadAmount = nCurrentThreadAmount; 
+					//}
+					//if(isDebugMode())
+					//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","Finished painting the object");
+				
+					if(movingDotsIsStationary)
+					{
+						movingDots.Pos[i] = movingDots.OldPos[i];
+					}
+					else
+					{
+						// move dot
+						//#pragma omp atomic
+						{
+							//#pragma omp critical
+							movingDots.Pos[i] = movingDots.OldPos.at(i) + movingDots.Mov[i].p2();
+							// check whether dot moves out of display field - x direction					
+							if(movingDots.Pos[i].x() >= movingDotsFirstHemiVisibleArea.p2().x())
+							{
+								//#pragma omp atomic
+								movingDots.Pos[i].setX(movingDots.Pos[i].x() - movingDotsFirstHemiVisibleArea.dx());
+							}
+							if(movingDots.Pos[i].x() <= movingDotsFirstHemiVisibleArea.p1().x())//
+							{
+								//#pragma omp atomic
+								movingDots.Pos[i].setX(movingDots.Pos[i].x() + movingDotsFirstHemiVisibleArea.dx());
+							}
+							// check whether dot moves out of display field - y direction
+							if(movingDots.Pos[i].y() >= movingDotsFirstHemiVisibleArea.p2().y())
+							{
+								//#pragma omp atomic
+								movingDots.Pos[i].setY(movingDots.Pos[i].y() - movingDotsFirstHemiVisibleArea.dy());
+							}
+							if(movingDots.Pos[i].y() <= movingDotsFirstHemiVisibleArea.p1().y())//movingDotsYStartRel)
+							{
+								//#pragma omp atomic
+								movingDots.Pos[i].setY(movingDots.Pos[i].y() + movingDotsFirstHemiVisibleArea.dy());
+							}
+						}
+					}
+				}
+				//dCurrTestTime = currExpConfStruct->pExperimentManager->restartExperimentTimer(nTestTimerID);
+				//if (dCurrTestTime > dMaxTestTime)
+				//{
+				//	dMaxTestTime = dCurrTestTime;
+				//}
+				//dMeanTestTime = dMeanTestTime + dCurrTestTime;
+			//}
+			//dMeanTestTime = dMeanTestTime / nNrOfTestSamples;
+
+			//dCurrTestTime = currExpConfStruct->pExperimentManager->restartExperimentTimer(nTestTimerID);
+			//dCurrTestTime = dCurrTestTime;
+
+			//StimulusResultImageFrame->fill(Qt::transparent);
+
+			//#pragma omp parallel for --> doesn't work in the drawing routines!
 			for(i=0; i<movingDotsNrOfDots; i++)
 			{
+				//nCurrentThreadNum = omp_get_thread_num();
+				//nCurrentThreadAmount = omp_get_num_threads(); 
+				//if ((nCurrentThreadNum != nDefaultThreadNum) )// || (nCurrentThreadAmount != nDefaultThreadAmount))
+				//{
+				//	nDefaultThreadNum = nCurrentThreadNum;
+				//	//nDefaultThreadAmount = nCurrentThreadAmount; 
+				//}
+
+
+
+				imgPainter->drawPoint(movingDots.Pos.at(i));
+				//Draw the remaining parts of a dot (mirrored!)
+				if (movingDots.Pos.at(i).x()>=movingDotsFirstHemiVisibleArea.p2().x()-movingDotsDotSize)
+					imgPainter->drawPoint(movingDots.Pos.at(i).x() - movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
+				if (movingDots.Pos.at(i).x()<=movingDotsFirstHemiVisibleArea.p1().x()+movingDotsDotSize)
+					imgPainter->drawPoint(movingDots.Pos.at(i).x() + movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
+				if (movingDots.Pos.at(i).y()>=movingDotsFirstHemiVisibleArea.p2().y()-movingDotsDotSize)
+					imgPainter->drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() - movingDotsFirstHemiVisibleArea.dy());
+				if (movingDots.Pos.at(i).y()<=movingDotsFirstHemiVisibleArea.p1().y()+movingDotsDotSize)
+					imgPainter->drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() + movingDotsFirstHemiVisibleArea.dy());
+				if (i==movingDotsNrOfDots-1)
+				{
+					//Remove the dot-parts that are outside the first hemisphere
+					imgPainter->save();
+					imgPainter->setPen(QPen(colorBackground, movingDotsDotSize*2, style, flatCap));
+					imgPainter->drawLine(movingDotsFirstHemiVisibleArea.p2().x()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p1().y()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().x()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().y()+(2*movingDotsDotSize));//Right border
+					imgPainter->drawLine(movingDotsFirstHemiVisibleArea.p1().x()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().y()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().x()+(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().y()-movingDotsDotSize);//Top border				
+					imgPainter->drawLine(movingDotsFirstHemiVisibleArea.p1().x()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p1().y()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().x()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().y()+(2*movingDotsDotSize));//Left border				
+					imgPainter->drawLine(movingDotsFirstHemiVisibleArea.p1().x()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().y()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().x()+(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().y()+movingDotsDotSize);//Bottom border				
+					
+					imgPainter->restore();
+				}
+
+
 				if(movingDotsHemifieldPos == RetinoMap_HemifieldPos_Both)
 				{
-					movingDots.MirrorXPos[i] = movingDots.Pos.at(i).x() + movingDotsFirstHemiVisibleArea.dx() + 2*movingDotsPixelFromCenter;
-					imgPainter->drawPoint(movingDots.Pos.at(i));
-					imgPainter->drawPoint(QPointF(movingDots.MirrorXPos.at(i), movingDots.Pos.at(i).y()));
-				}
-				else
-				{
-					imgPainter->drawPoint(movingDots.Pos.at(i));
+					//movingDots.MirrorXPos[i] = movingDots.Pos.at(i).x() + movingDotsFirstHemiVisibleArea.dx() + 2*movingDotsPixelFromCenter;					
+					//if (i==0)
+					//	imgPainter->drawPoints(movingDots.Pos);//too slow, takes twice as much time!
+					//imgPainter->drawPoint(QPointF(-3,i));
+					//imgPainter->drawPoint(QPointF(movingDots.MirrorXPos.at(i), movingDots.Pos.at(i).y()));
+					if (i==movingDotsNrOfDots-1)
+					{
+						//QPixmap tmpPXMirrorMap = StimulusResultImageFrame->copy(movingDotsFirstHemiVisibleArea.p1().x(),movingDotsFirstHemiVisibleArea.p1().y(),movingDotsFirstHemiVisibleArea.dx(),movingDotsFirstHemiVisibleArea.dy());
+						//mirrorImage = tmpPXMirrorMap.toImage();
+						mirrorImage = StimulusResultImageFrame->copy(movingDotsFirstHemiVisibleArea.p1().x(),movingDotsFirstHemiVisibleArea.p1().y(),movingDotsFirstHemiVisibleArea.dx(),movingDotsFirstHemiVisibleArea.dy()).toImage();
+						//mirrorImage = mirrorImage.mirrored(true,false);
+						//QPixmap mirror( QPixmap::fromImage( mirrorImage ) );						
+						imgPainter->drawImage((stimWidthPixelAmount/2)+movingDotsPixelFromCenter,movingDotsFirstHemiVisibleArea.p1().y(),mirrorImage);//    10+movingDotsPixelFromCenter,0,mirrorImage);//movingDotsFirstHemiVisibleArea.p2().x()+
+						
+						//imgPainter->save();
+						//imgPainter->setPen(Qt::NoPen);
+						//imgPainter->setBrush(tmpPXMirrorMap);
+						////imgPainter->setOpacity( 0.5 );
+						////imgPainter->translate((stimWidthPixelAmount/2)+movingDotsPixelFromCenter, 0 );
+						//imgPainter->translate(300,300);
+						//int nCurrCompMode = imgPainter->compositionMode();
+						//imgPainter->setCompositionMode(QPainter::CompositionMode_Plus);
+						//nCurrCompMode = imgPainter->compositionMode();
+						//imgPainter->drawRect(0,0,movingDotsFirstHemiVisibleArea.dx(),movingDotsFirstHemiVisibleArea.dy()); //mirrorImage->boundingRect() );
+						//imgPainter->restore();
+						//nCurrCompMode = imgPainter->compositionMode();
+
+						//imgPainter->translate( img->boundingRect().x(), img->boundingRect().height() - 60 );
+						//imgPainter->drawRect( img->boundingRect() );
+						//imgPainter->restore();
+
+
+						//QPoint p1, p2;
+						//p2.setY(tmpImage.height());
+
+						//QLinearGradient gradient(p1, p2);
+						//gradient.setColorAt(0, QColor(0, 0, 0, 100));
+						//gradient.setColorAt(0.5, Qt::transparent);
+						//gradient.setColorAt(1, Qt::transparent);
+
+						//QPainter p(&tmpImage);
+						//p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+						//p.fillRect(0, 0, tmpImage.width(), tmpImage.height(), gradient);
+						//p.end();
+
+						//painter->save();
+						//QPixmap mirror( QPixmap::fromImage( tmpImage ) );
+						//painter->setBrush( mirror );
+						//painter->setOpacity( 0.5 );
+						//painter->translate( img->boundingRect().x(), img->boundingRect().height() - 60 );
+						//painter->drawRect( img->boundingRect() );
+						//painter->restore();
+					}
+
 				}
 				movingDots.OldPos[i] = movingDots.Pos.at(i);
-			}		
+			}
+			//dCurrTestTime = currExpConfStruct->pExperimentManager->restartExperimentTimer(nTestTimerID);
+			//dCurrTestTime = dCurrTestTime;
+
+			//static bool firstUpdate = true;
+			//if (firstUpdate)
+			//{ 
+			//	firstUpdate = false;
+			//}
+
 			//if(movingDotsRetPosition>0)
 			//{
 			//	QPainterPath ret_apeture;

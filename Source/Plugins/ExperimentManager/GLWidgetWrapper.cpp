@@ -40,6 +40,8 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 		nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // on Win (with recent OGL drivers), "swapBuffers" will wait for n retraces as indicated by "setSwapInterval" command (works like DX "flip")
 	#endif
 	setAutoFillBackground(false);
+	setAttribute(Qt::WA_OpaquePaintEvent, true);
+	setAttribute(Qt::WA_NoSystemBackground, true);
 	setAutoBufferSwap(false); // in order to have control over time point for buffer swap
 	rScreenResolution = QApplication::desktop()->screenGeometry();//dDesktopWidget->screenGeometry();//availableGeometry();
 	//setFixedSize(rScreenResolution.width(), rScreenResolution.height());
@@ -737,6 +739,11 @@ bool GLWidgetWrapper::initExperimentObject()
 			}		
 		}
 	}
+	// Get the number of processors in this system
+	int iCPU = omp_get_num_procs();
+    qDebug() << __FUNCTION__ << "::" << iCPU << "processors available.";//The omp_get_num_threads() call returns 1 in the serial section of the code!!
+	// Now set the number of threads
+	omp_set_num_threads(iCPU);
 	return true;
 }
 

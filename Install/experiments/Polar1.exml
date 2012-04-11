@@ -102,7 +102,7 @@ Attributes only apply to readonly non user data, like the ID
         	<parameters>
 		      	<parameter ID="0">
 		        	<name>msec</name>
-		        	<value>200</value>
+		        	<value>2000</value>
 		        	<type>double</type>
 		        </parameter>  	
         	</parameters>
@@ -117,7 +117,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_internal_triggers>8</nr_of_internal_triggers>
+	        <nr_of_internal_triggers>2</nr_of_internal_triggers>
 	        <nr_of_external_triggers>1</nr_of_external_triggers>	 
 	        <object ID="1">
 	        	<parameters>
@@ -144,22 +144,22 @@ Attributes only apply to readonly non user data, like the ID
 			        <parameter ID="5">
 			        	<name>AntiAliasing</name>
 			        	<value>true</value>
-			        </parameter>	
-			        <parameter ID="6">   	
-			        	<name>StimulusWidthSpan</name>
-			        	<value>768</value>
-			        </parameter>	
-			        <parameter ID="7">     	
-			        	<name>StimulusHeightSpan</name>
-			        	<value>768</value>	
 			        </parameter>
+				<parameter ID="6">
+					<name>StimulusWidthSpan</name>
+					<value>768</value>
+				</parameter>
+				<parameter ID="7">
+					<name>StimulusHeightSpan</name>
+					<value>768</value>
+				</parameter>
 			        <parameter ID="8">
 			        	<name>OutputFrameFormat</name>
 			        	<value>PNG</value>
 			        </parameter>
 			        <parameter ID="10">
 			        	<name>FixationSize</name>
-			        	<value>8</value>
+			        	<value>12</value>
 			        </parameter>	
 			        <parameter ID="11">
 			        	<name>CycleTriggerAmount</name>
@@ -207,12 +207,12 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="2">
 			        	<name>EmptyTriggerSteps</name>
-			        	<value>4</value>
+			        	<value>0</value>
 			        </parameter>			        
 			        <parameter ID="3">
 			        	<name>PolarWedgeSpan</name>
 			        	<value>30</value>
-							</parameter>		        	
+				</parameter>		        	
 			        <parameter ID="4">	 	
 			        	<name>PolarCheckAmount</name>
 			        	<value>5</value>	        	
@@ -223,7 +223,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>       	
 			        <parameter ID="6">    	
 			        	<name>PolarRotationDirection</name>
-			        	<value>1</value>	        	
+			        	<value>-1</value>	        	
 			        </parameter>
 			        <parameter ID="7">   
 			        	<name>FlickrFrequency</name>
@@ -239,7 +239,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>	
 			        <parameter ID="10">
 			        	<name>GapDiameter</name>
-			        	<value>0</value>
+			        	<value>100</value>
 			        </parameter>
 	    				<parameter ID="11">
 			        	<name>DiscreteTriggerSteps</name>
@@ -247,7 +247,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>			        
 			        <parameter ID="12">
 			        	<name>RandomizeTriggerSteps</name>
-			        	<value>true</value>
+			        	<value>false</value>
 			        </parameter>			                
 			        <parameter ID="12">
 			        	<name>DisableCortMagFac</name>

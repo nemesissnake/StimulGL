@@ -125,12 +125,24 @@ enum RetinoMapExperimentType //The state of the main experiment object
 	RetinoMap_MovingDots	= 5
 };
 
+//typedef struct{
+//	QList<QPointF> Pos;
+//	QList<QPointF> OldPos;
+//	QList<QLineF> Mov;
+//	QList<float> MirrorXPos;
+//} MovingDotsStructure;
+
 typedef struct{
-	QList<QPointF> Pos;
-	QList<QPointF> OldPos;
+	QPolygonF Pos;
+	QPolygonF OldPos;
 	QList<QLineF> Mov;
-	QList<float> MirrorXPos;
+	//QList<float> MirrorXPos;
 } MovingDotsStructure;
+
+//QPolygonF
+//A QPolygonF is a QVector<QPointF>. The easiest way to add points to a QPolygonF is to use its streaming operator, as illustrated below:
+//QPolygonF polygon;
+//polygon << QPointF(10.4, 20.5) << QPointF(20.2, 30.2);
 
 class RetinoMap_glwidget : public GLWidgetWrapper
 {
@@ -260,6 +272,7 @@ private:
 
 	RetinoMapOutputType retinoOutputType;
 	RetinoMapOutputFormat retinoOutputFormat;
+	QImage mirrorImage;
 	QPixmap *StimulusResultImageFrame;
 	QPixmap *StimulusActivationMap;
 	QPainter *activationPainter;

@@ -29,6 +29,7 @@
 #include <QBoxLayout>
 #include <QCustomEvent>
 #include <QMutex>
+#include <omp.h>
 #include "Global.h"
 #include "ExperimentTimer.h"
 
