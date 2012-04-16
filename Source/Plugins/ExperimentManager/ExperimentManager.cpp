@@ -19,6 +19,7 @@
 
 #include "ExperimentManager.h"
 #include "ImageProcessor.h"
+#include "prtformatmanager.h"
 #include "metaextensions.h"
 #include <QFileDialog>
 #include <QWaitCondition>
@@ -98,11 +99,12 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
+	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
 }
 
 bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue)
 {
-	if (nObjectID >= 0)
+	if (nObjectID >= 0) 
 	{
 		if (!lExperimentObjectList.isEmpty())
 		{
@@ -113,7 +115,10 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 				{
 					if (lExperimentObjectList[i].nObjectID == nObjectID)
 					{
-						lExperimentObjectList[i].ExpBlockParams->insert(sName,sValue);
+						ParsedParameterDefinition tmpParDef;
+						tmpParDef.bHasChanged = true;
+						tmpParDef.sValue = sValue;
+						lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpParDef);
 						return true;
 					}
 				}
@@ -123,7 +128,7 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 	return false;
 }
 
-bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString &sValue)
+bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, ParsedParameterDefinition &strcParDef)
 {
 	if (nObjectID >= 0)
 	{
@@ -136,12 +141,11 @@ bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,co
 				{
 					if (lExperimentObjectList[i].nObjectID == nObjectID)
 					{
-						//QHash<QString, QString> test;
+						//tParsedParameterList test;
 						//test = *lExperimentObjectList[i].ExpBlockParams;
-						//QString stest = "";
 						if (lExperimentObjectList[i].ExpBlockParams->contains(sName))
 						{
-							sValue = lExperimentObjectList[i].ExpBlockParams->value(sName,sValue);//svalue
+							strcParDef = lExperimentObjectList[i].ExpBlockParams->value(sName,strcParDef);
 							return true;
 						}
 						return false;
@@ -153,7 +157,7 @@ bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,co
 	return false;
 }
 
-bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nObjectID,QHash<QString, QString> *expBlockTrialStruct)
+bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nObjectID,tParsedParameterList *expBlockTrialStruct)
 {
 	if (nObjectID >= 0)
 	{
@@ -342,15 +346,6 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 		cleanupExperiment();
 	}
 }
-
-//void ExperimentManager::deleteObject()
-//{
-//	//if (expCurrState != getCurrentExperimentState() Experiment_Stopped)
-//	//{
-//	this->deleteLater();
-//	//}
-//
-//}
 
 bool ExperimentManager::runExperiment()
 {
@@ -1270,7 +1265,8 @@ QObject *ExperimentManager::getObjectElementById(int nID)
 	return NULL;
 }
 
-QHash<QString, QString> *ExperimentManager::getObjectBlockParamListById(int nID)
+//QHash<QString, QString> *ExperimentManager::getObjectBlockParamListById(int nID)
+tParsedParameterList *ExperimentManager::getObjectBlockParamListById(int nID)
 {
 	if (nID >= 0)
 	{

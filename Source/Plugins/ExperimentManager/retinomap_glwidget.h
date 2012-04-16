@@ -25,7 +25,7 @@
 
 //Below defines must be all in lower case!
 //Shared defines
-#define GLWWRAP_WIDGET_DISPLAY_REFRESHRATE					"displayrefreshrate"
+#define GLWWRAP_WIDGET_STIMULI_REFRESHRATE					"stimulirefreshrate"
 #define RETINOMAP_WIDGET_PATTERN_POLARANGLE					"polarangle"
 #define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY				"eccentricity"
 #define RETINOMAP_WIDGET_PATTERN_MOVINGBAR					"movingbar"
@@ -91,8 +91,8 @@
 #define RETINOMAP_WIDGET_MOVINGDOTS_PIXELFROMCENTER			"movingdotspixelfromcenter"
 #define RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY				"movingdotsstationairy"
 //#define RETINOMAP_WIDGET_MOVINGDOTS_RETINALPOSITION		"movingdotsretinalposition"
-#define RETINOMAP_WIDGET_MOVINGDOTS_FIELDWIDTH				"movingdotsfieldwidth"
-#define RETINOMAP_WIDGET_MOVINGDOTS_FIELDHEIGHT				"movingdotsfieldheight"
+#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDWIDTH			"movingdotshemifieldwidth"
+#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDHEIGHT			"movingdotshemifieldheight"
 
 #define RETINOMAP_WIDGET_OUTPUT_SUBFOLDER					"/RetinoWidget/"
 
@@ -125,24 +125,11 @@ enum RetinoMapExperimentType //The state of the main experiment object
 	RetinoMap_MovingDots	= 5
 };
 
-//typedef struct{
-//	QList<QPointF> Pos;
-//	QList<QPointF> OldPos;
-//	QList<QLineF> Mov;
-//	QList<float> MirrorXPos;
-//} MovingDotsStructure;
-
 typedef struct{
-	QPolygonF Pos;
+	QPolygonF Pos; //A QPolygonF is a QVector<QPointF>. The easiest way to add points to a QPolygonF is to use its streaming operator: polygon << QPointF(10.4, 20.5) << QPointF(20.2, 30.2);
 	QPolygonF OldPos;
 	QList<QLineF> Mov;
-	//QList<float> MirrorXPos;
 } MovingDotsStructure;
-
-//QPolygonF
-//A QPolygonF is a QVector<QPointF>. The easiest way to add points to a QPolygonF is to use its streaming operator, as illustrated below:
-//QPolygonF polygon;
-//polygon << QPointF(10.4, 20.5) << QPointF(20.2, 30.2);
 
 class RetinoMap_glwidget : public GLWidgetWrapper
 {
@@ -170,8 +157,6 @@ private:
 	int nRetinoID;								//This variable stores the ObjectID used to identify the object
 	RetinoMapExperimentType currentExpType;		//The experiment type used, see RetinoMapExperimentType
 	bool firstBlockTrialPaintFrame;				//To determine whether it's the first frame to paint from a new Block trial
-	//QTime trialTime;							//The elapsed trial time
-	//int elapsedTrialTime;						//The elapsed trial time(snapshot)
 	QColor colorBackground;						//The color of the background
 	QBrush brushBackground;						//The background brush
 	QFont textFont;								//The font used for text(debug mode)
@@ -198,6 +183,7 @@ private:
 	int emptyTriggerSteps;						//Defines the number of Trigger steps in which no stimuli should be presented
 	bool bNoChangesSinceLastFrame;
 	ExperimentSnapshotStructure expSnapshot;
+	ExperimentBlockTrialStructure strcExperimentBlockTrialsCopy;
 
 	QColor movingDotsColor;
 	QColor cCheckerColor1;
@@ -208,6 +194,7 @@ private:
 	QString tmpParamValue;
 	float fStimulusDiameter;
 	float fTrialTimeProgress;
+	//float fLastTrialTimeProgress;
 	float fCortMagTrialTimeProgress;
 	bool bCreateActivationMap;
 	int currExpBlockTrialCycle;
@@ -266,8 +253,8 @@ private:
 	bool movingDotsIsStationary;
 	RetinoMapHemifieldPos movingDotsHemifieldPos;
 	int movingDotsPixelFromCenter;
-	int movingDotsFieldWidth;
-	int movingDotsFieldHeight;
+	int movingDotsHemiFieldWidth;
+	int movingDotsHemiFieldHeight;
 	MovingDotsStructure movingDots;
 
 	RetinoMapOutputType retinoOutputType;

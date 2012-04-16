@@ -101,24 +101,29 @@ void GLWidgetWrapper::setVerticalSyncSwap()
 	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
 }
 
-
 bool GLWidgetWrapper::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue)
 {
 	if (ExpBlockParams == NULL)
 	{
-		ExpBlockParams = new QHash<QString, QString>();
+		ExpBlockParams = new tParsedParameterList();//new QHash<QString, QString>();
 		pExpConf->pExperimentManager->setExperimentObjectBlockParameterStructure(nObjectID,ExpBlockParams);
 	}
 	return (pExpConf->pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName,sValue));
 }
 
-QString GLWidgetWrapper::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue)
+ParsedParameterDefinition GLWidgetWrapper::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue)
 {
-	QString sResult = sDefValue;
-	if (pExpConf->pExperimentManager->getExperimentObjectBlockParameter(nObjectID,sName,sResult))
-		return sResult;
+	ParsedParameterDefinition PPDResult;
+	PPDResult.bHasChanged = false;
+	PPDResult.sValue = sDefValue;
+	if (pExpConf->pExperimentManager->getExperimentObjectBlockParameter(nObjectID,sName,PPDResult))
+	{
+		return PPDResult;
+	}
 	else
-		return sDefValue;
+	{
+		return PPDResult;
+	}
 }
 
 void GLWidgetWrapper::init()
@@ -380,12 +385,17 @@ bool GLWidgetWrapper::updateExperimentBlockTrialStructure()
 	return true;
 }
 
+//bool GLWidgetWrapper::getExperimentBlockTrialStructureCopy(ExperimentBlockTrialStructure &expBlockTrialStructure)
+//{
+//	expBlockTrialStructure = strcExperimentBlockTrials;
+//	return true;
+//}
+
 bool GLWidgetWrapper::getCurrentExperimentProgressSnapshot(ExperimentSnapshotStructure *expSnapshotstrc)
 {
 	if (expSnapshotstrc)
 	{
 		mutExpSnapshot.lock();
-		expSnapshotstrc->elapsedTrialTime = expTrialTimer.getElapsedTimeInMilliSec();
 		expSnapshotstrc->currExpBlockTrialFrame = expFullStruct.parentStruct.currExpBlockTrialFrame;
 		expSnapshotstrc->currExpInternalTrigger = expFullStruct.parentStruct.currExpInternalTrigger;
 		expSnapshotstrc->currExpExternalTrigger = expFullStruct.parentStruct.currExpExternalTrigger;		
@@ -395,7 +405,14 @@ bool GLWidgetWrapper::getCurrentExperimentProgressSnapshot(ExperimentSnapshotStr
 				
 		if(strcExperimentBlockTrials.nNrOfBlocks > expSnapshotstrc->currExpBlock)
 		{
-			if (strcExperimentBlockTrials.lBlockTrialStructure.at(expSnapshotstrc->currExpBlock).nNrOfTrials > expSnapshotstrc->currExpTrial)
+			if(expSnapshotstrc->currExpTrial == -1)//When the experiment has not jet been fully initialized
+			{
+				if (strcExperimentBlockTrials.lBlockTrialStructure.at(expSnapshotstrc->currExpBlock).nNrOfTrials > 0)//let's try/assume here that we need the first ExpTrial!
+				{
+					expSnapshotstrc->currExpBlockTrialInternalTriggerAmount = strcExperimentBlockTrials.lBlockTrialStructure.at(expSnapshotstrc->currExpBlock).lTrialStructure.at(0).nNrOfInternalTriggers;
+				}
+			}
+			else if (strcExperimentBlockTrials.lBlockTrialStructure.at(expSnapshotstrc->currExpBlock).nNrOfTrials > expSnapshotstrc->currExpTrial) 
 			{
 				expSnapshotstrc->currExpBlockTrialInternalTriggerAmount = strcExperimentBlockTrials.lBlockTrialStructure.at(expSnapshotstrc->currExpBlock).lTrialStructure.at(expSnapshotstrc->currExpTrial).nNrOfInternalTriggers;
 			}
@@ -404,9 +421,31 @@ bool GLWidgetWrapper::getCurrentExperimentProgressSnapshot(ExperimentSnapshotStr
 		{
 			expSnapshotstrc->currExpBlockTrialInternalTriggerAmount = -1;
 		}
-		//elapsedTrialTime = trialTime.elapsed();
+		expSnapshotstrc->elapsedTrialTime = expTrialTimer.getElapsedTimeInMilliSec();
 		mutExpSnapshot.unlock();
 		return true;
+	}
+	return false;
+}
+
+bool GLWidgetWrapper::getCurrentExpBlockTrialInternalTriggerAmount(int &nInternalTriggerAmount)
+{
+	nInternalTriggerAmount = -1;
+	if(strcExperimentBlockTrials.nNrOfBlocks > expFullStruct.parentStruct.currExpBlock)
+	{
+		if(expFullStruct.parentStruct.currExpTrial == -1)//When the experiment has not jet been fully initialized
+		{
+			if (strcExperimentBlockTrials.lBlockTrialStructure.at(expFullStruct.parentStruct.currExpBlock).nNrOfTrials > 0)//let's try/assume here that we need the first ExpTrial!
+			{
+				nInternalTriggerAmount = strcExperimentBlockTrials.lBlockTrialStructure.at(expFullStruct.parentStruct.currExpBlock).lTrialStructure.at(0).nNrOfInternalTriggers;
+				return true;
+			}
+		}
+		else if (strcExperimentBlockTrials.lBlockTrialStructure.at(expFullStruct.parentStruct.currExpBlock).nNrOfTrials > expFullStruct.parentStruct.currExpTrial) 
+		{
+			nInternalTriggerAmount = strcExperimentBlockTrials.lBlockTrialStructure.at(expFullStruct.parentStruct.currExpBlock).lTrialStructure.at(expFullStruct.parentStruct.currExpTrial).nNrOfInternalTriggers;
+			return true;
+		}
 	}
 	return false;
 }
@@ -446,20 +485,33 @@ bool GLWidgetWrapper::getCurrentExperimentProgressSnapshot(ExperimentSnapshotStr
 
 bool GLWidgetWrapper::cleanupExperimentBlockTrialStructure()
 {
-	//for (int i;i<strcExperimentBlockTrials.lBlockTrialStructure.count();i++)
-	//{
-		strcExperimentBlockTrials.lBlockTrialStructure.clear();
-	//}
+	strcExperimentBlockTrials.lBlockTrialStructure.clear();
 	strcExperimentBlockTrials.nNrOfBlocks = 0;
 	return true;
 }
 
-bool GLWidgetWrapper::getExperimentBlockParameters(int nBlockNumber, int nObjectID, QHash<QString, QString> *hParams)
+bool GLWidgetWrapper::getExperimentBlockParameters(int nBlockNumber, int nObjectID, tParsedParameterList *hParams) //QHash<QString, QString> *hParams)
 {
 	if (hParams == NULL)
 		return false;
 	if(hParams->count() == 0)
 		return false;
+
+	ParsedParameterDefinition tmpParDef;
+	QString tmpString;
+
+	//Set all the parameter bHasChanged attributes too false again
+	tParsedParameterList::const_iterator iterPPL = hParams->constBegin();
+	while (iterPPL != hParams->constEnd()) 
+	{
+		tmpParDef = iterPPL.value();
+		tmpString = iterPPL.key();
+		tmpParDef.bHasChanged = false;
+		//cout << iterPPL.key() << ": " << iterPPL.value() << endl;
+		 hParams->insert(tmpString, tmpParDef);
+		++iterPPL;
+	}
+
 	if(pExpBlockTrialDomNodeList == NULL)
 		return false;
 	if (pExpBlockTrialDomNodeList->count() == 0)
@@ -471,7 +523,6 @@ bool GLWidgetWrapper::getExperimentBlockParameters(int nBlockNumber, int nObject
 
 	QDomElement tmpElement;
 	QDomNode tmpNode;
-	QString tmpString;
 
 	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
 	{
@@ -506,12 +557,14 @@ bool GLWidgetWrapper::getExperimentBlockParameters(int nBlockNumber, int nObject
 												if(!tmpElement.isNull())
 												{
 													tmpString = tmpElement.text().toLower();
-													if (hParams->contains(tmpString))//Is the Parameter available in the plugin?
+													if (hParams->contains(tmpString))//Is the Parameter available in the predefined plugin list?
 													{
 														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
 														if(!tmpElement.isNull())
 														{
-															hParams->insert(tmpString,tmpElement.text().toLower());
+															tmpParDef.sValue = tmpElement.text().toLower();
+															tmpParDef.bHasChanged = true;
+															hParams->insert(tmpString,tmpParDef);
 															bResult = true;//To define that at least one parameter was parsed successfully
 														}
 													}
@@ -546,7 +599,7 @@ bool GLWidgetWrapper::getExperimentBlockParameters(int nBlockNumber, int nObject
 	return false;
 }
 
-bool GLWidgetWrapper::getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result)
+bool GLWidgetWrapper::getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef)
 {
 	if(pExpBlockTrialDomNodeList == NULL)
 		return false;
@@ -596,7 +649,8 @@ bool GLWidgetWrapper::getExperimentBlockParameter(int nBlockNumber, int nObjectI
 														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
 														if(!tmpElement.isNull())
 														{
-															Result = tmpElement.text().toLower();
+															pParDef.sValue = tmpElement.text().toLower();
+															pParDef.bHasChanged = true;//If the item is present than it has changed
 															return true;
 														}
 														else
@@ -642,7 +696,7 @@ void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 	stimContainerDlg->setLayout(mainLayout);
 	//if(m_RunFullScreen)
 	//stimContainerDlg->setWindowModality(true);
-		stimContainerDlg->showFullScreen();
+	stimContainerDlg->showFullScreen();
 
 		//stimContainerDlg->raise();
 		//stimContainerDlg->activateWindow();
@@ -689,10 +743,6 @@ bool GLWidgetWrapper::startExperimentObject()
 			}		
 		}
 	}
-	//if (stimContainerDlg->isActiveWindow() == false)
-	//{
-		//stimContainerDlg->activateWindow();
-	//}	
 	return true;
 }
 
@@ -726,7 +776,7 @@ bool GLWidgetWrapper::initExperimentObject()
 	bCurrentSubObjectReadyToUnlock = false;
 	nRefreshRate = 0;
 	dAdditionalRefreshDelayTime = 0.0;
-	insertExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_DISPLAY_REFRESHRATE,QString::number(nRefreshRate));
+	insertExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,QString::number(nRefreshRate));
 	bool bRetVal;
 	if (thisMetaObject)
 	{
@@ -934,7 +984,9 @@ void GLWidgetWrapper::initBlockTrial()
 	if(bDoUnlock)
 		mutExpSnapshot.unlock();
 	getExperimentBlockParameters(tmpExpBlock,nObjectID,ExpBlockParams);//Should be moved to the manager?!
-	nRefreshRate = getExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_DISPLAY_REFRESHRATE,QString::number(nRefreshRate)).toInt();
+	ParsedParameterDefinition pParDef;
+	pParDef = getExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,QString::number(nRefreshRate));
+	nRefreshRate = pParDef.sValue.toInt();
 	bool bRetVal;
 	if (thisMetaObject)
 	{
@@ -948,11 +1000,6 @@ void GLWidgetWrapper::initBlockTrial()
 		}
 	}
 }
-
-//bool GLWidgetWrapper::loadBlockTrial()
-//{
-//	return true;
-//}
 
 bool GLWidgetWrapper::checkForNextBlockTrial()
 {
@@ -1126,7 +1173,6 @@ void GLWidgetWrapper::finalizePaintEvent()
 		dFramePeriodTime = 1000.0f/nRefreshRate; //DisplayRefreshRate
 		dAdditionalRefreshDelayTime = dFramePeriodTime/10.0f;
 		dWaitTime = 0.0f;
-
 		//dCurrentTime = pExpConf->pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);	
 		//while((dCurrentTime)<dFramePeriodTime)//Don't go too fast...//((dCurrentTime+dAdditionalRefreshDelayTime)<dFramePeriodTime)//Don't go too fast...
 		//{
@@ -1137,8 +1183,6 @@ void GLWidgetWrapper::finalizePaintEvent()
 		//	//Sleep(nSTime);
 		//	dCurrentTime = pExpConf->pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);
 		//}
-
-
 		if (bObjectIsLocked == false)
 		{
 			double currentPreSwapTime = pExpConf->pExperimentManager->elapsedExperimentTimerTime(0);
@@ -1184,14 +1228,12 @@ void GLWidgetWrapper::finalizePaintEvent()
 		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","BlockTrial Buffer Swapped, locked=",QString::number(bObjectIsLocked));
 
 	qApp->processEvents(); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
-
 	//QEventLoop loop;
 	//QObject::connect(this, SIGNAL(readyRead()), &loop, SLOT(quit()));
 	//// Execute the event loop here, now we will wait here until readyRead() signal is emitted
 	//// which in turn will trigger event loop quit.
 	//loop.exec();
 	//loop.Execute();
-
 	mutExpSnapshot.lock(); 
 	if (bObjectIsLocked==false)
 	{
@@ -1227,25 +1269,3 @@ void GLWidgetWrapper::finalizePaintEvent()
 		}
 	}
 }
-
-//void GLWidgetWrapper::proceedPaintEventLoop() 
-//{//Should only be called with the use of a signal, not in a paintEvent loop!
-//	if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial
-//	{
-//		if(bForceToStop)
-//		{
-//			changeSubObjectState(Experiment_SubObject_Abort);
-//			return;
-//		}
-//		else if (bExperimentShouldStop)
-//		{
-//			changeSubObjectState(Experiment_SubObject_Stop);
-//			//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
-//			return;
-//		}
-//		else
-//		{
-//			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
-//		}
-//	}
-//}

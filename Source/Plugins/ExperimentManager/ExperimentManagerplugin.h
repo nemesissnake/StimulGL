@@ -31,6 +31,7 @@
 #include "ExperimentManager_dialog.h"
 #include "ExperimentManager.h"
 #include "ImageProcessor.h"
+#include "prtformatmanager.h"
 #include "defines.h"
 
 QT_BEGIN_NAMESPACE

@@ -80,16 +80,19 @@ public slots:
 	QRectF getScreenResolution();
 	int getObjectID();
 	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue);
-	QString getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
+	ParsedParameterDefinition getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 
 protected:
 	bool checkForNextBlockTrial();
-	bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, QString &Result);
-	bool getExperimentBlockParameters(int nBlockNumber, int nObjectID, QHash<QString, QString> *hParams = NULL);
+	bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef);//QString &Result);
+	bool getExperimentBlockParameters(int nBlockNumber, int nObjectID, tParsedParameterList *hParams = NULL);//QHash<QString, QString> *hParams = NULL);
 	void finalizePaintEvent();
 	void setupLayout(QWidget* layoutWidget);	
 	bool isDebugMode();
 	bool getCurrentExperimentProgressSnapshot(ExperimentSnapshotStructure *expSnapshotstrc);
+	//bool getExperimentBlockTrialStructureCopy(ExperimentBlockTrialStructure &expBlockTrialStructure);
+	bool getCurrentExpBlockTrialInternalTriggerAmount(int &nInternalTriggerAmount);
+	int getCurrentStimuliRefreshRate() {return nRefreshRate;};
 	//int getElapsedFrameTime();
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
 
@@ -130,7 +133,7 @@ private:
 	QMutex mutRecursivePaint;
 	ExperimentSnapshotFullStructure expFullStruct;
 	//int nBlockTrialFrameCounter;
-	int nCurrentExperimentReceivedExternalTriggers;		//The current experiment number of external triggers recieved since it started, local use!
+	int nCurrentExperimentReceivedExternalTriggers;		//The current experiment number of external triggers received since it started, local use!
 	int nCurrentExperimentProcessedExternalTriggers;	//The current experiment processed external triggers, local use!
 	int nCurrentExperimentLastProcExternalTriggers;		//The current experiment last processed external trigger, local use!
 	int nCurrentExperimentReceivedInternalTriggers;		//The current experiment number of internal triggers incremented since it started, local use!
@@ -158,7 +161,8 @@ private:
 	ExperimentSubObjectStateHistory subObjectStateHistory;
 	int nFrameTimerIndex;
 	int nTrialTimerIndex;
-	QHash<QString, QString> *ExpBlockParams;
+	//QHash<QString, QString> *ExpBlockParams;
+	tParsedParameterList *ExpBlockParams;
 	ExperimentConfiguration *pExpConf;
 	ExperimentTimer expTrialTimer;
 	const QMetaObject* thisMetaObject;

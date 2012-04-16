@@ -31,7 +31,6 @@ Attributes only apply to readonly non user data, like the ID
                 <param1/>
             </constructor>
         </object> 
-    </declarations>
 
         <object ID="2">
             <class>ParallelPort</class>
@@ -40,9 +39,10 @@ Attributes only apply to readonly non user data, like the ID
                 <param1/>
             </constructor>
         </object> 
-    
-    <connections>
 
+    </declarations>	
+    <connections>
+   
         <object ID="0">
         	<type>signal</type>
         	<signature>timeout()</signature>
@@ -51,8 +51,7 @@ Attributes only apply to readonly non user data, like the ID
           	<signature>incrementExternalTrigger()</signature>      
           </target>
         </object>
-    </connections>
-    
+ 
         <object ID="2">
         	<type>signal</type>
         	<signature>CaptureThreadTriggered(short)</signature>
@@ -61,6 +60,8 @@ Attributes only apply to readonly non user data, like the ID
           	<signature>incrementExternalTrigger()</signature>      
           </target>
         </object>    
+
+	</connections>
     
     <initializations>       
    
@@ -102,7 +103,7 @@ Attributes only apply to readonly non user data, like the ID
         	<parameters>
 		      	<parameter ID="0">
 		        	<name>msec</name>
-		        	<value>200</value>
+		        	<value>1000</value>
 		        	<type>double</type>
 		        </parameter>  	
         	</parameters>
@@ -117,7 +118,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_internal_triggers>8</nr_of_internal_triggers>
+	        <nr_of_internal_triggers>2</nr_of_internal_triggers>
 	        <nr_of_external_triggers>1</nr_of_external_triggers>	 
 	        <object ID="1">
 	        	<parameters>
@@ -130,8 +131,8 @@ Attributes only apply to readonly non user data, like the ID
 			        	<value>true</value>
 			        </parameter>
 			        <parameter ID="2">
-			        	<name>TriggerDuration</name>
-			        	<value>2000</value>
+			        	<name>InternalTriggerDuration</name>
+			        	<value>1000</value>
 			        </parameter>
 			        <parameter ID="3">
 			        	<name>OutputTriggerFrame</name>
@@ -162,26 +163,22 @@ Attributes only apply to readonly non user data, like the ID
 			        	<value>8</value>
 			        </parameter>	
 			        <parameter ID="11">
-			        	<name>CycleTriggerAmount</name>
-			        	<value>1</value>
-			        </parameter>	
-			        <parameter ID="12">
-			        	<name>DisplayRefreshRate</name>
+			        	<name>StimuliRefreshRate</name>
 			        	<value>30</value>
 			        </parameter>
-			        <parameter ID="13">
+			        <parameter ID="12">
 			        	<name>BackGroundColor</name>
 			        	<value>#575757</value>
 			        </parameter>
-				        <parameter ID="14">
+				        <parameter ID="13">
 			        	<name>FixationColor</name>
 			        	<value>#FF0000</value>
 			        </parameter>
-				        <parameter ID="15">
+				        <parameter ID="14">
 			        	<name>CheckerColor1</name>
 			        	<value>#FFFFFF</value>
 			        </parameter>
-				        <parameter ID="16">
+				        <parameter ID="15">
 			        	<name>CheckerColor2</name>
 			        	<value>#000000</value>
 			        </parameter>			
@@ -193,7 +190,7 @@ Attributes only apply to readonly non user data, like the ID
 	        <name>MovingDots_Block</name>
 	        <block_number>1</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_internal_triggers>36</nr_of_internal_triggers>
+	        <nr_of_internal_triggers>25</nr_of_internal_triggers>
 	        <nr_of_external_triggers>1</nr_of_external_triggers>
 	        <object ID="1">
 	        	<parameters>
@@ -204,11 +201,7 @@ Attributes only apply to readonly non user data, like the ID
 			        <parameter ID="1">
 			        	<name>GapDiameter</name>
 			        	<value>0</value>
-			        </parameter>			        		               	
-			        <parameter ID="2">
-			        	<name>CycleTriggerAmount</name>
-			        	<value>12</value>
-			        </parameter>
+			        </parameter>	
 			        <parameter ID="3">
 			        	<name>RetinoPattern</name>
 			        	<value>MovingDots</value>
@@ -223,7 +216,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>			        
 			        <parameter ID="6">
 			        	<name>MovingDotsNrOfDots</name>
-			        	<value>350</value>
+			        	<value>10</value>
 			        </parameter>
 			        <parameter ID="7">
 			        	<name>MovingDotsDotSize</name>
@@ -246,20 +239,20 @@ Attributes only apply to readonly non user data, like the ID
 			        	<value>#FFFFFF</value>
 			        </parameter>			        
 			        <parameter ID="12">
-			        	<name>MovingDotsFieldWidth</name>
-			        	<value>768</value>
+			        	<name>MovingDotsHemiFieldWidth</name>
+			        	<value>384</value>
 			        </parameter>
 			        <parameter ID="13">
-			        	<name>MovingDotsFieldHeight</name>
+			        	<name>MovingDotsHemiFieldHeight</name>
 			        	<value>768</value>
 			        </parameter>
 			        <parameter ID="14">
 			        	<name>MovingDotsMinMoveAngle</name>
-			        	<value>45</value>
+			        	<value>0</value>
 			        </parameter>
 			        <parameter ID="15">
 			        	<name>MovingDotsMaxMoveAngle</name>
-			        	<value>45</value>
+			        	<value>0</value>
 			        </parameter>			        
 
 <!--			       

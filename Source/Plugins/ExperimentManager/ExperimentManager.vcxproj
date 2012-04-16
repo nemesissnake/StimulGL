@@ -305,13 +305,13 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -373,6 +373,13 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_metaextensions.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_prtformatmanager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -463,6 +470,13 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_prtformatmanager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_RandomGenerator.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -541,6 +555,13 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_metaextensions.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_prtformatmanager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -631,6 +652,13 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_prtformatmanager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_RandomGenerator.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -709,6 +737,13 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_metaextensions.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_prtformatmanager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -799,6 +834,13 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_prtformatmanager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_RandomGenerator.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -829,6 +871,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     <ClCompile Include="GLWidgetWrapper.cpp" />
     <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="metaextensions.cpp" />
+    <ClCompile Include="prtformatmanager.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="retinomap_glwidget.cpp" />
     <ClCompile Include="StdAfx.cpp" />
@@ -859,8 +902,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing experimentlogger.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="ExperimentManager.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ExperimentManager.h...</Message>
@@ -885,8 +928,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing ExperimentManager.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="ExperimentManager_dialog.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ExperimentManager_dialog.h...</Message>
@@ -911,8 +954,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing ExperimentManager_dialog.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="ExperimentManagerplugin.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ExperimentManagerplugin.h...</Message>
@@ -937,8 +980,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing ExperimentManagerplugin.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="ExperimentTimer.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ExperimentTimer.h...</Message>
@@ -963,8 +1006,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing ExperimentTimer.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="ExperimentTree.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ExperimentTree.h...</Message>
@@ -989,8 +1032,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing ExperimentTree.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <ClInclude Include="..\..\StimulGL\plugininterface.h" />
     <ClInclude Include="defines.h" />
@@ -1018,8 +1061,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing GLWidgetWrapper.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="ImageProcessor.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ImageProcessor.h...</Message>
@@ -1044,8 +1087,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing ImageProcessor.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="metaextensions.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing metaextensions.h...</Message>
@@ -1070,8 +1113,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing metaextensions.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="RandomGenerator.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing RandomGenerator.h...</Message>
@@ -1096,8 +1139,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing RandomGenerator.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <CustomBuild Include="retinomap_glwidget.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing retinomap_glwidget.h...</Message>
@@ -1122,8 +1165,34 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing retinomap_glwidget.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+    </CustomBuild>
+    <CustomBuild Include="prtformatmanager.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing prtformatmanager.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_PLUGIN -DQT_STATICPLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB -DQT_OPENGL_LIB "-I." "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtScriptTools" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtXml" "-I.\debug" "-I$(SolutionDir)\StimulGL" "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing prtformatmanager.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_PLUGIN -DQT_STATICPLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB "-I." "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtScriptTools" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtXml" "-I.\debug" "-I$(SolutionDir)\StimulGL" "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing prtformatmanager.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_PLUGIN -DQT_STATICPLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB "-I." "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtScriptTools" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtXml" "-I.\debug" "-I$(SolutionDir)\StimulGL" "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing prtformatmanager.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_PLUGIN -DQT_STATICPLUGIN -DQT_GUI_LIB -DQT_CORE_LIB -DQT_THREAD_SUPPORT -DQT_SCRIPT_LIB -DQT_SCRIPTTOOLS_LIB "-I." "-I$(QTDIR)\include\QtScript" "-I$(QTDIR)\include\QtScriptTools" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtOpenGL" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtXml" "-I.\debug" "-I$(SolutionDir)\StimulGL" "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I."</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">Moc%27ing prtformatmanager.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing prtformatmanager.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
@@ -1150,8 +1219,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Template|x64'">Moc%27ing stimulglgraphscene.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|x64'">.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

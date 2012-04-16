@@ -49,6 +49,12 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<ImageProcessor*>(), ImageProcessorProto);
 	QScriptValue ImageProcessorCtor = engine.newFunction(ImageProcessor::ctor__imageProcessor, ImageProcessorProto);
 	engine.globalObject().setProperty(IMAGEPROCESSOR_NAME, ImageProcessorCtor);
+
+	PrtFormatManager PrtFormatManagerObject;//or use new(), but make sure to use delete afterwards!
+	QScriptValue PrtFormatManagerProto = engine.newQObject(&PrtFormatManagerObject);
+	engine.setDefaultPrototype(qMetaTypeId<PrtFormatManager*>(), PrtFormatManagerProto);
+	QScriptValue PrtFormatManagerCtor = engine.newFunction(PrtFormatManager::ctor__PrtFormatManager, PrtFormatManagerProto);
+	engine.globalObject().setProperty(PRTFORMATMANAGER_NAME, PrtFormatManagerCtor);
 	return true;
 }
 

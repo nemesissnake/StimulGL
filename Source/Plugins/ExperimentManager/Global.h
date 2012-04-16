@@ -72,17 +72,6 @@ struct EXML_DocVersion //Structure to hold the version information
 	int build;
 };
 
-//typedef struct{
-//	QString sSignature;
-//	QList<QGenericArgument> lInputParameters;
-//} SlotDefinition;
-//
-//typedef struct{
-//	QString sName;
-//	int nMetaType;
-//
-//} ParameterDefinition;
-
 typedef struct{
 	int nExperimentID;
 	//int nExperimentNumber;
@@ -138,7 +127,19 @@ typedef struct{
 	int nNextThresholdTriggerCount;				//When we should switch to the next block
 } ExperimentSnapshotFullStructure;
 
-//typedef QHash<QString, QString> ExperimentBlockParameterStructure;
+typedef struct strcPPD
+{
+	strcPPD()
+	{
+		sValue = "<undefined>";
+		bHasChanged = true;
+	}
+	QString sValue;
+	bool bHasChanged;
+} ParsedParameterDefinition;
+
+typedef QHash<QString, ParsedParameterDefinition> tParsedParameterList;
+
 #define FUNC_PAINTOBJECT						"paintObject"
 #define FUNC_PAINTOBJECT_FULL					FUNC_PAINTOBJECT "(int,QObject *)"
 #define FUNC_SETOBJECTID						"setObjectID"
@@ -171,6 +172,7 @@ typedef struct{
 #define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
 #define TRIGGERTIMER_NAME						"TriggerTimer"
 #define IMAGEPROCESSOR_NAME						"ImageProcessor"
+#define PRTFORMATMANAGER_NAME					"PRTFormatManager"
 #define EXPERIMENTMANAGER_NAME					"ExperimentManager"
 #define MODULE_NAME								"Experiment Parser"
 #define MAX_INVOKE_ARG_COUNT					10

@@ -310,6 +310,27 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_experimentlogger.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
+    <ClCompile Include="prtformatmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_prtformatmanager.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_prtformatmanager.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_prtformatmanager.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_prtformatmanager.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_prtformatmanager.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_prtformatmanager.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -370,6 +391,9 @@
     </CustomBuild>
     <CustomBuild Include="ExperimentManager_dialog.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="prtformatmanager.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

@@ -130,7 +130,7 @@ Attributes only apply to readonly non user data, like the ID
 			        	<value>true</value>
 			        </parameter>
 			        <parameter ID="2">
-			        	<name>TriggerDuration</name>
+			        	<name>InternalTriggerDuration</name>
 			        	<value>200</value>
 			        </parameter>
 			        <parameter ID="3">
@@ -166,7 +166,7 @@ Attributes only apply to readonly non user data, like the ID
 			        	<value>1</value>
 			        </parameter>	
 			        <parameter ID="12">
-			        	<name>DisplayRefreshRate</name>
+			        	<name>StimuliRefreshRate</name>
 			        	<value>30</value>
 			        </parameter>			        
 			    	</parameters>    

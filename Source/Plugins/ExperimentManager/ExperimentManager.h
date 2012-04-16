@@ -60,17 +60,16 @@ public:
 		QObject *pObject;
 		QString sObjectName;
 		ExperimentSubObjectState nCurrentState;
-		QHash<QString, QString> *ExpBlockParams;
+		tParsedParameterList *ExpBlockParams;
 		//objectStateHistory sStateHistory;
 	} objectElement;
 
 	static QScriptValue ctor__experimentManager(QScriptContext* context, QScriptEngine* engine);
 	bool cleanupExperiment();
-	QHash<QString, QString> *getObjectBlockParamListById(int nID);
+	tParsedParameterList *getObjectBlockParamListById(int nID);
 
 public slots:
 	//void Test();
-
 	void changeToOpenGLView(QGraphicsView *GraphView);
 	bool setExperimentFileName(const QString qstrExpFileName);
 	QString getExperimentFileName();
@@ -84,15 +83,13 @@ public slots:
 	bool setDebugMode(const bool bDebugMode);
 	QString getCurrentDateTimeStamp();
 	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue);
-	bool getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString &sValue);
-	bool setExperimentObjectBlockParameterStructure(const int nObjectID, QHash<QString, QString> *expBlockTrialStruct);
-	
+	bool getExperimentObjectBlockParameter(const int nObjectID,const QString sName, ParsedParameterDefinition &strcParDef);
+	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);	
 	bool logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction = "", const QString &strTag = "", const QString &strMessage = "", const QString &strValue = "");
 	int createExperimentTimer();
 	bool startExperimentTimer(int nIndex);
 	double restartExperimentTimer(int nIndex);
 	double elapsedExperimentTimerTime(int nIndex);
-	//void deleteObject();
 
 private:
 	bool WriteAndCloseExperimentOutputData();
@@ -113,9 +110,6 @@ private:
 	void changeCurrentExperimentState(ExperimentState expCurrState);
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrentExperimentState() {return experimentCurrentState;}
-	//bool getGenericArgument(QString strMetaType,QString strValue, QGenericArgument &genArg);
-	//QGenericArgument getGenericArgument(QString *strMetaType,QString *strValue, bool &bSucceeded);
-
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	QList<objectElement> lExperimentObjectList;
@@ -131,8 +125,6 @@ private:
 
 	ExperimentLogger *expDataLogger;
 	int nExperimentTimerIndex;
-	//RandomGenerator *rndGen;
-	//int rndCounter;
 };
 
 class SleeperThread : public QThread
@@ -143,20 +135,5 @@ public:
 		QThread::msleep(msecs);
 	}
 };
-
-//class ThreadedContainerDlg : public QDialog
-//{
-//	Q_OBJECT
-//
-//public:
-//	ThreadedContainerDlg(QWidget *parent = NULL);
-//	ThreadedContainerDlg::~ThreadedContainerDlg();
-//
-//	private slots:
-//		void reject();
-//
-//protected:
-//	void closeEvent(QCloseEvent *e);
-//};
 
 #endif // ExperimentManager_H
