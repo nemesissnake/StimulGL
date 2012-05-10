@@ -320,4 +320,82 @@ bool PrtFormatManager::setConditionColor(const int nConditionIndex, const QStrin
 	return false;
 }
 
+QString PrtFormatManager::getRGBPaletteColorString(const int nSteps, const int nIndex)
+{//Returns a color ("R G B" string) from the palette by dividing it in nSteps and returning the color at nIndex (0-based)
+	QString sRetVal = "0 0 0";
+	QColor tmpColor;
+
+	if (nIndex < nSteps)
+	{
+		tmpColor.setHsv((int)((360.0/nSteps) * nIndex),255,255,255);
+		sRetVal = QString::number(tmpColor.red()) + " " + QString::number(tmpColor.green()) + " " + QString::number(tmpColor.blue());
+	}
+	return sRetVal;
+}
+
+bool PrtFormatManager::SortandMergeAllConditionIntervals()
+{
+	if (m_PRTConditions.isEmpty() == false)
+	{
+		int nLastIndexZeroBasedPosition;
+		int nTmpBegin;
+		int nTmpEnd;
+		int nStartSearchIndex;
+		int i,j;
+		QString tmpIntervals;
+		bool bExitLoop;
+
+		for (i=0;i<m_PRTConditions.count();i++)
+		{
+			nLastIndexZeroBasedPosition = -1;
+			nStartSearchIndex = 0;
+			tmpIntervals = "";
+			if (m_PRTConditions.at(i).Intervals.isEmpty()== false)
+			{
+				for (j=0;j<m_PRTConditions.at(i).Intervals.count();j++)
+				{
+					nTmpBegin = m_PRTConditions.at(i).Intervals.at(j).nBegin;
+					nTmpEnd = m_PRTConditions.at(i).Intervals.at(j).nEnd;
+					if (nTmpEnd >= nTmpBegin)
+					{
+						if((nTmpEnd-1) > nLastIndexZeroBasedPosition)//Should the temp string grow?
+						{
+							nLastIndexZeroBasedPosition = (nTmpEnd-1);
+							tmpIntervals = tmpIntervals.leftJustified(nLastIndexZeroBasedPosition+1,'0');
+						}
+						tmpIntervals.replace(nTmpBegin-1,nTmpEnd+1-nTmpBegin,QString(nTmpEnd+1-nTmpBegin,'1'));
+					}
+				}
+
+				//Clear the Intervals..
+				m_PRTConditions[i].Intervals.clear();
+				
+				if (tmpIntervals != "")
+				{
+					bExitLoop = false;
+					//Fill the Intervals again but now with the correct optimized blocks
+					do 
+					{
+						nTmpBegin = tmpIntervals.indexOf('1',nStartSearchIndex);
+						if (nTmpBegin >= 0)
+						{
+							nStartSearchIndex = nTmpBegin;
+							nTmpEnd = tmpIntervals.indexOf('0',nStartSearchIndex)-1;
+							if (nTmpEnd < 0)
+							{
+								nTmpEnd = tmpIntervals.size()-1;
+								bExitLoop = true;
+							}
+							nStartSearchIndex = nTmpEnd+1;
+							appendInterval(i,nTmpBegin+1,nTmpEnd+1);
+						}
+					} 
+					while ((nTmpBegin>=0) && (bExitLoop==false));
+				}
+			}
+		}
+	}
+	return true;
+}
+
 

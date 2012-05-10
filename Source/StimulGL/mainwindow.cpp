@@ -925,15 +925,19 @@ void MainWindow::setupDynamicPluginMenus()
 					}
 					else
 					{
-						qDebug() << "setupDynamicPluginMenus(), The Dynamic Plugin is incompatible(" << metaObject->className() << ")!";
+						qDebug() << __FUNCTION__ << "::The Dynamic Plugin is incompatible(" << metaObject->className() << ")!";
 					}
 				}
 				else
 				{
-					qDebug() << "setupDynamicPluginMenus(), Could not invoke the Dynamic Plugin slot(" << QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL) << ")!";	
+					qDebug() << __FUNCTION__ << "::Could not invoke the Dynamic Plugin slot(" << QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL) << ")!";	
 				}
 				metaObject = NULL;
 				bRetVal = false;
+			}
+			else
+			{
+				qDebug() << __FUNCTION__ << "::Could not load the Dynamic Plugin (" << fileName << ")!";
 			}
 		}
 	}

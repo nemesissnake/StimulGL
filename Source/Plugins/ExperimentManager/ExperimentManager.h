@@ -16,7 +16,6 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 //This file defines the script binding interface, all below function are scriptable except for the destructor
 
 #ifndef ExperimentManager_H
@@ -42,17 +41,41 @@
 class RetinoMap_glwidget;
 class ExperimentTree;
 
+//!  The Experiment Manager class. 
+/*!
+  The Experiment Manager can be used configure, open and execute experiment (*.exml) files.
+*/
 class ExperimentManager : public QObject, protected QScriptable
 {
 	Q_OBJECT
 
 signals:
-	void ExperimentStateHasChanged(int nExperimentMainState, QString timeTextStamp);//Should be type of ExperimentMainState
+	//! The ExperimentStateHasChanged Signal.
+	/*!
+		You can use this Signal to keep track of the internal Experiment state changes.
+		Parameter nExperimentMainState is type of the enum #ExperimentState.
+	*/
+	void ExperimentStateHasChanged(int nExperimentMainState, QString timeTextStamp);
+	//! The WriteToLogOutput Signal.
+	/*!
+		You can use this signal to let the ExperimentManager write something to the StimulGL log window.
+	*/
 	void WriteToLogOutput(const QString &strText2Write);
 
 public:
 	ExperimentManager(QObject *parent = NULL);
 	~ExperimentManager();
+
+	/*! The enum ExperimentState represents the main state of the ExperimentManager object */
+	enum ExperimentState 
+	{
+		Experiment_Constructed	= 0, /*!< enum value 0 */
+		Experiment_Initialized	= 1, /*!< enum value 1 */
+		Experiment_IsStarting	= 2, /*!< enum value 2 */
+		Experiment_Started      = 3, /*!< enum value 3 */
+		Experiment_IsStopping	= 4, /*!< enum value 4 */
+		Experiment_Stopped      = 5  /*!< enum value 5 */
+	};
 
 	typedef struct{
 		int nObjectID;
@@ -61,16 +84,14 @@ public:
 		QString sObjectName;
 		ExperimentSubObjectState nCurrentState;
 		tParsedParameterList *ExpBlockParams;
-		//objectStateHistory sStateHistory;
 	} objectElement;
-
+	
 	static QScriptValue ctor__experimentManager(QScriptContext* context, QScriptEngine* engine);
 	bool cleanupExperiment();
 	tParsedParameterList *getObjectBlockParamListById(int nID);
+	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);
 
 public slots:
-	//void Test();
-	void changeToOpenGLView(QGraphicsView *GraphView);
 	bool setExperimentFileName(const QString qstrExpFileName);
 	QString getExperimentFileName();
 	bool loadExperiment(QString strFile = "", bool bViewEditTree = true);
@@ -79,12 +100,9 @@ public slots:
 	void abortExperiment();
 	void stopExperiment();
 	void changeExperimentSubObjectState(ExperimentSubObjectState nState);
-	bool setFullScreenMode(const bool bFullScreen);
-	bool setDebugMode(const bool bDebugMode);
 	QString getCurrentDateTimeStamp();
-	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue);
+	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue, bool bIsInitializing = true);
 	bool getExperimentObjectBlockParameter(const int nObjectID,const QString sName, ParsedParameterDefinition &strcParDef);
-	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);	
 	bool logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction = "", const QString &strTag = "", const QString &strMessage = "", const QString &strValue = "");
 	int createExperimentTimer();
 	bool startExperimentTimer(int nIndex);
@@ -114,7 +132,6 @@ private:
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	QList<objectElement> lExperimentObjectList;
 
-//	short m_ExampleProperty;
 	ExperimentState experimentCurrentState;
 	bool m_RunFullScreen;
 	bool m_DebugMode;
@@ -122,18 +139,8 @@ private:
 	QString m_ExpFolder;
 	ExperimentTree *currentExperimentTree;	
 	ExperimentConfiguration strcExperimentConfiguration;
-
 	ExperimentLogger *expDataLogger;
 	int nExperimentTimerIndex;
-};
-
-class SleeperThread : public QThread
-{
-public:
-	static void msleep(unsigned long msecs)
-	{
-		QThread::msleep(msecs);
-	}
 };
 
 #endif // ExperimentManager_H

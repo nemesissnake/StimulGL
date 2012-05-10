@@ -36,6 +36,13 @@ QScriptValue USBHIDDevice::ctor__extensionname(QScriptContext* context, QScriptE
 	return engine->newQObject(new USBHIDDevice(0x181b, 0x4002), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 
+/*! \brief The USBHIDDevice constructor.
+*
+*   The vendor_id should be set to the Vendor ID of the USB HID Device,
+*   the product_id should be set to the Product ID of the USB HID Device.
+*   You do not need to specify the parent object, 
+*	the StimulGL script engine automatically retrieves the parent role
+*/
 USBHIDDevice::USBHIDDevice(unsigned short vendor_id, unsigned short product_id, QObject *parent) : QObject(parent)
 {
 	m_bActivateJoystickTrigger = false;
@@ -45,7 +52,7 @@ USBHIDDevice::USBHIDDevice(unsigned short vendor_id, unsigned short product_id, 
 	m_bActivateMouseLButtonEmu = false;
 	m_bActivateMouseRButtonEmu = false;
 	m_cButtonMask = 255;
-    m_sButtonDetectDetectionMethod = HIDCaptureThread::MaskedValueChanged;
+    m_sButtonDetectCaptureMethod = USBHIDDeviceNameSpace::MaskedValueChanged;
 	m_VendorId = vendor_id;
 	m_ProductId = product_id;
 	m_bWriteToFile = false;
@@ -62,6 +69,11 @@ USBHIDDevice::USBHIDDevice(unsigned short vendor_id, unsigned short product_id, 
 	ResetCalibrationData();
 }
 
+/*! \brief The USBHIDDevice destructor.
+*
+*   You do not need call the destructor. 
+*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+*/
 USBHIDDevice::~USBHIDDevice()
 {
 	StopCaptureThread();
@@ -74,16 +86,19 @@ USBHIDDevice::~USBHIDDevice()
 
 void USBHIDDevice::SetVendorID(unsigned short vendor_id)
 {
+	/*! Sets the Vendor ID for the USB HID Device. */
 	m_VendorId = vendor_id;
 }
 
 void USBHIDDevice::SetProductID(unsigned short product_id)
 {
+	/*! Sets the Product ID for the USB HID Device. */
 	m_ProductId = product_id;
 }
 
 void USBHIDDevice::ResetCalibrationData()
 {
+	/*! Resets the internal calibration data for the current USB HID Device. */
 	m_CalData.Xmin = 255 * RESSCALEFACTOR;
 	m_CalData.Xmax = 0;
 	m_CalData.Ymin = 255 * RESSCALEFACTOR;
@@ -94,26 +109,30 @@ void USBHIDDevice::ResetCalibrationData()
 	m_CalData.YRelScaleFactor = 0.0f;
 }
 
-void USBHIDDevice::SetCalibrationData(const strcCalibrationData &CalData)
+void USBHIDDevice::SetCalibrationData(const USBHIDDeviceNameSpace::strcCalibrationData &CalData)
 {
 	m_CalData = CalData;
 }
 
-void USBHIDDevice::setExampleProperty( short sExampleProperty )
-{
-	m_ExampleProperty = sExampleProperty;
-	//emit ExampleSignalTriggered(m_ExampleProperty);//Signal that the value has been changed
-}
-
-short USBHIDDevice::getExampleProperty() const
-{
-	return m_ExampleProperty;
-}
+//void USBHIDDevice::setExampleProperty( short sExampleProperty )
+//{
+//	m_ExampleProperty = sExampleProperty;
+//	//emit ExampleSignalTriggered(m_ExampleProperty);//Signal that the value has been changed
+//}
+//
+//short USBHIDDevice::getExampleProperty() const
+//{
+//	return m_ExampleProperty;
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool USBHIDDevice::Calibrate()
 {
+	/*! 
+	* Starts a Calibration wizard for an easy calibration for the current USB HID Device. 
+	* Returns true if the calibration was successful and accepted by the user.
+	*/
 	int nResult;
 	bool bRetVal = false;
 
@@ -135,14 +154,28 @@ bool USBHIDDevice::Calibrate()
 	return bRetVal;
 }
 
-void USBHIDDevice::ConfigureHIDTriggers(bool bActivateJoystickTrigger, bool bActivateButtonTriggers, unsigned char cButtonMask, short sButtonDetectDetectionMethod)
+//! For configuring the current HID Device Joystick Triggers for the capture thread.
+/*!
+    \param bActivateJoystickTrigger determines whether the Joysticks position changes should be used/captured during a capture thread.
+	\param bActivateButtonTriggers determines whether the Joysticks button changes should be used/captured during a capture thread.
+	\param cButtonMask a bit-mask pattern (one byte) representing which bits(buttons) should be taken into account during the capture thread.
+	\param sButtonDetectCaptureMethod the capture detection method to use(see the #USBHIDDeviceNameSpace::CaptureMethod).
+*/
+void USBHIDDevice::ConfigureHIDTriggers(bool bActivateJoystickTrigger, bool bActivateButtonTriggers, unsigned char cButtonMask, short sButtonDetectCaptureMethod)
 {
 	m_bActivateJoystickTrigger = bActivateJoystickTrigger;
 	m_bActivateButtonTriggers = bActivateButtonTriggers;
 	m_cButtonMask = cButtonMask;
-	m_sButtonDetectDetectionMethod = sButtonDetectDetectionMethod;
+	m_sButtonDetectCaptureMethod = sButtonDetectCaptureMethod;
 }
 
+//! For configuring the current HID Device Joystick Position Filtering for the capture thread.
+/*!
+    \param bActivateJoystickStabilisation whether the Joystick Stabilizing filter should be enabled during a capture thread.
+	\param nJoystickStabilisationThreshold the threshold for the Joystick Stabilizing filter during a capture thread.
+	\param bActivateJoystickHistory whether the Joystick History (LowPass) filter should be enabled during a capture thread.
+	\param nJoystickHistorySize the size for the Joystick History (LowPass) filter during a capture thread.
+*/
 void USBHIDDevice::ConfigureHIDFiltering(bool bActivateJoystickStabilisation, int nJoystickStabilisationThreshold, bool bActivateJoystickHistory, int nJoystickHistorySize)
 {
 	m_bActivateJoystickStabilisation = bActivateJoystickStabilisation;
@@ -151,6 +184,13 @@ void USBHIDDevice::ConfigureHIDFiltering(bool bActivateJoystickStabilisation, in
 	m_nJoystickHistorySize = nJoystickHistorySize;
 }
 
+//! For configuring the Mouse Emulation feature of the current HID Device Joystick during a capture thread.
+/*!
+    \param bEnable whether the Mouse Emulation should be enabled (or disabled) for the capture thread.
+	\param bFullScreenMode whether the Mouse Emulation should be performed in Full Screen Mode (or not) for the capture thread.
+	\param bEnableLeftMouse whether the Left Mouse button should be emulated during the Mouse Emulation of capture thread.
+	\param bEnableRightMouse whether the Right Mouse button should be emulated during the Mouse Emulation of capture thread.
+*/
 void USBHIDDevice::EmulateHIDMouse(bool bEnable, bool bFullScreenMode, bool bEnableLeftMouse, bool bEnableRightMouse)
 {
 	//Get The screen resolution
@@ -274,6 +314,13 @@ void USBHIDDevice::UpdateHIDMouseEmuButtons(unsigned char ButtonByteValue,unsign
 	MouseEmuMutex.unlock();
 }
 
+//! For configuring the logging of the captured data.
+/*!
+    \param bWriteToFile whether the captured data should be written to a file (or not) during the capture thread.
+	\param qsFileName the file-name of the file where the captured data is written to during the capture thread.
+	\param bWriteHeaderInfo whether a header (first line in file) before the captured data should be written to a file (or not) during the capture thread.
+	\param bWriteCalibratedData whether the calibrated (or raw) captured data should be written to a file during the capture thread.
+*/
 void USBHIDDevice::WriteCapturedDataToFile(bool bWriteToFile, QString qsFileName, bool bWriteHeaderInfo, bool bWriteCalibratedData)
 {
 	m_bWriteToFile = bWriteToFile;
@@ -283,15 +330,21 @@ void USBHIDDevice::WriteCapturedDataToFile(bool bWriteToFile, QString qsFileName
 		m_qsFileName = qsFileName;
 }
 
+//! For starting a new USBHIDDevice Capture thread, only one instance can be active at the same moment.
+/*!
+    \param bIsCalibrationThread whether the internal calibration data should be automatically updated (or not) if needed.
+	\return Whether the capture thread could be successfully started.
+	\sa StopCaptureThread()
+*/
 bool USBHIDDevice::StartCaptureThread(bool bIsCalibrationThread)
 {
-	HIDCaptureThread::DetectionMethod CapDecMethod;
-	if (m_sButtonDetectDetectionMethod == 0) 
-    {CapDecMethod = HIDCaptureThread::MaskedValueChanged;}
-	else if (m_sButtonDetectDetectionMethod == 1) 
-    {CapDecMethod = HIDCaptureThread::MaskedValueChangedHigh;}
+	USBHIDDeviceNameSpace::CaptureMethod CapDecMethod;
+	if (m_sButtonDetectCaptureMethod == 0) 
+    {CapDecMethod = USBHIDDeviceNameSpace::MaskedValueChanged;}
+	else if (m_sButtonDetectCaptureMethod == 1) 
+    {CapDecMethod = USBHIDDeviceNameSpace::MaskedValueChangedHigh;}
 	else 
-    {CapDecMethod = HIDCaptureThread::MaskedValueChangedLow;}
+    {CapDecMethod = USBHIDDeviceNameSpace::MaskedValueChangedLow;}
 	if (HIDCapThread)
 	{
 		delete HIDCapThread;
@@ -320,6 +373,7 @@ bool USBHIDDevice::StartCaptureThread(bool bIsCalibrationThread)
 
 void USBHIDDevice::StopCaptureThread(bool bWasCalibrationThread)
 {
+	/*! Stops the Capture Thread(if started), see #StartCaptureThread. */
 	if(HIDCapThread)
 	{
 		HIDCapThread->stop();

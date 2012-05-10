@@ -31,7 +31,7 @@ USBHIDDevice_Dialog::USBHIDDevice_Dialog(QWidget *parent) : QDialog(parent)
 	ResetCurrentCalibration();
 	ui.pushButton_Calibrate->setPalette(Qt::red);
 	ui.pushButton_Calibrate->setEnabled(true);
-	ChangeCurrentState(NotInitialized);
+	ChangeCurrentState(USBHIDDeviceNameSpace::NotInitialized);
 	UI_USBHIDDeviceObject = NULL;
 	connect(ui.checkBox_EnableFilter, SIGNAL(clicked()), this, SLOT(checkBox_EnableFilter_Pressed()));
 	connect(ui.checkBox_ToLog, SIGNAL(clicked()), this, SLOT(checkBox_ToLog_Pressed()));
@@ -84,7 +84,7 @@ void USBHIDDevice_Dialog::on_okButton_clicked()
 {
 	bDoAccept = true;
 	StopCapture();
-	if (m_CurrentState == ReadyToCapture || m_CurrentState == NotInitialized)
+	if (m_CurrentState == USBHIDDeviceNameSpace::ReadyToCapture || m_CurrentState == USBHIDDeviceNameSpace::NotInitialized)
 	{
 		bDoAccept = false;
 		accept();
@@ -95,7 +95,7 @@ void USBHIDDevice_Dialog::on_cancelButton_clicked()
 {
 	bDoReject = true;
 	StopCapture();
-	if (m_CurrentState == ReadyToCapture || m_CurrentState == NotInitialized)
+	if (m_CurrentState == USBHIDDeviceNameSpace::ReadyToCapture || m_CurrentState == USBHIDDeviceNameSpace::NotInitialized)
 	{
 		bDoReject = false;
 		reject();
@@ -130,11 +130,11 @@ void USBHIDDevice_Dialog::keyPressEvent(QKeyEvent *event)
 	event->ignore();
 }
 
-void USBHIDDevice_Dialog::ChangeCurrentState(HIDDevDialogState currState)
+void USBHIDDevice_Dialog::ChangeCurrentState(USBHIDDeviceNameSpace::HIDDevDialogState currState)
 {
 	switch (currState)
 	{
-	case NotInitialized:
+	case USBHIDDeviceNameSpace::NotInitialized:
 		ui.groupBox_Comm->setEnabled(true);
 		//ui.groupBox_Cap->setEnabled(true);
 		ui.groupBox_Filter->setEnabled(true);
@@ -145,7 +145,7 @@ void USBHIDDevice_Dialog::ChangeCurrentState(HIDDevDialogState currState)
 		ui.pushButton_Capture->setEnabled(true);
 		ui.label_State->setText("Pending...");
 		break;
-	case ReadyToCapture:
+	case USBHIDDeviceNameSpace::ReadyToCapture:
 		ui.groupBox_Comm->setEnabled(true);
 		//ui.groupBox_Cap->setEnabled(true);
 		ui.groupBox_Filter->setEnabled(true);
@@ -156,7 +156,7 @@ void USBHIDDevice_Dialog::ChangeCurrentState(HIDDevDialogState currState)
 		ui.pushButton_Capture->setEnabled(true);
 		ui.label_State->setText("Ready to capture...");
 		break;
-	case CaptureStarting:
+	case USBHIDDeviceNameSpace::CaptureStarting:
 		ui.groupBox_Comm->setEnabled(false);
 		//ui.groupBox_Cap->setEnabled(true);
 		ui.groupBox_Filter->setEnabled(false);
@@ -167,7 +167,7 @@ void USBHIDDevice_Dialog::ChangeCurrentState(HIDDevDialogState currState)
 		ui.pushButton_Capture->setEnabled(false);
 		ui.label_State->setText("Capture Thread is starting...");
 		break;
-	case CaptureStarted:
+	case USBHIDDeviceNameSpace::CaptureStarted:
 		ui.groupBox_Comm->setEnabled(false);
 		//ui.groupBox_Cap->setEnabled(true);
 		ui.groupBox_Filter->setEnabled(false);
@@ -178,7 +178,7 @@ void USBHIDDevice_Dialog::ChangeCurrentState(HIDDevDialogState currState)
 		ui.pushButton_Capture->setEnabled(false);
 		ui.label_State->setText("Capture Thread is running...");
 		break;
-	case CaptureStopping:
+	case USBHIDDeviceNameSpace::CaptureStopping:
 		ui.groupBox_Comm->setEnabled(false);
 		//ui.groupBox_Cap->setEnabled(true);
 		ui.groupBox_Filter->setEnabled(false);
@@ -293,15 +293,15 @@ void USBHIDDevice_Dialog::checkBox_ShowRef_Pressed()
 void USBHIDDevice_Dialog::CaptureHasStarted(QString sMessage)
 {
 	layout->addWidget(renderArea);
-	ChangeCurrentState(CaptureStarted);
+	ChangeCurrentState(USBHIDDeviceNameSpace::CaptureStarted);
 }
 
 void USBHIDDevice_Dialog::CaptureHasStopped(QString sMessage)
 {
 	layout->removeWidget(renderArea);
-	ChangeCurrentState(ReadyToCapture);
+	ChangeCurrentState(USBHIDDeviceNameSpace::ReadyToCapture);
 	DestroyHIDDevice();
-	ChangeCurrentState(NotInitialized);
+	ChangeCurrentState(USBHIDDeviceNameSpace::NotInitialized);
 	if(bDoReject)
 	{
 		bDoReject = false;
@@ -403,7 +403,7 @@ void USBHIDDevice_Dialog::UpdateUICalibration()
 
 void USBHIDDevice_Dialog::Initialize()
 {
-	if (m_CurrentState == NotInitialized)
+	if (m_CurrentState == USBHIDDeviceNameSpace::NotInitialized)
 	{
 		bDoAccept = false;
 		bDoReject = false;
@@ -411,10 +411,10 @@ void USBHIDDevice_Dialog::Initialize()
 		ConnectSignalSlots();
 		UI_USBHIDDeviceObject->SetCalibrationData(m_CalibrationConfiguration);
 		UI_USBHIDDeviceObject->ConfigureHIDFiltering(ui.checkBox_EnableStab->isChecked(),ui.lineEdit_ThresholdValue->text().toInt(),ui.checkBox_EnableFilter->isChecked(),ui.lineEdit_HistorySize->text().toInt());
-        UI_USBHIDDeviceObject->ConfigureHIDTriggers(true,true,255,HIDCaptureThread::MaskedValueChanged);
+        UI_USBHIDDeviceObject->ConfigureHIDTriggers(true,true,255,USBHIDDeviceNameSpace::MaskedValueChanged);
 		UI_USBHIDDeviceObject->WriteCapturedDataToFile(ui.checkBox_ToLog->isChecked(),ui.lineEdit_LogPath->text(),ui.checkBox_WriteHeader->isChecked(),ui.checkBox_WriteFil->isChecked());
 		UI_USBHIDDeviceObject->EmulateHIDMouse(ui.checkBox_MouseEmulation->isChecked(),ui.checkBox_FullScreen->isChecked(),ui.checkBox_LeftMouse->isChecked(),ui.checkBox_RightMouse->isChecked());
-		ChangeCurrentState(ReadyToCapture);
+		ChangeCurrentState(USBHIDDeviceNameSpace::ReadyToCapture);
 	}
 }
 
@@ -437,27 +437,27 @@ void USBHIDDevice_Dialog::DisconnectSignalSlots()
 void USBHIDDevice_Dialog::StartCapture()
 {
 	Initialize();
-	if (m_CurrentState == ReadyToCapture)
+	if (m_CurrentState == USBHIDDeviceNameSpace::ReadyToCapture)
 	{
 		if(UI_USBHIDDeviceObject->StartCaptureThread())
 		{
-			ChangeCurrentState(CaptureStarting);			
+			ChangeCurrentState(USBHIDDeviceNameSpace::CaptureStarting);			
 		}
 		else
 		{
 			DisconnectSignalSlots();
 			delete UI_USBHIDDeviceObject;
 			UI_USBHIDDeviceObject = NULL;
-			ChangeCurrentState(NotInitialized);
+			ChangeCurrentState(USBHIDDeviceNameSpace::NotInitialized);
 		}
 	}
 }
 
 void USBHIDDevice_Dialog::StopCapture()
 {
-	if (m_CurrentState == CaptureStarted)
+	if (m_CurrentState == USBHIDDeviceNameSpace::CaptureStarted)
 	{
 		UI_USBHIDDeviceObject->StopCaptureThread();
-		ChangeCurrentState(CaptureStopping);
+		ChangeCurrentState(USBHIDDeviceNameSpace::CaptureStopping);
 	}
 }

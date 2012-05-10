@@ -15,7 +15,7 @@ Attributes only apply to readonly non user data, like the ID
 	</defines>
 		
     <declarations>
-   
+ 
         <object ID="0">
             <class>TriggerTimer</class>
             <name>Timer_Object_1</name>
@@ -38,11 +38,20 @@ Attributes only apply to readonly non user data, like the ID
             <constructor>
                 <param1/>
             </constructor>
-        </object> 
-
-    </declarations>	
+        </object>    
+    </declarations>
+        
     <connections>
-   
+
+        <object ID="2">
+        	<type>signal</type>
+        	<signature>CaptureThreadTriggered(short)</signature>
+          <target ID="1">
+          	<type>slot</type>     
+          	<signature>incrementExternalTrigger()</signature>      
+          </target>
+        </object>
+
         <object ID="0">
         	<type>signal</type>
         	<signature>timeout()</signature>
@@ -51,20 +60,9 @@ Attributes only apply to readonly non user data, like the ID
           	<signature>incrementExternalTrigger()</signature>      
           </target>
         </object>
- 
-        <object ID="2">
-        	<type>signal</type>
-        	<signature>CaptureThreadTriggered(short)</signature>
-          <target ID="1">
-          	<type>slot</type>     
-          	<signature>incrementExternalTrigger()</signature>      
-          </target>
-        </object>    
-
-	</connections>
+    </connections>
     
     <initializations>       
-   
         <object ID="2">
         	<type>slot</type>
         	<signature>StartCaptureThread</signature>
@@ -96,14 +94,14 @@ Attributes only apply to readonly non user data, like the ID
 		        </parameter>        	
         	</parameters>
         </object>   
-   
+    
         <object ID="0">
         	<type>slot</type>
         	<signature>startTimer</signature>
         	<parameters>
 		      	<parameter ID="0">
 		        	<name>msec</name>
-		        	<value>1000</value>
+		        	<value>200</value>
 		        	<type>double</type>
 		        </parameter>  	
         	</parameters>
@@ -114,12 +112,12 @@ Attributes only apply to readonly non user data, like the ID
     <actions>
     	<blocks>
 
-		<block ID="0">
+	    <block ID="0">
 	        <name>Fixation_Block</name>
 	        <block_number>0</block_number>            
 	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_internal_triggers>2</nr_of_internal_triggers>
-	        <nr_of_external_triggers>1</nr_of_external_triggers>	 
+	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	
+	        <nr_of_external_triggers>1</nr_of_external_triggers> 
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
@@ -132,7 +130,7 @@ Attributes only apply to readonly non user data, like the ID
 			        </parameter>
 			        <parameter ID="2">
 			        	<name>InternalTriggerDuration</name>
-			        	<value>1000</value>
+			        	<value>200</value>
 			        </parameter>
 			        <parameter ID="3">
 			        	<name>OutputTriggerFrame</name>
@@ -163,151 +161,80 @@ Attributes only apply to readonly non user data, like the ID
 			        	<value>8</value>
 			        </parameter>	
 			        <parameter ID="11">
+			        	<name>CycleTriggerAmount</name>
+			        	<value>1</value>
+			        </parameter>	
+			        <parameter ID="12">
 			        	<name>StimuliRefreshRate</name>
 			        	<value>30</value>
-			        </parameter>
-			        <parameter ID="12">
-			        	<name>BackGroundColor</name>
-			        	<value>#575757</value>
-			        </parameter>
-				        <parameter ID="13">
-			        	<name>FixationColor</name>
-			        	<value>#FF0000</value>
-			        </parameter>
-				        <parameter ID="14">
-			        	<name>CheckerColor1</name>
-			        	<value>#FFFFFF</value>
-			        </parameter>
-				        <parameter ID="15">
-			        	<name>CheckerColor2</name>
-			        	<value>#000000</value>
-			        </parameter>			
+			        </parameter>			        
 			    	</parameters>    
 		    	</object>   
 	    	</block>
 	    	
-	    	<block ID="1">
-	        <name>MovingDots_Block</name>
+	        <block ID="1">
+	        <name>EccentricityBlock</name>
 	        <block_number>1</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_internal_triggers>25</nr_of_internal_triggers>
+	        <nr_of_trials>6</nr_of_trials>
+	        <nr_of_internal_triggers>36</nr_of_internal_triggers>
 	        <nr_of_external_triggers>1</nr_of_external_triggers>
 	        <object ID="1">
 	        	<parameters>
 			        <parameter ID="0">
-			        	<name>ShowFixPoint</name>
-			        	<value>true</value>
-			        </parameter>	
-			        <parameter ID="3">
-			        	<name>RetinoPattern</name>
-			        	<value>MovingDots</value>
-			        </parameter>	
-			        <parameter ID="4">
-			        	<name>MovingDotsMinMoveSpeed</name>
-			        	<value>8.0</value>
+			        	<name>CycleTriggerAmount</name>
+			        	<value>12</value>
 			        </parameter>
-			        <parameter ID="5">
-			        	<name>MovingDotsMaxMoveSpeed</name>
-			        	<value>8.0</value>
-			        </parameter>			        
-			        <parameter ID="6">
-			        	<name>MovingDotsNrOfDots</name>
-			        	<value>200</value>
-			        </parameter>
-			        <parameter ID="7">
-			        	<name>MovingDotsDotSize</name>
-			        	<value>10</value>
-			        </parameter>
-			        <parameter ID="8">
-			        	<name>MovingDotsHemifield</name>
-			        	<value>Both</value>
-			        </parameter>
-			        <parameter ID="9">
-			        	<name>MovingDotsPixelFromCenter</name>
-			        	<value>100</value>
-			        </parameter>			        			        			        			        
-			        <parameter ID="10">
-			        	<name>MovingDotsStationairy</name>
-			        	<value>false</value>
-			        </parameter>
-			        <parameter ID="11">
-			        	<name>MovingDotsColor</name>
-			        	<value>#FFFFFF</value>
-			        </parameter>			        
-			        <parameter ID="12">
-			        	<name>aMovingDotsHemiFieldWidth</name>
-			        	<value>300</value>
-			        </parameter>
-			        <parameter ID="13">
-			        	<name>aMovingDotsHemiFieldHeight</name>
-			        	<value>600</value>
-			        </parameter>
-			        <parameter ID="14">
-			        	<name>MovingDotsMinMoveAngle</name>
-			        	<value>0</value>
-			        </parameter>
-			        <parameter ID="15">
-			        	<name>MovingDotsMaxMoveAngle</name>
+			        <parameter ID="1">
+			        	<name>GapDiameter</name>
 			        	<value>0</value>
 			        </parameter>			        
-
-<!--			       
-			        <parameter ID="11">
-			        	<name>MovingDotsRetinalPosition</name>    Not implemented yet! 
-			        	<value>??</value>
+			        <parameter ID="2">	 	
+			        	<name>EccentricityCheckAmount</name>			        	 
+			        	<value>30</value>	        	
 			        </parameter>
-
-																												default, see above Takes screen size!!
-																												
-FixationColor	HEX string representing a RGB color, see color format (default = #FF0000)	Use this parameter to change the color of the fixation dot.
-CheckerColor1	HEX string representing a RGB color, see color format (default = #FFFFFF)	Use this parameter to change the color of the first checker.
-CheckerColor2	HEX string representing a RGB color, see color format (default = #000000)	Use this parameter to change the color of the second checker.
-BackGroundColor	HEX string representing a RGB color, see color format (default = #575757)	Use this parameter to change the color of the background.																													
- 
-			        <parameter ID="2">
-			        	<name>EmptyTriggerSteps</name>
-			        	<value>0</value>
-			        </parameter>	
-			        <parameter ID="3">   
+			        <parameter ID="3">	      	
+			        	<name>EccentricityRingAmount</name>
+			        	<value>2</value>
+			        </parameter>       	
+			        <parameter ID="4">    	
+			        	<name>EccentricityDirection</name>
+			        	<value>1</value>	        	
+			        </parameter>
+			        <parameter ID="5">   
 			        	<name>FlickrFrequency</name>
 			        	<value>7.5</value>
-			        </parameter>	
-	    				<parameter ID="11">
-			        	<name>DiscreteTriggerSteps</name>
-			        	<value>true</value>
-			        </parameter>			        		        		       
-			        <parameter ID="12">
-			        	<name>RandomizeTriggerSteps</name>
-			        	<value>true</value>
-			        </parameter>			                
-			        <parameter ID="12">
+			        </parameter>	        	
+			        <parameter ID="6">	    	
+			        	<name>CorticalMagnitudeFactor</name>
+			        	<value>0.08333333333</value>	        	
+			        </parameter> 
+			        <parameter ID="7">
+			        	<name>RetinoPattern</name>
+			        	<value>eccentricity</value>
+			        </parameter>
+			        <parameter ID="8">
 			        	<name>DisableCortMagFac</name>
 			        	<value>true</value>
+			        </parameter>
+	    				<parameter ID="9">
+			        	<name>DiscreteTriggerSteps</name>
+			        	<value>true</value>
 			        </parameter>			        
--->
-			    	</parameters>			    	 
+			        <parameter ID="10">
+			        	<name>RandomizeTriggerSteps</name>
+			        	<value>true</value>
+			        </parameter>
+			        <parameter ID="11">
+			        	<name>EmptyTriggerSteps</name>
+			        	<value>4</value>
+			        </parameter>			        	        	        			        
+			    	</parameters>    
 		    	</object>   
 	    	</block>
 
-	    	<block ID="2">
-	        <name>MovingDots_Block_2</name>
-	        <block_number>2</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
-	        <nr_of_internal_triggers>1</nr_of_internal_triggers>
-	        <nr_of_external_triggers>1</nr_of_external_triggers>
-	        <object ID="1">
-	        	<parameters>
-			        <parameter ID="12">
-			        	<name>MovingDotsHemiFieldWidth</name>
-			        	<value>300</value>
-			        </parameter>
-			</parameters>	
-		</object>   
-	    	</block>
-	    	
-		<block ID="3">
+		<block ID="2">
 	        <name>Fixation_Block</name>
-	        <block_number>3</block_number>
+	        <block_number>2</block_number>
 	        <nr_of_trials>1</nr_of_trials>
 	        <nr_of_internal_triggers>8</nr_of_internal_triggers>	
 	        <nr_of_external_triggers>1</nr_of_external_triggers> 

@@ -22,6 +22,7 @@
 
 #include <QThread>
 #include <QDateTime>
+#include "Global.h"
 
 class ParallelPort;
 class ppGenerateThread : public QThread
@@ -33,15 +34,7 @@ protected:
 
 public:
 
-	enum GenerationMethod
-	{
-		Value				= 0,
-		Pulse    			= 1,
-		Periodical			= 2
-	};
-	Q_DECLARE_FLAGS(GenerationMethods, GenerationMethod)
-
-	ppGenerateThread(short baseAddress, GenerationMethod method, short outputMask, short activeValue, short inActiveValue = 0, int activePulseTime = 10, int repetitionTime = 2000, QObject *parent = 0);
+	ppGenerateThread(short baseAddress, int method, short outputMask, short activeValue, short inActiveValue = 0, int activePulseTime = 10, int repetitionTime = 2000, QObject *parent = 0);
 	~ppGenerateThread();
 
 	public slots:
@@ -51,7 +44,7 @@ private:
 	bool isRunning;
 	bool abortRunning;
 	short nBaseAddress;
-	GenerationMethod dMethod;
+	int dMethod;//Type of GenerationMethod
 	short nOutputMask;
 	short nActiveValue;
 	short nInActiveValue;
@@ -65,6 +58,6 @@ signals:
 	void generateThreadStopped(QString timeTextStamp);
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(ppGenerateThread::GenerationMethods)
+//Q_DECLARE_OPERATORS_FOR_FLAGS(ppGenerateThread::GenerationMethods)
 
 #endif // PPGENERATETHREAD_H

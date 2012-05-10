@@ -38,25 +38,12 @@ protected:
 
 public:
 
-	enum DetectionMethod
-	{
-		MaskedValueChanged				= 0,
-		MaskedValueChangedHigh			= 1,
-		MaskedValueChangedLow			= 2
-	};
-	Q_DECLARE_FLAGS(DetectionMethods, DetectionMethod)
-
-	struct strcJoystickPosition {
-		unsigned char Xpos;
-		unsigned char Ypos;
-	};  
-
 	HIDCaptureThread(unsigned short productID,unsigned short vendorID,QObject *parent);
 	~HIDCaptureThread();
 
 public slots:
 	void WriteCapturedDataToFile(bool bWriteToFile = true, QString qsFileName = "", bool bWriteHeaderInfo = true, bool bWriteFilteredData = true);
-	void ConfigureHIDTriggers(bool bActivateJoystickTrigger, bool bActivateButtonTriggers, unsigned char cButtonMask, DetectionMethod ButtonDetectDetectionMethod);
+	void ConfigureHIDTriggers(bool bActivateJoystickTrigger, bool bActivateButtonTriggers, unsigned char cButtonMask, USBHIDDeviceNameSpace::CaptureMethod ButtonDetectCaptureMethod);
 	void ConfigureHIDFiltering(bool bActivateJoystickStabilisation, int nJoystickStabilisationThreshold, bool bActivateJoystickHistory, int nJoystickHistorySize);
 	void stop();
 
@@ -78,10 +65,10 @@ private:
 	unsigned char m_HIDData[PACKET_SIZE];
 	int m_HIDFilteredData[PACKET_SIZE];
 	unsigned char m_cButtonMask;
-	DetectionMethod m_ButtonDetectDetectionMethod;
+	USBHIDDeviceNameSpace::CaptureMethod m_ButtonDetectCaptureMethod;
 	QFile *m_pFile;
 	QMutex FileMutex;
-	QList<strcJoystickPosition> m_JostickHistory;//x,y
+	QList<USBHIDDeviceNameSpace::strcJoystickPosition> m_JostickHistory;//x,y
 	unsigned char cOldButtonByteVal;
 	unsigned char cNewButtonByteVal;
 	bool m_bActivateJoystickStabilisation;
@@ -96,7 +83,5 @@ signals:
 	void receiveThreadStarted(QString timeTextStamp);
 	void receiveThreadStopped(QString timeTextStamp);
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(HIDCaptureThread::DetectionMethods)
 
 #endif // HIDCAPTURETHREAD_H

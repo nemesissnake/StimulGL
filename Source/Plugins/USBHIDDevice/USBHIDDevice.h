@@ -31,20 +31,55 @@
 #include "hidapi.h"
 #include "hidcalibratedialog.h"
 #include "hidcapturethread.h"
+//#include "Global.h"
 
 class HIDCalibrateDialog;
+//!  The USBHIDDevice class. 
+/*!
+  The USBHIDDevice can be used to communicate with a USD HID Device.
+*/
 class USBHIDDevice : public QObject, protected QScriptable
 {
 	Q_OBJECT
-	Q_PROPERTY( short ExampleProperty WRITE setExampleProperty READ getExampleProperty )
 
 signals:
-	void CaptureThreadStarted(QString);//DateTimeStamp
-	void CaptureThreadStopped(QString);//DateTimeStamp
-	void CalibrateThreadStarted(QString);//DateTimeStamp
-	void CalibrateThreadStopped(QString);//DateTimeStamp
-	void CaptureThreadJoystickChanged(int, int);//Xpos,Ypos
-	void CaptureThreadButtonTriggered(unsigned char, unsigned char);//NewValue, WhichBitsChanged
+	//! The CaptureThreadStarted Signal.
+	/*!
+		You can use this Signal for receiving a notification when the capture thread is started.
+		Parameter DateTimeStamp holds the date/time of when the generate thread started.
+	*/
+	void CaptureThreadStarted(QString DateTimeStamp);
+	//! The CaptureThreadStopped Signal.
+	/*!
+		You can use this Signal for receiving a notification when the capture thread is stopped.
+		Parameter DateTimeStamp holds the date/time of when the generate thread stopped.
+	*/
+	void CaptureThreadStopped(QString DateTimeStamp);
+	//! The CalibrateThreadStarted Signal.
+	/*!
+		You can use this Signal for receiving a notification when the capture thread calibration is started.
+		Parameter DateTimeStamp holds the date/time of when the generate thread calibration started.
+	*/
+	void CalibrateThreadStarted(QString DateTimeStamp);
+	//! The CalibrateThreadStopped Signal.
+	/*!
+		You can use this Signal for receiving a notification when the capture thread calibration is stopped.
+		Parameter DateTimeStamp holds the date/time of when the generate thread calibration stopped.
+	*/
+	void CalibrateThreadStopped(QString DateTimeStamp);
+	//! The CaptureThreadJoystickChanged Signal.
+	/*!
+		This signal is generated when the capture thread detects a change in the X,Y position of the Joystick.
+		The Xpos and Ypos hold the last value of the Joystick when the change was detected.
+	*/
+	void CaptureThreadJoystickChanged(int Xpos, int Ypos);
+	//! The CaptureThreadButtonTriggered Signal.
+	/*!
+		This signal is generated when the capture thread detects a change in the Buttons.
+		NewValue holds the new value of the Buttons after the change was detected,
+		ChangedBits holds a mask of the Button-bits that changed value.
+	*/
+	void CaptureThreadButtonTriggered(unsigned char NewValue, unsigned char ChangedBits);
 
 public:
 	USBHIDDevice(unsigned short vendor_id = 0x181b, unsigned short product_id = 0x4002, QObject *parent = 0);
@@ -52,14 +87,9 @@ public:
 	~USBHIDDevice();
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
-
-	void ResetCalibrationData();
-	void SetCalibrationData(const strcCalibrationData &CalData);
+	void SetCalibrationData(const USBHIDDeviceNameSpace::strcCalibrationData &CalData);
 
 public slots:
-	void setExampleProperty( short sExampleProperty );
-	short getExampleProperty() const;
-
 	bool Calibrate();
 	bool StartCaptureThread(bool bIsCalibrationThread = false);
 	void StopCaptureThread(bool bWasCalibrationThread = false);
@@ -67,30 +97,28 @@ public slots:
 	void SetProductID(unsigned short product_id);
 
 	void WriteCapturedDataToFile(bool bWriteToFile, QString qsFileName, bool bWriteHeaderInfo, bool bWriteFilteredData);
-	void ConfigureHIDTriggers(bool bActivateJoystickTrigger, bool bActivateButtonTriggers, unsigned char cButtonMask, short ButtonDetectDetectionMethod);
+	void ConfigureHIDTriggers(bool bActivateJoystickTrigger, bool bActivateButtonTriggers, unsigned char cButtonMask, short ButtonDetectCaptureMethod);
 	void ConfigureHIDFiltering(bool bActivateJoystickStabilisation, int nJoystickStabilisationThreshold, bool bActivateJoystickHistory, int nJoystickHistorySize);
 	void EmulateHIDMouse(bool bEnable, bool bFullScreenMode, bool bEnableLeftMouse = false, bool bEnableRightMouse = false);
-
+	void ResetCalibrationData();
+	
 private slots:
 	void UpdateHIDMouseEmuPosition(int XPos, int YPos);
 	void UpdateHIDMouseEmuButtons(unsigned char ButtonByteValue,unsigned char ChangedByteValue);
 	
 private:
-	short m_ExampleProperty;
 	HIDCalibrateDialog *HIDCalDiag;
 	HIDCaptureThread *HIDCapThread;
 	bool m_bActivateJoystickTrigger;
 	bool m_bActivateButtonTriggers;
 	unsigned char m_cButtonMask;
-	short m_sButtonDetectDetectionMethod;
+	short m_sButtonDetectCaptureMethod;
 	bool m_bActivateJoystickStabilisation;
 	int m_nJoystickStabilisationThreshold;
 	bool m_bActivateJoystickHistory;
 	bool m_bActivateMousePosEmu;
 	bool m_bActivateMouseLButtonEmu;
 	bool m_bActivateMouseRButtonEmu;
-	//QMouseEvent* mouseEvent;
-	//QWidget *widgetUnderCursor;
 	QPoint mouseRelPos;
 	int m_nJoystickHistorySize;
 	bool m_bMouseFullScreenMode;
@@ -103,7 +131,7 @@ private:
 	bool m_bWriteHeaderInfo;
 	bool m_bWriteCalibratedData;
 	QString m_qsFileName;
-	strcCalibrationData m_CalData;  
+	USBHIDDeviceNameSpace::strcCalibrationData m_CalData;  
 	int m_nXCalcHIDPos;
 	int m_nYCalcHIDPos;
 	float m_fScreenWidthStep;

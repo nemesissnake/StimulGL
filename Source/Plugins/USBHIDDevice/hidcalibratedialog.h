@@ -48,7 +48,7 @@ private:
 	USBHIDDevice *m_USBHIDDev;
 	bool m_bCalibrationActive;
 	bool m_bSuccesfullyInitialized;
-	strcCalibrationData m_CalibrationConfiguration;
+	USBHIDDeviceNameSpace::strcCalibrationData m_CalibrationConfiguration;
 
 public slots:
 	void UpdateCalibration(int nXPos, int nYPos);

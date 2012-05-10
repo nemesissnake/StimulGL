@@ -79,13 +79,13 @@ public slots:
 	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
 	int getObjectID();
-	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue);
+	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 
 protected:
 	bool checkForNextBlockTrial();
 	bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef);//QString &Result);
-	bool getExperimentBlockParameters(int nBlockNumber, int nObjectID, tParsedParameterList *hParams = NULL);//QHash<QString, QString> *hParams = NULL);
+	bool getExperimentBlockParamsFromDomNodeList(int nBlockNumber, int nObjectID, tParsedParameterList *hParams = NULL);//QHash<QString, QString> *hParams = NULL);
 	void finalizePaintEvent();
 	void setupLayout(QWidget* layoutWidget);	
 	bool isDebugMode();

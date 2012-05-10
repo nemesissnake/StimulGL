@@ -101,14 +101,14 @@ void GLWidgetWrapper::setVerticalSyncSwap()
 	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
 }
 
-bool GLWidgetWrapper::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue)
+bool GLWidgetWrapper::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing)
 {
 	if (ExpBlockParams == NULL)
 	{
 		ExpBlockParams = new tParsedParameterList();//new QHash<QString, QString>();
 		pExpConf->pExperimentManager->setExperimentObjectBlockParameterStructure(nObjectID,ExpBlockParams);
 	}
-	return (pExpConf->pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName,sValue));
+	return (pExpConf->pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName,sValue,bIsInitializing));
 }
 
 ParsedParameterDefinition GLWidgetWrapper::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue)
@@ -116,6 +116,7 @@ ParsedParameterDefinition GLWidgetWrapper::getExperimentObjectBlockParameter(con
 	ParsedParameterDefinition PPDResult;
 	PPDResult.bHasChanged = false;
 	PPDResult.sValue = sDefValue;
+	PPDResult.bIsInitialized = true;
 	if (pExpConf->pExperimentManager->getExperimentObjectBlockParameter(nObjectID,sName,PPDResult))
 	{
 		return PPDResult;
@@ -490,27 +491,36 @@ bool GLWidgetWrapper::cleanupExperimentBlockTrialStructure()
 	return true;
 }
 
-bool GLWidgetWrapper::getExperimentBlockParameters(int nBlockNumber, int nObjectID, tParsedParameterList *hParams) //QHash<QString, QString> *hParams)
+bool GLWidgetWrapper::getExperimentBlockParamsFromDomNodeList(int nBlockNumber, int nObjectID, tParsedParameterList *hParams) //QHash<QString, QString> *hParams)
 {
 	if (hParams == NULL)
 		return false;
 	if(hParams->count() == 0)
 		return false;
 
-	ParsedParameterDefinition tmpParDef;
-	QString tmpString;
-
 	//Set all the parameter bHasChanged attributes too false again
-	tParsedParameterList::const_iterator iterPPL = hParams->constBegin();
-	while (iterPPL != hParams->constEnd()) 
+	QList<ParsedParameterDefinition> tmpStrValueList = hParams->values();//The order is guaranteed to be the same as that used by keys()!
+	QList<QString> tmpStrKeyList = hParams->keys();//The order is guaranteed to be the same as that used by values()!
+	for(int i=0;i<tmpStrKeyList.count();i++)
 	{
-		tmpParDef = iterPPL.value();
-		tmpString = iterPPL.key();
-		tmpParDef.bHasChanged = false;
-		//cout << iterPPL.key() << ": " << iterPPL.value() << endl;
-		 hParams->insert(tmpString, tmpParDef);
-		++iterPPL;
+		tmpStrValueList[i].bHasChanged = false;
+		hParams->insert(tmpStrKeyList[i], tmpStrValueList[i]);
 	}
+
+	//The below code seems not to work due to the iterator...
+	//
+	//
+	////Set all the parameter bHasChanged attributes too false again
+	//tParsedParameterList::const_iterator iterPPL = hParams->constBegin();
+	//while (iterPPL != hParams->constEnd()) 
+	//{
+	//	tmpParDef = iterPPL.value();
+	//	tmpString = iterPPL.key();
+	//	tmpParDef.bHasChanged = false;
+	//	//cout << iterPPL.key() << ": " << iterPPL.value() << endl;
+	//	 hParams->insert(tmpString, tmpParDef);
+	//	++iterPPL;
+	//}
 
 	if(pExpBlockTrialDomNodeList == NULL)
 		return false;
@@ -523,6 +533,8 @@ bool GLWidgetWrapper::getExperimentBlockParameters(int nBlockNumber, int nObject
 
 	QDomElement tmpElement;
 	QDomNode tmpNode;
+	ParsedParameterDefinition tmpParDef;
+	QString tmpString;
 
 	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
 	{
@@ -983,7 +995,7 @@ void GLWidgetWrapper::initBlockTrial()
 	int tmpExpBlock = expFullStruct.parentStruct.currExpBlock;
 	if(bDoUnlock)
 		mutExpSnapshot.unlock();
-	getExperimentBlockParameters(tmpExpBlock,nObjectID,ExpBlockParams);//Should be moved to the manager?!
+	getExperimentBlockParamsFromDomNodeList(tmpExpBlock,nObjectID,ExpBlockParams);//Should be moved to the manager?!
 	ParsedParameterDefinition pParDef;
 	pParDef = getExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,QString::number(nRefreshRate));
 	nRefreshRate = pParDef.sValue.toInt();

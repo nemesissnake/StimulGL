@@ -32,7 +32,7 @@ function ExperimentStateChanged()
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
 ExperimentManagerObj.WriteToLogOutput.connect(this, this.Log);
-ExperimentManagerObj.setExperimentFileName("E:\\Projects\\StimulGL\\Install\\experiments\\MovingDots1.exml");
+ExperimentManagerObj.setExperimentFileName("C:\\Program Files\\StimulGL\\experiments\\MovingDots1.exml");
 ExperimentManagerObj.runExperiment();
 
 //Polar1.exml

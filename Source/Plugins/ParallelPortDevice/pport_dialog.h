@@ -56,7 +56,7 @@ private:
 	short getATBaseAddress();
 	short getCBaseAddress();
 	short getCBitMask();
-	ppCaptureThread::DetectionMethod getCDetectionMethod();
+	ParallelPortNameSpace::CaptureMethod getCCaptureMethod();
 	int getCPostLHTiming();
 	int getCPostHLTiming();
 
@@ -66,7 +66,7 @@ private:
 	short getGBitMaskValue();
 	int getGActivePulseTime();
 	int getGRepetitionTime();
-	ppGenerateThread::GenerationMethod getGGenerationMethod();
+	ParallelPortNameSpace::GenerationMethod getGGenerationMethod();
 
 	void cleanUp();
 

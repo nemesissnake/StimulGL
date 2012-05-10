@@ -24,6 +24,7 @@
 #include <QHash>
 #include <QtScript>
 #include <QScriptable>
+#include <QColor>
 
 #define PRT_DEFAULT_VERSION				2
 #define PRT_UNDEF_VALUE_STRING			"<undefined value>"
@@ -92,6 +93,8 @@ public slots:
 	bool clearAll() {return (clearConditions() && clearParameters());}; 
 	int appendCondition(const QString sConditionName = PRT_UNDEF_NAME_STRING, const QString sConditionColor = PRT_UNDEF_COLOR_STRING);
 	int appendInterval(const int nConditionIndex = 0, const int nBegin = 0, const int nEnd = 1);
+	QString getRGBPaletteColorString(const int nSteps, const int nIndex);
+	bool SortandMergeAllConditionIntervals();
 
 private:
 	bool setDefaultParameters(const int nVersion = PRT_DEFAULT_VERSION);

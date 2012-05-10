@@ -30,6 +30,7 @@
 #include <QThread>
 #include "USBHIDDevice.h"
 
+
 class USBHIDDevice_Dialog : public QDialog, private Ui::USBHIDDevice_DialogClass
 {
 	Q_OBJECT
@@ -40,13 +41,13 @@ public:
 
 private:
 	USBHIDDevice *UI_USBHIDDeviceObject;
-	HIDDevDialogState m_CurrentState;
+	USBHIDDeviceNameSpace::HIDDevDialogState m_CurrentState;
 	bool bCalibrationActive;
 	bool bDoReject;
 	bool bDoAccept;
 	QHBoxLayout *layout;
 	RenderArea *renderArea;
-	strcCalibrationData m_CalibrationConfiguration;
+	USBHIDDeviceNameSpace::strcCalibrationData m_CalibrationConfiguration;
 	Ui::USBHIDDevice_DialogClass ui;
 	void ConnectSignalSlots();
 	void DisconnectSignalSlots();
@@ -75,7 +76,7 @@ private slots:
 	void pushButton_Calibrate_Pressed();
 	void pushButton_Browse_Pressed();
 
-	void ChangeCurrentState(HIDDevDialogState currState);
+	void ChangeCurrentState(USBHIDDeviceNameSpace::HIDDevDialogState currState);
 	void UpdateCalibration(int nXPos, int nYPos);
 	void StartCapture();
 	void StopCapture();

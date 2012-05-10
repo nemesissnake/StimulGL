@@ -27,17 +27,51 @@
 #include "ppGenerateThread.h"
 #include "./../../StimulGL/mainappinfo.h"
 
+//!  The ParallelPort Device class. 
+/*!
+  The ParallelPort Device can be used to communicate with a Parallel Port.
+*/
 class ParallelPort : public QObject, protected QScriptable
 {
 	Q_OBJECT
 	Q_PROPERTY( short BaseAddress WRITE setBaseAddress READ getBaseAddress )
 
 signals:
-	void GenerateThreadTriggered(short);
-	void GenerateThreadStarted(QString);
+	//! The GenerateThreadTriggered Signal.
+	/*!
+		You can use this Signal for receiving a notification when the generate thread changes the port output value.
+		The PortValue parameter(one byte) holds the triggered port value when triggered.
+	*/
+	void GenerateThreadTriggered(short PortValue);
+	//! The GenerateThreadStarted Signal.
+	/*!
+		You can use this Signal to keep track of when the generate thread starts.
+		Parameter DateTimeStamp holds the date/time of when the generate thread started.
+	*/
+	void GenerateThreadStarted(QString DateTimeStamp);
+	//! The GenerateThreadStopped Signal.
+	/*!
+		You can use this Signal to keep track of when the generate thread stops.
+		Parameter DateTimeStamp holds the date/time of when the generate thread stopped.
+	*/
 	void GenerateThreadStopped(QString);
-	void CaptureThreadTriggered(short);
+	//! The CaptureThreadTriggered Signal.
+	/*!
+		You can use this Signal for receiving a notification when the capture thread gets triggered by the current port value.
+		The PortValue parameter(one byte) holds the triggered port value when it gets triggered.
+	*/
+	void CaptureThreadTriggered(short PortValue);
+	//! The CaptureThreadStarted Signal.
+	/*!
+		You can use this Signal to keep track of when the capture thread starts.
+		Parameter DateTimeStamp holds the date/time of when the capture thread started.
+	*/
 	void CaptureThreadStarted(QString);
+	//! The CaptureThreadStopped Signal.
+	/*!
+		You can use this Signal to keep track of when the capture thread stops.
+		Parameter DateTimeStamp holds the date/time of when the capture thread stopped.
+	*/
 	void CaptureThreadStopped(QString);
 
 public:
@@ -53,8 +87,6 @@ public slots:
 	void PortWrite(const short &Value);
 	bool IsPortEpp();
 	bool IsPortEcp();
-	//ECP_Mode GetEcpMode();
-	//PortType GetPortType();
 	bool IsPortSpp();
 	bool IsPortPS2();
 	bool IsPortInput();
@@ -80,8 +112,6 @@ public slots:
 
 	bool StartCaptureThread(const short baseAddress, const short mask, const short method, const int postLHDelay = 0, const int postHLDelay = 0);
 	void StopCaptureThread();
-
-	//bool SetEcpMode(ECP_Mode nEcpModeValue);
 
 private:
 	InpOut32 InpOut32Object;

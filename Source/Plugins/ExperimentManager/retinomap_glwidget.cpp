@@ -454,8 +454,33 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			movingDotsDotSize = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_DOTSIZE,QString::number(movingDotsDotSize)).sValue.toInt();
 			movingDotsNrOfDots = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_NROFDOTS,QString::number(movingDotsNrOfDots)).sValue.toInt();
 			//movingDotsRetPosition = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_RETINALPOSITION,QString::number(movingDotsRetPosition)).toInt();
-			movingDotsHemiFieldWidth = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDWIDTH,QString::number(movingDotsHemiFieldWidth)).sValue.toInt();
-			movingDotsHemiFieldHeight = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDHEIGHT,QString::number(movingDotsHemiFieldHeight)).sValue.toInt();
+			
+			//We have initialized the parameter(movingDotsHemiFieldWidth) the first time(before the experiment actually started), but because the default value is dependent of another 
+			//parameter(stimWidthPixelAmount) that might have changed again we might have to reinitialize this parameter again. But this applies only when we fetch the 
+			//parameter for the first time and that the parameter is also not re-defined by the user. When we reinitialize the parameter here its important to set the bIsInitializing
+			//from the function insertExperimentObjectBlockParameter() to false!
+			pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDWIDTH,QString::number(stimWidthPixelAmount/2));
+			if ((pParDef.bIsInitialized) && (pParDef.bHasChanged == false))
+			{
+				if(insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDWIDTH,QString::number(stimWidthPixelAmount/2),false))
+					movingDotsHemiFieldWidth = QString::number(stimWidthPixelAmount/2).toInt();
+			}
+			else
+			{
+				movingDotsHemiFieldWidth = pParDef.sValue.toInt();
+			}
+			//Same counts for the next parameter
+			pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDHEIGHT,QString::number(stimHeigthPixelAmount));
+			if ((pParDef.bIsInitialized) && (pParDef.bHasChanged == false))
+			{
+				if(insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDHEIGHT,QString::number(stimHeigthPixelAmount),false))
+					movingDotsHemiFieldHeight = QString::number(stimHeigthPixelAmount).toInt();
+			}
+			else
+			{
+				movingDotsHemiFieldHeight = pParDef.sValue.toInt();
+			}
+
 			initializeMovingDotsStructures();
 			break;
 		case RetinoMap_Fixation:

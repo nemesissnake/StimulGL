@@ -20,12 +20,12 @@
 #include "ppcapturethread.h"
 #include "parallelport.h"
 
-ppCaptureThread::ppCaptureThread(short baseAddress, short mask, DetectionMethod method,int postLHDelay, int postHLDelay , QObject *parent)	: QThread(parent)
+ppCaptureThread::ppCaptureThread(short baseAddress, short mask, int method,int postLHDelay, int postHLDelay , QObject *parent) : QThread(parent)
 {
 	isRunning = false;
 	abortRunning = false;
 	nBaseAddress = baseAddress;
-	dMethod = method;
+	dMethod = (ParallelPortNameSpace::CaptureMethod)method;
 	nMask = mask;
 	nPostLHDelay = postLHDelay;
 	nPostHLDelay = postHLDelay;
@@ -79,7 +79,7 @@ void ppCaptureThread::run()
 	emit recieveThreadStarted(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 	switch (dMethod)
 	{
-	case MaskedValueChanged :
+	case ParallelPortNameSpace::MaskedValueChanged :
 		do 
 		{
 			if (oldValue != currentValue)//any change within masked measurement
@@ -110,7 +110,7 @@ void ppCaptureThread::run()
 			}
 		} while (abortRunning==false);
 		break;	
-	case MaskedValueChangedHigh :
+	case ParallelPortNameSpace::MaskedValueChangedHigh :
 		do 
 		{
 			if (oldValue != currentValue)
@@ -131,7 +131,7 @@ void ppCaptureThread::run()
 			}
 		} while (abortRunning==false);
 		break;
-	case MaskedValueChangedLow :
+	case ParallelPortNameSpace::MaskedValueChangedLow :
 		do 
 		{
 			if (oldValue != currentValue)

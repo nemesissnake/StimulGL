@@ -328,13 +328,13 @@ int PPort_Dialog::getCPostHLTiming()
 	return ui.txtHLDelay_C->text().toInt();
 }
 
-ppCaptureThread::DetectionMethod PPort_Dialog::getCDetectionMethod()
+ParallelPortNameSpace::CaptureMethod PPort_Dialog::getCCaptureMethod()
 {
 	//short tmpMask = 0;
-    if (ui.rbDecMethod_MVC0->isChecked())  return ppCaptureThread::MaskedValueChanged;
-    if (ui.rbDecMethodHigh_MVC1->isChecked())  return ppCaptureThread::MaskedValueChangedHigh;
-    if (ui.rbDecMethodLow_MVC2->isChecked())  return ppCaptureThread::MaskedValueChangedLow;
-    return ppCaptureThread::MaskedValueChanged;
+    if (ui.rbDecMethod_MVC0->isChecked())  return ParallelPortNameSpace::MaskedValueChanged;
+    if (ui.rbDecMethodHigh_MVC1->isChecked())  return ParallelPortNameSpace::MaskedValueChangedHigh;
+    if (ui.rbDecMethodLow_MVC2->isChecked())  return ParallelPortNameSpace::MaskedValueChangedLow;
+    return ParallelPortNameSpace::MaskedValueChanged;
 }
 
 void PPort_Dialog::on_btnStartCaptureThread_clicked()
@@ -377,7 +377,7 @@ void PPort_Dialog::on_btnStartCaptureThread_clicked()
 			return;
 		}
 	}
-	captureThread = new ppCaptureThread(nCBaseAddress,getCBitMask(),getCDetectionMethod(),getCPostLHTiming(),getCPostHLTiming(),this);
+	captureThread = new ppCaptureThread(nCBaseAddress,getCBitMask(),getCCaptureMethod(),getCPostLHTiming(),getCPostHLTiming(),this);
 	connect(captureThread, SIGNAL(recieveThreadTriggered(short)), this, SLOT(UpdateCaptureThreadUI(short)));
 	connect(captureThread, SIGNAL(recieveThreadStarted(QString)), this, SLOT(CaptureThreadStarted(QString)));
 	connect(captureThread, SIGNAL(recieveThreadStopped(QString)), this, SLOT(CaptureThreadStopped(QString)));
@@ -598,12 +598,12 @@ int PPort_Dialog::getGRepetitionTime()
 	return ui.txtRepetitionTime_G->text().toInt();
 }
 
-ppGenerateThread::GenerationMethod PPort_Dialog::getGGenerationMethod()
+ParallelPortNameSpace::GenerationMethod PPort_Dialog::getGGenerationMethod()
 {
-    if (ui.rbGenMethod_Value->isChecked())  return ppGenerateThread::Value;
-    if (ui.rbGenMethod_Pulse->isChecked())  return ppGenerateThread::Pulse;
-    if (ui.rbGenMethod_Periodical->isChecked())  return ppGenerateThread::Periodical;
-    return ppGenerateThread::Value;
+    if (ui.rbGenMethod_Value->isChecked())  return ParallelPortNameSpace::Value;
+    if (ui.rbGenMethod_Pulse->isChecked())  return ParallelPortNameSpace::Pulse;
+    if (ui.rbGenMethod_Periodical->isChecked())  return ParallelPortNameSpace::Periodical;
+    return ParallelPortNameSpace::Value;
 }
 
 void PPort_Dialog::on_btnStopGenerateThread_clicked()
@@ -640,7 +640,7 @@ void PPort_Dialog::on_btnStartGenerateThread_clicked()
 			return;
 		}
 	}
-	generateThread = new ppGenerateThread(nGBaseAddress,getGGenerationMethod(),getGBitMaskValue(),getGBitActiveValue(),getGBitInActiveValue(),getGActivePulseTime(),getGRepetitionTime(),this);
+	generateThread = new ppGenerateThread(nGBaseAddress,(int)getGGenerationMethod(),getGBitMaskValue(),getGBitActiveValue(),getGBitInActiveValue(),getGActivePulseTime(),getGRepetitionTime(),this);
 	connect(generateThread, SIGNAL(generateThreadTriggered(short)), this, SLOT(UpdateGenerateThreadUI(short)));
 	connect(generateThread, SIGNAL(generateThreadStarted(QString)), this, SLOT(GenerateThreadStarted(QString)));
 	connect(generateThread, SIGNAL(generateThreadStopped(QString)), this, SLOT(GenerateThreadStopped(QString)));	

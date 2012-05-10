@@ -20,12 +20,12 @@
 #include "ppgeneratethread.h"
 #include "parallelport.h"
 
-ppGenerateThread::ppGenerateThread(short baseAddress, GenerationMethod method, short outputMask, short activeValue, short inActiveValue, int activePulseTime, int repetitionTime, QObject *parent)	: QThread(parent)
+ppGenerateThread::ppGenerateThread(short baseAddress, int method, short outputMask, short activeValue, short inActiveValue, int activePulseTime, int repetitionTime, QObject *parent)	: QThread(parent)
 {
 	isRunning = false;
 	abortRunning = false;
 	nBaseAddress = baseAddress;
-	dMethod = method;
+	dMethod = (ParallelPortNameSpace::GenerationMethod)method;
 	nOutputMask = outputMask;
 	nActiveValue = activeValue;
 	nInActiveValue = inActiveValue;
@@ -80,14 +80,14 @@ void ppGenerateThread::run()
 	
 	switch (dMethod)
 	{
-	case Value :	
+	case ParallelPortNameSpace::Value :	
 		if (newActiveMaskedValue != currentValue)
 		{
 			portDev->PortWrite(newActiveMaskedValue);			
 		}
 		emit generateThreadTriggered(newActiveMaskedValue);
 		break;	
-	case Pulse:
+	case ParallelPortNameSpace::Pulse:
 		newInActiveMaskedValue = ((currentValue & (255 - nOutputMask)) | (nInActiveValue & nOutputMask));
 		if (newInActiveMaskedValue != currentValue)
 		{
@@ -100,7 +100,7 @@ void ppGenerateThread::run()
 		portDev->PortWrite(newInActiveMaskedValue);
 		//emit generateThreadTriggered(newInActiveMaskedValue);
 		break;
-	case Periodical:
+	case ParallelPortNameSpace::Periodical:
 		newInActiveMaskedValue = ((currentValue & (255 - nOutputMask)) | (nInActiveValue & nOutputMask));
 		int nInActivePulseTime;
 		if (nRepetitionTime>nActivePulseTime)

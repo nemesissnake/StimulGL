@@ -35,16 +35,6 @@ enum ExperimentTimerType //The type of a experiment timer, used for logging(flag
 	//Experiment_Timer_Experiment	= 32
 };
 
-enum ExperimentState //The state of the main experiment object
-{
-	Experiment_Constructed	= 0,
-	Experiment_Initialized	= 1,
-	Experiment_IsStarting	= 2,
-	Experiment_Started		= 3,
-	Experiment_IsStopping	= 4,
-	Experiment_Stopped		= 5
-};
-
 enum ExperimentSubObjectState //The state of an experiment (sub)object
 {	
 	Experiment_SubObject_Initialized	= 0,
@@ -127,16 +117,25 @@ typedef struct{
 	int nNextThresholdTriggerCount;				//When we should switch to the next block
 } ExperimentSnapshotFullStructure;
 
-typedef struct strcPPD
+/*! \struct strcParsedParameterDefinition
+ * A structure for the Experiment Manager parameter definitions.
+ */
+struct strcParsedParameterDefinition
 {
-	strcPPD()
+	//! The default constructor of the structure
+	strcParsedParameterDefinition()
 	{
 		sValue = "<undefined>";
 		bHasChanged = true;
-	}
-	QString sValue;
-	bool bHasChanged;
-} ParsedParameterDefinition;
+		bIsInitialized = true;
+	}	
+	QString sValue;		 //!< A String that stores the value of the parameter
+	bool bHasChanged;    //!< A Boolean value determing wheter the parameter has been changed since it's initialization
+	bool bIsInitialized; //!< A Boolean value determing wheter the parameter already has been initialized
+};
+
+/*! Creates a type name for strcParsedParameterDefinition */ 
+typedef strcParsedParameterDefinition ParsedParameterDefinition;
 
 typedef QHash<QString, ParsedParameterDefinition> tParsedParameterList;
 

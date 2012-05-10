@@ -28,42 +28,48 @@
 #define INVSQRRTTWO 0.707106781
 #define SQRRTTWO 1.414213562
 
-struct strcCalibrationData {
-	int Xmin;
-	int Xmax;
-	int Ymin;
-	int Ymax;
-	int XAbsOffset;
-	int YAbsOffset;
-	float XRelScaleFactor;
-	float YRelScaleFactor;
-};
 
-enum HIDDevDialogState
+/*! The namespace for the global USBHIDDevice definition */
+namespace USBHIDDeviceNameSpace
 {
-	NotInitialized					= 0,
-	ReadyToCapture					= 1,
-	CaptureStarting					= 2,
-	CaptureStarted					= 3,
-	CaptureStopping					= 4
-};
-Q_DECLARE_FLAGS(HIDDevDialogStates, HIDDevDialogState)
-Q_DECLARE_OPERATORS_FOR_FLAGS(HIDDevDialogStates)
-
-class SleepThread : public QThread
-{
-	//public:
-	//	SleepThread(QObject *parent);
-	//	~SleepThread();
-	//
-	//private:
-
-public:
-	static void msleep(unsigned long msecs)
+	// The enum (HIDDevDialogState) can store the state of a USBHID Device.
+	enum HIDDevDialogState
 	{
-		QThread::msleep(msecs);
-	}
+		NotInitialized					= 0, // 0: The NotInitialized state
+		ReadyToCapture					= 1, // 1: The ReadyToCapture state
+		CaptureStarting					= 2, // 2: The CaptureStarting state
+		CaptureStarted					= 3, // 3: The CaptureStarted state
+		CaptureStopping					= 4  // 4: The CaptureStopping state
+	};
+	Q_DECLARE_FLAGS(HIDDevDialogStates, HIDDevDialogState)
+	Q_DECLARE_OPERATORS_FOR_FLAGS(HIDDevDialogStates)
 
-};
+	struct strcCalibrationData {
+		int Xmin;
+		int Xmax;
+		int Ymin;
+		int Ymax;
+		int XAbsOffset;
+		int YAbsOffset;
+		float XRelScaleFactor;
+		float YRelScaleFactor;
+	};
+
+	/*! The enum (CaptureMethods) can store a USB HID Device Capture thread method */
+	enum CaptureMethod
+	{
+		MaskedValueChanged				= 0, //!< 0: The MaskedValueChanged	method
+		MaskedValueChangedHigh			= 1, //!< 1: The MaskedValueChangedHig method
+		MaskedValueChangedLow			= 2  //!< 2: The MaskedValueChangedLow method
+	};
+	Q_DECLARE_FLAGS(CaptureMethods, CaptureMethod)
+	Q_DECLARE_OPERATORS_FOR_FLAGS(CaptureMethods)
+
+	struct strcJoystickPosition 
+	{
+		unsigned char Xpos;
+		unsigned char Ypos;
+	};  
+}
 
 #endif

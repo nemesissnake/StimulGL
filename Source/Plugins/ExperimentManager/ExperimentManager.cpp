@@ -37,6 +37,11 @@ QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context,
 	return engine->newQObject(new ExperimentManager(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 
+/*! \brief The ExperimentManager constructor.
+*
+*   You do not need to specify the parent object. 
+*	The StimulGL script engine automatically retrieves the parent role
+*/
 ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
 {
 	//qDebug("ExperimentManager Main Constructor.");
@@ -55,6 +60,12 @@ ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
 	//rndCounter = 0;
 }
 
+
+/*! \brief The ExperimentManager destructor.
+*
+*   You do not need call the destructor. 
+*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+*/
 ExperimentManager::~ExperimentManager()
 {
 	cleanupExperiment();
@@ -102,8 +113,14 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
 }
 
-bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue)
+bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue, bool bIsInitializing)
 {
+/*! \brief Inserts a specified object parameter for the current experiment block.
+ *
+ *  Inserts a specified object parameter with objectID(nObjectID), parameter name(sName) and parameter value(sValue) for the current experiment block.
+ *  If bIsInitializing is true then this new parameter is marked as Initializing, see #ParsedParameterDefinition.bIsInitialized,
+ *  this marks the parameter as unused which can be helpful for further setting the default value.
+ */
 	if (nObjectID >= 0) 
 	{
 		if (!lExperimentObjectList.isEmpty())
@@ -118,6 +135,7 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 						ParsedParameterDefinition tmpParDef;
 						tmpParDef.bHasChanged = true;
 						tmpParDef.sValue = sValue;
+						tmpParDef.bIsInitialized = bIsInitializing;
 						lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpParDef);
 						return true;
 					}
@@ -130,6 +148,10 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 
 bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, ParsedParameterDefinition &strcParDef)
 {
+/*! \brief Returns a boolean value that determines if a specified object parameter from the current experiment block could be retrieved and set.
+ *
+ *  Returns true if &strcParDef could be set to a specified object parameter with objectID(nObjectID), parameter name(sName) for the current experiment block.
+ */
 	if (nObjectID >= 0)
 	{
 		if (!lExperimentObjectList.isEmpty())
@@ -146,6 +168,13 @@ bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,co
 						if (lExperimentObjectList[i].ExpBlockParams->contains(sName))
 						{
 							strcParDef = lExperimentObjectList[i].ExpBlockParams->value(sName,strcParDef);
+							if (strcParDef.bIsInitialized == true)
+							{
+								//Important, here we need to set the bFirstRequire option to false for future requests, but return the parameter with true
+								ParsedParameterDefinition tmpPPD(strcParDef);
+								tmpPPD.bIsInitialized = false;
+								lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpPPD);
+							}
 							return true;
 						}
 						return false;
@@ -182,6 +211,11 @@ bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nOb
 
 bool ExperimentManager::logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage, const QString &strValue)
 {
+/*! \brief Use this function to log Experiment Data to a logfile.
+ *
+ *  Returns a boolean value that determines if a log entry consisting of a ObjectID(nObjectIndex), TimerID(nTimerIndex), 
+ *  Function(strFunction), Tag(strTag), Message(strMessage) and Value(strValue) could be forwarded to the internal Experiment Data Logger.
+ */
 	if (expDataLogger)
 	{
 		expDataLogger->setLogVars(nObjectIndex, nTimerIndex, strFunction, strTag, strMessage, strValue);
@@ -192,6 +226,11 @@ bool ExperimentManager::logExperimentObjectData(const int &nObjectIndex, const i
 
 int ExperimentManager::createExperimentTimer()
 {
+/*! \brief Use this function to create a Experiment Timer.
+ *
+ *  Returns the TimerID of a newly constructed Experiment Timer.
+ *  If this fails the function returns -1.
+ */
 	if (expDataLogger)
 	{
 		return expDataLogger->createTimer();
@@ -201,6 +240,11 @@ int ExperimentManager::createExperimentTimer()
 
 bool ExperimentManager::startExperimentTimer(int nIndex)
 {
+/*! \brief Use this function to start a Experiment Timer.
+ *
+ *  Returns a boolean value that determines if the Timer with TimerID(nIndex) could be started,
+ *  otherwise it returns false.
+ */
 	if (expDataLogger)
 	{
 		return expDataLogger->startTimer(nIndex);
@@ -210,6 +254,11 @@ bool ExperimentManager::startExperimentTimer(int nIndex)
 
 double ExperimentManager::restartExperimentTimer(int nIndex)
 {
+/*! \brief Use this function to re-start a Experiment Timer.
+ *
+ *  Returns a boolean value that determines if the Timer with TimerID(nIndex) could be re-started,
+ *  otherwise it returns false.
+ */
 	if ((expDataLogger) && (nIndex >= 0))
 	{
 		return expDataLogger->restartTimer(nIndex);
@@ -219,6 +268,11 @@ double ExperimentManager::restartExperimentTimer(int nIndex)
 
 double ExperimentManager::elapsedExperimentTimerTime(int nIndex)
 {
+/*! \brief Use this function to retrieve the current elapsed Experiment Timer Time.
+ *
+ *  Returns a double value that holds the current Experiment Timer Time from the Timer with TimerID(nIndex), 
+ *  if the current Time could not be fetched than the function returns -1.
+ */
 	if ((expDataLogger) && (nIndex >= 0))
 	{
 		return expDataLogger->elapsedTimerTime(nIndex);
@@ -228,11 +282,19 @@ double ExperimentManager::elapsedExperimentTimerTime(int nIndex)
 
 QString ExperimentManager::getCurrentDateTimeStamp()
 {
+/*! \brief Use this function to retrieve the current Date/Time.
+ *
+ *  Returns a string containing the current Date/Time.
+ */
 	return (QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 }
 
 QString ExperimentManager::getExperimentFileName()
 {
+/*! \brief Returns the current set experiment filename.
+ *
+ *  The internal set experiment filename is returned, see #setExperimentFileName.
+ */
 	if(QFile::exists(m_ExpFileName))
 	{
 		return m_ExpFileName;
@@ -246,14 +308,28 @@ QString ExperimentManager::getExperimentFileName()
 
 bool ExperimentManager::setExperimentFileName(const QString qstrExpFileName)
 {
+/*! \brief Sets the current experiment filename.
+ *
+ *  The internal experiment filename is set to the parameter qstrExpFileName.
+ *  Returns true if the filename exists.
+ */
 	m_ExpFileName = qstrExpFileName;
 	QFileInfo fInfo(m_ExpFileName);
-	m_ExpFolder = fInfo.absolutePath();
-	return true;
+	if (fInfo.exists())
+	{
+		m_ExpFolder = fInfo.absolutePath();
+		return true;
+	}
+	return false;
 }
 
 bool ExperimentManager::saveExperiment(QString strFile)
 {
+/*! \brief Saves the Experiment from memory to a file.
+ *
+ *  The current Experiment in memory is saved to a file (strFile), if strFile=="" then the experiment is automatically saved to the last set experiment filename, 
+ *  see #setExperimentFileName.
+ */
 	if (!currentExperimentTree)
 		return false;
 	
@@ -286,6 +362,11 @@ bool ExperimentManager::saveExperiment(QString strFile)
 
 bool ExperimentManager::loadExperiment(QString strFile, bool bViewEditTree)
 {
+/*! \brief Loads the Experiment from a file into memory.
+ *
+ *  The Experiment file (strFile) is load into memory, if strFile=="" then the last set experiment is automatically loaded in memory, see #setExperimentFileName.
+ *  If bViewEditTree is set to true then the experiment filename is shown in a custom viewer (under construction).
+ */
 	if (currentExperimentTree)
 	{
 		delete currentExperimentTree;
@@ -349,6 +430,10 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 
 bool ExperimentManager::runExperiment()
 {
+/*! \brief Runs the current Experiment from memory.
+ *
+ *  The current Experiment in memory is started if/after it has successfully loaded.
+ */
 	if (!currentExperimentTree)
 	{
 		if((loadExperiment("", false) == false) || (!currentExperimentTree))
@@ -434,6 +519,10 @@ void ExperimentManager::initializeDataLogger()
 
 void ExperimentManager::abortExperiment()
 {
+/*! \brief Aborts the current Experiment that is running.
+ *
+ *  Tries to abort the current Experiment that is running, see #runExperiment.
+ */
 	if(getCurrentExperimentState()==Experiment_Started)
 	{
 		changeCurrentExperimentState(Experiment_IsStopping);
@@ -445,6 +534,10 @@ void ExperimentManager::abortExperiment()
 
 void ExperimentManager::stopExperiment()
 {
+/*! \brief Stops the current Experiment that is running.
+ *
+ *  Tries to stop the current Experiment that is running, see #runExperiment.
+ */
 	if(getCurrentExperimentState()==Experiment_Started)
 	{
 		changeCurrentExperimentState(Experiment_IsStopping);
@@ -1432,55 +1525,55 @@ bool ExperimentManager::createExperimentObjects()
 	return false;
 }
 
-bool ExperimentManager::setFullScreenMode(const bool bFullScreen)
-{
-	m_RunFullScreen = bFullScreen;
-	return true;
-}
+//bool ExperimentManager::setFullScreenMode(const bool bFullScreen)
+//{
+//	m_RunFullScreen = bFullScreen;
+//	return true;
+//}
 
-bool ExperimentManager::setDebugMode(const bool bDebugMode)
-{
-	m_DebugMode = bDebugMode;
-	return true;
-}
+//bool ExperimentManager::setDebugMode(const bool bDebugMode)
+//{
+//	m_DebugMode = bDebugMode;
+//	return true;
+//}
 
 //void ExperimentManager::setBackgroundColor(const QColor &col)
 //{
 	//this->setBackgroundBrush(QBrush(col));
 //}
 
-void ExperimentManager::changeToOpenGLView(QGraphicsView *GraphView)
-{
-	GraphView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));//QGL::DoubleBuffer, SampleBuffers
-
-	//GraphView->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
-	//QGraphicsView::FullViewportUpdate	0	When any visible part of the scene changes or is reexposed, QGraphicsView will update the entire viewport. This approach is fastest when QGraphicsView spends more time figuring out what to draw than it would spend drawing (e.g., when very many small items are repeatedly updated). This is the preferred update mode for viewports that do not support partial updates, such as QGLWidget, and for viewports that need to disable scroll optimization.
-	//QGraphicsView::MinimalViewportUpdate	1	QGraphicsView will determine the minimal viewport region that requires a redraw, minimizing the time spent drawing by avoiding a redraw of areas that have not changed. This is QGraphicsView's default mode. Although this approach provides the best performance in general, if there are many small visible changes on the scene, QGraphicsView might end up spending more time finding the minimal approach than it will spend drawing.
-	//QGraphicsView::SmartViewportUpdate	2	QGraphicsView will attempt to find an optimal update mode by analyzing the areas that require a redraw.
-	//QGraphicsView::BoundingRectViewportUpdate	4	The bounding rectangle of all changes in the viewport will be redrawn. This mode has the advantage that QGraphicsView searches only one region for changes, minimizing time spent determining what needs redrawing. The disadvantage is that areas that have not changed also need to be redrawn.
-	//QGraphicsView::NoViewportUpdate	3	QGraphicsView will never update its viewport when the scene changes; the user is expected to control all updates. This mode disables all (potentially slow) item visibility testing in QGraphicsView, and is suitable for scenes that either require a fixed frame rate, or where the viewport is otherwise updated externally.
-	//view.setScene(new OpenGLScene);
-
-	//GraphView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-	////GraphView.setCacheMode(QGraphicsView.CacheBackground);// to speed up difficult background refresh speed
-	//GraphView->setOptimizationFlags(QGraphicsView::DontSavePainterState | QGraphicsView::DontAdjustForAntialiasing);
-		
-	QDesktopWidget* desktopWidget = QApplication::desktop();
-	const QRectF rScreenResolution = desktopWidget->screenGeometry();//availableGeometry();
-	//int w = rScreenResolution.width();//GraphView->width();
-	//int h = rScreenResolution.height();//GraphView->height();
-	//this->setSceneRect(rScreenResolution);
-	//GraphView->fitInView(rScreenResolution, Qt::KeepAspectRatio);
-	GraphView->setSceneRect(rScreenResolution);
-
-	//GraphView->setSceneRect(-0.5*w, -0.5*h, w, h);
-	//GraphView->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-	//GraphView->setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-	//GraphView->updateSceneRect(QRect(0, 0, w, h));
-	//boundingRect()
-	//this->setItemIndexMethod(QGraphicsScene::NoIndex);
-	//GraphView->setDragMode(QGraphicsView::NoDrag);
-}
+//void ExperimentManager::changeToOpenGLView(QGraphicsView *GraphView)
+//{
+//	GraphView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));//QGL::DoubleBuffer, SampleBuffers
+//
+//	//GraphView->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
+//	//QGraphicsView::FullViewportUpdate	0	When any visible part of the scene changes or is reexposed, QGraphicsView will update the entire viewport. This approach is fastest when QGraphicsView spends more time figuring out what to draw than it would spend drawing (e.g., when very many small items are repeatedly updated). This is the preferred update mode for viewports that do not support partial updates, such as QGLWidget, and for viewports that need to disable scroll optimization.
+//	//QGraphicsView::MinimalViewportUpdate	1	QGraphicsView will determine the minimal viewport region that requires a redraw, minimizing the time spent drawing by avoiding a redraw of areas that have not changed. This is QGraphicsView's default mode. Although this approach provides the best performance in general, if there are many small visible changes on the scene, QGraphicsView might end up spending more time finding the minimal approach than it will spend drawing.
+//	//QGraphicsView::SmartViewportUpdate	2	QGraphicsView will attempt to find an optimal update mode by analyzing the areas that require a redraw.
+//	//QGraphicsView::BoundingRectViewportUpdate	4	The bounding rectangle of all changes in the viewport will be redrawn. This mode has the advantage that QGraphicsView searches only one region for changes, minimizing time spent determining what needs redrawing. The disadvantage is that areas that have not changed also need to be redrawn.
+//	//QGraphicsView::NoViewportUpdate	3	QGraphicsView will never update its viewport when the scene changes; the user is expected to control all updates. This mode disables all (potentially slow) item visibility testing in QGraphicsView, and is suitable for scenes that either require a fixed frame rate, or where the viewport is otherwise updated externally.
+//	//view.setScene(new OpenGLScene);
+//
+//	//GraphView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+//	////GraphView.setCacheMode(QGraphicsView.CacheBackground);// to speed up difficult background refresh speed
+//	//GraphView->setOptimizationFlags(QGraphicsView::DontSavePainterState | QGraphicsView::DontAdjustForAntialiasing);
+//		
+//	QDesktopWidget* desktopWidget = QApplication::desktop();
+//	const QRectF rScreenResolution = desktopWidget->screenGeometry();//availableGeometry();
+//	//int w = rScreenResolution.width();//GraphView->width();
+//	//int h = rScreenResolution.height();//GraphView->height();
+//	//this->setSceneRect(rScreenResolution);
+//	//GraphView->fitInView(rScreenResolution, Qt::KeepAspectRatio);
+//	GraphView->setSceneRect(rScreenResolution);
+//
+//	//GraphView->setSceneRect(-0.5*w, -0.5*h, w, h);
+//	//GraphView->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
+//	//GraphView->setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
+//	//GraphView->updateSceneRect(QRect(0, 0, w, h));
+//	//boundingRect()
+//	//this->setItemIndexMethod(QGraphicsScene::NoIndex);
+//	//GraphView->setDragMode(QGraphicsView::NoDrag);
+//}
 
 ContainerDlg::ContainerDlg(QWidget *parent) : QDialog(parent)
 {
