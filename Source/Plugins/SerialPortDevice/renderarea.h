@@ -1,4 +1,4 @@
-//ExperimentManagerplugin
+//SerialPortDeviceplugin
 //Copyright (C) 2012  Sven Gijsen
 //
 //This file is part of StimulGL.
@@ -17,41 +17,38 @@
 //
 
 
-#ifndef METAEXTENSIONS_H
-#define METAEXTENSIONS_H
+#ifndef RENDERAREA_H
+#define RENDERAREA_H
 
-#include <QTimer>
-#include <QThread>
-#include "ExperimentTimer.h"
+#include <QWidget>
+#include "Global.h"
+//#include <QBrush>
+//#include <QPen>
+//#include <QPixmap>
 
-class TriggerTimer : public QObject
+class RenderArea : public QWidget
 {
 	Q_OBJECT
 
-signals:
-	void timeout();
-
 public:
-	TriggerTimer();
-	TriggerTimer(const TriggerTimer& other ){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
-	~TriggerTimer();
+	RenderArea(QWidget *parent = NULL);
+	~RenderArea();
 
 public slots:
-	void startTimer(double nMSec);
-	void stopTimer();
+	//void UpdatePosition(float XPos, float YPos, bool bShowRef = false);
+	void setAntialiased(bool antialiased);
+
+protected:
+	void paintEvent(QPaintEvent *event);
 
 private:
-	QThread _thread;
-	//QMutex _mutex;
-	QTimer ThreadActivationTrigger;
-	ExperimentTimer eTimer;
-	bool bDoStopTimer;
-	double dTriggerInterval;
-	double dElapsed;
-	double dNextThreshold;
-
-private slots:
-	void runThreadedTimerFunction();
+	//Shape shape;
+	//QPen pen;
+	//QBrush brush;
+	bool m_bAntialiased;
+	//bool m_bShowRefLines;
+	//float m_fXPos;
+	//float m_fYPos;
 };
 
-#endif // METAEXTENSIONS_H
+#endif // RENDERAREA_H

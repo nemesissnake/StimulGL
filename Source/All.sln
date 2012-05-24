@@ -12,7 +12,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StimulGL", "StimulGL\StimulGL.vcxproj", "{44216F98-423E-3FF8-BFF4-8B464627E2EC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52} = {13EA300A-1CA2-417E-8DC0-C5217D9F9A52}
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F} = {B820C439-C052-4D87-BD6C-62BFB2BA973F}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SerialPortDeviceplugin", "Plugins\SerialPortDevice\SerialPortDeviceplugin.vcxproj", "{B820C439-C052-4D87-BD6C-62BFB2BA973F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +87,18 @@ Global
 		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Template|Win32.Build.0 = Template|Win32
 		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Template|x64.ActiveCfg = Template|x64
 		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Template|x64.Build.0 = Template|x64
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Debug|Win32.Build.0 = Debug|Win32
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Debug|x64.ActiveCfg = Debug|x64
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Debug|x64.Build.0 = Debug|x64
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Release|Win32.ActiveCfg = Release|Win32
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Release|Win32.Build.0 = Release|Win32
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Release|x64.ActiveCfg = Release|x64
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Release|x64.Build.0 = Release|x64
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Template|Win32.ActiveCfg = Template|Win32
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Template|Win32.Build.0 = Template|Win32
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Template|x64.ActiveCfg = Template|x64
+		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Template|x64.Build.0 = Template|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

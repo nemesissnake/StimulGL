@@ -592,6 +592,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|x64'">"$(QTDIR)\bin\moc.exe"    "-I." "-I.\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I." "-I." "-I." "%(FullPath)" -o ".\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"</Command>
     </CustomBuild>
     <ClInclude Include="..\..\StimulGL\plugininterface.h" />
+    <ClInclude Include="CustomScriptObjects.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />

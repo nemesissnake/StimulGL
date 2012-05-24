@@ -42,8 +42,8 @@ bool USBHIDDevicePlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue USBHIDDeviceProto = engine.newQObject(USBHIDDeviceObject);
 	engine.setDefaultPrototype(qMetaTypeId<USBHIDDevice*>(), USBHIDDeviceProto);
 	QScriptValue USBHIDDeviceCtor = engine.newFunction(USBHIDDevice::ctor__extensionname, USBHIDDeviceProto);
-	engine.globalObject().setProperty("USBHIDDevice", USBHIDDeviceCtor);
-	int nRes = qRegisterMetaType<USBHIDDevice>("USBHIDDevice");
+	engine.globalObject().setProperty(PLUGIN_SCRIPTOBJECT_NAME, USBHIDDeviceCtor);
+	int nRes = qRegisterMetaType<USBHIDDevice>(PLUGIN_SCRIPTOBJECT_NAME);
 	return true;
 }
 

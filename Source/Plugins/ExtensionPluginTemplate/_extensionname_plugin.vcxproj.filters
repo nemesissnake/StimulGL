@@ -138,6 +138,9 @@
     <ClInclude Include="..\..\StimulGL\plugininterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CustomScriptObjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="_extensionname_.h">

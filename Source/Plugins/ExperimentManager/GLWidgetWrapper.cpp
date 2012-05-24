@@ -721,7 +721,7 @@ bool GLWidgetWrapper::startExperimentObject()
 {
 	if(!this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
 	{
-		//qDebug() << "RetinoMap_glwidget::start::No Double Buffering available!";
+		//qDebug() << __FUNCTION__ << "RetinoMap_glwidget::No Double Buffering available!";
 		stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
 		return false;
 	}

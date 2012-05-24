@@ -438,13 +438,13 @@ bool ExperimentManager::runExperiment()
 	{
 		if((loadExperiment("", false) == false) || (!currentExperimentTree))
 		{
-			qDebug() << "runExperiment::No Experiment loaded!";
+			qDebug() << __FUNCTION__ << "::No Experiment loaded!";
 			return false;
 		}
 	}
 	if(getCurrentExperimentState() != Experiment_Initialized)
 	{
-		qDebug() << "runExperiment::Wrong state, could not start experiment!";
+		qDebug() << __FUNCTION__ << "::Wrong state, could not start experiment!";
 		return false;
 	}
 
@@ -527,7 +527,7 @@ void ExperimentManager::abortExperiment()
 	{
 		changeCurrentExperimentState(Experiment_IsStopping);
 		if(!abortExperimentObjects())
-			qDebug() << "ExperimentManager::abortExperiment Could not abort the Experiment Objects";
+			qDebug() << __FUNCTION__ << ": Could not abort the Experiment Objects";
 		QThread::currentThread()->setPriority(QThread::NormalPriority);
 	}
 }
@@ -604,7 +604,7 @@ bool ExperimentManager::changeExperimentObjectsSignalSlots(bool bDisconnect, int
 {
 	if (!currentExperimentTree)
 	{
-		qDebug() << "connectExperimentObjectsSignalSlots::No Experiment loaded!";
+		qDebug() << __FUNCTION__ << ":No Experiment loaded!";
 		return false;
 	}
 	if (lExperimentObjectList.isEmpty())
@@ -669,7 +669,7 @@ void ExperimentManager::changeExperimentSubObjectState(ExperimentSubObjectState 
 {
 	if (!currentExperimentTree)
 	{
-		qDebug() << "invokeExperimentObjectSlot::No Experiment loaded!";
+		qDebug() << __FUNCTION__ ":No Experiment loaded!";
 	}
 	if (lExperimentObjectList.isEmpty())
 		return;
@@ -727,7 +727,7 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 {
 	if (!currentExperimentTree)
 	{
-		qDebug() << "invokeExperimentObjectSlot::No Experiment loaded!";
+		qDebug() << __FUNCTION__ << ":No Experiment loaded!";
 		return false;
 	}
 	if (lExperimentObjectList.isEmpty())
@@ -761,7 +761,7 @@ bool ExperimentManager::invokeExperimentObjectsSlots(const QString &sSlotName)
 				if(!metaObject->invokeMethod(lExperimentObjectList.at(i).pObject, sSlotName.toLatin1(), Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))//, Q_ARG(QString, "sqrt"), Q_ARG(int, 42), Q_ARG(double, 9.7));
 					//if(!QMetaObject::invokeMethod(lExperimentObjectList[i].pObject, sMethod.toLatin1(), Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))//, Q_ARG(QString, "sqrt"), Q_ARG(int, 42), Q_ARG(double, 9.7));
 				{
-					qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << sSlotFullName << ")!";		
+					qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << sSlotFullName << ")!";		
 					return false;
 				}
 			}
@@ -803,7 +803,7 @@ bool ExperimentManager::configureExperiment()
 {
 	if (!currentExperimentTree)
 	{
-		qDebug() << "configureExperiment::No Experiment loaded!";
+		qDebug() << __FUNCTION__ ":No Experiment loaded!";
 		return false;
 	}
 	//Default Settings
@@ -870,7 +870,7 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 {
 	if (!currentExperimentTree)
 	{
-		qDebug() << "initializeExperimentObjects(" << bFinalize << ")::No Experiment loaded!";
+		qDebug() << __FUNCTION__ "(" << bFinalize << ")::No Experiment loaded!";
 		return false;
 	}
 	QStringList strList;
@@ -997,13 +997,11 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 							//sArguments.append(QGenericArgument());	
 							if (k<nArgCount)
 							{
-								bSucceeded = false;
 								normType = QMetaObject::normalizedType(sParameterTypes[k].toLatin1());
 								typeId = QMetaType::type(normType);								
 
-								switch (typeId)//QMetaType::Type
+								if(typeId==QMetaType::Bool)//QMetaType::Type
 								{
-								case QMetaType::Bool: 
 									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
 									if(k==0)
 										sArguments0 = Q_ARG(bool,sParameterValues[k].toInt());
@@ -1025,10 +1023,9 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 										sArguments8 = Q_ARG(bool,sParameterValues[k].toInt());
 									else if(k==9)
 										sArguments9 = Q_ARG(bool,sParameterValues[k].toInt());
-									
-									bSucceeded = true;
-									break;
-								case QMetaType::Int: 
+								}
+								else if(typeId==QMetaType::Int)
+								{
 									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
 									if(k==0)
 										sArguments0 = Q_ARG(int,sParameterValues[k].toInt());
@@ -1050,10 +1047,9 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 										sArguments8 = Q_ARG(int,sParameterValues[k].toInt());
 									else if(k==9)
 										sArguments9 = Q_ARG(int,sParameterValues[k].toInt());
-
-									bSucceeded = true;
-									break;
-								case QMetaType::Short: 
+								}
+								else if(typeId==QMetaType::Short)
+								{ 
 									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
 									if(k==0)
 										sArguments0 = Q_ARG(short,sParameterValues[k].toShort());
@@ -1075,10 +1071,9 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 										sArguments8 = Q_ARG(short,sParameterValues[k].toShort());
 									else if(k==9)
 										sArguments9 = Q_ARG(short,sParameterValues[k].toShort());
-
-									bSucceeded = true;
-									break;
-								case QMetaType::Double:
+								}
+								else if(typeId==QMetaType::Double)
+								{
 									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
 									if(k==0)
 										sArguments0 = Q_ARG(double,sParameterValues[k].toDouble());
@@ -1100,16 +1095,31 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 										sArguments8 = Q_ARG(double,sParameterValues[k].toDouble());
 									else if(k==9)
 										sArguments9 = Q_ARG(double,sParameterValues[k].toDouble());
-
-									bSucceeded = true;
-									break;
-								default:
-									bSucceeded = false;
 								}
-								if (bSucceeded == false)
+								else//In all other cases we marshal to QString and give that a try... 
 								{
-									qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not create a generic argument!";
-									return false;
+									qWarning() << "initializeExperimentObjects(" << bFinalize << ")::Undefined argument (typeId=" << typeId << "), switching to QString to create a generic argument...";
+									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+									if(k==0)
+										sArguments0 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==1)
+										sArguments1 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==2)
+										sArguments2 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==3)
+										sArguments3 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==4)
+										sArguments4 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==5)
+										sArguments5 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==6)
+										sArguments6 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==7)
+										sArguments7 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==8)
+										sArguments8 = Q_ARG(QString,sParameterValues[k]);
+									else if(k==9)
+										sArguments9 = Q_ARG(QString,sParameterValues[k]);
 								}
 							}
 							else
@@ -1117,15 +1127,34 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 								break;
 							}
 						}
-
-
-
 						if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1(),sArguments0,sArguments1,sArguments2,sArguments3,sArguments4,sArguments5,sArguments6,sArguments7,sArguments8,sArguments9)))
 						{
 							//QStringList methods;
 							//for(int i = sourceMetaObject->methodOffset(); i < sourceMetaObject->methodCount(); ++i)
 							//	methods << QString::fromLatin1(sourceMetaObject->method(i).signature());
-							qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
+							qDebug() << __FUNCTION__ << "(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
+							//bSucceeded = true;
+							//break;							
+
+							//int id = QMetaType::type(QString("QIODevice::OpenMode").toLatin1());//OPENMODE_ENUM_META_TYPE_NAME
+							//if (id != -1) {
+							//	void *myClassPtr = QMetaType::construct(id);
+							//	//myClassPtr->setValue("ReadOnly");
+							//	QVariant tmpVariant = QVariant::fromValue(myClassPtr);
+							//	QIODevice::OpenMode *s = (QIODevice::OpenMode *)myClassPtr;
+							//	//s = (QIODevice::OpenMode)*myClassPtr;
+							//	//QVariant var;
+							//	//var.setValue(s); // copy s into the variant
+
+							//	//...
+
+							//		// retrieve the value
+							//		//MyStruct s2 = var.value<MyStruct>();
+
+							//	QMetaType::destroy(id, myClassPtr);
+							//	myClassPtr = 0;
+							//}
+
 							return false;
 						}
 						continue;
@@ -1134,7 +1163,7 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 					{
 						if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1())))
 						{
-							qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
+							qDebug() << __FUNCTION__ << "(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
 							return false;
 						}
 						continue;
@@ -1159,7 +1188,7 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 {//nObjectID only implemented when bDisconnect = true!
 	if (!currentExperimentTree)
 	{
-		qDebug() << "connectExperimentObjects::No Experiment loaded!";
+		qDebug() << __FUNCTION__ << "::No Experiment loaded!";
 		return false;
 	}
 	QStringList strList;
@@ -1384,7 +1413,7 @@ bool ExperimentManager::createExperimentObjects()
 {
 	if (!currentExperimentTree)
 	{
-		qDebug() << "createExperimentObjects::No Experiment loaded!";
+		qDebug() << __FUNCTION__ << "::No Experiment loaded!";
 		return false;
 	}
 	QStringList strList;
@@ -1475,7 +1504,7 @@ bool ExperimentManager::createExperimentObjects()
 						bRetVal = true;
 						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETMETAOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal))))
 						{
-							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETMETAOBJECT << "()" << ")!";		
+							qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETMETAOBJECT << "()" << ")!";		
 							return false;
 						}		
 					}
@@ -1486,7 +1515,7 @@ bool ExperimentManager::createExperimentObjects()
 						bRetVal = true;
 						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
 						{
-							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTOBJECTID << "()" << ")!";		
+							qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETEXPERIMENTOBJECTID << "()" << ")!";		
 							return false;
 						}		
 					}
@@ -1508,7 +1537,7 @@ bool ExperimentManager::createExperimentObjects()
 						bRetVal = true;
 						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETBLOCKTRIALDOMNODELIST, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentBlockTrialsDomNodeList))))
 						{
-							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
+							qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
 							return false;
 						}		
 					}

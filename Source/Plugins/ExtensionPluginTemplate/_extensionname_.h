@@ -26,6 +26,7 @@
 #include <QtScript>
 #include <QScriptable>
 #include "./../../StimulGL/mainappinfo.h"
+//#include "CustomScriptObjects.h"
 
 class _extensionname_ : public QObject, protected QScriptable
 {
@@ -45,6 +46,9 @@ public:
 public slots:
 	void setExampleProperty( short sExampleProperty );
 	short getExampleProperty() const;
+
+protected slots:
+	//bool ExtendScriptContext(QScriptEngine &engine);
 
 private:
 	short m_ExampleProperty;

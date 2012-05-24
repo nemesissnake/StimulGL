@@ -25,6 +25,9 @@
 #include <QMessageBox>
 #include "maindefines.h"
 
+//#define EXTENDSCRIPTOBJECT_FUNCTION_SHORT_SIGNATURE "ExtendScriptContext"
+//#define EXTENDSCRIPTOBJECT_FUNCTION_FULL_SIGNATURE EXTENDSCRIPTOBJECT_FUNCTION_SHORT_SIGNATURE "(QScriptEngine&)"
+
 	class PluginInterface
 	{
 	public:
@@ -34,6 +37,54 @@
 		virtual QString Test(const QString &message) {return "I'm oke(" + message + ")" + " --> " + strPluginInformation;}	
 		virtual bool ConfigureScriptEngine(QScriptEngine &eng) = 0;
 		virtual QString GetMinimalMainProgramVersion() {return MAIN_PROGRAM_FILE_VERSION_STRING;};
+		//virtual bool FinalizeScriptObjectScriptContext(QScriptEngine &engine, QObject* object)
+		//{//This function calls the ScriptObject member functions (if defined) to further setup the scripting environment
+		//	if(object == NULL)
+		//		return false;
+		//	bool bResult = false;
+		//	const QMetaObject* metaObject = object->metaObject();
+
+		//	if (metaObject)
+		//	{
+		//		if (!(metaObject->indexOfMethod(QString(EXTENDSCRIPTOBJECT_FUNCTION_FULL_SIGNATURE).toLatin1()) == -1))//Is the slot present?
+		//		{
+		//			bool bRetVal;
+		//			//Invoke the slot
+		//			if(!metaObject->invokeMethod(object, QString(EXTENDSCRIPTOBJECT_FUNCTION_SHORT_SIGNATURE).toLatin1(), Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QScriptEngine&, engine)))//, Q_ARG(QString, "sqrt"), Q_ARG(int, 42), Q_ARG(double, 9.7));
+		//			{
+		//				qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << QString(EXTENDSCRIPTOBJECT_FUNCTION_FULL_SIGNATURE) << ")!";		
+		//				return false;
+		//			}
+		//			if (bRetVal == false)
+		//			{
+
+		//			}
+		//		}
+		//		////Query the properties(only Q_PROPERTY)
+		//		//QStringList properties;
+		//		//QString nolist;
+		//		//for(int i = metaObject->propertyOffset(); i < metaObject->propertyCount(); ++i)
+		//		//{
+		//		//	properties << QString::fromLatin1(metaObject->property(i).name());
+		//		//	nolist = QString::fromLatin1(metaObject->property(i).name());
+		//		//}
+		//		////Query the methods(only public slots!)
+		//		//QStringList methods;
+		//		//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+		//		//	methods << QString::fromLatin1(metaObject->method(i).signature());
+		//		////Query the enumerators(only ??)
+		//		//QStringList enums;
+		//		//for(int i = metaObject->enumeratorOffset(); i < metaObject->enumeratorCount(); ++i)
+		//		//	enums << QString::fromLatin1(metaObject->enumerator(i).name());
+		//	}
+		//	else
+		//	{
+		//		return false;
+		//	}
+
+		//	bResult = true;
+		//	return bResult;
+		//}
 	public slots:
 		virtual bool IsCompatible() 
 		{

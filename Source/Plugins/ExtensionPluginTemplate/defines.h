@@ -35,6 +35,7 @@
 #define PLUGIN_AUTHOR_EMAIL							"authoremail goes here"
 #define PLUGIN_COMPANY_NAME							"companyname goes here"
 #define PLUGIN_INTERNAL_NAME						"_extensionname_"
+#define PLUGIN_SCRIPTOBJECT_NAME					"_extensionname_"
 #define PLUGIN_PRODUCT_NAME							PLUGIN_INTERNAL_NAME
 #define PLUGIN_INTERNAL_EXTENSION					"dll"
 #define PLUGIN_ORIGINAL_FILENAME					PLUGIN_INTERNAL_NAME "." PLUGIN_INTERNAL_EXTENSION
