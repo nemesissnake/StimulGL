@@ -73,6 +73,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//QWaitCondition sleep;
 	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
 	MainAppInfo::Initialize();
+	QApplication::setGraphicsSystem("opengl");//"raster");
 	StimulGLFlags = mainFlags;
     AppScriptStatus = MainAppInfo::NoScript;
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash) == false)
@@ -881,12 +882,12 @@ void MainWindow::setupDynamicPluginMenus()
 				}
 				else
 				{
-					qDebug() << "setupDynamicPluginMenus(), The Static Plugin is incompatible(" << metaObject->className() << ")!";
+					qDebug() << __FUNCTION__ << ", The Static Plugin is incompatible(" << metaObject->className() << ")!";
 				}
 			}
 			else
 			{
-				qDebug() << "setupDynamicPluginMenus(), Could not invoke the Static Plugin slot(" << QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL) << ")!";	
+				qDebug() << __FUNCTION__ << ", Could not invoke the Static Plugin slot(" << QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL) << ")!";	
 			}
 			metaObject = NULL;
 			bRetVal = false;
@@ -904,10 +905,12 @@ void MainWindow::setupDynamicPluginMenus()
 				//	properties << QString::fromLatin1(metaObject->method(i).signature());
 				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL).toLatin1())) == -1))//Is the slot present?
 				{
+					//qWarning() << __FUNCTION__ << ", Checking plugin compatibility(" << fileName << ")...";	
 					//Invoke the slot
 					metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
 					if (bRetVal)
 					{
+						//qWarning() << __FUNCTION__ << ", Plugin is compatibility(" << fileName << ")";
 						if (popPluginIntoMenu(plugin))
 						{
 							pluginFileNames += fileName;
@@ -925,7 +928,7 @@ void MainWindow::setupDynamicPluginMenus()
 					}
 					else
 					{
-						qDebug() << __FUNCTION__ << "::The Dynamic Plugin is incompatible(" << metaObject->className() << ")!";
+						qDebug() << __FUNCTION__ << "::The Dynamic Plugin is incompatible(" << fileName << ")!"; //metaObject->className() << ")!";
 					}
 				}
 				else

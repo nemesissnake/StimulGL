@@ -31,6 +31,7 @@
 #include "experimenttree.h"
 #include "Global.h"
 #include "retinomap_glwidget.h"
+#include "qmlWidget.h"
 #include "./../../StimulGL/mainappinfo.h"
 #include "experimentlogger.h"
 
@@ -39,6 +40,7 @@
 #endif
 
 class RetinoMap_glwidget;
+class qmlWidget;
 class ExperimentTree;
 
 //!  The Experiment Manager class. 

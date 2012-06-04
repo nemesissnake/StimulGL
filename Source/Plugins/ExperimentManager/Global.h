@@ -62,7 +62,8 @@ struct EXML_DocVersion //Structure to hold the version information
 	int build;
 };
 
-typedef struct{
+typedef struct strcExperimentConfiguration
+{
 	int nExperimentID;
 	//int nExperimentNumber;
 	QString nExperimentName;
@@ -70,12 +71,14 @@ typedef struct{
 	ExperimentManager *pExperimentManager;
 } ExperimentConfiguration;
 
-typedef struct{
+typedef struct strcExperimentSubObjectStateHistory
+{
 	QList<ExperimentSubObjectState> nState;
 	QList<QString> sDateTimeStamp;
 } ExperimentSubObjectStateHistory;
 
-typedef struct{
+typedef struct strcTrialStructure
+{
 	int nTrialID;
 	int nTrialNumber;
 	//QString nBlockName;
@@ -84,7 +87,8 @@ typedef struct{
 	//RandomGenerator *randEmptyStimGenerator;//This can hold some trial specific Information that can also be randomized
 } TrialStructure;
 
-typedef struct{
+typedef struct strcBlockTrialStructure
+{
 	int nBlockID;
 	int nBlockNumber;
 	QString nBlockName;
@@ -92,14 +96,16 @@ typedef struct{
 	QList<TrialStructure> lTrialStructure;
 } BlockTrialStructure;
 
-typedef struct{
+typedef struct strcExperimentBlockTrialStructure
+{
 	//int nExperimentID??
 	//int nExperimentName??
 	int nNrOfBlocks;
 	QList<BlockTrialStructure> lBlockTrialStructure;
 } ExperimentBlockTrialStructure;
 
-typedef struct{
+typedef struct strcExperimentSnapshotStructure
+{
 	int currExpBlockTrialFrame;
 	int currExpExternalTrigger;			//The current experiment external trigger
 	int currExpInternalTrigger;			//The current experiment internal trigger
@@ -111,7 +117,8 @@ typedef struct{
 	//int currExpBlockTrialCycle;--> inside widget
 } ExperimentSnapshotStructure;
 
-typedef struct{
+typedef struct strcExperimentSnapshotFullStructure
+{
 	ExperimentSnapshotStructure parentStruct;
 	int nTotalProcessedExperimentTrials;		//The total number of trials processed within experiment, might be that this Trial is not fully processed
 	int nNextThresholdTriggerCount;				//When we should switch to the next block
@@ -169,6 +176,7 @@ typedef QHash<QString, ParsedParameterDefinition> tParsedParameterList;
 #define FUNC_OBJECT_STOP						"stopExperimentObject"
 #define FUNC_OBJECT_ABORT						"abortExperimentObject"
 #define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
+#define QML_WIDGET_NAME							"qmlWidget"   
 #define TRIGGERTIMER_NAME						"TriggerTimer"
 #define IMAGEPROCESSOR_NAME						"ImageProcessor"
 #define PRTFORMATMANAGER_NAME					"PRTFormatManager"

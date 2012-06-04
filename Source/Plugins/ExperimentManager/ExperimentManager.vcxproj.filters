@@ -91,27 +91,6 @@
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stimulglgraphscene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_stimulglgraphscene.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_stimulglgraphscene.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_stimulglgraphscene.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_stimulglgraphscene.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_stimulglgraphscene.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_stimulglgraphscene.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_retinomap_glwidget.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
@@ -331,6 +310,48 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_prtformatmanager.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
+    <ClCompile Include="ContainerDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ContainerDlg.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_ContainerDlg.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_ContainerDlg.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ContainerDlg.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_ContainerDlg.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ContainerDlg.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="qmlWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_qmlWidget.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_qmlWidget.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_qmlWidget.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_qmlWidget.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_qmlWidget.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_qmlWidget.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -386,13 +407,16 @@
     <CustomBuild Include="retinomap_glwidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="stimulglgraphscene.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="ExperimentManager_dialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="prtformatmanager.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ContainerDlg.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="qmlWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -401,5 +425,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="licenseHeader.licenseheader" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

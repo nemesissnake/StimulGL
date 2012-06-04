@@ -248,6 +248,11 @@ bool SerialPortDevice::setStopBits(QString stopBits)
 	return false;
 }
 
+void SerialPortDevice::setTimeout(long millisec)
+{
+	return serialPort->setTimeout(millisec);
+}
+
 void SerialPortDevice::setTimeout(qlonglong millisec)
 {
 	return serialPort->setTimeout(millisec);

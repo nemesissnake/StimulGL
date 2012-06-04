@@ -108,6 +108,7 @@ ExperimentManager::~ExperimentManager()
 void ExperimentManager::RegisterMetaTypes()
 {//To register the Objects to the Meta, so they can be accessed trough an *.exml file
 	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
+	qRegisterMetaType<qmlWidget>(QML_WIDGET_NAME);
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
@@ -978,7 +979,7 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 						}// end of parameter loop
 						int nArgCount = sParameterNames.count();						
 						QByteArray normType;
-						bool bSucceeded;
+						//bool bSucceeded;
 						int typeId;
 						//QGenericArgument sArguments[MAX_INVOKE_ARG_COUNT];// this doesn't work! weird bug??
 						QGenericArgument sArguments0;
@@ -1095,6 +1096,30 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 										sArguments8 = Q_ARG(double,sParameterValues[k].toDouble());
 									else if(k==9)
 										sArguments9 = Q_ARG(double,sParameterValues[k].toDouble());
+								}
+								else if(typeId==QMetaType::Long)
+								{
+									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+									if(k==0)
+										sArguments0 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==1)
+										sArguments1 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==2)
+										sArguments2 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==3)
+										sArguments3 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==4)
+										sArguments4 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==5)
+										sArguments5 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==6)
+										sArguments6 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==7)
+										sArguments7 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==8)
+										sArguments8 = Q_ARG(long,sParameterValues[k].toLong());
+									else if(k==9)
+										sArguments9 = Q_ARG(long,sParameterValues[k].toLong());
 								}
 								else//In all other cases we marshal to QString and give that a try... 
 								{

@@ -125,7 +125,8 @@ enum RetinoMapExperimentType //The state of the main experiment object
 	RetinoMap_MovingDots	= 5
 };
 
-typedef struct{
+typedef struct strcMovingDotsStructure
+{
 	QPolygonF Pos; //A QPolygonF is a QVector<QPointF>. The easiest way to add points to a QPolygonF is to use its streaming operator: polygon << QPointF(10.4, 20.5) << QPointF(20.2, 30.2);
 	QPolygonF OldPos;
 	QList<QLineF> Mov;

@@ -57,7 +57,7 @@ EnableResponseFiles
 {Yes}
 
 Ext
-{}
+{.exe}
 
 ExtractSolidArchivesOnStartup
 {No}
@@ -248,33 +248,26 @@ File ::0C66E5AE-4BD7-4C6B-96A2-147410FCF51A -name perl.api -parent ABE09714-5C58
 File ::EC2C81FC-DB8C-4B0F-8EB3-832F62F3046C -name python.api -parent ABE09714-5C58-4F69-B029-54982E1F64F1
 File ::3826E267-0277-4FD9-AF63-66C342CDC53D -name qscript.api -parent ABE09714-5C58-4F69-B029-54982E1F64F1
 File ::B032140D-993A-4FF7-AE80-28677F58ADD7 -name xml.api -parent ABE09714-5C58-4F69-B029-54982E1F64F1
-File ::27E525B4-67D4-4649-AD97-96432A2C8E74 -name E:/Projects/StimulGL/Install/StimulGL_Win32_Debug.exe -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::7E328DE7-2654-4D26-81C8-9E5FCAF16983 -name E:/Projects/StimulGL/Install/StimulGL_Win32_Release.exe -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::37A39DB3-A83E-4827-A49A-459E45D983DA -name E:/Projects/StimulGL/Install/LICENSE.txt -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::921DC5FF-4AB1-4073-8589-2E345A2BFE94 -name E:/Projects/StimulGL/Install/README.txt -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::4434FE16-7CF0-4686-96AE-9254CC88ED91 -name E:/Projects/StimulGL/Install/bins/vcredist_x86.exe -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::1DC74C97-D411-49FA-B52B-54BFF31B6221 -name C:/Qt/4.8.0/win32/bin/hidapi_win32.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::2A5B3BB4-3214-4A71-B423-AE77CADB846D -name C:/Qt/4.8.0/win32/bin/hidapid_win32.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::718465D8-44BF-4051-9C1B-635A7CDA168C -name C:/Qt/4.8.0/win32/bin/inpout32.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::C1E903B8-3B00-4267-860B-C1F091F0476F -name C:/Qt/4.8.0/win32/bin/qscintilla2.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::BBC4885A-CB87-4E75-9ECA-36D4078EC83D -name C:/Qt/4.8.0/win32/bin/qscintilla2d.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::53C3D9DA-C8A4-4D9F-9605-D90D1061EFCC -name C:/Qt/4.8.0/win32/bin/QtCore4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::3F1B57EE-DC49-481F-A6BD-2369F4CC7632 -name C:/Qt/4.8.0/win32/bin/QtCored4.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::2B3D34FC-E604-4F5E-A7B4-56E131BCCFE1 -name C:/Qt/4.8.0/win32/bin/QtGui4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::CDDA6A7A-CC89-4A05-8BED-D517D7412098 -name C:/Qt/4.8.0/win32/bin/QtGuid4.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::F7A1E2EE-C40E-42A4-ABDD-68C1FADEDB9F -name C:/Qt/4.8.0/win32/bin/QtOpenGL4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::F9E5965A-5D2F-4467-A919-71A1D46BBAFB -name C:/Qt/4.8.0/win32/bin/QtOpenGLd4.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::D573A685-88EB-46D5-9492-457A7A806243 -name C:/Qt/4.8.0/win32/bin/QtScript4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::DD52F5AF-330D-4941-9D03-DB137EB09390 -name C:/Qt/4.8.0/win32/bin/QtScriptd4.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::D0EB9CCE-EF7D-41F0-BF91-89666E84D122 -name C:/Qt/4.8.0/win32/bin/QtScriptTools4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::6E85A816-89C2-4CE8-AD57-EC1C0C45A758 -name C:/Qt/4.8.0/win32/bin/QtScriptToolsd4.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::DDC8AAA1-2215-44EC-95BB-060DEF259430 -name C:/Qt/4.8.0/win32/bin/QtSvg4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::9B20B09B-DE83-47B5-9205-E2FD8778627A -name C:/Qt/4.8.0/win32/bin/QtSvgd4.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::95623759-1C20-4E3C-B9B2-0340BFF29B8E -name C:/Qt/4.8.0/win32/bin/QtXml4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::AAA8BA0F-A227-47FE-8511-9B66BD804587 -name C:/Qt/4.8.0/win32/bin/QtXmld4.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::F349EF95-C8B5-403B-8FF5-2788CEBE0427 -name C:/Qt/4.8.0/win32/bin/QtXmlPatterns4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::00A800FE-B32E-4624-A14B-42491FCF4DB8 -name C:/Qt/4.8.0/win32/bin/QtXmlPatternsd4.dll -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::A4A3887F-2E59-4A9C-853C-25943CA4AC45 -name E:/Projects/StimulGL/Install/StimulGL_Win32_Release_NoBindings.bat -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::B3B97544-81FA-4ED0-9B2B-736F9182571E -name C:/Qt/4.8.0/win32/bin/QtNetwork4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::5B031E42-D5BD-4B41-9977-71FE9B6DC467 -name C:/Qt/4.8.0/win32/bin/QtSql4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::E1255792-CE4B-4F24-A248-F1C402533494 -name C:/Qt/4.8.0/win32/bin/phonon4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::5A4658E0-6A9D-48D3-ABE0-F1288BC2BDEB -name C:/Qt/4.8.0/win32/bin/QtDeclarative4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 FileGroup ::21B9C60D-2802-481D-BF1F-F26B0588B66E -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name Plugins -parent FileGroups
 File ::B1EFAFC1-6B99-4503-82D2-507339ADFC7F -type dir -name E:/Projects/StimulGL/Install/plugins -parent 21B9C60D-2802-481D-BF1F-F26B0588B66E
 File ::F5060ED4-9C5C-45CE-B813-79BD56A04D6B -type dir -name Win32 -parent B1EFAFC1-6B99-4503-82D2-507339ADFC7F
@@ -303,6 +296,8 @@ File ::FD25B175-0EF5-42DA-8454-0B4C2E77DFE0 -name qtscript_xml.dll -parent 1D9F1
 File ::6C042694-B0E6-43EF-969F-28C59054B090 -name qtscript_xmld.dll -active 0 -parent 1D9F1E95-F0CE-4F72-ADD4-3D373040CE89
 File ::B50DCEB2-C7B4-4FEE-9F45-D237FF4800BA -name qtscript_xmlpatterns.dll -parent 1D9F1E95-F0CE-4F72-ADD4-3D373040CE89
 File ::26A27C49-8084-4908-AA1C-B73A743FEB1F -name qtscript_xmlpatternsd.dll -active 0 -parent 1D9F1E95-F0CE-4F72-ADD4-3D373040CE89
+File ::BDD30BFC-BBED-4E15-AF22-F76E86133D23 -name SerialPortDeviceplugin_Win32_Debug.dll -active 0 -parent F5060ED4-9C5C-45CE-B813-79BD56A04D6B
+File ::72BB0921-B5C5-4DB9-B0D5-0C5ADBBCD31F -name SerialPortDeviceplugin_Win32_Release.dll -parent F5060ED4-9C5C-45CE-B813-79BD56A04D6B
 File ::E435F330-1496-4538-9D56-D50F30329769 -type dir -name x64 -active 0 -parent B1EFAFC1-6B99-4503-82D2-507339ADFC7F
 File ::F8B6A0FC-2B2F-49A5-837E-8AFAD88119E7 -name _extensionname_plugin_x64_Debug.dll -active 0 -parent E435F330-1496-4538-9D56-D50F30329769
 File ::6BD3AD0E-A767-4F26-BB02-B7B9A8789D87 -name _extensionname_plugin_x64_Release.dll -active 0 -parent E435F330-1496-4538-9D56-D50F30329769
@@ -370,6 +365,7 @@ File ::B464ACAE-9D43-4D47-9A82-2359514B5DFB -name E:/Projects/StimulGL/Source/Pl
 File ::72CE2237-D232-4CCA-8EFA-A1D0CAB7EFBC -name E:/Projects/StimulGL/Source/Plugins/ExtensionPluginTemplate/scripts/QScriptExample_ExtensionPluginTemplate_.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::042C3DF6-0B5C-4589-887B-72D893CD8D57 -name E:/Projects/StimulGL/Source/Plugins/ParallelPortDevice/scripts/QScriptExample_ParallelPort.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::D52BC55C-6ABB-4069-9DFF-921B10FE285B -name E:/Projects/StimulGL/Source/Plugins/USBHIDDevice/scripts/QScriptExampleUSBHIDDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::A91D18B9-2F4D-4802-91A2-66FAAB3C6CA8 -name E:/Projects/StimulGL/Source/Plugins/SerialPortDevice/scripts/QScriptExampleSerialPortDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 FileGroup ::E5DE8D2A-E046-4945-B382-97B2670A7E75 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name Documentation -parent FileGroups
 Component ::3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files} -parent Components
 Component ::0D3704F3-F8AB-4DEB-8467-6A1B887C03A5 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name Plugins -parent Components
@@ -408,6 +404,7 @@ InstallComponent DD3BB5DF-244E-4D82-84E9-28725D30BCEA -setup Install -type actio
 Condition BB04B6FD-7005-49F0-B9C9-9FA412E7A343 -active Yes -parent DD3BB5DF-244E-4D82-84E9-28725D30BCEA -title {Platform Condition} -component PlatformCondition -TreeObject::id BB04B6FD-7005-49F0-B9C9-9FA412E7A343
 Condition 23D3C72D-A0C5-4AAA-91DB-84B672E4537B -active Yes -parent DD3BB5DF-244E-4D82-84E9-28725D30BCEA -title {File Exists Condition} -component FileExistsCondition -TreeObject::id 23D3C72D-A0C5-4AAA-91DB-84B672E4537B
 Condition 1E1EBED5-48DF-4148-BD79-B41EB189D5E0 -active Yes -parent DD3BB5DF-244E-4D82-84E9-28725D30BCEA -title {String Is Condition} -component StringIsCondition -TreeObject::id 1E1EBED5-48DF-4148-BD79-B41EB189D5E0
+InstallComponent B2DD21AE-D477-4F2C-9AE3-03AB29B1F21A -setup Install -type action -title {Add Directory To Path} -component AddDirectoryToPath -active Yes -parent 9FAD9049-4135-43F0-847C-59893E37C15B
 InstallComponent 5B0980B3-294E-41C4-9E10-96B6694524C0 -setup Install -type pane -title {Copying Files} -component CopyFiles -active Yes -parent DefaultInstall
 InstallComponent 90559B49-71AC-4ED3-909E-BBA8325FFBDD -setup Install -type action -title {Disable Buttons} -component ModifyWidget -active Yes -parent 5B0980B3-294E-41C4-9E10-96B6694524C0
 InstallComponent 53490221-57D3-41B5-A049-F51DCFEE81E4 -setup Install -type action -title {Install Everything} -component ExecuteAction -active Yes -parent 5B0980B3-294E-41C4-9E10-96B6694524C0
@@ -426,6 +423,7 @@ InstallComponent 5AED5E24-7D5D-442D-89D7-3D15214385B4 -setup Install -type actio
 Condition C77DAA79-9133-4438-A655-FD82726DBF77 -active Yes -parent 5AED5E24-7D5D-442D-89D7-3D15214385B4 -title {Platform Condition} -component PlatformCondition -TreeObject::id C77DAA79-9133-4438-A655-FD82726DBF77
 Condition 7472B7F9-3773-4F20-B461-A182E76C57C1 -active Yes -parent 5AED5E24-7D5D-442D-89D7-3D15214385B4 -title {File Exists Condition} -component FileExistsCondition -TreeObject::id 7472B7F9-3773-4F20-B461-A182E76C57C1
 Condition 7313C6A8-1A5A-45A1-9328-264736068574 -active Yes -parent 5AED5E24-7D5D-442D-89D7-3D15214385B4 -title {String Is Condition} -component StringIsCondition -TreeObject::id 7313C6A8-1A5A-45A1-9328-264736068574
+InstallComponent E2703174-D558-4124-B4A1-1D336C75169C -setup Install -type action -title {Add Directory To Path} -component AddDirectoryToPath -active Yes -parent B53DB0A7-45C6-43B1-88C0-B14158C1DDA7
 InstallComponent FEE2F8F2-0E09-4C64-8866-C8C8B080AF85 -setup Install -type action -title {Prompt to continue installation} -component ConsoleAskYesOrNo -active Yes -parent ConsoleInstall
 InstallComponent 22D8325B-8FE3-4281-B44E-B167B12BE7B3 -setup Install -type action -conditions 892D6754-7CA6-4CF2-8429-428CDCED5C57 -title {Exit if they said no} -component Exit -active Yes -parent ConsoleInstall
 Condition 892D6754-7CA6-4CF2-8429-428CDCED5C57 -active Yes -parent 22D8325B-8FE3-4281-B44E-B167B12BE7B3 -title {String Is Condition} -component StringIsCondition -TreeObject::id 892D6754-7CA6-4CF2-8429-428CDCED5C57
@@ -433,9 +431,11 @@ InstallComponent AA641D4F-CAD4-4ACB-B153-A810EAC7B4CA -setup Install -type actio
 Condition 816F2AED-367C-49E7-A825-50CD66346BDD -active Yes -parent AA641D4F-CAD4-4ACB-B153-A810EAC7B4CA -title {File Permission Condition} -component FilePermissionCondition -TreeObject::id 816F2AED-367C-49E7-A825-50CD66346BDD
 InstallComponent ABC58F85-12AE-4CB0-BF72-B19F39FB5B6E -setup Install -type action -title {Output Installing Message} -component ConsoleMessage -active Yes -parent ConsoleInstall
 InstallComponent B2B7DE1C-71BF-4930-829A-DE7180B21C81 -setup Install -type action -title {Install Everything} -component ExecuteAction -active Yes -parent ConsoleInstall
+InstallComponent 27F4102A-675C-4053-BE7B-B4829106F060 -setup Install -type action -title {Add Directory To Path} -component AddDirectoryToPath -active Yes -parent ConsoleInstall
 InstallComponent F919A085-ED34-4092-BC72-5435846DF540 -setup Install -type action -title {Output Install Complete Message} -component ConsoleMessage -active Yes -parent ConsoleInstall
 InstallComponent 1CEB7B96-0CE5-41D4-AC12-53836A7B33E4 -setup Install -type action -title Exit -component Exit -active Yes -parent ConsoleInstall
 InstallComponent 1956415E-F026-469E-8F8D-8422AAF63127 -setup Install -type action -title {Install Everything} -component ExecuteAction -active Yes -parent SilentInstall
+InstallComponent 80E6AA25-5EE5-4D0E-B2AF-CA6A44754430 -setup Install -type action -title {Add Directory To Path} -component AddDirectoryToPath -active Yes -parent SilentInstall
 InstallComponent 14100B86-8F80-44D2-84C2-890F20957593 -setup Install -type action -title Exit -component Exit -active Yes -parent SilentInstall
 InstallComponent 03F14297-F67B-48CF-94E0-BAE14BDAE2B2 -setup Install -type actiongroup -title {Setup Actions} -alias {Setup Actions} -active Yes -parent ActionGroupsInstall
 InstallComponent 62446598-30D1-49F4-9F44-465609FB3BD8 -setup Install -type actiongroup -title {Startup Actions} -alias {Startup Actions} -active Yes -parent ActionGroupsInstall
@@ -577,6 +577,9 @@ array set Properties {
 1956415E-F026-469E-8F8D-8422AAF63127,Action
 {Install Actions}
 
+1956415E-F026-469E-8F8D-8422AAF63127,Conditions
+{0 conditions}
+
 1969A222-548B-4BEA-88A4-03F61B6082FC,Conditions
 {1 condition}
 
@@ -638,7 +641,7 @@ array set Properties {
 {<%InstallDir%>}
 
 21B9C60D-2802-481D-BF1F-F26B0588B66E,FileSize
-{31594496}
+{10795008}
 
 21B9C60D-2802-481D-BF1F-F26B0588B66E,Name
 {Plugins}
@@ -648,6 +651,15 @@ array set Properties {
 
 23D3C72D-A0C5-4AAA-91DB-84B672E4537B,Filename
 {<%ProgramExecutable%>}
+
+27F4102A-675C-4053-BE7B-B4829106F060,Conditions
+{0 conditions}
+
+27F4102A-675C-4053-BE7B-B4829106F060,Directory
+{<%InstallDir%>}
+
+27F4102A-675C-4053-BE7B-B4829106F060,Level
+{system}
 
 2F3D7E29-7A1D-4FEB-8DAF-FF0E06239BEB,Conditions
 {0 conditions}
@@ -789,6 +801,9 @@ array set Properties {
 
 5AED5E24-7D5D-442D-89D7-3D15214385B4,Background
 {#FFFFFF}
+
+5AED5E24-7D5D-442D-89D7-3D15214385B4,Conditions
+{3 conditions}
 
 5AED5E24-7D5D-442D-89D7-3D15214385B4,Text,subst
 {1}
@@ -1063,6 +1078,15 @@ array set Properties {
 80310451-F0BB-4443-A165-5A7FD5023D45,String
 {<%InstallStopped%>}
 
+80E6AA25-5EE5-4D0E-B2AF-CA6A44754430,Conditions
+{0 conditions}
+
+80E6AA25-5EE5-4D0E-B2AF-CA6A44754430,Directory
+{<%InstallDir%>}
+
+80E6AA25-5EE5-4D0E-B2AF-CA6A44754430,Level
+{system}
+
 816F2AED-367C-49E7-A825-50CD66346BDD,CheckCondition
 {Before Next Action is Executed}
 
@@ -1312,6 +1336,15 @@ B09C8B57-0C00-4DA1-AB56-5D1C4231B454,Widget
 B2B7DE1C-71BF-4930-829A-DE7180B21C81,Action
 {Install Actions}
 
+B2DD21AE-D477-4F2C-9AE3-03AB29B1F21A,Conditions
+{0 conditions}
+
+B2DD21AE-D477-4F2C-9AE3-03AB29B1F21A,Directory
+{<%InstallDir%>}
+
+B2DD21AE-D477-4F2C-9AE3-03AB29B1F21A,Level
+{system}
+
 B53DB0A7-45C6-43B1-88C0-B14158C1DDA7,BackButton,subst
 {1}
 
@@ -1520,7 +1553,7 @@ D562F7E3-157E-48ED-91CE-71FBA40B332D,Destination
 {<%InstallDir%>}
 
 D562F7E3-157E-48ED-91CE-71FBA40B332D,FileSize
-{63118992}
+{25614511}
 
 D562F7E3-157E-48ED-91CE-71FBA40B332D,Name
 {Program Files}
@@ -1579,6 +1612,9 @@ DC0E7458-E86E-43D8-A9DB-F53D91901A9B,String2
 DD3BB5DF-244E-4D82-84E9-28725D30BCEA,Background
 {#FFFFFF}
 
+DD3BB5DF-244E-4D82-84E9-28725D30BCEA,Conditions
+{3 conditions}
+
 DD3BB5DF-244E-4D82-84E9-28725D30BCEA,Text,subst
 {1}
 
@@ -1593,6 +1629,15 @@ DD3BB5DF-244E-4D82-84E9-28725D30BCEA,X
 
 DD3BB5DF-244E-4D82-84E9-28725D30BCEA,Y
 {200}
+
+E2703174-D558-4124-B4A1-1D336C75169C,Conditions
+{0 conditions}
+
+E2703174-D558-4124-B4A1-1D336C75169C,Directory
+{<%InstallDir%>}
+
+E2703174-D558-4124-B4A1-1D336C75169C,Level
+{system}
 
 E34E2BAB-FCC4-430A-8B9B-080B11B26F9E,Action
 {Uninstall Actions}
@@ -1730,10 +1775,13 @@ FE7C119F-2B67-439E-A0DF-FA1E714F2630,Destination
 {<%InstallDir%>/scripts}
 
 FE7C119F-2B67-439E-A0DF-FA1E714F2630,FileSize
-{32071}
+{40434}
 
 FE7C119F-2B67-439E-A0DF-FA1E714F2630,Name
 {Additional Scripts}
+
+FEE2F8F2-0E09-4C64-8866-C8C8B080AF85,Conditions
+{0 conditions}
 
 FEE2F8F2-0E09-4C64-8866-C8C8B080AF85,Default
 {Yes}

@@ -85,7 +85,7 @@ public slots:
 	bool setFlowControl(QString flow);
 	QString stopBitsToString() const;
 	bool setStopBits(QString stopBits);
-	void setTimeout(qlonglong millisec);
+	void setTimeout(long millisec);
 	QString queryModeToString() const;
 	bool setQueryMode(QString mode);
 	bool open(QString mode);
@@ -100,6 +100,7 @@ public:
 	void setFlowControl(SerialPortEnums::FlowType flow);
 	void setStopBits(SerialPortEnums::StopBitsType stopBits);
 	void setQueryMode(QextSerialPort::QueryMode mode);
+	void setTimeout(qlonglong millisec);
 	bool open(QIODevice::OpenMode mode);
 	
 	SerialPortEnums::BaudRateType baudRate() const;

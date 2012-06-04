@@ -28,6 +28,7 @@ RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent
 {
 	initialize();
 	GLWidgetWrapper::setupLayout(this);
+	GLWidgetWrapper::setDoubleBufferCheck(true);
 }
 
 RetinoMap_glwidget::~RetinoMap_glwidget()

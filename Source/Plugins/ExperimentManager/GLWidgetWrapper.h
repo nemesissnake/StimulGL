@@ -31,6 +31,7 @@
 #include <QMutex>
 #include <omp.h>
 #include "Global.h"
+#include "ContainerDlg.h"
 #include "ExperimentTimer.h"
 
 enum GLWidgetPaintFlags //An optional paint flag that can be forwarded to the FUNC_PAINTOBJECT_FULL routine 
@@ -86,7 +87,6 @@ protected:
 	bool checkForNextBlockTrial();
 	bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef);//QString &Result);
 	bool getExperimentBlockParamsFromDomNodeList(int nBlockNumber, int nObjectID, tParsedParameterList *hParams = NULL);//QHash<QString, QString> *hParams = NULL);
-	void finalizePaintEvent();
 	void setupLayout(QWidget* layoutWidget);	
 	bool isDebugMode();
 	bool getCurrentExperimentProgressSnapshot(ExperimentSnapshotStructure *expSnapshotstrc);
@@ -95,16 +95,17 @@ protected:
 	int getCurrentStimuliRefreshRate() {return nRefreshRate;};
 	//int getElapsedFrameTime();
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
-
+	void setDoubleBufferCheck(bool bShouldCheck) {bCheckForDoubleBuffering = bShouldCheck;};
+	void paintEvent(QPaintEvent *event);
 	void closeEvent(QCloseEvent *evt);
 	void customEvent(QEvent *event);
-
 	void initBlockTrial();
-	void paintEvent(QPaintEvent *event);
+	bool eventFilter(QObject *target, QEvent *event);
 
 protected slots:
 	void incrementExternalTrigger();
-	void animate();
+	void animate();//bool bForceRepaint = false);
+	void finalizePaintEvent();
 	//void proceedPaintEventLoop();;
 
 private:
@@ -118,7 +119,6 @@ private:
 	bool setExperimentObjectReadyToUnlock();
 	void setVerticalSyncSwap();
 	void init();
-	bool eventFilter(QObject *target, QEvent *event);
 	int getRelativeBlockTrialTrigger(int nAbsoluteTrigger);		//Returns the relative (within a BlockTrial) trigger from a absolute (within the whole Experiment) trigger
 	bool updateExperimentBlockTrialStructure();
 	bool cleanupExperimentBlockTrialStructure();
@@ -128,6 +128,7 @@ private:
 private:
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
+	bool bCheckForDoubleBuffering;
 	double dWaitTime;
 	QMutex mutExpSnapshot;
 	QMutex mutRecursivePaint;
@@ -167,21 +168,6 @@ private:
 	ExperimentTimer expTrialTimer;
 	const QMetaObject* thisMetaObject;
 	QPainter *lockedPainter;
-};
-
-class ContainerDlg : public QDialog
-{
-	Q_OBJECT
-
-public:
-	ContainerDlg(QWidget *parent = NULL);
-	ContainerDlg::~ContainerDlg();
-
-	private slots:
-		void reject();
-
-protected:
-	void closeEvent(QCloseEvent *e);
 };
 
 #endif // GLWIDGET_H

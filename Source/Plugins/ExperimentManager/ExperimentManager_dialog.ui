@@ -77,14 +77,76 @@
     <widget class="QPushButton" name="btnExampleButton">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>50</y>
+       <x>400</x>
+       <y>30</y>
        <width>131</width>
        <height>51</height>
       </rect>
      </property>
      <property name="text">
-      <string>Example Button</string>
+      <string>Example Button 1</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnExampleButton_2">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>90</y>
+       <width>131</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Example Button 2</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnExampleButton_3">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>150</y>
+       <width>131</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Example Button 3</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnExampleButton_4">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>210</y>
+       <width>131</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Example Button 4</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnExampleButton_5">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>270</y>
+       <width>131</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Example Button 5</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="qmlWidgetHolder" native="true">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>351</width>
+       <height>301</height>
+      </rect>
      </property>
     </widget>
    </widget>

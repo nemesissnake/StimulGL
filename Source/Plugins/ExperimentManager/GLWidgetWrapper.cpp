@@ -34,6 +34,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	pExpBlockTrialDomNodeList = NULL;
 	bForceToStop = false;
 	bExperimentShouldStop = false;
+	bCheckForDoubleBuffering = false;
 	#ifdef Q_WS_MACX
 		nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // make param in interface and recommend per platform
 	#elseabot
@@ -574,7 +575,7 @@ bool GLWidgetWrapper::getExperimentBlockParamsFromDomNodeList(int nBlockNumber, 
 														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
 														if(!tmpElement.isNull())
 														{
-															tmpParDef.sValue = tmpElement.text().toLower();
+															tmpParDef.sValue = tmpElement.text();
 															tmpParDef.bHasChanged = true;
 															hParams->insert(tmpString,tmpParDef);
 															bResult = true;//To define that at least one parameter was parsed successfully
@@ -719,11 +720,15 @@ void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 
 bool GLWidgetWrapper::startExperimentObject()
 {
-	if(!this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
+	//QString a = thisMetaObject->className();
+	if (bCheckForDoubleBuffering)
 	{
-		//qDebug() << __FUNCTION__ << "RetinoMap_glwidget::No Double Buffering available!";
-		stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
-		return false;
+		if(!this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
+		{
+			//qDebug() << __FUNCTION__ << "RetinoMap_glwidget::No Double Buffering available!";
+			stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
+			return false;
+		}
 	}
 	//else
 	//{
@@ -850,6 +855,7 @@ void GLWidgetWrapper::closeEvent(QCloseEvent *evt)
 bool GLWidgetWrapper::stopExperimentObject()
 {
 	bExperimentShouldStop = true;
+	thisMetaObject->invokeMethod( this, "finalizePaintEvent",Qt::QueuedConnection);//a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
 	//int a = tTotalRunningTime.elapsed();
 	//stopTriggerTimer();
 	return true;
@@ -858,6 +864,7 @@ bool GLWidgetWrapper::stopExperimentObject()
 bool GLWidgetWrapper::abortExperimentObject()
 {
 	bForceToStop = true;
+	thisMetaObject->invokeMethod( this, "finalizePaintEvent",Qt::QueuedConnection);//a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
 	//int a = tTotalRunningTime.elapsed();
 	//stopTriggerTimer();
 	return true;
@@ -1147,8 +1154,14 @@ void GLWidgetWrapper::animate()
 		mutRecursivePaint.lock();
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
-		//repaint();
-		update();
+		//if (bForceRepaint)
+		//{
+		//	repaint();
+		//} 
+		//else
+		//{
+			update();
+		//}
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","update() called");
 		//mutRecursivePaint.unlock();
