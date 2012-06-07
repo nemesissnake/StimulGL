@@ -83,6 +83,7 @@ public:
 	static QScriptValue ctor__PrtFormatManager(QScriptContext* context, QScriptEngine* engine);
 
 public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool loadFile(const QString sFileName);
 	bool saveFile(const QString sFileName, const bool bOverWrite = false);
 	bool setParameterValue(const QString sParamName, const QString sParamValue = PRT_UNDEF_VALUE_STRING, const QString sParamDescription = PRT_UNDEF_DESC_STRING);
@@ -100,6 +101,8 @@ private:
 	bool setDefaultParameters(const int nVersion = PRT_DEFAULT_VERSION);
 	PRTDefinitionParameters getParameter(const QString sParamName);
 	bool setConditionColor(const int nConditionIndex, const QString sColor);
+
+	QScriptEngine* currentScriptEngine;
 
 	PRTDefinitionParameterList m_PRTParameters;
 	PRTConditionsDefinitionList m_PRTConditions;

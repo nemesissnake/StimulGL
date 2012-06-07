@@ -26,7 +26,21 @@ QScriptValue PrtFormatManager::ctor__PrtFormatManager(QScriptContext* context, Q
 
 PrtFormatManager::PrtFormatManager(QObject *parent)	: QObject(parent)
 {
+	currentScriptEngine = NULL;
 	clearAll();
+}
+
+bool PrtFormatManager::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
 }
 
 PrtFormatManager::~PrtFormatManager()

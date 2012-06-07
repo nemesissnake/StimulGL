@@ -45,6 +45,7 @@ QScriptValue USBHIDDevice::ctor__extensionname(QScriptContext* context, QScriptE
 */
 USBHIDDevice::USBHIDDevice(unsigned short vendor_id, unsigned short product_id, QObject *parent) : QObject(parent)
 {
+	currentScriptEngine = NULL;
 	m_bActivateJoystickTrigger = false;
 	m_bActivateButtonTriggers = false;
 	m_bActivateMousePosEmu = false;
@@ -82,6 +83,19 @@ USBHIDDevice::~USBHIDDevice()
 		delete HIDCalDiag;
 		HIDCalDiag = NULL;
 	}
+}
+
+bool USBHIDDevice::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
 }
 
 void USBHIDDevice::SetVendorID(unsigned short vendor_id)

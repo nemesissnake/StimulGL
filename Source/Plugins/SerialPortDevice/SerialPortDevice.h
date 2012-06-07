@@ -73,6 +73,8 @@ private slots:
 		void ProcessSerialData();
 		
 public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
+
 	QString portName() const; 
 	void setPortName(const QString & name);
 	QString baudRateToString() const;
@@ -153,6 +155,7 @@ public:
 //	bool ExtendScriptContext(QScriptEngine &engine);
 
 private:
+	QScriptEngine* currentScriptEngine;
 	QextSerialPort* serialPort;
 	QString sTmpTypeName;
 	int nTmpEnumIndex;

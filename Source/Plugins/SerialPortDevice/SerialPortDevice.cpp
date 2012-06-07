@@ -56,6 +56,8 @@ QScriptValue SerialPortDevice::ctor__extensionname(QScriptContext* context, QScr
 */
 SerialPortDevice::SerialPortDevice(QObject *parent) : QObject(parent)
 {
+	currentScriptEngine = NULL;
+
 	//Windows settings
 	serialPort = NULL;
 	serialPort = new QextSerialPort();
@@ -95,6 +97,19 @@ SerialPortDevice::~SerialPortDevice()
 		delete serialPort;
 		serialPort = NULL;
 	}
+}
+
+bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
 }
 
 void SerialPortDevice::ProcessSerialData()

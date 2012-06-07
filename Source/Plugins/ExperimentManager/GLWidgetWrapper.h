@@ -57,7 +57,10 @@ signals:
 	void UserWantsToClose(void);
 	void ObjectShouldStop(void);
 	void ObjectStateHasChanged(ExperimentSubObjectState);
-	void LogToOutputWindow(const QString &strText2Write);
+	void NewInitBlockTrial();
+	void ExternalTriggerIncremented(int);
+	void ExperimentStructureChanged(int,int,int);//Block,Trial,InternalTrigger
+	//void LogToOutputWindow(const QString &strText2Write);
 
 public:
 	GLWidgetWrapper(QWidget *parent = NULL);
@@ -73,7 +76,7 @@ public slots:
 	bool stopExperimentObject();
 	bool abortExperimentObject();
 	bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList = NULL);
-	bool setExperimentObjectID(int nObjID);	//Necessary to set the ID!
+	bool setExperimentObjectID(int nObjID);			//Necessary to set the ID!
 	bool setExperimentMetaObject();					//Necessary to set the MetaObject!
 	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
 	
@@ -104,7 +107,7 @@ protected:
 
 protected slots:
 	void incrementExternalTrigger();
-	void animate();//bool bForceRepaint = false);
+	void animate(bool bOnlyCheckBlockTrials = false);
 	void finalizePaintEvent();
 	//void proceedPaintEventLoop();;
 
@@ -127,6 +130,7 @@ private:
 
 private:
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
+	bool bFirstTriggerAfterUnlock;						//To detect the exact start of the experiment detected by the checkForNextBlockTrial() function.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
 	bool bCheckForDoubleBuffering;
 	double dWaitTime;

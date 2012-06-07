@@ -36,12 +36,25 @@ QScriptValue _extensionname_::ctor__extensionname(QScriptContext* context, QScri
 
 _extensionname_::_extensionname_(QObject *parent) : QObject(parent)
 {
-
+	currentScriptEngine = NULL;
 }
 
 _extensionname_::~_extensionname_()
 {
 
+}
+
+bool _extensionname_::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
 }
 
 void _extensionname_::setExampleProperty( short sExampleProperty )

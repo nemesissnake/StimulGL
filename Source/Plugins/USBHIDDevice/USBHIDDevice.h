@@ -90,6 +90,7 @@ public:
 	void SetCalibrationData(const USBHIDDeviceNameSpace::strcCalibrationData &CalData);
 
 public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool Calibrate();
 	bool StartCaptureThread(bool bIsCalibrationThread = false);
 	void StopCaptureThread(bool bWasCalibrationThread = false);
@@ -107,6 +108,7 @@ private slots:
 	void UpdateHIDMouseEmuButtons(unsigned char ButtonByteValue,unsigned char ChangedByteValue);
 	
 private:
+	QScriptEngine* currentScriptEngine;
 	HIDCalibrateDialog *HIDCalDiag;
 	HIDCaptureThread *HIDCapThread;
 	bool m_bActivateJoystickTrigger;

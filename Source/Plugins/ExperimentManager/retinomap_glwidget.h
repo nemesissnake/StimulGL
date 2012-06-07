@@ -22,6 +22,7 @@
 
 #include "GLWidgetWrapper.h"
 #include <QPointF>
+#include <QScriptEngine>
 
 //Below defines must be all in lower case!
 //Shared defines
@@ -42,8 +43,6 @@
 #define RETINOMAP_WIDGET_POS_BOTH							"both"
 #define RETINOMAP_WIDGET_GAP_DIAMETER						"gapdiameter"
 #define RETINOMAP_WIDGET_FLICKRSPEED_HZ						"flickrfrequency"
-#define RETINOMAP_WIDGET_WIDTH_PIXEL_AMOUNT					"stimuluswidthspan"
-#define RETINOMAP_WIDGET_HEIGHT_PIXEL_AMOUNT				"stimulusheightspan"
 #define RETINOMAP_WIDGET_CORTMAG_FACTOR						"corticalmagnitudefactor"
 #define RETINOMAP_WIDGET_TRIGGERDURATION_MSEC				"internaltriggerduration"
 #define RETINOMAP_WIDGET_DISCRETETRIGGERSTEPS				"discretetriggersteps"
@@ -60,7 +59,6 @@
 #define RETINOMAP_WIDGET_DISABLECORTMAGFAC					"disablecortmagfac"
 #define RETINOMAP_WIDGET_CHECKERCOLOR1						"checkercolor1"
 #define RETINOMAP_WIDGET_CHECKERCOLOR2						"checkercolor2"
-#define RETINOMAP_WIDGET_BACKGROUNDCOLOR					"backgroundcolor"
 #define RETINOMAP_WIDGET_FIXATIONCOLOR						"fixationcolor"
 //PolarAngle specific defines
 #define RETINOMAP_WIDGET_POLAR_RING_AMOUNT					"polarringamount"
@@ -142,6 +140,7 @@ public:
 	RetinoMap_glwidget(const RetinoMap_glwidget& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool startObject();
 	bool initObject();
 	bool setObjectConfiguration(QObject *pExpConfStruct = NULL);//ExperimentConfiguration *pExpConfStruct = NULL);
@@ -155,6 +154,7 @@ private:
 	void initializeMovingDotsStructures();
 	QImage RetinoMap_glwidget::fractalFillCheckeredImage(float fWidth, float fHeigth, float fSize, int nflickr);
 
+	QScriptEngine* currentScriptEngine;
 	int nRetinoID;								//This variable stores the ObjectID used to identify the object
 	RetinoMapExperimentType currentExpType;		//The experiment type used, see RetinoMapExperimentType
 	bool firstBlockTrialPaintFrame;				//To determine whether it's the first frame to paint from a new Block trial

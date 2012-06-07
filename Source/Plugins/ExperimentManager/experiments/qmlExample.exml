@@ -8,14 +8,30 @@ Attributes only apply to readonly non user data, like the ID
 
 <EXML version="2.0.0.1">
     <defines>
-			<experiment ID="0">
-				<name>QML Example Experiment with the use of a TriggerTimer or ParallelPort</name>
-				<debugmode>true</debugmode>
-			</experiment>
-		</defines>
+	<experiment ID="0">
+		<name>QML Example Experiment with the use of a TriggerTimer or ParallelPort</name>
+		<debugmode>true</debugmode>
+	</experiment>
+    </defines>
 		
     <declarations>
  
+        <object ID="0">            
+            <class>qmlWidget</class>
+            <name>qmlWidget_Object_1</name>
+            <constructor>
+                <param1/>
+            </constructor>
+        </object>
+
+        <object ID="1">
+            <class>TriggerTimer</class>
+            <name>Timer_Object_1</name>
+            <constructor>
+                <param1/>
+            </constructor>
+        </object>	
+	
         <object ID="2">
             <class>ParallelPort</class>
             <name>ParallelPort_Object_1</name>
@@ -23,22 +39,7 @@ Attributes only apply to readonly non user data, like the ID
                 <param1/>
             </constructor>
         </object>    
-
-        <object ID="0">
-            <class>TriggerTimer</class>
-            <name>Timer_Object_1</name>
-            <constructor>
-                <param1/>
-            </constructor>
-        </object>
-
-        <object ID="1">            
-            <class>qmlWidget</class>
-            <name>qmlWidget_Name</name>
-            <constructor>
-                <param1/>
-            </constructor>
-        </object> 
+	
     </declarations>
     
     <connections>
@@ -46,27 +47,18 @@ Attributes only apply to readonly non user data, like the ID
         <object ID="2">
         	<type>signal</type>
         	<signature>CaptureThreadTriggered(short)</signature>
-          <target ID="1">
+          <target ID="0">
           	<type>slot</type>     
           	<signature>incrementExternalTrigger()</signature>      
           </target>
         </object>
 
-        <object ID="0">
+        <object ID="1">
         	<type>signal</type>
         	<signature>timeout()</signature>
-          <target ID="1">
+          <target ID="0">
           	<type>slot</type>     
           	<signature>incrementExternalTrigger()</signature>      
-          </target>
-        </object>
-	
-        <object ID="0">
-        	<type>signal</type>
-        	<signature>timeout()</signature>
-          <target ID="1">
-          	<type>slot</type>     
-          	<signature>invokeQmlMethod()</signature>      
           </target>
         </object>
 	
@@ -106,13 +98,13 @@ Attributes only apply to readonly non user data, like the ID
         	</parameters>
         </object>   
   
-        <object ID="0">
+        <object ID="1">
         	<type>slot</type>
         	<signature>startTimer</signature>
         	<parameters>
 		      	<parameter ID="0">
 		        	<name>msec</name>
-		        	<value>2000</value>
+		        	<value>1000</value>
 		        	<type>double</type>
 		        </parameter>  	
         	</parameters>
@@ -126,41 +118,60 @@ Attributes only apply to readonly non user data, like the ID
 	    <block ID="0">
 	        <name>QMLExample_Block</name>
 	        <block_number>0</block_number>            
-	        <nr_of_trials>1</nr_of_trials>
+	        <nr_of_trials>4</nr_of_trials>
 	        <nr_of_internal_triggers>2</nr_of_internal_triggers>
 	        <nr_of_external_triggers>1</nr_of_external_triggers>	 
-	        <object ID="1">
+	        <object ID="0">
 	        	<parameters>
-				<parameter ID="0">
-					<name>QmlMainFilePath</name>
-					<value>E:\Projects\StimulGL\Source\Plugins\ExperimentManager\qml\examples\example_2.qml</value>
-				</parameter>
-			
-			
-			
-				<parameter ID="6">
-					<name>StimulusWidthSpan</name>
-					<value>768</value>
-				</parameter>
-				<parameter ID="7">
-					<name>StimulusHeightSpan</name>
-					<value>768</value>
-				</parameter>
-			        <parameter ID="11">
-			        	<name>CycleTriggerAmount</name>
-			        	<value>1</value>
-			        </parameter>	
+							<parameter ID="0">
+								<name>QmlMainFilePath</name>
+								<value>E:\Projects\StimulGL\Source\Plugins\ExperimentManager\qml\examples\example_2.qml</value>
+							</parameter>			
+							<parameter ID="6">
+								<name>StimulusWidthSpan</name>
+								<value>768</value>
+							</parameter>
+							<parameter ID="7">
+								<name>StimulusHeightSpan</name>
+								<value>768</value>
+							</parameter>
 			        <parameter ID="12">
-			        	<name>StimuliRefreshRate</name>
-			        	<value>30</value>
+			        	<name>QmlMinEventTime</name>
+			        	<value>1</value>
 			        </parameter>
 			        <parameter ID="13">
 			        	<name>BackGroundColor</name>
 			        	<value>#575757</value>
 			        </parameter>
-			   </parameters>    
-		    	</object>   
-	    	</block>
+			   	</parameters>    
+		    </object>   
+	    </block>
+
+	    <block ID="1">
+	        <name>QMLExample_Block_1</name>
+	        <block_number>1</block_number>            
+	        <nr_of_trials>2</nr_of_trials>
+	        <nr_of_internal_triggers>2</nr_of_internal_triggers>
+	        <nr_of_external_triggers>1</nr_of_external_triggers>	
+	        <object ID="0">
+	        	<parameters>
+				<parameter ID="0">
+					<name>QmlMainFilePath</name>
+					<value>E:\Projects\StimulGL\Source\Plugins\ExperimentManager\qml\examples\example_1.qml</value>
+				</parameter>			
+        <parameter ID="13">
+        	<name>BackGroundColor</name>
+        	<value>#FF0000</value>
+        </parameter>				
+			</parameters>    
+		 </object>
+           </block>		
+		
+		
+		
+		
+		
+		
 <!--	    	
 	    	<block ID="1">
 	        <name>PolarAngle_Block</name>
@@ -255,7 +266,7 @@ Attributes only apply to readonly non user data, like the ID
     
     <finalizations>
 
-        <object ID="0">
+        <object ID="1">
         	<type>slot</type>
         	<signature>stopTimer</signature>
         </object>

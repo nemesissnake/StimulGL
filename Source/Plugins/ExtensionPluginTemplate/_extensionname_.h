@@ -44,6 +44,7 @@ public:
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 
 public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	void setExampleProperty( short sExampleProperty );
 	short getExampleProperty() const;
 
@@ -51,6 +52,7 @@ protected slots:
 	//bool ExtendScriptContext(QScriptEngine &engine);
 
 private:
+	QScriptEngine* currentScriptEngine;
 	short m_ExampleProperty;
 
 };

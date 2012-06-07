@@ -26,6 +26,7 @@
 
 RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent)
 {
+	currentScriptEngine = NULL;
 	initialize();
 	GLWidgetWrapper::setupLayout(this);
 	GLWidgetWrapper::setDoubleBufferCheck(true);
@@ -73,6 +74,19 @@ RetinoMap_glwidget::~RetinoMap_glwidget()
 		delete previousRandEmptyStimGenerator;
 		previousRandEmptyStimGenerator = NULL;
 	}
+}
+
+bool RetinoMap_glwidget::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
 }
 
 void RetinoMap_glwidget::initialize()
@@ -193,7 +207,7 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		tmpString = QColor(87,87,87).name();//gives "#575757";
 		colorBackground = QColor(tmpString);
 		brushBackground = QBrush(colorBackground);
-		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_BACKGROUNDCOLOR,tmpString);
+		insertExperimentObjectBlockParameter(nRetinoID,GLWIDGET_BACKGROUNDCOLOR,tmpString);
 		tmpString = QColor(255, 0, 0).name();
 		fixationColor = QColor(tmpString);
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXATIONCOLOR,tmpString);
@@ -211,9 +225,9 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		fixationSize = 8;
 		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXSIZE,QString::number(fixationSize));
 		stimHeigthPixelAmount = rectScreenRes.height();
-		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
+		insertExperimentObjectBlockParameter(nRetinoID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
 		stimWidthPixelAmount = stimHeigthPixelAmount;
-		insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
+		insertExperimentObjectBlockParameter(nRetinoID,GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
 		cycleTriggerAmount = 1;
 		if(getCurrentExpBlockTrialInternalTriggerAmount(tmpInteger))
 			cycleTriggerAmount = tmpInteger;
@@ -339,8 +353,8 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		{
 			showFixationPoint = true;
 		}
-		stimHeigthPixelAmount = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount)).sValue.toFloat();
-		stimWidthPixelAmount = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount)).sValue.toFloat();
+		stimHeigthPixelAmount = getExperimentObjectBlockParameter(nRetinoID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount)).sValue.toFloat();
+		stimWidthPixelAmount = getExperimentObjectBlockParameter(nRetinoID,GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount)).sValue.toFloat();
 		setStimuliResolution(stimWidthPixelAmount,stimHeigthPixelAmount);
 		fixationSize = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXSIZE,QString::number(fixationSize)).sValue.toInt();
 		
@@ -361,7 +375,7 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		triggerDurationMsec = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_TRIGGERDURATION_MSEC,QString::number(triggerDurationMsec)).sValue.toInt();
 		emptyTriggerSteps = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS,QString::number(emptyTriggerSteps)).sValue.toInt();		
 		gapDiameter = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_GAP_DIAMETER,QString::number(gapDiameter)).sValue.toInt();
-		colorBackground = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_BACKGROUNDCOLOR,colorBackground.name()).sValue);
+		colorBackground = QColor(getExperimentObjectBlockParameter(nRetinoID,GLWIDGET_BACKGROUNDCOLOR,colorBackground.name()).sValue);
 		brushBackground = QBrush(colorBackground);
 		fixationColor = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXATIONCOLOR,fixationColor.name()).sValue);
 		cCheckerColor1 = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR1,cCheckerColor1.name()).sValue);
@@ -501,7 +515,7 @@ bool RetinoMap_glwidget::initObject()
 bool RetinoMap_glwidget::startObject()
 {
 	lastTriggerNumber = -1;
-	emit LogToOutputWindow("Started");
+	//emit LogToOutputWindow("Started");
 	return true;
 }
 
@@ -703,8 +717,8 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 						tmpStr = tmpStr + QString(",") + randEmptyStimGenerator->at(j);
 				}
 				currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","EmptyRandomList(steps) = ",tmpStr);
-				if(isDebugMode())
-					emit LogToOutputWindow("EmptyRandomList(steps) = " + tmpStr);
+				//if(isDebugMode())
+					//emit LogToOutputWindow("EmptyRandomList(steps) = " + tmpStr);
 			}
 			emptyTriggerStepCount = emptyTriggerSteps;
 		}
@@ -732,8 +746,8 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					tmpStr = tmpStr + QString(",") + randStimStateGenerator->at(j);
 			}
 			currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","StimRandomList = ",tmpStr);
-			if(isDebugMode())
-				emit LogToOutputWindow("StimRandomList = " + tmpStr);
+			//if(isDebugMode())
+				//emit LogToOutputWindow("StimRandomList = " + tmpStr);
 		}	
 
 		if (discreteTriggerSteps)

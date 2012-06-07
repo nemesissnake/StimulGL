@@ -4,7 +4,9 @@ import QtQuick 1.0
 Rectangle {
     id: page
     width: 500; height: 200
-    color: "lightgray"
+    color: "#0000FF00"
+    border.width: 7
+    border.color: "#e04343"//"lightgray"
 
     Text {
         id: helloText
@@ -42,13 +44,54 @@ Rectangle {
         Cell { cellColor: "black"; onClicked: helloText.color = cellColor }
     }
 
+    Text {
+        id: someText
+        x: 258
+        y: 123
+        width: 207
+        height: 36
+        text: "Some Text"
+        font.family: "Helvetica"
+        font.pointSize: 24
+        color: "red"
+    }
+
     Item {
         id: functionsID
         objectName: "functions"
         function myQmlFunction(msg) {
-            console.log("Got message:", msg)
+            console.log("Got message(myQmlFunction):", msg)
             return helloText.color //"some return value"
         }
+
+        function myQmlTextFunction(msg) {
+            console.log("Got message(myQmlTextFunction):", msg)
+            someText.text = msg //"some return value"
+            return true
+        }
+    }
+
+    Rectangle {
+        id: rectangle1
+        x: 371
+        y: 30
+        width: 101
+        height: 75
+        color: "#575757"
+    }
+
+    Column {
+        x: 16
+        y: 27
+        width: 87
+        height: 93
+        spacing: 10
+
+        Button { text: "Apple" }
+        Button { text: "Orange" }
+        DebugMode {}
+        //Button { text: "Pear" }
+        //Button { text: "Grape" }
     }
 }
 

@@ -36,11 +36,13 @@ public:
 	static QScriptValue ctor__imageProcessor(QScriptContext* context, QScriptEngine* engine);
 
 public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool ConvertPngToDatFile(QString strSource, QString strDestination, bool bOverwrite = false);
 	bool ConvertDatToPngFile(QString strSource, QString strDestination, bool bOverwrite = false);
 	bool ScalePngFile(QString strSource, QString strDestination, int nRatio = 1, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false);
 
 private:
+	QScriptEngine* currentScriptEngine;
 	
 };
 

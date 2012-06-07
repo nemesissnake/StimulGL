@@ -34,7 +34,7 @@ QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context,
 	//		// return a non-object value to indicate that the
 	//		// thisObject() should be the result of the "new Foo()" expression
 	//		//return engine->undefinedValue();
-	return engine->newQObject(new ExperimentManager(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
+	return engine->newQObject(new ExperimentManager(NULL,engine), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 
 /*! \brief The ExperimentManager constructor.
@@ -42,7 +42,32 @@ QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context,
 *   You do not need to specify the parent object. 
 *	The StimulGL script engine automatically retrieves the parent role
 */
-ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
+ExperimentManager::ExperimentManager(QObject *parent, QScriptEngine* engine) : QObject(parent)
+{
+	currentScriptEngine = engine;
+	DefaultConstruct();
+}
+
+bool ExperimentManager::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
+}
+
+//ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
+//{
+//	currentEngine = NULL;
+//	DefaultConstruct();
+//}
+
+void ExperimentManager::DefaultConstruct()
 {
 	//qDebug("ExperimentManager Main Constructor.");
 	//qWarning("");
@@ -54,8 +79,7 @@ ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
 	currentExperimentTree = NULL;
 	expDataLogger = NULL;
 	RegisterMetaTypes();
-	changeCurrentExperimentState(Experiment_Constructed);
-	changeCurrentExperimentState(Experiment_Initialized);
+	changeCurrentExperimentState(ExperimentManager_Constructed);
 	//rndGen = NULL;
 	//rndCounter = 0;
 }
@@ -405,6 +429,7 @@ bool ExperimentManager::loadExperiment(QString strFile, bool bViewEditTree)
 		if (bViewEditTree)
 			currentExperimentTree->showMaximized();
 		setExperimentFileName(fileName);
+		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return true;
 	}
 	else
@@ -422,7 +447,7 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 		experimentCurrentState = expCurrState;
 		emit ExperimentStateHasChanged(expCurrState,getCurrentDateTimeStamp());
 	}
-	if(expCurrState == Experiment_Stopped)
+	if(expCurrState == ExperimentManager_Stopped)
 	{
 		WriteAndCloseExperimentOutputData();
 		cleanupExperiment();
@@ -443,7 +468,7 @@ bool ExperimentManager::runExperiment()
 			return false;
 		}
 	}
-	if(getCurrentExperimentState() != Experiment_Initialized)
+	if(getCurrentExperimentState() != ExperimentManager_Loaded)
 	{
 		qDebug() << __FUNCTION__ << "::Wrong state, could not start experiment!";
 		return false;
@@ -457,28 +482,28 @@ bool ExperimentManager::runExperiment()
 	// QThread::TimeCriticalPriority);
 #endif
 
-	changeCurrentExperimentState(Experiment_IsStarting);
-
 	if (!configureExperiment())
 	{
-		changeCurrentExperimentState(Experiment_Initialized);
+		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}	
+
 	if (!createExperimentObjects())
 	{
-		changeCurrentExperimentState(Experiment_Initialized);
+		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}
 
 	if(!connectExperimentObjects())
 	{
-		changeCurrentExperimentState(Experiment_Initialized);
+		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}
+	changeCurrentExperimentState(ExperimentManager_Configured);
 
 	if(!initializeExperiment())
 	{
-		changeCurrentExperimentState(Experiment_Initialized);
+		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}
 
@@ -486,10 +511,13 @@ bool ExperimentManager::runExperiment()
 
 	if(!initExperimentObjects())
 	{
-		changeCurrentExperimentState(Experiment_Initialized);
+		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}
-	
+
+	changeCurrentExperimentState(ExperimentManager_Initialized);
+	changeCurrentExperimentState(ExperimentManager_IsStarting);
+
 	if (expDataLogger)
 		expDataLogger->startTimer(nExperimentTimerIndex);
 
@@ -497,7 +525,7 @@ bool ExperimentManager::runExperiment()
 	
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
-		changeCurrentExperimentState(Experiment_Initialized);
+		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}
 
@@ -505,7 +533,7 @@ bool ExperimentManager::runExperiment()
 	QDesktopWidget *dt = QApplication::desktop();
 	QCursor::setPos(dt->width(), dt->height()/2); // not at bottom because then mouse movement on Mac would show dock
 
-	changeCurrentExperimentState(Experiment_Started);
+	changeCurrentExperimentState(ExperimentManager_Started);
 	return true;
 }
 
@@ -524,9 +552,9 @@ void ExperimentManager::abortExperiment()
  *
  *  Tries to abort the current Experiment that is running, see #runExperiment.
  */
-	if(getCurrentExperimentState()==Experiment_Started)
+	if(getCurrentExperimentState()==ExperimentManager_Started)
 	{
-		changeCurrentExperimentState(Experiment_IsStopping);
+		changeCurrentExperimentState(ExperimentManager_IsStopping);
 		if(!abortExperimentObjects())
 			qDebug() << __FUNCTION__ << ": Could not abort the Experiment Objects";
 		QThread::currentThread()->setPriority(QThread::NormalPriority);
@@ -539,9 +567,9 @@ void ExperimentManager::stopExperiment()
  *
  *  Tries to stop the current Experiment that is running, see #runExperiment.
  */
-	if(getCurrentExperimentState()==Experiment_Started)
+	if(getCurrentExperimentState()==ExperimentManager_Started)
 	{
-		changeCurrentExperimentState(Experiment_IsStopping);
+		changeCurrentExperimentState(ExperimentManager_IsStopping);
 		if(!stopExperimentObjects())
 			qDebug() << "ExperimentManager::stopExperiment Could not stop the Experiment Objects";
 		QThread::currentThread()->setPriority(QThread::NormalPriority);
@@ -720,7 +748,7 @@ void ExperimentManager::changeExperimentSubObjectState(ExperimentSubObjectState 
 			}			
 		}
 		if(nActiveExperimentObjects == 0)//No more active object? Then the experiment ended
-			changeCurrentExperimentState(Experiment_Stopped);
+			changeCurrentExperimentState(ExperimentManager_Stopped);
 	}
 }
 
@@ -1510,12 +1538,26 @@ bool ExperimentManager::createExperimentObjects()
 					//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
 					//	properties << QString::fromLatin1(metaObject->method(i).signature());
 
-					bool bResult = false;
-					if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogToOutputWindow(QString)")) == -1))//Is the signal present?
+					if (currentScriptEngine)
 					{
-						//Connect the signal
-						bResult = connect(tmpElement.pObject, SIGNAL(LogToOutputWindow(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
+						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_MAKETHISAVAILABLEINSCRIPT_FULL)) == -1))//Is the slot present?
+						{
+							//Invoke the slot
+							bRetVal = true;
+							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_MAKETHISAVAILABLEINSCRIPT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QString, tmpElement.sObjectName),Q_ARG(QObject*, (QObject*)currentScriptEngine))))
+							{
+								qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_MAKETHISAVAILABLEINSCRIPT << "()" << ")!";		
+								return false;
+							}		
+						}
 					}
+
+					//bool bResult = false;
+					//if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogToOutputWindow(QString)")) == -1))//Is the signal present?
+					//{
+					//	//Connect the signal
+					//	bResult = connect(tmpElement.pObject, SIGNAL(LogToOutputWindow(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
+					//}
 
 					//if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogExpObjData(int,int,QString)")) == -1))//Is the signal present?
 					//{

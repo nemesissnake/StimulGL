@@ -745,6 +745,7 @@ bool GLWidgetWrapper::startExperimentObject()
 	//	}
 	//}
 
+	bFirstTriggerAfterUnlock = true;
 	pExpConf->pExperimentManager->startExperimentTimer(nFrameTimerIndex);//Starts the Frame timer
 	pExpConf->pExperimentManager->startExperimentTimer(nTrialTimerIndex);//Starts the Trial timer
 	checkForNextBlockTrial();
@@ -858,16 +859,25 @@ bool GLWidgetWrapper::stopExperimentObject()
 	thisMetaObject->invokeMethod( this, "finalizePaintEvent",Qt::QueuedConnection);//a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
 	//int a = tTotalRunningTime.elapsed();
 	//stopTriggerTimer();
+
+	bool bRetVal;
+	if (thisMetaObject)
+	{
+		if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_STOPOBJECT_FULL)) == -1))//Is the slot present?
+		{
+			//Invoke the slot
+			if(!(thisMetaObject->invokeMethod(this, FUNC_STOPOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal))))
+			{
+				qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_STOPOBJECT_FULL << ")!";		
+			}		
+		}
+	}
 	return true;
 }
 
 bool GLWidgetWrapper::abortExperimentObject()
 {
-	bForceToStop = true;
-	thisMetaObject->invokeMethod( this, "finalizePaintEvent",Qt::QueuedConnection);//a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
-	//int a = tTotalRunningTime.elapsed();
-	//stopTriggerTimer();
-	return true;
+	return stopExperimentObject();
 }
 
 //void GLWidgetWrapper::startTriggerTimer(int msTime)
@@ -968,6 +978,7 @@ void GLWidgetWrapper::incrementExternalTrigger()
 	if (bCurrentSubObjectIsLocked == false)
 	{
 		nCurrentExperimentReceivedExternalTriggers++;//Externally Triggered
+		emit ExternalTriggerIncremented(nCurrentExperimentReceivedExternalTriggers);
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Externally Triggered!, Received="),QString::number(nCurrentExperimentReceivedExternalTriggers));				
 	}
@@ -984,6 +995,7 @@ void GLWidgetWrapper::incrementExternalTrigger()
 void GLWidgetWrapper::initBlockTrial()
 {
 	//stimContainerDlg->activateWindow();
+	emit NewInitBlockTrial();
 	bForceToStop = false;
 	bExperimentShouldStop = false;
 //#ifdef Q_WS_MACX
@@ -1028,6 +1040,9 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 	int nIntExtDiv;//The ratio between external and internal triggers
 	bool goToNextBlockTrial = false;
 	bool bFirstCheckAfterExperimentStarted = false;	
+	bool bRetval = false;
+	bool bExperimentStructureChanged = false;
+
 	mutExpSnapshot.lock();
 	if(expFullStruct.parentStruct.currExpTrial == -1)//First Experiment Trial? (Start/Init), occurs before the start of the Trigger(timer)
 	{
@@ -1035,8 +1050,13 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 		goToNextBlockTrial = true;
 		expFullStruct.parentStruct.currExpBlock = 0;//currExpBlockTrialTrigger
 		bFirstCheckAfterExperimentStarted = true;		
+		bExperimentStructureChanged = true;
 	}
-	expFullStruct.parentStruct.currExpExternalTrigger = nCurrentExperimentReceivedExternalTriggers;//Take a snapshot!
+	if (expFullStruct.parentStruct.currExpExternalTrigger != nCurrentExperimentReceivedExternalTriggers)
+	{
+		expFullStruct.parentStruct.currExpExternalTrigger = nCurrentExperimentReceivedExternalTriggers;//Take a snapshot!
+		bExperimentStructureChanged = true;
+	}	
 	if (bFirstCheckAfterExperimentStarted)
 	{
 		nIntExtDiv = strcExperimentBlockTrials.lBlockTrialStructure[0].lTrialStructure[0].nNrOfExternalSubTriggers;
@@ -1051,13 +1071,18 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 		nCurrentExperimentLastProcExternalTriggers = nCurrentExperimentReceivedExternalTriggers;
 		nCurrentExperimentReceivedInternalTriggers++;
 	}
-	expFullStruct.parentStruct.currExpInternalTrigger = nCurrentExperimentReceivedInternalTriggers;//Take a snapshot!	
+	if (expFullStruct.parentStruct.currExpInternalTrigger != nCurrentExperimentReceivedInternalTriggers)
+	{
+		expFullStruct.parentStruct.currExpInternalTrigger = nCurrentExperimentReceivedInternalTriggers;//Take a snapshot!
+		bExperimentStructureChanged = true;
+	}
 	if(bFirstCheckAfterExperimentStarted == false)
 	{
 		goToNextBlockTrial = expFullStruct.parentStruct.currExpInternalTrigger >= expFullStruct.nNextThresholdTriggerCount;//Go to next Block Trial?
 	}
 	if(goToNextBlockTrial)//When we init/start or switch from a Block Trial 
 	{
+		bExperimentStructureChanged = true;
 		if((expFullStruct.parentStruct.currExpTrial+1) >= strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].nNrOfTrials)//End of this Block(No more Trials)?
 		{			
 			if ((expFullStruct.parentStruct.currExpBlock+1) >= strcExperimentBlockTrials.nNrOfBlocks)//No more blocks?
@@ -1065,6 +1090,11 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 					QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped));//,Qt::HighEventPriority);
 					bExperimentShouldStop = true;
 					pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("No More BlockTrials to process"),QString("Block=") + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
+					//if (bExperimentStructureChanged)
+					//{
+					//	if(getSubObjectState() == Experiment_SubObject_Started)
+					//		emit ExperimentStructureChanged(expFullStruct.parentStruct.currExpBlock,expFullStruct.parentStruct.currExpTrial,expFullStruct.parentStruct.currExpBlockTrialTrigger);//,expFullStruct.parentStruct.currExpBlockTrialInternalTriggerAmount);
+					//}
 					mutExpSnapshot.unlock();
 					return false;
 			} 
@@ -1103,16 +1133,30 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 			tStimTimer.singleShot(1, this, SLOT(repaint()));
 		}
 		expTrialTimer.restart();
-		mutExpSnapshot.unlock();
-		return true;
+		bRetval = true;
 	}
 	else
 	{
-		expFullStruct.parentStruct.currExpBlockTrialTrigger = getRelativeBlockTrialTrigger(expFullStruct.parentStruct.currExpInternalTrigger);
-		mutExpSnapshot.unlock();
-		return false;
+		int nRelBlockTrigger = getRelativeBlockTrialTrigger(expFullStruct.parentStruct.currExpInternalTrigger);
+		if (expFullStruct.parentStruct.currExpBlockTrialTrigger != nRelBlockTrigger)
+		{
+			expFullStruct.parentStruct.currExpBlockTrialTrigger = nRelBlockTrigger;
+			bExperimentStructureChanged = true;
+		}		
+		bRetval = false;
+	}
+	if ((bCurrentSubObjectIsLocked == false) && (bFirstTriggerAfterUnlock))//has the experiment just been unlocked for the first time?
+	{
+		bFirstTriggerAfterUnlock = false;
+		emit ExperimentStructureChanged(expFullStruct.parentStruct.currExpBlock,expFullStruct.parentStruct.currExpTrial,expFullStruct.parentStruct.currExpBlockTrialTrigger);
+	}
+	if ((bExperimentStructureChanged) && (bFirstCheckAfterExperimentStarted == false))
+	{
+		if(getSubObjectState() == Experiment_SubObject_Started)
+			emit ExperimentStructureChanged(expFullStruct.parentStruct.currExpBlock,expFullStruct.parentStruct.currExpTrial,expFullStruct.parentStruct.currExpBlockTrialTrigger);//,expFullStruct.parentStruct.currExpBlockTrialInternalTriggerAmount);
 	}
 	mutExpSnapshot.unlock();
+	return bRetval;
 }
 
 int GLWidgetWrapper::getRelativeBlockTrialTrigger(int nAbsoluteTrigger)
@@ -1145,7 +1189,7 @@ int GLWidgetWrapper::getRelativeBlockTrialTrigger(int nAbsoluteTrigger)
 	return -1;
 }
 
-void GLWidgetWrapper::animate()
+void GLWidgetWrapper::animate(bool bOnlyCheckBlockTrials)
 {
 	if(getSubObjectState() == Experiment_SubObject_Started)
 	{
@@ -1154,14 +1198,14 @@ void GLWidgetWrapper::animate()
 		mutRecursivePaint.lock();
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
-		//if (bForceRepaint)
-		//{
-		//	repaint();
-		//} 
-		//else
-		//{
+		if (bOnlyCheckBlockTrials)
+		{
+			checkForNextBlockTrial();
+		} 
+		else
+		{
 			update();
-		//}
+		}
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","update() called");
 		//mutRecursivePaint.unlock();

@@ -26,7 +26,7 @@ Q_DECLARE_METATYPE(ExperimentManager*)
 
 ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 {
-	ExperimentManagerObject = new ExperimentManager(parent);
+	ExperimentManagerObject = new ExperimentManager(parent,NULL);
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
 	strPluginInformation = PLUGIN_INFORMATION;
 }
@@ -55,6 +55,13 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<PrtFormatManager*>(), PrtFormatManagerProto);
 	QScriptValue PrtFormatManagerCtor = engine.newFunction(PrtFormatManager::ctor__PrtFormatManager, PrtFormatManagerProto);
 	engine.globalObject().setProperty(PRTFORMATMANAGER_NAME, PrtFormatManagerCtor);
+
+	qmlWidget QmlWidgetObject;//or use new(), but make sure to use delete afterwards!
+	QScriptValue QmlWidgetProto = engine.newQObject(&QmlWidgetObject);
+	engine.setDefaultPrototype(qMetaTypeId<qmlWidget*>(), QmlWidgetProto);
+	QScriptValue QmlWidgetCtor = engine.newFunction(qmlWidget::ctor_QmlWidget, QmlWidgetProto);
+	engine.globalObject().setProperty(QMLWIDGET_NAME, QmlWidgetCtor);
+
 	return true;
 }
 

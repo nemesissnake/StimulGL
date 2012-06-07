@@ -65,18 +65,22 @@ signals:
 	void WriteToLogOutput(const QString &strText2Write);
 
 public:
-	ExperimentManager(QObject *parent = NULL);
+	//ExperimentManager(QObject *parent = NULL);
+	ExperimentManager(QObject *parent = NULL, QScriptEngine* engine = NULL);
 	~ExperimentManager();
 
 	/*! The enum ExperimentState represents the main state of the ExperimentManager object */
 	enum ExperimentState 
 	{
-		Experiment_Constructed	= 0, /*!< enum value 0 */
-		Experiment_Initialized	= 1, /*!< enum value 1 */
-		Experiment_IsStarting	= 2, /*!< enum value 2 */
-		Experiment_Started      = 3, /*!< enum value 3 */
-		Experiment_IsStopping	= 4, /*!< enum value 4 */
-		Experiment_Stopped      = 5  /*!< enum value 5 */
+		ExperimentManager_NoState		= 0, /*!< enum value 0 */
+		ExperimentManager_Constructed	= 1, /*!< enum value 1 */
+		ExperimentManager_Loaded		= 2, /*!< enum value 2 */
+		ExperimentManager_Configured	= 3, /*!< enum value 3 */
+		ExperimentManager_Initialized	= 4, /*!< enum value 4 */
+		ExperimentManager_IsStarting	= 5, /*!< enum value 5 */
+		ExperimentManager_Started		= 6, /*!< enum value 6 */
+		ExperimentManager_IsStopping	= 7, /*!< enum value 7 */
+		ExperimentManager_Stopped		= 8  /*!< enum value 8 */
 	};
 
 	typedef struct{
@@ -94,6 +98,7 @@ public:
 	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);
 
 public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool setExperimentFileName(const QString qstrExpFileName);
 	QString getExperimentFileName();
 	bool loadExperiment(QString strFile = "", bool bViewEditTree = true);
@@ -112,6 +117,7 @@ public slots:
 	double elapsedExperimentTimerTime(int nIndex);
 
 private:
+	void DefaultConstruct();
 	bool WriteAndCloseExperimentOutputData();
 	void initializeDataLogger();
 	void RegisterMetaTypes();
@@ -134,6 +140,7 @@ private:
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	QList<objectElement> lExperimentObjectList;
 
+	QScriptEngine* currentScriptEngine;
 	ExperimentState experimentCurrentState;
 	bool m_RunFullScreen;
 	bool m_DebugMode;

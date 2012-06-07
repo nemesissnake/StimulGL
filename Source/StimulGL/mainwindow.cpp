@@ -41,7 +41,7 @@ MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 
 #ifndef QT_NO_DEBUG_OUTPUT	
 	qInstallMsgHandler(MainAppInfo::MyOutputHandler);
-	qDebug("SimulGL Main Constructor.");
+	qDebug("StimulGL Main Constructor.");
 #endif
 //When compiling your final application, be sure to add the flags -DQT_NO_DEBUG and -DQT_NO_DEBUG_OUTPUT.  
 //These will reduce the application size and ensure that the logfile isn't used. 

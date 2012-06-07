@@ -146,6 +146,10 @@ typedef strcParsedParameterDefinition ParsedParameterDefinition;
 
 typedef QHash<QString, ParsedParameterDefinition> tParsedParameterList;
 
+#define GLWIDGET_BACKGROUNDCOLOR				"backgroundcolor"
+#define GLWIDGET_WIDTH_PIXEL_AMOUNT				"stimuluswidthspan"
+#define GLWIDGET_HEIGHT_PIXEL_AMOUNT			"stimulusheightspan"
+
 #define FUNC_PAINTOBJECT						"paintObject"
 #define FUNC_PAINTOBJECT_FULL					FUNC_PAINTOBJECT "(int,QObject *)"
 #define FUNC_SETOBJECTID						"setObjectID"
@@ -154,10 +158,14 @@ typedef QHash<QString, ParsedParameterDefinition> tParsedParameterList;
 #define FUNC_INITOBJECT_FULL					FUNC_INITOBJECT "()"
 #define FUNC_STARTOBJECT						"startObject"
 #define FUNC_STARTOBJECT_FULL					FUNC_STARTOBJECT "()"
+#define FUNC_STOPOBJECT							"stopObject"
+#define FUNC_STOPOBJECT_FULL					FUNC_STOPOBJECT "()"
 #define FUNC_SETOBJECTCONFIGURATION				"setObjectConfiguration"
 #define FUNC_SETOBJECTCONFIGURATION_FULL		FUNC_SETOBJECTCONFIGURATION "(QObject *)"
 #define FUNC_INITOBJECTBLOCKTRIAL				"initObjectBlockTrial"
 #define FUNC_INITOBJECTBLOCKTRIAL_FULL			FUNC_INITOBJECTBLOCKTRIAL "()"
+#define FUNC_MAKETHISAVAILABLEINSCRIPT			"makeThisAvailableInScript"
+#define FUNC_MAKETHISAVAILABLEINSCRIPT_FULL		FUNC_MAKETHISAVAILABLEINSCRIPT "(QString,QObject *)"
 
 #define SIGNAL_USERCLOSE_FULL					"UserWantsToClose(void)"
 #define SIGNAL_OBJECTSTOP_FULL					"ObjectShouldStop(void)"
@@ -180,6 +188,7 @@ typedef QHash<QString, ParsedParameterDefinition> tParsedParameterList;
 #define TRIGGERTIMER_NAME						"TriggerTimer"
 #define IMAGEPROCESSOR_NAME						"ImageProcessor"
 #define PRTFORMATMANAGER_NAME					"PRTFormatManager"
+#define QMLWIDGET_NAME							"qmlWidget"
 #define EXPERIMENTMANAGER_NAME					"ExperimentManager"
 #define MODULE_NAME								"Experiment Parser"
 #define MAX_INVOKE_ARG_COUNT					10
