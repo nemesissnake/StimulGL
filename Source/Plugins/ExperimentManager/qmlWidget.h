@@ -28,6 +28,10 @@
 #include <QDeclarativeContext>
 #include <QDeclarativeView>
 
+#include <QAbstractItemModel>
+#include <QStringListModel>
+#include "ImageListModel.h"
+
 #define QML_WIDGET_MAINFILEPATH							"qmlmainfilepath"
 #define QML_WIDGET_MAX_EVENT_TIME						"qmlmineventtime"
 
@@ -53,6 +57,11 @@ public slots:
 	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
 	//bool invokeQmlMethod(QString strRootObjectName = "", QString strMethodName = "", QVariant &returnedValue = QVariant(), QVariant inputValue1 = "", QVariant inputValue2 = "", QVariant inputValue3 = NULL, QVariant inputValue4 = NULL, QVariant inputValue5 = NULL, QVariant inputValue6 = NULL, QVariant inputValue7 = NULL, QVariant inputValue8 = NULL, QVariant inputValue9 = NULL);
 	QVariant invokeQmlMethod(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());
+	
+	QString addPixmapToImageBuffer(const QPixmap &pixmap);
+	bool getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
+	bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
+	bool removePixmapFromImageBuffer(const QString &ID);
 
 private slots:
 	void callAnimate();
@@ -62,6 +71,7 @@ private:
 	void parseExperimentObjectBlockParameters(bool bInit = false);
 	void qmlEventRoutine(bool dShowWidget = true);
 
+	ImageListModel *imgLstModel;
 	QDeclarativeView *qmlViewer;
 	QPalette GlWidgetPallette;
 	QString qmlMainFilePath;

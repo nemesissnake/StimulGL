@@ -19,6 +19,7 @@
 #include "qmlWidget.h"
 #include <QDomNodeList>
 #include "ExperimentManager.h"
+#include "ModelIndexProvider.h"
 
 qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent)
 {
@@ -29,6 +30,12 @@ qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent)
 
 qmlWidget::~qmlWidget()
 {
+	if (imgLstModel)
+	{
+		delete imgLstModel;
+		imgLstModel = NULL;
+
+	}	
 	if (glWidget)
 	{
 		delete glWidget;
@@ -43,6 +50,12 @@ qmlWidget::~qmlWidget()
 	{
 		delete stimuliPainter;
 		stimuliPainter = NULL;
+	}
+	if (qmlViewer)
+	{
+		//qmlViewer->close();
+		delete qmlViewer;
+		qmlViewer = NULL;
 	}
 }
 
@@ -84,7 +97,8 @@ void qmlWidget::initialize()
 	stimuliPainter = NULL;
 	currExpConfStruct = NULL;
 	qmlViewer = NULL;
-	glWidget = NULL;	
+	glWidget = NULL;
+	imgLstModel = NULL;
 	rootObject = NULL;
 }
 
@@ -169,11 +183,57 @@ bool qmlWidget::initObject()
 	format.setSampleBuffers(false);
 	glWidget = new QGLWidget(format,this,this);
 	glWidget->setAutoFillBackground(true);	//here we must use this functionality	
-	qmlViewer->setViewport(glWidget);	
+	qmlViewer->setViewport(glWidget);
 	
+	if (!imgLstModel)
+	{
+		imgLstModel = new ImageListModel();
+		qmlViewer->engine()->addImageProvider(DEFAULT_IMAGEBUFFER_NAME, new ModelIndexProvider(*imgLstModel));//Qt::DisplayRole
+	}
+		
 	parseExperimentObjectBlockParameters(true);
 	lastTriggerNumber = -1;
 	return true;
+}
+
+QString qmlWidget::addPixmapToImageBuffer(const QPixmap &pixmap)
+{
+	if (!imgLstModel)
+		return false;
+	return imgLstModel->addPixmap(pixmap);
+}
+
+bool qmlWidget::getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
+{
+	if (!imgLstModel)
+		return false;
+	if(imgLstModel->getPixmap(*pixmap,ID))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool qmlWidget::updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
+{
+	if (!imgLstModel)
+		return false;
+	if(imgLstModel->updatePixmap(*pixmap,ID))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool qmlWidget::removePixmapFromImageBuffer(const QString &ID)
+{
+	if (!imgLstModel)
+		return false;
+	if(imgLstModel->removePixmap(ID))
+	{
+		return true;
+	}
+	return false;
 }
 
 bool qmlWidget::startObject()
@@ -212,6 +272,15 @@ bool qmlWidget::initObjectBlockTrial()
 
 QVariant qmlWidget::invokeQmlMethod(QString strRootObjectName, QString strMethodName, QVariant inputValue1, QVariant inputValue2, QVariant inputValue3, QVariant inputValue4, QVariant inputValue5, QVariant inputValue6, QVariant inputValue7, QVariant inputValue8, QVariant inputValue9)
 {
+	if (!rootObject)
+	{
+		rootObject = dynamic_cast<QObject *>(qmlViewer->rootObject());// get root object
+		if (!rootObject)
+		{
+			qDebug() << __FUNCTION__ "::Failed to retrieve the root QML object.";
+			return NULL;
+		}
+	}
 	QObject *methodsContainerObject;
 	if (strRootObjectName.isEmpty())
 		methodsContainerObject = rootObject;
@@ -319,6 +388,7 @@ bool qmlWidget::paintObject(int paintFlags, QObject *paintEventObject)//Only get
 
 void qmlWidget::qmlEventRoutine(bool dShowWidget)
 {
+	//qmlViewer->setVisible(false);
 	if (bResolutionChanged)
 	{
 		qmlViewer->setVisible(false);
