@@ -74,6 +74,32 @@ QString MainAppInfo::outputsDirPath()
 	return pluginsDir.absolutePath();
 }
 
+QString MainAppInfo::qmlExtensionsPluginDirPath()
+{
+	QString strExtPluginDirPath = appDirPath() + QString("/qml/plugins/");
+	#ifdef WIN64
+		strExtPluginDirPath = strExtPluginDirPath + QString("x64");
+	#else
+		strExtPluginDirPath = strExtPluginDirPath + QString("Win32");
+	#endif
+
+#ifdef DEBUG
+		QString strConfiguration = "/Debug";
+#else
+		QString strConfiguration = "/Release";
+#endif
+	
+	if(QDir(strExtPluginDirPath).exists()==false)
+	{
+		QDir().mkdir(strExtPluginDirPath);
+	}
+	else if(QDir(strExtPluginDirPath + strConfiguration).exists())
+	{
+		strExtPluginDirPath = strExtPluginDirPath + strConfiguration;
+	}
+	return QDir(strExtPluginDirPath).absolutePath();
+}
+
 QStringList MainAppInfo::getQTScriptBindingList()	
 {
 #ifdef WIN32

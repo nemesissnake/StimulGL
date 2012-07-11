@@ -47,6 +47,7 @@ public:
 	static QString appLogFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_LOGFILE_NAME);}
 	static QString pluginsDirPath();
 	static QString outputsDirPath();
+	static QString qmlExtensionsPluginDirPath();
 
 	static QString getDefaultFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}
 	static QStringList getQTScriptBindingList();

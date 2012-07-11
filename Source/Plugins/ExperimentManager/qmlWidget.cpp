@@ -190,7 +190,18 @@ bool qmlWidget::initObject()
 		imgLstModel = new ImageListModel();
 		qmlViewer->engine()->addImageProvider(DEFAULT_IMAGEBUFFER_NAME, new ModelIndexProvider(*imgLstModel));//Qt::DisplayRole
 	}
-		
+
+	if (qmlViewer)
+	{
+		QString extPluginPath = MainAppInfo::qmlExtensionsPluginDirPath();
+		QStringList importPaths = qmlViewer->engine()->importPathList();
+		if (!importPaths.contains(extPluginPath))
+		{
+			qmlViewer->engine()->addImportPath(extPluginPath);
+			qDebug() << __FUNCTION__ "::Added the QML extension plugin path (" << extPluginPath << ").";
+		}
+	}
+	
 	parseExperimentObjectBlockParameters(true);
 	lastTriggerNumber = -1;
 	return true;
