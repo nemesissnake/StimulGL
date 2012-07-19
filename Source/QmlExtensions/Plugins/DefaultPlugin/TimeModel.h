@@ -1,4 +1,4 @@
-//ExperimentManagerplugin
+//DefaultQMLPlugin
 //Copyright (C) 2012  Sven Gijsen
 //
 //This file is part of StimulGL.
@@ -30,44 +30,19 @@
 class MinuteTimer : public QObject
 {
 	Q_OBJECT
+
 public:
-	MinuteTimer(QObject *parent) : QObject(parent)
-	{
-	}
-
-	void start()
-	{
-		if (!timer.isActive()) {
-			time = QTime::currentTime();
-			timer.start(60000-time.second()*1000, this);
-		}
-	}
-
-	void stop()
-	{
-		timer.stop();
-	}
-
-	int hour() const { return time.hour(); }
-	int minute() const { return time.minute(); }
+	MinuteTimer(QObject *parent);
+	void start();
+	void stop();
+	int hour() const;
+	int minute() const;
 
 signals:
 	void timeChanged();
 
 protected:
-	void timerEvent(QTimerEvent *)
-	{
-		QTime now = QTime::currentTime();
-		if (now.second() == 59 && now.minute() == time.minute() && now.hour() == time.hour()) {
-			// just missed time tick over, force it, wait extra 0.5 seconds
-			time.addSecs(60);
-			timer.start(60500, this);
-		} else {
-			time = now;
-			timer.start(60000-time.second()*1000, this);
-		}
-		emit timeChanged();
-	}
+	void timerEvent(QTimerEvent *);
 
 private:
 	QTime time;
@@ -81,25 +56,10 @@ class TimeModel : public QObject
 		Q_PROPERTY(int minute READ minute NOTIFY timeChanged)
 
 public:
-	TimeModel(QObject *parent=0) : QObject(parent)
-	{
-		if (++instances == 1) {
-			if (!timer)
-				timer = new MinuteTimer(qApp);
-			connect(timer, SIGNAL(timeChanged()), this, SIGNAL(timeChanged()));
-			timer->start();
-		}
-	}
-
-	~TimeModel()
-	{
-		if (--instances == 0) {
-			timer->stop();
-		}
-	}
-
-	int minute() const { return timer->minute(); }
-	int hour() const { return timer->hour(); }
+	TimeModel(QObject *parent=0);
+	~TimeModel();
+	int minute() const;
+	int hour() const;
 
 signals:
 	void timeChanged();
@@ -109,12 +69,5 @@ private:
 	static MinuteTimer *timer;
 	static int instances;
 };
-
-int TimeModel::instances=0;
-MinuteTimer *TimeModel::timer=0;
-
-//#include "TimeModel.moc"
-
-//Q_EXPORT_PLUGIN2(qmlqtimeexampleplugin, QMLExtensionPlugin);
 
 #endif // TIMEMODEL_H

@@ -352,24 +352,6 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_qmlWidget.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_TimeModel.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_TimeModel.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_TimeModel.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_TimeModel.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_TimeModel.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_TimeModel.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
     <ClCompile Include="ModelIndexProvider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -410,6 +392,27 @@
       <Filter>Generated Files\Template_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ImageListModel.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="QmlErrorHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_QmlErrorHandler.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_QmlErrorHandler.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_QmlErrorHandler.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_QmlErrorHandler.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_QmlErrorHandler.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_QmlErrorHandler.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
   </ItemGroup>
@@ -482,13 +485,13 @@
     <CustomBuild Include="qmlWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="TimeModel.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="ModelIndexProvider.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ImageListModel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QmlErrorHandler.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

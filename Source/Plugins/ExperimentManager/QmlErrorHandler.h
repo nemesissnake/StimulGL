@@ -1,4 +1,4 @@
-//DefaultQMLPlugin
+//ExperimentManagerplugin
 //Copyright (C) 2012  Sven Gijsen
 //
 //This file is part of StimulGL.
@@ -16,16 +16,31 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "DefaultPlugin.h"
-#include "defines.h"
-#include "TimeModel.h"
-#include "PhononPlayer.h"
+#ifndef QMLERRORHANDLER_H
+#define QMLERRORHANDLER_H
 
-void QDefaultQmlPlugin::registerTypes(const char *uri)
+#include <QObject>
+#include <QDeclarativeView>
+#include <QDeclarativeError>
+#include <QMessageBox>
+
+class QmlErrorHandler : public QObject
 {
-	Q_ASSERT(uri == QLatin1String(DEFAULT_STIMULGL_PLUGIN_QML_NAME));
-	qmlRegisterType<TimeModel>(uri, 1, 0, TIMEMODEL_TYPE_QML_NAME);
-	qmlRegisterType<PhononPlayer>(uri, 1, 0, PHONONPLAYER_TYPE_QML_NAME);
-}
+	Q_OBJECT
 
-Q_EXPORT_PLUGIN2(qmlstimulgldefaultplugin, QDefaultQmlPlugin);//qmlqtimeexampleplugin
+public:
+	explicit QmlErrorHandler(QDeclarativeView &view, QObject *parent = NULL);//QmlErrorHandler(QObject *parent = NULL);
+	~QmlErrorHandler();
+
+	bool errorOccured() const;
+
+private slots:
+	void handleQmlStatusChange(QDeclarativeView::Status status);
+	void handleQmlErrors(const QList<QDeclarativeError>& qmlErrors);
+
+private:
+	QDeclarativeView &mView;
+	bool mErrorOccured;
+};
+
+#endif // QMLERRORHANDLER_H

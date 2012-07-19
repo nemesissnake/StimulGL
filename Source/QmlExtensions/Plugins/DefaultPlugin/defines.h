@@ -16,16 +16,17 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "DefaultPlugin.h"
-#include "defines.h"
-#include "TimeModel.h"
-#include "PhononPlayer.h"
 
-void QDefaultQmlPlugin::registerTypes(const char *uri)
-{
-	Q_ASSERT(uri == QLatin1String(DEFAULT_STIMULGL_PLUGIN_QML_NAME));
-	qmlRegisterType<TimeModel>(uri, 1, 0, TIMEMODEL_TYPE_QML_NAME);
-	qmlRegisterType<PhononPlayer>(uri, 1, 0, PHONONPLAYER_TYPE_QML_NAME);
-}
+#ifndef DEFAULTQMLPLUGINDEFINES_H
+#define DEFAULTQMLPLUGINDEFINES_H
+//#include "./../../StimulGL/maindefines.h"
 
-Q_EXPORT_PLUGIN2(qmlstimulgldefaultplugin, QDefaultQmlPlugin);//qmlqtimeexampleplugin
+#define DEFAULT_STIMULGL_PLUGIN_QML_NAME	"StimulGLExtensions"
+#define TIMEMODEL_TYPE_QML_NAME				"Time"
+#define PHONONPLAYER_TYPE_QML_NAME			"MediaPlayer"
+
+#endif // DEFAULTQMLPLUGINDEFINES_H
+
+
+
+

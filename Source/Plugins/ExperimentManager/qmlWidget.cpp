@@ -21,11 +21,10 @@
 #include "ExperimentManager.h"
 #include "ModelIndexProvider.h"
 
-qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent)
+qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent), parentWidget(parent)
 {
 	currentScriptEngine = NULL;
 	initialize();
-	GLWidgetWrapper::setupLayout(this);
 }
 
 qmlWidget::~qmlWidget()
@@ -34,7 +33,6 @@ qmlWidget::~qmlWidget()
 	{
 		delete imgLstModel;
 		imgLstModel = NULL;
-
 	}	
 	if (glWidget)
 	{
@@ -53,10 +51,30 @@ qmlWidget::~qmlWidget()
 	}
 	if (qmlViewer)
 	{
-		//qmlViewer->close();
 		delete qmlViewer;
 		qmlViewer = NULL;
 	}
+	if (qmlErrorHandler)
+	{
+		delete qmlErrorHandler;
+		qmlErrorHandler = NULL;
+	}
+	parentWidget = NULL;
+}
+
+bool qmlWidget::executeQMLDocument(const QString &strPath, QDialog *ContainerDlg)//QVBoxLayout *layout) 
+{
+	qmlMainFilePath = strPath;
+	if(initObject())
+	{
+		if (ContainerDlg)
+		{
+			setAlternativeContainerDialog(ContainerDlg);
+			ContainerDlg->installEventFilter(this);//re-route all ContainerDlg events to this->bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
+		}
+		return startObject();
+	}
+	return false;
 }
 
 bool qmlWidget::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
@@ -100,10 +118,11 @@ void qmlWidget::initialize()
 	glWidget = NULL;
 	imgLstModel = NULL;
 	rootObject = NULL;
+	qmlErrorHandler = NULL;
 }
 
-void qmlWidget::parseExperimentObjectBlockParameters(bool bInit)
-{	
+void qmlWidget::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyToDefault)
+{
 	int tmpInteger = -1;
 	if (bInit)
 	{	
@@ -111,16 +130,21 @@ void qmlWidget::parseExperimentObjectBlockParameters(bool bInit)
 
 		tmpString = QColor(87,87,87).name();//gives "#575757";
 		colorBackground = QColor(tmpString);
-		insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,tmpString);
+		if(!bSetOnlyToDefault)
+			insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,tmpString);
 		tmpString = "";
 		QString qmlMainFilePath = tmpString;
-		insertExperimentObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAINFILEPATH,tmpString);
+		if(!bSetOnlyToDefault)
+			insertExperimentObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAINFILEPATH,tmpString);
 		stimHeigthPixelAmount = rectScreenRes.height();
-		insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
+		if(!bSetOnlyToDefault)
+			insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
 		stimWidthPixelAmount = stimHeigthPixelAmount;
-		insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
+		if(!bSetOnlyToDefault)
+			insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
 		nWidgetMaxEvenTime = 5;
-		insertExperimentObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAX_EVENT_TIME,QString::number(nWidgetMaxEvenTime));		
+		if(!bSetOnlyToDefault)
+			insertExperimentObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAX_EVENT_TIME,QString::number(nWidgetMaxEvenTime));		
 	} 
 	else
 	{
@@ -165,6 +189,10 @@ void qmlWidget::parseExperimentObjectBlockParameters(bool bInit)
 
 bool qmlWidget::initObject()
 {
+	if (parentWidget == NULL)
+	{
+		GLWidgetWrapper::setupLayout(this);
+	} 
 	//if (currExpConfStruct)
 	//{
 	//	if (currExpConfStruct->pExperimentManager)
@@ -172,8 +200,8 @@ bool qmlWidget::initObject()
 	//		currExpConfStruct->pExperimentManager->logExperimentObjectData(nQMLWidgetID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
 	//	}
 	//}
-	qmlViewer = new QDeclarativeView(this);		
-	qmlViewer->setAttribute(Qt::WA_OpaquePaintEvent);// Qt::WA_OpaquePaintEvent basically implies that you'll repaint everything as necessary yourself (which QML is well behaved with).
+	qmlViewer = new QDeclarativeView(this);
+	qmlViewer->setAttribute(Qt::WA_OpaquePaintEvent);// Qt::WA_OpaquePaintEvent basically implies that you'll re-paint everything as necessary yourself (which QML is well behaved with).
 	qmlViewer->setAttribute(Qt::WA_NoSystemBackground);//Qt::WA_NoSystemBackground tells Qt to nicely not paint the background.)
 	qmlViewer->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
 	qmlViewer->viewport()->setAttribute(Qt::WA_NoSystemBackground);
@@ -182,15 +210,16 @@ bool qmlWidget::initObject()
 	QGLFormat format = QGLFormat::defaultFormat();
 	format.setSampleBuffers(false);
 	glWidget = new QGLWidget(format,this,this);
-	glWidget->setAutoFillBackground(true);	//here we must use this functionality	
-	qmlViewer->setViewport(glWidget);
+	glWidget->setAutoFillBackground(true);	//here we must use this functionality
+	//if (parentWidget == NULL)
+		qmlViewer->setViewport(glWidget);//uncomment this
 	
 	if (!imgLstModel)
 	{
 		imgLstModel = new ImageListModel();
 		qmlViewer->engine()->addImageProvider(DEFAULT_IMAGEBUFFER_NAME, new ModelIndexProvider(*imgLstModel));//Qt::DisplayRole
 	}
-
+	
 	if (qmlViewer)
 	{
 		QString extPluginPath = MainAppInfo::qmlExtensionsPluginDirPath();
@@ -200,12 +229,25 @@ bool qmlWidget::initObject()
 			qmlViewer->engine()->addImportPath(extPluginPath);
 			qDebug() << __FUNCTION__ "::Added the QML extension plugin path (" << extPluginPath << ").";
 		}
+		qmlErrorHandler = new QmlErrorHandler(*qmlViewer,this);
+	}	
+	if (parentWidget == NULL)
+	{
+		parseExperimentObjectBlockParameters(true,false);
 	}
-	
-	parseExperimentObjectBlockParameters(true);
+	else
+	{
+		parseExperimentObjectBlockParameters(true,true);
+		setExperimentMetaObject();
+	}
 	lastTriggerNumber = -1;
 	return true;
 }
+
+//void qmlWidget::processQMLEngineWarning(const QList<QDeclarativeError> & warnings)
+//{
+//
+//}
 
 QString qmlWidget::addPixmapToImageBuffer(const QPixmap &pixmap)
 {
@@ -255,6 +297,17 @@ bool qmlWidget::startObject()
 
 bool qmlWidget::stopObject()
 {
+	//if (qmlErrorHandler)
+	//{
+	//	if (!qmlErrorHandler->errorOccured()) 
+	//	{
+	//		int a = 9;
+	//	} 
+	//	else 
+	//	{
+	//		int a = 96;
+	//	}
+	//}
 	disconnect(&tWidgetUpdateLoopTimer, SIGNAL(timeout()), this, SLOT(callAnimate()));
 	tWidgetUpdateLoopTimer.stop();
 	return true;
@@ -361,7 +414,7 @@ QVariant qmlWidget::invokeQmlMethod(QString strRootObjectName, QString strMethod
 void qmlWidget::callAnimate()
 {  
 	animate(true);
-	qmlEventRoutine();
+	qmlEventRoutine(false);
 }
 
 bool qmlWidget::paintObject(int paintFlags, QObject *paintEventObject)//Only gets called once during whole experiment!
@@ -402,6 +455,7 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget)
 	//qmlViewer->setVisible(false);
 	if (bResolutionChanged)
 	{
+		bResolutionChanged = false;
 		qmlViewer->setVisible(false);
 		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());		
 	}
@@ -413,6 +467,9 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget)
 		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());
 	}	
 	if (dShowWidget)
-		qmlViewer->showFullScreen();//Fastest
+	{
+		qmlViewer->showFullScreen();//Fastest uncomment this
+		glWidget->setFocus();
+	}
 }
 

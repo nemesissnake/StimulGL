@@ -44,6 +44,7 @@
 #define MAIN_PROGRAM_ORIGINAL_FILENAME					"StimulGL.exe"
 #define MAIN_PROGRAM_LOGFILE_NAME						"logfile.txt"
 #define MAIN_PROGRAM_DOC_DIRNAME						"documents"
+#define MAIN_PROGRAM_EXAMPLES_DIRNAME					"examples"
 #define MAIN_PROGRAM_DOC_BINARYCOLLFILE					"MainDocumentation.qhc"
 #define MAIN_PROGRAM_FILE_DESCRIPTION					"Open Source Cross Platform Scriptable Application"
 #define MAIN_PROGRAM_FILESEXTENSION_LIST				MAIN_PROGRAM_INTERNAL_NAME "standard files (*.qs *.svg *.svgz *.svg.gz);;QT Script files (*.qs);;SVG files (*.svg *.svgz *.svg.gz);;"

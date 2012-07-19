@@ -32,7 +32,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	thisMetaObject = NULL;
 	stimContainerDlg = NULL;
 	pExpBlockTrialDomNodeList = NULL;
-	bForceToStop = false;
+	//bForceToStop = false;
 	bExperimentShouldStop = false;
 	bCheckForDoubleBuffering = false;
 	#ifdef Q_WS_MACX
@@ -51,10 +51,11 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	//setMinimumSize(200, 200);
 	setWindowTitle(tr("Painting a Scene"));
 
+	alternativeContainerDlg = NULL;
 	stimContainerDlg = new ContainerDlg();
 	stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
 	stimContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
-	stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool Retinotopic_Mapping::eventFilter(QObject *target, QEvent *event)
+	stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 	mainLayout = NULL;
 	nObjectID = -1;
 	pExpConf = NULL;
@@ -90,6 +91,10 @@ GLWidgetWrapper::~GLWidgetWrapper()
 		delete lockedPainter;
 		lockedPainter = NULL;
 	}
+	if (alternativeContainerDlg)
+	{
+		alternativeContainerDlg = NULL;//not owned by this class
+	}
 	cleanupExperimentBlockTrialStructure();
 	changeSubObjectState(Experiment_SubObject_Stopped);
 }
@@ -100,6 +105,13 @@ void GLWidgetWrapper::setVerticalSyncSwap()
 	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
 	StimulGLQGLFormat.setSampleBuffers(true);
 	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
+}
+
+void GLWidgetWrapper::doRepaint()
+{
+	////if (!mutProcEvents.tryLock())
+	////	return;
+	repaint();
 }
 
 bool GLWidgetWrapper::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing)
@@ -214,9 +226,14 @@ void GLWidgetWrapper::customEvent(QEvent *event)
 	}
 }
 
+void GLWidgetWrapper::setAlternativeContainerDialog(QDialog *ContainerDlg)
+{
+	alternativeContainerDlg = ContainerDlg;
+}
+
 bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 {
-	if (target == stimContainerDlg) 
+	if ((target == stimContainerDlg) || (target == alternativeContainerDlg))
 	{
 		if (event->type() == QEvent::KeyPress) 
 		{
@@ -234,7 +251,9 @@ bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 			//	setExperimentObjectReadyToUnlock();
 			//	break;
 			case Qt::Key_Alt:	//To start the experiment
-				setExperimentObjectReadyToUnlock();					
+				setExperimentObjectReadyToUnlock();
+				if(target == alternativeContainerDlg)//here we don't have a trigger object because of the lack of the ExperimentManager, so we trigger it automatically to start
+					tStimTimer.singleShot(100, this, SLOT(incrementExternalTrigger()));//incrementExternalTrigger();
 				break;
 			}
 		}
@@ -707,15 +726,7 @@ void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 	mainLayout->setMargin(0);
 	mainLayout->addWidget(layoutWidget);
 	stimContainerDlg->setLayout(mainLayout);
-	//if(m_RunFullScreen)
-	//stimContainerDlg->setWindowModality(true);
 	stimContainerDlg->showFullScreen();
-
-		//stimContainerDlg->raise();
-		//stimContainerDlg->activateWindow();
-		//stimContainerDlg->repaint();
-	//else
-	//	stimContainerDlg->show();
 }
 
 bool GLWidgetWrapper::startExperimentObject()
@@ -857,9 +868,6 @@ bool GLWidgetWrapper::stopExperimentObject()
 {
 	bExperimentShouldStop = true;
 	thisMetaObject->invokeMethod( this, "finalizePaintEvent",Qt::QueuedConnection);//a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
-	//int a = tTotalRunningTime.elapsed();
-	//stopTriggerTimer();
-
 	bool bRetVal;
 	if (thisMetaObject)
 	{
@@ -895,6 +903,10 @@ bool GLWidgetWrapper::abortExperimentObject()
 
 void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 {
+	//if(!mutProcEvents.tryLock())
+	//	return;
+	//mutProcEvents.lock();
+	//waitProcEvents.wait(&mutProcEvents);
 	int nPaintFlags;
 	if(isDebugMode())
 		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Starting to paint the widget");
@@ -940,10 +952,10 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 		QFont textFont("arial", 22, QFont::Bold, false);
 		QString strText;
 		QString strTextStart = "Experiment ready, ";
-		if (bCurrentSubObjectReadyToUnlock == false)
-			strText = strTextStart + "press 'Alt' to proceed or CTRL + 'a' to abort the experiment";
-		else
+		if (bCurrentSubObjectReadyToUnlock)
 			strText = strTextStart + "waiting for a trigger to start...";
+		else
+			strText = strTextStart + "press 'Alt' to proceed or CTRL + 'a' to abort the experiment";
 		//lockedPainter->begin(this);
 		const QRectF windowRect = lockedPainter->window();
 		//if(isDebugMode())
@@ -975,14 +987,7 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 
 void GLWidgetWrapper::incrementExternalTrigger()
 {
-	if (bCurrentSubObjectIsLocked == false)
-	{
-		nCurrentExperimentReceivedExternalTriggers++;//Externally Triggered
-		emit ExternalTriggerIncremented(nCurrentExperimentReceivedExternalTriggers);
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Externally Triggered!, Received="),QString::number(nCurrentExperimentReceivedExternalTriggers));				
-	}
-	else
+	if (bCurrentSubObjectIsLocked)
 	{
 		if (bCurrentSubObjectReadyToUnlock == true)
 		{
@@ -990,13 +995,20 @@ void GLWidgetWrapper::incrementExternalTrigger()
 			unlockExperimentObject();
 		}
 	}
+	else
+	{
+		nCurrentExperimentReceivedExternalTriggers++;//Externally Triggered
+		emit ExternalTriggerIncremented(nCurrentExperimentReceivedExternalTriggers);
+		if(isDebugMode())
+			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Externally Triggered!, Received="),QString::number(nCurrentExperimentReceivedExternalTriggers));
+	}
 }
 
 void GLWidgetWrapper::initBlockTrial()
 {
 	//stimContainerDlg->activateWindow();
 	emit NewInitBlockTrial();
-	bForceToStop = false;
+	//bForceToStop = false;
 	bExperimentShouldStop = false;
 //#ifdef Q_WS_MACX
 //	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // make param in interface and recommend per platform
@@ -1035,7 +1047,7 @@ void GLWidgetWrapper::initBlockTrial()
 bool GLWidgetWrapper::checkForNextBlockTrial()
 {
 	//stimContainerDlg->activateWindow();
-	if ((bForceToStop)||(bExperimentShouldStop))
+	if (bExperimentShouldStop)//||(bForceToStop)
 		return false;	
 	int nIntExtDiv;//The ratio between external and internal triggers
 	bool goToNextBlockTrial = false;
@@ -1059,11 +1071,13 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 	}	
 	if (bFirstCheckAfterExperimentStarted)
 	{
-		nIntExtDiv = strcExperimentBlockTrials.lBlockTrialStructure[0].lTrialStructure[0].nNrOfExternalSubTriggers;
+		if(strcExperimentBlockTrials.nNrOfBlocks > 0)//Are there blocks defined? qmlWidgetViewer trough UI (without ExperimentManager) doesn't have any defined blocks here!
+			nIntExtDiv = strcExperimentBlockTrials.lBlockTrialStructure[0].lTrialStructure[0].nNrOfExternalSubTriggers;
 	} 
 	else
 	{
-		nIntExtDiv = strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].lTrialStructure[expFullStruct.parentStruct.currExpTrial].nNrOfExternalSubTriggers;
+		if(strcExperimentBlockTrials.nNrOfBlocks > 0)//Are there blocks defined? qmlWidgetViewer trough UI (without ExperimentManager) doesn't have any defined blocks here!
+			nIntExtDiv = strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].lTrialStructure[expFullStruct.parentStruct.currExpTrial].nNrOfExternalSubTriggers;
 	}
 	if ((nCurrentExperimentReceivedExternalTriggers!=0) && ((nCurrentExperimentReceivedExternalTriggers-nCurrentExperimentProcessedExternalTriggers)%nIntExtDiv == 0) && (nCurrentExperimentLastProcExternalTriggers != nCurrentExperimentReceivedExternalTriggers))
 	{
@@ -1078,59 +1092,67 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 	}
 	if(bFirstCheckAfterExperimentStarted == false)
 	{
-		goToNextBlockTrial = expFullStruct.parentStruct.currExpInternalTrigger >= expFullStruct.nNextThresholdTriggerCount;//Go to next Block Trial?
+		if(strcExperimentBlockTrials.nNrOfBlocks > 0)//Are there blocks defined? qmlWidgetViewer trough UI (without ExperimentManager) doesn't have any defined blocks here!
+			goToNextBlockTrial = expFullStruct.parentStruct.currExpInternalTrigger >= expFullStruct.nNextThresholdTriggerCount;//Go to next Block Trial?
 	}
 	if(goToNextBlockTrial)//When we init/start or switch from a Block Trial 
 	{
 		bExperimentStructureChanged = true;
-		if((expFullStruct.parentStruct.currExpTrial+1) >= strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].nNrOfTrials)//End of this Block(No more Trials)?
-		{			
-			if ((expFullStruct.parentStruct.currExpBlock+1) >= strcExperimentBlockTrials.nNrOfBlocks)//No more blocks?
-			{
-					QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped));//,Qt::HighEventPriority);
-					bExperimentShouldStop = true;
-					pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("No More BlockTrials to process"),QString("Block=") + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
-					//if (bExperimentStructureChanged)
-					//{
-					//	if(getSubObjectState() == Experiment_SubObject_Started)
-					//		emit ExperimentStructureChanged(expFullStruct.parentStruct.currExpBlock,expFullStruct.parentStruct.currExpTrial,expFullStruct.parentStruct.currExpBlockTrialTrigger);//,expFullStruct.parentStruct.currExpBlockTrialInternalTriggerAmount);
-					//}
-					mutExpSnapshot.unlock();
-					return false;
-			} 
+		if(strcExperimentBlockTrials.nNrOfBlocks > 0)//Are there blocks defined? qmlWidgetViewer trough UI (without ExperimentManager) doesn't have any defined blocks here!
+		{
+			if((expFullStruct.parentStruct.currExpTrial+1) >= strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].nNrOfTrials)//End of this Block(No more Trials)?
+			{			
+				if ((expFullStruct.parentStruct.currExpBlock+1) >= strcExperimentBlockTrials.nNrOfBlocks)//No more blocks?
+				{
+						QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped));//,Qt::HighEventPriority);
+						bExperimentShouldStop = true;
+						pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("No More BlockTrials to process"),QString("Block=") + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
+						//if (bExperimentStructureChanged)
+						//{
+						//	if(getSubObjectState() == Experiment_SubObject_Started)
+						//		emit ExperimentStructureChanged(expFullStruct.parentStruct.currExpBlock,expFullStruct.parentStruct.currExpTrial,expFullStruct.parentStruct.currExpBlockTrialTrigger);//,expFullStruct.parentStruct.currExpBlockTrialInternalTriggerAmount);
+						//}
+						mutExpSnapshot.unlock();
+						return false;
+				} 
+				else
+				{
+					expFullStruct.parentStruct.currExpTrial = 0;	//Reset the Experiment Trial Counter
+					expFullStruct.parentStruct.currExpBlock++;		//Increment the Experiment Block Counter
+					expFullStruct.parentStruct.currExpBlockTrialTrigger = 0;
+				}
+			}
 			else
 			{
-				expFullStruct.parentStruct.currExpTrial = 0;	//Reset the Experiment Trial Counter
-				expFullStruct.parentStruct.currExpBlock++;		//Increment the Experiment Block Counter
+				expFullStruct.parentStruct.currExpTrial++;//Increment the Experiment Trial Counter
 				expFullStruct.parentStruct.currExpBlockTrialTrigger = 0;
 			}
-		}
-		else
-		{
-			expFullStruct.parentStruct.currExpTrial++;//Increment the Experiment Trial Counter
-			expFullStruct.parentStruct.currExpBlockTrialTrigger = 0;
-		}
-		expFullStruct.nNextThresholdTriggerCount += strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].lTrialStructure[expFullStruct.parentStruct.currExpTrial].nNrOfInternalTriggers;//increment the nextTimeThresholdTRs
-		expFullStruct.parentStruct.currExpBlockTrialFrame = 0;
-		//if(isDebugMode())
+			expFullStruct.nNextThresholdTriggerCount += strcExperimentBlockTrials.lBlockTrialStructure[expFullStruct.parentStruct.currExpBlock].lTrialStructure[expFullStruct.parentStruct.currExpTrial].nNrOfInternalTriggers;//increment the nextTimeThresholdTRs
+			expFullStruct.parentStruct.currExpBlockTrialFrame = 0;
+
+			//if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Starting to Init new BlockTrial"),QString("Block=") + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
-		initBlockTrial();		
+			initBlockTrial();
+		}
 		if (bFirstCheckAfterExperimentStarted)
 		{
+			if (expFullStruct.parentStruct.currExpTrial == -1)
+				expFullStruct.parentStruct.currExpTrial = 0;
 			changeSubObjectState(Experiment_SubObject_Started);
 		}
 		if (bCurrentSubObjectIsLocked == false)
 		{
 			if(isDebugMode())
 				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","New BlockTrial Prepared, going to qeueu animate()");
-			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
+			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
 			if(!bFirstCheckAfterExperimentStarted)
 				expFullStruct.nTotalProcessedExperimentTrials++;
 		}
 		else
 		{
-			//QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
-			tStimTimer.singleShot(1, this, SLOT(repaint()));
+			//QMetaObject::invokeMethod( this, "aniiiimmmmaaatttte",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
+			//if(strcExperimentBlockTrials.nNrOfBlocks > 0)//Are there blocks defined? qmlWidgetViewer trough UI (without ExperimentManager) doesn't have any defined blocks here!
+			tStimTimer.singleShot(1, this, SLOT(doRepaint()));
 		}
 		expTrialTimer.restart();
 		bRetval = true;
@@ -1191,24 +1213,27 @@ int GLWidgetWrapper::getRelativeBlockTrialTrigger(int nAbsoluteTrigger)
 
 void GLWidgetWrapper::animate(bool bOnlyCheckBlockTrials)
 {
+	//QObject *a = sender();
+	
 	if(getSubObjectState() == Experiment_SubObject_Started)
 	{
-		//bool tmpA = mutRecursivePaint.tryLock();		
-		//mutRecursivePaint.tryLock();
 		mutRecursivePaint.lock();
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
 		if (bOnlyCheckBlockTrials)
 		{
+			//if(a)
+			//	QString b = a->objectName();
 			checkForNextBlockTrial();
 		} 
 		else
 		{
+			//if(a)
+			//	QString b = a->objectName();
 			update();
 		}
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","update() called");
-		//mutRecursivePaint.unlock();
 		//	elapsed = frameTime.elapsed();//Calculate the elapsed time since started
 		//	frameTime.restart();
 		//	repaint();//calls the below void GLWidget::paintEvent(QPaintEvent *event)
@@ -1295,14 +1320,16 @@ void GLWidgetWrapper::finalizePaintEvent()
 	swapBuffers();
 	if(isDebugMode())// && (bObjectIsLocked==false))
 		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","BlockTrial Buffer Swapped, locked=",QString::number(bObjectIsLocked));
-
-	qApp->processEvents(); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
+	qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,1); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
+	//mutProcEvents.unlock();
 	//QEventLoop loop;
 	//QObject::connect(this, SIGNAL(readyRead()), &loop, SLOT(quit()));
 	//// Execute the event loop here, now we will wait here until readyRead() signal is emitted
 	//// which in turn will trigger event loop quit.
 	//loop.exec();
 	//loop.Execute();
+	//if(((currentSubObjectState == Experiment_SubObject_Started) || (currentSubObjectState == Experiment_SubObject_Initialized)) == false)
+	//	return;
 	mutExpSnapshot.lock(); 
 	if (bObjectIsLocked==false)
 	{
@@ -1320,13 +1347,14 @@ void GLWidgetWrapper::finalizePaintEvent()
 	//tStimTimer.singleShot(1, this, SLOT(proceedPaintEventLoop()));
 	if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial
 	{
-		if(bForceToStop)
-		{
-			changeSubObjectState(Experiment_SubObject_Abort);
-			//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
-			return;
-		}
-		else if (bExperimentShouldStop)
+		//if(bForceToStop)
+		//{
+		//	changeSubObjectState(Experiment_SubObject_Abort);
+		//	//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
+		//	return;
+		//}
+		//else 
+		if (bExperimentShouldStop)
 		{
 			changeSubObjectState(Experiment_SubObject_Stop);
 			//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
@@ -1334,7 +1362,7 @@ void GLWidgetWrapper::finalizePaintEvent()
 		}
 		else
 		{
-			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
+			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
 		}
 	}
 }

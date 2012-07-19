@@ -25,6 +25,14 @@
 #include <QDialog>
 #include "ui_ExperimentManager_dialog.h"
 #include <QtGui>
+
+#include "qmlWidget.h"
+#include "ContainerDlg.h"
+
+//#include <QtMultimedia>
+//#include <QAudioOutput>
+
+
 //#include <QDeclarativeEngine>
 //#include <QDeclarativeComponent>
 //#include <QDeclarativeItem>
@@ -48,9 +56,20 @@ public:
 	ExperimentManager_Dialog(QWidget *parent = 0);
 	~ExperimentManager_Dialog();
 
+protected:
+	void closeEvent(QCloseEvent *event);
+
 private:
 	Ui::ExperimentManager_DialogClass ui;
+	void connectSignalSlots(bool bDisconnect = false);
 	void cleanUp();
+
+	//QFile inputFile;
+	//QAudioOutput *audioOutput;
+	//void startPlaying();
+//private slots:
+	//void finishedPlaying(QAudio::State state);
+	//void AudioStateChanged(QAudio::State newState);
 	
 private slots:
 	void on_cancelButton_clicked();
@@ -60,9 +79,14 @@ private slots:
 	void exampleButton_4_Pressed();
 	void exampleButton_5_Pressed();
 	void on_okButton_clicked();
+	void changeExperimentSubObjectState(ExperimentSubObjectState nState);
 	//void on_GraphScene_Closed();
 
 private:
+	qmlWidget *QmlWidgetObject;
+	ContainerDlg *tmpContainerDlg;
+	QVBoxLayout *tmpLayout;
+	ExperimentSubObjectState currentExperimentState;
 	//StimulGLGraphScene *StimGLScene;
 	//QGraphicsView *GraphView;
 	//QmlApplicationViewer *qmlViewer;

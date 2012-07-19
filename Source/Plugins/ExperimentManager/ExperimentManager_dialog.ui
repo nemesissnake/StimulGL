@@ -77,17 +77,20 @@
     <widget class="QPushButton" name="btnExampleButton">
      <property name="geometry">
       <rect>
-       <x>400</x>
+       <x>10</x>
        <y>30</y>
        <width>131</width>
        <height>51</height>
       </rect>
      </property>
      <property name="text">
-      <string>Example Button 1</string>
+      <string>Run QML Document</string>
      </property>
     </widget>
     <widget class="QPushButton" name="btnExampleButton_2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>400</x>
@@ -101,6 +104,9 @@
      </property>
     </widget>
     <widget class="QPushButton" name="btnExampleButton_3">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>400</x>
@@ -114,6 +120,9 @@
      </property>
     </widget>
     <widget class="QPushButton" name="btnExampleButton_4">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>400</x>
@@ -127,6 +136,9 @@
      </property>
     </widget>
     <widget class="QPushButton" name="btnExampleButton_5">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>400</x>
@@ -137,16 +149,6 @@
      </property>
      <property name="text">
       <string>Example Button 5</string>
-     </property>
-    </widget>
-    <widget class="QWidget" name="qmlWidgetHolder" native="true">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>20</y>
-       <width>351</width>
-       <height>301</height>
-      </rect>
      </property>
     </widget>
    </widget>

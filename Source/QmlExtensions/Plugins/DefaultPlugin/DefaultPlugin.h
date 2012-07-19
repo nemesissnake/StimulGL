@@ -16,16 +16,13 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "DefaultPlugin.h"
-#include "defines.h"
-#include "TimeModel.h"
-#include "PhononPlayer.h"
+#include <QtDeclarative/QDeclarativeExtensionPlugin>
+#include <QtDeclarative/qdeclarative.h>
 
-void QDefaultQmlPlugin::registerTypes(const char *uri)
+class QDefaultQmlPlugin : public QDeclarativeExtensionPlugin
 {
-	Q_ASSERT(uri == QLatin1String(DEFAULT_STIMULGL_PLUGIN_QML_NAME));
-	qmlRegisterType<TimeModel>(uri, 1, 0, TIMEMODEL_TYPE_QML_NAME);
-	qmlRegisterType<PhononPlayer>(uri, 1, 0, PHONONPLAYER_TYPE_QML_NAME);
-}
+	Q_OBJECT
+public:
+	void registerTypes(const char *uri);
+};
 
-Q_EXPORT_PLUGIN2(qmlstimulgldefaultplugin, QDefaultQmlPlugin);//qmlqtimeexampleplugin

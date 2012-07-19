@@ -90,7 +90,8 @@ protected:
 	bool checkForNextBlockTrial();
 	bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef);//QString &Result);
 	bool getExperimentBlockParamsFromDomNodeList(int nBlockNumber, int nObjectID, tParsedParameterList *hParams = NULL);//QHash<QString, QString> *hParams = NULL);
-	void setupLayout(QWidget* layoutWidget);	
+	void setupLayout(QWidget* layoutWidget);
+	//void installKeyFilter()
 	bool isDebugMode();
 	bool getCurrentExperimentProgressSnapshot(ExperimentSnapshotStructure *expSnapshotstrc);
 	//bool getExperimentBlockTrialStructureCopy(ExperimentBlockTrialStructure &expBlockTrialStructure);
@@ -103,6 +104,7 @@ protected:
 	void closeEvent(QCloseEvent *evt);
 	void customEvent(QEvent *event);
 	void initBlockTrial();
+	void setAlternativeContainerDialog(QDialog *ContainerDlg = NULL);
 	bool eventFilter(QObject *target, QEvent *event);
 
 protected slots:
@@ -110,6 +112,9 @@ protected slots:
 	void animate(bool bOnlyCheckBlockTrials = false);
 	void finalizePaintEvent();
 	//void proceedPaintEventLoop();;
+
+private slots:
+	void doRepaint();
 
 private:
 	//int getCurrentExperimentBlockTrialFrame() {return nBlockTrialFrameCounter;}
@@ -136,6 +141,8 @@ private:
 	double dWaitTime;
 	QMutex mutExpSnapshot;
 	QMutex mutRecursivePaint;
+	//QWaitCondition waitProcEvents;						//See below
+	QMutex mutProcEvents;								//Another implementation, due to qApp->processEvents() RecursiveRepaint can occur...
 	ExperimentSnapshotFullStructure expFullStruct;
 	//int nBlockTrialFrameCounter;
 	int nCurrentExperimentReceivedExternalTriggers;		//The current experiment number of external triggers received since it started, local use!
@@ -151,7 +158,8 @@ private:
 	double dLastPreSwapTime;
 	double dAdditionalRefreshDelayTime;
 	ContainerDlg *stimContainerDlg;
-	bool bForceToStop;
+	QObject *alternativeContainerDlg;
+	//bool bForceToStop;
 	bool bExperimentShouldStop;
 	QRectF rScreenResolution;
 	//int nMinScreenUpdateTime;

@@ -28,6 +28,7 @@
 #include <QDeclarativeContext>
 #include <QDeclarativeView>
 
+#include "QmlErrorHandler.h"
 #include <QAbstractItemModel>
 #include <QStringListModel>
 #include "ImageListModel.h"
@@ -45,6 +46,9 @@ public:
 	qmlWidget(const qmlWidget& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 	static QScriptValue ctor_QmlWidget(QScriptContext* context, QScriptEngine* engine);
+	
+public:	
+	bool executeQMLDocument(const QString &strPath, QDialog *ContainerDlg = NULL);// QVBoxLayout *layout = NULL);
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
@@ -65,12 +69,15 @@ public slots:
 
 private slots:
 	void callAnimate();
+	//void processQMLEngineWarning(const QList<QDeclarativeError> & warnings);
 
 private:
 	void initialize();
-	void parseExperimentObjectBlockParameters(bool bInit = false);
+	void parseExperimentObjectBlockParameters(bool bInit = false, bool bSetOnlyToDefault = false);
 	void qmlEventRoutine(bool dShowWidget = true);
 
+	QmlErrorHandler *qmlErrorHandler;
+	QWidget *parentWidget;
 	ImageListModel *imgLstModel;
 	QDeclarativeView *qmlViewer;
 	QPalette GlWidgetPallette;
