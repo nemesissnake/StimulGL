@@ -30,6 +30,7 @@
 
 #include "../Plugins/ParallelPortDevice/parallelport.h"
 #include "../Plugins/ExperimentManager/ExperimentManager.h"
+#include "../Plugins/KeyBoardDevice/KeyBoardCapture.h"
 
 MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 {
@@ -72,7 +73,8 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//DisableSplash				= 0x00002
 	//QWaitCondition sleep;
 	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
-	MainAppInfo::Initialize();
+	MainAppInfo::Initialize(this);
+	//MainAppInfo::setMainWindow(this);
 	QApplication::setGraphicsSystem("opengl");//"raster");
 	StimulGLFlags = mainFlags;
     AppScriptStatus = MainAppInfo::NoScript;
@@ -851,6 +853,7 @@ void MainWindow::setupDynamicPluginMenus()
 		showSplashMessage("Loading Static Plugins...");
         Q_IMPORT_PLUGIN(parallelportplugin)// see below
         Q_IMPORT_PLUGIN(experimentmanagerplugin)// see below
+		Q_IMPORT_PLUGIN(keyboardplugin)// see below
 
 		bool bRetVal = false;
 		QString strRetVal = "";
@@ -1229,7 +1232,7 @@ void MainWindow::executeScript()
 	//	return;
 	//}
 	// now emit our test signal:
-	// emit AbortScript();
+	// emit AborrtScript();
 
 }
 
@@ -1260,7 +1263,7 @@ void MainWindow::abortScript()
 	//qApp->processEvents();
 	//}
 	//if(fff == false)
-	//	QTimer::singleShot(0, this, SLOT(abortScript()));
+	//	QTimer::singleShot(0, this, SLOT(aborrtScript()));
 	//fff = true;
 
 	//delete AppScriptEngine->eng;

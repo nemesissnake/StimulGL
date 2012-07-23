@@ -123,7 +123,7 @@
       <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Qtmaind.lib;gdi32.lib;user32.lib;QtSvgd4.lib;QtXmld4.lib;QtOpenGLd4.lib;QtGuid4.lib;QtCored4.lib;QtScriptd4.lib;QtScriptToolsd4.lib;QtSqld4.lib;qscintilla2d.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclaratived4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmaind.lib;gdi32.lib;user32.lib;QtSvgd4.lib;QtXmld4.lib;QtOpenGLd4.lib;QtGuid4.lib;QtCored4.lib;QtScriptd4.lib;QtScriptToolsd4.lib;QtSqld4.lib;qscintilla2d.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclaratived4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(ProjectDir)..\..\StaticLibs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -190,7 +190,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Qtmaind.lib;QtSvgd4.lib;QtXmld4.lib;QtOpenGLd4.lib;QtGuid4.lib;QtCored4.lib;QtScriptd4.lib;QtScriptToolsd4.lib;QtSqld4.lib;qscintilla2d.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclaratived4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmaind.lib;QtSvgd4.lib;QtXmld4.lib;QtOpenGLd4.lib;QtGuid4.lib;QtCored4.lib;QtScriptd4.lib;QtScriptToolsd4.lib;QtSqld4.lib;qscintilla2d.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclaratived4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(ProjectDir)..\..\StaticLibs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -259,7 +259,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <PreprocessorDefinitions>QT_NO_DEBUG;NDEBUG;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Qtmain.lib;gdi32.lib;user32.lib;QtSvg4.lib;QtXml4.lib;QtOpenGL4.lib;QtGui4.lib;QtCore4.lib;QtScript4.lib;QtScriptTools4.lib;QtSql4.lib;qscintilla2.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclarative4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmain.lib;gdi32.lib;user32.lib;QtSvg4.lib;QtXml4.lib;QtOpenGL4.lib;QtGui4.lib;QtCore4.lib;QtScript4.lib;QtScriptTools4.lib;QtSql4.lib;qscintilla2.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclarative4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(ProjectDir)..\..\StaticLibs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -325,7 +325,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <PreprocessorDefinitions>QT_NO_DEBUG;NDEBUG;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>QtSvg4.lib;QtXml4.lib;QtOpenGL4.lib;QtGui4.lib;QtCore4.lib;Qtmain.lib;QtScript4.lib;QtScriptTools4.lib;QtSql4.lib;qscintilla2.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclarative4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>QtSvg4.lib;QtXml4.lib;QtOpenGL4.lib;QtGui4.lib;QtCore4.lib;Qtmain.lib;QtScript4.lib;QtScriptTools4.lib;QtSql4.lib;qscintilla2.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclarative4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(ProjectDir)..\..\StaticLibs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

@@ -21,6 +21,7 @@
 #include <QString>
 
 QFile * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
+QWidget * MainAppInfo::mainWindow = NULL;//Needed to initialize the static variable!
 //std::ofstream * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
 
 QDir MainAppInfo::appDebugDirPath()
@@ -169,8 +170,9 @@ void MainAppInfo::CloseMainLogFile()
 	}	
 }
 
-bool MainAppInfo::Initialize()
+bool MainAppInfo::Initialize(QWidget *mainWin)
 {
+	mainWindow = mainWin;
 	bool bRetval = false;
 	bRetval = InitializeMainAppNaming();
 	return bRetval;

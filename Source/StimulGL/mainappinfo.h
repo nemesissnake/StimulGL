@@ -23,6 +23,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QString>
+//#include <QWidget>
 
 #include <QTime>
 #include <iostream>
@@ -33,10 +34,11 @@
 class MainAppInfo {
 private:
 	static QFile *mainLogFile;
+	static QWidget *mainWindow;
 	//static std::ofstream *mainLogFile;
 public:
 
-	static bool Initialize();
+	static bool Initialize(QWidget *mainWin = NULL);
 	static bool InitializeMainAppNaming();
 	static QString MainProgramName()				{return MAIN_PROGRAM_INTERNAL_NAME;}
 	static QString MainOrganizationName()			{return MAIN_PROGRAM_COMPANY_NAME;}
@@ -49,6 +51,8 @@ public:
 	static QString pluginsDirPath();
 	static QString outputsDirPath();
 	static QString qmlExtensionsPluginDirPath();
+	static QWidget* getMainWindow()					{return mainWindow;};
+
 
 	static QString getDefaultFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}
 	static QStringList getQTScriptBindingList();

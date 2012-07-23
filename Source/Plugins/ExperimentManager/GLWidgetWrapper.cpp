@@ -1253,6 +1253,10 @@ void GLWidgetWrapper::changeSubObjectState(ExperimentSubObjectState newSubObject
 		subObjectStateHistory.nState.append(currentSubObjectState);
 		subObjectStateHistory.sDateTimeStamp.append(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 		emit ObjectStateHasChanged(currentSubObjectState);
+		if(currentSubObjectState == Experiment_SubObject_Stop)
+		{
+			qApp->setActiveWindow(MainAppInfo::getMainWindow());
+		}
 	}
 }
 

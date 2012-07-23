@@ -1,4 +1,4 @@
-//USBHIDDeviceplugin
+//plugininterface.h
 //Copyright (C) 2012  Sven Gijsen
 //
 //This file is part of StimulGL.
