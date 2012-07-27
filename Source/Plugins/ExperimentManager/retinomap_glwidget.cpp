@@ -24,9 +24,12 @@
 #include <QFile>
 #include "ExperimentManager.h"
 
+Q_DECLARE_METATYPE(QPixmap*)
+
 RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent)
 {
 	currentScriptEngine = NULL;
+	customScriptHandlerFunction = NULL;
 	initialize();
 	GLWidgetWrapper::setupLayout(this);
 	GLWidgetWrapper::setDoubleBufferCheck(true);
@@ -34,6 +37,11 @@ RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent
 
 RetinoMap_glwidget::~RetinoMap_glwidget()
 {
+	if (customScriptHandlerFunction)
+	{
+		delete customScriptHandlerFunction;
+		customScriptHandlerFunction = NULL;
+	}
 	if (StimulusResultImageFrame)
 	{
 		delete StimulusResultImageFrame;
@@ -1566,6 +1574,19 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	stimuliPainter->setPen(textPen);
 	stimuliPainter->setFont(textFont);
 	//painter.drawPixmap((rectScreenRes.width()-nStimFrameWidth)/2,(rectScreenRes.height()-nStimFrameHeight)/2,*StimulusResultImageFrame);
+	if (customScriptHandlerFunction && currentScriptEngine)
+	{
+		//int nWidth = StimulusResultImageFrame->width();
+		QScriptValue scriptVal = currentScriptEngine->toScriptValue<QPixmap *>(StimulusResultImageFrame);//parentScriptEngine->newQObject((QObject*)tmpPixmap->toQObject());//static_cast<QScriptEngine*>(parent())->newQObject((QObject*)tmpPixmap);
+		QScriptValue funcReturnValue = customScriptHandlerFunction->call(QScriptValue(), QScriptValueList() << scriptVal);//.toNumber();//
+		QPixmap* tmpResult = NULL;
+		tmpResult = currentScriptEngine->fromScriptValue<QPixmap *>(funcReturnValue);
+		if(tmpResult)
+		{
+			*StimulusResultImageFrame = tmpResult->copy();	
+			//nWidth = StimulusResultImageFrame->width();
+		}
+	}
 	stimuliPainter->drawPixmap(0,0,*StimulusResultImageFrame);
 
 	//if(isDebugMode())
@@ -1614,3 +1635,23 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	return true;
 }
 
+bool RetinoMap_glwidget::installCustomScriptHandlerFunction(QString FuncName)
+{
+	if (currentScriptEngine)
+	{
+		customScriptHandlerFunction = new QScriptValue(currentScriptEngine->globalObject().property(FuncName));
+		if(customScriptHandlerFunction->isFunction())
+		{
+			return true;
+		}
+		else
+		{
+			if(customScriptHandlerFunction)
+			{
+				delete customScriptHandlerFunction;
+				customScriptHandlerFunction = NULL;
+			}
+		}
+	}
+	return false;
+}

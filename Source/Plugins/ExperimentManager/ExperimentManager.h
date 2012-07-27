@@ -96,6 +96,7 @@ public:
 	bool cleanupExperiment();
 	tParsedParameterList *getObjectBlockParamListById(int nID);
 	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);
+	bool getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue);
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script

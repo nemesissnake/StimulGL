@@ -161,7 +161,7 @@ Attributes only apply to readonly non user data, like the ID
 				</parameter>			
         <parameter ID="13">
         	<name>BackGroundColor</name>
-        	<value>#FF0000</value>
+        	<value>#000000</value>
         </parameter>				
 			</parameters>    
 		 </object>

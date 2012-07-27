@@ -45,8 +45,10 @@ QScriptValue ctor_KeyBoard(QScriptContext* context, QScriptEngine* engine)
 	//		// return a non-object value to indicate that the
 	//		// thisObject() should be the result of the "new Foo()" expression
 	//		//return engine->undefinedValue();
-
-	return engine->newQObject(new KeyBoardCapture(), QScriptEngine::ScriptOwnership);
+	KeyBoardCapture *KeyBoardCaptureObj = new KeyBoardCapture();
+	QScriptValue sVal = engine->newQObject(KeyBoardCaptureObj, QScriptEngine::ScriptOwnership);
+	KeyBoardCaptureObj->setScriptEngine(engine);
+	return sVal;
 } 
 
 bool KeyBoardPlugin::ConfigureScriptEngine(QScriptEngine &engine)

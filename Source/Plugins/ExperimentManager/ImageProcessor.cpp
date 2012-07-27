@@ -21,6 +21,8 @@
 #include <QImage>
 #include <QPixmap>
 #include "Global.h"
+#include <QtOpenGL>
+#include <qgl.h>
 
 QScriptValue ImageProcessor::ctor__imageProcessor(QScriptContext* context, QScriptEngine* engine)
 {
@@ -235,3 +237,74 @@ bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int
 	bSaveResult = tmpPixmap.save(strDestination,"PNG");
 	return bSaveResult;
 }
+
+//QPixmap ImageProcessor::ChangeHue(QPixmap &p)
+//{
+	//m_colorMatrix *= QMatrix4x4(
+	//	1.164,  0.000,  1.596, -0.8708,
+	//	1.164, -0.392, -0.813,  0.5296,
+	//	1.164,  2.017,  0.000, -1.081,
+	//	0.0,    0.000,  0.000,  1.0000);
+
+	//p.t
+
+	//uniform sampler2D Image;
+	//uniform sampler3D RGB2HSI;
+	//uniform sampler3D HSI2RGB;
+
+	//uniform float hueShift;
+	//uniform float satBoost;
+
+	//varying vec2 texCoord;
+
+	//// Sample the image
+	//vec3 rgb = texture2D(Image, texCoord).rgb;
+	//// Look up the corresponding HSI value
+	//vec3 hsi = texture3D(RGB2HSI, rgb).xyz;
+
+	//// Manipulate hue and saturation
+	//hsi.x = fract(hsi.x + hueShift);
+	//hsi.y *= satBoost;
+
+	//// Look up the corresponding RGB value
+	//gl_FragColor = texture3D(HSI2RGB, hsi);
+	
+	//uniform sampler2DRect texture;
+	//const mat3 rgb2yiq = mat3(0.299, 0.587, 0.114, 0.595716, -0.274453, -0.321263, 0.211456, -0.522591, 0.311135);
+	//const mat3 yiq2rgb = mat3(1.0, 0.9563, 0.6210, 1.0, -0.2721, -0.6474, 1.0, -1.1070, 1.7046);
+	//uniform float hue;
+	//
+	//vec3 yColor = rgb2yiq * texture2DRect(texture, gl_TexCoord[0].st).rgb; 
+
+	//float originalHue = atan(yColor.b, yColor.g);
+	//float finalHue = originalHue + hue;
+
+	//float chroma = sqrt(yColor.b*yColor.b+yColor.g*yColor.g);
+
+	//vec3 yFinalColor = vec3(yColor.r, chroma * cos(finalHue), chroma * sin(finalHue));
+	//gl_FragColor    = vec4(yiq2rgb*yFinalColor, 1.0);
+	
+	//QImage img = p.toImage().convertToFormat().convertDepth(8);
+	//if (img.isNull())
+	//{
+	//	return p;
+	//}
+	//for (int i = 0; i < img.numColors(); ++i)
+	//{
+	//	QRgb rgb = img.color(i);
+	//	if (rgb >= 0xFF000000)
+	//	{
+	//		QColor color(rgb);
+	//		int h, s, v;
+	//		color.hsv(&h, &s, &v);
+	//		s = s * 7 / 10;
+	//		v = v * 12 / 10;
+	//		if (v > 255) v = 255;
+	//		color.setHsv(h, s, v);
+	//		img.setColor(i, color.rgb());
+	//	}
+	//}
+	//bool b = p.convertFromImage(img);
+	//return p;
+	//return p;
+//}

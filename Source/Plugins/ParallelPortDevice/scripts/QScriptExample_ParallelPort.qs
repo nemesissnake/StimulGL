@@ -46,7 +46,7 @@ function PauseMills(millis)
 
 PPDevice = new ParallelPortDevice(); //Construct a Parallel Port Object
 //Configure the Parallel Port
-Log(PPDevice.GetMinimalMainProgramVersion());//Test(""));
+//Log(PPDevice.GetMinimalMainProgramVersion());//Test(""));
 Log("The default BaseAdress is: " + PPDevice.BaseAddress); //Read the default Parallel Port BaseAddress
 PPDevice.BaseAddress = 4368; //4368 (decimal) == 1110 (hexadecimal) 
 Log("The changed BaseAdress is: " + PPDevice.BaseAddress); //Read the changed Parallel Port BaseAddress again

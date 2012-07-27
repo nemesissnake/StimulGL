@@ -21,12 +21,14 @@
 #define KEYBOARDCAPTURE_H
 #include <QObject>
 #include <QString>
+#include <QtScript>
 #include <QScriptable>
 #include <QMap>
 #include "keyboardCaptureThread.h"
 #include "./../../StimulGL/mainappinfo.h"
 
 class keyboardCaptureThread;
+class QTScriptEngine;
 
 //!  The KeyBoard Device class. 
 /*!
@@ -38,6 +40,8 @@ class KeyBoardCapture : public QObject, protected QScriptable
 	//Q_PROPERTY( short BaseAddress WRITE setBaseAddress READ getBaseAddress )
 
 signals:
+	//void TestSignal(QPixmap *);
+
 	//! The CaptureThreadKeyPressed Signal.
 	/*!
 		You can use this Signal for receiving a notification when the capture thread gets triggered by a KeyBoard key-press.
@@ -64,19 +68,23 @@ signals:
 	void CaptureThreadStopped(QString);
 
 public:
-	KeyBoardCapture(QObject *parent = 0);
+	KeyBoardCapture(QObject *parent = NULL);
 	KeyBoardCapture(const KeyBoardCapture& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	void setScriptEngine(QScriptEngine *scriptEngine) {parentScriptEngine = scriptEngine;};
 	~KeyBoardCapture();
 
 public slots:
 	bool StartCaptureThread(const short method);
 	void StopCaptureThread();
 	QString getVirtualKeyString(const quint32 &keyCode);
+	bool installCustomScriptHandlerFunction(QString FuncName);
 
 private:
 	void setupKeyCodeTable();
 	QMap<int,QString> mKeyCodes;//QMap<quint32,QString> mKeyCodes;
 	keyboardCaptureThread *captureThread;
+
+	static QScriptEngine *parentScriptEngine;
 };
 
 #endif // KEYBOARDCAPTURE_H

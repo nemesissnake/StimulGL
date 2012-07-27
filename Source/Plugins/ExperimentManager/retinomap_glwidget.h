@@ -147,6 +147,7 @@ public slots:
 	bool setObjectID(int nObjID);
 	bool initObjectBlockTrial();
 	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
+	bool installCustomScriptHandlerFunction(QString FuncName);
 
 private:
 	void initialize();
@@ -154,6 +155,7 @@ private:
 	void initializeMovingDotsStructures();
 	QImage RetinoMap_glwidget::fractalFillCheckeredImage(float fWidth, float fHeigth, float fSize, int nflickr);
 
+	QScriptValue *customScriptHandlerFunction;
 	QScriptEngine* currentScriptEngine;
 	int nRetinoID;								//This variable stores the ObjectID used to identify the object
 	RetinoMapExperimentType currentExpType;		//The experiment type used, see RetinoMapExperimentType

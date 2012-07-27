@@ -41,6 +41,8 @@ public slots:
 	bool ConvertDatToPngFile(QString strSource, QString strDestination, bool bOverwrite = false);
 	bool ScalePngFile(QString strSource, QString strDestination, int nRatio = 1, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false);
 
+	//QPixmap ChangeHue(QPixmap &p);
+
 private:
 	QScriptEngine* currentScriptEngine;
 	

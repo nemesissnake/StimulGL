@@ -123,6 +123,7 @@ private:
 	//int getCurrentExperimentTrigger() {return nCurrentExperimentTrigger;}
 	//int getCurrentExperimentBlockTrialTrigger() {return nCurrentExperimentBlockTrialReceivedTriggers;}
 	//int getExperimentBlockTrialTriggerAmount(int nBlock, int nTrial);
+	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool unlockExperimentObject();
 	bool setExperimentObjectReadyToUnlock();
 	void setVerticalSyncSwap();

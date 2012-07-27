@@ -555,6 +555,7 @@ bool GLWidgetWrapper::getExperimentBlockParamsFromDomNodeList(int nBlockNumber, 
 	QDomNode tmpNode;
 	ParsedParameterDefinition tmpParDef;
 	QString tmpString;
+	QString tmpValue;
 
 	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
 	{
@@ -594,7 +595,9 @@ bool GLWidgetWrapper::getExperimentBlockParamsFromDomNodeList(int nBlockNumber, 
 														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
 														if(!tmpElement.isNull())
 														{
-															tmpParDef.sValue = tmpElement.text();
+															tmpValue = tmpElement.text();
+															expandExperimentBlockParameterValue(tmpValue);
+															tmpParDef.sValue = tmpValue;
 															tmpParDef.bHasChanged = true;
 															hParams->insert(tmpString,tmpParDef);
 															bResult = true;//To define that at least one parameter was parsed successfully
@@ -626,6 +629,34 @@ bool GLWidgetWrapper::getExperimentBlockParamsFromDomNodeList(int nBlockNumber, 
 			}
 			else
 				continue;//Search next block
+		}
+	}
+	return false;
+}
+
+bool GLWidgetWrapper::expandExperimentBlockParameterValue(QString &sValue)
+{
+	if (!sValue.isEmpty())
+	{		
+		if(pExpConf)
+		{
+			if (pExpConf->pExperimentManager)
+			{
+				int nLastIndex = sValue.lastIndexOf("}");
+				if(nLastIndex > 1)
+				{
+					int nFirstIndex = sValue.lastIndexOf("{");
+					if((nFirstIndex >= 0) && (nFirstIndex < nLastIndex))
+					{
+						QVariant varResult = "";
+						if(pExpConf->pExperimentManager->getScriptContextValue(sValue.mid(nFirstIndex+1,nLastIndex-nFirstIndex-1),varResult))
+						{
+							sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,varResult.toString());
+							return true;
+						}
+					}	
+				}
+			}
 		}
 	}
 	return false;

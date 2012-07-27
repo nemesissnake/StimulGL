@@ -18,6 +18,11 @@
 
 
 #include "KeyBoardCapture.h"
+#include <QPixmap>
+
+Q_DECLARE_METATYPE(QPixmap*)
+
+QScriptEngine * KeyBoardCapture::parentScriptEngine = NULL;//Initialize the static variable
 
 /*! \brief The KeyBoard Device constructor.
 *
@@ -27,6 +32,7 @@
 KeyBoardCapture::KeyBoardCapture(QObject *parent) : QObject(parent)
 {
 	captureThread = NULL;
+	parentScriptEngine = NULL;
 	//setupKeyCodeTable();
 }
 
@@ -42,6 +48,48 @@ KeyBoardCapture::~KeyBoardCapture()
 		delete captureThread;
 		captureThread = NULL;
 	}
+}
+
+bool KeyBoardCapture::installCustomScriptHandlerFunction(QString FuncName)
+{
+	//// From QVariant to QObject *
+	//QObject * obj = qvariant_cast<QObject *>(item->data(Qt::UserRole));
+	//// from QObject* to myClass*
+	//myClass * lmyClass = qobject_cast<myClass *>(obj);
+
+	//QObject*	QScriptValue::toQObject()
+	//QObject*	QScriptEngine::newQObject(value)
+
+	QPixmap *tmpPixmap;
+	//tmpPixmap->setObjectName("aaaa");
+	tmpPixmap = new QPixmap(15,15);
+
+	//emit TestSignal(tmpPixmap);
+
+	QScriptValue add = parentScriptEngine->globalObject().property(FuncName);
+	bool a = add.isFunction();
+	//QObject *tmpObject = qvariant_cast<QObject *>(*tmpPixmap);
+	//QScriptValue scriptVal = parentScriptEngine->newQObject(tmpObject);//parentScriptEngine->newQObject((QObject*)tmpPixmap->toQObject());//static_cast<QScriptEngine*>(parent())->newQObject((QObject*)tmpPixmap);
+	QScriptValue scriptVal = parentScriptEngine->toScriptValue<QPixmap *>(tmpPixmap);//parentScriptEngine->newQObject((QObject*)tmpPixmap->toQObject());//static_cast<QScriptEngine*>(parent())->newQObject((QObject*)tmpPixmap);
+
+	//scriptVal = parentScriptEngine->newQObject(tmpPixmap, QScriptEngine::ScriptOwnership);//(QObject*)tmpPixmap);//return engine->newQObject(new ParallelPort(), QScriptEngine::ScriptOwnership);
+	QScriptValue result = add.call(QScriptValue(), QScriptValueList() << scriptVal << 2);//.toNumber();//
+	//QString tmpParamString = scriptVal.toString();
+	bool aa = result.isObject();
+	QString gg = result.toVariant().typeName();
+	//tmpPixmap = qscriptvalue_cast<QPixmap *>(scriptVal);
+	//tmpPixmap = qobject_cast<QPixmap *>(scriptVal.toQObject());
+	QString tmpResultString = result.toString();
+	tmpPixmap = parentScriptEngine->fromScriptValue<QPixmap *>(result);
+	//QString tmp = tmpPixmap->objectName();
+	int aaa = tmpPixmap->width();
+
+
+	delete tmpPixmap;
+	tmpPixmap = NULL;
+
+	return true;
+
 }
 
 bool KeyBoardCapture::StartCaptureThread(const short method)

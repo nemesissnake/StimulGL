@@ -1621,6 +1621,41 @@ bool ExperimentManager::createExperimentObjects()
 	return false;
 }
 
+bool ExperimentManager::getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue)
+{
+	if (!currentScriptEngine)
+	{
+		QString tmpString = "... Could not expand the script object (" + sScriptContextStatement + "), the script engine is not ready!";
+		emit WriteToLogOutput(tmpString);
+		qDebug() << tmpString;
+	}
+	if (!currentScriptEngine->canEvaluate(sScriptContextStatement))
+	{
+		QString tmpString = "... Could not evaluate the script object (" + sScriptContextStatement + ")!";
+		emit WriteToLogOutput(tmpString);
+		qDebug() << tmpString;
+	}
+	else
+	{
+		QScriptValue tmpScriptValue = currentScriptEngine->evaluate(sScriptContextStatement);
+		sScriptContextReturnValue = tmpScriptValue.toVariant();//"E:/Projects/StimulGL/Install/examples/";
+		return true;
+	}
+//}
+//
+////{
+//write2OutputWindow("... Script started Evaluating on " + t.currentTime().toString() + "...");
+//t.start();
+//
+////AppScriptEngine->executeScript(DocManager->getDocHandler(activeMdiChild())->text());
+////return;
+//QScriptValue result;
+//result = AppScriptEngine->eng->evaluate(DocManager->getDocHandler(activeMdiChild())->text());
+//	//currentScriptEngine->
+
+	return false;
+}
+
 //bool ExperimentManager::setFullScreenMode(const bool bFullScreen)
 //{
 //	m_RunFullScreen = bFullScreen;

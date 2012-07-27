@@ -251,3 +251,5 @@ void ParallelPort::StopCaptureThread()
 /*! Stops the Capture Thread(if started), see #StartCaptureThread. */
 	captureThread->stop();
 }
+
+
