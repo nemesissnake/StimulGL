@@ -31,7 +31,8 @@
 
 #include "maindefines.h"
 
-class MainAppInfo {
+class MainAppInfo 
+{
 private:
 	static QFile *mainLogFile;
 	static QWidget *mainWindow;
@@ -48,6 +49,7 @@ public:
 	static QString appDocDirPath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}
 	static QString appExampleDirPath()				{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}
 	static QString appLogFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_LOGFILE_NAME);}
+	static QString appXsdFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_XSD_DIRNAME + QDir::separator());}
 	static QString pluginsDirPath();
 	static QString outputsDirPath();
 	static QString qmlExtensionsPluginDirPath();

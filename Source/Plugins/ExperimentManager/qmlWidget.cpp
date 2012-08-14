@@ -20,6 +20,7 @@
 #include <QDomNodeList>
 #include "ExperimentManager.h"
 #include "ModelIndexProvider.h"
+#include <QMessageBox>
 
 qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent), parentWidget(parent)
 {
@@ -168,7 +169,7 @@ void qmlWidget::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyTo
 		pParDef = getExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,colorBackground.name());
 		if (pParDef.bHasChanged)
 		{
-			colorBackground = QColor(pParDef.sValue);
+			colorBackground = QColor(pParDef.sValue.toLower());
 			GlWidgetPallette = glWidget->palette();
 			GlWidgetPallette.setColor(glWidget->backgroundRole(), colorBackground);
 			glWidget->setPalette(GlWidgetPallette);
@@ -207,13 +208,45 @@ bool qmlWidget::initObject()
 	qmlViewer->viewport()->setAttribute(Qt::WA_NoSystemBackground);
 	qmlViewer->setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	qmlViewer->setResizeMode(QDeclarativeView::SizeViewToRootObject);//SizeViewToRootObject);//SizeRootObjectToView );
+
 	QGLFormat format = QGLFormat::defaultFormat();
 	format.setSampleBuffers(false);
+
+	////Workaround to have TextInput correctly rendered in Win7 is to explicitly define QGLWidget with double buffer and direct rendering.
+	//QGLFormat format = QGLFormat(QGL::DirectRendering | QGL::DoubleBuffer);
+	//format.setSampleBuffers(true);
+	//QGLWidget *glWidget = new QGLWidget(format);
+	//bool a = format.doubleBuffer();//true
+	//bool b = format.directRendering();//true
+	//bool c = format.sampleBuffers();//false
+	//format.setDoubleBuffer(true);
+	//format.setDirectRendering(true);
+	//format.setSampleBuffers(true);
+	//a = format.doubleBuffer();
+	//b = format.directRendering();
+	//c = format.sampleBuffers();
+	//qDebug() << a << b << c;
+
 	glWidget = new QGLWidget(format,this,this);
 	glWidget->setAutoFillBackground(true);	//here we must use this functionality
 	//if (parentWidget == NULL)
 		qmlViewer->setViewport(glWidget);//uncomment this
+
+
+
 	
+
+	//QPainter::RenderHints from = qmlViewer->renderHints();
+	//qmlViewer->setRenderHints(QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+	//QPainter::RenderHints to = qmlViewer->renderHints();
+	////Antialiasing = 0x01,
+	////TextAntialiasing = 0x02,
+	////SmoothPixmapTransform = 0x04,
+	////HighQualityAntialiasing = 0x08,
+	////NonCosmeticDefaultPen = 0x10
+	////QMessageBox::warning(NULL, QString("renderHints()"), QString("From: ") + QString::number((int)from) + QString(", To: ") + QString::number((int)to));
+	//qDebug() << QString("From: ") + QString::number((int)from) + QString(", To: ") + QString::number((int)to);
+		
 	if (!imgLstModel)
 	{
 		imgLstModel = new ImageListModel();

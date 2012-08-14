@@ -24,8 +24,8 @@
 void QDefaultQmlPlugin::registerTypes(const char *uri)
 {
 	Q_ASSERT(uri == QLatin1String(DEFAULT_STIMULGL_PLUGIN_QML_NAME));
-	qmlRegisterType<TimeModel>(uri, 1, 0, TIMEMODEL_TYPE_QML_NAME);
-	qmlRegisterType<PhononPlayer>(uri, 1, 0, PHONONPLAYER_TYPE_QML_NAME);
+	qmlRegisterType<TimeModel>(uri, TIMEMODEL_VERSION_STRING_MAJOR, TIMEMODEL_VERSION_STRING_MINOR, TIMEMODEL_TYPE_QML_NAME);
+	qmlRegisterType<PhononPlayer>(uri, PHONONPLAYER_VERSION_STRING_MAJOR, PHONONPLAYER_VERSION_STRING_MINOR, PHONONPLAYER_TYPE_QML_NAME);
 }
 
 Q_EXPORT_PLUGIN2(qmlstimulgldefaultplugin, QDefaultQmlPlugin);//qmlqtimeexampleplugin

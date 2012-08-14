@@ -55,11 +55,15 @@ QString MainAppInfo::pluginsDirPath()
 {
 	QDir pluginsDir = appDebugDirPath();
 	pluginsDir.cd("plugins");
+	if(!pluginsDir.exists())
+		return appDebugDirPath().absolutePath();
 	#ifdef WIN64
 		pluginsDir.cd("x64");
 	#else
 		pluginsDir.cd("Win32");
 	#endif
+	//if(!pluginsDir.exists())
+	//	return appDebugDirPath().absolutePath();
 	return pluginsDir.absolutePath();
 }
 
@@ -84,19 +88,19 @@ QString MainAppInfo::qmlExtensionsPluginDirPath()
 		strExtPluginDirPath = strExtPluginDirPath + QString("Win32");
 	#endif
 
-#ifdef DEBUG
-		QString strConfiguration = "/Debug";
-#else
-		QString strConfiguration = "/Release";
-#endif
+//#ifdef DEBUG
+//		QString strConfiguration = "/Debug";
+//#else
+//		QString strConfiguration = "/Release";
+//#endif
 	
 	if(QDir(strExtPluginDirPath).exists()==false)
 	{
 		QDir().mkdir(strExtPluginDirPath);
 	}
-	else if(QDir(strExtPluginDirPath + strConfiguration).exists())
+	else if(QDir(strExtPluginDirPath).exists()) // + strConfiguration).exists())
 	{
-		strExtPluginDirPath = strExtPluginDirPath + strConfiguration;
+		strExtPluginDirPath = strExtPluginDirPath;// + strConfiguration;
 	}
 	return QDir(strExtPluginDirPath).absolutePath();
 }

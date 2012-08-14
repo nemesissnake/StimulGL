@@ -70,14 +70,17 @@ public slots:
 	void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList());
 	void executeScript();
 	QString getSelectedScriptFileLocation();
+	QString getApplicationRootDirPath() {return QDir(QCoreApplication::applicationDirPath()).absolutePath();};
 	QString getSelectedScriptFileName();
+	QString getEnvironmentVariabele(QString strName) {return QProcessEnvironment::systemEnvironment().value(strName);}
 	void closeSelectedScriptFile(bool bAutoSaveChanges = false);
 	//void debugScript();
 	bool initialize(MainAppInfo::MainProgramModeFlags mainFlags = 0);
 	void write2OutputWindow(const QString &text2Write = "");
 	void clearOutputWindow() {clearDebugger();};
+	void processEvents() {qApp->processEvents();};
 	void cleanupScript();
-
+	
 	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
 	void findNext();

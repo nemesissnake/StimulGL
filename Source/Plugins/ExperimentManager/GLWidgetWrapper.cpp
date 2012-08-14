@@ -27,6 +27,7 @@
 
 GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 {
+	currentSubObjectState = Experiment_SubObject_Constructing;
 	init();
 	lockedPainter = NULL;
 	thisMetaObject = NULL;
@@ -34,6 +35,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	pExpBlockTrialDomNodeList = NULL;
 	//bForceToStop = false;
 	bExperimentShouldStop = false;
+	//bIsPainting = false;
 	bCheckForDoubleBuffering = false;
 	#ifdef Q_WS_MACX
 		nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // make param in interface and recommend per platform
@@ -71,6 +73,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 
 GLWidgetWrapper::~GLWidgetWrapper()
 {
+	changeSubObjectState(Experiment_SubObject_Destructing);
 	if (mainLayout)
 	{
 		delete mainLayout;
@@ -95,8 +98,7 @@ GLWidgetWrapper::~GLWidgetWrapper()
 	{
 		alternativeContainerDlg = NULL;//not owned by this class
 	}
-	cleanupExperimentBlockTrialStructure();
-	changeSubObjectState(Experiment_SubObject_Stopped);
+	cleanupExperimentBlockTrialStructure();	
 }
 
 void GLWidgetWrapper::setVerticalSyncSwap()
@@ -105,13 +107,6 @@ void GLWidgetWrapper::setVerticalSyncSwap()
 	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
 	StimulGLQGLFormat.setSampleBuffers(true);
 	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
-}
-
-void GLWidgetWrapper::doRepaint()
-{
-	////if (!mutProcEvents.tryLock())
-	////	return;
-	repaint();
 }
 
 bool GLWidgetWrapper::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing)
@@ -642,113 +637,103 @@ bool GLWidgetWrapper::expandExperimentBlockParameterValue(QString &sValue)
 		{
 			if (pExpConf->pExperimentManager)
 			{
-				int nLastIndex = sValue.lastIndexOf("}");
-				if(nLastIndex > 1)
-				{
-					int nFirstIndex = sValue.lastIndexOf("{");
-					if((nFirstIndex >= 0) && (nFirstIndex < nLastIndex))
-					{
-						QVariant varResult = "";
-						if(pExpConf->pExperimentManager->getScriptContextValue(sValue.mid(nFirstIndex+1,nLastIndex-nFirstIndex-1),varResult))
-						{
-							sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,varResult.toString());
-							return true;
-						}
-					}	
-				}
+				return pExpConf->pExperimentManager->expandExperimentBlockParameterValue(sValue);				
 			}
 		}
 	}
 	return false;
 }
 
-bool GLWidgetWrapper::getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef)
-{
-	if(pExpBlockTrialDomNodeList == NULL)
-		return false;
-	if (pExpBlockTrialDomNodeList->count() == 0)
-		return false;
-
-	int nBlockCount = pExpBlockTrialDomNodeList->count();
-	if (!(nBlockCount > 0))
-		return false;
-
-	QDomElement tmpElement;
-	QDomNode tmpNode;
-
-	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
-	{
-		if(pExpBlockTrialDomNodeList->at(i).hasChildNodes())
-		{
-			tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(BLOCKNUMBER_TAG);
-			if(!tmpElement.isNull())//Is there a block_number defined?
-			{
-				if (nBlockNumber == tmpElement.text().toInt())//Correct block number?
-				{
-					QDomNodeList tmpObjectNodeList = pExpBlockTrialDomNodeList->at(i).toElement().elementsByTagName(OBJECT_TAG);//Retrieve all the objects
-					int nObjectListCount = tmpObjectNodeList.count();
-					if (nObjectListCount>0)
-					{
-						for (int j=0;j<nObjectListCount;j++)//For each object
-						{
-							if(tmpObjectNodeList.item(j).toElement().hasAttribute(ID_TAG))
-							{
-								if(nObjectID == tmpObjectNodeList.item(j).toElement().attribute(ID_TAG,"").toInt())//Correct ObjectID?
-								{
-									if(tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG).isElement())
-									{
-										tmpElement = tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG);
-										QDomNodeList tmpParameterNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
-										int nParameterListCount = tmpParameterNodeList.count();
-										if (nParameterListCount>0)
-										{
-											for (int k=0;k<nParameterListCount;k++)//For each parameter
-											{
-												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
-												if(!tmpElement.isNull())
-												{
-													if(strParamName.toLower() == tmpElement.text().toLower())//Correct Parameter Name?
-													{
-														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
-														if(!tmpElement.isNull())
-														{
-															pParDef.sValue = tmpElement.text().toLower();
-															pParDef.bHasChanged = true;//If the item is present than it has changed
-															return true;
-														}
-														else
-															return false;
-													}
-												}
-												else
-													continue;//Next parameter maybe?
-											}
-										}
-										else
-											return false;
-									}
-									else
-										return false;
-								}
-								else
-									return false;
-							}
-							else
-								return false;
-						}
-					}
-					else
-						return false;//Nothing defined		
-				}
-				else
-					continue;//Search next block
-			}
-			else
-				continue;//Search next block
-		}
-	}
-	return false;
-}
+//bool GLWidgetWrapper::getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef)
+//{
+//	if(pExpBlockTrialDomNodeList == NULL)
+//		return false;
+//	if (pExpBlockTrialDomNodeList->count() == 0)
+//		return false;
+//
+//	int nBlockCount = pExpBlockTrialDomNodeList->count();
+//	if (!(nBlockCount > 0))
+//		return false;
+//
+//	QDomElement tmpElement;
+//	QDomNode tmpNode;
+//	QString tmpValue;
+//
+//	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
+//	{
+//		if(pExpBlockTrialDomNodeList->at(i).hasChildNodes())
+//		{
+//			tmpElement = pExpBlockTrialDomNodeList->at(i).firstChildElement(BLOCKNUMBER_TAG);
+//			if(!tmpElement.isNull())//Is there a block_number defined?
+//			{
+//				if (nBlockNumber == tmpElement.text().toInt())//Correct block number?
+//				{
+//					QDomNodeList tmpObjectNodeList = pExpBlockTrialDomNodeList->at(i).toElement().elementsByTagName(OBJECT_TAG);//Retrieve all the objects
+//					int nObjectListCount = tmpObjectNodeList.count();
+//					if (nObjectListCount>0)
+//					{
+//						for (int j=0;j<nObjectListCount;j++)//For each object
+//						{
+//							if(tmpObjectNodeList.item(j).toElement().hasAttribute(ID_TAG))
+//							{
+//								if(nObjectID == tmpObjectNodeList.item(j).toElement().attribute(ID_TAG,"").toInt())//Correct ObjectID?
+//								{
+//									if(tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG).isElement())
+//									{
+//										tmpElement = tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG);
+//										QDomNodeList tmpParameterNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
+//										int nParameterListCount = tmpParameterNodeList.count();
+//										if (nParameterListCount>0)
+//										{
+//											for (int k=0;k<nParameterListCount;k++)//For each parameter
+//											{
+//												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
+//												if(!tmpElement.isNull())
+//												{
+//													if(strParamName.toLower() == tmpElement.text().toLower())//Correct Parameter Name?
+//													{
+//														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
+//														if(!tmpElement.isNull())
+//														{
+//															tmpValue = tmpElement.text().toLower();
+//															expandExperimentBlockParameterValue(tmpValue);
+//															pParDef.sValue = tmpValue;
+//															pParDef.bHasChanged = true;//If the item is present than it has changed
+//															return true;
+//														}
+//														else
+//															return false;
+//													}
+//												}
+//												else
+//													continue;//Next parameter maybe?
+//											}
+//										}
+//										else
+//											return false;
+//									}
+//									else
+//										return false;
+//								}
+//								else
+//									return false;
+//							}
+//							else
+//								return false;
+//						}
+//					}
+//					else
+//						return false;//Nothing defined		
+//				}
+//				else
+//					continue;//Search next block
+//			}
+//			else
+//				continue;//Search next block
+//		}
+//	}
+//	return false;
+//}
 
 void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 {
@@ -1183,7 +1168,7 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 		{
 			//QMetaObject::invokeMethod( this, "aniiiimmmmaaatttte",Qt::QueuedConnection);// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
 			//if(strcExperimentBlockTrials.nNrOfBlocks > 0)//Are there blocks defined? qmlWidgetViewer trough UI (without ExperimentManager) doesn't have any defined blocks here!
-			tStimTimer.singleShot(1, this, SLOT(doRepaint()));
+			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));
 		}
 		expTrialTimer.restart();
 		bRetval = true;
@@ -1248,38 +1233,53 @@ void GLWidgetWrapper::animate(bool bOnlyCheckBlockTrials)
 	
 	if(getSubObjectState() == Experiment_SubObject_Started)
 	{
-		mutRecursivePaint.lock();
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
-		if (bOnlyCheckBlockTrials)
+		if(mutRecursivePaint.tryLock())
 		{
-			//if(a)
-			//	QString b = a->objectName();
-			checkForNextBlockTrial();
-		} 
-		else
-		{
-			//if(a)
-			//	QString b = a->objectName();
-			update();
+			if (bExperimentShouldStop)
+			{
+				changeSubObjectState(Experiment_SubObject_Stop);
+				mutRecursivePaint.unlock();
+				return;
+			}
+
+			if(isDebugMode())
+				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
+			if (bOnlyCheckBlockTrials)
+			{
+				//if(a)
+				//	QString b = a->objectName();
+				checkForNextBlockTrial();
+			} 
+			else
+			{
+				//if(a)
+				//	QString b = a->objectName();
+				update();
+			}
+			if(isDebugMode())
+				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","update() called");
+			//	elapsed = frameTime.elapsed();//Calculate the elapsed time since started
+			//	frameTime.restart();
+			//	repaint();//calls the below void GLWidget::paintEvent(QPaintEvent *event)
+			//You should usually use 'update', as this will allow multiple queued paint events to be 'collapsed' into a single event. 
+			//The update method will call updateGL for QGLWidgets. The 'repaint' method should be used if you want an immediate repaint.
+			//If you have hooked up a timer to periodically call 'update', then failure to repaint regularly usually indicates 
+			//that you're putting stress on the CPU.
+			mutRecursivePaint.unlock();
 		}
-		if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","update() called");
-		//	elapsed = frameTime.elapsed();//Calculate the elapsed time since started
-		//	frameTime.restart();
-		//	repaint();//calls the below void GLWidget::paintEvent(QPaintEvent *event)
-		//You should usually use 'update', as this will allow multiple queued paint events to be 'collapsed' into a single event. 
-		//The update method will call updateGL for QGLWidgets. The 'repaint' method should be used if you want an immediate repaint.
-		//If you have hooked up a timer to periodically call 'update', then failure to repaint regularly usually indicates 
-		//that you're putting stress on the CPU.
-		mutRecursivePaint.unlock();
 	}
 }
 
-void GLWidgetWrapper::changeSubObjectState(ExperimentSubObjectState newSubObjectState)
+bool GLWidgetWrapper::changeSubObjectState(ExperimentSubObjectState newSubObjectState)
 {
 	if(newSubObjectState != currentSubObjectState)
 	{
+		if((((int)newSubObjectState > (int)ExperimentSubObjectState::Experiment_SubObject_MaxState) || ((int)newSubObjectState < 0)) ||
+		  (((int)currentSubObjectState > (int)ExperimentSubObjectState::Experiment_SubObject_MaxState) || ((int)currentSubObjectState < 0)) ||
+		  ((int)currentSubObjectState == Experiment_SubObject_Destructing))
+		{
+			return false;
+		}
 		currentSubObjectState = newSubObjectState;
 		subObjectStateHistory.nState.append(currentSubObjectState);
 		subObjectStateHistory.sDateTimeStamp.append(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
@@ -1288,7 +1288,9 @@ void GLWidgetWrapper::changeSubObjectState(ExperimentSubObjectState newSubObject
 		{
 			qApp->setActiveWindow(MainAppInfo::getMainWindow());
 		}
+		return true;
 	}
+	return false;
 }
 
 void GLWidgetWrapper::finalizePaintEvent() 
@@ -1355,49 +1357,62 @@ void GLWidgetWrapper::finalizePaintEvent()
 	swapBuffers();
 	if(isDebugMode())// && (bObjectIsLocked==false))
 		pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","BlockTrial Buffer Swapped, locked=",QString::number(bObjectIsLocked));
-	qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,1); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
-	//mutProcEvents.unlock();
-	//QEventLoop loop;
-	//QObject::connect(this, SIGNAL(readyRead()), &loop, SLOT(quit()));
-	//// Execute the event loop here, now we will wait here until readyRead() signal is emitted
-	//// which in turn will trigger event loop quit.
-	//loop.exec();
-	//loop.Execute();
-	//if(((currentSubObjectState == Experiment_SubObject_Started) || (currentSubObjectState == Experiment_SubObject_Initialized)) == false)
-	//	return;
-	mutExpSnapshot.lock(); 
-	if (bObjectIsLocked==false)
+
+	if (bExperimentShouldStop)
 	{
-		expFullStruct.parentStruct.currExpBlockTrialFrame++;
+		changeSubObjectState(Experiment_SubObject_Stop);
+		return;
 	}
-	if((nRefreshRate > 0) && (bObjectIsLocked==false)) //&& isDebugMode())
+
+	//qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,1); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
+
+	if (bExperimentShouldStop)
 	{
-		if (dCurrentTime > (dFramePeriodTime*1.5f))
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took too long(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")",QString::number(dCurrentTime));
-		else if(isDebugMode())
-			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")",QString::number(dCurrentTime));
+		changeSubObjectState(Experiment_SubObject_Stop);
+		return;
 	}
-	mutExpSnapshot.unlock(); 
-	//QMetaObject::invokeMethod( this, "proceedPaintEventLoop",Qt::QueuedConnection);
-	//tStimTimer.singleShot(1, this, SLOT(proceedPaintEventLoop()));
-	if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial
+
+	if(mutExpSnapshot.tryLock())
 	{
-		//if(bForceToStop)
-		//{
-		//	changeSubObjectState(Experiment_SubObject_Abort);
-		//	//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
-		//	return;
-		//}
-		//else 
 		if (bExperimentShouldStop)
 		{
 			changeSubObjectState(Experiment_SubObject_Stop);
-			//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
+			mutExpSnapshot.unlock(); 
 			return;
 		}
-		else
+		if (bObjectIsLocked==false)
 		{
-			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
+			expFullStruct.parentStruct.currExpBlockTrialFrame++;
+		}
+		if((nRefreshRate > 0) && (bObjectIsLocked==false)) //&& isDebugMode())
+		{
+			if (dCurrentTime > (dFramePeriodTime*1.5f))
+				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took too long(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")",QString::number(dCurrentTime));
+			else if(isDebugMode())
+				pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took(" + QString::number(dCurrentTime) + " mSecs),(Block=" + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")",QString::number(dCurrentTime));
+		}
+		mutExpSnapshot.unlock(); 
+		//QMetaObject::invokeMethod( this, "proceedPaintEventLoop",Qt::QueuedConnection);
+		//tStimTimer.singleShot(1, this, SLOT(proceedPaintEventLoop()));
+		if( !checkForNextBlockTrial() ) //Check whether we need to prepare for an new block Trial
+		{
+			//if(bForceToStop)
+			//{
+			//	changeSubObjectState(Experiment_SubObject_Abort);
+			//	//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
+			//	return;
+			//}
+			//else 
+			if (bExperimentShouldStop)
+			{
+				changeSubObjectState(Experiment_SubObject_Stop);
+				//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
+				return;
+			}
+			else
+			{
+				QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
+			}
 		}
 	}
 }

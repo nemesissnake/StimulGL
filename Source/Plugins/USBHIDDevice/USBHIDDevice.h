@@ -36,7 +36,7 @@
 class HIDCalibrateDialog;
 //!  The USBHIDDevice class. 
 /*!
-  The USBHIDDevice can be used to communicate with a USD HID Device.
+  The USBHIDDevice can be used to communicate with a USB HID Device.
 */
 class USBHIDDevice : public QObject, protected QScriptable
 {

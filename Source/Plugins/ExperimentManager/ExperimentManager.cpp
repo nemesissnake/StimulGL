@@ -23,6 +23,8 @@
 #include "metaextensions.h"
 #include <QFileDialog>
 #include <QWaitCondition>
+#include <QXmlSchema>
+#include <QXmlSchemaValidator>
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
@@ -415,28 +417,40 @@ bool ExperimentManager::loadExperiment(QString strFile, bool bViewEditTree)
 		return false;
 
 	QFile file(fileName);
-	if (!file.open(QFile::ReadOnly | QFile::Text)) {
-		//QMessageBox::warning(this, tr("Open Experiment"),
-		//	tr("Cannot read file %1:\n%2.")
-		//	.arg(fileName)
-		//	.arg(file.errorString()));
+	if (!file.open(QFile::ReadOnly | QFile::Text)) 
+	{
 		emit WriteToLogOutput("Could not open experiment file!");
 		return false;
 	}
-
-	if (currentExperimentTree->read(&file))
-	{
-		if (bViewEditTree)
-			currentExperimentTree->showMaximized();
-		setExperimentFileName(fileName);
-		changeCurrentExperimentState(ExperimentManager_Loaded);
-		return true;
-	}
 	else
 	{
-		delete currentExperimentTree;
-		currentExperimentTree = NULL;
+		currentExperimentFile.clear();
+		currentValidationFile.clear();
+		currentExperimentFile = file.readAll();
+		//QString aa = MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME);
+		file.close();
+		QFile validationFile(MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME));
+		if (validationFile.open(QFile::ReadOnly | QFile::Text)) 
+		{
+			currentValidationFile = validationFile.readAll();
+		}
+		validationFile.close();
+		if (file.open(QFile::ReadOnly | QFile::Text))
+		{
+			if (currentExperimentTree->read(&file))
+			{
+				if (bViewEditTree)
+					currentExperimentTree->showMaximized();
+				setExperimentFileName(fileName);
+				changeCurrentExperimentState(ExperimentManager_Loaded);
+				return true;
+			}
+		}
 	}
+	currentExperimentFile.clear();
+	currentValidationFile.clear();
+	delete currentExperimentTree;
+	currentExperimentTree = NULL;
 	return false;
 }
 
@@ -454,12 +468,13 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 	}
 }
 
-bool ExperimentManager::runExperiment()
+bool ExperimentManager::validateExperiment()
 {
-/*! \brief Runs the current Experiment from memory.
+/*! \brief Validates the current Experiment from memory.
  *
- *  The current Experiment in memory is started if/after it has successfully loaded.
+ *  The current Experiment in memory is validated and return the result.
  */
+
 	if (!currentExperimentTree)
 	{
 		if((loadExperiment("", false) == false) || (!currentExperimentTree))
@@ -468,12 +483,76 @@ bool ExperimentManager::runExperiment()
 			return false;
 		}
 	}
+	if (currentExperimentFile.isEmpty())
+	{
+		qDebug() << __FUNCTION__ << "::No Experiment in memory to validate!";
+		return false;
+	}
+	if (currentValidationFile.isEmpty())
+	{
+		qDebug() << __FUNCTION__ << "::No Experiment validation in memory!";
+		return false;
+	}
 	if(getCurrentExperimentState() != ExperimentManager_Loaded)
 	{
-		qDebug() << __FUNCTION__ << "::Wrong state, could not start experiment!";
+		qDebug() << __FUNCTION__ << "::Wrong state, could not validate the experiment!";
 		return false;
 	}
 
+	////const QByteArray schemaData = schemaView->toPlainText().toUtf8();
+	////const QByteArray instanceData = instanceEdit->toPlainText().toUtf8();
+	XmlMessageHandler messageHandler;
+	QXmlSchema schema;
+	schema.setMessageHandler(&messageHandler);
+	schema.load(currentValidationFile);
+
+	bool errorOccurred = false;
+	if (!schema.isValid()) {
+		errorOccurred = true;
+	} 
+	else 
+	{
+		QXmlSchemaValidator validator(schema);
+		if (!validator.validate(currentExperimentFile))
+			errorOccurred = true;
+	}
+
+	if (errorOccurred) 
+	{
+		errorOccurred = errorOccurred;
+		QString strMessage = messageHandler.statusMessage();
+		int nColumn = messageHandler.column();
+		int nLine = messageHandler.line();
+
+		nColumn = nColumn;
+
+		emit WriteToLogOutput(strMessage + "(" + QString::number(nColumn) + ", " + QString::number(nLine) + ")");
+		//qApp->processEvents();
+		//validationStatus->setText(messageHandler.statusMessage());
+		//moveCursor(messageHandler.line(), messageHandler.column());
+		return true;
+	} 
+	//else 
+	//{		
+	//	//validationStatus->setText(tr("validation successful"));
+	//}
+
+	//const QString styleSheet = QString("QLabel {background: %1; padding: 3px}")
+	//	.arg(errorOccurred ? QColor(Qt::red).lighter(160).name() :
+	//	QColor(Qt::green).lighter(160).name());
+	//validationStatus->setStyleSheet(styleSheet);
+	return true;
+}
+
+bool ExperimentManager::runExperiment()
+{
+/*! \brief Runs the current Experiment from memory.
+ *
+ *  The current Experiment in memory is started if/after it has successfully loaded.
+ */
+	if (!validateExperiment())
+		return false;
+	
 #ifdef Q_OS_WIN
 	//bool ret = 
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
@@ -592,6 +671,8 @@ bool ExperimentManager::WriteAndCloseExperimentOutputData()
 bool ExperimentManager::cleanupExperiment()
 {
 	cleanupExperimentObjects();
+	currentExperimentFile.clear();
+	currentValidationFile.clear();
 	if (currentExperimentTree)
 	{
 		delete currentExperimentTree;
@@ -729,7 +810,7 @@ void ExperimentManager::changeExperimentSubObjectState(ExperimentSubObjectState 
 						lExperimentObjectList[i].nCurrentState = Experiment_SubObject_IsStopping;
 					}
 				}
-				else if(nState == Experiment_SubObject_Stopped)
+				else if((nState == Experiment_SubObject_Stopped) || (nState == Experiment_SubObject_Destructing))
 				{
 					changeExperimentObjectsSignalSlots(true,i);
 					lExperimentObjectList[i].pObject = NULL;
@@ -742,7 +823,8 @@ void ExperimentManager::changeExperimentSubObjectState(ExperimentSubObjectState 
 				//lExperimentObjectList[i].sStateHistory.nState.append(lExperimentObjectList[i].nCurrentState);
 				//lExperimentObjectList[i].sStateHistory.sDateTimeStamp.append(getCurrentDateTimeStamp());
 			}
-			if (!((lExperimentObjectList[i].nCurrentState == Experiment_SubObject_Initialized)||(lExperimentObjectList[i].nCurrentState == Experiment_SubObject_Stopped)))
+			if (!((lExperimentObjectList[i].nCurrentState == Experiment_SubObject_Initialized)||(lExperimentObjectList[i].nCurrentState == Experiment_SubObject_Stopped) || 
+				  (lExperimentObjectList[i].nCurrentState == Experiment_SubObject_Constructing)||(lExperimentObjectList[i].nCurrentState == Experiment_SubObject_Destructing) ))
 			{
 				nActiveExperimentObjects++;
 			}			
@@ -873,6 +955,7 @@ bool ExperimentManager::configureExperiment()
 
 				tmpElement = tmpNode.firstChildElement(DEBUGMODE_TAG);
 				tmpString = tmpElement.text();
+				expandExperimentBlockParameterValue(tmpString);
 				if (!tmpString.isEmpty())
 				{
 					if (tmpString == BOOL_TRUE_TAG)
@@ -991,19 +1074,20 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 							if (tmpString.isEmpty())
 								continue;
 
-							tmpElement = tmpNode.firstChildElement(VALUE_TAG);
-							tmpString = tmpElement.text();
-							if (tmpString.isEmpty())
-								continue;
-
 							tmpElement = tmpNode.firstChildElement(MEMBER_TYPE_TAG);
 							tmpString = tmpElement.text();
 							if (tmpString.isEmpty())
 								continue;
 
+							tmpElement = tmpNode.firstChildElement(VALUE_TAG);
+							tmpString = tmpElement.text();
+							if (tmpString.isEmpty())
+								continue;
+							expandExperimentBlockParameterValue(tmpString);
+
+							sParameterValues.append(tmpString);
 							sParameterNames.append(tmpNode.firstChildElement(NAME_TAG).text());
 							sParameterTypes.append(tmpNode.firstChildElement(MEMBER_TYPE_TAG).text());
-							sParameterValues.append(tmpNode.firstChildElement(VALUE_TAG).text());					
 						}// end of parameter loop
 						int nArgCount = sParameterNames.count();						
 						QByteArray normType;
@@ -1233,6 +1317,28 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 			}
 		}
 		return true;
+	}
+	return false;
+}
+
+bool ExperimentManager::expandExperimentBlockParameterValue(QString &sValue)
+{
+	if (!sValue.isEmpty())
+	{		
+		int nLastIndex = sValue.lastIndexOf("}");
+		if(nLastIndex > 1)
+		{
+			int nFirstIndex = sValue.lastIndexOf("{");
+			if((nFirstIndex >= 0) && (nFirstIndex < nLastIndex))
+			{
+				QVariant varResult = "";
+				if(getScriptContextValue(sValue.mid(nFirstIndex+1,nLastIndex-nFirstIndex-1),varResult))
+				{
+					sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,varResult.toString());
+					return true;
+				}
+			}	
+		}
 	}
 	return false;
 }
@@ -1638,73 +1744,14 @@ bool ExperimentManager::getScriptContextValue(const QString &sScriptContextState
 	else
 	{
 		QScriptValue tmpScriptValue = currentScriptEngine->evaluate(sScriptContextStatement);
-		sScriptContextReturnValue = tmpScriptValue.toVariant();//"E:/Projects/StimulGL/Install/examples/";
+		sScriptContextReturnValue = tmpScriptValue.toVariant();
 		return true;
 	}
-//}
-//
-////{
-//write2OutputWindow("... Script started Evaluating on " + t.currentTime().toString() + "...");
-//t.start();
-//
-////AppScriptEngine->executeScript(DocManager->getDocHandler(activeMdiChild())->text());
-////return;
-//QScriptValue result;
-//result = AppScriptEngine->eng->evaluate(DocManager->getDocHandler(activeMdiChild())->text());
-//	//currentScriptEngine->
-
 	return false;
 }
 
-//bool ExperimentManager::setFullScreenMode(const bool bFullScreen)
-//{
-//	m_RunFullScreen = bFullScreen;
-//	return true;
-//}
-
-//bool ExperimentManager::setDebugMode(const bool bDebugMode)
-//{
-//	m_DebugMode = bDebugMode;
-//	return true;
-//}
-
-//void ExperimentManager::setBackgroundColor(const QColor &col)
-//{
-	//this->setBackgroundBrush(QBrush(col));
-//}
-
-//void ExperimentManager::changeToOpenGLView(QGraphicsView *GraphView)
-//{
-//	GraphView->setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));//QGL::DoubleBuffer, SampleBuffers
-//
-//	//GraphView->setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
-//	//QGraphicsView::FullViewportUpdate	0	When any visible part of the scene changes or is reexposed, QGraphicsView will update the entire viewport. This approach is fastest when QGraphicsView spends more time figuring out what to draw than it would spend drawing (e.g., when very many small items are repeatedly updated). This is the preferred update mode for viewports that do not support partial updates, such as QGLWidget, and for viewports that need to disable scroll optimization.
-//	//QGraphicsView::MinimalViewportUpdate	1	QGraphicsView will determine the minimal viewport region that requires a redraw, minimizing the time spent drawing by avoiding a redraw of areas that have not changed. This is QGraphicsView's default mode. Although this approach provides the best performance in general, if there are many small visible changes on the scene, QGraphicsView might end up spending more time finding the minimal approach than it will spend drawing.
-//	//QGraphicsView::SmartViewportUpdate	2	QGraphicsView will attempt to find an optimal update mode by analyzing the areas that require a redraw.
-//	//QGraphicsView::BoundingRectViewportUpdate	4	The bounding rectangle of all changes in the viewport will be redrawn. This mode has the advantage that QGraphicsView searches only one region for changes, minimizing time spent determining what needs redrawing. The disadvantage is that areas that have not changed also need to be redrawn.
-//	//QGraphicsView::NoViewportUpdate	3	QGraphicsView will never update its viewport when the scene changes; the user is expected to control all updates. This mode disables all (potentially slow) item visibility testing in QGraphicsView, and is suitable for scenes that either require a fixed frame rate, or where the viewport is otherwise updated externally.
-//	//view.setScene(new OpenGLScene);
-//
-//	//GraphView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-//	////GraphView.setCacheMode(QGraphicsView.CacheBackground);// to speed up difficult background refresh speed
-//	//GraphView->setOptimizationFlags(QGraphicsView::DontSavePainterState | QGraphicsView::DontAdjustForAntialiasing);
-//		
-//	QDesktopWidget* desktopWidget = QApplication::desktop();
-//	const QRectF rScreenResolution = desktopWidget->screenGeometry();//availableGeometry();
-//	//int w = rScreenResolution.width();//GraphView->width();
-//	//int h = rScreenResolution.height();//GraphView->height();
-//	//this->setSceneRect(rScreenResolution);
-//	//GraphView->fitInView(rScreenResolution, Qt::KeepAspectRatio);
-//	GraphView->setSceneRect(rScreenResolution);
-//
-//	//GraphView->setSceneRect(-0.5*w, -0.5*h, w, h);
-//	//GraphView->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-//	//GraphView->setVerticalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
-//	//GraphView->updateSceneRect(QRect(0, 0, w, h));
-//	//boundingRect()
-//	//this->setItemIndexMethod(QGraphicsScene::NoIndex);
-//	//GraphView->setDragMode(QGraphicsView::NoDrag);
-//}
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 ContainerDlg::ContainerDlg(QWidget *parent) : QDialog(parent)
 {

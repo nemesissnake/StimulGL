@@ -88,7 +88,7 @@ public slots:
 
 protected:
 	bool checkForNextBlockTrial();
-	bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef);//QString &Result);
+	//bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef);//QString &Result);
 	bool getExperimentBlockParamsFromDomNodeList(int nBlockNumber, int nObjectID, tParsedParameterList *hParams = NULL);//QHash<QString, QString> *hParams = NULL);
 	void setupLayout(QWidget* layoutWidget);
 	//void installKeyFilter()
@@ -113,9 +113,6 @@ protected slots:
 	void finalizePaintEvent();
 	//void proceedPaintEventLoop();;
 
-private slots:
-	void doRepaint();
-
 private:
 	//int getCurrentExperimentBlockTrialFrame() {return nBlockTrialFrameCounter;}
 	//int getCurrentExperimentTrial() {return nCurrentExperimentTrial;}
@@ -131,10 +128,11 @@ private:
 	int getRelativeBlockTrialTrigger(int nAbsoluteTrigger);		//Returns the relative (within a BlockTrial) trigger from a absolute (within the whole Experiment) trigger
 	bool updateExperimentBlockTrialStructure();
 	bool cleanupExperimentBlockTrialStructure();
-	void changeSubObjectState(ExperimentSubObjectState newSubObjectState);
+	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
 
 private:
+	//bool bIsPainting;
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bFirstTriggerAfterUnlock;						//To detect the exact start of the experiment detected by the checkForNextBlockTrial() function.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
@@ -142,7 +140,7 @@ private:
 	double dWaitTime;
 	QMutex mutExpSnapshot;
 	QMutex mutRecursivePaint;
-	//QWaitCondition waitProcEvents;						//See below
+	//QWaitCondition waitProcEvents;					//See below
 	QMutex mutProcEvents;								//Another implementation, due to qApp->processEvents() RecursiveRepaint can occur...
 	ExperimentSnapshotFullStructure expFullStruct;
 	//int nBlockTrialFrameCounter;

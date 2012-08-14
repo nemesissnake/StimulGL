@@ -1,4 +1,4 @@
-//_extensionname_
+//_extensionname_ 
 //Copyright (C) 2012  _authorname_
 //
 //This file is part of StimulGL.
@@ -42,7 +42,7 @@
 #define PLUGIN_FULL_NAME							PLUGIN_INTERNAL_NAME "(v" PLUGIN_FILE_VERSION_STRING ")"
 #define PLUGIN_FILE_DESCRIPTION						"<_extensionname_ description goes here>"
 #define PLUGIN_INFORMATION							PLUGIN_INTERNAL_NAME " Plugin(v" PLUGIN_FILE_VERSION_STRING ") by " PLUGIN_AUTHOR_NAME
-#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION			"1.0.0.1"//Make sure to override the GetMinimalMainProgramVersion() function with this defined value when needed!
+#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION			"2.0.0.2"//Make sure to override the GetMinimalMainProgramVersion() function with this defined value when needed!
 //Only edit until here!
 
 

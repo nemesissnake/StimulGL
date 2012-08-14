@@ -415,6 +415,9 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_QmlErrorHandler.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
+    <ClCompile Include="XmlMessageHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -492,6 +495,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="QmlErrorHandler.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="XmlMessageHandler.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

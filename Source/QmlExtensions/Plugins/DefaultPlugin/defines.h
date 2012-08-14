@@ -1,4 +1,4 @@
-//DefaultQMLPlugin
+//DefaultQMLPlugin 
 //Copyright (C) 2012  Sven Gijsen
 //
 //This file is part of StimulGL.
@@ -21,9 +21,13 @@
 #define DEFAULTQMLPLUGINDEFINES_H
 //#include "./../../StimulGL/maindefines.h"
 
-#define DEFAULT_STIMULGL_PLUGIN_QML_NAME	"StimulGLExtensions"
-#define TIMEMODEL_TYPE_QML_NAME				"Time"
-#define PHONONPLAYER_TYPE_QML_NAME			"MediaPlayer"
+#define DEFAULT_STIMULGL_PLUGIN_QML_NAME		"StimulGLExtensions"
+#define TIMEMODEL_TYPE_QML_NAME					"Time"
+#define TIMEMODEL_VERSION_STRING_MAJOR			1
+#define TIMEMODEL_VERSION_STRING_MINOR			0
+#define PHONONPLAYER_TYPE_QML_NAME				"MediaPlayer"
+#define PHONONPLAYER_VERSION_STRING_MAJOR		1
+#define PHONONPLAYER_VERSION_STRING_MINOR		1
 
 #endif // DEFAULTQMLPLUGINDEFINES_H
 

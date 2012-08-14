@@ -37,13 +37,16 @@ enum ExperimentTimerType //The type of a experiment timer, used for logging(flag
 
 enum ExperimentSubObjectState //The state of an experiment (sub)object
 {	
-	Experiment_SubObject_Initialized	= 0,
-	Experiment_SubObject_Started		= 1,
-	Experiment_SubObject_Abort			= 2,
-	Experiment_SubObject_IsAborting		= 3,
-	Experiment_SubObject_Stop			= 4,
-	Experiment_SubObject_IsStopping		= 5,
-	Experiment_SubObject_Stopped		= 6	
+	Experiment_SubObject_Constructing	= 0,
+	Experiment_SubObject_Initialized	= 1,
+	Experiment_SubObject_Started		= 2,
+	Experiment_SubObject_Abort			= 3,
+	Experiment_SubObject_IsAborting		= 4,
+	Experiment_SubObject_Stop			= 5,
+	Experiment_SubObject_IsStopping		= 6,
+	Experiment_SubObject_Stopped		= 7,
+	Experiment_SubObject_Destructing	= 8,
+	Experiment_SubObject_MaxState		= 9
 };
 
 enum EXML_TAG_SECTIONS //These are the main section Tag's

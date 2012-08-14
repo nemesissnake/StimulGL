@@ -8,6 +8,7 @@ function CleanupScript()
 	ConnectDisconnectScriptFunctions = null;
 	CleanupScript = null;
 	StimulGL.cleanupScript();
+	Log("CleanupScript() exited successfully")
 }
 
 function ExperimentStructureChanged()
@@ -52,8 +53,9 @@ function ExperimentStateChanged()
 }
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
-ExperimentManagerObj.setExperimentFileName("C:\\Program Files\\StimulGL\\experiments\\Polar1.exml");
-ExperimentManagerObj.runExperiment();
+ExperimentManagerObj.setExperimentFileName(StimulGL.getApplicationRootDirPath() + "/examples/experiments/Polar1.exml");
+if(!ExperimentManagerObj.runExperiment())
+	CleanupScript();
 
 //Polar1.exml
 //Polar2.exml

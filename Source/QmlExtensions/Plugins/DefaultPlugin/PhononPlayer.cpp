@@ -18,6 +18,7 @@
 
 #include "PhononPlayer.h"
 #include <QFileDialog>
+#include <qapplication.h>
 
 //int	PhononPlayer::instances=NULL;
 
@@ -28,7 +29,9 @@ PhononPlayer::PhononPlayer(QObject *parent) : QObject(parent)
 		//if(mediaObject == NULL)
 		mediaObject = new Phonon::MediaObject();//this
 		//if(audioOutput == NULL)
-		audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory);//,this
+		audioOutput = new Phonon::AudioOutput(Phonon::NoCategory);//Phonon::MusicCategory);//,this
+		setOutputDevice(0);
+		//QString aa = audioOutput->outputDevice().name();
 		//if (metaInformationResolver == NULL)
 		metaInformationResolver = new Phonon::MediaObject(this);
 		phononPath = Phonon::createPath(mediaObject, audioOutput);
@@ -67,6 +70,34 @@ PhononPlayer::~PhononPlayer()
 			metaInformationResolver = NULL;
 		}
 	//}
+}
+
+QStringList PhononPlayer::getOutputDevices()
+{
+	QStringList lstOutputDevices;
+	//QList<Phonon::EffectDescription> effectDescriptions = Phonon::BackendCapabilities::availableAudioEffects();
+	QList<Phonon::AudioOutputDevice> audioOutputDevices = Phonon::BackendCapabilities::availableAudioOutputDevices();
+	//foreach (Phonon::EffectDescription effectDescription, effectDescriptions) 
+	//{
+	//	Phonon::Effect *effect = new Phonon::Effect(effectDescription);
+	//	// ... Do something with the effect, like insert it into a media graph
+	//}
+	foreach (Phonon::AudioOutputDevice audioOutputDevice, audioOutputDevices) 
+	{
+		Phonon::AudioOutputDevice *device = new Phonon::AudioOutputDevice(audioOutputDevice);
+		lstOutputDevices.append(device->name());
+	}
+	return lstOutputDevices;
+}
+
+bool PhononPlayer::setOutputDevice(const int nIndex)
+{
+	QList<Phonon::AudioOutputDevice> audioOutputDevices = Phonon::BackendCapabilities::availableAudioOutputDevices();
+	if(audioOutputDevices.count() > nIndex)
+	{
+		return audioOutput->setOutputDevice(audioOutputDevices[nIndex]);
+	}
+	return false;
 }
 
 int PhononPlayer::addFile(const QString strFile)
@@ -133,8 +164,14 @@ bool PhononPlayer::play(const int index)
 	//return false;
 	
 
-	if(mediaObject->state() == Phonon::PlayingState)
-		mediaObject->stop();
+	//if(mediaObject->state() == Phonon::PlayingState)
+	//{
+	//	do 
+	//	{
+	//		mediaObject->stop();
+	//	}
+	//	while (mediaObject->state() == Phonon::PlayingState);
+	//}
 	mediaObject->clearQueue();//Clears the queue of media sources, this makes reloading!?
 	if (mediaSources.size() == 0)
 		return false;

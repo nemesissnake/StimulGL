@@ -22,23 +22,25 @@
 
 ExperimentManager_Dialog::ExperimentManager_Dialog(QWidget *parent)	: QDialog(parent)
 {
+	currentExperimentState = Experiment_SubObject_Constructing;
 	//Gets constructed only once during the load of the plugin
 	QmlWidgetObject = NULL;
 	tmpContainerDlg = NULL;
 	tmpLayout = NULL;
 	//audioOutput = NULL;
-	currentExperimentState = Experiment_SubObject_Initialized;
-
+	
 	ui.setupUi(this);
 	connect(ui.btnExampleButton, SIGNAL(clicked()), this, SLOT(exampleButton_Pressed()));
 	connect(ui.btnExampleButton_2, SIGNAL(clicked()), this, SLOT(exampleButton_2_Pressed()));
 	connect(ui.btnExampleButton_3, SIGNAL(clicked()), this, SLOT(exampleButton_3_Pressed()));
 	connect(ui.btnExampleButton_4, SIGNAL(clicked()), this, SLOT(exampleButton_4_Pressed()));
 	connect(ui.btnExampleButton_5, SIGNAL(clicked()), this, SLOT(exampleButton_5_Pressed()));
+	currentExperimentState = Experiment_SubObject_Initialized;
 }
 
 ExperimentManager_Dialog::~ExperimentManager_Dialog()
 {
+	currentExperimentState = Experiment_SubObject_Destructing;
 	cleanUp();
 }
 
@@ -62,7 +64,6 @@ void ExperimentManager_Dialog::on_cancelButton_clicked()
 
 void ExperimentManager_Dialog::cleanUp()
 {
-	currentExperimentState = Experiment_SubObject_Initialized;
 	connectSignalSlots(true);
 	if (QmlWidgetObject)
 	{

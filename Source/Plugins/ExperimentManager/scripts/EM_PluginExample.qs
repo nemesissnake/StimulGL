@@ -134,5 +134,5 @@ function ConnectDisconnectScriptFunctions(Connect)
 
 
 ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
-ExperimentManagerObj.setExperimentFileName("E:\\Projects\\StimulGL\\Source\\Plugins\\ExperimentManager\\experiments\\qmlExample.exml");
+ExperimentManagerObj.setExperimentFileName(StimulGL.getApplicationRootDirPath() + "/examples/MediaPlayer/PluginExample.exml");
 ExperimentManagerObj.runExperiment();

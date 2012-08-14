@@ -25,6 +25,7 @@
 #include "ExperimentManager.h"
 
 Q_DECLARE_METATYPE(QPixmap*)
+Q_DECLARE_METATYPE(QPainter*)
 
 RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent)
 {
@@ -211,6 +212,9 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		case RetinoMap_Fixation:
 			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_PATTERN,RETINOMAP_WIDGET_PATTERN_FIXATION);
 			break;
+		case RetinoMap_Custom:
+			insertExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_PATTERN,RETINOMAP_WIDGET_PATTERN_CUSTOM);
+			break;			
 		}
 		tmpString = QColor(87,87,87).name();//gives "#575757";
 		colorBackground = QColor(tmpString);
@@ -341,19 +345,21 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		if (previousRandEmptyStimGenerator == NULL)
 			previousRandEmptyStimGenerator = new RandomGenerator();	
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_PATTERN,RETINOMAP_WIDGET_PATTERN_POLARANGLE);
-		if(pParDef.sValue == RETINOMAP_WIDGET_PATTERN_ECCENTRICITY)
+		if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_PATTERN_ECCENTRICITY)
 			currentExpType = RetinoMap_Eccentricity;
-		else if(pParDef.sValue == RETINOMAP_WIDGET_PATTERN_MOVINGBAR)
+		else if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_PATTERN_MOVINGBAR)
 			currentExpType = RetinoMap_MovingBar;
-		else if(pParDef.sValue == RETINOMAP_WIDGET_PATTERN_FIXATION)
+		else if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_PATTERN_FIXATION)
 			currentExpType = RetinoMap_Fixation;
-		else if(pParDef.sValue == RETINOMAP_WIDGET_PATTERN_MOVINGDOTS)
+		else if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_PATTERN_MOVINGDOTS)
 			currentExpType = RetinoMap_MovingDots; 
-		else// (pParDef.sValue == RETINOMAP_WIDGET_PATTERN_POLARANGLE)
+		else if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_PATTERN_CUSTOM)
+			currentExpType = RetinoMap_Custom; 
+		else// (pParDef.sValue.toLower() == RETINOMAP_WIDGET_PATTERN_POLARANGLE)
 			currentExpType = RetinoMap_PolarAngle;
-
+		
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_SHOWFIXPOINT,RETINOMAP_WIDGET_BOOL_TRUE);
-		if(pParDef.sValue == RETINOMAP_WIDGET_BOOL_FALSE)
+		if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_FALSE)
 		{
 			showFixationPoint = false;
 		}
@@ -383,45 +389,45 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		triggerDurationMsec = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_TRIGGERDURATION_MSEC,QString::number(triggerDurationMsec)).sValue.toInt();
 		emptyTriggerSteps = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS,QString::number(emptyTriggerSteps)).sValue.toInt();		
 		gapDiameter = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_GAP_DIAMETER,QString::number(gapDiameter)).sValue.toInt();
-		colorBackground = QColor(getExperimentObjectBlockParameter(nRetinoID,GLWIDGET_BACKGROUNDCOLOR,colorBackground.name()).sValue);
+		colorBackground = QColor(getExperimentObjectBlockParameter(nRetinoID,GLWIDGET_BACKGROUNDCOLOR,colorBackground.name()).sValue.toLower());
 		brushBackground = QBrush(colorBackground);
-		fixationColor = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXATIONCOLOR,fixationColor.name()).sValue);
-		cCheckerColor1 = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR1,cCheckerColor1.name()).sValue);
-		cCheckerColor2 = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR2,cCheckerColor2.name()).sValue);		
+		fixationColor = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXATIONCOLOR,fixationColor.name()).sValue.toLower());
+		cCheckerColor1 = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR1,cCheckerColor1.name()).sValue.toLower());
+		cCheckerColor2 = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CHECKERCOLOR2,cCheckerColor2.name()).sValue.toLower());		
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_OUTPUTTRIGGERFRAME,RETINOMAP_WIDGET_BOOL_FALSE);
-		if (pParDef.sValue == RETINOMAP_WIDGET_BOOL_TRUE)
+		if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_TRUE)
 			outputTriggerFrame = true;
 		else //if(tmpString == RETINOMAP_WIDGET_BOOL_FALSE)
 			outputTriggerFrame = false;
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_DISCRETETRIGGERSTEPS,RETINOMAP_WIDGET_BOOL_FALSE);
-		if (pParDef.sValue == RETINOMAP_WIDGET_BOOL_TRUE)
+		if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_TRUE)
 			discreteTriggerSteps = true;
-		else// if(pParDef.sValue == RETINOMAP_WIDGET_BOOL_FALSE)
+		else// if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_FALSE)
 			discreteTriggerSteps = false;
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_RANDOMIZETRIGGERSTEPS,RETINOMAP_WIDGET_BOOL_FALSE);
-		if (pParDef.sValue == RETINOMAP_WIDGET_BOOL_TRUE)
+		if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_TRUE)
 			randomizeTriggerSteps = true;
-		else// if(pParDef.sValue == RETINOMAP_WIDGET_BOOL_FALSE)
+		else// if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_FALSE)
 			randomizeTriggerSteps = false;
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ANTIALIASING,RETINOMAP_WIDGET_BOOL_TRUE);
-		if(pParDef.sValue == RETINOMAP_WIDGET_BOOL_FALSE)
+		if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_FALSE)
 			antiAliasing = false;
 		else //(tmpString == RETINOMAP_WIDGET_BOOL_TRUE)
 			antiAliasing = true;
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_OUTPUTFRAMETYPE,RETINOMAP_WIDGET_OUTPUTTYPE_FRAME);
-		if (pParDef.sValue == RETINOMAP_WIDGET_OUTPUTTYPE_MASK)
+		if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_OUTPUTTYPE_MASK)
 			retinoOutputType = RetinoMap_OutputType_Mask;
-		else //(pParDef.sValue == RETINOMAP_WIDGET_OUTPUTTYPE_FRAME)
+		else //(pParDef.sValue.toLower() == RETINOMAP_WIDGET_OUTPUTTYPE_FRAME)
 			retinoOutputType = RetinoMap_OutputType_Frame;
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT,RETINOMAP_WIDGET_OUTPUTFORMAT_DAT);
-		if (pParDef.sValue == RETINOMAP_WIDGET_OUTPUTFORMAT_PNG)
+		if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_OUTPUTFORMAT_PNG)
 			retinoOutputFormat = RetinoMap_OutputFormat_PNG;
-		else //(pParDef.sValue == RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT)
+		else //(pParDef.sValue.toLower() == RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT)
 			retinoOutputFormat = RetinoMap_OutputFormat_DAT;
 		pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_DISABLECORTMAGFAC,RETINOMAP_WIDGET_BOOL_FALSE);
-		if (pParDef.sValue == RETINOMAP_WIDGET_BOOL_TRUE)
+		if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_TRUE)
 			disableCortMagFac = true;
-		else //if(pParDef.sValue == RETINOMAP_WIDGET_BOOL_FALSE)
+		else //if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_FALSE)
 			disableCortMagFac = false;
 
 		//Specific ExperimentType Parameters
@@ -438,7 +444,7 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			eccentricityNrRings = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_RING_AMOUNT,QString::number(eccentricityNrRings)).sValue.toInt();
 			eccentricityDirection = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_DIRECTION,QString::number(eccentricityDirection)).sValue.toInt();
 			pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_ECCENTRICITY_ENABLE_CORTMAG_TIMING,RETINOMAP_WIDGET_BOOL_FALSE);
-			if (pParDef.sValue == RETINOMAP_WIDGET_BOOL_TRUE)
+			if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_TRUE)
 				enableCortMagTiming = true;
 			else //if(tmpString == RETINOMAP_WIDGET_BOOL_FALSE)
 				enableCortMagTiming = false;
@@ -456,23 +462,23 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			//	movingBarIncludeOppositeDirection = false;	
 			break;
 		case RetinoMap_MovingDots :
-			movingDotsColor = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_COLOR,movingDotsColor.name()).sValue);
+			movingDotsColor = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_COLOR,movingDotsColor.name()).sValue.toLower());
 			movingDotsMinMoveAngle = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_MIN_MOVEANGLE,QString::number(movingDotsMinMoveAngle)).sValue.toFloat();
 			movingDotsMaxMoveAngle = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_MAX_MOVEANGLE,QString::number(movingDotsMaxMoveAngle)).sValue.toFloat();
 			movingDotsMaxMoveSpeed = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_MAX_MOVESPEED,QString::number(movingDotsMaxMoveSpeed)).sValue.toFloat();
 			movingDotsMinMoveSpeed = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_MIN_MOVESPEED,QString::number(movingDotsMinMoveSpeed)).sValue.toFloat();
 			pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD,RETINOMAP_WIDGET_POS_BOTH);
-			if (pParDef.sValue == RETINOMAP_WIDGET_POS_LEFT)
+			if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_POS_LEFT)
 				movingDotsHemifieldPos = RetinoMap_HemifieldPos_Left;
-			else if (pParDef.sValue == RETINOMAP_WIDGET_POS_RIGHT)
+			else if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_POS_RIGHT)
 				movingDotsHemifieldPos = RetinoMap_HemifieldPos_Right;
-			else //if (pParDef.sValue == RETINOMAP_WIDGET_POS_BOTH)
+			else //if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_POS_BOTH)
 				movingDotsHemifieldPos = RetinoMap_HemifieldPos_Both;
 			movingDotsPixelFromCenter = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_PIXELFROMCENTER,QString::number(movingDotsPixelFromCenter)).sValue.toInt();
 			pParDef = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY,RETINOMAP_WIDGET_BOOL_FALSE);
-			if (pParDef.sValue == RETINOMAP_WIDGET_BOOL_TRUE)
+			if (pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_TRUE)
 				movingDotsIsStationary = true;
-			else //if(pParDef.sValue == RETINOMAP_WIDGET_BOOL_FALSE)
+			else //if(pParDef.sValue.toLower() == RETINOMAP_WIDGET_BOOL_FALSE)
 				movingDotsIsStationary = false;			
 			movingDotsDotSize = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_DOTSIZE,QString::number(movingDotsDotSize)).sValue.toInt();
 			movingDotsNrOfDots = getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_MOVINGDOTS_NROFDOTS,QString::number(movingDotsNrOfDots)).sValue.toInt();
@@ -507,6 +513,8 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			initializeMovingDotsStructures();
 			break;
 		case RetinoMap_Fixation:
+			break;
+		case RetinoMap_Custom:
 			break;
 		}
 	}
@@ -659,9 +667,9 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	}
 	getCurrentExperimentProgressSnapshot(&expSnapshot);
 	int elapsedTrialTime = (int)expSnapshot.elapsedTrialTime;
-	if((elapsedTrialTime >= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1))))&&(currentExpType != RetinoMap_Fixation))//If the TrialTime exceeds the maximum time for the current Block-Trial Time
+	if((elapsedTrialTime >= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1)))) &&(currentExpType != RetinoMap_Fixation))//If the TrialTime exceeds the maximum time for the current Block-Trial Time
 		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1))-1;
-	else if((elapsedTrialTime <= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger))))&&(currentExpType != RetinoMap_Fixation))//If the TrialTime is less than the minimum time for the current Block-Trial Time
+	else if((elapsedTrialTime <= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger)))) &&(currentExpType != RetinoMap_Fixation))//If the TrialTime is less than the minimum time for the current Block-Trial Time
 		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger))+1;
 	if (currExpBlockTrialCycle < (int)(expSnapshot.currExpBlockTrialTrigger/cycleTriggerAmount))
 	{
@@ -1460,6 +1468,18 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			}
 		}
 		break;
+	case RetinoMap_Custom:
+		if(showFixationPoint) // show fix cross
+		{
+			imgPainter->setPen(QPen(fixationColor, fixationSize, style, roundCap));
+			imgPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+			if(bCreateActivationMap)
+			{
+				activationPainter->setPen(QPen(whiteColor, fixationSize, style, roundCap));			
+				activationPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+			}
+		}
+		break;
 	}
 	if ((bCreateActivationMap) && (activationPainter))
 		activationPainter->end();
@@ -1573,21 +1593,32 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	stimuliPainter->fillRect(event->rect(), brushBackground);
 	stimuliPainter->setPen(textPen);
 	stimuliPainter->setFont(textFont);
-	//painter.drawPixmap((rectScreenRes.width()-nStimFrameWidth)/2,(rectScreenRes.height()-nStimFrameHeight)/2,*StimulusResultImageFrame);
+	
+	stimuliPainter->drawPixmap(0,0,*StimulusResultImageFrame);
 	if (customScriptHandlerFunction && currentScriptEngine)
 	{
-		//int nWidth = StimulusResultImageFrame->width();
-		QScriptValue scriptVal = currentScriptEngine->toScriptValue<QPixmap *>(StimulusResultImageFrame);//parentScriptEngine->newQObject((QObject*)tmpPixmap->toQObject());//static_cast<QScriptEngine*>(parent())->newQObject((QObject*)tmpPixmap);
-		QScriptValue funcReturnValue = customScriptHandlerFunction->call(QScriptValue(), QScriptValueList() << scriptVal);//.toNumber();//
-		QPixmap* tmpResult = NULL;
-		tmpResult = currentScriptEngine->fromScriptValue<QPixmap *>(funcReturnValue);
-		if(tmpResult)
+		scriptVal1 = currentScriptEngine->toScriptValue<QPainter *>(stimuliPainter);
+		if (currentExpType == RetinoMap_Fixation)
 		{
-			*StimulusResultImageFrame = tmpResult->copy();	
-			//nWidth = StimulusResultImageFrame->width();
+			customScriptHandlerFunction->call(QScriptValue(), QScriptValueList() << scriptVal1);
+		}
+		else
+		{
+			scriptVal2 = currentScriptEngine->toScriptValue<float>(fTrialTimeProgress);
+			customScriptHandlerFunction->call(QScriptValue(), QScriptValueList() << scriptVal1 << scriptVal2);
 		}
 	}
-	stimuliPainter->drawPixmap(0,0,*StimulusResultImageFrame);
+
+	//if (customScriptHandlerFunction && currentScriptEngine)
+	//{
+	//	scriptVal = currentScriptEngine->toScriptValue<QPixmap *>(StimulusResultImageFrame);
+	//	funcReturnValue = customScriptHandlerFunction->call(QScriptValue(), QScriptValueList() << scriptVal);
+	//	tmpPixmap = NULL;
+	//	tmpPixmap = currentScriptEngine->fromScriptValue<QPixmap *>(funcReturnValue);
+	//	if(tmpPixmap)
+	//		*StimulusResultImageFrame = tmpPixmap->copy();	
+	//}		
+	//stimuliPainter->drawPixmap(0,0,*StimulusResultImageFrame);
 
 	//if(isDebugMode())
 	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(5));

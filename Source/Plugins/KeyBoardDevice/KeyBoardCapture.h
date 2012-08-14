@@ -77,7 +77,7 @@ public slots:
 	bool StartCaptureThread(const short method);
 	void StopCaptureThread();
 	QString getVirtualKeyString(const quint32 &keyCode);
-	bool installCustomScriptHandlerFunction(QString FuncName);
+	//bool installCustomScriptHandlerFunction(QString FuncName);
 
 private:
 	void setupKeyCodeTable();

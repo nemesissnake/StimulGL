@@ -32,8 +32,10 @@
 #include "Global.h"
 #include "retinomap_glwidget.h"
 #include "qmlWidget.h"
+#include "defines.h"
 #include "./../../StimulGL/mainappinfo.h"
 #include "experimentlogger.h"
+#include "XmlMessageHandler.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -97,6 +99,7 @@ public:
 	tParsedParameterList *getObjectBlockParamListById(int nID);
 	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);
 	bool getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue);
+	bool expandExperimentBlockParameterValue(QString &sValue);
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
@@ -104,6 +107,7 @@ public slots:
 	QString getExperimentFileName();
 	bool loadExperiment(QString strFile = "", bool bViewEditTree = true);
 	bool saveExperiment(QString strFile = "");
+	bool validateExperiment();
 	bool runExperiment();
 	void abortExperiment();
 	void stopExperiment();
@@ -140,6 +144,9 @@ private:
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	QList<objectElement> lExperimentObjectList;
+
+	QByteArray currentExperimentFile;
+	QByteArray currentValidationFile;
 
 	QScriptEngine* currentScriptEngine;
 	ExperimentState experimentCurrentState;

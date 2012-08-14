@@ -32,6 +32,7 @@
 #define RETINOMAP_WIDGET_PATTERN_MOVINGBAR					"movingbar"
 #define RETINOMAP_WIDGET_PATTERN_MOVINGDOTS					"movingdots"
 #define RETINOMAP_WIDGET_PATTERN_FIXATION					"fixation"
+#define RETINOMAP_WIDGET_PATTERN_CUSTOM						"custom"
 #define RETINOMAP_WIDGET_PATTERN							"retinopattern"
 #define RETINOMAP_WIDGET_CYCLE_TRIGGER_AMOUNT				"cycletriggeramount"
 #define RETINOMAP_WIDGET_SHOWFIXPOINT						"showfixpoint"
@@ -117,10 +118,11 @@ enum RetinoMapExperimentType //The state of the main experiment object
 {
 	RetinoMap_Fixation		= 0,
 	RetinoMap_LockedState	= 1,
-	RetinoMap_PolarAngle	= 2,
-	RetinoMap_Eccentricity	= 3,
-	RetinoMap_MovingBar		= 4,
-	RetinoMap_MovingDots	= 5
+	RetinoMap_Custom		= 2,
+	RetinoMap_PolarAngle	= 3,
+	RetinoMap_Eccentricity	= 4,
+	RetinoMap_MovingBar		= 5,
+	RetinoMap_MovingDots	= 6
 };
 
 typedef struct strcMovingDotsStructure
@@ -272,6 +274,11 @@ private:
 	RandomGenerator *randStimStateGenerator;		 //To hold the Stimuli Trigger Step
 	RandomGenerator *randEmptyStimGenerator;		 //To hold the Empty Block Trials
 	RandomGenerator *previousRandEmptyStimGenerator; //To hold the processed Empty Block Trials
+
+	QScriptValue scriptVal1;
+	QScriptValue scriptVal2;
+	//QScriptValue funcReturnValue;
+	//QPixmap* tmpPixmap;
 };
 Q_DECLARE_METATYPE(RetinoMap_glwidget)
 #endif // RETINOMAP_GLWIDGET_H

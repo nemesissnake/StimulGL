@@ -39,6 +39,9 @@ public slots:
 	bool pause();
 	bool stop();
 	int addFile(const QString strFile = QString());
+	
+	QStringList getOutputDevices();
+	bool setOutputDevice(const int nIndex);
 
 private slots:
 	void stateChanged(Phonon::State newState, Phonon::State oldState);

@@ -27,6 +27,7 @@
 #include <QtPlugin>
 #include <QFileInfo>
 #include <QMetaObject>
+#include "OutputListDelegate.h"
 
 #include "../Plugins/ParallelPortDevice/parallelport.h"
 #include "../Plugins/ExperimentManager/ExperimentManager.h"
@@ -244,6 +245,14 @@ QScriptValue myPrintFunction(QScriptContext *context, QScriptEngine *engine)
 	QScriptValue calleeData = context->callee().data();
 	QListWidget *outputObject = qobject_cast<QListWidget*>(calleeData.toQObject());
 	outputObject->addItem(result);
+	return engine->undefinedValue();
+
+	outputObject->setItemDelegate(new OutputListDelegate(outputObject));
+	QListWidgetItem *item = new QListWidgetItem();
+	item->setData(Qt::DisplayRole, "Title");
+	item->setData(Qt::UserRole + 1, "Description");
+	outputObject->addItem(item);
+
 	return engine->undefinedValue();//outputWindowList
 }
 

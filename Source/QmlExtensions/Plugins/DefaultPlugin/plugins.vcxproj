@@ -141,9 +141,9 @@
     <PostBuildEvent>
       <Command>echo POSTBUILDSTEP for $(ProjectName) $(Platform) $(Configuration)
 
-xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\" /i /d /y
-xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\StimulGLExtensions" /s /i /y
-copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\StimulGLExtensions\qmldir" /y
+xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\" /i /d /y
+xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions" /s /i /y
+copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions\qmldir" /y
 if errorlevel 1 goto BuildEventFailed
 goto BuildEventOK
 :BuildEventFailed
@@ -199,9 +199,9 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     <PostBuildEvent>
       <Command>echo POSTBUILDSTEP for $(ProjectName) $(Platform) $(Configuration)
 
-xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\" /i /d /y
-xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\StimulGLExtensions" /s /i /y
-copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\StimulGLExtensions\qmldir" /y
+xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\" /i /d /y
+xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions" /s /i /y
+copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions\qmldir" /y
 if errorlevel 1 goto BuildEventFailed
 goto BuildEventOK
 :BuildEventFailed
@@ -255,9 +255,9 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     <PostBuildEvent>
       <Command>echo POSTBUILDSTEP for $(ProjectName) $(Platform) $(Configuration)
 
-xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\" /i /d /y
-xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\StimulGLExtensions" /s /i /y
-copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\StimulGLExtensions\qmldir" /y
+xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\" /i /d /y
+xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions" /s /i /y
+copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions\qmldir" /y
 if errorlevel 1 goto BuildEventFailed
 goto BuildEventOK
 :BuildEventFailed
@@ -311,9 +311,9 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     <PostBuildEvent>
       <Command>echo POSTBUILDSTEP for $(ProjectName) $(Platform) $(Configuration)
 
-xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\" /i /d /y
-xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\StimulGLExtensions" /s /i /y
-copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\$(Configuration)\StimulGLExtensions\qmldir" /y
+xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\" /i /d /y
+xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions" /s /i /y
+copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions\qmldir" /y
 if errorlevel 1 goto BuildEventFailed
 goto BuildEventOK
 :BuildEventFailed

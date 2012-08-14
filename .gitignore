@@ -60,3 +60,5 @@ Install/*
 Source/QmlExtensions/Plugins/DefaultPlugin/DefaultPlugin.sdf
 Source/QmlExtensions/Plugins/DefaultPlugin/plugins.opensdf
 Source/QmlExtensions/Plugins/DefaultPlugin/plugins.sdf
+
+/Publish
