@@ -289,7 +289,6 @@ File ::03BA2241-AEDE-4D77-94BF-2DE2AA78B8C6 -name E:/Projects/StimulGL/Install/s
 File ::88C91A8F-4E44-42B7-8A82-C4FC91A83EF0 -name E:/Projects/StimulGL/Install/scripts/cubic.svg -parent B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD
 File ::D028F557-ADE6-42A3-89F9-BDEB97B01D9C -name E:/Projects/StimulGL/Install/scripts/DigitalClock.qs -parent B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD
 File ::D4CC9BD8-5B3B-4532-A59D-344DA895A513 -name E:/Projects/StimulGL/Install/scripts/frank.xbel -parent B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD
-File ::79FE37EE-C0E4-4455-9C51-37A3884FCEB0 -name E:/Projects/StimulGL/Install/scripts/ImageComposition.qs -parent B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD
 File ::4565E4B9-C4AA-43CE-9AC3-6EED2FEC9CEB -name E:/Projects/StimulGL/Install/scripts/IncludeMe.qs -parent B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD
 File ::3EC33475-0DD7-4F15-80F5-F09FEA7B904A -name E:/Projects/StimulGL/Install/scripts/jennifer.xbel -parent B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD
 File ::4E3650B1-BCCE-46A6-9C40-2175915C8740 -name E:/Projects/StimulGL/Install/scripts/LineEdits.qs -parent B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD
@@ -624,7 +623,7 @@ File ::78A51F27-06CC-43A9-A942-0728B47C5DAE -name C:/Qt/4.8.0/x64/plugins/sqldri
 File ::08FBBBAD-633B-4BEE-B883-3CDF986E1407 -name C:/Qt/4.8.0/x64/plugins/sqldrivers/qsqlpsql4.dll -parent F5A8C1C7-68B7-435D-857F-39DCE56C22D0
 Component ::3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files(x64)} -parent Components
 Component ::C511BCE0-5730-4B6A-B67A-9BFDC29D6A11 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files(win32)} -parent Components
-Component ::0C4197C0-9F10-4AD0-86B8-506675EEFCBC -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name Default -parent Components
+Component ::0C4197C0-9F10-4AD0-86B8-506675EEFCBC -setup Install -active Yes -platforms Windows -name Default -parent Components
 SetupType ::FE124F32-8FA4-46F1-B258-E80E59625C4F -setup Install -active Yes -platforms Windows -name Typical -parent SetupTypes
 SetupType ::02AD7066-582E-44F8-88AD-22D50D85E745 -setup Install -active Yes -platforms {Solaris-x86 Windows} -name win32 -parent SetupTypes
 SetupType ::B0B77E39-1ED0-4AF8-B878-75FB97F48091 -setup Install -active Yes -platforms Windows -name x64 -parent SetupTypes
@@ -908,6 +907,9 @@ array set Properties {
 213874EE-2BCC-43BB-8B31-176507FEF175,Destination
 {<%InstallDir%>/qml/plugins/x64/StimulGLExtensions}
 
+213874EE-2BCC-43BB-8B31-176507FEF175,FileSize
+{73}
+
 213874EE-2BCC-43BB-8B31-176507FEF175,Name
 {QMLDIR(x64)}
 
@@ -961,6 +963,9 @@ array set Properties {
 
 339CD47A-83C5-49EE-AC9B-A96C0AF6B26F,Destination
 {<%InstallDir%>/plugins/Win32/phonon_backend}
+
+339CD47A-83C5-49EE-AC9B-A96C0AF6B26F,FileSize
+{197120}
 
 339CD47A-83C5-49EE-AC9B-A96C0AF6B26F,Name
 {QML PhononBackend(win32)}
@@ -1045,6 +1050,9 @@ array set Properties {
 
 4EDD61CE-1738-42F3-82D2-E035E88FDF4A,Destination
 {<%InstallDir%>/plugins/x64/phonon_backend}
+
+4EDD61CE-1738-42F3-82D2-E035E88FDF4A,FileSize
+{243200}
 
 4EDD61CE-1738-42F3-82D2-E035E88FDF4A,Name
 {QML PhononBackend(x64)}
@@ -1419,7 +1427,7 @@ array set Properties {
 {<%InstallDir%>}
 
 891CF076-368A-450C-890A-7E3FDCB8748B,FileSize
-{29459093}
+{43874965}
 
 891CF076-368A-450C-890A-7E3FDCB8748B,Name
 {Program Files(win32)}
@@ -1513,6 +1521,9 @@ array set Properties {
 
 9B6EA236-969D-43FC-A84A-06A74E6C3DBE,Destination
 {<%InstallDir%>/qml/plugins/Win32/StimulGLExtensions}
+
+9B6EA236-969D-43FC-A84A-06A74E6C3DBE,FileSize
+{75}
 
 9B6EA236-969D-43FC-A84A-06A74E6C3DBE,Name
 {QMLDir(win32)}
@@ -1718,6 +1729,9 @@ B53DB0A7-45C6-43B1-88C0-B14158C1DDA7,NextButton,subst
 B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0,Destination
 {<%InstallDir%>\sqldrivers}
 
+B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0,FileSize
+{676352}
+
 B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0,Name
 {SQLLiteDrivers(win32)}
 
@@ -1725,7 +1739,7 @@ B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,Destination
 {<%InstallDir%>/examples/scripts}
 
 B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,FileSize
-{210856}
+{204671}
 
 B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,Name
 {Example Scripts(default)}
@@ -1938,7 +1952,7 @@ D562F7E3-157E-48ED-91CE-71FBA40B332D,Destination
 {<%InstallDir%>}
 
 D562F7E3-157E-48ED-91CE-71FBA40B332D,FileSize
-{33276981}
+{51504693}
 
 D562F7E3-157E-48ED-91CE-71FBA40B332D,Name
 {Program Files(x64)}
@@ -2061,7 +2075,7 @@ E5DE8D2A-E046-4945-B382-97B2670A7E75,Destination
 {<%InstallDir%>/documents}
 
 E5DE8D2A-E046-4945-B382-97B2670A7E75,FileSize
-{16384}
+{1042432}
 
 E5DE8D2A-E046-4945-B382-97B2670A7E75,Name
 {Documents}
@@ -2122,6 +2136,9 @@ F0017531-B3DB-462E-B03E-B55F7BB841B4,Action
 
 F5A8C1C7-68B7-435D-857F-39DCE56C22D0,Destination
 {<%InstallDir%>sqldrivers}
+
+F5A8C1C7-68B7-435D-857F-39DCE56C22D0,FileSize
+{812032}
 
 F5A8C1C7-68B7-435D-857F-39DCE56C22D0,Name
 {SQLLiteDrivers(x64)}
@@ -2757,7 +2774,7 @@ Windows,InstallMode
 {Standard}
 
 Windows,InstallType
-{win32}
+{x64}
 
 Windows,LastRequireAdministrator
 {Yes}
