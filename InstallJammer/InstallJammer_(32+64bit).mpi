@@ -312,10 +312,12 @@ FileGroup ::FE7C119F-2B67-439E-A0DF-FA1E714F2630 -setup Install -active Yes -pla
 File ::ABC1B1ED-659D-4D62-A8E0-E3EA2C33F5C0 -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/ExperimentManager.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::A84A255F-9B76-491E-A620-D2E396758465 -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/ImageConversion.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::B464ACAE-9D43-4D47-9A82-2359514B5DFB -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/PRTFormatting.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::72CE2237-D232-4CCA-8EFA-A1D0CAB7EFBC -name E:/Projects/StimulGL/Source/Plugins/ExtensionPluginTemplate/scripts/QScriptExample_ExtensionPluginTemplate_.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::72CE2237-D232-4CCA-8EFA-A1D0CAB7EFBC -name E:/Projects/StimulGL/Source/Plugins/ExtensionPluginTemplate/scripts/QScriptExample_ExtensionPluginTemplate_.qs -active 0 -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::042C3DF6-0B5C-4589-887B-72D893CD8D57 -name E:/Projects/StimulGL/Source/Plugins/ParallelPortDevice/scripts/QScriptExample_ParallelPort.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::D52BC55C-6ABB-4069-9DFF-921B10FE285B -name E:/Projects/StimulGL/Source/Plugins/USBHIDDevice/scripts/QScriptExampleUSBHIDDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::A91D18B9-2F4D-4802-91A2-66FAAB3C6CA8 -name E:/Projects/StimulGL/Source/Plugins/SerialPortDevice/scripts/QScriptExampleSerialPortDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::42799612-F05F-490E-8107-10EA0EBB05A3 -name E:/Projects/StimulGL/Source/Plugins/KeyBoardDevice/scripts/QScriptExample_KeyBoard.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::ED42D892-E1F0-467B-B152-C8184EA2433B -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/TriggerTimer.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 FileGroup ::E5DE8D2A-E046-4945-B382-97B2670A7E75 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name Documents -parent FileGroups
 File ::182C849A-4C78-4BB0-8AB8-DBA019559C3C -name E:/Projects/StimulGL/Install/documents/MainDocumentation.qhc -parent E5DE8D2A-E046-4945-B382-97B2670A7E75
 File ::92D1763F-22CE-4811-860C-50DE5667D48D -name E:/Projects/StimulGL/Install/documents/MainDocumentation.qch -parent E5DE8D2A-E046-4945-B382-97B2670A7E75
@@ -555,6 +557,7 @@ File ::CBB59838-2631-4C1E-AD53-1E441C6DE07A -name perl.api -parent 173847FF-4250
 File ::CD650CD9-726F-45D2-B10D-E57B2A51727B -name python.api -parent 173847FF-4250-4C17-8CAA-8301880107EE
 File ::12E6D9B7-5F16-4669-A574-E93441240075 -name qscript.api -parent 173847FF-4250-4C17-8CAA-8301880107EE
 File ::46D83471-8377-43BB-B766-08ABB295E1B8 -name xml.api -parent 173847FF-4250-4C17-8CAA-8301880107EE
+File ::B8D2FF5F-0C8B-449A-A167-2B599CF7E17E -name exml.api -parent 173847FF-4250-4C17-8CAA-8301880107EE
 FileGroup ::891CF076-368A-450C-890A-7E3FDCB8748B -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {Program Files(win32)} -parent FileGroups
 File ::0CE75847-D528-42B9-9CA1-8500415CFC55 -name C:/Qt/4.8.0/win32/bin/assistant.exe -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 File ::B13BDCF5-B662-4B38-804E-0C781451A111 -name C:/Qt/4.8.0/win32/bin/hidapi_win32.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B

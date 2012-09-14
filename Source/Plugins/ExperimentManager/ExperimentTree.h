@@ -37,7 +37,7 @@ public:
 	bool read(QIODevice *device);
 	bool write(QIODevice *device);
 
-	bool getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList);
+	int getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList);
 
 private slots:
 	void updateDomElement(QTreeWidgetItem *item, int column);

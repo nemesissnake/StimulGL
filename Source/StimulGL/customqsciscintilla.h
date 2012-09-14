@@ -25,8 +25,6 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <Qsci/qsciscintilla.h>
-#include <Qsci/qsciapis.h>
-#include <Qsci/qscilexerjavascript.h>
 #include <Qsci/qsciprinter.h>
 #include "scifinddialog.h"
 #include "mainappinfo.h"
@@ -41,7 +39,7 @@ class CustomQsciScintilla : public QsciScintilla//, QObject
 		//CustomQsciScintilla(const CustomQsciScintilla& other ){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 		~CustomQsciScintilla();
 
-		void setCustomLexer();
+		//void setCustomLexer();
 		void setManagerObject(QObject *managerObject,QObject *childWindowObject);
 		void toggleLineComment();
 		void toggleBlockComment();
@@ -81,7 +79,7 @@ class CustomQsciScintilla : public QsciScintilla//, QObject
 
 		QObject *manager;
 		QObject *childWindow;
-		QsciLexer *Qjslexer;
+		//QsciLexer *Qjslexer;
 
 		int searchStartingLine_;
 		int searchStartingCol_;

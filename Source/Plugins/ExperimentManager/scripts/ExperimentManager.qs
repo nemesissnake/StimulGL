@@ -2,13 +2,44 @@ var ExperimentManagerObj = new ExperimentManager();
 
 function CleanupScript()
 {
+	ConnectDisconnectScriptFunctions(false);
+	ConnectDisconnectScriptFunctions = null;
 	ExperimentManagerObj = null;
 	ExperimentStateChanged = null;
 	ExperimentStructureChanged = null;
-	ConnectDisconnectScriptFunctions = null;
 	CleanupScript = null;
 	StimulGL.cleanupScript();
 	Log("CleanupScript() exited successfully")
+}
+
+function ConnectDisconnectScriptFunctions(Connect)
+{
+	if(Connect)
+	{
+		Log("... Connecting Signal/Slots");
+		try 
+		{	
+			ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
+			ExperimentManagerObj.WriteToLogOutput.connect(this,this.Log);//For more extensive debugging information
+		} 
+		catch (e) 
+		{
+			Log(".*. Something went wrong connecting the Signal/Slots:" + e);
+		}		
+	}
+	else
+	{
+		Log("... Disconnecting Signal/Slots");
+		try 
+		{	
+			ExperimentManagerObj.ExperimentStateHasChanged.disconnect(this, this.ExperimentStateChanged);
+			ExperimentManagerObj.WriteToLogOutput.disconnect(this,this.Log);//For more extensive debugging information
+		} 
+		catch (e) 
+		{
+			Log(".*. Something went wrong disconnecting the Signal/Slots:" + e);
+		}		
+	}	
 }
 
 function ExperimentStructureChanged()
@@ -52,7 +83,7 @@ function ExperimentStateChanged()
 	}
 }
 
-ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);
+ConnectDisconnectScriptFunctions(true);
 ExperimentManagerObj.setExperimentFileName(StimulGL.getApplicationRootDirPath() + "/examples/experiments/Polar1.exml");
 if(!ExperimentManagerObj.runExperiment())
 	CleanupScript();

@@ -24,6 +24,9 @@
 #include <QFile>
 #include <QDir>
 #include <QtGui>
+#include <Qsci/qsciapis.h>
+#include <Qsci/qscilexerjavascript.h>
+#include <Qsci/qscilexerxml.h>
 #include "customqsciscintilla.h"
 #include "scifinddialog.h"
 #include "mainappinfo.h"

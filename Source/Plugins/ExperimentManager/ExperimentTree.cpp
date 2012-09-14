@@ -350,11 +350,11 @@ QTreeWidgetItem *ExperimentTree::createItem(const QDomElement &element, QTreeWid
 	return item;
 }
 
-bool ExperimentTree::getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList)
+int ExperimentTree::getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList)
 {
 	int nDepth = sElementTagName.count();
 	if(nDepth<=0)
-		return false;
+		return -1;
 
 	QDomElement tmpElem;
 	for (int i=0;i<nDepth;i++)
@@ -389,5 +389,5 @@ bool ExperimentTree::getDocumentElements(const QStringList &sElementTagName,QDom
 	//for (; !elt.isNull(); elt = elt.nextSiblingElement("entry")) {
 	//	// ...
 	//}
-	return (ResultDomNodeList.count() > 0);		
+	return ResultDomNodeList.count();		
 }

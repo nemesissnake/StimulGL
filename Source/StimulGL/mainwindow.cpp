@@ -211,22 +211,24 @@ QScriptValue myIncludeFunction(QScriptContext *ctx, QScriptEngine *eng)
 	QString fileName = ctx->argument(0).toString();
 	QString fileText;
 	QFile file(fileName);
+	if(file.exists())
+	{
+		if ( file.open(QFile::ReadOnly | QFile::Truncate) ) 
+		{       
+			// file opened successfully
+			QTextStream textStream(&file);        // use a text stream
+			// until end of file...
+			//while ( !textStream.eof() ) {           
+			// read and parse the command line
+			//fileText = textStream.readLine();         // line of text excluding '\n'
+			// do something with the line
+			//...
+			//}
 
-	if ( file.open(QFile::ReadOnly | QFile::Truncate) ) 
-	{       
-		// file opened successfully
-		QTextStream textStream(&file);        // use a text stream
-		// until end of file...
-		//while ( !textStream.eof() ) {           
-		// read and parse the command line
-		//fileText = textStream.readLine();         // line of text excluding '\n'
-		// do something with the line
-		//...
-		//}
-
-		fileText = textStream.readAll();
-		// Close the file
-		file.close();
+			fileText = textStream.readAll();
+			// Close the file
+			file.close();
+		}
 	}
 
 	ctx->setActivationObject(ctx->parentContext()->activationObject());
@@ -346,7 +348,8 @@ void MainWindow::scriptUnloaded(qint64 id)
 
 void MainWindow::setActiveSubWindow(QWidget *window)
 {
-	if (!window){return;}
+	if (!window)
+		return;
 	mdiArea->setActiveSubWindow(qobject_cast<QMdiSubWindow *>(window));
 }
 
@@ -1138,17 +1141,22 @@ void MainWindow::executeScript()
 	StimulGLScriptRunMode = (MainAppInfo::ScriptRunMode)action->data().toInt(); 
 	switch (DocManager->getDocType(activeMdiChild()))
 	{
-	case MainAppInfo::DOCTYPE_QSCRIPT:
-		{ break; }
-	case MainAppInfo::DOCTYPE_SVG: {
-			if (DocManager->getDocHandler(activeMdiChild())->isModified()){
+		case MainAppInfo::DOCTYPE_QSCRIPT:
+		{ 
+			break; 
+		}
+		case MainAppInfo::DOCTYPE_SVG: 
+		{
+			if (DocManager->getDocHandler(activeMdiChild())->isModified())
+			{
 				QMessageBox::StandardButton ret;
 				ret = QMessageBox::warning(this, tr("Save Changes?"),
 					tr("'%1' has unsaved changes that need to be saved to execute\n"
 					"Do you want to save your changes first?")
 					.arg(QFileInfo(activeMdiChildFilePath()).fileName()),
 					QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-		 		if (ret == QMessageBox::Save){
+		 		if (ret == QMessageBox::Save)
+				{
 					save();
 					SVGPreviewer->openFile(DocManager->getFileName(activeMdiChild()));
 					//SVGPreviewer->openFile(activeMdiChildFilePath()); abov code worked, this one didn't received an empty path...
@@ -1156,7 +1164,8 @@ void MainWindow::executeScript()
 					//SVGPreviewer->showFullScreen();
 				}
 			}
-			else {
+			else 
+			{
 				SVGPreviewer->openFile(DocManager->getFileName(activeMdiChild()));
 				//SVGPreviewer->openFile(activeMdiChildFilePath()); abov code worked, this one didn't received an empty path...
 				SVGPreviewer->showMaximized();
@@ -1169,7 +1178,8 @@ void MainWindow::executeScript()
 			return;
 			break;
 		}
-	default: {//none of them 
+		default: //none of them
+		{ 
 			return;
 			break;
 		}
@@ -1178,7 +1188,7 @@ void MainWindow::executeScript()
 	clearDebugger();
 	QTime t;
 
-	//AppScriptEngine->
+	QDir::setCurrent(getSelectedScriptFileLocation());
 
 	if (StimulGLScriptRunMode == MainAppInfo::Debug)
 	{

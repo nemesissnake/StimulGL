@@ -27,6 +27,7 @@
 */
 ParallelPort::ParallelPort(short BaseAddress, QObject *parent) : QObject(parent)
 {
+	currentScriptEngine = NULL;
 	nBaseAddress = BaseAddress;
 	generateThread = NULL;
 	captureThread = NULL;
@@ -49,6 +50,19 @@ ParallelPort::~ParallelPort()
 		delete generateThread;
 		generateThread = NULL;
 	}
+}
+
+bool ParallelPort::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
 }
 
 void ParallelPort::setBaseAddress( short BaseAddress )
@@ -249,7 +263,10 @@ bool ParallelPort::StartCaptureThread(const short baseAddress, const short mask,
 void ParallelPort::StopCaptureThread()
 {
 /*! Stops the Capture Thread(if started), see #StartCaptureThread. */
-	captureThread->stop();
+	if (captureThread)
+	{
+		captureThread->stop();
+	}
 }
 
 

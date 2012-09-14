@@ -36,8 +36,8 @@ void	_stdcall DlPortWritePortUchar(USHORT port, UCHAR Value);
 USHORT	_stdcall DlPortReadPortUshort (USHORT port);
 void	_stdcall DlPortWritePortUshort(USHORT port, USHORT Value);
 
-ULONG	_stdcall DlPortReadPortUlong(ULONG port);
-void	_stdcall DlPortWritePortUlong(ULONG port, ULONG Value);
+DWORD	_stdcall DlPortReadPortDWORD(DWORD port);
+void	_stdcall DlPortWritePortDWORD(DWORD port, DWORD Value);
 
 //WinIO function support (Untested and probably does NOT work - esp. on x64!)
 PBYTE	_stdcall MapPhysToLin(PBYTE pbPhysAddr, DWORD dwPhysSize, HANDLE *pPhysicalMemoryHandle);

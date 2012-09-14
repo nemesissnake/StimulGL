@@ -21,6 +21,7 @@
 #define PARALLELPORT_H
 #include <QObject>
 #include <QString>
+#include <QtScript>
 #include <QScriptable>
 #include "InpOut32.h"
 #include "ppCaptureThread.h"
@@ -80,6 +81,8 @@ public:
 	~ParallelPort();
 
 public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
+
 	void setBaseAddress( short BaseAddress );
 	short getBaseAddress() const;
 
@@ -114,6 +117,7 @@ public slots:
 	void StopCaptureThread();
 
 private:
+	QScriptEngine* currentScriptEngine;
 	InpOut32 InpOut32Object;
 	short nBaseAddress;
 

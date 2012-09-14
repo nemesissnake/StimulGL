@@ -20,6 +20,7 @@
 #include "ExperimentManagerplugin.h"
 #include "ExperimentManager.h"
 #include "ImageProcessor.h"
+#include "TriggerTimer.h"
 #include "defines.h"
 
 Q_DECLARE_METATYPE(ExperimentManager*)
@@ -43,6 +44,12 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<ExperimentManager*>(), ExperimentManagerProto);
 	QScriptValue ExperimentManagerCtor = engine.newFunction(ExperimentManager::ctor__experimentManager, ExperimentManagerProto);
 	engine.globalObject().setProperty(EXPERIMENTMANAGER_NAME, ExperimentManagerCtor);
+
+	TriggerTimer TriggerTimerObject;//or use new(), but make sure to use delete afterwards!
+	QScriptValue TriggerTimerProto = engine.newQObject(&TriggerTimerObject);
+	engine.setDefaultPrototype(qMetaTypeId<TriggerTimer*>(), TriggerTimerProto);
+	QScriptValue TriggerTimerCtor = engine.newFunction(TriggerTimer::ctor__triggerTimer, TriggerTimerProto);
+	engine.globalObject().setProperty(TRIGGERTIMER_NAME, TriggerTimerCtor);
 
 	ImageProcessor ImageProcessorObject;//or use new(), but make sure to use delete afterwards!
 	QScriptValue ImageProcessorProto = engine.newQObject(&ImageProcessorObject);

@@ -22,72 +22,102 @@
 
 CustomQsciScintilla::CustomQsciScintilla(MainAppInfo::DocType docType)
 {	
-	Qjslexer = NULL;
+	//Qjslexer = NULL;
 
-	switch (docType)
-	{
-	case MainAppInfo::DOCTYPE_QSCRIPT:
-		{
-			setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-			setAutoCompletionSource(QsciScintilla::AcsAll);
+	//switch (docType)
+	//{
+	//case MainAppInfo::DOCTYPE_QSCRIPT:
+	//	{
+	//		setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+	//		setAutoCompletionSource(QsciScintilla::AcsAll);
 
-			//QsciLexer* lexer = NULL;
-			QString fileName = "";
-			QDir dir(MainAppInfo::apiDirPath());
-			Qjslexer = new QsciLexerJavaScript();
-			fileName = "qscript.api";
-			if ( dir.entryList(QDir::Files).contains(fileName) ) 
-			{
-				QsciAPIs* apis = new QsciAPIs(Qjslexer);
-				if ( apis->load(dir.absoluteFilePath(fileName)) ) 
-				{
-					//apis->add("text");
-					apis->prepare();
-					Qjslexer->setAPIs(apis);
-				}
-				else 
-				{
-					delete apis;
-				}
-			}
-			setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-			setMatchedBraceBackgroundColor(QColor(255,255,120));
-			setMatchedBraceForegroundColor(QColor(0,0,255));
-			break;
-		}
-	case MainAppInfo::DOCTYPE_SVG:
-		{
-			setAutoCompletionSource(QsciScintilla::AcsNone);
-			break;
-		}
-	case MainAppInfo::DOCTYPE_UNDEFINED:
-		{
-			setAutoCompletionSource(QsciScintilla::AcsNone);
-			break;
-		}
-	default://if none of the above match...
-		{
-			setAutoCompletionSource(QsciScintilla::AcsNone);
-			break;
-		}
-	}
-	//this->->standardCommands()->clearKeys();
+	//		//QsciLexer* lexer = NULL;
+	//		QString fileName = "";
+	//		QDir dir(MainAppInfo::apiDirPath());
+	//		Qjslexer = new QsciLexerJavaScript();
+	//		fileName = "qscript.api";
+	//		if ( dir.entryList(QDir::Files).contains(fileName) ) 
+	//		{
+	//			QsciAPIs* apis = new QsciAPIs(Qjslexer);
+	//			if ( apis->load(dir.absoluteFilePath(fileName)) ) 
+	//			{
+	//				//apis->add("text");
+	//				apis->prepare();
+	//				Qjslexer->setAPIs(apis);
+	//			}
+	//			else 
+	//			{
+	//				delete apis;
+	//			}
+	//		}
+	//		setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+	//		setMatchedBraceBackgroundColor(QColor(255,255,120));
+	//		setMatchedBraceForegroundColor(QColor(0,0,255));
+	//		break;
+	//	}
+	//case MainAppInfo::DOCTYPE_EXML:
+	//	{
+	//		setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+	//		setAutoCompletionSource(QsciScintilla::AcsAll);
+
+	//		//QsciLexer* lexer = NULL;
+	//		QString fileName = "";
+	//		QDir dir(MainAppInfo::apiDirPath());
+	//		Qjslexer = new QsciLexerJavaScript();
+	//		//lexer = new QsciLexer();
+	//		fileName = "xml.api";
+	//		if ( dir.entryList(QDir::Files).contains(fileName) ) 
+	//		{
+	//			QsciAPIs* apis = new QsciAPIs(Qjslexer);
+	//			if ( apis->load(dir.absoluteFilePath(fileName)) ) 
+	//			{
+	//				//apis->add("text");
+	//				apis->prepare();
+	//				Qjslexer->setAPIs(apis);
+	//			}
+	//			else 
+	//			{
+	//				delete apis;
+	//			}
+	//		}
+	//		setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+	//		setMatchedBraceBackgroundColor(QColor(255,255,120));
+	//		setMatchedBraceForegroundColor(QColor(0,0,255));
+	//		break;
+	//	}
+	//case MainAppInfo::DOCTYPE_SVG:
+	//	{
+	//		setAutoCompletionSource(QsciScintilla::AcsNone);
+	//		break;
+	//	}
+	//case MainAppInfo::DOCTYPE_UNDEFINED:
+	//	{
+	//		setAutoCompletionSource(QsciScintilla::AcsNone);
+	//		break;
+	//	}
+	//default://if none of the above match...
+	//	{
+	//		setAutoCompletionSource(QsciScintilla::AcsNone);
+	//		break;
+	//	}
+	//}
+	////this->->standardCommands()->clearKeys();
 }
 
 CustomQsciScintilla::~CustomQsciScintilla()
 {
-	if(Qjslexer)
-		delete Qjslexer;
+	//if(Qjslexer)
+	//	delete Qjslexer;
 }
 
-void CustomQsciScintilla::setCustomLexer()
-{
-	if(Qjslexer)
-	{
-		Qjslexer->setParent(this);
-		this->setLexer(Qjslexer);
-	}
-}
+//void CustomQsciScintilla::setCustomLexer()
+//{
+//	if(Qjslexer)
+//	{
+//		Qjslexer->setParent(this);
+//		this->setLexer(Qjslexer);
+//	}
+//}
 
 void CustomQsciScintilla::setManagerObject(QObject *managerObject,QObject *childWindowObject)
 {

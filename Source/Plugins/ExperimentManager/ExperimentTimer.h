@@ -45,6 +45,7 @@ public:
 	double	getElapsedTimeInMilliSec();				// get elapsed time in milli seconds
 	double	getElapsedTimeInMicroSec();				// get elapsed time in micro-second
 	static bool SleepMSecAccurate(double mSecs);
+	static bool SleepMSecAccurate2(double mSecs);
 
 private:
 	double startTimeInMicroSec;						// starting time in micro-second

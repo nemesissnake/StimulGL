@@ -20,7 +20,7 @@
 #include "ExperimentManager.h"
 #include "ImageProcessor.h"
 #include "prtformatmanager.h"
-#include "metaextensions.h"
+#include "TriggerTimer.h"
 #include <QFileDialog>
 #include <QWaitCondition>
 #include <QXmlSchema>
@@ -526,7 +526,7 @@ bool ExperimentManager::validateExperiment()
 
 		nColumn = nColumn;
 
-		emit WriteToLogOutput(strMessage + "(" + QString::number(nColumn) + ", " + QString::number(nLine) + ")");
+		emit WriteToLogOutput("Invalid schema, " + strMessage + "(line:" + QString::number(nLine) + ", col:" + QString::number(nColumn) + ")");
 		//qApp->processEvents();
 		//validationStatus->setText(messageHandler.statusMessage());
 		//moveCursor(messageHandler.line(), messageHandler.column());
@@ -928,15 +928,16 @@ bool ExperimentManager::configureExperiment()
 	strList.append(DEFINES_TAG);
 	strList.append(EXPERIMENT_TAG);
 	QDomNodeList tmpList;
-	if (currentExperimentTree->getDocumentElements(strList,tmpList))
+	
+	if (currentExperimentTree->getDocumentElements(strList,tmpList) >= 0)
 	{
 		int nNrOfObjects = tmpList.count();
-		QDomNode tmpNode;
-		QDomElement tmpElement;
-		QString tmpString = "";
-
 		if (nNrOfObjects>0)
 		{
+			QDomNode tmpNode;
+			QDomElement tmpElement;
+			QString tmpString = "";
+
 			tmpNode = tmpList.at(0);//We'll only use the first one by now and ignore the rest
 			if (tmpNode.isElement()) 
 			{
@@ -969,8 +970,9 @@ bool ExperimentManager::configureExperiment()
 				}
 			}
 		}
+		return true;
 	}
-	return true;
+	return false;
 }
 
 bool ExperimentManager::finalizeExperimentObjects()
@@ -993,326 +995,329 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 	else
 		strList.append(INITIALIZATIONS_TAG);
 	strList.append(OBJECT_TAG);
-	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList))
+	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList) >= 0)
 	{
 		int nNrOfObjects = ExperimentObjectDomNodeList.count();
-		QDomNode tmpNode;
-		QDomElement tmpElement;
-		QDomNodeList tmpObjectNodeList;
-		QString tmpString;
-
-		int nObjectID = -1;
-		int nParameterID = -1;
-		QObject *pSourceObject = NULL;
-		QString sType = "";
-		QString sSignature = "";
-		QList<QString> sParameterNames;
-		QList<QString> sParameterValues;
-		QList<QString> sParameterTypes;
-
-		for(int i=0;i<nNrOfObjects;i++)
+		if (nNrOfObjects>0)
 		{
-			sParameterNames.clear();
-			sParameterTypes.clear();
-			sParameterValues.clear();
-			tmpNode = ExperimentObjectDomNodeList.at(i);
-			if (tmpNode.isElement()) 
+			QDomNode tmpNode;
+			QDomElement tmpElement;
+			QDomNodeList tmpObjectNodeList;
+			QString tmpString;
+
+			int nObjectID = -1;
+			int nParameterID = -1;
+			QObject *pSourceObject = NULL;
+			QString sType = "";
+			QString sSignature = "";
+			QList<QString> sParameterNames;
+			QList<QString> sParameterValues;
+			QList<QString> sParameterTypes;
+
+			for(int i=0;i<nNrOfObjects;i++)
 			{
-				tmpString = "";
-				tmpElement = tmpNode.toElement();
-				if(!tmpElement.hasAttribute(ID_TAG))
-					break;
-				tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
-				if (tmpString.isEmpty())
-					break;
-				nObjectID = tmpString.toInt();
-				if (!(nObjectID >= 0))
-					break;
-				pSourceObject = getObjectElementById(nObjectID);
-				if (pSourceObject == NULL)
-					continue;
-
-				tmpElement = tmpNode.firstChildElement(INIT_FINIT_TYPE_TAG);
-				tmpString = tmpElement.text();
-				if (tmpString.isEmpty())
-					break;
-				if (!(tmpString == INIT_FINIT_TYPE_SLOT_TAG))
-					break;
-				sType = tmpString;
-
-				tmpElement = tmpNode.firstChildElement(INIT_FINIT_SIGNATURE_TAG);
-				tmpString = tmpElement.text();
-				if (tmpString.isEmpty())
-					break;
-				sSignature = tmpString;
-
-				const QMetaObject* sourceMetaObject = pSourceObject->metaObject();
-
-				tmpElement = tmpNode.firstChildElement(PARAMETERS_TAG);
-				if(tmpElement.isElement())
+				sParameterNames.clear();
+				sParameterTypes.clear();
+				sParameterValues.clear();
+				tmpNode = ExperimentObjectDomNodeList.at(i);
+				if (tmpNode.isElement()) 
 				{
-					tmpObjectNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
-					int nParameterCount = tmpObjectNodeList.count();
-					if (nParameterCount>0)
-					{
-						for (int j=0;j<nParameterCount;j++)//For each parameter
-						{
-							tmpString = "";
-							tmpNode = tmpObjectNodeList.at(j);
-							tmpElement = tmpNode.toElement();
-							if(!tmpElement.hasAttribute(ID_TAG))
-								continue;
-							tmpString =tmpElement.attribute(ID_TAG,"");//Correct ParameterID?
-							if (tmpString.isEmpty())
-								continue;
-							nParameterID = tmpString.toInt();
-							if (!(nParameterID >= 0))
-								continue;
-
-							tmpElement = tmpNode.firstChildElement(NAME_TAG);
-							tmpString = tmpElement.text();
-							if (tmpString.isEmpty())
-								continue;
-
-							tmpElement = tmpNode.firstChildElement(MEMBER_TYPE_TAG);
-							tmpString = tmpElement.text();
-							if (tmpString.isEmpty())
-								continue;
-
-							tmpElement = tmpNode.firstChildElement(VALUE_TAG);
-							tmpString = tmpElement.text();
-							if (tmpString.isEmpty())
-								continue;
-							expandExperimentBlockParameterValue(tmpString);
-
-							sParameterValues.append(tmpString);
-							sParameterNames.append(tmpNode.firstChildElement(NAME_TAG).text());
-							sParameterTypes.append(tmpNode.firstChildElement(MEMBER_TYPE_TAG).text());
-						}// end of parameter loop
-						int nArgCount = sParameterNames.count();						
-						QByteArray normType;
-						//bool bSucceeded;
-						int typeId;
-						//QGenericArgument sArguments[MAX_INVOKE_ARG_COUNT];// this doesn't work! weird bug??
-						QGenericArgument sArguments0;
-						QGenericArgument sArguments1;
-						QGenericArgument sArguments2;
-						QGenericArgument sArguments3;
-						QGenericArgument sArguments4;
-						QGenericArgument sArguments5;
-						QGenericArgument sArguments6;
-						QGenericArgument sArguments7;
-						QGenericArgument sArguments8;
-						QGenericArgument sArguments9;
-
-						for(int k=0;k<MAX_INVOKE_ARG_COUNT;k++)//max arguments
-						{							
-							//sArguments.append(QGenericArgument());	
-							if (k<nArgCount)
-							{
-								normType = QMetaObject::normalizedType(sParameterTypes[k].toLatin1());
-								typeId = QMetaType::type(normType);								
-
-								if(typeId==QMetaType::Bool)//QMetaType::Type
-								{
-									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
-									if(k==0)
-										sArguments0 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==1)
-										sArguments1 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==2)
-										sArguments2 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==3)
-										sArguments3 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==4)
-										sArguments4 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==5)
-										sArguments5 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==6)
-										sArguments6 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==7)
-										sArguments7 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==8)
-										sArguments8 = Q_ARG(bool,sParameterValues[k].toInt());
-									else if(k==9)
-										sArguments9 = Q_ARG(bool,sParameterValues[k].toInt());
-								}
-								else if(typeId==QMetaType::Int)
-								{
-									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
-									if(k==0)
-										sArguments0 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==1)
-										sArguments1 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==2)
-										sArguments2 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==3)
-										sArguments3 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==4)
-										sArguments4 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==5)
-										sArguments5 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==6)
-										sArguments6 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==7)
-										sArguments7 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==8)
-										sArguments8 = Q_ARG(int,sParameterValues[k].toInt());
-									else if(k==9)
-										sArguments9 = Q_ARG(int,sParameterValues[k].toInt());
-								}
-								else if(typeId==QMetaType::Short)
-								{ 
-									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
-									if(k==0)
-										sArguments0 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==1)
-										sArguments1 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==2)
-										sArguments2 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==3)
-										sArguments3 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==4)
-										sArguments4 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==5)
-										sArguments5 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==6)
-										sArguments6 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==7)
-										sArguments7 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==8)
-										sArguments8 = Q_ARG(short,sParameterValues[k].toShort());
-									else if(k==9)
-										sArguments9 = Q_ARG(short,sParameterValues[k].toShort());
-								}
-								else if(typeId==QMetaType::Double)
-								{
-									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
-									if(k==0)
-										sArguments0 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==1)
-										sArguments1 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==2)
-										sArguments2 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==3)
-										sArguments3 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==4)
-										sArguments4 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==5)
-										sArguments5 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==6)
-										sArguments6 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==7)
-										sArguments7 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==8)
-										sArguments8 = Q_ARG(double,sParameterValues[k].toDouble());
-									else if(k==9)
-										sArguments9 = Q_ARG(double,sParameterValues[k].toDouble());
-								}
-								else if(typeId==QMetaType::Long)
-								{
-									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
-									if(k==0)
-										sArguments0 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==1)
-										sArguments1 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==2)
-										sArguments2 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==3)
-										sArguments3 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==4)
-										sArguments4 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==5)
-										sArguments5 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==6)
-										sArguments6 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==7)
-										sArguments7 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==8)
-										sArguments8 = Q_ARG(long,sParameterValues[k].toLong());
-									else if(k==9)
-										sArguments9 = Q_ARG(long,sParameterValues[k].toLong());
-								}
-								else//In all other cases we marshal to QString and give that a try... 
-								{
-									qWarning() << "initializeExperimentObjects(" << bFinalize << ")::Undefined argument (typeId=" << typeId << "), switching to QString to create a generic argument...";
-									// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
-									if(k==0)
-										sArguments0 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==1)
-										sArguments1 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==2)
-										sArguments2 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==3)
-										sArguments3 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==4)
-										sArguments4 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==5)
-										sArguments5 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==6)
-										sArguments6 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==7)
-										sArguments7 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==8)
-										sArguments8 = Q_ARG(QString,sParameterValues[k]);
-									else if(k==9)
-										sArguments9 = Q_ARG(QString,sParameterValues[k]);
-								}
-							}
-							else
-							{
-								break;
-							}
-						}
-						if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1(),sArguments0,sArguments1,sArguments2,sArguments3,sArguments4,sArguments5,sArguments6,sArguments7,sArguments8,sArguments9)))
-						{
-							//QStringList methods;
-							//for(int i = sourceMetaObject->methodOffset(); i < sourceMetaObject->methodCount(); ++i)
-							//	methods << QString::fromLatin1(sourceMetaObject->method(i).signature());
-							qDebug() << __FUNCTION__ << "(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
-							//bSucceeded = true;
-							//break;							
-
-							//int id = QMetaType::type(QString("QIODevice::OpenMode").toLatin1());//OPENMODE_ENUM_META_TYPE_NAME
-							//if (id != -1) {
-							//	void *myClassPtr = QMetaType::construct(id);
-							//	//myClassPtr->setValue("ReadOnly");
-							//	QVariant tmpVariant = QVariant::fromValue(myClassPtr);
-							//	QIODevice::OpenMode *s = (QIODevice::OpenMode *)myClassPtr;
-							//	//s = (QIODevice::OpenMode)*myClassPtr;
-							//	//QVariant var;
-							//	//var.setValue(s); // copy s into the variant
-
-							//	//...
-
-							//		// retrieve the value
-							//		//MyStruct s2 = var.value<MyStruct>();
-
-							//	QMetaType::destroy(id, myClassPtr);
-							//	myClassPtr = 0;
-							//}
-
-							return false;
-						}
+					tmpString = "";
+					tmpElement = tmpNode.toElement();
+					if(!tmpElement.hasAttribute(ID_TAG))
+						break;
+					tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					if (tmpString.isEmpty())
+						break;
+					nObjectID = tmpString.toInt();
+					if (!(nObjectID >= 0))
+						break;
+					pSourceObject = getObjectElementById(nObjectID);
+					if (pSourceObject == NULL)
 						continue;
+
+					tmpElement = tmpNode.firstChildElement(INIT_FINIT_TYPE_TAG);
+					tmpString = tmpElement.text();
+					if (tmpString.isEmpty())
+						break;
+					if (!(tmpString == INIT_FINIT_TYPE_SLOT_TAG))
+						break;
+					sType = tmpString;
+
+					tmpElement = tmpNode.firstChildElement(INIT_FINIT_SIGNATURE_TAG);
+					tmpString = tmpElement.text();
+					if (tmpString.isEmpty())
+						break;
+					sSignature = tmpString;
+
+					const QMetaObject* sourceMetaObject = pSourceObject->metaObject();
+
+					tmpElement = tmpNode.firstChildElement(PARAMETERS_TAG);
+					if(tmpElement.isElement())
+					{
+						tmpObjectNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
+						int nParameterCount = tmpObjectNodeList.count();
+						if (nParameterCount>0)
+						{
+							for (int j=0;j<nParameterCount;j++)//For each parameter
+							{
+								tmpString = "";
+								tmpNode = tmpObjectNodeList.at(j);
+								tmpElement = tmpNode.toElement();
+								if(!tmpElement.hasAttribute(ID_TAG))
+									continue;
+								tmpString =tmpElement.attribute(ID_TAG,"");//Correct ParameterID?
+								if (tmpString.isEmpty())
+									continue;
+								nParameterID = tmpString.toInt();
+								if (!(nParameterID >= 0))
+									continue;
+
+								tmpElement = tmpNode.firstChildElement(NAME_TAG);
+								tmpString = tmpElement.text();
+								if (tmpString.isEmpty())
+									continue;
+
+								tmpElement = tmpNode.firstChildElement(MEMBER_TYPE_TAG);
+								tmpString = tmpElement.text();
+								if (tmpString.isEmpty())
+									continue;
+
+								tmpElement = tmpNode.firstChildElement(VALUE_TAG);
+								tmpString = tmpElement.text();
+								if (tmpString.isEmpty())
+									continue;
+								expandExperimentBlockParameterValue(tmpString);
+
+								sParameterValues.append(tmpString);
+								sParameterNames.append(tmpNode.firstChildElement(NAME_TAG).text());
+								sParameterTypes.append(tmpNode.firstChildElement(MEMBER_TYPE_TAG).text());
+							}// end of parameter loop
+							int nArgCount = sParameterNames.count();						
+							QByteArray normType;
+							//bool bSucceeded;
+							int typeId;
+							//QGenericArgument sArguments[MAX_INVOKE_ARG_COUNT];// this doesn't work! weird bug??
+							QGenericArgument sArguments0;
+							QGenericArgument sArguments1;
+							QGenericArgument sArguments2;
+							QGenericArgument sArguments3;
+							QGenericArgument sArguments4;
+							QGenericArgument sArguments5;
+							QGenericArgument sArguments6;
+							QGenericArgument sArguments7;
+							QGenericArgument sArguments8;
+							QGenericArgument sArguments9;
+
+							for(int k=0;k<MAX_INVOKE_ARG_COUNT;k++)//max arguments
+							{							
+								//sArguments.append(QGenericArgument());	
+								if (k<nArgCount)
+								{
+									normType = QMetaObject::normalizedType(sParameterTypes[k].toLatin1());
+									typeId = QMetaType::type(normType);								
+
+									if(typeId==QMetaType::Bool)//QMetaType::Type
+									{
+										// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+										if(k==0)
+											sArguments0 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==1)
+											sArguments1 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==2)
+											sArguments2 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==3)
+											sArguments3 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==4)
+											sArguments4 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==5)
+											sArguments5 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==6)
+											sArguments6 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==7)
+											sArguments7 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==8)
+											sArguments8 = Q_ARG(bool,sParameterValues[k].toInt());
+										else if(k==9)
+											sArguments9 = Q_ARG(bool,sParameterValues[k].toInt());
+									}
+									else if(typeId==QMetaType::Int)
+									{
+										// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+										if(k==0)
+											sArguments0 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==1)
+											sArguments1 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==2)
+											sArguments2 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==3)
+											sArguments3 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==4)
+											sArguments4 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==5)
+											sArguments5 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==6)
+											sArguments6 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==7)
+											sArguments7 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==8)
+											sArguments8 = Q_ARG(int,sParameterValues[k].toInt());
+										else if(k==9)
+											sArguments9 = Q_ARG(int,sParameterValues[k].toInt());
+									}
+									else if(typeId==QMetaType::Short)
+									{ 
+										// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+										if(k==0)
+											sArguments0 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==1)
+											sArguments1 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==2)
+											sArguments2 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==3)
+											sArguments3 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==4)
+											sArguments4 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==5)
+											sArguments5 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==6)
+											sArguments6 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==7)
+											sArguments7 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==8)
+											sArguments8 = Q_ARG(short,sParameterValues[k].toShort());
+										else if(k==9)
+											sArguments9 = Q_ARG(short,sParameterValues[k].toShort());
+									}
+									else if(typeId==QMetaType::Double)
+									{
+										// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+										if(k==0)
+											sArguments0 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==1)
+											sArguments1 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==2)
+											sArguments2 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==3)
+											sArguments3 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==4)
+											sArguments4 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==5)
+											sArguments5 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==6)
+											sArguments6 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==7)
+											sArguments7 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==8)
+											sArguments8 = Q_ARG(double,sParameterValues[k].toDouble());
+										else if(k==9)
+											sArguments9 = Q_ARG(double,sParameterValues[k].toDouble());
+									}
+									else if(typeId==QMetaType::Long)
+									{
+										// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+										if(k==0)
+											sArguments0 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==1)
+											sArguments1 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==2)
+											sArguments2 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==3)
+											sArguments3 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==4)
+											sArguments4 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==5)
+											sArguments5 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==6)
+											sArguments6 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==7)
+											sArguments7 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==8)
+											sArguments8 = Q_ARG(long,sParameterValues[k].toLong());
+										else if(k==9)
+											sArguments9 = Q_ARG(long,sParameterValues[k].toLong());
+									}
+									else//In all other cases we marshal to QString and give that a try... 
+									{
+										qWarning() << "initializeExperimentObjects(" << bFinalize << ")::Undefined argument (typeId=" << typeId << "), switching to QString to create a generic argument...";
+										// below is dirty, but array doesn't work, passes wrong value to invoked function! weird bug??
+										if(k==0)
+											sArguments0 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==1)
+											sArguments1 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==2)
+											sArguments2 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==3)
+											sArguments3 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==4)
+											sArguments4 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==5)
+											sArguments5 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==6)
+											sArguments6 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==7)
+											sArguments7 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==8)
+											sArguments8 = Q_ARG(QString,sParameterValues[k]);
+										else if(k==9)
+											sArguments9 = Q_ARG(QString,sParameterValues[k]);
+									}
+								}
+								else
+								{
+									break;
+								}
+							}
+							if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1(),sArguments0,sArguments1,sArguments2,sArguments3,sArguments4,sArguments5,sArguments6,sArguments7,sArguments8,sArguments9)))
+							{
+								//QStringList methods;
+								//for(int i = sourceMetaObject->methodOffset(); i < sourceMetaObject->methodCount(); ++i)
+								//	methods << QString::fromLatin1(sourceMetaObject->method(i).signature());
+								qDebug() << __FUNCTION__ << "(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
+								//bSucceeded = true;
+								//break;							
+
+								//int id = QMetaType::type(QString("QIODevice::OpenMode").toLatin1());//OPENMODE_ENUM_META_TYPE_NAME
+								//if (id != -1) {
+								//	void *myClassPtr = QMetaType::construct(id);
+								//	//myClassPtr->setValue("ReadOnly");
+								//	QVariant tmpVariant = QVariant::fromValue(myClassPtr);
+								//	QIODevice::OpenMode *s = (QIODevice::OpenMode *)myClassPtr;
+								//	//s = (QIODevice::OpenMode)*myClassPtr;
+								//	//QVariant var;
+								//	//var.setValue(s); // copy s into the variant
+
+								//	//...
+
+								//		// retrieve the value
+								//		//MyStruct s2 = var.value<MyStruct>();
+
+								//	QMetaType::destroy(id, myClassPtr);
+								//	myClassPtr = 0;
+								//}
+
+								return false;
+							}
+							continue;
+						}
+						else//No parameters?
+						{
+							if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1())))
+							{
+								qDebug() << __FUNCTION__ << "(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
+								return false;
+							}
+							continue;
+						}
 					}
-					else//No parameters?
+					else//No Parameters?
 					{
 						if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1())))
 						{
-							qDebug() << __FUNCTION__ << "(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
-							return false;
+							qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
 						}
 						continue;
 					}
-				}
-				else//No Parameters?
-				{
-					if(!(sourceMetaObject->invokeMethod(pSourceObject,sSignature.toLatin1())))
-					{
-						qDebug() << "initializeExperimentObjects(" << bFinalize << ")::Could not invoke the Method(" << sSignature << ")!";
-					}
-					continue;
 				}
 			}
 		}
@@ -1355,134 +1360,101 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 	strList.append(ROOT_TAG);
 	strList.append(CONNECTIONS_TAG);
 	strList.append(OBJECT_TAG);
-	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList))
+	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList) >= 0)
 	{
 		int nNrOfObjects = ExperimentObjectDomNodeList.count();
-		QDomNode tmpNode;
-		QDomElement tmpElement;
-		QDomNodeList tmpObjectNodeList;
-		QString tmpString;
-
-		int nSourceObjectID = -1;
-		int nTargetObjectID = -1;
-		QString sSourceType = "";
-		QString sSourceSignature = "";
-		QString sTargetType = "";
-		QString sTargetSignature = "";
-		QObject *pSourceObject = NULL;
-		QObject *pTargetObject = NULL;
-
-		for(int i=0;i<nNrOfObjects;i++)
+		if (nNrOfObjects > 0)
 		{
-			tmpNode = ExperimentObjectDomNodeList.at(i);
-			if (tmpNode.isElement()) 
+			QDomNode tmpNode;
+			QDomElement tmpElement;
+			QDomNodeList tmpObjectNodeList;
+			QString tmpString;
+
+			int nSourceObjectID = -1;
+			int nTargetObjectID = -1;
+			QString sSourceType = "";
+			QString sSourceSignature = "";
+			QString sTargetType = "";
+			QString sTargetSignature = "";
+			QObject *pSourceObject = NULL;
+			QObject *pTargetObject = NULL;
+
+			for(int i=0;i<nNrOfObjects;i++)
 			{
-				tmpString = "";
-				tmpElement = tmpNode.toElement();
-				if(!tmpElement.hasAttribute(ID_TAG))
-					break;
-				tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
-				if (tmpString.isEmpty())
-					break;
-				nSourceObjectID = tmpString.toInt();
-				if (!(nSourceObjectID >= 0))
-					break;
-				pSourceObject = getObjectElementById(nSourceObjectID);
-				if (pSourceObject == NULL)
-					continue;
-
-				tmpElement = tmpNode.firstChildElement(CONNECTIONS_TYPE_TAG);
-				tmpString = tmpElement.text();
-				if (tmpString.isEmpty())
-					break;
-				if (!(tmpString == CONNECTIONS_TYPE_SIGNAL_TAG))
-					break;
-				sSourceType = tmpString;
-
-				tmpElement = tmpNode.firstChildElement(CONNECTIONS_SIGNATURE_TAG);
-				tmpString = tmpElement.text();
-				if (tmpString.isEmpty())
-					break;
-				sSourceSignature = tmpString;
-
-
-
-				tmpObjectNodeList = tmpNode.toElement().elementsByTagName(CONNECTIONS_TARGET_TAG);//Retrieve all the targets
-				int nTargetCount = tmpObjectNodeList.count();
-				if (nTargetCount>0)
+				tmpNode = ExperimentObjectDomNodeList.at(i);
+				if (tmpNode.isElement()) 
 				{
-					for (int j=0;j<nTargetCount;j++)//For each object
+					tmpString = "";
+					tmpElement = tmpNode.toElement();
+					if(!tmpElement.hasAttribute(ID_TAG))
+						break;
+					tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					if (tmpString.isEmpty())
+						break;
+					nSourceObjectID = tmpString.toInt();
+					if (!(nSourceObjectID >= 0))
+						break;
+					pSourceObject = getObjectElementById(nSourceObjectID);
+					if (pSourceObject == NULL)
+						continue;
+
+					tmpElement = tmpNode.firstChildElement(CONNECTIONS_TYPE_TAG);
+					tmpString = tmpElement.text();
+					if (tmpString.isEmpty())
+						break;
+					if (!(tmpString == CONNECTIONS_TYPE_SIGNAL_TAG))
+						break;
+					sSourceType = tmpString;
+
+					tmpElement = tmpNode.firstChildElement(CONNECTIONS_SIGNATURE_TAG);
+					tmpString = tmpElement.text();
+					if (tmpString.isEmpty())
+						break;
+					sSourceSignature = tmpString;
+
+
+
+					tmpObjectNodeList = tmpNode.toElement().elementsByTagName(CONNECTIONS_TARGET_TAG);//Retrieve all the targets
+					int nTargetCount = tmpObjectNodeList.count();
+					if (nTargetCount>0)
 					{
-						tmpString = "";
-						tmpNode = tmpObjectNodeList.at(j);
-						tmpElement = tmpNode.toElement();
-						if(!tmpElement.hasAttribute(ID_TAG))
-							continue;
-						tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
-						if (tmpString.isEmpty())
-							continue;
-						nTargetObjectID = tmpString.toInt();
-						if (!(nTargetObjectID >= 0))
-							continue;
-						pTargetObject = getObjectElementById(nTargetObjectID);
-						if (pTargetObject == NULL)
-							continue;
-
-						tmpElement = tmpNode.firstChildElement(CONNECTIONS_TYPE_TAG);
-						tmpString = tmpElement.text();
-						if (tmpString.isEmpty())
-							continue;
-						if (!((tmpString == CONNECTIONS_TYPE_SIGNAL_TAG) || (tmpString == CONNECTIONS_TYPE_SLOT_TAG)))
-							continue;
-						sTargetType = tmpString;
-
-						tmpElement = tmpNode.firstChildElement(CONNECTIONS_SIGNATURE_TAG);
-						tmpString = tmpElement.text();
-						if (tmpString.isEmpty())
-							continue;
-						sTargetSignature = tmpString;
-
-						const QMetaObject* targetMetaObject = pTargetObject->metaObject();
-						const QMetaObject* sourceMetaObject = pSourceObject->metaObject();
-						int nSourceID = -1;
-						int nTargetID = -1;
-
-						if (!bDisconnect)
+						for (int j=0;j<nTargetCount;j++)//For each object
 						{
-							if (sTargetType == CONNECTIONS_TYPE_SIGNAL_TAG)
-							{
-								if (sSourceType == CONNECTIONS_TYPE_SIGNAL_TAG)
-								{
-									nSourceID = sourceMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sSourceSignature.toLatin1()));
-									if (!(nSourceID == -1))//Is the signal present?
-									{
-										nTargetID = targetMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
-										if (!(nTargetID == -1))//Is the signal present?
-										{
-											QMetaObject::connect(pSourceObject, nSourceID, pTargetObject, nTargetID);
-										}
-									}
-								} 
-							} 
-							else if(sTargetType == CONNECTIONS_TYPE_SLOT_TAG)
-							{
-								if (sSourceType == CONNECTIONS_TYPE_SIGNAL_TAG)
-								{
-									nSourceID = sourceMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sSourceSignature.toLatin1()));
-									if (!(nSourceID == -1))//Is the signal present?
-									{
-										nTargetID = targetMetaObject->indexOfMethod(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
-										if (!(nTargetID == -1))//Is the method present?
-										{
-											QMetaObject::connect(pSourceObject, nSourceID, pTargetObject, nTargetID);
-										}
-									}
-								} 
-							}							
-						} 
-						else
-						{
-							if ((nObjectID == -1) ||((nSourceObjectID == nObjectID) || (nTargetObjectID == nObjectID)))
+							tmpString = "";
+							tmpNode = tmpObjectNodeList.at(j);
+							tmpElement = tmpNode.toElement();
+							if(!tmpElement.hasAttribute(ID_TAG))
+								continue;
+							tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+							if (tmpString.isEmpty())
+								continue;
+							nTargetObjectID = tmpString.toInt();
+							if (!(nTargetObjectID >= 0))
+								continue;
+							pTargetObject = getObjectElementById(nTargetObjectID);
+							if (pTargetObject == NULL)
+								continue;
+
+							tmpElement = tmpNode.firstChildElement(CONNECTIONS_TYPE_TAG);
+							tmpString = tmpElement.text();
+							if (tmpString.isEmpty())
+								continue;
+							if (!((tmpString == CONNECTIONS_TYPE_SIGNAL_TAG) || (tmpString == CONNECTIONS_TYPE_SLOT_TAG)))
+								continue;
+							sTargetType = tmpString;
+
+							tmpElement = tmpNode.firstChildElement(CONNECTIONS_SIGNATURE_TAG);
+							tmpString = tmpElement.text();
+							if (tmpString.isEmpty())
+								continue;
+							sTargetSignature = tmpString;
+
+							const QMetaObject* targetMetaObject = pTargetObject->metaObject();
+							const QMetaObject* sourceMetaObject = pSourceObject->metaObject();
+							int nSourceID = -1;
+							int nTargetID = -1;
+
+							if (!bDisconnect)
 							{
 								if (sTargetType == CONNECTIONS_TYPE_SIGNAL_TAG)
 								{
@@ -1494,7 +1466,7 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 											nTargetID = targetMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
 											if (!(nTargetID == -1))//Is the signal present?
 											{
-												QMetaObject::disconnect(pSourceObject, nSourceID, pTargetObject, nTargetID);
+												QMetaObject::connect(pSourceObject, nSourceID, pTargetObject, nTargetID);
 											}
 										}
 									} 
@@ -1509,10 +1481,46 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 											nTargetID = targetMetaObject->indexOfMethod(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
 											if (!(nTargetID == -1))//Is the method present?
 											{
-												QMetaObject::disconnect(pSourceObject, nSourceID, pTargetObject, nTargetID);
+												QMetaObject::connect(pSourceObject, nSourceID, pTargetObject, nTargetID);
 											}
 										}
 									} 
+								}							
+							} 
+							else
+							{
+								if ((nObjectID == -1) ||((nSourceObjectID == nObjectID) || (nTargetObjectID == nObjectID)))
+								{
+									if (sTargetType == CONNECTIONS_TYPE_SIGNAL_TAG)
+									{
+										if (sSourceType == CONNECTIONS_TYPE_SIGNAL_TAG)
+										{
+											nSourceID = sourceMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sSourceSignature.toLatin1()));
+											if (!(nSourceID == -1))//Is the signal present?
+											{
+												nTargetID = targetMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
+												if (!(nTargetID == -1))//Is the signal present?
+												{
+													QMetaObject::disconnect(pSourceObject, nSourceID, pTargetObject, nTargetID);
+												}
+											}
+										} 
+									} 
+									else if(sTargetType == CONNECTIONS_TYPE_SLOT_TAG)
+									{
+										if (sSourceType == CONNECTIONS_TYPE_SIGNAL_TAG)
+										{
+											nSourceID = sourceMetaObject->indexOfSignal(QMetaObject::normalizedSignature(sSourceSignature.toLatin1()));
+											if (!(nSourceID == -1))//Is the signal present?
+											{
+												nTargetID = targetMetaObject->indexOfMethod(QMetaObject::normalizedSignature(sTargetSignature.toLatin1()));
+												if (!(nTargetID == -1))//Is the method present?
+												{
+													QMetaObject::disconnect(pSourceObject, nSourceID, pTargetObject, nTargetID);
+												}
+											}
+										} 
+									}
 								}
 							}
 						}
@@ -1581,144 +1589,148 @@ bool ExperimentManager::createExperimentObjects()
 	strList.append(ROOT_TAG);
 	strList.append(DECLARATIONS_TAG);
 	strList.append(OBJECT_TAG);
-	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList))
+	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList)>=0)
 	{
 		int nNrOfObjects = ExperimentObjectDomNodeList.count();
-		int nNrOfBlockTrials = 0;
-		QDomNode tmpNode;
-		QDomElement tmpElement;
-		QString tmpString;
+		if (nNrOfObjects > 0)
+		{
+			int nNrOfBlockTrials = 0;
+			QDomNode tmpNode;
+			QDomElement tmpElement;
+			QString tmpString;
 
-		if (nNrOfObjects>0)
-		{
-			strList.clear();
-			strList.append(ROOT_TAG);
-			strList.append(ACTIONS_TAG);
-			strList.append(BLOCKTRIALS_TAG);
-			strList.append(BLOCK_TAG);
-			if (currentExperimentTree->getDocumentElements(strList,ExperimentBlockTrialsDomNodeList))
+			if (nNrOfObjects>0)
 			{
-				nNrOfBlockTrials = ExperimentBlockTrialsDomNodeList.count();
-			}
-		}
-		for(int i=0;i<nNrOfObjects;i++)
-		{
-			tmpNode = ExperimentObjectDomNodeList.at(i);
-			if (tmpNode.isElement()) 
-			{
-				QString tmpString1 = "";
-				tmpElement = tmpNode.toElement();
-				if(!tmpElement.hasAttribute(ID_TAG))
-					break;
-				tmpString1 =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
-				if (tmpString1.isEmpty())
-					break;
-				//tmpElement = tmpNode.firstChildElement(tmpString);
-				int nID = tmpString1.toInt();//tmpElement.text().toInt();
-				if (!(nID >= 0))
-					break;
-				tmpString = CLASS_TAG;
-				tmpElement = tmpNode.firstChildElement(tmpString);
-				QString sClass = tmpElement.text();
-				if (sClass.isEmpty())
-					break;
-				tmpString = NAME_TAG;
-				tmpElement = tmpNode.firstChildElement(tmpString);
-				QString sName = tmpElement.text();
-				//if (sName.isEmpty())
-				//	break;
-	
-				int metaID = QMetaType::type(sClass.toLatin1());
-				if (metaID > 0)//(id != -1) 
+				strList.clear();
+				strList.append(ROOT_TAG);
+				strList.append(ACTIONS_TAG);
+				strList.append(BLOCKTRIALS_TAG);
+				strList.append(BLOCK_TAG);
+				if (currentExperimentTree->getDocumentElements(strList,ExperimentBlockTrialsDomNodeList) >= 0)
 				{
-					bool bRetVal = true;
-					objectElement tmpElement;
-					tmpElement.nObjectID = nID;
-					tmpElement.nMetaID = metaID;
-					tmpElement.sObjectName = sName;
-					tmpElement.pObject = static_cast< QObject* > ( QMetaType::construct(metaID) );
-					
-					const QMetaObject* metaObject = tmpElement.pObject->metaObject();
-
-					//QStringList properties;
-					//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
-					//	properties << QString::fromLatin1(metaObject->method(i).signature());
-
-					if (currentScriptEngine)
+					nNrOfBlockTrials = ExperimentBlockTrialsDomNodeList.count();
+				}
+			}
+			for(int i=0;i<nNrOfObjects;i++)
+			{
+				tmpNode = ExperimentObjectDomNodeList.at(i);
+				if (tmpNode.isElement()) 
+				{
+					QString tmpString1 = "";
+					tmpElement = tmpNode.toElement();
+					if(!tmpElement.hasAttribute(ID_TAG))
+						break;
+					tmpString1 =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					if (tmpString1.isEmpty())
+						break;
+					//tmpElement = tmpNode.firstChildElement(tmpString);
+					int nID = tmpString1.toInt();//tmpElement.text().toInt();
+					if (!(nID >= 0))
+						break;
+					tmpString = CLASS_TAG;
+					tmpElement = tmpNode.firstChildElement(tmpString);
+					QString sClass = tmpElement.text();
+					if (sClass.isEmpty())
+						break;
+					tmpString = NAME_TAG;
+					tmpElement = tmpNode.firstChildElement(tmpString);
+					QString sName = tmpElement.text();
+					//if (sName.isEmpty())
+					//	break;
+	
+					int metaID = QMetaType::type(sClass.toLatin1());
+					if (metaID > 0)//(id != -1) 
 					{
-						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_MAKETHISAVAILABLEINSCRIPT_FULL)) == -1))//Is the slot present?
+						bool bRetVal = true;
+						objectElement tmpElement;
+						tmpElement.nObjectID = nID;
+						tmpElement.nMetaID = metaID;
+						tmpElement.sObjectName = sName;
+						tmpElement.pObject = static_cast< QObject* > ( QMetaType::construct(metaID) );
+					
+						const QMetaObject* metaObject = tmpElement.pObject->metaObject();
+
+						//QStringList properties;
+						//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+						//	properties << QString::fromLatin1(metaObject->method(i).signature());
+
+						if (currentScriptEngine)
+						{
+							if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_MAKETHISAVAILABLEINSCRIPT_FULL)) == -1))//Is the slot present?
+							{
+								//Invoke the slot
+								bRetVal = true;
+								if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_MAKETHISAVAILABLEINSCRIPT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QString, tmpElement.sObjectName),Q_ARG(QObject*, (QObject*)currentScriptEngine))))
+								{
+									qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_MAKETHISAVAILABLEINSCRIPT << "()" << ")!";		
+									return false;
+								}		
+							}
+						}
+
+						//bool bResult = false;
+						//if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogToOutputWindow(QString)")) == -1))//Is the signal present?
+						//{
+						//	//Connect the signal
+						//	bResult = connect(tmpElement.pObject, SIGNAL(LogToOutputWindow(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
+							//bResult = true;
+						//}
+
+						//if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogExpObjData(int,int,QString)")) == -1))//Is the signal present?
+						//{
+						//	//Connect the signal
+						//	bResult = connect(tmpElement.pObject, SIGNAL(LogExpObjData(int,int,QString)), this, SLOT(logExperimentObjectData(int,int,QString)));//Qt::QueuedConnection --> makes it asynchronyous
+						//}
+
+						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETMETAOBJECT_FULL)) == -1))//Is the slot present?
 						{
 							//Invoke the slot
 							bRetVal = true;
-							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_MAKETHISAVAILABLEINSCRIPT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QString, tmpElement.sObjectName),Q_ARG(QObject*, (QObject*)currentScriptEngine))))
+							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETMETAOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal))))
 							{
-								qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_MAKETHISAVAILABLEINSCRIPT << "()" << ")!";		
+								qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETMETAOBJECT << "()" << ")!";		
 								return false;
 							}		
 						}
-					}
 
-					//bool bResult = false;
-					//if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogToOutputWindow(QString)")) == -1))//Is the signal present?
-					//{
-					//	//Connect the signal
-					//	bResult = connect(tmpElement.pObject, SIGNAL(LogToOutputWindow(QString)), this, SIGNAL(WriteToLogOutput(QString)));//Qt::QueuedConnection --> makes it asynchronyous
-					//}
-
-					//if (!(metaObject->indexOfSignal(QMetaObject::normalizedSignature("LogExpObjData(int,int,QString)")) == -1))//Is the signal present?
-					//{
-					//	//Connect the signal
-					//	bResult = connect(tmpElement.pObject, SIGNAL(LogExpObjData(int,int,QString)), this, SLOT(logExperimentObjectData(int,int,QString)));//Qt::QueuedConnection --> makes it asynchronyous
-					//}
-
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETMETAOBJECT_FULL)) == -1))//Is the slot present?
-					{
-						//Invoke the slot
-						bRetVal = true;
-						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETMETAOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal))))
+						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTOBJECTID_FULL)) == -1))//Is the slot present?
 						{
-							qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETMETAOBJECT << "()" << ")!";		
-							return false;
-						}		
-					}
+							//Invoke the slot
+							bRetVal = true;
+							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
+							{
+								qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETEXPERIMENTOBJECTID << "()" << ")!";		
+								return false;
+							}		
+						}
 
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTOBJECTID_FULL)) == -1))//Is the slot present?
-					{
-						//Invoke the slot
-						bRetVal = true;
-						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTOBJECTID, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int, tmpElement.nObjectID))))
+						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTCONFIGURATION_FULL)) == -1))//Is the slot present?
 						{
-							qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETEXPERIMENTOBJECTID << "()" << ")!";		
-							return false;
-						}		
-					}
+							//Invoke the slot
+							bRetVal = true;
+							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTCONFIGURATION, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(ExperimentConfiguration*, &strcExperimentConfiguration))))
+							{
+								qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTCONFIGURATION << "()" << ")!";		
+								return false;
+							}		
+						}	
 
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTCONFIGURATION_FULL)) == -1))//Is the slot present?
-					{
-						//Invoke the slot
-						bRetVal = true;
-						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTCONFIGURATION, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(ExperimentConfiguration*, &strcExperimentConfiguration))))
+						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETBLOCKTRIALDOMNODELIST_FULL)) == -1))//Is the slot present?
 						{
-							qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTCONFIGURATION << "()" << ")!";		
-							return false;
-						}		
-					}	
+							//Invoke the slot
+							bRetVal = true;
+							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETBLOCKTRIALDOMNODELIST, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentBlockTrialsDomNodeList))))
+							{
+								qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
+								return false;
+							}		
+						}
 
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETBLOCKTRIALDOMNODELIST_FULL)) == -1))//Is the slot present?
-					{
-						//Invoke the slot
-						bRetVal = true;
-						if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETBLOCKTRIALDOMNODELIST, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentBlockTrialsDomNodeList))))
-						{
-							qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
-							return false;
-						}		
+						tmpElement.nCurrentState = Experiment_SubObject_Initialized;//This is still an inactive state!
+						//tmpElement.sStateHistory.nState.append(tmpElement.nCurrentState);
+						//tmpElement.sStateHistory.sDateTimeStamp.append(getCurrentDateTimeStamp());
+						lExperimentObjectList.append(tmpElement);					
 					}
-
-					tmpElement.nCurrentState = Experiment_SubObject_Initialized;//This is still an inactive state!
-					//tmpElement.sStateHistory.nState.append(tmpElement.nCurrentState);
-					//tmpElement.sStateHistory.sDateTimeStamp.append(getCurrentDateTimeStamp());
-					lExperimentObjectList.append(tmpElement);					
 				}
 			}
 		}

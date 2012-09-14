@@ -141,10 +141,17 @@ int DocumentManager::count(void)
 MainAppInfo::DocType DocumentManager::getDocType(const QString strExtension)
 {
 	QString tmpExt = strExtension.toLower();
-	if (tmpExt == "qs"){return MainAppInfo::DOCTYPE_QSCRIPT;}
+	if (tmpExt == "qs")
+	{
+		return MainAppInfo::DOCTYPE_QSCRIPT;
+	}
 	else if ((tmpExt == "gz") || (tmpExt == "svg") || (tmpExt == "svgz")) 
 	{
 		return MainAppInfo::DOCTYPE_SVG;
+	}
+	else if (tmpExt == "exml")
+	{
+		return MainAppInfo::DOCTYPE_EXML;
 	}
 	else//extension not found
 	{
@@ -205,7 +212,7 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
 
-	custQsci->setCustomLexer();
+	//custQsci->setCustomLexer();
 
 	custQsci->setPaper(QColor(255,255,255));
 	custQsci->setAutoIndent(true);
@@ -255,6 +262,39 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 					//apis->add("text");
 					apis->prepare();
 					Qjslexer->setAPIs(apis);
+				}
+				else 
+				{
+					delete apis;
+				}
+			}
+			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+			break;
+		}
+	case MainAppInfo::DOCTYPE_EXML:
+		{
+			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+
+			//QsciLexer* lexer = NULL;
+			QString fileName = "";
+			QDir dir(MainAppInfo::apiDirPath());
+
+			//QsciLexerXML()
+			QsciLexer *QxmlLexer = new QsciLexerXML(custQsci);
+			custQsci->setLexer(QxmlLexer);
+			QxmlLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
+			fileName = "exml.api";
+			if ( dir.entryList(QDir::Files).contains(fileName) ) 
+			{
+				QsciAPIs* apis = new QsciAPIs(QxmlLexer);
+				if ( apis->load(dir.absoluteFilePath(fileName)) ) 
+				{
+					//apis->add("text");
+					apis->prepare();
+					QxmlLexer->setAPIs(apis);
 				}
 				else 
 				{

@@ -18,15 +18,14 @@
 
 
 #include "ExperimentTimer.h"
-//#include <stdlib.h>
+#include "CurrentTime.h"
+#include <QDebug>
 
-ExperimentTimer::ExperimentTimer(QObject *parent)
-	: QObject(parent)
+ExperimentTimer::ExperimentTimer(QObject *parent) : QObject(parent)
 {
 #ifdef WIN32
-	QueryPerformanceFrequency(&frequency);
-	//long double PCFreq0 = long double(frequency.QuadPart)/1000.0;
-	//double PCFreq1 = double(frequency.QuadPart)/1000.0;
+	if (!QueryPerformanceFrequency(&frequency))// Save the performance counter frequency for later use.
+		qDebug() << __FUNCTION__ << "QueryPerformanceFrequency() failed with error " << GetLastError();
 	startCount.QuadPart = 0;
 	endCount.QuadPart = 0;
 #else
@@ -36,40 +35,6 @@ ExperimentTimer::ExperimentTimer(QObject *parent)
 	stopped = 0;
 	startTimeInMicroSec = 0;
 	endTimeInMicroSec = 0;
-
-	//LARGE_INTEGER ticksPerSecond;
-	//LARGE_INTEGER tick;   // A point in time
-	//LARGE_INTEGER time;   // For converting tick into real time
-
-	//// get the high resolution counter's accuracy
-	//QueryPerformanceFrequency(&ticksPerSecond);
-
-	//// what time is it?
-	//QueryPerformanceCounter(&tick);
-
-	//// convert the tick number into the number of seconds
-	//// since the system was started...
-	//time.QuadPart = tick.QuadPart/ticksPerSecond.QuadPart;
-
-	////get the number of hours
-	//int hours = time.QuadPart/3600;
-
-	////get the number of minutes
-	//time.QuadPart = time.QuadPart - (hours * 3600);
-	//int minutes = time.QuadPart/60;
-
-	////get the number of seconds
-	//int seconds = time.QuadPart - (minutes * 60);
-
-	//QString result = "The system was started ";
-	//result += QString::number(hours) + QString(" hours ");
-	//result += QString::number(minutes) + " minutes ";
-	//result += QString::number(seconds) + " and ";
-	//result += QString::number(tick.QuadPart % ticksPerSecond.QuadPart);
-	//result += "/" + QString::number(ticksPerSecond.QuadPart) + "=" + QString::number((tick.QuadPart % ticksPerSecond.QuadPart)/ticksPerSecond.QuadPart);
-	//result += " seconds ago.";
-
-	//result = result;
 }
 
 ExperimentTimer::~ExperimentTimer()
@@ -87,7 +52,8 @@ void ExperimentTimer::start()
 {
 	stopped = 0; // reset stop flag
 #ifdef WIN32
-	QueryPerformanceCounter(&startCount);
+	if (!QueryPerformanceCounter(&startCount))// Save the performance counter frequency for later use.
+		qDebug() << __FUNCTION__ << "QueryPerformanceCounter() failed with error " << GetLastError();
 #else
 	gettimeofday(&startCount, NULL);
 #endif
@@ -97,7 +63,8 @@ void ExperimentTimer::stop()
 {
 	stopped = 1; // set timer stopped flag
 #ifdef WIN32
-	QueryPerformanceCounter(&endCount);
+	if (!QueryPerformanceCounter(&endCount))// Save the performance counter frequency for later use.
+		qDebug() << __FUNCTION__ << "QueryPerformanceCounter() failed with error " << GetLastError();
 #else
 	gettimeofday(&endCount, NULL);
 #endif
@@ -107,26 +74,17 @@ double ExperimentTimer::getElapsedTimeInMicroSec()
 {
 #ifdef WIN32
 	if(!stopped)
-		QueryPerformanceCounter(&endCount);	
-	startTimeInMicroSec = startCount.QuadPart * (1000000.0 / frequency.QuadPart);
-	endTimeInMicroSec = endCount.QuadPart * (1000000.0 / frequency.QuadPart);
+		if (!QueryPerformanceCounter(&endCount))// Save the performance counter frequency for later use.
+			qDebug() << __FUNCTION__ << "QueryPerformanceCounter() failed with error " << GetLastError();
+	return (endCount.QuadPart - startCount.QuadPart)*(1000000.0/frequency.QuadPart);
 #else
 	if(!stopped)
 		gettimeofday(&endCount, NULL);
 
 	startTimeInMicroSec = (startCount.tv_sec * 1000000.0) + startCount.tv_usec;
 	endTimeInMicroSec = (endCount.tv_sec * 1000000.0) + endCount.tv_usec;
-#endif
-	//double dRetVal = endTimeInMicroSec - startTimeInMicroSec;
-	//qint64 a = dRetVal;
-	//__int64 b = dRetVal;
-	//long double c =	(startCount.QuadPart * (1000000.0 / frequency.QuadPart)) - (endTimeInMicroSec = endCount.QuadPart * (1000000.0 / frequency.QuadPart));
-
-	//QString str;
-	//str.sprintf("took %.020Lf ms", c);
-	//QString str1;
-	//str1.sprintf("start %I64d end %I64d took %.020Lf ms", startTimeInMicroSec, endTimeInMicroSec, c);
 	return endTimeInMicroSec - startTimeInMicroSec;
+#endif	
 }
 
 double ExperimentTimer::getElapsedTimeInMilliSec()
@@ -150,13 +108,16 @@ bool ExperimentTimer::SleepMSecAccurate(double mSecs)
 	// note: BE SURE YOU CALL timeEndPeriod(1) at program exit!!!
 	// note: that will require linking to winmm.lib
 	// note: never use static initializers (like this) with Winamp plug-ins!
-	//static LARGE_INTEGER m_prev_end_of_frame; 
-	//m_prev_end_of_frame.QuadPart = 0;
-	//int max_fps = 60;
 	LARGE_INTEGER freq;
 	LARGE_INTEGER start_tick;
-	QueryPerformanceFrequency(&freq);
-	QueryPerformanceCounter(&start_tick);	
+	if (!QueryPerformanceFrequency(&freq))// Save the performance counter frequency for later use.
+		qDebug() << __FUNCTION__ << "QueryPerformanceFrequency() failed with error " << GetLastError();
+	//else
+	//	qDebug() << __FUNCTION__ << "QueryPerformanceFrequency(freq) gives: " << freq.QuadPart;
+	if (!QueryPerformanceCounter(&start_tick))
+		qDebug() << __FUNCTION__ << "QueryPerformanceCounter() failed with error " << GetLastError();
+	//else
+	//	qDebug() << __FUNCTION__ << "QueryPerformanceCounter(start) gives: " << start_tick.QuadPart;
 	
 	if (mSecs > 0.5)
 	{
@@ -168,7 +129,10 @@ bool ExperimentTimer::SleepMSecAccurate(double mSecs)
 
 		do
 		{
-			QueryPerformanceCounter(&current_tick);
+			if (!QueryPerformanceCounter(&current_tick))
+				qDebug() << __FUNCTION__ << "QueryPerformanceCounter() failed with error " << GetLastError();
+			//else
+			//	qDebug() << __FUNCTION__ << "QueryPerformanceCounter(current) gives: " << current_tick.QuadPart;
 			ticks_passed = (int)((__int64)current_tick.QuadPart - (__int64)start_tick.QuadPart);
 			ticks_left = ticks_to_wait - ticks_passed;
 			if (ticks_passed >= ticks_to_wait)
@@ -194,5 +158,77 @@ bool ExperimentTimer::SleepMSecAccurate(double mSecs)
 	{
 		Sleep(0);
 	}
+	return true;
+}
+
+bool ExperimentTimer::SleepMSecAccurate2(double mSecs)
+{
+	//// note: BE SURE YOU CALL timeBeginPeriod(1) at program startup!!!
+	//// note: BE SURE YOU CALL timeEndPeriod(1) at program exit!!!
+	//// note: that will require linking to winmm.lib
+	//// note: never use static initializers (like this) with Winamp plug-ins!
+	//LARGE_INTEGER freq;
+	//LARGE_INTEGER start_tick;
+	//if (!QueryPerformanceFrequency(&freq))// Save the performance counter frequency for later use.
+	//	qDebug() << __FUNCTION__ << "QueryPerformanceFrequency() failed with error " << GetLastError();
+	////else
+	////	qDebug() << __FUNCTION__ << "QueryPerformanceFrequency(freq) gives: " << freq.QuadPart;
+	//if (!QueryPerformanceCounter(&start_tick))
+	//	qDebug() << __FUNCTION__ << "QueryPerformanceCounter() failed with error " << GetLastError();
+	////else
+	////	qDebug() << __FUNCTION__ << "QueryPerformanceCounter(start) gives: " << start_tick.QuadPart;
+
+	double staticStartTimeInMicroSec = WTF::currentTimeMS();
+	double staticRemainingTimeToWait = mSecs;
+
+	//int A_state = 0;
+	//int B_state = 0;
+	//int C_state = 0;
+	//int D_state = 0;
+	//int E_state = 0;
+
+	if (mSecs > 0.5)
+	{
+		//int ticks_passed = 0;
+		//int ticks_left = 0;
+		//LARGE_INTEGER current_tick;
+		//int ticks_to_wait = (int)(freq.QuadPart / (1000.0 / mSecs));
+		bool doneWaiting = false;
+		do
+		{
+			staticRemainingTimeToWait = mSecs - (WTF::currentTimeMS() - staticStartTimeInMicroSec);
+			//if(staticRemainingTimeToWait >= 2.0)
+			//{
+			//	Sleep(0);//staticRemainingTimeToWait/2);// - 1.0);
+			//	A_state++;
+			//}
+			if(staticRemainingTimeToWait > 0.05)
+			{                      
+				Sleep(0);  // causes thread to give up its timeslice
+			//	B_state++;
+			}
+			else
+			{
+				doneWaiting = true;
+			}
+		}
+		while (!doneWaiting); 
+	}
+	//else if(mSecs >= 1.0)
+	//{
+	//	Sleep(0);
+	//	C_state++;
+	//}
+	//else if(mSecs >= 0.5)
+	//{
+	//	Sleep(0);
+	//	//D_state++;
+	//}
+	//else
+	//{
+	//	E_state++;
+	//}
+	//staticStartTimeInMicroSec = mSecs - (WTF::currentTimeMS() - staticStartTimeInMicroSec);//jsdfhjsdfhjsdfj
+	//qDebug() << A_state << "," << B_state << "," << C_state << "," << D_state << "," << E_state << ": " << staticStartTimeInMicroSec;
 	return true;
 }
