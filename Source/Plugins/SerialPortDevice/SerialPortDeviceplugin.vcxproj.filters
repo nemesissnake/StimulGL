@@ -219,9 +219,6 @@
     <ClInclude Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialport_global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CustomScriptObjects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="renderarea.h">

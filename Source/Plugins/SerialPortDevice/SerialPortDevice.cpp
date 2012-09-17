@@ -61,11 +61,11 @@ SerialPortDevice::SerialPortDevice(QObject *parent) : QObject(parent)
 	//Windows settings
 	serialPort = NULL;
 	serialPort = new QextSerialPort();
-	serialPort->setBaudRate(SerialPortEnums::BAUD19200);
-	serialPort->setDataBits(SerialPortEnums::DATA_8);
-	serialPort->setFlowControl(SerialPortEnums::FLOW_OFF);
-	serialPort->setParity(SerialPortEnums::PAR_NONE);
-	serialPort->setStopBits(SerialPortEnums::STOP_1);
+	serialPort->setBaudRate(BaudRateType::BAUD19200);
+	serialPort->setDataBits(DataBitsType::DATA_8);
+	serialPort->setFlowControl(FlowType::FLOW_OFF);
+	serialPort->setParity(ParityType::PAR_NONE);
+	serialPort->setStopBits(StopBitsType::STOP_1);
 	serialPort->setTimeout(10);
 	serialPort->setPortName("COM1");
 	serialPort->setQueryMode(QextSerialPort::EventDriven);
@@ -117,12 +117,6 @@ void SerialPortDevice::ProcessSerialData()
 	return;
 }
 
-//bool SerialPortDevice::ExtendScriptContext(QScriptEngine &engine)
-//{
-//	//RegisterMetaTypes(engine);
-//	return true;
-//}
-
 QString SerialPortDevice::portName() const
 {
 	return serialPort->portName();
@@ -133,7 +127,7 @@ void SerialPortDevice::setPortName(const QString & name)
 	return serialPort->setPortName(name);
 }
 
-SerialPortEnums::BaudRateType SerialPortDevice::baudRate() const 
+BaudRateType SerialPortDevice::baudRate() const 
 {
 	return serialPort->baudRate();
 } 
@@ -143,7 +137,7 @@ QString SerialPortDevice::baudRateToString() const
 	return baudRateHash.key((int)serialPort->baudRate(),UNKNOWNENUMSTRING);
 } 
 
-void SerialPortDevice::setBaudRate(SerialPortEnums::BaudRateType baudRate)
+void SerialPortDevice::setBaudRate(BaudRateType baudRate)
 {
 	return serialPort->setBaudRate(baudRate);
 } 
@@ -153,13 +147,13 @@ bool SerialPortDevice::setBaudRate(QString baudRate)
 	nTmpEnumIndex =  baudRateHash.value(baudRate,-1);
 	if (nTmpEnumIndex>=0)
 	{
-		serialPort->setBaudRate((SerialPortEnums::BaudRateType)nTmpEnumIndex);
+		serialPort->setBaudRate((BaudRateType)nTmpEnumIndex);
 		return true;
 	}
 	return false;
 }
 
-SerialPortEnums::DataBitsType SerialPortDevice::dataBits () const
+DataBitsType SerialPortDevice::dataBits () const
 {
 	return serialPort->dataBits();
 }
@@ -169,7 +163,7 @@ QString SerialPortDevice::dataBitsToString() const
 	return dataBitsHash.key((int)serialPort->dataBits(),UNKNOWNENUMSTRING);
 }
 
-void SerialPortDevice::setDataBits(SerialPortEnums::DataBitsType dataBits)
+void SerialPortDevice::setDataBits(DataBitsType dataBits)
 {
 	return serialPort->setDataBits(dataBits);
 }
@@ -179,13 +173,13 @@ bool SerialPortDevice::setDataBits(QString dataBits)
 	nTmpEnumIndex =  dataBitsHash.value(dataBits,-1);
 	if (nTmpEnumIndex>=0)
 	{
-		serialPort->setDataBits((SerialPortEnums::DataBitsType)nTmpEnumIndex);
+		serialPort->setDataBits((DataBitsType)nTmpEnumIndex);
 		return true;
 	}
 	return false;
 }
 
-SerialPortEnums::ParityType SerialPortDevice::parity() const
+ParityType SerialPortDevice::parity() const
 {
 	return serialPort->parity();
 }
@@ -195,7 +189,7 @@ QString SerialPortDevice::parityToString() const
 	return parityHash.key((int)serialPort->parity(),UNKNOWNENUMSTRING);
 }
 
-void SerialPortDevice::setParity(SerialPortEnums::ParityType parity)
+void SerialPortDevice::setParity(ParityType parity)
 {
 	return serialPort->setParity(parity);
 }
@@ -205,13 +199,13 @@ bool SerialPortDevice::setParity(QString parity)
 	nTmpEnumIndex =  parityHash.value(parity,-1);
 	if (nTmpEnumIndex>=0)
 	{
-		serialPort->setParity((SerialPortEnums::ParityType)nTmpEnumIndex);
+		serialPort->setParity((ParityType)nTmpEnumIndex);
 		return true;
 	}
 	return false;
 }
 
-SerialPortEnums::FlowType SerialPortDevice::flowControl() const
+FlowType SerialPortDevice::flowControl() const
 {
 	return serialPort->flowControl();
 }
@@ -221,7 +215,7 @@ QString SerialPortDevice::flowControlToString() const
 	return flowControlHash.key((int)serialPort->flowControl(),UNKNOWNENUMSTRING);
 }
 
-void SerialPortDevice::setFlowControl(SerialPortEnums::FlowType flow)
+void SerialPortDevice::setFlowControl(FlowType flow)
 {
 	return serialPort->setFlowControl(flow);
 }
@@ -231,13 +225,13 @@ bool SerialPortDevice::setFlowControl(QString flow)
 	nTmpEnumIndex =  flowControlHash.value(flow,-1);
 	if (nTmpEnumIndex>=0)
 	{
-		serialPort->setFlowControl((SerialPortEnums::FlowType)nTmpEnumIndex);
+		serialPort->setFlowControl((FlowType)nTmpEnumIndex);
 		return true;
 	}
 	return false;
 }
 
-SerialPortEnums::StopBitsType SerialPortDevice::stopBits() const
+StopBitsType SerialPortDevice::stopBits() const
 {
 	return serialPort->stopBits();
 }
@@ -247,7 +241,7 @@ QString SerialPortDevice::stopBitsToString() const
 	return stopBitsHash.key((int)serialPort->stopBits(),UNKNOWNENUMSTRING);
 }
 
-void SerialPortDevice::setStopBits(SerialPortEnums::StopBitsType stopBits)
+void SerialPortDevice::setStopBits(StopBitsType stopBits)
 {
 	return serialPort->setStopBits(stopBits);
 }
@@ -257,7 +251,7 @@ bool SerialPortDevice::setStopBits(QString stopBits)
 	nTmpEnumIndex =  stopBitsHash.value(stopBits,-1);
 	if (nTmpEnumIndex>=0)
 	{
-		serialPort->setStopBits((SerialPortEnums::StopBitsType)nTmpEnumIndex);
+		serialPort->setStopBits((StopBitsType)nTmpEnumIndex);
 		return true;
 	}
 	return false;
@@ -265,12 +259,12 @@ bool SerialPortDevice::setStopBits(QString stopBits)
 
 void SerialPortDevice::setTimeout(long millisec)
 {
-	return serialPort->setTimeout(millisec);
+	serialPort->setTimeout(millisec);
 }
 
 void SerialPortDevice::setTimeout(qlonglong millisec)
 {
-	return serialPort->setTimeout(millisec);
+	serialPort->setTimeout(millisec);
 }
 
 QextSerialPort::QueryMode SerialPortDevice::queryMode() const
@@ -360,5 +354,52 @@ void SerialPortDevice::close()
 	return serialPort->close();
 }
 
+bool SerialPortDevice::CreateHashTableFromEnum(const QString &sTypeName, QHash<QString, int> &hTable)
+{
+	if((sTypeName == BAUDRATE_ENUM_SHORT_TYPE_NAME) ||
+		(sTypeName == DATABITS_ENUM_SHORT_TYPE_NAME) ||
+		(sTypeName == PARITY_ENUM_SHORT_TYPE_NAME) ||
+		(sTypeName == STOPBITS_ENUM_SHORT_TYPE_NAME) ||
+		(sTypeName == FLOW_ENUM_SHORT_TYPE_NAME) ||
+		(sTypeName == QUERYMODE_ENUM_SHORT_TYPE_NAME)
+		)
+	{
+		const QMetaObject metaObject = this->staticMetaObject;//SerialPortEnums::staticMetaObject;//this->staticMetaObject;// 
+		//int test = metaObject.enumeratorCount();
+		//QMetaEnum testmetaEnum = metaObject.enumerator(test-1);
+		//QString teststr = testmetaEnum.name();
 
-
+		int enumeratorIndex = metaObject.indexOfEnumerator(sTypeName.toLatin1());
+		if (enumeratorIndex >= 0)
+		{
+			QMetaEnum metaEnum = metaObject.enumerator(enumeratorIndex);
+			int nKeyCount = metaEnum.keyCount();
+			for (int i=0;i<nKeyCount;i++)
+			{
+				hTable.insert(metaEnum.key(i),metaEnum.value(i));
+			}
+			if (hTable.count() > 0)
+				return true;
+			return false;
+		}
+		else
+		{
+			qDebug() << __FUNCTION__ << "::Unknown Enumeration Type (" << sTypeName << ")!";	
+			return false;
+		}
+		return true;
+	}
+	else if(sTypeName == OPENMODE_ENUM_SHORT_TYPE_NAME)
+	{
+		hTable.insert("NotOpen", (int)QIODevice::NotOpen);
+		hTable.insert("ReadOnly", (int)QIODevice::ReadOnly);
+		hTable.insert("WriteOnly", (int)QIODevice::WriteOnly);
+		hTable.insert("ReadWrite", (int)QIODevice::ReadWrite);
+		hTable.insert("Append", (int)QIODevice::Append);
+		hTable.insert("Truncate", (int)QIODevice::Truncate);
+		hTable.insert("Text", (int)QIODevice::Text);
+		hTable.insert("Unbuffered", (int)QIODevice::Unbuffered);
+		return true;
+	}
+	return false;
+}

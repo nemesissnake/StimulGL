@@ -32,28 +32,28 @@ SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(pare
 	//make sure user can input their own port name!
 	ui.portBox->setEditable(true);
 
-	ui.baudRateBox->addItem("1200", SerialPortEnums::BAUD1200);
-	ui.baudRateBox->addItem("2400", SerialPortEnums::BAUD2400);
-	ui.baudRateBox->addItem("4800", SerialPortEnums::BAUD4800);
-	ui.baudRateBox->addItem("9600", SerialPortEnums::BAUD9600);
-	ui.baudRateBox->addItem("19200", SerialPortEnums::BAUD19200);
-	ui.baudRateBox->addItem("38400", SerialPortEnums::BAUD38400);
-	ui.baudRateBox->addItem("57600", SerialPortEnums::BAUD57600);
-	ui.baudRateBox->addItem("115200", SerialPortEnums::BAUD115200);
+	ui.baudRateBox->addItem("1200", BAUD1200);	
+	ui.baudRateBox->addItem("2400", BAUD2400);
+	ui.baudRateBox->addItem("4800", BAUD4800);
+	ui.baudRateBox->addItem("9600", BAUD9600);
+	ui.baudRateBox->addItem("19200", BAUD19200);
+	ui.baudRateBox->addItem("38400", BAUD38400);
+	ui.baudRateBox->addItem("57600", BAUD57600);
+	ui.baudRateBox->addItem("115200", BAUD115200);
 	ui.baudRateBox->setCurrentIndex(3);
 
-	ui.parityBox->addItem("NONE", SerialPortEnums::PAR_NONE);
-	ui.parityBox->addItem("ODD", SerialPortEnums::PAR_ODD);
-	ui.parityBox->addItem("EVEN", SerialPortEnums::PAR_EVEN);
+	ui.parityBox->addItem("NONE", PAR_NONE);
+	ui.parityBox->addItem("ODD", PAR_ODD);
+	ui.parityBox->addItem("EVEN", PAR_EVEN);
 
-	ui.dataBitsBox->addItem("5", SerialPortEnums::DATA_5);
-	ui.dataBitsBox->addItem("6", SerialPortEnums::DATA_6);
-	ui.dataBitsBox->addItem("7", SerialPortEnums::DATA_7);
-	ui.dataBitsBox->addItem("8", SerialPortEnums::DATA_8);
+	ui.dataBitsBox->addItem("5", DATA_5);
+	ui.dataBitsBox->addItem("6", DATA_6);
+	ui.dataBitsBox->addItem("7", DATA_7);
+	ui.dataBitsBox->addItem("8", DATA_8);
 	ui.dataBitsBox->setCurrentIndex(3);
 
-	ui.stopBitsBox->addItem("1", SerialPortEnums::STOP_1);
-	ui.stopBitsBox->addItem("2", SerialPortEnums::STOP_2);
+	ui.stopBitsBox->addItem("1", STOP_1);
+	ui.stopBitsBox->addItem("2", STOP_2);
 
 	ui.queryModeBox->addItem("Polling", QextSerialPort::Polling);
 	ui.queryModeBox->addItem("EventDriven", QextSerialPort::EventDriven);
@@ -63,11 +63,11 @@ SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(pare
 	serialTimer = new QTimer(this);
 	serialTimer->setInterval(40);
 
-	serialSettings.BaudRate = SerialPortEnums::BAUD9600;
-	serialSettings.DataBits = SerialPortEnums::DATA_8;
-	serialSettings.FlowControl = SerialPortEnums::FLOW_OFF;
-	serialSettings.Parity = SerialPortEnums::PAR_NONE;
-	serialSettings.StopBits = SerialPortEnums::STOP_1;
+	serialSettings.BaudRate = BAUD9600;
+	serialSettings.DataBits = DATA_8;
+	serialSettings.FlowControl = FLOW_OFF;
+	serialSettings.Parity = PAR_NONE;
+	serialSettings.StopBits = STOP_1;
 	serialSettings.Timeout_Millisec = 10;
 
 	serialPort = new QextSerialPort(ui.portBox->currentText(), serialSettings, QextSerialPort::Polling);
@@ -177,22 +177,22 @@ void SerialPortDevice_Dialog::onPortNameChanged(const QString &sName)//name
 
 void SerialPortDevice_Dialog::onBaudRateChanged(int idx)
 {
-	serialPort->setBaudRate((SerialPortEnums::BaudRateType)ui.baudRateBox->itemData(idx).toInt());
+	serialPort->setBaudRate((BaudRateType)ui.baudRateBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onParityChanged(int idx)
 {
-	serialPort->setParity((SerialPortEnums::ParityType)ui.parityBox->itemData(idx).toInt());
+	serialPort->setParity((ParityType)ui.parityBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onDataBitsChanged(int idx)
 {
-	serialPort->setDataBits((SerialPortEnums::DataBitsType)ui.dataBitsBox->itemData(idx).toInt());
+	serialPort->setDataBits((DataBitsType)ui.dataBitsBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onStopBitsChanged(int idx)
 {
-	serialPort->setStopBits((SerialPortEnums::StopBitsType)ui.stopBitsBox->itemData(idx).toInt());
+	serialPort->setStopBits((StopBitsType)ui.stopBitsBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onQueryModeChanged(int idx)
