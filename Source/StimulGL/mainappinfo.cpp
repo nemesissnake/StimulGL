@@ -132,6 +132,7 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg)
 {
 	if(MainAppInfo::mainLogFile == NULL)
 	{
+		//QString aa = MainAppInfo::appLogFilePath();
 		MainAppInfo::mainLogFile = new QFile(MainAppInfo::appLogFilePath());
 	}
 	if(!MainAppInfo::mainLogFile->isOpen())

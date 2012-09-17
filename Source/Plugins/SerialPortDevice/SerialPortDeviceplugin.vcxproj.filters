@@ -55,9 +55,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="renderarea.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -122,24 +119,6 @@
       <Filter>Form Files\Generated Files\Template_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_SerialPortDevice.cpp">
-      <Filter>Form Files\Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_renderarea.cpp">
-      <Filter>Form Files\Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_renderarea.cpp">
-      <Filter>Form Files\Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_renderarea.cpp">
-      <Filter>Form Files\Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_renderarea.cpp">
-      <Filter>Form Files\Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_renderarea.cpp">
-      <Filter>Form Files\Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_renderarea.cpp">
       <Filter>Form Files\Generated Files\Template_x64</Filter>
     </ClCompile>
     <ClCompile Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialenumerator.cpp">
@@ -221,9 +200,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="renderarea.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="SerialPortDevice.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
