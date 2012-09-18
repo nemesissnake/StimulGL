@@ -72,7 +72,7 @@ public slots:
 	void stopTimer();
 	double currentTime() {return WTF::currentTime();};
 	bool setTimerType(const QString &sNewTimerType);
-	QString timerTypeToString() const;
+	QString getTimerType() const;
 
 private:
 	void resetIntervalTestResults();

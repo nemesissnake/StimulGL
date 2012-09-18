@@ -87,6 +87,7 @@ public slots:
 	void findPrev();
 
 private slots:
+	bool restartScriptEngine();
 	void abortScript();
 	void setupContextMenus();
 	void DebugcontextMenuEvent(const QPoint &pos);
@@ -153,6 +154,7 @@ private:
 	QAction *runScriptAction;
 	//QAction *debugScriptAction;
 	QAction *abortScriptAction;
+	QAction *restartScriptEngineAction;
 	QAction *newAction;
 	QAction *newScriptAction;
 	QAction *newSVGAction;
@@ -267,6 +269,8 @@ private:
 	void newDocument(const MainAppInfo::DocType &docType, int &DocIndex);
 	//void setupSyntaxHighlighting(MdiChild *childWindow,MDIDocumentType tempFileType);
 	void parseRemainingGlobalSettings();
+	bool configureDebugger();
+	bool configurePluginScriptEngine(const int nIndex);
 	void writeMainWindowSettings();
 	bool checkPluginCompatibility(QObject *plugin);
     bool popPluginIntoMenu(QObject *plugin);

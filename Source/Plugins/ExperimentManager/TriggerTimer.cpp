@@ -103,7 +103,7 @@ bool TriggerTimer::setTimerType(TriggerTimerType newTimerType)
 	return false;	
 }
 
-QString TriggerTimer::timerTypeToString() const
+QString TriggerTimer::getTimerType() const
 {
 	return timerTypeHash.key((int)currentTimerType,UNKNOWNENUMSTRING);
 }

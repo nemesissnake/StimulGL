@@ -36,6 +36,7 @@
 MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 {
 	DocManager = NULL;
+	AppScriptEngine = NULL;
 	PluginsFound = false;
 	DevicePluginsFound = false;
 	ExtensionPluginsFound = false;
@@ -269,6 +270,11 @@ QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine
 void MainWindow::setupScriptEngine()
 {
 	//qDebug() << "setupScriptEngine() - start";
+	if(AppScriptEngine)
+	{
+		delete AppScriptEngine;
+		AppScriptEngine = NULL;
+	}
 	AppScriptEngine = new QTScriptEngine(this);
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllScriptBindings) == false)
 	{
@@ -310,8 +316,7 @@ void MainWindow::setupScriptEngine()
 	//Q_DECLARE_METATYPE(DocFindFlags)
 	//Next, the DocFindFlags conversion functions. We represent the DocFindFlags value as a script object and just copy the properties, see below after this function body!
 
-	//Now we can register DocFindFlags with the engine:
-	
+	//Now we can register DocFindFlags with the engine:	
 	qScriptRegisterMetaType(AppScriptEngine->eng, sciFindDialog::DocFindFlagstoScriptValue, sciFindDialog::DocFindFlagsfromScriptValue);
 	
 	//Working with DocFindFlags values is now easy:
@@ -332,6 +337,19 @@ void MainWindow::setupScriptEngine()
 	//engine.globalObject().setProperty("MyStruct", ctor);
 	QScriptValue ctor = AppScriptEngine->eng->newFunction(sciFindDialog::DocFindFlagsConstructor);
 	AppScriptEngine->eng->globalObject().setProperty("DocFindFlags", ctor);
+}
+
+bool MainWindow::restartScriptEngine()
+{
+	QMdiSubWindow *tmpSubWindow = activeMdiChild();
+	setupScriptEngine();
+	for (int i=0;i<Plugins->Count()-1;i++)
+	{
+		configurePluginScriptEngine(i);
+	}
+	configureDebugger();
+	updateMenuControls(tmpSubWindow);	
+	return true;
 }
 
 void MainWindow::scriptLoaded(qint64 id)
@@ -745,6 +763,12 @@ void MainWindow::createDefaultMenus()
 	abortScriptAction->setStatusTip(tr("Stop the current script from running"));
 	connect(abortScriptAction, SIGNAL(triggered()), this, SLOT(abortScript()));
 
+	restartScriptEngineAction = scriptMenu->addAction(tr("Restart Script Engine"));
+	restartScriptEngineAction->setEnabled(false);//false);
+	restartScriptEngineAction->setShortcut(QKeySequence(tr("F9")));
+	restartScriptEngineAction->setStatusTip(tr("Force a restart of the script engine"));
+	connect(restartScriptEngineAction, SIGNAL(triggered()), this, SLOT(restartScriptEngine()));
+
 
 	menuBar()->addMenu(scriptMenu);//the script menu..........................................................
 
@@ -1055,10 +1079,16 @@ QAction* MainWindow::integratePlugin(QObject *plugin, PluginCollection *collecti
 		action1->setData(collection->GetLoaderName(tmpIndex));
 		connect(action1, SIGNAL(triggered()), this, SLOT(showPluginGUI()));
 		action1->setStatusTip(tr("Show the Plugins UI(") + collection->GetLoaderName(tmpIndex) +")");
-		collection->GetInterface(tmpIndex)->ConfigureScriptEngine(* AppScriptEngine->eng);
+		//collection->GetInterface(tmpIndex)->ConfigureScriptEngine(* AppScriptEngine->eng);
+		configurePluginScriptEngine(tmpIndex);
 		return action1;
 	}
 	return 0;
+}
+
+bool MainWindow::configurePluginScriptEngine(const int nIndex)
+{
+	return Plugins->GetInterface(nIndex)->ConfigureScriptEngine(* AppScriptEngine->eng);
 }
 
 void MainWindow::setAppDirectories()
@@ -1087,34 +1117,39 @@ void MainWindow::setScriptRunningStatus(MainAppInfo::ActiveScriptMode state)
 			runScriptAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
 			abortScriptAction->setEnabled(true);
+			restartScriptEngineAction->setEnabled(true);
 			break; 
 		}	
 	case MainAppInfo::Executing:
 		{ 
 			runScriptAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
-			abortScriptAction->setEnabled(true);			
+			abortScriptAction->setEnabled(true);
+			restartScriptEngineAction->setEnabled(true);
 			break; 
 		}	
 	case MainAppInfo::NoScript:
 		{ 
 			runScriptAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
-			abortScriptAction->setEnabled(false);			
+			abortScriptAction->setEnabled(false);
+			restartScriptEngineAction->setEnabled(false);
 			break; 
 		}	
 	case MainAppInfo::Pending:
 		{ 
 			runScriptAction->setEnabled(true);
 //			debugScriptAction->setEnabled(true);
-			abortScriptAction->setEnabled(false);			
+			abortScriptAction->setEnabled(false);
+			restartScriptEngineAction->setEnabled(false);
 			break; 
 		}	
 	case MainAppInfo::Stopping:
 		{ 
 			runScriptAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
-			abortScriptAction->setEnabled(true);			
+			abortScriptAction->setEnabled(true);
+			restartScriptEngineAction->setEnabled(true);
 			break; 
 		}	
 	}
@@ -1278,6 +1313,8 @@ void MainWindow::abortScript()
 	//for (int i=0;i<1;i++)
 	//{
 	//
+	//restartScriptEngine();
+	//return;
 	AppScriptEngine->eng->collectGarbage();
 	//qApp->processEvents();
 	//}
@@ -1791,6 +1828,7 @@ void MainWindow::setupToolBars()
 	toolsToolBar->addAction(runScriptAction);
 	//toolsToolBar->addAction(debugScriptAction);
 	toolsToolBar->addAction(abortScriptAction);
+	toolsToolBar->addAction(restartScriptEngineAction);
 }
 
 void MainWindow::parseRemainingGlobalSettings()
@@ -1800,7 +1838,11 @@ void MainWindow::parseRemainingGlobalSettings()
 	move(pos);
 	resize(size);
 	setRenderer();
+	configureDebugger();
+}
 
+bool MainWindow::configureDebugger()
+{
 	settings->beginGroup("Debugging");
 	if (settings->contains("OpenExtDebug"))	
 	{
@@ -1820,8 +1862,8 @@ void MainWindow::parseRemainingGlobalSettings()
 	{
 		AppScriptEngine->ConfigureDebugger(false);
 	}
-
 	settings->endGroup();
+	return true;
 }
 
 void MainWindow::writeMainWindowSettings()
