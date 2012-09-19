@@ -95,9 +95,6 @@ private:
 	TriggerTimerType currentTimerType;
 	bool bTimerIsRunning;
 
-	double dTest1;//sdfgsdfgdfg
-	double dTest2;//sdfgsdfgdfasefse
-
 private slots:
 	void runThreadedTimerFunction();
 

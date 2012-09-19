@@ -30,18 +30,20 @@ class SystemKeyboardReadWrite : public QObject
 	Q_OBJECT
 
 signals:	
-	void keyPressedSignal(quint32 key);																			// Broadcasts a key has been pressed	
-	void keyReleasedSignal(quint32 key);																			// Broadcasts a key has been released
+	void keyPressedSignal(quint32 key);																		// Broadcasts a key has been pressed	
+	void keyReleasedSignal(quint32 key);																	// Broadcasts a key has been released
 
 public:
 	SystemKeyboardReadWrite();																				// Class constructor
 	static SystemKeyboardReadWrite * instance();															// Returns singleton instance
 	bool connected();																						// Returns whether the keyboard hook is connected
-	bool setConnected(bool state);																			// Connects / Disconnects the keyboard hook
+	bool setConnected(bool state, bool forwardKeyEvents = true);											// Connects / Disconnects the keyboard hook
 
 private:	
 	HHOOK keyboardHook;																						// Keyboard hook
-	static LRESULT CALLBACK keyboardProcedure(int nCode, WPARAM wParam, LPARAM lParam);						// Identifies hook activity
+	static LRESULT CALLBACK keyboardProcedure_Forward(int nCode, WPARAM wParam, LPARAM lParam);				// Identifies hook activity
+	static LRESULT CALLBACK keyboardProcedure_NoForward(int nCode, WPARAM wParam, LPARAM lParam);			// Identifies hook activity
+	static void keyboardProcedure_Main(int nCode, WPARAM wParam, LPARAM lParam, bool bForwardKeys);			// Identifies hook activity
 };
 
 #endif // SYSTEMKEYBOARDREADWRITE_H

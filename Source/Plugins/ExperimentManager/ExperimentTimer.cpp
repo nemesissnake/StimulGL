@@ -163,49 +163,18 @@ bool ExperimentTimer::SleepMSecAccurate(double mSecs)
 
 bool ExperimentTimer::SleepMSecAccurate2(double mSecs)
 {
-	//// note: BE SURE YOU CALL timeBeginPeriod(1) at program startup!!!
-	//// note: BE SURE YOU CALL timeEndPeriod(1) at program exit!!!
-	//// note: that will require linking to winmm.lib
-	//// note: never use static initializers (like this) with Winamp plug-ins!
-	//LARGE_INTEGER freq;
-	//LARGE_INTEGER start_tick;
-	//if (!QueryPerformanceFrequency(&freq))// Save the performance counter frequency for later use.
-	//	qDebug() << __FUNCTION__ << "QueryPerformanceFrequency() failed with error " << GetLastError();
-	////else
-	////	qDebug() << __FUNCTION__ << "QueryPerformanceFrequency(freq) gives: " << freq.QuadPart;
-	//if (!QueryPerformanceCounter(&start_tick))
-	//	qDebug() << __FUNCTION__ << "QueryPerformanceCounter() failed with error " << GetLastError();
-	////else
-	////	qDebug() << __FUNCTION__ << "QueryPerformanceCounter(start) gives: " << start_tick.QuadPart;
-
 	double staticStartTimeInMicroSec = WTF::currentTimeMS();
 	double staticRemainingTimeToWait = mSecs;
 
-	//int A_state = 0;
-	//int B_state = 0;
-	//int C_state = 0;
-	//int D_state = 0;
-	//int E_state = 0;
-
 	if (mSecs > 0.5)
 	{
-		//int ticks_passed = 0;
-		//int ticks_left = 0;
-		//LARGE_INTEGER current_tick;
-		//int ticks_to_wait = (int)(freq.QuadPart / (1000.0 / mSecs));
 		bool doneWaiting = false;
 		do
 		{
 			staticRemainingTimeToWait = mSecs - (WTF::currentTimeMS() - staticStartTimeInMicroSec);
-			//if(staticRemainingTimeToWait >= 2.0)
-			//{
-			//	Sleep(0);//staticRemainingTimeToWait/2);// - 1.0);
-			//	A_state++;
-			//}
 			if(staticRemainingTimeToWait > 0.05)
 			{                      
 				Sleep(0);  // causes thread to give up its timeslice
-			//	B_state++;
 			}
 			else
 			{
@@ -214,21 +183,5 @@ bool ExperimentTimer::SleepMSecAccurate2(double mSecs)
 		}
 		while (!doneWaiting); 
 	}
-	//else if(mSecs >= 1.0)
-	//{
-	//	Sleep(0);
-	//	C_state++;
-	//}
-	//else if(mSecs >= 0.5)
-	//{
-	//	Sleep(0);
-	//	//D_state++;
-	//}
-	//else
-	//{
-	//	E_state++;
-	//}
-	//staticStartTimeInMicroSec = mSecs - (WTF::currentTimeMS() - staticStartTimeInMicroSec);//jsdfhjsdfhjsdfj
-	//qDebug() << A_state << "," << B_state << "," << C_state << "," << D_state << "," << E_state << ": " << staticStartTimeInMicroSec;
 	return true;
 }

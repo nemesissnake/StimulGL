@@ -74,7 +74,7 @@ public:
 	~KeyBoardCapture();
 
 public slots:
-	bool StartCaptureThread(const short method);
+	bool StartCaptureThread(const short method, bool keyForwarding = true);
 	void StopCaptureThread();
 	QString getVirtualKeyString(const quint32 &keyCode);
 	//bool installCustomScriptHandlerFunction(QString FuncName);

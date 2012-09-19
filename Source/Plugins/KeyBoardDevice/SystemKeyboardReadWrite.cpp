@@ -32,9 +32,10 @@
 SystemKeyboardReadWrite::SystemKeyboardReadWrite() : QObject()
 {
 	keyboardHook = NULL;// Assign to null
+	//bForward_keyEvents = true;
 }
 
-LRESULT CALLBACK SystemKeyboardReadWrite::keyboardProcedure(int nCode, WPARAM wParam, LPARAM lParam)
+void SystemKeyboardReadWrite::keyboardProcedure_Main(int nCode, WPARAM wParam, LPARAM lParam, bool bForwardKeys)
 {	
 	if (nCode == HC_ACTION)// Check for a key down press
 	{
@@ -49,10 +50,38 @@ LRESULT CALLBACK SystemKeyboardReadWrite::keyboardProcedure(int nCode, WPARAM wP
 			KBDLLHOOKSTRUCT *pKeyboard = (KBDLLHOOKSTRUCT*)lParam;
 			emit SystemKeyboardReadWrite::instance()->keyReleasedSignal((quint32) pKeyboard->vkCode);
 		}		
-		instance()->setConnected( false );
-		instance()->setConnected( true );//reconnect
+		instance()->setConnected( false, bForwardKeys );
+		instance()->setConnected( true, bForwardKeys );//reconnect
 	}
+	//return !SystemKeyboardReadWrite::getForwardKeyEvents();
+	//CallNextHookEx( NULL, nCode, wParam, lParam );
+	//return false; //this value causes the system to call the next hook procedure in the chain anyway, and it eventually gets processed by your default window procedure.
+	//If you CallNextHook() the next hook in the chain is called. If you return non-zero the message is not received by the target window (thus preventing the window from 
+	//receiving the keyboard message). If you return zero the message is received by the target window.
+	//Your desired behavior is to return non-zero if the key pressed is 'a', and zero otherwise.
+}
+
+LRESULT CALLBACK SystemKeyboardReadWrite::keyboardProcedure_Forward(int nCode, WPARAM wParam, LPARAM lParam)
+{	
+	keyboardProcedure_Main(nCode, wParam, lParam, true);
 	return false;
+	//CallNextHookEx( NULL, nCode, wParam, lParam );
+	//return false; //this value causes the system to call the next hook procedure in the chain anyway, and it eventually gets processed by your default window procedure.
+	//If you CallNextHook() the next hook in the chain is called. If you return non-zero the message is not received by the target window (thus preventing the window from 
+	//receiving the keyboard message). If you return zero the message is received by the target window.
+	//Your desired behavior is to return non-zero if the key pressed is 'a', and zero otherwise.
+}
+
+LRESULT CALLBACK SystemKeyboardReadWrite::keyboardProcedure_NoForward(int nCode, WPARAM wParam, LPARAM lParam)
+{	
+	keyboardProcedure_Main(nCode, wParam, lParam, false);
+	return true;
+	//return !SystemKeyboardReadWrite::getForwardKeyEvents();
+	//CallNextHookEx( NULL, nCode, wParam, lParam );
+	//return false; //this value causes the system to call the next hook procedure in the chain anyway, and it eventually gets processed by your default window procedure.
+	//If you CallNextHook() the next hook in the chain is called. If you return non-zero the message is not received by the target window (thus preventing the window from 
+	//receiving the keyboard message). If you return zero the message is received by the target window.
+	//Your desired behavior is to return non-zero if the key pressed is 'a', and zero otherwise.
 }
 
 bool SystemKeyboardReadWrite::connected()
@@ -60,11 +89,18 @@ bool SystemKeyboardReadWrite::connected()
 	return keyboardHook;
 }
 
-bool SystemKeyboardReadWrite::setConnected(bool state)
+bool SystemKeyboardReadWrite::setConnected(bool state, bool forwardKeyEvents)
 {
 	if(state && keyboardHook == NULL)
 	{
-		keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProcedure, GetModuleHandle(NULL), 0);
+		if (forwardKeyEvents)
+		{
+			keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProcedure_Forward, GetModuleHandle(NULL), 0);
+		} 
+		else
+		{
+			keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, keyboardProcedure_NoForward, GetModuleHandle(NULL), 0);
+		}
 		return keyboardHook;
 	}
 	else

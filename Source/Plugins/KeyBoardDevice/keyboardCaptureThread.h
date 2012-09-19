@@ -37,6 +37,9 @@ public:
 	keyboardCaptureThread(int method, QObject *parent = 0);
 	~keyboardCaptureThread();
 
+	bool setKeyEventForwarding(bool bForward);
+	bool getKeyEventForwarding();
+
 public slots:
 	void stop();
 
@@ -44,7 +47,7 @@ private:
 	bool isRunning;
 	bool abortRunning;
 	KeyBoardNameSpace::CaptureKeyMethod dMethod;				//type of CaptureKeyMethod
-	//KeyBoardCapture *portDev;
+	bool bForwardKeyEvents;
 
 signals:
 	void recieveThreadKeyPressed(quint32 key);

@@ -92,7 +92,7 @@ KeyBoardCapture::~KeyBoardCapture()
 //
 //}
 
-bool KeyBoardCapture::StartCaptureThread(const short method)
+bool KeyBoardCapture::StartCaptureThread(const short method, bool keyForwarding)
 { 
 	KeyBoardNameSpace::CaptureKeyMethod CapDecMethod;
 	if (method == 0) 
@@ -103,6 +103,7 @@ bool KeyBoardCapture::StartCaptureThread(const short method)
 		CapDecMethod = KeyBoardNameSpace::KeyPressedReleased;
 
 	captureThread = new keyboardCaptureThread(CapDecMethod,this);
+	captureThread->setKeyEventForwarding(keyForwarding);
 
 	connect(captureThread, SIGNAL(recieveThreadKeyPressed(quint32)), this, SIGNAL(CaptureThreadKeyPressed(quint32)));
 	connect(captureThread, SIGNAL(recieveThreadKeyReleased(quint32)), this, SIGNAL(CaptureThreadKeyReleased(quint32)));

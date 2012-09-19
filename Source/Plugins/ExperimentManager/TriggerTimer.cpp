@@ -218,22 +218,17 @@ void TriggerTimer::runThreadedTimerFunction()
 	if (currentTimerType == QPCNew_TriggerTimerType)
 	{
 		//dElapsed = eTimer.getElapsedTimeInMilliSec();
-		dTest1 = 0.0;//fgdfgdgdf
 		dElapsed = WTF::currentTimeMS() - dStartTime;
-		dTest1 = dElapsed;///dfgdgdfg
 		if ((((int)(dElapsed+1)) + intervalTest.dSampleSpeedToUse) >= ((int)dNextThreshold))//Can we dismiss the below?
 		{
 			dRemainingTime = dNextThreshold - dElapsed;			
 			if(dRemainingTime > 0.0)
 			{
 				emit goingAccurate(dRemainingTime);
-				dTest2 = WTF::currentTimeMS() - dStartTime;///dfgdgdfg
+				// = WTF::currentTimeMS() - dStartTime;
 				//eTimer.SleepMSecAccurate(dRemainingTime);
 				eTimer.SleepMSecAccurate2(dRemainingTime);
 			}
-			dElapsed = WTF::currentTimeMS() - dStartTime;//sdffsdffs
-
-			qDebug() << dTest1 << "," << dTest2 << "," << dRemainingTime << "," << dElapsed;
 			emit timeout();
 			dNextThreshold = dNextThreshold + dTriggerInterval;
 		}
@@ -255,7 +250,7 @@ void TriggerTimer::runThreadedTimerFunction()
 							intervalTest.dSampleSpeedToUse = intervalTest.dMinSampleSpeed;
 						}
 						intervalTest.bSampleSpeedDetermined = true;
-						qDebug() << "intervalTest.dMinSampleSpeed set to: " << intervalTest.dMinSampleSpeed;
+						//qDebug() << "intervalTest.dMinSampleSpeed set to: " << intervalTest.dMinSampleSpeed;
 					}
 				}
 			}

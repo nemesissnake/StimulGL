@@ -240,7 +240,8 @@ QScriptValue myIncludeFunction(QScriptContext *ctx, QScriptEngine *eng)
 QScriptValue myPrintFunction(QScriptContext *context, QScriptEngine *engine)
 {
 	QString result;
-	for (int i = 0; i < context->argumentCount(); ++i) {
+	for (int i = 0; i < context->argumentCount(); ++i)
+	{
 		if (i > 0)
 			result.append(" ");
 		result.append(context->argument(i).toString());

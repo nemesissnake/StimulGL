@@ -7,13 +7,14 @@ var nTriggerCounter = 0;
 
 function myFinalCleanup()//Cleanup
 {
-	ExampleDevicePluginObj.close();	
 	ExampleDevicePluginObj.CaptureThreadReadyRead.disconnect(this, this.mySignalFunction);//readyRead
+	ExampleDevicePluginObj.close();	
 	s = null;
 	ExampleDevicePluginObj = null;
 	mySignalFunction = null;
 	myFinalCleanup = null;
 	Log("Finished script Cleanup!");
+	StimulGL.cleanupScript();
 }
 
 function mySignalFunction()

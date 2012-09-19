@@ -132,7 +132,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		QtVersion = Qt 4.8.0 (x64)
+		QtVersion = 4.8.0 (64bit)
 	EndGlobalSection
 	GlobalSection(Qt) = preSolution
 		Integration = True

@@ -26,12 +26,24 @@ keyboardCaptureThread::keyboardCaptureThread(int method, QObject *parent) : QThr
 {
 	isRunning = false;
 	abortRunning = false;
+	bForwardKeyEvents = true;
 	dMethod = (KeyBoardNameSpace::CaptureKeyMethod)method;
 }
 
 keyboardCaptureThread::~keyboardCaptureThread()
 {
 	this->stop();
+}
+
+bool keyboardCaptureThread::setKeyEventForwarding(bool bForward)
+{
+	bForwardKeyEvents = bForward;
+	return bForwardKeyEvents;
+}
+
+bool keyboardCaptureThread::getKeyEventForwarding()
+{
+	return bForwardKeyEvents;
 }
 
 void keyboardCaptureThread::stop()
@@ -63,7 +75,7 @@ void keyboardCaptureThread::run()
 	systemKeyCapture = new SystemKeyboardReadWrite();
 	if (systemKeyCapture)
 	{
-		if (systemKeyCapture->setConnected(true))
+		if (systemKeyCapture->setConnected(true, bForwardKeyEvents))
 		{
 			bool bDoHandleKeyPress = ((dMethod == KeyBoardNameSpace::KeyPressed) || (dMethod == KeyBoardNameSpace::KeyPressedReleased));
 			bool bDoHandleKeyRelease = ((dMethod == KeyBoardNameSpace::KeyReleased) || (dMethod == KeyBoardNameSpace::KeyPressedReleased));
@@ -87,7 +99,7 @@ void keyboardCaptureThread::run()
 					disconnect(systemKeyCapture->instance(), SIGNAL(keyReleasedSignal(quint32)), this, SIGNAL(recieveThreadKeyReleased(quint32)));
 			}
 			emit recieveThreadStopped(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
-			systemKeyCapture->setConnected(false);
+			systemKeyCapture->setConnected(false, bForwardKeyEvents);
 		}
 		delete systemKeyCapture;
 		systemKeyCapture = NULL;

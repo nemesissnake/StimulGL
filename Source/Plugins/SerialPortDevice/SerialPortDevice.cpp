@@ -78,8 +78,9 @@ SerialPortDevice::SerialPortDevice(QObject *parent) : QObject(parent)
 	CreateHashTableFromEnum(QString(QUERYMODE_ENUM_SHORT_TYPE_NAME),queryModeHash);
 	CreateHashTableFromEnum(QString(OPENMODE_ENUM_SHORT_TYPE_NAME),openModeHash);
 
-	connect(serialPort, SIGNAL(extSerialPortReadyRead()), this, SIGNAL(CaptureThreadReadyRead()));
-	connect(serialPort, SIGNAL(extSerialPortReadyRead()), this, SLOT(ProcessSerialData()));
+	connect(serialPort, SIGNAL(readyRead()), this, SIGNAL(CaptureThreadReadyRead()));
+	connect(serialPort, SIGNAL(readyRead()), this, SLOT(ProcessSerialData()));
+
 }
 
 /*! \brief The SerialPortDevice destructor.
@@ -89,8 +90,10 @@ SerialPortDevice::SerialPortDevice(QObject *parent) : QObject(parent)
 */
 SerialPortDevice::~SerialPortDevice()
 {
-	disconnect(serialPort, SIGNAL(extSerialPortReadyRead()), this, SIGNAL(CaptureThreadReadyRead()));
-	disconnect(serialPort, SIGNAL(extSerialPortReadyRead()), this, SLOT(ProcessSerialData()));
+	disconnect(serialPort, SIGNAL(readyRead()), this, SIGNAL(CaptureThreadReadyRead()));
+	disconnect(serialPort, SIGNAL(readyRead()), this, SLOT(ProcessSerialData()));
+
+
 	if (serialPort)
 	{
 		serialPort->close();
