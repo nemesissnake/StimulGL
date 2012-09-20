@@ -5,43 +5,53 @@
     <virtualFolder>doc</virtualFolder>
     <filterSection>
         <toc>
-            <section title="StimulGL" ref="index.html">            
+            <section title="StimulGL" ref="Generated/index.html">            
 <!--            
                 <section title="Find File" ref="./findfile.html">
                     <section title="File Dialog" ref="./filedialog.html"></section>
                     <section title="Wildcard Matching" ref="./wildcardmatching.html"></section>
                     <section title="Browse" ref="./browse.html"></section>
-                </section>
-                
+                </section>                
                 <section title="Open File" ref="./openfile.html"></section>
 -->
-
-                <section title="ExperimentManager Plugin" ref="./ExperimentManagerPlugin/ExperimentManagerPlugin.html"></section>
-								<section title="ParallelPortDevice Plugin" ref="./ParallelPortDevicePlugin/ParallelPortDevicePlugin.html"></section>
-								<section title="USBHIDDevice Plugin" ref="./USBHIDDevicePlugin/USBHIDDevicePlugin.html"></section>
-								<section title="Extension Plugin Template" ref="./ExtensionPluginTemplate/ExtensionPluginTemplate.html"></section>
+                <section title="ExperimentManager Plugin" ref="./Generated/ExperimentManagerPlugin/ExperimentManagerPlugin.html">
+									<section title="ExperimentManager Script Object" ref="./Generated/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
+								</section>
+								<section title="ParallelPortDevice Plugin" ref="./Generated/ParallelPortDevicePlugin/ParallelPortDevicePlugin.html">
+									<section title="ParallelPortDevice Script Object" ref="./Generated/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
+								</section>
+								<section title="USBHIDDevice Plugin" ref="./Generated/USBHIDDevicePlugin/USBHIDDevicePlugin.html">
+									<section title="USBHIDDevice Script Object" ref="./Generated/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
+								</section>
+								<section title="Extension Plugin Template" ref="./Generated/ExtensionPluginTemplate/ExtensionPluginTemplate.html"></section>
 
             </section>
             </toc>
         <keywords>
-            <keyword name="StimulGL" ref="./index.html"/>
-            <keyword name="License" ref="./index.html"/>
-            <keyword name="Experiment Manager" ref="./ExperimentManagerPlugin/ExperimentManagerPlugin.html"/>
-            <keyword name="Parallel Port" ref="./ParallelPortDevicePlugin/ParallelPortDevicePlugin.html"/>
-            <keyword name="USBHID Device" ref="./USBHIDDevicePlugin/USBHIDDevicePlugin.html"/>
-            <keyword name="Plugin Template" ref="./ExtensionPluginTemplate/ExtensionPluginTemplate.html"/>
+            <keyword name="StimulGL" ref="./Generated/index.html"/>
+            <keyword name="License" ref="./Generated/index.html"/>
+            <keyword name="Experiment Manager" ref="./Generated/ExperimentManagerPlugin/ExperimentManagerPlugin.html"/>
+            <keyword name="Parallel Port" ref="./Generated/ParallelPortDevicePlugin/ParallelPortDevicePlugin.html"/>
+            <keyword name="USBHID Device" ref="./Generated/USBHIDDevicePlugin/USBHIDDevicePlugin.html"/>
+            <keyword name="Plugin Template" ref="./Generated/ExtensionPluginTemplate/ExtensionPluginTemplate.html"/>
+            <keyword name="ExperimentManager" ref="./Generated/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"/>
+            <keyword name="ParallelPort" ref="./Generated/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"/>
+            <keyword name="USBHIDDevice" ref="./Generated/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"/>
             </keywords>
         <files>
-            <file>index.html</file>
-            <file>about.txt</file>
-            <file>ExperimentManagerPlugin/ExperimentManagerPlugin.html</file>
-            <file>ExperimentManagerPlugin/images/*.png</file>
-						<file>ParallelPortDevicePlugin/ParallelPortDevicePlugin.html</file>
-            <file>ParallelPortDevicePlugin/images/*.png</file>
-						<file>USBHIDDevicePlugin/USBHIDDevicePlugin.html</file>
-            <file>USBHIDDevicePlugin/images/*.jpg</file>
-						<file>ExtensionPluginTemplate/ExtensionPluginTemplate.html</file>						
-						<file>images/*.png</file>		           
+            <file>Generated/index.html</file>
+            <file>Generated/about.txt</file>
+            <file>Generated/ExperimentManagerPlugin/ExperimentManagerPlugin.html</file>
+            <file>Generated/ExperimentManagerPlugin/images/*.png</file>
+						<file>Generated/ParallelPortDevicePlugin/ParallelPortDevicePlugin.html</file>
+            <file>Generated/ParallelPortDevicePlugin/images/*.png</file>
+						<file>Generated/USBHIDDevicePlugin/USBHIDDevicePlugin.html</file>
+            <file>Generated/USBHIDDevicePlugin/images/*.jpg</file>
+						<file>Generated/ExtensionPluginTemplate/ExtensionPluginTemplate.html</file>						
+						<file>Generated/images/*.png</file>	
+					  <file>Generated/ExperimentManagerPlugin/Doxygen/*.*</file>
+					  <file>Generated/ParallelPortDevicePlugin/Doxygen/*.*</file>
+					  <file>Generated/USBHIDDevicePlugin/Doxygen/*.*</file>
             </files>
         </filterSection>
     </QtHelpProject>

@@ -1,0 +1,9 @@
+version 1.0.0.0 -> 2.0.0.1 changes
+
+nr_of_triggers = nr_of_internal_triggers
+added the nr_of_external_triggers
+added the FixationColor
+added the CheckerColor1
+added the CheckerColor2
+added the BackGroundColor
+TriggerDuration = InternalTriggerDuration
