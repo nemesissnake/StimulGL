@@ -85,6 +85,9 @@ public slots:
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
 	void findNext();
 	void findPrev();
+#ifdef DEBUG
+	QString testFunction(QString inp = "");
+#endif
 
 private slots:
 	bool restartScriptEngine();

@@ -130,6 +130,7 @@ QString MainAppInfo::apiDirPath()
 
 void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg) 
 {
+	bool bDoAbort = false;
 	if(MainAppInfo::mainLogFile == NULL)
 	{
 		//QString aa = MainAppInfo::appLogFilePath();
@@ -157,11 +158,15 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg)
 		break;
 	case QtFatalMsg:
 		strMessage = QString("Fatal: %1").arg(msg);
-		abort();
+		bDoAbort = true;		
 	}
 	QTextStream ts(mainLogFile);
 	ts << QDate::currentDate().toString().toAscii().data() << QString("\t") << QTime::currentTime().toString().toAscii().data() << QString("\t") << strMessage << QString("\n"); //endl macro doesn't work?
-
+	if (bDoAbort)
+	{
+		CloseMainLogFile();
+		abort();
+	}
 }
 
 void MainAppInfo::CloseMainLogFile()
@@ -170,7 +175,7 @@ void MainAppInfo::CloseMainLogFile()
 	{
 		if(MainAppInfo::mainLogFile->isOpen())
 		{
-			MainAppInfo::mainLogFile->close();
+			MainAppInfo::mainLogFile->close();			
 		}
 	}	
 }

@@ -22,102 +22,78 @@
 
 CustomQsciScintilla::CustomQsciScintilla(MainAppInfo::DocType docType)
 {	
-	//Qjslexer = NULL;
 
-	//switch (docType)
-	//{
-	//case MainAppInfo::DOCTYPE_QSCRIPT:
-	//	{
-	//		setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-	//		setAutoCompletionSource(QsciScintilla::AcsAll);
-
-	//		//QsciLexer* lexer = NULL;
-	//		QString fileName = "";
-	//		QDir dir(MainAppInfo::apiDirPath());
-	//		Qjslexer = new QsciLexerJavaScript();
-	//		fileName = "qscript.api";
-	//		if ( dir.entryList(QDir::Files).contains(fileName) ) 
-	//		{
-	//			QsciAPIs* apis = new QsciAPIs(Qjslexer);
-	//			if ( apis->load(dir.absoluteFilePath(fileName)) ) 
-	//			{
-	//				//apis->add("text");
-	//				apis->prepare();
-	//				Qjslexer->setAPIs(apis);
-	//			}
-	//			else 
-	//			{
-	//				delete apis;
-	//			}
-	//		}
-	//		setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-	//		setMatchedBraceBackgroundColor(QColor(255,255,120));
-	//		setMatchedBraceForegroundColor(QColor(0,0,255));
-	//		break;
-	//	}
-	//case MainAppInfo::DOCTYPE_EXML:
-	//	{
-	//		setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-	//		setAutoCompletionSource(QsciScintilla::AcsAll);
-
-	//		//QsciLexer* lexer = NULL;
-	//		QString fileName = "";
-	//		QDir dir(MainAppInfo::apiDirPath());
-	//		Qjslexer = new QsciLexerJavaScript();
-	//		//lexer = new QsciLexer();
-	//		fileName = "xml.api";
-	//		if ( dir.entryList(QDir::Files).contains(fileName) ) 
-	//		{
-	//			QsciAPIs* apis = new QsciAPIs(Qjslexer);
-	//			if ( apis->load(dir.absoluteFilePath(fileName)) ) 
-	//			{
-	//				//apis->add("text");
-	//				apis->prepare();
-	//				Qjslexer->setAPIs(apis);
-	//			}
-	//			else 
-	//			{
-	//				delete apis;
-	//			}
-	//		}
-	//		setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-	//		setMatchedBraceBackgroundColor(QColor(255,255,120));
-	//		setMatchedBraceForegroundColor(QColor(0,0,255));
-	//		break;
-	//	}
-	//case MainAppInfo::DOCTYPE_SVG:
-	//	{
-	//		setAutoCompletionSource(QsciScintilla::AcsNone);
-	//		break;
-	//	}
-	//case MainAppInfo::DOCTYPE_UNDEFINED:
-	//	{
-	//		setAutoCompletionSource(QsciScintilla::AcsNone);
-	//		break;
-	//	}
-	//default://if none of the above match...
-	//	{
-	//		setAutoCompletionSource(QsciScintilla::AcsNone);
-	//		break;
-	//	}
-	//}
-	////this->->standardCommands()->clearKeys();
 }
 
 CustomQsciScintilla::~CustomQsciScintilla()
 {
-	//if(Qjslexer)
-	//	delete Qjslexer;
+
 }
 
-//void CustomQsciScintilla::setCustomLexer()
+#ifdef DEBUG
+//void CustomQsciScintilla::testFunction()
 //{
-//	if(Qjslexer)
-//	{
-//		Qjslexer->setParent(this);
-//		this->setLexer(Qjslexer);
-//	}
+//	bool d = 9;
 //}
+
+QString CustomQsciScintilla::testFunction(QString inp)
+{
+	bool b1 = this->isCallTipActive();
+	this->callTip();
+	bool b2 = this->isCallTipActive();
+	this->zoomIn(50);
+	//void SCN_AUTOCCHARDELETED();
+	//bool b3 = connect(this, SIGNAL(SCN_CHARADDED(int)), this, SLOT(handleAutoCompletionSelection()));//SCN_AUTOCCHARDELETED
+	//bool b4 = connect(this, SIGNAL(textChanged()), SLOT(CustomQsciScintilla::test(QString)));
+	bool b4 = connect(this, SIGNAL(textChanged()), this, SLOT(testFunction()));
+	
+	QStringList aa;
+	aa << "Arial" << "Helvetica" << "Times" << "Courier";
+
+	this->showUserList(0, aa);
+
+	return QString("done");
+}
+
+//void CustomQsciScintilla::handleCallTipClick(int dir)
+//{
+//
+//}
+//
+//void CustomQsciScintilla::handleCharAdded(int charadded)
+//{
+//
+//}
+//
+//void CustomQsciScintilla::handleIndicatorClick(int pos, int modifiers)
+//{
+//
+//}
+//
+//void CustomQsciScintilla::handleAutoCompletionSelection()
+//{
+//	bool c;
+//	c=true;
+//}
+//
+//void CustomQsciScintilla::handleUserListSelection(const char *text, int id)
+//{
+//
+//}
+
+
+//void handleIndicatorRelease(int pos, int modifiers);
+//void handleMarginClick(int pos, int margin, int modifiers);
+//void handleModified(int pos, int mtype, const char *text, int len,
+//	int added, int line, int foldNow, int foldPrev, int token,
+//	int annotationLinesAdded);
+//void handlePropertyChange(const char *prop, const char *val);
+//void handleSavePointReached();
+//void handleSavePointLeft();
+//void handleSelectionChanged(bool yes);
+
+
+#endif
 
 void CustomQsciScintilla::setManagerObject(QObject *managerObject,QObject *childWindowObject)
 {

@@ -55,6 +55,24 @@ MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 //{
 //}
 
+#ifdef DEBUG
+QString MainWindow::testFunction(QString inp)
+{
+	CustomQsciScintilla *tmpSci;
+	tmpSci = DocManager->getDocHandler(activeMdiChild());
+	if (tmpSci)
+	{
+		//bool b4 = connect(tmpSci, SIGNAL(textChanged()), this, SLOT(testFunction()));
+		//b4=b4;
+		return tmpSci->testFunction(inp);
+	}
+	else
+	{
+		return QString("");
+	}
+}
+#endif
+
 void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
 {
 	QMenu menu(this);

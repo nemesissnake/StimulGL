@@ -212,8 +212,6 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
 
-	//custQsci->setCustomLexer();
-
 	custQsci->setPaper(QColor(255,255,255));
 	custQsci->setAutoIndent(true);
 	custQsci->setAutoCompletionThreshold(2);
@@ -364,8 +362,10 @@ bool DocumentManager::setSubWindow(int DocIndex, QMdiSubWindow *subWindow)
 		return false;
 	}
 	DocModifiedMapper->setMapping(QScintillaChildren.at(DocIndex), SubWindowChildren.at(DocIndex));
-	connect(QScintillaChildren.at(DocIndex), SIGNAL(textChanged()),	DocModifiedMapper, SLOT (map()));
-	connect(DocModifiedMapper, SIGNAL(mapped(QWidget *)), this, SLOT(documentWasModified(QWidget *)));
+	bool bResult = false;
+	bResult = connect(QScintillaChildren.at(DocIndex), SIGNAL(textChanged()),	DocModifiedMapper, SLOT(map()));
+	bResult = connect(DocModifiedMapper, SIGNAL(mapped(QWidget *)), this, SLOT(documentWasModified(QWidget *)));
+
 	QScintillaChildren.at(DocIndex)->setManagerObject(this,subWindow);
 	return true;
 }

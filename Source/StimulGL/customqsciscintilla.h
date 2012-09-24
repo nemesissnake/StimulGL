@@ -31,7 +31,7 @@
 
 class CustomQsciScintilla : public QsciScintilla//, QObject
 {
-	//Q_OBJECT
+	Q_OBJECT
 
 	public:
 		//CustomQsciScintilla(){};
@@ -62,6 +62,20 @@ class CustomQsciScintilla : public QsciScintilla//, QObject
 		void startFind(const QString& str, const DocFindFlags& flags); 
 		void replace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool replaceAll = false);
 		void startReplace(const QString& str1, const QString& str2, const DocFindFlags& flags, bool& replaceAll, int& count);
+
+
+	public slots:
+
+#ifdef DEBUG
+		QString testFunction(QString inp = "");
+		//void testFunction();
+
+		//void handleCallTipClick(int dir);
+		//void handleCharAdded(int charadded);
+		//void handleIndicatorClick(int pos, int modifiers);
+		//void handleAutoCompletionSelection();
+		//void handleUserListSelection(const char *text, int id);
+#endif
 
 	protected:
 		void closeEvent(QCloseEvent *event);
