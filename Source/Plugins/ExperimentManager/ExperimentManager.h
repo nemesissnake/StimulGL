@@ -71,6 +71,8 @@ public:
 	ExperimentManager(QObject *parent = NULL, QScriptEngine* engine = NULL);
 	~ExperimentManager();
 
+	Q_ENUMS(ExperimentState)
+
 	/*! The enum ExperimentState represents the main state of the ExperimentManager object */
 	enum ExperimentState 
 	{
@@ -120,6 +122,7 @@ public slots:
 	bool startExperimentTimer(int nIndex);
 	double restartExperimentTimer(int nIndex);
 	double elapsedExperimentTimerTime(int nIndex);
+	QString getCurrentExperimentState();
 
 private:
 	void DefaultConstruct();
@@ -140,7 +143,7 @@ private:
 	void cleanupExperimentObjects();
 	void changeCurrentExperimentState(ExperimentState expCurrState);
 	QObject *getObjectElementById(int nID);
-	ExperimentState getCurrentExperimentState() {return experimentCurrentState;}
+	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	QList<objectElement> lExperimentObjectList;
@@ -150,6 +153,7 @@ private:
 
 	QScriptEngine* currentScriptEngine;
 	ExperimentState experimentCurrentState;
+	QHash<QString, int> experimentStateHash;
 	bool m_RunFullScreen;
 	bool m_DebugMode;
 	QString m_ExpFileName;

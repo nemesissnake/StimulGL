@@ -23,8 +23,6 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QString>
-//#include <QWidget>
-
 #include <QTime>
 #include <iostream>
 #include <fstream>
@@ -66,6 +64,7 @@ public:
 
 	static void MyOutputHandler(QtMsgType type, const char *msg); 
 	static void CloseMainLogFile();
+	static bool CreateHashTableFromEnumeration(const QString &sTypeName, QHash<QString, int> &hTable, const QMetaObject metaObject);
 
 private:
 	static QDir appDebugDirPath();

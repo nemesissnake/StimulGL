@@ -20,7 +20,6 @@
 #include "TriggerTimer.h"
 
 #define THREADACTIVATIONTRIGGERTIME		5 //This is the minimal trigger period, the time resolution/accuracy can be higher!
-#define UNKNOWNENUMSTRING				"Unknown_Enumeration"
 
 TriggerTimer::TriggerTimer() : QObject(NULL)
 {
