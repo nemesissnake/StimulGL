@@ -27,9 +27,9 @@
 #include <QScriptable>
 #include <QDesktopWidget>
 #include <QHash>
+#include "maindefines.h"
 #include "qextserialport.h"
 
-#define UNKNOWNENUMSTRING				"Unknown_Enumeration"
 #define BAUDRATE_ENUM_TYPE_NAME			typeid(BaudRateType).name()
 #define BAUDRATE_ENUM_SHORT_TYPE_NAME	"BaudRateType_"
 #define DATABITS_ENUM_TYPE_NAME			typeid(DataBitsType).name()

@@ -24,6 +24,7 @@
 #include <QtScript>
 #include "ExperimentTimer.h"
 #include "CurrentTime.h"
+#include "maindefines.h"
 
 /*! The enum (TriggerTimerType) can store a TriggerTimer type */
 enum TriggerTimerType

@@ -19,6 +19,8 @@
 #include "mainappinfo.h"
 #include <QTextStream>
 #include <QString>
+#include <QMetaEnum>
+#include <QDebug>
 
 QFile * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
 QWidget * MainAppInfo::mainWindow = NULL;//Needed to initialize the static variable!
@@ -212,4 +214,37 @@ bool MainAppInfo::isCompatibleVersion(const QString &strMinimalRequiredVersion, 
 		return true;//same version
 	}
 	return false;//wrong arguments
+}
+
+bool MainAppInfo::CreateHashTableFromEnumeration(const QString &sTypeName, QHash<QString, int> &hTable, const QMetaObject metaObject)
+{
+	if(!sTypeName.isEmpty())
+	{
+		//int test = metaObject.enumeratorCount();
+		//QMetaEnum testmetaEnum = metaObject.enumerator(test-1);
+		//QString teststr = testmetaEnum.name();
+
+		QStringList tmpList = sTypeName.split("::",QString::SkipEmptyParts);
+		QString sShortTypeName = tmpList.at(tmpList.count()-1);
+		int enumeratorIndex = metaObject.indexOfEnumerator(sShortTypeName.toLatin1());
+		if (enumeratorIndex >= 0)
+		{
+			QMetaEnum metaEnum = metaObject.enumerator(enumeratorIndex);
+			int nKeyCount = metaEnum.keyCount();
+			for (int i=0;i<nKeyCount;i++)
+			{
+				hTable.insert(metaEnum.key(i),metaEnum.value(i));
+			}
+			if (hTable.count() > 0)
+				return true;
+			return false;
+		}
+		else
+		{
+			qDebug() << __FUNCTION__ << "::Unknown Enumeration Type (" << sShortTypeName << ")!";	
+			return false;
+		}
+		return true;
+	}
+	return false;
 }

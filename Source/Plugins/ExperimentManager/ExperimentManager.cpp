@@ -63,18 +63,9 @@ bool ExperimentManager::makeThisAvailableInScript(QString strObjectScriptName, Q
 	return false;
 }
 
-//ExperimentManager::ExperimentManager(QObject *parent) : QObject(parent)
-//{
-//	currentEngine = NULL;
-//	DefaultConstruct();
-//}
-
 void ExperimentManager::DefaultConstruct()
 {
-	//qDebug("ExperimentManager Main Constructor.");
-	//qWarning("");
-	//qCritical("");
-	//qFatal("");
+	MainAppInfo::CreateHashTableFromEnumeration(typeid(ExperimentState).name(),experimentStateHash,this->staticMetaObject);
 	m_RunFullScreen = true;
 	m_ExpFileName = "";
 	m_DebugMode = false;
@@ -307,6 +298,15 @@ double ExperimentManager::elapsedExperimentTimerTime(int nIndex)
 	return -1;
 }
 
+QString ExperimentManager::getCurrentExperimentState()
+{
+/*! \brief Use this function to retrieve the current Experiment State.
+ *
+ *  Returns a string containing the current Experiment State.
+ */
+	return experimentStateHash.key(getCurrExperimentState(),UNKNOWNENUMSTRING);
+}
+
 QString ExperimentManager::getCurrentDateTimeStamp()
 {
 /*! \brief Use this function to retrieve the current Date/Time.
@@ -456,7 +456,7 @@ bool ExperimentManager::loadExperiment(QString strFile, bool bViewEditTree)
 
 void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrState)
 {
-	if (expCurrState != getCurrentExperimentState())
+	if (expCurrState != getCurrExperimentState())
 	{
 		experimentCurrentState = expCurrState;
 		emit ExperimentStateHasChanged(expCurrState,getCurrentDateTimeStamp());
@@ -493,7 +493,7 @@ bool ExperimentManager::validateExperiment()
 		qDebug() << __FUNCTION__ << "::No Experiment validation in memory!";
 		return false;
 	}
-	if(getCurrentExperimentState() != ExperimentManager_Loaded)
+	if(getCurrExperimentState() != ExperimentManager_Loaded)
 	{
 		qDebug() << __FUNCTION__ << "::Wrong state, could not validate the experiment!";
 		return false;
@@ -526,10 +526,8 @@ bool ExperimentManager::validateExperiment()
 
 		nColumn = nColumn;
 
-		emit WriteToLogOutput("Invalid schema, " + strMessage + "(line:" + QString::number(nLine) + ", col:" + QString::number(nColumn) + ")");
-		//qApp->processEvents();
-		//validationStatus->setText(messageHandler.statusMessage());
-		//moveCursor(messageHandler.line(), messageHandler.column());
+		//!!!!!   emit WriteToLogOutput("Invalid schema, " + strMessage + "(line:" + QString::number(nLine) + ", col:" + QString::number(nColumn) + ")");
+
 		return true;
 	} 
 	//else 
@@ -631,7 +629,7 @@ void ExperimentManager::abortExperiment()
  *
  *  Tries to abort the current Experiment that is running, see #runExperiment.
  */
-	if(getCurrentExperimentState()==ExperimentManager_Started)
+	if(getCurrExperimentState()==ExperimentManager_Started)
 	{
 		changeCurrentExperimentState(ExperimentManager_IsStopping);
 		if(!abortExperimentObjects())
@@ -646,7 +644,7 @@ void ExperimentManager::stopExperiment()
  *
  *  Tries to stop the current Experiment that is running, see #runExperiment.
  */
-	if(getCurrentExperimentState()==ExperimentManager_Started)
+	if(getCurrExperimentState()==ExperimentManager_Started)
 	{
 		changeCurrentExperimentState(ExperimentManager_IsStopping);
 		if(!stopExperimentObjects())
