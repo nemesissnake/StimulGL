@@ -1,7 +1,26 @@
 Anchor
 Applet
 Area
+#http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Global_Objects:Array
 Array
+Array()
+Array(arrayLength)
+Array(element0, element1, ..., elementN)
+Array.prototype
+Array.index
+Array.input
+Array.length
+Array.pop() Removes the last element from an array and returns that element.
+Array.push(element1, ..., elementN) Adds one or more elements to the end of an array and returns the new length of the array.
+Array.shift() Removes the first element from an array and returns that element.
+Array.reverse() Reverses the order of the elements of an array -- the first becomes the last, and the last becomes the first.
+Array.sort(compareFunction) Sorts the elements of an array.
+Array.splice(index, howMany, [element1][, ..., elementN]) Adds and/or removes elements from an array.
+Array.unshift(element1, ..., elementN) Adds one or more elements to the front of an array and returns the new length of the array.
+Array.concat(value1, value2, ..., valueN) Returns a new array comprised of this array joined with other array(s) and/or value(s).
+Array.join(separator) Joins all elements of an array into a string.
+Array.splice(begin[,end]) Extracts a section of an array and returns a new array.
+Array.prototype
 Boolean
 Button
 Checkbox
@@ -550,7 +569,7 @@ slice
 small
 sort
 source
-splice
+splice(index, howMany, [element1][, ..., elementN]) Adds and/or removes elements from an array.
 split
 sqrt
 src

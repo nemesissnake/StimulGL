@@ -265,7 +265,7 @@ private:
 	bool setDefaultGLFormat();
     void createDefaultMenus();
 	void setupHelpMenu();
-    void setupDynamicPluginMenus();
+    void setupDynamicPlugins();
 	QAction* integratePlugin(QObject *plugin, PluginCollection *collection);
 	void setupToolBars();
 	void setRenderer();

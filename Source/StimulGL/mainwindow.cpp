@@ -115,7 +115,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	setupScriptEngine();
 	setupStatusBar();
 	createDefaultMenus();
-	setupDynamicPluginMenus();
+	setupDynamicPlugins();
 	setupHelpMenu();
 	setupToolBars();
 	updateMenuControls(0);
@@ -901,7 +901,7 @@ void MainWindow::createDockWindows()
 	addDockWidget(Qt::BottomDockWidgetArea, debuggerDock);
 }
 
-void MainWindow::setupDynamicPluginMenus()
+void MainWindow::setupDynamicPlugins()
 {
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllPlugins) == false)
 	{

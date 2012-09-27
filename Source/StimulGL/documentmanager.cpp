@@ -196,7 +196,7 @@ bool DocumentManager::getLexer(QsciLexer *lexer, const QString &lexerName, QObje
 			{
 				//apis->add("text");
 				apis->prepare();
-				lexer->setAPIs(apis);
+				lexer->setAPIs(apis);				
 			}
 			else 
 			{
@@ -257,7 +257,15 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 				QsciAPIs* apis = new QsciAPIs(Qjslexer);
 				if ( apis->load(dir.absoluteFilePath(fileName)) ) 
 				{
-					//apis->add("text");
+					custQsci->setCallTipsStyle(QsciScintilla::CallTipsStyle::CallTipsNoAutoCompletionContext);
+					QStringList apiEntries = getAdditionalApiEntries();
+					if (apiEntries.isEmpty() == false)
+					{
+						for (int i=0;i<apiEntries.count();i++)
+						{
+							apis->add(apiEntries.at(i));
+						}
+					}
 					apis->prepare();
 					Qjslexer->setAPIs(apis);
 				}
@@ -290,7 +298,6 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 				QsciAPIs* apis = new QsciAPIs(QxmlLexer);
 				if ( apis->load(dir.absoluteFilePath(fileName)) ) 
 				{
-					//apis->add("text");
 					apis->prepare();
 					QxmlLexer->setAPIs(apis);
 				}
@@ -327,6 +334,16 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 	DocIndex = DocCount;
 	DocCount++;
 	return custQsci;
+}
+
+int DocumentManager::addAdditionalApiEntry(const QString &entry)
+{
+	if(additionalApiEntries.contains(entry,Qt::CaseSensitive) == false)
+	{
+		additionalApiEntries.append(entry);
+		return additionalApiEntries.count() -1;
+	}
+	return -1;
 }
 
 void DocumentManager::onMarginClicked (int margin, int line, Qt::KeyboardModifiers state) 

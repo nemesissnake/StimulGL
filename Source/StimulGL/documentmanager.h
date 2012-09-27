@@ -84,9 +84,12 @@ private:
 	QList<CustomQsciScintilla *> QScintillaChildren;
 	QList<QMdiSubWindow *> SubWindowChildren;
 	QList<bool> ChildrenModification;
+	QStringList additionalApiEntries;
 
 	void setFileName(int DocIndex, QString fileName);
 	bool getLexer(QsciLexer *lexer, const QString &lexerName, QObject *parent = 0);
+	QStringList getAdditionalApiEntries() {return additionalApiEntries;};
+	int addAdditionalApiEntry(const QString &entry); 
 
 private slots:
 	void documentWasModified(QWidget *subWindow);

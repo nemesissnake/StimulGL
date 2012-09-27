@@ -31,67 +31,52 @@ CustomQsciScintilla::~CustomQsciScintilla()
 }
 
 #ifdef DEBUG
-//void CustomQsciScintilla::testFunction()
-//{
-//	bool d = 9;
-//}
 
 QString CustomQsciScintilla::testFunction(QString inp)
 {
-	bool b1 = this->isCallTipActive();
-	this->callTip();
-	bool b2 = this->isCallTipActive();
-	this->zoomIn(50);
-	//void SCN_AUTOCCHARDELETED();
-	//bool b3 = connect(this, SIGNAL(SCN_CHARADDED(int)), this, SLOT(handleAutoCompletionSelection()));//SCN_AUTOCCHARDELETED
-	//bool b4 = connect(this, SIGNAL(textChanged()), SLOT(CustomQsciScintilla::test(QString)));
-	bool b4 = connect(this, SIGNAL(textChanged()), this, SLOT(testFunction()));
+	return inp;
+	//bool b1 = this->isCallTipActive();
+	//this->callTip();
+	//bool b2 = this->isCallTipActive();
 	
-	QStringList aa;
-	aa << "Arial" << "Helvetica" << "Times" << "Courier";
+	//callTip();
+	
+	//return QString("done");
 
-	this->showUserList(0, aa);
+	//this->zoomIn(50);
+	
+	//void SCN_AUTOCCHARDELETED();
+	//bool b4 = connect(this, SIGNAL(textChanged()), SLOT(CustomQsciScintilla::test(QString)));
+	//bool b4 = connect(this, SIGNAL(textChanged()), this, SLOT(testFunction()));
+	//QStringList aa;
+	//aa << "Arial" << "Helvetica" << "Times" << "Courier";
+	//this->showUserList(0, aa);
+
+	bool b3 = connect(this, SIGNAL(SCN_CHARADDED(int)), this, SLOT(handleCharAdded(int)));
+	connect(this,SIGNAL(SCN_CALLTIPCLICK(int)),SLOT(handleCallTipClick(int)));
+	connect(this,SIGNAL(SCN_AUTOCSELECTION(const char *,int)),SLOT(handleAutoCompletionSelection()));
+	connect(this,SIGNAL(SCN_USERLISTSELECTION(const char *,int)),SLOT(handleUserListSelection(const char *,int)));
 
 	return QString("done");
+
+	CallTipsStyle a = callTipsStyle();// != CallTipsNone);
+	bool b = isCallTipActive();
+	int pos = SendScintilla(SCI_GETCURRENTPOS);
+
+	QString ct("sometext\nnextline");
+	QByteArray ct_ba = ct.toLatin1();
+	const char *cts = ct_ba.data();
+	SendScintilla(SCI_CALLTIPSHOW, 50.0, cts);
+	int listType = 0;
+	//SendScintilla(SCI_USERLISTSHOW,listType,cts);//int listType, const char *list)
+	
+	QStringList c;
+	c << "Arial" << "Helvetica" << "Times" << "Courier";
+	showUserList(2,c);
+	//SCI_SETKEYWORDS(int keyWordSet, const char *keyWordList)
+	//SendScintilla(SCI_SETKEYWORDS, listType, g_cppKeyWords );
+	return QString("done");
 }
-
-//void CustomQsciScintilla::handleCallTipClick(int dir)
-//{
-//
-//}
-//
-//void CustomQsciScintilla::handleCharAdded(int charadded)
-//{
-//
-//}
-//
-//void CustomQsciScintilla::handleIndicatorClick(int pos, int modifiers)
-//{
-//
-//}
-//
-//void CustomQsciScintilla::handleAutoCompletionSelection()
-//{
-//	bool c;
-//	c=true;
-//}
-//
-//void CustomQsciScintilla::handleUserListSelection(const char *text, int id)
-//{
-//
-//}
-
-
-//void handleIndicatorRelease(int pos, int modifiers);
-//void handleMarginClick(int pos, int margin, int modifiers);
-//void handleModified(int pos, int mtype, const char *text, int len,
-//	int added, int line, int foldNow, int foldPrev, int token,
-//	int annotationLinesAdded);
-//void handlePropertyChange(const char *prop, const char *val);
-//void handleSavePointReached();
-//void handleSavePointLeft();
-//void handleSelectionChanged(bool yes);
-
 
 #endif
 

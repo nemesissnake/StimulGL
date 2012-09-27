@@ -68,13 +68,6 @@ class CustomQsciScintilla : public QsciScintilla//, QObject
 
 #ifdef DEBUG
 		QString testFunction(QString inp = "");
-		//void testFunction();
-
-		//void handleCallTipClick(int dir);
-		//void handleCharAdded(int charadded);
-		//void handleIndicatorClick(int pos, int modifiers);
-		//void handleAutoCompletionSelection();
-		//void handleUserListSelection(const char *text, int id);
 #endif
 
 	protected:
@@ -93,7 +86,6 @@ class CustomQsciScintilla : public QsciScintilla//, QObject
 
 		QObject *manager;
 		QObject *childWindow;
-		//QsciLexer *Qjslexer;
 
 		int searchStartingLine_;
 		int searchStartingCol_;
