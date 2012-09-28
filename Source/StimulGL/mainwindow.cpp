@@ -58,18 +58,19 @@ MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 #ifdef DEBUG
 QString MainWindow::testFunction(QString inp)
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	if (tmpSci)
-	{
-		//bool b4 = connect(tmpSci, SIGNAL(textChanged()), this, SLOT(testFunction()));
-		//b4=b4;
-		return tmpSci->testFunction(inp);
-	}
-	else
-	{
-		return QString("");
-	}
+	return inp;
+	//CustomQsciScintilla *tmpSci;
+	//tmpSci = DocManager->getDocHandler(activeMdiChild());
+	//if (tmpSci)
+	//{
+	//	//bool b4 = connect(tmpSci, SIGNAL(textChanged()), this, SLOT(testFunction()));
+	//	//b4=b4;
+	//	return tmpSci->testFunction(inp);
+	//}
+	//else
+	//{
+	//	return QString("");
+	//}
 }
 #endif
 
@@ -905,6 +906,7 @@ void MainWindow::setupDynamicPlugins()
 {
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllPlugins) == false)
 	{
+		extendAPICallTips(this->metaObject());
 		showSplashMessage("Loading Static Plugins...");
         Q_IMPORT_PLUGIN(parallelportplugin)// see below
         Q_IMPORT_PLUGIN(experimentmanagerplugin)// see below
@@ -917,9 +919,23 @@ void MainWindow::setupDynamicPlugins()
 		foreach (QObject *plugin, QPluginLoader::staticInstances())
 		{
 			metaObject = plugin->metaObject();
-			//QStringList properties;
-			//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
-			//	properties << QString::fromLatin1(metaObject->method(i).signature());
+			//QStringList methods;
+			//for(i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
+			//{
+			//	methods << QString::fromLatin1(metaObject->method(i).signature());
+			//	DocManager->addAdditionalApiEntry(QString::fromLatin1(metaObject->method(i).signature()));
+			//}
+
+			if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
+			{
+				//Invoke the slot
+				QObject *pointerQObject = NULL;
+				bool bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject));				
+				const QMetaObject* metaScriptObject = (const QMetaObject*) pointerQObject;
+				if (metaScriptObject && bResult)
+					extendAPICallTips(metaScriptObject);
+			}
+
 			if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL).toLatin1())) == -1))//Is the slot present?
 			{
 				//Invoke the slot
@@ -963,6 +979,18 @@ void MainWindow::setupDynamicPlugins()
 				//	properties << QString::fromLatin1(metaObject->method(i).signature());
 				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL).toLatin1())) == -1))//Is the slot present?
 				{
+					
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						QObject *pointerQObject = NULL;
+						bool bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject));				
+						const QMetaObject* metaScriptObject = (const QMetaObject*) pointerQObject;
+						if (metaScriptObject && bResult)
+							extendAPICallTips(metaScriptObject);
+					}					
+					
+					
 					//qWarning() << __FUNCTION__ << ", Checking plugin compatibility(" << fileName << ")...";	
 					//Invoke the slot
 					metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
@@ -1012,6 +1040,71 @@ void MainWindow::setupDynamicPlugins()
 	//b->openExperiment();
 	//delete b;
 }
+
+bool MainWindow::extendAPICallTips(const QMetaObject* metaScriptObject)
+{
+	if (metaScriptObject)
+	{
+		// <item signature> ::SuperClassName||ScriptClassName::Type::ReturnType::Description
+
+		int i;
+		QString tmpString;
+		QString sScriptClassName;
+		QString sSuperClassName;
+		QStringList sClassInfoList;
+		QString sDivider = "::";
+
+		sScriptClassName = metaScriptObject->className();
+		sSuperClassName = metaScriptObject->superClass()->className();
+
+		int amount = metaScriptObject->classInfoCount();
+		for(i = metaScriptObject->classInfoOffset(); i < metaScriptObject->classInfoCount(); ++i)
+		{
+			if (QString::fromLatin1(metaScriptObject->classInfo(i).name()) == QString(SCRIPT_API_CLASS_NAME_TAG))
+			{
+				sScriptClassName = QString::fromLatin1(metaScriptObject->classInfo(i).value());				
+			}			
+		}
+		DocManager->addAdditionalApiEntry(sScriptClassName + " " + sDivider + sSuperClassName);
+		
+		for(i = metaScriptObject->methodOffset(); i < metaScriptObject->methodCount(); ++i)
+		{
+			sClassInfoList << QString::fromLatin1(metaScriptObject->method(i).signature());
+
+			//is this an member signal or slot?
+			QString mType = METHOD_TYPE_MEMBER_TAG;
+			if(metaScriptObject->indexOfSignal(sClassInfoList.at(sClassInfoList.count()-1).toLatin1()) >= 0)
+				mType = METHOD_TYPE_SIGNAL_TAG;
+			else if(metaScriptObject->indexOfSlot(sClassInfoList.at(sClassInfoList.count()-1).toLatin1()) >= 0)
+				mType = METHOD_TYPE_SLOT_TAG;
+			DocManager->addAdditionalApiEntry(QString::fromLatin1(metaScriptObject->method(i).signature()) + " " + sDivider + sScriptClassName + sDivider + mType);
+		}
+
+		for(i = metaScriptObject->propertyOffset(); i < metaScriptObject->propertyCount(); ++i)
+		{
+			sClassInfoList << QString::fromLatin1(metaScriptObject->property(i).name());
+			DocManager->addAdditionalApiEntry(QString::fromLatin1(metaScriptObject->property(i).name()) + " " + sDivider + sScriptClassName + sDivider + METHOD_TYPE_PROPERTY_TAG);
+		}
+
+		for(i = metaScriptObject->enumeratorOffset(); i < metaScriptObject->enumeratorCount(); ++i)
+		{
+			sClassInfoList << QString::fromLatin1(metaScriptObject->enumerator(i).name());
+			//DocManager->addAdditionalApiEntry(QString::fromLatin1(metaScriptObject->method(i).signature()) + " " + sDivider + sScriptClassName + sDivider + METHOD_TYPE_ENUMERATOR_TAG);
+		}
+
+		//QStringList constructor;
+		//int constructorcount = metaScriptObject->constructorCount();
+		//if(constructorcount>0)
+		//	constructorcount = constructorcount;
+		//for(i = metaScriptObject->indexOfConstructor(); i < metaScriptObject->constructorCount(); ++i)
+		//{
+		//	constructor << QString::fromLatin1(metaScriptObject->method(i).signature());
+		//	DocManager->addAdditionalApiEntry(QString::fromLatin1(metaScriptObject->method(i).signature()));
+		//}
+		return true;
+	}
+	return false;
+};
 
 bool MainWindow::checkPluginCompatibility(QObject *plugin)
 {

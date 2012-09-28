@@ -3,18 +3,18 @@
 //Declare a global variabele to count the number of key presses while capturing
 var KeyPressedCounter = 0;
 //Construct a StimulGL Plugin KeyBoard Object
-var KeyBoardDeviceObj = new KeyBoardDevice(); 
+var KeyBoardCaptureObj = new KeyBoardCapture(); 
 
 //This function makes sure that everything gets nicely cleaned before the script ends
 function ScriptCleanupFunction()//Cleanup
 {
 	//Disconnect the signal/slots
-	KeyBoardDeviceObj.CaptureThreadStarted.disconnect(this, this.KeyCaptureStartedFunction);
-	KeyBoardDeviceObj.CaptureThreadKeyPressed.disconnect(this, this.KeyCaptureDetectFunction);
-	KeyBoardDeviceObj.CaptureThreadKeyReleased.disconnect(this, this.KeyCaptureDetectFunction);	
-	KeyBoardDeviceObj.CaptureThreadStopped.disconnect(this, this.KeyCaptureStoppedFunction);
+	KeyBoardCaptureObj.CaptureThreadStarted.disconnect(this, this.KeyCaptureStartedFunction);
+	KeyBoardCaptureObj.CaptureThreadKeyPressed.disconnect(this, this.KeyCaptureDetectFunction);
+	KeyBoardCaptureObj.CaptureThreadKeyReleased.disconnect(this, this.KeyCaptureDetectFunction);	
+	KeyBoardCaptureObj.CaptureThreadStopped.disconnect(this, this.KeyCaptureStoppedFunction);
 	//Set all constructed objects to null 
-	KeyBoardDeviceObj = null;
+	KeyBoardCaptureObj = null;
 	//Set all functions to null
 	KeyCaptureStartedFunction = null;
 	KeyCaptureDetectFunction = null;
@@ -33,7 +33,7 @@ function KeyCaptureDetectFunction(keyCode)
 	Log("KeyPressedCounter incremented to: " + KeyPressedCounter + "\n");
 	if (KeyPressedCounter==4)
 	{
-		KeyBoardDeviceObj.StopCaptureThread();		
+		KeyBoardCaptureObj.StopCaptureThread();		
 	}
 }
 
@@ -55,12 +55,12 @@ function KeyCaptureStoppedFunction(DateTimeStampStopped)
 }
 
 //Connect the signal/slots
-KeyBoardDeviceObj.CaptureThreadStarted.connect(this, this.KeyCaptureStartedFunction);
-KeyBoardDeviceObj.CaptureThreadKeyPressed.connect(this, this.KeyCaptureDetectFunction);
-KeyBoardDeviceObj.CaptureThreadKeyReleased.connect(this, this.KeyCaptureDetectFunction);
-KeyBoardDeviceObj.CaptureThreadStopped.connect(this, this.KeyCaptureStoppedFunction);
+KeyBoardCaptureObj.CaptureThreadStarted.connect(this, this.KeyCaptureStartedFunction);
+KeyBoardCaptureObj.CaptureThreadKeyPressed.connect(this, this.KeyCaptureDetectFunction);
+KeyBoardCaptureObj.CaptureThreadKeyReleased.connect(this, this.KeyCaptureDetectFunction);
+KeyBoardCaptureObj.CaptureThreadStopped.connect(this, this.KeyCaptureStoppedFunction);
 //Start the capture thread
-KeyBoardDeviceObj.StartCaptureThread(0, false);
+KeyBoardCaptureObj.StartCaptureThread(0, false);
 //StartCaptureThread(const short method, bool keyForwarding)
 //method == 0 --> KeyPressed
 //method == 1 --> KeyReleased

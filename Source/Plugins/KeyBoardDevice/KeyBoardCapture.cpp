@@ -123,14 +123,14 @@ void KeyBoardCapture::StopCaptureThread()
 	captureThread->stop();
 }
 
-QString KeyBoardCapture::getVirtualKeyString(const quint32 &keyCode)
-{
-	if (mKeyCodes.contains(keyCode))
-		return mKeyCodes.value(keyCode);
-	else
-		return QString("");
-	return QString("");
-}
+//QString KeyBoardCapture::getVirtualKeyString(const quint32 &keyCode)
+//{
+//	if (mKeyCodes.contains(keyCode))
+//		return mKeyCodes.value(keyCode);
+//	else
+//		return QString("");
+//	return QString("");
+//}
 
 void KeyBoardCapture::setupKeyCodeTable()
 {

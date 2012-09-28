@@ -31,6 +31,7 @@
 class _extensionname_ : public QObject, protected QScriptable
 {
 	Q_OBJECT
+	//Q_CLASSINFO("ScriptAPIClassName", "_extensionname_")//Can't use defines here!, moc doesn't handle defines, not needed here
 	Q_PROPERTY( short ExampleProperty WRITE setExampleProperty READ getExampleProperty )
 
 signals:

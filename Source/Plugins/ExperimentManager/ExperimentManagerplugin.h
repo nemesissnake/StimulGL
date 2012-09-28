@@ -57,6 +57,7 @@ public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
 	QString GetAdditionalFileExtensions() {return QString("Experiment Manager Plugin files (*.exml);;");};
+	QObject *GetScriptMetaObject() {return (QObject *)ExperimentManagerObject->metaObject();};
 };
 
 #endif//ExperimentManagerPLUGIN_H

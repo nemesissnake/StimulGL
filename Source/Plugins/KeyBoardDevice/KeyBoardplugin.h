@@ -53,6 +53,7 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
+	QObject *GetScriptMetaObject() {return (QObject *)KeyBoardObject->metaObject();};
 
 };
 

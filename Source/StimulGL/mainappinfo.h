@@ -52,6 +52,7 @@ public:
 	static QString outputsDirPath();
 	static QString qmlExtensionsPluginDirPath();
 	static QWidget* getMainWindow()					{return mainWindow;};
+	static QString getScriptApiClassName()			{return SCRIPT_API_CLASS_NAME_TAG;};
 
 
 	static QString getDefaultFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}

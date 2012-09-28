@@ -43,7 +43,7 @@ public:
 
 	bool ConfigureScriptEngine(QScriptEngine &engine);
 	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};
-
+	
 private:
 	short nBaseAddress;
 	ParallelPort *PPortObject; 
@@ -52,6 +52,7 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
+	QObject *GetScriptMetaObject() {return (QObject *)PPortObject->metaObject();};
 
 };
 

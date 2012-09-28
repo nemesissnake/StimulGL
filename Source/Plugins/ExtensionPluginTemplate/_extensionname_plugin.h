@@ -55,6 +55,7 @@ public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};// ExtensionInterface PluginInterface::IsCompatible();};
 	//QString GetAdditionalFileExtensions() {return QString("_extensionname_ files (*._extensionname_);;");};
+	QObject *GetScriptMetaObject() {return (QObject *)_extensionname_Object->metaObject();};
 
 signals:
 	void DoSignal();

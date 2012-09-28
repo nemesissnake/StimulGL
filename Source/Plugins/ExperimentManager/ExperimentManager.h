@@ -52,6 +52,7 @@ class ExperimentTree;
 class ExperimentManager : public QObject, protected QScriptable
 {
 	Q_OBJECT
+	//Q_CLASSINFO("ScriptAPIClassName", "ExperimentManager")//Can't use defines here!, moc doesn't handle defines, not needed here
 
 signals:
 	//! The ExperimentStateHasChanged Signal.

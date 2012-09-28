@@ -53,6 +53,7 @@
 class SerialPortDevice : public QObject, protected QScriptable
 {
 	Q_OBJECT
+	Q_CLASSINFO("ScriptAPIClassName", "SerialPort")//Can't use defines here!, moc doesn't handle defines
 
 signals:
 	//! The CaptureThreadTriggered Signal.

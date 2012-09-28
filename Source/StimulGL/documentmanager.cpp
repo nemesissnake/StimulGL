@@ -341,6 +341,7 @@ int DocumentManager::addAdditionalApiEntry(const QString &entry)
 	if(additionalApiEntries.contains(entry,Qt::CaseSensitive) == false)
 	{
 		additionalApiEntries.append(entry);
+		//qDebug() << additionalApiEntries.at(additionalApiEntries.count()-1);
 		return additionalApiEntries.count() -1;
 	}
 	return -1;

@@ -69,6 +69,7 @@ public:
 	DocFindFlags lastFlags() const; 
 	bool appendKnownFileExtensionList(QString strFileExtLst);
 	QString getKnownFileExtensionList() {return strFileExtensionList;};
+	int addAdditionalApiEntry(const QString &entry); 
 
 public slots:
 	void signalDocManagerOutput(QString strText2Output) {emit DocumentManagerOutput(strText2Output);};
@@ -89,7 +90,6 @@ private:
 	void setFileName(int DocIndex, QString fileName);
 	bool getLexer(QsciLexer *lexer, const QString &lexerName, QObject *parent = 0);
 	QStringList getAdditionalApiEntries() {return additionalApiEntries;};
-	int addAdditionalApiEntry(const QString &entry); 
 
 private slots:
 	void documentWasModified(QWidget *subWindow);

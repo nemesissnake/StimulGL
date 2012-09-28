@@ -57,6 +57,7 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+	Q_CLASSINFO("ScriptAPIClassName", "StimulGL")//Can't use defines here!, moc doesn't handle defines
 
 public:
 	MainWindow();
@@ -285,6 +286,7 @@ private:
 	QString activeMdiChildFilePath();
 	QMdiSubWindow *findMdiChild(const QString &fileName);
 	void updateRecentFileList(const QString &fileName);
+	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);
 	
 	//std::ofstream mainLogFile;
 	//void MyOutputHandler(QtMsgType type, const char *msg);
