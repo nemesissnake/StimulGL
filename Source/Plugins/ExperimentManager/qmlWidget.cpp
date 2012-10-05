@@ -492,10 +492,16 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget)
 		qmlViewer->setVisible(false);
 		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());		
 	}
-	if (qmlViewer->source() != QUrl::fromLocalFile(qmlMainFilePath))
+
+	QFileInfo fi(qmlMainFilePath);
+	QUrl fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
+	//QString test = fi.canonicalFilePath();
+	//QString test2 = qmlViewer->source().toString();
+	
+	if (qmlViewer->source() != fileUrl)
 	{
 		qmlViewer->setVisible(false);
-		qmlViewer->setSource(QUrl::fromLocalFile(qmlMainFilePath));//QUrl::fromLocalFile("MyItem.qml"));
+		qmlViewer->setSource(fileUrl);
 		rootObject = dynamic_cast<QObject *>(qmlViewer->rootObject());// get root object
 		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());
 	}	

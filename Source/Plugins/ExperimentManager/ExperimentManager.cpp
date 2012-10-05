@@ -44,7 +44,7 @@ QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context,
 *   You do not need to specify the parent object. 
 *	The StimulGL script engine automatically retrieves the parent role
 */
-ExperimentManager::ExperimentManager(QObject *parent, QScriptEngine* engine) : QObject(parent)
+ExperimentManager::ExperimentManager(QObject *parent, QScriptEngine* engine) : QObject(parent), parentObject(parent)
 {
 	currentScriptEngine = engine;
 	DefaultConstruct();
@@ -68,7 +68,6 @@ void ExperimentManager::DefaultConstruct()
 	MainAppInfo::CreateHashTableFromEnumeration(typeid(ExperimentState).name(),experimentStateHash,this->staticMetaObject);
 	m_RunFullScreen = true;
 	m_ExpFileName = "";
-	m_DebugMode = false;
 	currentExperimentTree = NULL;
 	expDataLogger = NULL;
 	RegisterMetaTypes();
@@ -399,7 +398,7 @@ bool ExperimentManager::loadExperiment(QString strFile, bool bViewEditTree)
 		delete currentExperimentTree;
 		currentExperimentTree = NULL;
 	}
-	currentExperimentTree = new ExperimentTree;
+	currentExperimentTree = new ExperimentTree(MainAppInfo::getMainWindow());
 
 	QString fileName = getExperimentFileName();
 	if (strFile.isEmpty())
@@ -972,6 +971,25 @@ bool ExperimentManager::configureExperiment()
 		return true;
 	}
 	return false;
+}
+
+void ExperimentManager::setDebugMode(bool mode)
+{
+	strcExperimentConfiguration.bDebugMode = mode;
+}
+
+bool ExperimentManager::getDebugMode()
+{
+	return strcExperimentConfiguration.bDebugMode;
+}
+
+void ExperimentManager::setExperimentName(QString name)
+{
+	strcExperimentConfiguration.nExperimentName = name;
+}
+QString ExperimentManager::getExperimentName()
+{
+	return strcExperimentConfiguration.nExperimentName;
 }
 
 bool ExperimentManager::finalizeExperimentObjects()
@@ -1740,6 +1758,16 @@ bool ExperimentManager::createExperimentObjects()
 
 bool ExperimentManager::getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue)
 {
+	//if(sScriptContextStatement.left(3).toLower() == QString(QString(EXPERIMENTMANAGER_SCRIPTCONTEXT_NAME) + ".").toLower())
+	//{//Here we have direct access to this (--> the current Experiment Manager used)
+	//	QString sMethod = sScriptContextStatement.mid(3);
+	//	QString sRetVal;
+	//	QVariant vRetVal;
+	//	bool a = QMetaObject::invokeMethod( this, sMethod.toLatin1(), Qt::DirectConnection, Q_RETURN_ARG(QVariant, (QVariant)vRetVal));//Q_RETURN_ARG(QString, sRetVal));//(QVariant, sScriptContextReturnValue));
+	//	sScriptContextReturnValue = sRetVal;
+	//	return a;
+	//}
+
 	if (!currentScriptEngine)
 	{
 		QString tmpString = "... Could not expand the script object (" + sScriptContextStatement + "), the script engine is not ready!";

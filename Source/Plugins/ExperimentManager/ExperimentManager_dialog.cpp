@@ -22,12 +22,11 @@
 
 ExperimentManager_Dialog::ExperimentManager_Dialog(QWidget *parent)	: QDialog(parent)
 {
-	currentExperimentState = Experiment_SubObject_Constructing;
-	//Gets constructed only once during the load of the plugin
+	currentExperimentSubObjectState = Experiment_SubObject_Constructing;
 	QmlWidgetObject = NULL;
+	ExperimentManagerObj = NULL;
 	tmpContainerDlg = NULL;
 	tmpLayout = NULL;
-	//audioOutput = NULL;
 	
 	ui.setupUi(this);
 	connect(ui.btnExampleButton, SIGNAL(clicked()), this, SLOT(exampleButton_Pressed()));
@@ -35,12 +34,13 @@ ExperimentManager_Dialog::ExperimentManager_Dialog(QWidget *parent)	: QDialog(pa
 	connect(ui.btnExampleButton_3, SIGNAL(clicked()), this, SLOT(exampleButton_3_Pressed()));
 	connect(ui.btnExampleButton_4, SIGNAL(clicked()), this, SLOT(exampleButton_4_Pressed()));
 	connect(ui.btnExampleButton_5, SIGNAL(clicked()), this, SLOT(exampleButton_5_Pressed()));
-	currentExperimentState = Experiment_SubObject_Initialized;
+	currentExperimentSubObjectState = Experiment_SubObject_Initialized;
+	currentExperimentState = ExperimentManager::ExperimentManager_NoState;
 }
 
 ExperimentManager_Dialog::~ExperimentManager_Dialog()
 {
-	currentExperimentState = Experiment_SubObject_Destructing;
+	currentExperimentSubObjectState = Experiment_SubObject_Destructing;
 	cleanUp();
 }
 
@@ -64,19 +64,42 @@ void ExperimentManager_Dialog::on_cancelButton_clicked()
 
 void ExperimentManager_Dialog::cleanUp()
 {
+	if(ExperimentManagerObj)
+	{
+		if ((currentExperimentState == ExperimentManager::ExperimentManager_IsStarting) || (currentExperimentState == ExperimentManager::ExperimentManager_Started))
+		{
+			ExperimentManagerObj->abortExperiment();
+			int nRetries = 10;
+			while(currentExperimentState != ExperimentManager::ExperimentManager_Stopped)
+			{
+				qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,50);
+				nRetries--;
+				if (nRetries == 0)
+				{
+					break;//Could not stop the experiment....
+				}
+			}
+			nRetries = nRetries;
+		}		
+	}
 	connectSignalSlots(true);
+	if(ExperimentManagerObj)
+	{
+		delete ExperimentManagerObj;
+		ExperimentManagerObj = NULL;
+	}
 	if (QmlWidgetObject)
 	{
 		QmlWidgetObject->stopObject();
 		delete QmlWidgetObject;
 		QmlWidgetObject = NULL;
 	}
-	if (tmpContainerDlg == NULL)
+	if (tmpContainerDlg)
 	{
 		delete tmpContainerDlg;
 		tmpContainerDlg = NULL;
 	}
-	if (tmpLayout == NULL)
+	if (tmpLayout)
 	{
 		delete tmpLayout;
 		tmpLayout = NULL;
@@ -86,19 +109,58 @@ void ExperimentManager_Dialog::cleanUp()
 
 void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 {
-	if (QmlWidgetObject == NULL)
-		return;
+	//void UserWantsToClose(void);
+	//void ObjectShouldStop(void);
+	//void ObjectStateHasChanged(ExperimentSubObjectState);
+	//void NewInitBlockTrial();
+	//void ExternalTriggerIncremented(int);
+	//void ExperimentStructureChanged(int,int,int);//Block,Trial,InternalTrigger
+
 	if (bDisconnect)
 	{
-		disconnect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
-		//disconnect(QmlWidgetObject, SIGNAL(ObjectShouldStop(void)), QmlWidgetObject, SLOT(stopExperiment(void)));
-		disconnect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+		if(QmlWidgetObject)
+		{
+			disconnect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
+			//disconnect(QmlWidgetObject, SIGNAL(ObjectShouldStop(void)), QmlWidgetObject, SLOT(stopExperiment(void)));
+			disconnect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+		}
+		if(ExperimentManagerObj)
+		{
+			disconnect(ExperimentManagerObj, SIGNAL(ExperimentStateHasChanged(int, QString)), this, SLOT(ExperimentStateHasChanged(int, QString)));
+			disconnect(ExperimentManagerObj, SIGNAL(WriteToLogOutput(QString)), this, SLOT(LogMessage(QString)));
+		}
 	}
 	else
 	{
-		connect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
-		//connect(QmlWidgetObject, SIGNAL(ObjectShouldStop(void)), QmlWidgetObject, SLOT(stopExperiment(void)));
-		connect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+		if(QmlWidgetObject)
+		{
+			connect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
+			//connect(QmlWidgetObject, SIGNAL(ObjectShouldStop(void)), QmlWidgetObject, SLOT(stopExperiment(void)));
+			connect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+		}
+		if(ExperimentManagerObj)
+		{
+			connect(ExperimentManagerObj, SIGNAL(ExperimentStateHasChanged(int, QString)), this, SLOT(ExperimentStateHasChanged(int, QString)));
+			connect(ExperimentManagerObj, SIGNAL(WriteToLogOutput(QString)), this, SLOT(LogMessage(QString)));
+		}
+	}	
+}
+
+void ExperimentManager_Dialog::LogMessage(QString sMessage)
+{
+
+}
+
+void ExperimentManager_Dialog::ExperimentStateHasChanged(int nExperimentMainState, QString timeTextStamp)
+{
+	currentExperimentState = (ExperimentManager::ExperimentState)nExperimentMainState;
+	if (currentExperimentState == ExperimentManager::ExperimentManager_Constructed)
+	{
+
+	} 
+	else if (currentExperimentState == ExperimentManager::ExperimentManager_Initialized)
+	{
+
 	}
 }
 
@@ -106,25 +168,25 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 {
 	if(nState == Experiment_SubObject_Abort)
 	{
-		if (currentExperimentState != Experiment_SubObject_IsAborting)//Multiple Abort events could occur, catch only first one
+		if (currentExperimentSubObjectState != Experiment_SubObject_IsAborting)//Multiple Abort events could occur, catch only first one
 		{
 			if (QmlWidgetObject)
 				QmlWidgetObject->deleteLater();
-			currentExperimentState = Experiment_SubObject_IsAborting;
+			currentExperimentSubObjectState = Experiment_SubObject_IsAborting;
 		}
 	}
 	else if(nState == Experiment_SubObject_Stop)
 	{
-		if (currentExperimentState != Experiment_SubObject_IsStopping)//Multiple Stop events could occur, catch only first one
+		if (currentExperimentSubObjectState != Experiment_SubObject_IsStopping)//Multiple Stop events could occur, catch only first one
 		{
 			if (QmlWidgetObject)
 				QmlWidgetObject->deleteLater();
-			currentExperimentState = Experiment_SubObject_IsStopping;
+			currentExperimentSubObjectState = Experiment_SubObject_IsStopping;
 		}
 	}
 	else if(nState == Experiment_SubObject_Stopped)
 	{
-		currentExperimentState = nState;
+		currentExperimentSubObjectState = nState;
 		if (tmpContainerDlg)
 		{
 			tmpContainerDlg->deleteLater();
@@ -135,24 +197,44 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 	}
 	else//All other cases
 	{
-		currentExperimentState = nState;
+		currentExperimentSubObjectState = nState;
 	}
 }
 
 void ExperimentManager_Dialog::exampleButton_Pressed()
 {
-	if (((currentExperimentState == Experiment_SubObject_Initialized) || (currentExperimentState == Experiment_SubObject_Stopped)) == false)
+	if (((currentExperimentSubObjectState == Experiment_SubObject_Initialized) || (currentExperimentSubObjectState == Experiment_SubObject_Stopped)) == false)
 		return;
-	
-	QString fileName = QFileDialog::getOpenFileName(NULL, tr("Open a QML Document"), MainAppInfo::appExampleDirPath(), tr("QML Document Files (*.qml);;Any file (*)"));
+	QString fileName = QFileDialog::getOpenFileName(NULL, tr("Open a Experiment file"), MainAppInfo::appExampleDirPath(), tr("Experiment Files (*.exml);;Any file (*)"));//"E:\\Projects\\StimulGL\\Install\\examples\\GettingStartedGuide\\ExperimentManager\\experiments\\PolarAngle.exml";
+	if (fileName.isEmpty())
+		return;
+	QFile file(fileName);
+	if (!file.exists())
+		return;
+	QFileInfo fi(file);
+	QDir::setCurrent(fi.canonicalPath());
+	ExperimentManagerObj = new ExperimentManager(this);
+	connectSignalSlots(false);
+	ExperimentManagerObj->setExperimentFileName(file.fileName());
+		if(!ExperimentManagerObj->runExperiment())
+	{
+		return;
+	}
+}
+
+void ExperimentManager_Dialog::exampleButton_2_Pressed()
+{
+	if (((currentExperimentSubObjectState == Experiment_SubObject_Initialized) || (currentExperimentSubObjectState == Experiment_SubObject_Stopped)) == false)
+		return;
+
+	QString fileName = "E:\\Projects\\StimulGL\\Install\\examples\\GettingStartedGuide\\ExperimentManager\\experiments\\Block_2.qml";//QFileDialog::getOpenFileName(NULL, tr("Open a QtQuick File"), MainAppInfo::appExampleDirPath(), tr("QtQuick Files (*.qml);;Any file (*)"));
 	if (fileName.isEmpty())
 		return;
 
 	QFile file(fileName);
 	if (!file.exists())
 		return;
-	
-	//if (tmpContainerDlg == NULL)//Always construct a new one
+
 	tmpContainerDlg = new ContainerDlg(this);
 	tmpContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
 	tmpContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
@@ -161,92 +243,25 @@ void ExperimentManager_Dialog::exampleButton_Pressed()
 	tmpLayout->setMargin(0);
 	tmpContainerDlg->setLayout(tmpLayout);
 	tmpContainerDlg->setWindowModality(Qt::WindowModality::WindowModal);
+	
 	QmlWidgetObject = new qmlWidget(this);
 	tmpLayout->addWidget(QmlWidgetObject);
-	
+
 	if(QmlWidgetObject->executeQMLDocument(fileName,tmpContainerDlg))//tmpLayout))
+	//if(QmlWidgetObject->executeQMLDocument(fileName))//tmpLayout))
 	{
 		connectSignalSlots(false);
 		tmpContainerDlg->showFullScreen();
 	}
 }
 
-void ExperimentManager_Dialog::exampleButton_2_Pressed()
-{
-	//startPlaying();
-}
-
-//void ExperimentManager_Dialog::startPlaying()
-//{
-//	inputFile.setFileName("E:\\Projects\\StimulGL\\Install\\examples\\Sounds\\level2.wav");//morsecode.mp3");//level2.wav");//WindowsNotify.wav");
-//	inputFile.open(QIODevice::ReadOnly);
-//
-//	QAudioFormat format;
-//	// Set up the format, eg.
-//	format.setFrequency(22050);////44100);//8000);
-//	format.setChannels(1);//2);
-//	format.setSampleSize(16);//8);
-//	format.setCodec("audio/pcm");
-//	format.setByteOrder(QAudioFormat::LittleEndian);
-//	format.setSampleType(QAudioFormat::UnSignedInt);
-//
-//
-//	QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-//	if (!info.isFormatSupported(format)) {
-//		qWarning()<<"raw audio format not supported by backend, cannot play audio.";
-//		return;
-//	}
-//
-//	audioOutput = new QAudioOutput(format, this);
-//	connect(audioOutput,SIGNAL(stateChanged(QAudio::State)),this,SLOT(finishedPlaying(QAudio::State)));
-//	audioOutput->start(&inputFile);
-//}
-
-//void ExperimentManager_Dialog::finishedPlaying(QAudio::State state)
-//{
-//	if (state == QAudio::IdleState) {
-//		audioOutput->stop();
-//		inputFile.close();
-//		delete audioOutput;
-//	}
-//}
-
-//void ExperimentManager_Dialog::AudioStateChanged(QAudio::State newState)
-//{
-//	switch (newState) {
-//	case QAudio::StoppedState:
-//		if (audioOutput->error() != QAudio::NoError) {
-//			// Perform error handling
-//		} else {
-//			// Normal stop
-//		}
-//		break;
-//	}
-//}
-
 void ExperimentManager_Dialog::exampleButton_3_Pressed()
 {
-	//if(audioOutput)
-	//{
-	//	audioOutput->stop();
-	//	if (inputFile.isOpen())
-	//		inputFile.close();
-	//	delete audioOutput;
-	//	audioOutput = NULL;
-	//}
+	
 }
 
 void ExperimentManager_Dialog::exampleButton_4_Pressed()
 {
-	////Phonon::MediaObject *music = Phonon::createPlayer(Phonon::MusicCategory, Phonon::MediaSource(
-	////music->play();
-
-	//Phonon::MediaObject *mediaObject = new Phonon::MediaObject(this);
-	//mediaObject->setCurrentSource(Phonon::MediaSource("E:\\Projects\\StimulGL\\Install\\examples\\Sounds\\level2.wav"));//morsecode.mp3"));//level2.wav"));//WindowsNotify.wav"));
-	//Phonon::AudioOutput *audioOutput = new Phonon::AudioOutput(Phonon::MusicCategory, this);
-	//Phonon::Path path = Phonon::createPath(mediaObject, audioOutput);
-
-	//mediaObject->play();
 	
 }
 

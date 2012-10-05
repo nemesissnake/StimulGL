@@ -41,6 +41,8 @@
 #include <windows.h>
 #endif
 
+#define EXPERIMENTMANAGER_SCRIPTCONTEXT_NAME	"EM"
+
 class RetinoMap_glwidget;
 class qmlWidget;
 class ExperimentTree;
@@ -124,6 +126,10 @@ public slots:
 	double restartExperimentTimer(int nIndex);
 	double elapsedExperimentTimerTime(int nIndex);
 	QString getCurrentExperimentState();
+	void setDebugMode(bool mode);
+	bool getDebugMode();
+	void setExperimentName(QString name);
+	QString getExperimentName();	
 
 private:
 	void DefaultConstruct();
@@ -152,11 +158,11 @@ private:
 	QByteArray currentExperimentFile;
 	QByteArray currentValidationFile;
 
+	QObject *parentObject;
 	QScriptEngine* currentScriptEngine;
 	ExperimentState experimentCurrentState;
 	QHash<QString, int> experimentStateHash;
 	bool m_RunFullScreen;
-	bool m_DebugMode;
 	QString m_ExpFileName;
 	QString m_ExpFolder;
 	ExperimentTree *currentExperimentTree;	

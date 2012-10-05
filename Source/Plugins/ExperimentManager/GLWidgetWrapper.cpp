@@ -54,7 +54,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	setWindowTitle(tr("Painting a Scene"));
 
 	alternativeContainerDlg = NULL;
-	stimContainerDlg = new ContainerDlg();
+	stimContainerDlg = new ContainerDlg();//MainAppInfo::getMainWindow()); //Can be used like this...
 	stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
 	stimContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
 	stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
@@ -742,6 +742,7 @@ void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 	mainLayout->setMargin(0);
 	mainLayout->addWidget(layoutWidget);
 	stimContainerDlg->setLayout(mainLayout);
+	stimContainerDlg->setModal(true); //Set to true because starting an experiment file from the ExperimentManager plugins User Interface requests this to work properly...
 	stimContainerDlg->showFullScreen();
 }
 

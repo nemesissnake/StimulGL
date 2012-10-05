@@ -27,8 +27,8 @@ Q_DECLARE_METATYPE(ExperimentManager*)
 
 ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 {
-	ExperimentManagerObject = new ExperimentManager(parent,NULL);
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
+	ExperimentManagerObject = new ExperimentManager(ExperimentManagerDiagObject,NULL);
 	strPluginInformation = PLUGIN_INFORMATION;
 }
 

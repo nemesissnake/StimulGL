@@ -31,7 +31,7 @@ class ExperimentTree : public QTreeWidget
 	Q_OBJECT
 
 public:
-	ExperimentTree(QWidget *parent = 0);
+	ExperimentTree(QWidget *parent = NULL);
 	~ExperimentTree();
 
 	bool read(QIODevice *device);

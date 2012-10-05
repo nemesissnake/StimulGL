@@ -91,7 +91,11 @@ function ExperimentStateChanged(currentState)
 	
 	currentEMState = currentState;
 	Log(ExperimentManagerObj.getCurrentExperimentState());	
-	if(currentEMState == 8)
+	if(currentEMState == 4)
+	{
+
+	}
+	else if(currentEMState == 8)
 	{
 		CleanupScript();
 		//Whenever the experiment is stopped (or aborted) we make sure here that we'll end the script nicely
