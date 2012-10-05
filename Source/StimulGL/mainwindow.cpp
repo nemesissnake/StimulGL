@@ -925,23 +925,43 @@ void MainWindow::setupDynamicPlugins()
 			//	methods << QString::fromLatin1(metaObject->method(i).signature());
 			//	DocManager->addAdditionalApiEntry(QString::fromLatin1(metaObject->method(i).signature()));
 			//}
-
-			if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
-			{
-				//Invoke the slot
-				QObject *pointerQObject = NULL;
-				bool bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject));				
-				const QMetaObject* metaScriptObject = (const QMetaObject*) pointerQObject;
-				if (metaScriptObject && bResult)
-					extendAPICallTips(metaScriptObject);
-			}
-
 			if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL).toLatin1())) == -1))//Is the slot present?
 			{
 				//Invoke the slot
 				metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
 				if (bRetVal)
 				{
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECTCOUNT_FULL).toLatin1())) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						int nScriptObjectCount = 0;
+						bool bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECTCOUNT,Qt::DirectConnection, Q_RETURN_ARG(int,(int)nScriptObjectCount));				
+						if(bResult && (nScriptObjectCount > 0))
+						{
+							if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
+							{
+								QObject *pointerQObject = NULL;
+								const QMetaObject* metaScriptObject;
+								for (int i=0;i<nScriptObjectCount;i++)
+								{
+									//Invoke the slot
+									pointerQObject = NULL;
+									bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject), Q_ARG(int,(int)i));				
+									if(bResult)
+									{
+										metaScriptObject = (const QMetaObject*) pointerQObject;
+										if (metaScriptObject && bResult)
+											extendAPICallTips(metaScriptObject);
+									}
+									else
+									{
+										break;
+									}
+								}
+							}
+						}
+					}
+
 					popPluginIntoMenu(plugin);
 					//Additional File Extensions defined?
 					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILEEXT_FULL).toLatin1())) == -1))//Is the slot present?
@@ -979,23 +999,42 @@ void MainWindow::setupDynamicPlugins()
 				//	properties << QString::fromLatin1(metaObject->method(i).signature());
 				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL).toLatin1())) == -1))//Is the slot present?
 				{
-					
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
-					{
-						//Invoke the slot
-						QObject *pointerQObject = NULL;
-						bool bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject));				
-						const QMetaObject* metaScriptObject = (const QMetaObject*) pointerQObject;
-						if (metaScriptObject && bResult)
-							extendAPICallTips(metaScriptObject);
-					}					
-					
-					
 					//qWarning() << __FUNCTION__ << ", Checking plugin compatibility(" << fileName << ")...";	
 					//Invoke the slot
 					metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
 					if (bRetVal)
 					{
+						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECTCOUNT_FULL).toLatin1())) == -1))//Is the slot present?
+						{
+							//Invoke the slot
+							int nScriptObjectCount = 0;
+							bool bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECTCOUNT,Qt::DirectConnection, Q_RETURN_ARG(int,(int)nScriptObjectCount));				
+							if(bResult && (nScriptObjectCount > 0))
+							{
+								if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
+								{
+									QObject *pointerQObject = NULL;
+									const QMetaObject* metaScriptObject;
+									for (int i=0;i<nScriptObjectCount;i++)
+									{
+										//Invoke the slot
+										pointerQObject = NULL;
+										bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject), Q_ARG(int,(int)i));				
+										if(bResult)
+										{
+											metaScriptObject = (const QMetaObject*) pointerQObject;
+											if (metaScriptObject && bResult)
+												extendAPICallTips(metaScriptObject);
+										}
+										else
+										{
+											break;
+										}
+									}
+								}
+							}
+						}
+
 						//qWarning() << __FUNCTION__ << ", Plugin is compatibility(" << fileName << ")";
 						if (popPluginIntoMenu(plugin))
 						{

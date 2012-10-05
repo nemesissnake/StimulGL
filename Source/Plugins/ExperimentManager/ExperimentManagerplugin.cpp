@@ -27,6 +27,12 @@ Q_DECLARE_METATYPE(ExperimentManager*)
 
 ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 {
+	ExperimentManagerDiagObject = NULL;
+	ExperimentManagerObject = NULL;
+	TriggerTimerObject = NULL;
+	ImageProcessorObject = NULL;
+	PrtFormatManagerObject = NULL;
+	QmlWidgetObject = NULL;
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
 	ExperimentManagerObject = new ExperimentManager(ExperimentManagerDiagObject,NULL);
 	strPluginInformation = PLUGIN_INFORMATION;
@@ -34,8 +40,36 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 
 ExperimentManagerPlugin::~ExperimentManagerPlugin()
 {
-	delete ExperimentManagerDiagObject;
-	delete ExperimentManagerObject;
+	if(ExperimentManagerObject)
+	{
+		delete ExperimentManagerObject;
+		ExperimentManagerObject = NULL;
+	}
+	if(ExperimentManagerDiagObject)
+	{
+		delete ExperimentManagerDiagObject;
+		ExperimentManagerDiagObject = NULL;
+	}
+	if(TriggerTimerObject)
+	{
+		delete TriggerTimerObject;
+		TriggerTimerObject = NULL;
+	}
+	if(ImageProcessorObject)
+	{
+		delete ImageProcessorObject;
+		ImageProcessorObject = NULL;
+	}
+	if(PrtFormatManagerObject)
+	{
+		delete PrtFormatManagerObject;
+		PrtFormatManagerObject = NULL;
+	}
+	if(QmlWidgetObject)
+	{
+		delete QmlWidgetObject;
+		QmlWidgetObject = NULL;
+	}
 }
 
 bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
@@ -45,29 +79,41 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue ExperimentManagerCtor = engine.newFunction(ExperimentManager::ctor__experimentManager, ExperimentManagerProto);
 	engine.globalObject().setProperty(EXPERIMENTMANAGER_NAME, ExperimentManagerCtor);
 
-	TriggerTimer TriggerTimerObject;//or use new(), but make sure to use delete afterwards!
-	QScriptValue TriggerTimerProto = engine.newQObject(&TriggerTimerObject);
+	if(TriggerTimerObject == NULL)
+		TriggerTimerObject = new TriggerTimer();
+	QScriptValue TriggerTimerProto = engine.newQObject(TriggerTimerObject);
 	engine.setDefaultPrototype(qMetaTypeId<TriggerTimer*>(), TriggerTimerProto);
 	QScriptValue TriggerTimerCtor = engine.newFunction(TriggerTimer::ctor__triggerTimer, TriggerTimerProto);
 	engine.globalObject().setProperty(TRIGGERTIMER_NAME, TriggerTimerCtor);
 
-	ImageProcessor ImageProcessorObject;//or use new(), but make sure to use delete afterwards!
-	QScriptValue ImageProcessorProto = engine.newQObject(&ImageProcessorObject);
+	if(ImageProcessorObject == NULL)
+		ImageProcessorObject = new ImageProcessor();
+	QScriptValue ImageProcessorProto = engine.newQObject(ImageProcessorObject);
 	engine.setDefaultPrototype(qMetaTypeId<ImageProcessor*>(), ImageProcessorProto);
 	QScriptValue ImageProcessorCtor = engine.newFunction(ImageProcessor::ctor__imageProcessor, ImageProcessorProto);
 	engine.globalObject().setProperty(IMAGEPROCESSOR_NAME, ImageProcessorCtor);
 
-	PrtFormatManager PrtFormatManagerObject;//or use new(), but make sure to use delete afterwards!
-	QScriptValue PrtFormatManagerProto = engine.newQObject(&PrtFormatManagerObject);
+	if(PrtFormatManagerObject == NULL)
+		PrtFormatManagerObject = new PrtFormatManager();
+	QScriptValue PrtFormatManagerProto = engine.newQObject(PrtFormatManagerObject);
 	engine.setDefaultPrototype(qMetaTypeId<PrtFormatManager*>(), PrtFormatManagerProto);
 	QScriptValue PrtFormatManagerCtor = engine.newFunction(PrtFormatManager::ctor__PrtFormatManager, PrtFormatManagerProto);
 	engine.globalObject().setProperty(PRTFORMATMANAGER_NAME, PrtFormatManagerCtor);
 
-	qmlWidget QmlWidgetObject;//or use new(), but make sure to use delete afterwards!
-	QScriptValue QmlWidgetProto = engine.newQObject(&QmlWidgetObject);
-	engine.setDefaultPrototype(qMetaTypeId<qmlWidget*>(), QmlWidgetProto);
-	QScriptValue QmlWidgetCtor = engine.newFunction(qmlWidget::ctor_QmlWidget, QmlWidgetProto);
-	engine.globalObject().setProperty(QMLWIDGET_NAME, QmlWidgetCtor);
+	//if(QmlWidgetObject == NULL)
+	//	QmlWidgetObject = new qmlWidget();
+	//QScriptValue QmlWidgetProto = engine.newQObject(QmlWidgetObject);
+	//engine.setDefaultPrototype(qMetaTypeId<qmlWidget*>(), QmlWidgetProto);
+	//QScriptValue QmlWidgetCtor = engine.newFunction(qmlWidget::ctor_QmlWidget, QmlWidgetProto);
+	//engine.globalObject().setProperty(QMLWIDGET_NAME, QmlWidgetCtor);
+
+	//if(retinoWidgetObject == NULL)
+	//	retinoWidgetObject = new RetinoMap_glwidget();
+	//RetinoMap_glwidget retinoWidgetObject;//or use new(), but make sure to use delete afterwards!
+	//QScriptValue RetinoWidgetProto = engine.newQObject(&retinoWidgetObject);
+	//engine.setDefaultPrototype(qMetaTypeId<RetinoMap_glwidget*>(), RetinoWidgetProto);
+	//QScriptValue RetinoWidgetCtor = engine.newFunction(RetinoMap_glwidget::ctor_RetinoWidget, RetinoWidgetProto);
+	//engine.globalObject().setProperty(RETINOMAP_WIDGET_NAME, RetinoWidgetCtor);
 
 	return true;
 }
@@ -93,6 +139,37 @@ bool ExperimentManagerPlugin::ShowGUI()
 	    break;
 	}		
 	return true;
+}
+
+QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
+{
+	if(nIndex<0)
+		return NULL;
+
+	switch (nIndex)
+	{
+	case 0:
+		return (QObject *)ExperimentManagerObject->metaObject();
+	case 1:
+		if(TriggerTimerObject == NULL)
+			TriggerTimerObject = new TriggerTimer();
+		return (QObject *)TriggerTimerObject->metaObject();
+	case 2:
+		if(ImageProcessorObject == NULL)
+			ImageProcessorObject = new ImageProcessor();
+		return (QObject *)ImageProcessorObject->metaObject();
+	case 3:
+		if(PrtFormatManagerObject == NULL)
+			PrtFormatManagerObject = new PrtFormatManager();
+		return (QObject *)PrtFormatManagerObject->metaObject();
+	default:
+		return NULL;
+	}
+}
+
+int ExperimentManagerPlugin::GetScriptMetaObjectCount() 
+{
+	return 4;
 }
 
 Q_EXPORT_PLUGIN2(experimentmanagerplugin, ExperimentManagerPlugin);

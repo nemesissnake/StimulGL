@@ -61,7 +61,8 @@ public slots:
 		return false;//wrong arguments
 	};
 	virtual QString GetAdditionalFileExtensions() {return QString("");};
-	virtual QObject *GetScriptMetaObject() {return NULL;};
+	virtual QObject *GetScriptMetaObject(int nIndex = 0) {return NULL;};
+	virtual int GetScriptMetaObjectCount() {return 0;};
 
 protected:
 	QString strPluginInformation;

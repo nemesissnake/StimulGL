@@ -53,8 +53,8 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
-	QObject *GetScriptMetaObject() {return (QObject *)KeyBoardObject->metaObject();};
-
+	QObject *GetScriptMetaObject(int nIndex) {return (QObject *)KeyBoardObject->metaObject();};
+	int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
 };
 
 #endif//KeyBoardPLUGIN_H

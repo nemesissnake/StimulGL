@@ -55,7 +55,8 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
-	QObject *GetScriptMetaObject() {return (QObject *)USBHIDDeviceObject->metaObject();};
+	QObject *GetScriptMetaObject(int nIndex) {return (QObject *)USBHIDDeviceObject->metaObject();};
+	int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
 };
 
 #endif//USBHIDDevicePLUGIN_H

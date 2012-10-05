@@ -286,10 +286,12 @@ private:
 	QString activeMdiChildFilePath();
 	QMdiSubWindow *findMdiChild(const QString &fileName);
 	void updateRecentFileList(const QString &fileName);
-	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);
 	
 	//std::ofstream mainLogFile;
 	//void MyOutputHandler(QtMsgType type, const char *msg);
+
+public:
+	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);
 
 protected:
 	void closeEvent(QCloseEvent *event);

@@ -51,7 +51,8 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
-	QObject *GetScriptMetaObject() {return (QObject *)SerialPortDeviceObject->metaObject();};
+	QObject *GetScriptMetaObject(int nIndex) {return (QObject *)SerialPortDeviceObject->metaObject();};
+	int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
 };
 
 #endif//SerialPortDevicePLUGIN_H
