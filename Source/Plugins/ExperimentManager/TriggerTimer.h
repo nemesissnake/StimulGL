@@ -37,6 +37,7 @@ enum TriggerTimerType
 class TriggerTimer : public QObject, protected QScriptable
 {
 	Q_OBJECT
+	//Q_CLASSINFO("ScriptAPIClassName", "TriggerTimer")//Can't use defines here!, moc doesn't handle defines, not needed here
 
 	struct strcIntervalTest
 	{
@@ -74,6 +75,8 @@ public slots:
 	double currentTime() {return WTF::currentTime();};
 	bool setTimerType(const QString &sNewTimerType);
 	QString getTimerType() const;
+	//QObject *GetScriptMetaObject(int nIndex) {return (QObject *)this->metaObject();};
+	//int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
 
 private:
 	void resetIntervalTestResults();

@@ -52,7 +52,8 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
-	QObject *GetScriptMetaObject() {return (QObject *)PPortObject->metaObject();};
+	QObject *GetScriptMetaObject(int nIndex) {return (QObject *)PPortObject->metaObject();};
+	int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
 
 };
 

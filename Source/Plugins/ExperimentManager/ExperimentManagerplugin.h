@@ -32,6 +32,7 @@
 #include "ExperimentManager.h"
 #include "ImageProcessor.h"
 #include "prtformatmanager.h"
+#include "TriggerTimer.h"
 #include "defines.h"
 
 QT_BEGIN_NAMESPACE
@@ -53,11 +54,17 @@ private:
 	ExperimentManager *ExperimentManagerObject; 
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;
 
+	TriggerTimer *TriggerTimerObject;
+	ImageProcessor *ImageProcessorObject;
+	PrtFormatManager *PrtFormatManagerObject;
+	qmlWidget *QmlWidgetObject;
+
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
 	QString GetAdditionalFileExtensions() {return QString("Experiment Manager Plugin files (*.exml);;");};
-	QObject *GetScriptMetaObject() {return (QObject *)ExperimentManagerObject->metaObject();};
+	QObject *GetScriptMetaObject(int nIndex);
+	int GetScriptMetaObjectCount();
 };
 
 #endif//ExperimentManagerPLUGIN_H
