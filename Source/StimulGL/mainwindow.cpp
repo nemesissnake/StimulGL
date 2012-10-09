@@ -287,6 +287,69 @@ QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine
 	return 0;
 }
 
+#ifdef DEBUG
+QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine)
+{
+	context->setActivationObject(context->parentContext()->activationObject());
+	context->setThisObject(context->parentContext()->thisObject());
+
+	QScriptValue allArgumentsArray = context->argumentsObject();//containing all parameters as array
+
+	QString result1;
+	for (int i = 0; i < context->argumentCount(); ++i)
+	{
+		if (i > 0)
+			result1.append(" ");
+		result1.append(context->argument(i).toString());		
+	}
+
+	QString result2;
+	QScriptValue self = context->thisObject();
+	result2 += self.property("firstName").toString();
+	result2 += QLatin1String(" ");
+	result2 += self.property("lastName").toString();
+
+	QStringList result3 = context->backtrace();//<function-name>(<arguments>)@<file-name>:<line-number>
+	QString result4 = context->toString();
+
+	QScriptContextInfo result5 = QScriptContextInfo(context);
+
+	QStringList result6;
+	QScriptValue obj = context->parentContext()->thisObject();
+	while (obj.isObject()) 
+	{
+		QScriptValueIterator it(obj);
+		while (it.hasNext()) 
+		{
+			result6 << it.name();
+			result6 << it.scriptName();
+			result6 << it.value().toString();
+
+			it.next();
+			if (it.flags() & QScriptValue::SkipInEnumeration)//Note that QScriptValueIterator will not automatically skip over properties that have the QScriptValue::SkipInEnumeration flag set; that flag only affects iteration in script code. If you want, you can skip over such properties with code like the following:
+				continue;
+			result6 << "found enumerated property:" << it.name();			
+		}
+		obj = obj.prototype();
+	}
+	
+
+
+	//QScriptValue calleeData = context->callee().data();
+	//QListWidget *outputObject = qobject_cast<QListWidget*>(calleeData.toQObject());
+	//outputObject->addItem(result);
+	//return engine->undefinedValue();
+
+	//outputObject->setItemDelegate(new OutputListDelegate(outputObject));
+	//QListWidgetItem *item = new QListWidgetItem();
+	//item->setData(Qt::DisplayRole, "Title");
+	//item->setData(Qt::UserRole + 1, "Description");
+	//outputObject->addItem(item);
+
+	return result1;//engine->undefinedValue();
+}
+#endif
+
 void MainWindow::setupScriptEngine()
 {
 	//qDebug() << "setupScriptEngine() - start";
@@ -332,6 +395,12 @@ void MainWindow::setupScriptEngine()
 
 	QScriptValue AppScriptThisObject = AppScriptEngine->eng->newQObject(this);
 	AppScriptEngine->eng->globalObject().setProperty("StimulGL", AppScriptThisObject);
+
+#ifdef DEBUG
+	QScriptValue TestFunctionVal = AppScriptEngine->eng->newFunction(myScriptTestFunction);
+	AppScriptEngine->eng->globalObject().setProperty("Test", TestFunctionVal);
+#endif
+
 	//We must declare it so that the type will be known to QMetaType, find "Q_DECLARE_METATYPE(DocFindFlags)"
 	//Q_DECLARE_METATYPE(DocFindFlags)
 	//Next, the DocFindFlags conversion functions. We represent the DocFindFlags value as a script object and just copy the properties, see below after this function body!
@@ -1337,15 +1406,38 @@ void MainWindow::executeScript()
 
 	QDir::setCurrent(getSelectedScriptFileLocation());
 
+	QString strScriptProgram = DocManager->getDocHandler(activeMdiChild())->text();
+
 	if (StimulGLScriptRunMode == MainAppInfo::Debug)
 	{
-		if (!AppScriptEngine->eng->canEvaluate(DocManager->getDocHandler(activeMdiChild())->text()))
+		if (!AppScriptEngine->eng->canEvaluate(strScriptProgram))
 		{
 			write2OutputWindow("... DebugScript -> Script syntax error ...");
 		}
 	}
-	
-	//{
+
+	QScriptSyntaxCheckResult syntaxChkResult = AppScriptEngine->eng->checkSyntax(strScriptProgram);
+	bool bSyntaxValidated = false;
+	if (syntaxChkResult.state() == QScriptSyntaxCheckResult::Error)
+	{
+		write2OutputWindow("... Invalid Script Syntax, the program contains a syntax error ...");
+	}
+	else if (syntaxChkResult.state() == QScriptSyntaxCheckResult::Intermediate)
+	{
+		write2OutputWindow("... Invalid Script Syntax, the program is incomplete ...");
+	}
+	else if(syntaxChkResult.state() == QScriptSyntaxCheckResult::Valid)
+	{
+		write2OutputWindow("... Valid Script Syntax ...");
+		bSyntaxValidated = true;
+	}
+	if(!bSyntaxValidated)
+	{
+		write2OutputWindow("... Script Syntax error at(col " + QString::number(syntaxChkResult.errorColumnNumber()) + ", line " + QString::number(syntaxChkResult.errorLineNumber()) + "): " + syntaxChkResult.errorMessage() + " ...");
+		DocManager->getDocHandler(activeMdiChild())->setCursorPosition(syntaxChkResult.errorLineNumber()-1,syntaxChkResult.errorColumnNumber());
+	}
+	else
+	{
 		write2OutputWindow("... Script started Evaluating on " + t.currentTime().toString() + "...");
 		t.start();
 
@@ -1359,7 +1451,6 @@ void MainWindow::executeScript()
 		{
 			write2OutputWindow("... Script stopped Evaluating due to error on line " + result.property("lineNumber").toString() + ": --> " + result.toString() + "...");
 			DocManager->getDocHandler(activeMdiChild())->setCursorPosition(result.property("lineNumber").toInteger()-1,0);
-			return;
 		}
 		else
 		{
@@ -1367,7 +1458,7 @@ void MainWindow::executeScript()
 			write2OutputWindow("... Total Time(ms): " + QString::number(timeElapsed));
 			write2OutputWindow("... Script fully Evaluated on " + t.currentTime().toString() + " ...");
 		}
-	//}	
+	}	
 	AppScriptEngine->eng->collectGarbage();
 	outputWindowList->scrollToBottom();
 
