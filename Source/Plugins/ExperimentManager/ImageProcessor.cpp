@@ -304,7 +304,7 @@ bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int
 	//		img.setColor(i, color.rgb());
 	//	}
 	//}
-	//bool b = p.convertFromImage(img);
+	//bofol b = p.convertFromImage(img);
 	//return p;
 	//return p;
 //}

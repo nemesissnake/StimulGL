@@ -248,7 +248,6 @@ test
 FileGroup ::D562F7E3-157E-48ED-91CE-71FBA40B332D -setup Install -active Yes -platforms {Windows TarArchive ZipArchive} -name {Program Files(x64)} -parent FileGroups
 File ::7E328DE7-2654-4D26-81C8-9E5FCAF16983 -targetfilename StimulGL.exe -name E:/Projects/StimulGL/Install/StimulGL_x64_Release.exe -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::37A39DB3-A83E-4827-A49A-459E45D983DA -name E:/Projects/StimulGL/Install/LICENSE.txt -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::921DC5FF-4AB1-4073-8589-2E345A2BFE94 -name E:/Projects/StimulGL/Install/README.txt -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::4434FE16-7CF0-4686-96AE-9254CC88ED91 -name E:/Projects/StimulGL/Install/bins/vcredist_x86.exe -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::1DC74C97-D411-49FA-B52B-54BFF31B6221 -name C:/Qt/4.8.0/x64/bin/hidapi_x64.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::C1E903B8-3B00-4267-860B-C1F091F0476F -name C:/Qt/4.8.0/x64/bin/qscintilla2.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D

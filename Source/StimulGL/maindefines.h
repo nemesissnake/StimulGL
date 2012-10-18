@@ -51,8 +51,8 @@
 #define MAIN_PROGRAM_XSD_DIRNAME						"xsd"
 #define MAIN_PROGRAM_DOC_BINARYCOLLFILE					"MainDocumentation.qhc"
 #define MAIN_PROGRAM_FILE_DESCRIPTION					"Open Source Cross Platform Scriptable Application"
-#define MAIN_PROGRAM_FILESEXTENSION_LIST				MAIN_PROGRAM_INTERNAL_NAME "standard files (*.qs *.svg *.svgz *.svg.gz);;QT Script files (*.qs);;SVG files (*.svg *.svgz *.svg.gz);;"
-#define MAIN_PROGRAM_ANYFILESEXTENSION_LIST				"Any files (*)"
+#define MAIN_PROGRAM_FILESEXTENSION_LIST				"Any files (*);;" MAIN_PROGRAM_INTERNAL_NAME "standard files (*.qs *.svg *.svgz *.svg.gz);;QT Script files (*.qs);;SVG files (*.svg *.svgz *.svg.gz);;"
+#define MAIN_PROGRAM_POST_FILESEXTENSION_LIST			""//"Any files (*)"
 #define MAIN_PROGRAM_UNTITLED_NAME						"Untitled"
 #define UNKNOWNENUMSTRING								"Unknown_Enumeration Value"
 #define MAIN_PROGRAM_STANDARD_DATETIME_FORMAT			"yyyyMMddHHmmsszzz"
@@ -61,6 +61,7 @@
 //Only edit until here!
 
 #define SCRIPT_API_CLASS_NAME_TAG						"ScriptAPIClassName"
+#define MAIN_PROGRAM_LOG_SLOT_NAME						"write2OutputWindow"
 #define METHOD_TYPE_SIGNAL_TAG							"signal"
 #define METHOD_TYPE_SLOT_TAG							"slot"
 #define METHOD_TYPE_MEMBER_TAG							"member"

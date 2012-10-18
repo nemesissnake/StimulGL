@@ -18,6 +18,7 @@
 
 
 #include "QmlErrorHandler.h"
+#include <QDebug>
 
 QmlErrorHandler::QmlErrorHandler(QDeclarativeView &view, QObject *parent) : QObject(parent), mView(view), mErrorOccured(false)
 {
@@ -57,15 +58,10 @@ void QmlErrorHandler::handleQmlErrors(const QList<QDeclarativeError>& qmlErrors)
 
 	mErrorOccured = true;
 
-	QMessageBox msgBox;
-	//msgBox.setText("Uh oh, something went terribly wrong!");
-	//msgBox.setInformativeText("We're sorry, but it seems there are some problems "
-	//	"with running our application on your phone. Please "
-	//	"send us the following information to help us resolve "
-	//	"this issue:\n\n") + errors.join("\n").toLatin1();
-	msgBox.setText(errors.join("\n"));
-	msgBox.exec();
-	//qApp->exit(-1);
+	//QMessageBox msgBox;
+	//msgBox.setText(errors.join("\n"));
+	//msgBox.exec();
+	qWarning() << errors.join("\n");
 }
 
 bool QmlErrorHandler::errorOccured() const

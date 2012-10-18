@@ -769,7 +769,7 @@ bool GLWidgetWrapper::startExperimentObject()
 	//	}
 	//	else
 	//	{
-	//		bool b = true;
+	//		bfool b = true;
 	//	}
 	//}
 

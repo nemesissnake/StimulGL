@@ -919,7 +919,7 @@ void MainWindow::showDocumentation()
 	helpAssistant->showDocumentation("index.html");
 }
 
-void MainWindow::write2OutputWindow(const QString &text2Write)
+void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined MAIN_PROGRAM_LOG_SLOT_NAME
 {
 	outputWindowList->addItem(text2Write);
 }
@@ -1138,7 +1138,7 @@ void MainWindow::setupDynamicPlugins()
 			}
 		}
 	}
-	DocManager->appendKnownFileExtensionList(MAIN_PROGRAM_ANYFILESEXTENSION_LIST);
+	DocManager->appendKnownFileExtensionList(MAIN_PROGRAM_POST_FILESEXTENSION_LIST);
 	////example 1(static plugin):
 	//see line Q_IMPORT_PLUGIN(parallelportplugin)
 	//ParallelPort *a = new ParallelPort(888,NULL); //see Q_DECLARE_METATYPE(ParallelPort*), must include header etc

@@ -4,9 +4,9 @@ import QtQuick 1.1
 
 Rectangle
 {
-	width: 300
-	height: 400
-	color: "#cfc313"
+	width: 600
+	height: 800
+	color: "#ffff00" //Yellow color
 
 	Text
 	{
@@ -27,7 +27,7 @@ Rectangle
 		y: 152
 		width: 113
 		height: 77
-		color: "#a81b1b"
+		color: "#ff0000"
 	}
 
 	Rectangle 
@@ -37,6 +37,6 @@ Rectangle
 		y: 268
 		width: 113
 		height: 77
-		color: "#1b2ba8"
+		color: "#0000ff"
 	}
 }

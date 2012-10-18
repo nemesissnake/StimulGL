@@ -148,7 +148,7 @@ void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 
 void ExperimentManager_Dialog::LogMessage(QString sMessage)
 {
-
+	QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, sMessage));
 }
 
 void ExperimentManager_Dialog::ExperimentStateHasChanged(int nExperimentMainState, QString timeTextStamp)
@@ -181,19 +181,19 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 		{
 			if (QmlWidgetObject)
 				QmlWidgetObject->deleteLater();
+			if (tmpContainerDlg)
+				tmpContainerDlg->deleteLater();
 			currentExperimentSubObjectState = Experiment_SubObject_IsStopping;
 		}
 	}
-	else if(nState == Experiment_SubObject_Stopped)
+	else if(nState == Experiment_SubObject_Destructing)
 	{
-		currentExperimentSubObjectState = nState;
-		if (tmpContainerDlg)
-		{
-			tmpContainerDlg->deleteLater();
-			//delete tmpContainerDlg;//Doesn't work!
-			//tmpContainerDlg = NULL;
-		}
+		currentExperimentSubObjectState = Experiment_SubObject_Destructing;
 		QmlWidgetObject = NULL;
+		tmpContainerDlg = NULL;
+		delete tmpLayout;
+		tmpLayout = NULL;
+		currentExperimentSubObjectState = Experiment_SubObject_Stopped;		
 	}
 	else//All other cases
 	{
@@ -227,7 +227,7 @@ void ExperimentManager_Dialog::exampleButton_2_Pressed()
 	if (((currentExperimentSubObjectState == Experiment_SubObject_Initialized) || (currentExperimentSubObjectState == Experiment_SubObject_Stopped)) == false)
 		return;
 
-	QString fileName = "E:\\Projects\\StimulGL\\Install\\examples\\GettingStartedGuide\\ExperimentManager\\experiments\\Block_2.qml";//QFileDialog::getOpenFileName(NULL, tr("Open a QtQuick File"), MainAppInfo::appExampleDirPath(), tr("QtQuick Files (*.qml);;Any file (*)"));
+	QString fileName = QFileDialog::getOpenFileName(NULL, tr("Open a QtQuick File"), MainAppInfo::appExampleDirPath(), tr("QtQuick Files (*.qml);;Any file (*)"));
 	if (fileName.isEmpty())
 		return;
 
@@ -239,12 +239,14 @@ void ExperimentManager_Dialog::exampleButton_2_Pressed()
 	tmpContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
 	tmpContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
 	tmpLayout = new QVBoxLayout;
-	tmpLayout->setAlignment(Qt::AlignCenter);
+	tmpLayout->setAlignment(Qt::AlignHCenter);
 	tmpLayout->setMargin(0);
+	//tmpLayout->setStretch(0,1680);
 	tmpContainerDlg->setLayout(tmpLayout);
 	tmpContainerDlg->setWindowModality(Qt::WindowModality::WindowModal);
 	
 	QmlWidgetObject = new qmlWidget(this);
+	//tmpLayout->setStretch(0,)
 	tmpLayout->addWidget(QmlWidgetObject);
 
 	if(QmlWidgetObject->executeQMLDocument(fileName,tmpContainerDlg))//tmpLayout))

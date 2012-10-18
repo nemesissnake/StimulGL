@@ -10,7 +10,7 @@ Attributes only apply to readonly non user data, like the ID
 
 	<defines>
 		<experiment ID="0">
-			<name>QML Example Experiment with the use of a TriggerTimer</name>
+			<name>Integrating QML Files Example</name>
 			<debugmode>true</debugmode>
 		</experiment>
 	</defines>
@@ -61,56 +61,62 @@ Attributes only apply to readonly non user data, like the ID
 	<actions>
 		<blocks>
 			<block ID="0">
-				<name>QMLExample_Block</name>
+				<name>QMLExample_Block_0</name>
 				<block_number>0</block_number>
-				<nr_of_trials>4</nr_of_trials>
+				<nr_of_trials>1</nr_of_trials>
 				<nr_of_internal_triggers>2</nr_of_internal_triggers>
 				<nr_of_external_triggers>1</nr_of_external_triggers>
 				<object ID="0">
 					<parameters>
 						<parameter ID="0">
 							<name>QmlMainFilePath</name>
-							<value>./Block_1.qml</value>
+							<value>./Example_2a.qml</value>
 						</parameter>
 						<parameter ID="1">
 							<name>StimulusWidthSpan</name>
-							<value>768</value>
+							<value>800</value>
 						</parameter>
 						<parameter ID="2">
 							<name>StimulusHeightSpan</name>
-							<value>768</value>
+							<value>600</value>
 						</parameter>
 						<parameter ID="3">
-							<name>QmlMinEventTime</name>
-							<value>1</value>
-						</parameter>
-						<parameter ID="4">
 							<name>BackGroundColor</name>
-							<value>#575757</value>
+							<value>#575757</value> <!-- Grey background color -->
 						</parameter>
 					</parameters>
 				</object>
 			</block>
-
 			<block ID="1">
 				<name>QMLExample_Block_1</name>
 				<block_number>1</block_number>
-				<nr_of_trials>2</nr_of_trials>
+				<nr_of_trials>1</nr_of_trials>
 				<nr_of_internal_triggers>2</nr_of_internal_triggers>
 				<nr_of_external_triggers>1</nr_of_external_triggers>
 				<object ID="0">
 					<parameters>
 						<parameter ID="0">
-								<name>QmlMainFilePath</name>
-								<value>Block_2.qml</value>
-						</parameter>
-						<parameter ID="1">
-							<name>BackGroundColor</name>
-							<value>#000000</value>
+							<name>QmlMainFilePath</name>
+							<value>./Example_2b.qml</value>
 						</parameter>
 					</parameters>
 				</object>
 			</block>
+			<block ID="2">
+				<name>QMLExample_Block_2</name>
+				<block_number>2</block_number>
+				<nr_of_trials>1</nr_of_trials>
+				<nr_of_internal_triggers>2</nr_of_internal_triggers>
+				<nr_of_external_triggers>1</nr_of_external_triggers>
+				<object ID="0">
+					<parameters>
+						<parameter ID="0">
+							<name>QmlMainFilePath</name>
+							<value>./Example_2c.qml</value>
+						</parameter>
+					</parameters>
+				</object>
+			</block>			
 		</blocks>
 	</actions>
 

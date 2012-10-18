@@ -107,6 +107,7 @@ public:
 	bool expandExperimentBlockParameterValue(QString &sValue);
 
 public slots:
+	void SendToMainAppLogOutput(const QString &strText2Write);
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool setExperimentFileName(const QString qstrExpFileName);
 	QString getExperimentFileName();

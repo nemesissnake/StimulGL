@@ -21,6 +21,7 @@
 #include "ExperimentManager.h"
 #include "ModelIndexProvider.h"
 #include <QMessageBox>
+#include <QMetaObject>
 
 qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent), parentWidget(parent)
 {
@@ -30,6 +31,9 @@ qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent), parentWidget(pa
 
 qmlWidget::~qmlWidget()
 {
+	//qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,20);//To make sure that the qmlEventRoutine(bool dShowWidget) function is finished in case of an qml error!
+	disconnect(qmlViewer, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onStatusChanged(QDeclarativeView::Status)));
+
 	if (imgLstModel)
 	{
 		delete imgLstModel;
@@ -140,7 +144,8 @@ void qmlWidget::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyTo
 		stimHeigthPixelAmount = rectScreenRes.height();
 		if(!bSetOnlyToDefault)
 			insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
-		stimWidthPixelAmount = stimHeigthPixelAmount;
+		//stimWidthPixelAmount = stimHeigthPixelAmount; removed, not needed here!
+		stimWidthPixelAmount = rectScreenRes.width();
 		if(!bSetOnlyToDefault)
 			insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
 		nWidgetMaxEvenTime = 5;
@@ -216,9 +221,9 @@ bool qmlWidget::initObject()
 	//QGLFormat format = QGLFormat(QGL::DirectRendering | QGL::DoubleBuffer);
 	//format.setSampleBuffers(true);
 	//QGLWidget *glWidget = new QGLWidget(format);
-	//bool a = format.doubleBuffer();//true
-	//bool b = format.directRendering();//true
-	//bool c = format.sampleBuffers();//false
+	//bofol a = format.doubleBuffer();//true
+	//bofol b = format.directRendering();//true
+	//bofol c = format.sampleBuffers();//false
 	//format.setDoubleBuffer(true);
 	//format.setDirectRendering(true);
 	//format.setSampleBuffers(true);
@@ -232,10 +237,8 @@ bool qmlWidget::initObject()
 	//if (parentWidget == NULL)
 		qmlViewer->setViewport(glWidget);//uncomment this
 
-
-
-	
-
+	connect(qmlViewer, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onStatusChanged(QDeclarativeView::Status)));
+		
 	//QPainter::RenderHints from = qmlViewer->renderHints();
 	//qmlViewer->setRenderHints(QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
 	//QPainter::RenderHints to = qmlViewer->renderHints();
@@ -483,6 +486,31 @@ bool qmlWidget::paintObject(int paintFlags, QObject *paintEventObject)//Only get
 	return true;
 }
 
+void qmlWidget::onStatusChanged(QDeclarativeView::Status status)
+{
+	if (status == QDeclarativeView::Error)
+	{
+		QList<QDeclarativeError> errList;
+		errList = qmlViewer->errors();
+		for (int i=0;i<errList.count();i++)
+		{
+			QString errMessage = "... QML error at(col " + QString::number(errList.at(i).column()) + ", line " + QString::number(errList.at(i).line()) + "): " + errList.at(i).description() + " ...";
+			if(currExpConfStruct)
+			{
+				if(currExpConfStruct->pExperimentManager)
+					currExpConfStruct->pExperimentManager->SendToMainAppLogOutput(errMessage);
+				else
+					QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));				
+			}
+			else
+			{
+				QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
+				break;
+			}
+		}
+	}
+}
+
 void qmlWidget::qmlEventRoutine(bool dShowWidget)
 {
 	//qmlViewer->setVisible(false);
@@ -502,6 +530,24 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget)
 	{
 		qmlViewer->setVisible(false);
 		qmlViewer->setSource(fileUrl);
+		
+		if (qmlViewer->status() == QDeclarativeView::Error)
+		{
+			this->stopObject();
+			if(currExpConfStruct)
+			{
+				if(currExpConfStruct->pExperimentManager)
+				{
+					currExpConfStruct->pExperimentManager->abortExperiment();
+					return;
+				}
+			}
+			//bool bInvokeSucceeded = QMetaObject::invokeMethod(currExpConfStruct->pExperimentManager, "abortExperiment",Qt::QueuedConnection);	
+			//currExpConfStruct->pExperimentManager->abortExperiment();
+
+			this->abortExperimentObject();//this seems to work...
+			return;
+		}
 		rootObject = dynamic_cast<QObject *>(qmlViewer->rootObject());// get root object
 		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());
 	}	

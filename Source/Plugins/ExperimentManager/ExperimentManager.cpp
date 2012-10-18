@@ -130,6 +130,11 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
 }
 
+void ExperimentManager::SendToMainAppLogOutput(const QString &strText2Write)
+{
+	emit WriteToLogOutput(strText2Write);
+}
+
 bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue, bool bIsInitializing)
 {
 /*! \brief Inserts a specified object parameter for the current experiment block.

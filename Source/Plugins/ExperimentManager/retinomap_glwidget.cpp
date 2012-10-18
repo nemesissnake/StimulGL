@@ -824,8 +824,6 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		if (nextNewCycleEntered)
 			emptyTriggerStepCount = emptyTriggerSteps;
 
-		//if (  (  (emptyTriggerSteps==0)  ||  ((emptyTriggerStepCount<1)&&(emptyTriggerLastIndex!=expSnapshot.currExpBlockTrialTrigger)       )  )  == false)
-		//if (  (  (emptyTriggerSteps >0)  &&  ((emptyTriggerStepCount<1)&&(emptyTriggerLastIndex!=expSnapshot.currExpBlockTrialTrigger)==false)  )  )
 		if   (  (  (emptyTriggerSteps >0)  &&  ((emptyTriggerStepCount>0)||(emptyTriggerLastIndex==expSnapshot.currExpBlockTrialTrigger)       )  )  )
 		{
 			if (emptyTriggerLastIndex != expSnapshot.currExpBlockTrialTrigger) 

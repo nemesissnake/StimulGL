@@ -69,6 +69,7 @@ public slots:
 
 private slots:
 	void callAnimate();
+	void onStatusChanged(QDeclarativeView::Status status);
 	//void processQMLEngineWarning(const QList<QDeclarativeError> & warnings);
 
 private:

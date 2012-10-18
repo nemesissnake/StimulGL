@@ -10,7 +10,7 @@ class ContainerDlg : public QDialog
 public:
 	ContainerDlg(QWidget *parent = NULL);
 	ContainerDlg::~ContainerDlg();
-
+	
 	private slots:
 		void reject();
 
