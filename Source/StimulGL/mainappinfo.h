@@ -29,6 +29,13 @@
 
 #include "maindefines.h"
 
+typedef struct strcDocContentInfoStructure
+{
+	QString strDocContent;
+	QString strDocExtension;
+	bool bIsFile;
+} DocContentInfoStructure;
+
 class MainAppInfo 
 {
 private:
@@ -104,8 +111,9 @@ public:
 		DOCTYPE_UNDEFINED		= 0x00000,
 		DOCTYPE_QSCRIPT			= 0x00001,
 		DOCTYPE_SVG				= 0x00002,
-		DOCTYPE_EXML			= 0x00003,
-		DOCTYPE_PLUGIN_WIDGET	= 0x00004
+		DOCTYPE_PLUGIN_DEFINED	= 0x00003
+		//DOCTYPE_EXML			= 0x00003,
+		//DOCTYPE_PLUGIN_WIDGET	= 0x00004
 	};
 	Q_DECLARE_FLAGS(DocTypes, DocType)
 };

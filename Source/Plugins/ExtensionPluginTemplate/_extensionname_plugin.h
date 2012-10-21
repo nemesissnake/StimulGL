@@ -54,7 +54,7 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};// ExtensionInterface PluginInterface::IsCompatible();};
-	//QString GetAdditionalFileExtensions() {return QString("_extensionname_ files (*._extensionname_);;");};
+	//QStringList GetAdditionalFileExtensions() {return (QStringList() << "_extensionname_ files (*._extensionname_);;");};
 	QObject *GetScriptMetaObject(int nIndex) {return (QObject *)_extensionname_Object->metaObject();};
 	int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
 

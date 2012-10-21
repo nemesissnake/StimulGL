@@ -48,6 +48,18 @@ ExperimentTree::~ExperimentTree()
 
 }
 
+bool ExperimentTree::read(QByteArray &byteArrayContent)
+{
+	bool bRetval = false;
+	QBuffer buffer(&byteArrayContent);
+	if(buffer.open(QIODevice::ReadOnly))
+	{
+		bRetval = read(&buffer);
+		buffer.close();
+	}
+	return bRetval;
+}
+
 bool ExperimentTree::read(QIODevice *device)
 {
 	QString errorStr;

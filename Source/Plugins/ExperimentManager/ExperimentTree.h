@@ -35,6 +35,7 @@ public:
 	~ExperimentTree();
 
 	bool read(QIODevice *device);
+	bool read(QByteArray &byteArrayContent);
 	bool write(QIODevice *device);
 
 	int getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList);

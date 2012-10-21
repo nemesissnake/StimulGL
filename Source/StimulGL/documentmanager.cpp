@@ -149,9 +149,13 @@ MainAppInfo::DocType DocumentManager::getDocType(const QString strExtension)
 	{
 		return MainAppInfo::DOCTYPE_SVG;
 	}
-	else if (tmpExt == "exml")
+	//else if (tmpExt == "exml")
+	//{
+	//	return MainAppInfo::DOCTYPE_EXML;
+	//}
+	else if(getKnownDocumentFileHandlerIndex(tmpExt) >= 0)
 	{
-		return MainAppInfo::DOCTYPE_EXML;
+		return MainAppInfo::DOCTYPE_PLUGIN_DEFINED;
 	}
 	else//extension not found
 	{
@@ -279,41 +283,46 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
 			break;
 		}
-	case MainAppInfo::DOCTYPE_EXML:
-		{
-			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+	//case MainAppInfo::DOCTYPE_EXML:
+	//	{
+	//		custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+	//		custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
 
-			//QsciLexer* lexer = NULL;
-			QString fileName = "";
-			QDir dir(MainAppInfo::apiDirPath());
+	//		//QsciLexer* lexer = NULL;
+	//		QString fileName = "";
+	//		QDir dir(MainAppInfo::apiDirPath());
 
-			//QsciLexerXML()
-			QsciLexer *QxmlLexer = new QsciLexerXML(custQsci);
-			custQsci->setLexer(QxmlLexer);
-			QxmlLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
-			fileName = "exml.api";
-			if ( dir.entryList(QDir::Files).contains(fileName) ) 
-			{
-				QsciAPIs* apis = new QsciAPIs(QxmlLexer);
-				if ( apis->load(dir.absoluteFilePath(fileName)) ) 
-				{
-					apis->prepare();
-					QxmlLexer->setAPIs(apis);
-				}
-				else 
-				{
-					delete apis;
-				}
-			}
-			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
-			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
-			break;
-		}
+	//		//QsciLexerXML()
+	//		QsciLexer *QxmlLexer = new QsciLexerXML(custQsci);
+	//		custQsci->setLexer(QxmlLexer);
+	//		QxmlLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
+	//		fileName = "exml.api";
+	//		if ( dir.entryList(QDir::Files).contains(fileName) ) 
+	//		{
+	//			QsciAPIs* apis = new QsciAPIs(QxmlLexer);
+	//			if ( apis->load(dir.absoluteFilePath(fileName)) ) 
+	//			{
+	//				apis->prepare();
+	//				QxmlLexer->setAPIs(apis);
+	//			}
+	//			else 
+	//			{
+	//				delete apis;
+	//			}
+	//		}
+	//		custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+	//		custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+	//		custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+	//		break;
+	//	}
 	case MainAppInfo::DOCTYPE_SVG:
 		{
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+			break;
+		}
+	case MainAppInfo::DOCTYPE_PLUGIN_DEFINED:
+		{
+			//custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
 			break;
 		}
 	case MainAppInfo::DOCTYPE_UNDEFINED:
@@ -463,6 +472,55 @@ bool DocumentManager::appendKnownFileExtensionList(QString strFileExtLst)
 {
 	strFileExtensionList = strFileExtensionList + strFileExtLst;
 	return true;
+}
+
+bool DocumentManager::appendKnownDocumentFileHandlerList(const QString &strDocHandlerInfo, QObject *pluginObject)
+{
+	if(pluginObject)
+	{
+		if(pluginDocHandlerStore.strDocHandlerInfoList.contains(strDocHandlerInfo) == false)
+		{
+			pluginDocHandlerStore.strDocHandlerInfoList.append(strDocHandlerInfo);
+			pluginDocHandlerStore.pluginObject.append(pluginObject);
+			return true;
+		}
+	}
+	return false;
+}
+
+QObject *DocumentManager::getKnownDocumentFileHandlerInformation(const int &nIndex, QString &strDocHndlrName)
+{
+	//See below function!
+	if (pluginDocHandlerStore.strDocHandlerInfoList.count() > nIndex)
+	{
+		QStringList tmpList = pluginDocHandlerStore.strDocHandlerInfoList.at(nIndex).split("|",QString::SkipEmptyParts);
+		if (tmpList.count() > 1)
+		{
+			strDocHndlrName = tmpList.at(1);
+			return pluginDocHandlerStore.pluginObject.at(nIndex);
+		}
+	}
+	return NULL;
+}
+
+int DocumentManager::getKnownDocumentFileHandlerIndex(const QString &strExtension)
+{
+	//See above function!
+	int nCount = pluginDocHandlerStore.strDocHandlerInfoList.count();
+	if (nCount > 0)
+	{
+		QStringList tmpList;
+		for (int i=0;i<nCount;i++)
+		{
+			tmpList = pluginDocHandlerStore.strDocHandlerInfoList.at(i).split("|",QString::SkipEmptyParts);
+			if (tmpList.count() > 1)
+			{
+				if(tmpList.at(0) == strExtension)
+					return i;
+			}
+		}
+	}
+	return -1;
 }
 
 bool DocumentManager::saveFile(int DocIndex, QString fileName)

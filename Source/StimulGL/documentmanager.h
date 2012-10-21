@@ -45,6 +45,12 @@ public:
 	DocumentManager(QObject *parent);
 	~DocumentManager();
 
+	struct strcPluginDocHandlerInfo
+	{
+		QStringList strDocHandlerInfoList;
+		QList<QObject *> pluginObject;
+	};  
+
 	CustomQsciScintilla *getDocHandler(const int &DocIndex);
 	CustomQsciScintilla *getDocHandler(QMdiSubWindow *subWindow);
 	int count(void);
@@ -69,6 +75,9 @@ public:
 	DocFindFlags lastFlags() const; 
 	bool appendKnownFileExtensionList(QString strFileExtLst);
 	QString getKnownFileExtensionList() {return strFileExtensionList;};
+	bool appendKnownDocumentFileHandlerList(const QString &strDocHandlerInfo, QObject *pluginObject);
+	int getKnownDocumentFileHandlerIndex(const QString &strExtension);
+	QObject *getKnownDocumentFileHandlerInformation(const int &nIndex, QString &strDocHndlrName);
 	int addAdditionalApiEntry(const QString &entry); 
 
 public slots:
@@ -81,6 +90,7 @@ private:
 	QSignalMapper *NrOfLinesChangedMapper;
 	QStringList ChildrenFileNames;
 	QString strFileExtensionList;
+	strcPluginDocHandlerInfo pluginDocHandlerStore;	
 	QList<MainAppInfo::DocType> ChildrenDocTypes;
 	QList<CustomQsciScintilla *> QScintillaChildren;
 	QList<QMdiSubWindow *> SubWindowChildren;

@@ -50,6 +50,13 @@ void ExperimentManager_Dialog::closeEvent(QCloseEvent *event)
 	event->accept();//or event->ignore();
 }
 
+////void ExperimentManager_Dialog::showEvent(QShowEvent * event)
+//ExperimentManager_Dialog::showEvent(QShowEvent * event)
+//{
+//	if(docContentStructToRun.strDocContent.isEmpty() == false)
+//		executeDocument();
+//}
+
 void ExperimentManager_Dialog::on_okButton_clicked()
 {
 	cleanUp();
@@ -64,6 +71,9 @@ void ExperimentManager_Dialog::on_cancelButton_clicked()
 
 void ExperimentManager_Dialog::cleanUp()
 {
+	docContentStructToRun.strDocContent = "";
+	docContentStructToRun.strDocExtension = "";
+	docContentStructToRun.bIsFile = true;
 	if(ExperimentManagerObj)
 	{
 		if ((currentExperimentState == ExperimentManager::ExperimentManager_IsStarting) || (currentExperimentState == ExperimentManager::ExperimentManager_Started))
@@ -105,6 +115,12 @@ void ExperimentManager_Dialog::cleanUp()
 		tmpLayout = NULL;
 	}
 	return;
+}
+
+bool ExperimentManager_Dialog::setContentToExecute(DocContentInfoStructure docContentStruct)
+{
+	docContentStructToRun = docContentStruct;
+	return true;
 }
 
 void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
@@ -201,60 +217,105 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 	}
 }
 
-void ExperimentManager_Dialog::exampleButton_Pressed()
+bool ExperimentManager_Dialog::executeDocument()
 {
 	if (((currentExperimentSubObjectState == Experiment_SubObject_Initialized) || (currentExperimentSubObjectState == Experiment_SubObject_Stopped)) == false)
-		return;
-	QString fileName = QFileDialog::getOpenFileName(NULL, tr("Open a Experiment file"), MainAppInfo::appExampleDirPath(), tr("Experiment Files (*.exml);;Any file (*)"));//"E:\\Projects\\StimulGL\\Install\\examples\\GettingStartedGuide\\ExperimentManager\\experiments\\PolarAngle.exml";
-	if (fileName.isEmpty())
-		return;
-	QFile file(fileName);
-	if (!file.exists())
-		return;
-	QFileInfo fi(file);
-	QDir::setCurrent(fi.canonicalPath());
-	ExperimentManagerObj = new ExperimentManager(this);
-	connectSignalSlots(false);
-	ExperimentManagerObj->setExperimentFileName(file.fileName());
-		if(!ExperimentManagerObj->runExperiment())
+		return false;
+
+	QString fileSource = "";
+	if(docContentStructToRun.strDocExtension == PLUGIN_EXMLDOC_EXTENSION)
 	{
-		return;
+		if(docContentStructToRun.bIsFile)
+		{
+			if(docContentStructToRun.strDocContent.isEmpty())
+			{
+				fileSource = QFileDialog::getOpenFileName(NULL, tr("Open a Experiment file"), MainAppInfo::appExampleDirPath(), tr("Experiment Files (*.exml);;Any file (*)"));
+			}
+			if (fileSource.isEmpty())
+				return false;
+			QFile file(fileSource);
+			if (!file.exists())
+				return false;
+			QFileInfo fi(file);
+			QDir::setCurrent(fi.canonicalPath());
+		}
+		else
+		{
+			fileSource = docContentStructToRun.strDocContent;
+			//QString dd = MainAppInfo::appDirPath();
+			QDir::setCurrent(MainAppInfo::appDirPath());
+		}
+		ExperimentManagerObj = new ExperimentManager(this);
+		connectSignalSlots(false);
+		if(ExperimentManagerObj->loadExperiment(fileSource,false,docContentStructToRun.bIsFile))
+		{
+			return ExperimentManagerObj->runExperiment();
+		}
+		else
+		{
+			LogMessage("Error: Could not execute the document!");
+		}
 	}
+	else if (docContentStructToRun.strDocExtension == PLUGIN_QMLDOC_EXTENSION)
+	{
+		if(docContentStructToRun.bIsFile)
+		{
+			if(docContentStructToRun.strDocContent.isEmpty())
+			{
+				fileSource = QFileDialog::getOpenFileName(NULL, tr("Open a QtQuick File"), MainAppInfo::appExampleDirPath(), tr("QtQuick Files (*.qml);;Any file (*)"));
+			}
+			if (fileSource.isEmpty())
+				return false;
+			QFile file(fileSource);
+			if (!file.exists())
+				return false;
+			QFileInfo fi(file);
+			QDir::setCurrent(fi.canonicalPath());
+		}
+		else
+		{
+			fileSource = docContentStructToRun.strDocContent;
+			//QString dd = MainAppInfo::appDirPath();
+			QDir::setCurrent(MainAppInfo::appDirPath());
+		}
+		tmpContainerDlg = new ContainerDlg(this);
+		tmpContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
+		tmpContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
+		tmpLayout = new QVBoxLayout;
+		tmpLayout->setAlignment(Qt::AlignHCenter);
+		tmpLayout->setMargin(0);
+		//tmpLayout->setStretch(0,1680);
+		tmpContainerDlg->setLayout(tmpLayout);
+		tmpContainerDlg->setWindowModality(Qt::WindowModality::WindowModal);
+
+		QmlWidgetObject = new qmlWidget(this);
+		//tmpLayout->setStretch(0,)
+		tmpLayout->addWidget(QmlWidgetObject);
+
+		if(QmlWidgetObject->executeQMLDocument(fileSource,tmpContainerDlg,docContentStructToRun.bIsFile))
+		{
+			connectSignalSlots(false);
+			tmpContainerDlg->showFullScreen();
+			return true;
+		}
+	}
+	return false;
+}
+
+void ExperimentManager_Dialog::exampleButton_Pressed()
+{
+	docContentStructToRun.strDocContent = "";
+	docContentStructToRun.bIsFile = true;
+	docContentStructToRun.strDocExtension = PLUGIN_EXMLDOC_EXTENSION;
+	executeDocument();
 }
 
 void ExperimentManager_Dialog::exampleButton_2_Pressed()
 {
-	if (((currentExperimentSubObjectState == Experiment_SubObject_Initialized) || (currentExperimentSubObjectState == Experiment_SubObject_Stopped)) == false)
-		return;
-
-	QString fileName = QFileDialog::getOpenFileName(NULL, tr("Open a QtQuick File"), MainAppInfo::appExampleDirPath(), tr("QtQuick Files (*.qml);;Any file (*)"));
-	if (fileName.isEmpty())
-		return;
-
-	QFile file(fileName);
-	if (!file.exists())
-		return;
-
-	tmpContainerDlg = new ContainerDlg(this);
-	tmpContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-	tmpContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
-	tmpLayout = new QVBoxLayout;
-	tmpLayout->setAlignment(Qt::AlignHCenter);
-	tmpLayout->setMargin(0);
-	//tmpLayout->setStretch(0,1680);
-	tmpContainerDlg->setLayout(tmpLayout);
-	tmpContainerDlg->setWindowModality(Qt::WindowModality::WindowModal);
-	
-	QmlWidgetObject = new qmlWidget(this);
-	//tmpLayout->setStretch(0,)
-	tmpLayout->addWidget(QmlWidgetObject);
-
-	if(QmlWidgetObject->executeQMLDocument(fileName,tmpContainerDlg))//tmpLayout))
-	//if(QmlWidgetObject->executeQMLDocument(fileName))//tmpLayout))
-	{
-		connectSignalSlots(false);
-		tmpContainerDlg->showFullScreen();
-	}
+	docContentStructToRun.strDocContent = "";
+	docContentStructToRun.bIsFile = true;
+	docContentStructToRun.strDocExtension = PLUGIN_QMLDOC_EXTENSION;
+	executeDocument();
 }
 
 void ExperimentManager_Dialog::exampleButton_3_Pressed()

@@ -48,7 +48,7 @@ public:
 	static QScriptValue ctor_QmlWidget(QScriptContext* context, QScriptEngine* engine);
 	
 public:	
-	bool executeQMLDocument(const QString &strPath, QDialog *ContainerDlg = NULL);// QVBoxLayout *layout = NULL);
+	bool executeQMLDocument(const QString &strSource, QDialog *ContainerDlg = NULL, bool bIsFile = true);// QVBoxLayout *layout = NULL);
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
@@ -75,7 +75,7 @@ private slots:
 private:
 	void initialize();
 	void parseExperimentObjectBlockParameters(bool bInit = false, bool bSetOnlyToDefault = false);
-	void qmlEventRoutine(bool dShowWidget = true);
+	void qmlEventRoutine(bool dShowWidget = true, QString strContent = "");
 
 	QmlErrorHandler *qmlErrorHandler;
 	QWidget *parentWidget;

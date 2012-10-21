@@ -391,11 +391,12 @@ bool ExperimentManager::saveExperiment(QString strFile)
 	return false;
 }
 
-bool ExperimentManager::loadExperiment(QString strFile, bool bViewEditTree)
+bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bool bIsFile)
 {
 /*! \brief Loads the Experiment from a file into memory.
  *
- *  The Experiment file (strFile) is load into memory, if strFile=="" then the last set experiment is automatically loaded in memory, see #setExperimentFileName.
+ *  The Experiment source (strSource) is load into memory (filepath or content), if strSource=="" then the last set experiment file is automatically loaded in memory, see #setExperimentFileName.
+ *  If bIsFile is set to true then the strSource contains a path to the experiment file, if bIsFile is set to false then the strSource contains the content itself.
  *  If bViewEditTree is set to true then the experiment filename is shown in a custom viewer (under construction).
  */
 	if (currentExperimentTree)
@@ -404,52 +405,74 @@ bool ExperimentManager::loadExperiment(QString strFile, bool bViewEditTree)
 		currentExperimentTree = NULL;
 	}
 	currentExperimentTree = new ExperimentTree(MainAppInfo::getMainWindow());
+	QFile file;
+	QString fileName = "";
 
-	QString fileName = getExperimentFileName();
-	if (strFile.isEmpty())
+	if (bIsFile)
 	{
-		if (fileName.isEmpty())
+		fileName = getExperimentFileName();
+		if (strSource.isEmpty())
 		{
-			fileName = QFileDialog::getOpenFileName(NULL, tr("Open Experiment File"), QDir::currentPath(), tr("Experiment Files (*.exml *.xml);;Any file (*)"));
+			if (fileName.isEmpty())
+				fileName = QFileDialog::getOpenFileName(NULL, tr("Open Experiment File"), QDir::currentPath(), tr("Experiment Files (*.exml *.xml);;Any file (*)"));
 		}
-	}
-	else
-	{
-		fileName = strFile;
-	}
-	if (fileName.isEmpty())
-		return false;
-
-	QFile file(fileName);
-	if (!file.open(QFile::ReadOnly | QFile::Text)) 
-	{
-		emit WriteToLogOutput("Could not open experiment file!");
-		return false;
+		else
+		{
+			fileName = strSource;
+		}
+		if (fileName.isEmpty())
+			return false;
+		file.setFileName(fileName);
+		if (!file.open(QFile::ReadOnly | QFile::Text)) 
+		{
+			emit WriteToLogOutput("Could not open experiment file!");
+			return false;
+		}
+		else
+		{
+			currentExperimentFile.clear();
+			currentValidationFile.clear();
+			currentExperimentFile = file.readAll();
+			//QString aa = MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME);
+			file.close();
+		}
 	}
 	else
 	{
 		currentExperimentFile.clear();
 		currentValidationFile.clear();
-		currentExperimentFile = file.readAll();
-		//QString aa = MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME);
-		file.close();
-		QFile validationFile(MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME));
-		if (validationFile.open(QFile::ReadOnly | QFile::Text)) 
-		{
-			currentValidationFile = validationFile.readAll();
-		}
-		validationFile.close();
-		if (file.open(QFile::ReadOnly | QFile::Text))
-		{
-			if (currentExperimentTree->read(&file))
-			{
-				if (bViewEditTree)
-					currentExperimentTree->showMaximized();
-				setExperimentFileName(fileName);
-				changeCurrentExperimentState(ExperimentManager_Loaded);
-				return true;
-			}
-		}
+		fileName = "";
+		currentExperimentFile = strSource.toAscii();
+	}
+
+	QFile validationFile(MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME));
+	if (validationFile.open(QFile::ReadOnly | QFile::Text)) 
+		currentValidationFile = validationFile.readAll();
+	validationFile.close();
+
+	//if (bIsFile)
+	//{
+	//	if (file.open(QFile::ReadOnly | QFile::Text))
+	//	{
+	//		if (currentExperimentTree->read(&file))
+	//		{
+	//			if (bViewEditTree)
+	//				currentExperimentTree->showMaximized();
+	//			setExperimentFileName(fileName);
+	//			changeCurrentExperimentState(ExperimentManager_Loaded);
+	//			return true;
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	if (currentExperimentTree->read(currentExperimentFile))
+	{
+		if (bViewEditTree)
+			currentExperimentTree->showMaximized();
+		setExperimentFileName(fileName);
+		changeCurrentExperimentState(ExperimentManager_Loaded);
+		return true;
 	}
 	currentExperimentFile.clear();
 	currentValidationFile.clear();

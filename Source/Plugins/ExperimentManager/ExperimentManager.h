@@ -111,7 +111,7 @@ public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool setExperimentFileName(const QString qstrExpFileName);
 	QString getExperimentFileName();
-	bool loadExperiment(QString strFile = "", bool bViewEditTree = true);
+	bool loadExperiment(QString strSource = "", bool bViewEditTree = true, bool bIsFile = true);
 	bool saveExperiment(QString strFile = "");
 	bool validateExperiment();
 	bool runExperiment();

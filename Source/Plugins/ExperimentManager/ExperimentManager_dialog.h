@@ -39,14 +39,18 @@ public:
 	ExperimentManager_Dialog(QWidget *parent = 0);
 	~ExperimentManager_Dialog();
 
+	bool setContentToExecute(DocContentInfoStructure docContentStruct);
+	bool executeDocument();
+
 protected:
 	void closeEvent(QCloseEvent *event);
+	//void showEvent (QShowEvent * event);
 
 private:
 	Ui::ExperimentManager_DialogClass ui;
 	void connectSignalSlots(bool bDisconnect = false);
 	void cleanUp();
-
+	
 private slots:
 	void on_cancelButton_clicked();
 	void exampleButton_Pressed();
@@ -67,6 +71,7 @@ private:
 	QVBoxLayout *tmpLayout;
 	ExperimentSubObjectState currentExperimentSubObjectState;
 	ExperimentManager::ExperimentState currentExperimentState;
+	DocContentInfoStructure docContentStructToRun;
 };
 
 #endif // ExperimentManager_DIALOG_H

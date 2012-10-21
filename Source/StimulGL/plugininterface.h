@@ -60,7 +60,8 @@ public slots:
 		}
 		return false;//wrong arguments
 	};
-	virtual QString GetAdditionalFileExtensions() {return QString("");};
+	virtual QStringList GetAdditionalFileExtensions() {return QStringList();};
+	virtual QStringList GetAdditionalFileSlotHandlers() {return QStringList();};
 	virtual QObject *GetScriptMetaObject(int nIndex = 0) {return NULL;};
 	virtual int GetScriptMetaObjectCount() {return 0;};
 

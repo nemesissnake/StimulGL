@@ -67,9 +67,12 @@ qmlWidget::~qmlWidget()
 	parentWidget = NULL;
 }
 
-bool qmlWidget::executeQMLDocument(const QString &strPath, QDialog *ContainerDlg)//QVBoxLayout *layout) 
+bool qmlWidget::executeQMLDocument(const QString &strSource, QDialog *ContainerDlg, bool bIsFile)//QVBoxLayout *layout) 
 {
-	qmlMainFilePath = strPath;
+	if(bIsFile)
+		qmlMainFilePath = strSource;
+	else
+		qmlMainFilePath = "";
 	if(initObject())
 	{
 		if (ContainerDlg)
@@ -77,7 +80,15 @@ bool qmlWidget::executeQMLDocument(const QString &strPath, QDialog *ContainerDlg
 			setAlternativeContainerDialog(ContainerDlg);
 			ContainerDlg->installEventFilter(this);//re-route all ContainerDlg events to this->bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 		}
-		return startObject();
+		if(bIsFile)
+		{
+			return startObject();
+		}
+		else
+		{
+			qmlEventRoutine(false,strSource);
+			return true;
+		}
 	}
 	return false;
 }
@@ -511,7 +522,7 @@ void qmlWidget::onStatusChanged(QDeclarativeView::Status status)
 	}
 }
 
-void qmlWidget::qmlEventRoutine(bool dShowWidget)
+void qmlWidget::qmlEventRoutine(bool dShowWidget, QString strContent)
 {
 	//qmlViewer->setVisible(false);
 	if (bResolutionChanged)
@@ -521,36 +532,50 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget)
 		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());		
 	}
 
-	QFileInfo fi(qmlMainFilePath);
-	QUrl fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
-	//QString test = fi.canonicalFilePath();
-	//QString test2 = qmlViewer->source().toString();
-	
-	if (qmlViewer->source() != fileUrl)
+	if(strContent.isEmpty() == false)
 	{
-		qmlViewer->setVisible(false);
-		qmlViewer->setSource(fileUrl);
-		
-		if (qmlViewer->status() == QDeclarativeView::Error)
-		{
-			this->stopObject();
-			if(currExpConfStruct)
-			{
-				if(currExpConfStruct->pExperimentManager)
-				{
-					currExpConfStruct->pExperimentManager->abortExperiment();
-					return;
-				}
-			}
-			//bool bInvokeSucceeded = QMetaObject::invokeMethod(currExpConfStruct->pExperimentManager, "abortExperiment",Qt::QueuedConnection);	
-			//currExpConfStruct->pExperimentManager->abortExperiment();
-
-			this->abortExperimentObject();//this seems to work...
+		QFile tmpFile("tmp.txt");
+		if (!tmpFile.open(QIODevice::WriteOnly | QIODevice::Text))
 			return;
-		}
-		rootObject = dynamic_cast<QObject *>(qmlViewer->rootObject());// get root object
-		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());
-	}	
+		tmpFile.write(strContent.toAscii());
+		tmpFile.close();
+		qmlMainFilePath = tmpFile.fileName();
+	}
+	//else
+	{
+		QFileInfo fi(qmlMainFilePath);
+		QUrl fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
+		//QString test = fi.canonicalFilePath();
+		//QString test2 = qmlViewer->source().toString();
+	
+		
+		if (qmlViewer->source() != fileUrl)
+		{
+			qmlViewer->setVisible(false);
+			qmlViewer->setSource(fileUrl);
+		
+			if (qmlViewer->status() == QDeclarativeView::Error)
+			{
+				this->stopObject();
+				if(currExpConfStruct)
+				{
+					if(currExpConfStruct->pExperimentManager)
+					{
+						currExpConfStruct->pExperimentManager->abortExperiment();
+						return;
+					}
+				}
+				//bool bInvokeSucceeded = QMetaObject::invokeMethod(currExpConfStruct->pExperimentManager, "abortExperiment",Qt::QueuedConnection);	
+				//currExpConfStruct->pExperimentManager->abortExperiment();
+
+				this->abortExperimentObject();//this seems to work...
+				return;
+			}
+			rootObject = dynamic_cast<QObject *>(qmlViewer->rootObject());// get root object
+			qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());
+		}	
+	}
+
 	if (dShowWidget)
 	{
 		qmlViewer->showFullScreen();//Fastest uncomment this

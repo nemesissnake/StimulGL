@@ -51,9 +51,10 @@ public:
 	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};
 
 private:
+	bool ExecuteContent(const DocContentInfoStructure &docStruct);
+
 	ExperimentManager *ExperimentManagerObject; 
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;
-
 	TriggerTimer *TriggerTimerObject;
 	ImageProcessor *ImageProcessorObject;
 	PrtFormatManager *PrtFormatManagerObject;
@@ -62,7 +63,10 @@ private:
 public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
-	QString GetAdditionalFileExtensions() {return QString("Experiment Manager Plugin files (*.exml);;");};
+	QStringList GetAdditionalFileExtensions() {return (QStringList() << "Experiment files (*.exml);;" << "QML documents (*.qml);;");};
+	QStringList GetAdditionalFileSlotHandlers() {return (QStringList() << "exml|ExperimentManagerEXMLDocumentHandler(const QString &)" << "qml|ExperimentManagerQMLDocumentHandler(const QString &)");};
+	bool ExperimentManagerEXMLDocumentHandler(const QString &docContent);
+	bool ExperimentManagerQMLDocumentHandler(const QString &docContent);
 	QObject *GetScriptMetaObject(int nIndex);
 	int GetScriptMetaObjectCount();
 };

@@ -536,6 +536,15 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 				printAction->setEnabled(true);
 				break;
 			}
+		case MainAppInfo::DOCTYPE_PLUGIN_DEFINED:
+			{
+				if (currentRunningScriptID == 0)
+				{
+					setScriptRunningStatus(MainAppInfo::Pending);
+				}
+				printAction->setEnabled(true);
+				break;
+			}
 		case MainAppInfo::DOCTYPE_UNDEFINED:
 			{
 				//statusBar()->showMessage("DOCTYPE_UNDEFINED");
@@ -1036,10 +1045,22 @@ void MainWindow::setupDynamicPlugins()
 					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILEEXT_FULL).toLatin1())) == -1))//Is the slot present?
 					{
 						//Invoke the slot
-						metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILEEXT,Qt::DirectConnection, Q_RETURN_ARG(QString, strRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
-						if (strRetVal != "")
+						QStringList strRetValList;
+						metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILEEXT,Qt::DirectConnection, Q_RETURN_ARG(QStringList, strRetValList));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
+						for (int i=0;i<strRetValList.count();i++)
 						{
-							DocManager->appendKnownFileExtensionList(strRetVal);
+							DocManager->appendKnownFileExtensionList(strRetValList[i]);
+						}
+
+						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILE_SLOT_HANDLERS_FULL).toLatin1())) == -1))//Is the slot present?
+						{
+							//Invoke the slot
+							metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILE_SLOT_HANDLERS,Qt::DirectConnection, Q_RETURN_ARG(QStringList, strRetValList));			
+							for (int i=0;i<strRetValList.count();i++)
+							{
+								DocManager->appendKnownDocumentFileHandlerList(strRetValList[i],plugin);
+								//QString a = strRetValList[i];
+							}
 						}
 					}
 				}
@@ -1112,10 +1133,21 @@ void MainWindow::setupDynamicPlugins()
 							if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILEEXT_FULL).toLatin1())) == -1))//Is the slot present?
 							{
 								//Invoke the slot
-								metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILEEXT,Qt::DirectConnection, Q_RETURN_ARG(QString, strRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
-								if (strRetVal != "")
+								QStringList strRetValList;
+								metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILEEXT,Qt::DirectConnection, Q_RETURN_ARG(QStringList, strRetValList));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
+								for (int i=0;i<strRetValList.count();i++)
 								{
-									DocManager->appendKnownFileExtensionList(strRetVal);
+									DocManager->appendKnownFileExtensionList(strRetValList[i]);
+								}	
+								if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILE_SLOT_HANDLERS_FULL).toLatin1())) == -1))//Is the slot present?
+								{
+									//Invoke the slot
+									metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILE_SLOT_HANDLERS,Qt::DirectConnection, Q_RETURN_ARG(QStringList, strRetValList));			
+									for (int i=0;i<strRetValList.count();i++)
+									{
+										DocManager->appendKnownDocumentFileHandlerList(strRetValList[i],plugin);
+										//QString a = strRetValList[i];
+									}
 								}
 							}
 						}
@@ -1393,8 +1425,11 @@ void MainWindow::closeSelectedScriptFile(bool bAutoSaveChanges)
 void MainWindow::executeScript()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
-	StimulGLScriptRunMode = (MainAppInfo::ScriptRunMode)action->data().toInt(); 
-	switch (DocManager->getDocType(activeMdiChild()))
+	StimulGLScriptRunMode = (MainAppInfo::ScriptRunMode)action->data().toInt();
+	QMdiSubWindow *currentActiveWindow = activeMdiChild();
+	QString strFileName = DocManager->getFileName(currentActiveWindow);
+
+	switch (DocManager->getDocType(currentActiveWindow))
 	{
 		case MainAppInfo::DOCTYPE_QSCRIPT:
 		{ 
@@ -1402,7 +1437,7 @@ void MainWindow::executeScript()
 		}
 		case MainAppInfo::DOCTYPE_SVG: 
 		{
-			if (DocManager->getDocHandler(activeMdiChild())->isModified())
+			if (DocManager->getDocHandler(currentActiveWindow)->isModified())
 			{
 				QMessageBox::StandardButton ret;
 				ret = QMessageBox::warning(this, tr("Save Changes?"),
@@ -1413,7 +1448,7 @@ void MainWindow::executeScript()
 		 		if (ret == QMessageBox::Save)
 				{
 					save();
-					SVGPreviewer->openFile(DocManager->getFileName(activeMdiChild()));
+					SVGPreviewer->openFile(DocManager->getFileName(currentActiveWindow));
 					//SVGPreviewer->openFile(activeMdiChildFilePath()); abov code worked, this one didn't received an empty path...
 					SVGPreviewer->showMaximized();
 					//SVGPreviewer->showFullScreen();
@@ -1421,7 +1456,7 @@ void MainWindow::executeScript()
 			}
 			else 
 			{
-				SVGPreviewer->openFile(DocManager->getFileName(activeMdiChild()));
+				SVGPreviewer->openFile(DocManager->getFileName(currentActiveWindow));
 				//SVGPreviewer->openFile(activeMdiChildFilePath()); abov code worked, this one didn't received an empty path...
 				SVGPreviewer->showMaximized();
 				//GraphScene = new QGraphicsScene();
@@ -1429,6 +1464,38 @@ void MainWindow::executeScript()
 				//QGraphicsItem *item = GraphScene->itemAt(50, 50);
 				//GraphView = new QGraphicsView(GraphScene);
 				//GraphView->showMaximized();
+			}
+			return;
+			break;
+		}
+		case MainAppInfo::DOCTYPE_PLUGIN_DEFINED:
+		{
+			clearDebugger();
+			//QTime t;
+			QDir::setCurrent(getSelectedScriptFileLocation());
+			QString strDocumentContent = DocManager->getDocHandler(currentActiveWindow)->text();
+			QString strExtension = QFileInfo(DocManager->getFileName(currentActiveWindow)).completeSuffix();
+			QString strDocHandlerSlotName = "";
+			QObject* pluginObject = DocManager->getKnownDocumentFileHandlerInformation(DocManager->getKnownDocumentFileHandlerIndex(strExtension),strDocHandlerSlotName);
+			
+			if(pluginObject)
+			{
+				if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(strDocHandlerSlotName.toLatin1())) == -1))//Is the slot present?
+				{
+					//Invoke the slot
+					bool bResult = false;
+					bool bRetVal = false;
+					QString shortSignature = strDocHandlerSlotName.left(strDocHandlerSlotName.indexOf("("));
+					bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(shortSignature.toLatin1()),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetVal), Q_ARG(QString,strDocumentContent));				
+					//if(bResult)
+					//{
+					//	break;
+					//}
+					//else
+					//{
+					//	break;
+					//}
+				}
 			}
 			return;
 			break;
@@ -1442,11 +1509,8 @@ void MainWindow::executeScript()
 
 	clearDebugger();
 	QTime t;
-
 	QDir::setCurrent(getSelectedScriptFileLocation());
-
-	QString strScriptProgram = DocManager->getDocHandler(activeMdiChild())->text();
-
+	QString strScriptProgram = DocManager->getDocHandler(currentActiveWindow)->text();
 	if (StimulGLScriptRunMode == MainAppInfo::Debug)
 	{
 		if (!AppScriptEngine->eng->canEvaluate(strScriptProgram))
@@ -1454,7 +1518,6 @@ void MainWindow::executeScript()
 			write2OutputWindow("... DebugScript -> Script syntax error ...");
 		}
 	}
-
 	QScriptSyntaxCheckResult syntaxChkResult = AppScriptEngine->eng->checkSyntax(strScriptProgram);
 	bool bSyntaxValidated = false;
 	if (syntaxChkResult.state() == QScriptSyntaxCheckResult::Error)
@@ -1473,23 +1536,21 @@ void MainWindow::executeScript()
 	if(!bSyntaxValidated)
 	{
 		write2OutputWindow("... Script Syntax error at(col " + QString::number(syntaxChkResult.errorColumnNumber()) + ", line " + QString::number(syntaxChkResult.errorLineNumber()) + "): " + syntaxChkResult.errorMessage() + " ...");
-		DocManager->getDocHandler(activeMdiChild())->setCursorPosition(syntaxChkResult.errorLineNumber()-1,syntaxChkResult.errorColumnNumber());
+		DocManager->getDocHandler(currentActiveWindow)->setCursorPosition(syntaxChkResult.errorLineNumber()-1,syntaxChkResult.errorColumnNumber());
 	}
 	else
 	{
 		write2OutputWindow("... Script started Evaluating on " + t.currentTime().toString() + "...");
 		t.start();
 
-		//AppScriptEngine->executeScript(DocManager->getDocHandler(activeMdiChild())->text());
-		//return;
 		QScriptValue result;
-		result = AppScriptEngine->eng->evaluate(DocManager->getDocHandler(activeMdiChild())->text());
+		result = AppScriptEngine->eng->evaluate(DocManager->getDocHandler(currentActiveWindow)->text());
 		QString strResult;
 		strResult = result.toString();
 		if (result.isError()) 
 		{
 			write2OutputWindow("... Script stopped Evaluating due to error on line " + result.property("lineNumber").toString() + ": --> " + result.toString() + "...");
-			DocManager->getDocHandler(activeMdiChild())->setCursorPosition(result.property("lineNumber").toInteger()-1,0);
+			DocManager->getDocHandler(currentActiveWindow)->setCursorPosition(result.property("lineNumber").toInteger()-1,0);
 		}
 		else
 		{
@@ -1500,48 +1561,7 @@ void MainWindow::executeScript()
 	}	
 	AppScriptEngine->eng->collectGarbage();
 	outputWindowList->scrollToBottom();
-
-	////if (AppScriptEngine->eng->canEvaluate("create"))
-	////{
-	////	QScriptValue createFunc = AppScriptEngine->eng->evaluate("create");
-	////	if (AppScriptEngine->eng->hasUncaughtException()) {
-	////		QScriptValue exception = AppScriptEngine->eng->uncaughtException();
-	////		//QMessageBox::critical(0, "Script error", QString("Script threw an uncaught exception while looking for create func: ") + exception.toString());
-	////		write2Debugger("... No create Function found in script ...");
-	////		//return;
-	////	}
-	////	else
-	////	{
-	////		if (!createFunc.isFunction()) {
-	////			QMessageBox::critical(0, "Script Error", "create Function is not a function!");
-	////		}
-	////		else
-	////		{
-	////			createFunc.call(AppScriptThisObject);
-	////		}		
-	////	}
-	////}
-
-	//if (AppScriptEngine->eng->hasUncaughtException())	{
-	//	QScriptValue exception = AppScriptEngine->eng->uncaughtException();
-	//	QMessageBox::critical(0, "Script error", QString("Script threw an uncaught exception while looking for create func: ") + exception.toString());
-	//	return;
-	//}
-	// now emit our test signal:
-	// emit AborrtScript();
-
 }
-
-//void MainWindow::setCurrentScriptMode()
-//{
-//ActiveScriptModes
-//
-//}
-//
-//void MainWindow::getCurrentScriptMode()
-//{
-//
-//}
 
 void MainWindow::cleanupScript()//Safe way to make sure the script is unloaded/aborted trough the script
 {
@@ -1550,44 +1570,7 @@ void MainWindow::cleanupScript()//Safe way to make sure the script is unloaded/a
 
 void MainWindow::abortScript()
 {
-	////AppScriptEngine->eng->currentContext()->throwError("bbbb");
-	//
-	//for (int i=0;i<1;i++)
-	//{
-	//
-	//restartScriptEngine();
-	//return;
 	AppScriptEngine->eng->collectGarbage();
-	//qApp->processEvents();
-	//}
-	//if(fff == false)
-	//	QTimer::singleShot(0, this, SLOT(aborrtScript()));
-	//fff = true;
-
-	//delete AppScriptEngine->eng;
-	
-	//AppScriptEngine->agent->exceptionThrow(currentRunningScriptID,"bbbbbb",true);
-	//AppScriptEngine->agent->scriptUnload(currentRunningScriptID);
-
-	//scriptUnload
-
-	//QScriptContext::throwError ("endless loop ...");
-
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!this needs to be done
-
-//	AppScriptEngine->agent->exceptionThrow(currentRunningScriptID,"blaaaaaa",false));
-
-	//emit AbortScript();
-	////AppScriptEngine->eng->th
-
-	//if (AppScriptEngine->eng->isEvaluating())
-	//{
-	//	AppScriptEngine->eng->abortEvaluation();
-	//}
-	//else
-	//{
-	//	//AppScriptEngine->agent->exceptionThrow()//scriptUnload();// ->~QScriptEngine();
-	//}
 }
 
 void MainWindow::openOptionsDialog()
@@ -1610,12 +1593,6 @@ void MainWindow::openOptionsDialog()
 	}		
 	return;
 }
-
-//void MainWindow::aboutQtPlugins()
-//{
-//	PluginDialog dialog(pluginsDir.path(), pluginFileNames, this);
-//	dialog.exec();
-//}
 
 void MainWindow::aboutStimulGL()
 {
@@ -1673,50 +1650,6 @@ void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesTo
 		}
 	}
 }
-
-/*void MainWindow::setupSyntaxHighlighting(MdiChild *childWindow,MDIDocumentType tempFileType)
-{
-	QFont font;
-
-	switch (tempFileType)
-	{
-	case DOCTYPE_QSCRIPT:
-		{
-			font.setFamily("Arial");
-			font.setFixedPitch(true);
-			font.setPointSize(11);
-			childWindow->setFont(font);
-			SyntaxHL = new SyntaxHighlighter(childWindow->document());
-			break;
-		}
-	case DOCTYPE_SVG:
-		{
-			font.setFamily("Arial");
-			font.setFixedPitch(true);
-			font.setPointSize(11);
-			childWindow->setFont(font);
-			break;
-		}
-	case DOCTYPE_UNDEFINED:
-		{
-			font.setFamily("Arial");
-			font.setFixedPitch(true);
-			font.setPointSize(11);
-			childWindow->setFont(font);
-			break;
-		}
-	default://none of them
-		{
-			font.setFamily("Arial");
-			font.setFixedPitch(true);
-			font.setPointSize(11);
-			childWindow->setFont(font);
-			break;
-		}
-	}	
-}*/
-
-
 
 bool MainWindow::parseFile(const QFile &file)
 {
