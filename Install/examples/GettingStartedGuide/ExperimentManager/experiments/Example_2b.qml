@@ -18,7 +18,7 @@ Rectangle
 
         fillMode: Image.PreserveAspectFit
         width: 300; height: 300 // This is the area in which the source file is automatically scaled with a preserved aspect fit
-        source: "./images/banana.jpg"
+        source: "images/banana.jpg"     //"./images/banana.jpg"
 
         onStatusChanged: if (imgFruit.status == Image.Ready)
         {

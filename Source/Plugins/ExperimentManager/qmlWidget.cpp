@@ -64,6 +64,9 @@ qmlWidget::~qmlWidget()
 		delete qmlErrorHandler;
 		qmlErrorHandler = NULL;
 	}
+	if(tmpFile.exists())
+		if(tmpFile.remove() == false)
+			qWarning() << __FUNCTION__ << "Could not remove a temporarily file(" << tmpFile.fileName() << ")"; 
 	parentWidget = NULL;
 }
 
@@ -511,7 +514,7 @@ void qmlWidget::onStatusChanged(QDeclarativeView::Status status)
 				if(currExpConfStruct->pExperimentManager)
 					currExpConfStruct->pExperimentManager->SendToMainAppLogOutput(errMessage);
 				else
-					QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));				
+					QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
 			}
 			else
 			{
@@ -531,51 +534,60 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget, QString strContent)
 		qmlViewer->setVisible(false);
 		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());		
 	}
-
+	
+	QFileInfo fi(qmlMainFilePath);
+	QUrl fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
+	//QString test = fi.canonicalFilePath();
+	//QString test2 = qmlViewer->source().toString();
 	if(strContent.isEmpty() == false)
 	{
-		QFile tmpFile("tmp.txt");
-		if (!tmpFile.open(QIODevice::WriteOnly | QIODevice::Text))
-			return;
-		tmpFile.write(strContent.toAscii());
-		tmpFile.close();
-		qmlMainFilePath = tmpFile.fileName();
-	}
-	//else
-	{
-		QFileInfo fi(qmlMainFilePath);
-		QUrl fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
-		//QString test = fi.canonicalFilePath();
-		//QString test2 = qmlViewer->source().toString();
-	
-		
-		if (qmlViewer->source() != fileUrl)
+		int nRetries = 1;
+		QString filename("tmp");
+		tmpFile.setFileName(filename + QString::number(nRetries) + ".txt");
+		while (!tmpFile.open(QIODevice::WriteOnly | QIODevice::Text))
 		{
-			qmlViewer->setVisible(false);
-			qmlViewer->setSource(fileUrl);
-		
-			if (qmlViewer->status() == QDeclarativeView::Error)
+			nRetries++;
+			tmpFile.setFileName(filename + QString::number(nRetries) + ".txt");
+			if (nRetries == 10)
 			{
-				this->stopObject();
-				if(currExpConfStruct)
-				{
-					if(currExpConfStruct->pExperimentManager)
-					{
-						currExpConfStruct->pExperimentManager->abortExperiment();
-						return;
-					}
-				}
-				//bool bInvokeSucceeded = QMetaObject::invokeMethod(currExpConfStruct->pExperimentManager, "abortExperiment",Qt::QueuedConnection);	
-				//currExpConfStruct->pExperimentManager->abortExperiment();
-
+				QString errMessage = __FUNCTION__ + QString(": Could not create temporarily file.");
+				QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
 				this->abortExperimentObject();//this seems to work...
 				return;
 			}
-			rootObject = dynamic_cast<QObject *>(qmlViewer->rootObject());// get root object
-			qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());
-		}	
+		}
+		tmpFile.write(strContent.toAscii());
+		tmpFile.close();
+		fi.setFile(tmpFile.fileName());
+		qmlMainFilePath = fi.canonicalFilePath();
+		fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
 	}
+	if (qmlViewer->source() != fileUrl)
+	{
+		qmlViewer->setVisible(false);
+		qmlViewer->setSource(fileUrl);
+		
+		if (qmlViewer->status() == QDeclarativeView::Error)
+		{
+			this->stopObject();
+			if(currExpConfStruct)
+			{
+				if(currExpConfStruct->pExperimentManager)
+				{
+					currExpConfStruct->pExperimentManager->abortExperiment();
+					return;
+				}
+			}
+			//bool bInvokeSucceeded = QMetaObject::invokeMethod(currExpConfStruct->pExperimentManager, "abortExperiment",Qt::QueuedConnection);	
+			//currExpConfStruct->pExperimentManager->abortExperiment();
 
+			this->abortExperimentObject();//this seems to work...
+			return;
+		}
+		rootObject = dynamic_cast<QObject *>(qmlViewer->rootObject());// get root object
+		qmlViewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());
+	}	
+	
 	if (dShowWidget)
 	{
 		qmlViewer->showFullScreen();//Fastest uncomment this

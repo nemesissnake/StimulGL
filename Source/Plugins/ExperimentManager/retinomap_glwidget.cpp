@@ -1684,3 +1684,56 @@ bool RetinoMap_glwidget::installCustomScriptHandlerFunction(QString FuncName)
 	}
 	return false;
 }
+
+bool RetinoMap_glwidget::parseExperimentObjectParameter(QString strParamName)
+{
+	fixationColor = QColor(getExperimentObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FIXATIONCOLOR,fixationColor.name()).sValue.toLower());
+	strParamName = strParamName;
+
+	
+	//ExperimentParameterContainer expParamCntnr;
+	//ExperimentParameterContainer *expParamCntnr = new ExperimentParameterContainer();
+	//TypedExperimentParameterContainer *typedExpParamCntnr = new TypedExperimentParameterContainer();
+
+	typedExpParamCntnr.insertExperimentParameter(RETINOMAP_WIDGET_FIXSIZE,&fixationSize);
+	int *tmpVar = NULL;
+	tmpVar = typedExpParamCntnr.getExperimentParameter<int>(RETINOMAP_WIDGET_FIXSIZE);
+	*tmpVar = 88;
+	int g = *tmpVar;
+
+	//expParamCntnr.insertExperimentParameter(RETINOMAP_WIDGET_FIXSIZE,QVariant(fixationSize));
+	
+	
+	//ExperimentParameter ep("Name");
+	//TypedExperimentParameter <int>tep("fef",7);
+
+	//std::vector<TypedExperimentParameter*> my_property_list;
+	//for(unsigned int u=0; u<10; ++u)
+	//	my_property_list.push_back(new TypedExperimentParameter(u));
+
+	////QList<QPair<QString, ExperimentParameter>> list;
+	////list.append(qMakePair("list1", ep));
+
+	//QHash<QString, ExperimentParameter> hash;
+	//hash.insert("defd",ep);
+
+	//QHash<QString, TypedExperimentParameter> hash;
+	//hash.insert("defd",ep);
+	
+	//typedef std::vector< std::shared_ptr<TypedExperimentParameter> > property_list_type;
+	//typedef std::vector< std::shared_ptr<ExperimentParameter> > property_list_type;
+	
+	//std::vector<ExperimentParameter*> my_property_list;
+	//for(unsigned int u=0; u<10; ++u)
+	//	my_property_list.push_back(new ExperimentParameter(u));
+	//
+	////use_property_list(my_property_list);
+
+	//for(std::vector<ExperimentParameter*>::iterator it=my_property_list.begin();
+	//	it!=my_property_list.end(); ++it)
+	//	delete *it;
+
+
+
+	return true;
+}

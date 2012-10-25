@@ -64,9 +64,9 @@ public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
 	QStringList GetAdditionalFileExtensions() {return (QStringList() << "Experiment files (*.exml);;" << "QML documents (*.qml);;");};
-	QStringList GetAdditionalFileSlotHandlers() {return (QStringList() << "exml|ExperimentManagerEXMLDocumentHandler(const QString &)" << "qml|ExperimentManagerQMLDocumentHandler(const QString &)");};
-	bool ExperimentManagerEXMLDocumentHandler(const QString &docContent);
-	bool ExperimentManagerQMLDocumentHandler(const QString &docContent);
+	QStringList GetAdditionalFileSlotHandlers() {return (QStringList() << "exml|ExperimentManagerEXMLDocumentHandler(const QString &, const QString &)" << "qml|ExperimentManagerQMLDocumentHandler(const QString &, const QString &)");};
+	bool ExperimentManagerEXMLDocumentHandler(const QString &docContent, const QString &strHomePath);
+	bool ExperimentManagerQMLDocumentHandler(const QString &docContent, const QString &strHomePath);
 	QObject *GetScriptMetaObject(int nIndex);
 	int GetScriptMetaObjectCount();
 };

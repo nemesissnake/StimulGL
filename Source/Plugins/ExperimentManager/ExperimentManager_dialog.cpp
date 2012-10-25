@@ -50,13 +50,6 @@ void ExperimentManager_Dialog::closeEvent(QCloseEvent *event)
 	event->accept();//or event->ignore();
 }
 
-////void ExperimentManager_Dialog::showEvent(QShowEvent * event)
-//ExperimentManager_Dialog::showEvent(QShowEvent * event)
-//{
-//	if(docContentStructToRun.strDocContent.isEmpty() == false)
-//		executeDocument();
-//}
-
 void ExperimentManager_Dialog::on_okButton_clicked()
 {
 	cleanUp();
@@ -73,6 +66,7 @@ void ExperimentManager_Dialog::cleanUp()
 {
 	docContentStructToRun.strDocContent = "";
 	docContentStructToRun.strDocExtension = "";
+	docContentStructToRun.strDocHomeDir = "";
 	docContentStructToRun.bIsFile = true;
 	if(ExperimentManagerObj)
 	{
@@ -243,7 +237,7 @@ bool ExperimentManager_Dialog::executeDocument()
 		{
 			fileSource = docContentStructToRun.strDocContent;
 			//QString dd = MainAppInfo::appDirPath();
-			QDir::setCurrent(MainAppInfo::appDirPath());
+			QDir::setCurrent(docContentStructToRun.strDocHomeDir);
 		}
 		ExperimentManagerObj = new ExperimentManager(this);
 		connectSignalSlots(false);
@@ -276,7 +270,7 @@ bool ExperimentManager_Dialog::executeDocument()
 		{
 			fileSource = docContentStructToRun.strDocContent;
 			//QString dd = MainAppInfo::appDirPath();
-			QDir::setCurrent(MainAppInfo::appDirPath());
+			QDir::setCurrent(docContentStructToRun.strDocHomeDir);
 		}
 		tmpContainerDlg = new ContainerDlg(this);
 		tmpContainerDlg->setAttribute(Qt::WA_DeleteOnClose);

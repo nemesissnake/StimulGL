@@ -33,6 +33,7 @@
 #include "Global.h"
 #include "ContainerDlg.h"
 #include "ExperimentTimer.h"
+#include "ExperimentParameter.h"
 
 enum GLWidgetPaintFlags //An optional paint flag that can be forwarded to the FUNC_PAINTOBJECT_FULL routine 
 {
@@ -65,7 +66,7 @@ signals:
 public:
 	GLWidgetWrapper(QWidget *parent = NULL);
 	~GLWidgetWrapper();
-
+	
 	void setBlockTrials();
 
 public slots:
@@ -78,14 +79,14 @@ public slots:
 	bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList = NULL);
 	bool setExperimentObjectID(int nObjID);			//Necessary to set the ID!
 	bool setExperimentMetaObject();					//Necessary to set the MetaObject!
-	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);
-	
+	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);	
 	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
 	int getObjectID();
 	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
-
+	bool setExperimentObjectParameter(QString strParamName, QString strParamValue);
+	
 protected:
 	bool checkForNextBlockTrial();
 	//bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef);//QString &Result);

@@ -169,6 +169,8 @@ typedef QHash<QString, ParsedParameterDefinition> tParsedParameterList;
 #define FUNC_INITOBJECTBLOCKTRIAL_FULL			FUNC_INITOBJECTBLOCKTRIAL "()"
 #define FUNC_MAKETHISAVAILABLEINSCRIPT			"makeThisAvailableInScript"
 #define FUNC_MAKETHISAVAILABLEINSCRIPT_FULL		FUNC_MAKETHISAVAILABLEINSCRIPT "(QString,QObject *)"
+#define FUNC_PARSEEXPOBJECTPARAMETER			"parseExperimentObjectParameter"
+#define FUNC_PARSEEXPOBJECTPARAMETER_FULL		FUNC_PARSEEXPOBJECTPARAMETER "(QString)"
 
 #define SIGNAL_USERCLOSE_FULL					"UserWantsToClose(void)"
 #define SIGNAL_OBJECTSTOP_FULL					"ObjectShouldStop(void)"

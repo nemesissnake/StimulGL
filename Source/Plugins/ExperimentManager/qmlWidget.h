@@ -77,6 +77,7 @@ private:
 	void parseExperimentObjectBlockParameters(bool bInit = false, bool bSetOnlyToDefault = false);
 	void qmlEventRoutine(bool dShowWidget = true, QString strContent = "");
 
+	QFile tmpFile;
 	QmlErrorHandler *qmlErrorHandler;
 	QWidget *parentWidget;
 	ImageListModel *imgLstModel;

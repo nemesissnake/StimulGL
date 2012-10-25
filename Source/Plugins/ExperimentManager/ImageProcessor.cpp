@@ -141,7 +141,21 @@ bool ImageProcessor::ConvertDatToPngFile(QString strSource, QString strDestinati
 
 bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int nRatio, int nMethod, int nColorThreshold, bool bOverwrite)
 {
-	if (nRatio == 0)
+	if (nRatio <= 0)
+		return false;
+	QFile fileSource(strSource);
+	if (!fileSource.exists())
+		return false;
+	QPixmap tmpPixmap;
+	if(!tmpPixmap.load(strSource,"PNG"))
+		return false;
+	QSize newSize = tmpPixmap.size()/nRatio;
+	return ScalePngFileBySize(strSource,strDestination,newSize.width(),newSize.height(),nMethod,nColorThreshold,bOverwrite);
+}
+
+bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod, int nColorThreshold, bool bOverwrite)
+{
+	if ((nXPixels <= 0)||(nYPixels <= 0))
 		return false;
 	bool bSaveResult = false;
 	QFile fileSource(strSource);
@@ -159,7 +173,7 @@ bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int
 	QPixmap tmpPixmap;
 	if(!tmpPixmap.load(strSource,"PNG"))
 		return false;
-	QSize newSize = tmpPixmap.size()/nRatio;
+	QSize newSize(nXPixels,nYPixels);
 	switch (nMethod)
 	{
 	case 0://default (Mono colored)

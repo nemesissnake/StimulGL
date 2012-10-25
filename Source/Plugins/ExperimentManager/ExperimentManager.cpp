@@ -70,6 +70,7 @@ void ExperimentManager::DefaultConstruct()
 	m_ExpFileName = "";
 	currentExperimentTree = NULL;
 	expDataLogger = NULL;
+	typedExpParamCntnr = NULL;
 	RegisterMetaTypes();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
 	//rndGen = NULL;
@@ -160,6 +161,105 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 						tmpParDef.bIsInitialized = bIsInitializing;
 						lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpParDef);
 						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//template< typename T > bool insertExperimentParameter(const QString &strKeyName, T *pExpParam = NULL)
+//{
+//	if(pExpParam == NULL)
+//		return false;
+//	if (typeid(T) == typeid(int))
+//	{
+//		hIntContainer.insert(strKeyName,pExpParam);
+//		return true;
+//	}
+//	return false;
+//}
+
+//template< typename T > T *getExperimentParameter(const QString &strKeyName)
+
+template< typename T > bool ExperimentManager::insertExperimentObjectBlockParameter2(const int &nObjectID,const QString &sKeyName,const T *sVariabele)
+{
+	if(typedExpParamCntnr == NULL)
+		return NULL;
+	if (nObjectID >= 0) 
+	{
+		if (!lExperimentObjectList.isEmpty())
+		{
+			int nObjectCount = lExperimentObjectList.count();
+			if (nObjectCount>0)
+			{
+				for (int i=0;i<nObjectCount;i++)
+				{
+					if (lExperimentObjectList[i].nObjectID == nObjectID)
+					{
+						//ParsedParameterDefinition tmpParDef;
+						//tmpParDef.bHasChanged = true;
+						//tmpParDef.sValue = sValue;
+						//tmpParDef.bIsInitialized = bIsInitializing;
+						//lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpParDef);
+						bool bRetVal = typedExpParamCntnr->insertExperimentParameter(sName,sVariabele);
+						return bRetVal;
+						eqwrwer
+					}
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
+//getExperimentParameter(const QString &strKeyName)
+template< typename T > T* ExperimentManager::getExperimentObjectBlockParameter2(const int &nObjectID,const QString &sKeyName)//, ParsedParameterDefinition &strcParDef)
+{
+/*! \brief Returns a boolean value that determines if a specified object parameter from the current experiment block could be retrieved and set.
+ *
+ *  Returns true if &strcParDef could be set to a specified object parameter with objectID(nObjectID), parameter name(sName) for the current experiment block.
+ */
+	if (nObjectID >= 0)
+	{
+		if (!lExperimentObjectList.isEmpty())
+		{
+			int nObjectCount = lExperimentObjectList.count();
+			if (nObjectCount>0)
+			{
+				for (int i=0;i<nObjectCount;i++)
+				{
+					if (lExperimentObjectList[i].nObjectID == nObjectID)
+					{
+						//tParsedParameterList test;
+						//test = *lExperimentObjectList[i].ExpBlockParams;
+						if (lExperimentObjectList[i].ExpBlockParams->contains(sName))
+						{
+							sfsdfsdf
+							//strcParDef = lExperimentObjectList[i].ExpBlockParams->value(sName,strcParDef);
+							//if (strcParDef.bIsInitialized == true)
+							//{
+							//	//Important, here we need to set the bFirstRequire option to false for future requests, but return the parameter with true
+							//	ParsedParameterDefinition tmpPPD(strcParDef);
+							//	tmpPPD.bIsInitialized = false;
+							//	lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpPPD);
+							//}
+							//return true;
+						}
+						return false;
 					}
 				}
 			}
@@ -703,6 +803,11 @@ bool ExperimentManager::cleanupExperiment()
 	{
 		delete currentExperimentTree;
 		currentExperimentTree = NULL;
+	}
+	if(typedExpParamCntnr)
+	{
+		delete typedExpParamCntnr;
+		typedExpParamCntnr = NULL;
 	}
 	return true;
 }

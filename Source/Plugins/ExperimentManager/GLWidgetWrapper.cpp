@@ -1021,6 +1021,42 @@ void GLWidgetWrapper::incrementExternalTrigger()
 	}
 }
 
+bool GLWidgetWrapper::setExperimentObjectParameter(QString strParamName, QString strParamValue)
+{
+	if (ExpBlockParams == NULL)
+		return false;
+
+	ParsedParameterDefinition tmpPP;
+	tmpPP.bHasChanged = true;
+	tmpPP.bIsInitialized = true;
+	tmpPP.sValue = strParamValue;
+	strParamName = strParamName.toLower();
+	ExpBlockParams->insert(strParamName, tmpPP);
+
+	//Set all the parameter bHasChanged attributes too false again
+	//QList<ParsedParameterDefinition> tmpStrValueList = ExpBlockParams->values();//The order is guaranteed to be the same as that used by keys()!
+	//QList<QString> tmpStrKeyList = ExpBlockParams->keys();//The order is guaranteed to be the same as that used by values()!
+	//for(int i=0;i<tmpStrKeyList.count();i++)
+	//{
+	//	tmpStrValueList[i].bHasChanged = false;
+	//	ExpBlockParams->insert(tmpStrKeyList[i], tmpStrValueList[i]);
+	//}
+	
+	bool bRetVal = false;
+	if (thisMetaObject)
+	{
+		if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PARSEEXPOBJECTPARAMETER_FULL)) == -1))//Is the slot present?
+		{
+			//Invoke the slot
+			if(!(thisMetaObject->invokeMethod(this, FUNC_PARSEEXPOBJECTPARAMETER, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal), Q_ARG(QString, strParamName))))
+			{
+				qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_INITOBJECTBLOCKTRIAL_FULL << ")!";		
+			}		
+		}
+	}
+	return bRetVal;
+}
+
 void GLWidgetWrapper::initBlockTrial()
 {
 	//stimContainerDlg->activateWindow();

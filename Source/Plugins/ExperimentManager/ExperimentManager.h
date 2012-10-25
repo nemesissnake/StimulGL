@@ -106,6 +106,9 @@ public:
 	bool getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue);
 	bool expandExperimentBlockParameterValue(QString &sValue);
 
+	template< typename T > bool insertExperimentObjectBlockParameter2(const int &nObjectID,const QString &sKeyName,const T *sVariabele = NULL);
+	template< typename T > T *getExperimentObjectBlockParameter2(const int &nObjectID,const QString &sKeyName);
+
 public slots:
 	void SendToMainAppLogOutput(const QString &strText2Write);
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
@@ -159,8 +162,9 @@ private:
 	QByteArray currentExperimentFile;
 	QByteArray currentValidationFile;
 
+	TypedExperimentParameterContainer *typedExpParamCntnr;
 	QObject *parentObject;
-	QScriptEngine* currentScriptEngine;
+	QScriptEngine *currentScriptEngine;
 	ExperimentState experimentCurrentState;
 	QHash<QString, int> experimentStateHash;
 	bool m_RunFullScreen;

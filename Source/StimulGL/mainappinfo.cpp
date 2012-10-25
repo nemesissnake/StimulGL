@@ -148,7 +148,8 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg)
 		}
 	}
 	QString strMessage;
-	switch (type) {
+	switch (type) 
+	{
 	case QtDebugMsg:
 		strMessage = QString("Debug: %1").arg(msg);
 		break;
@@ -164,6 +165,10 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg)
 	}
 	QTextStream ts(mainLogFile);
 	ts << QDate::currentDate().toString().toAscii().data() << QString("\t") << QTime::currentTime().toString().toAscii().data() << QString("\t") << strMessage << QString("\n"); //endl macro doesn't work?
+	if(MainAppInfo::getMainWindow())
+	{
+		QMetaObject::invokeMethod((QObject *)MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, strMessage));
+	}	
 	if (bDoAbort)
 	{
 		CloseMainLogFile();

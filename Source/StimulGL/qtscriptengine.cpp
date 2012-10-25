@@ -59,7 +59,7 @@ bool QTScriptEngine::ImportScriptExtensions()
 		if (ret.isError())
 		{
 			failExtensions.append(ext);
-			qWarning() << "Could not load: " << failExtensions[failExtensions.size()-1];
+			qWarning() << __FUNCTION__ << "Could not load: " << failExtensions[failExtensions.size()-1];
 		}	
 	}
 	if (!failExtensions.isEmpty()) {

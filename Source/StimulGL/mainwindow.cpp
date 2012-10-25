@@ -1486,7 +1486,7 @@ void MainWindow::executeScript()
 					bool bResult = false;
 					bool bRetVal = false;
 					QString shortSignature = strDocHandlerSlotName.left(strDocHandlerSlotName.indexOf("("));
-					bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(shortSignature.toLatin1()),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetVal), Q_ARG(QString,strDocumentContent));				
+					bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(shortSignature.toLatin1()),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetVal), Q_ARG(QString,strDocumentContent), Q_ARG(QString,getSelectedScriptFileLocation()));				
 					//if(bResult)
 					//{
 					//	break;

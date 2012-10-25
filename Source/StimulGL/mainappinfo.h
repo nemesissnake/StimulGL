@@ -33,6 +33,7 @@ typedef struct strcDocContentInfoStructure
 {
 	QString strDocContent;
 	QString strDocExtension;
+	QString strDocHomeDir;
 	bool bIsFile;
 } DocContentInfoStructure;
 

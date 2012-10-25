@@ -172,20 +172,22 @@ int ExperimentManagerPlugin::GetScriptMetaObjectCount()
 	return 4;
 }
 
-bool ExperimentManagerPlugin::ExperimentManagerEXMLDocumentHandler(const QString &docContent)
+bool ExperimentManagerPlugin::ExperimentManagerEXMLDocumentHandler(const QString &docContent, const QString &strHomePath)
 {
 	DocContentInfoStructure docStruct;
 	docStruct.strDocContent = docContent;
 	docStruct.bIsFile = false;
+	docStruct.strDocHomeDir = strHomePath;
 	docStruct.strDocExtension = PLUGIN_EXMLDOC_EXTENSION;
 	return ExecuteContent(docStruct);
 }
 
-bool ExperimentManagerPlugin::ExperimentManagerQMLDocumentHandler(const QString &docContent)
+bool ExperimentManagerPlugin::ExperimentManagerQMLDocumentHandler(const QString &docContent, const QString &strHomePath)
 {
 	DocContentInfoStructure docStruct;
 	docStruct.strDocContent = docContent;
 	docStruct.bIsFile = false;
+	docStruct.strDocHomeDir = strHomePath;
 	docStruct.strDocExtension = PLUGIN_QMLDOC_EXTENSION;
 	return ExecuteContent(docStruct);
 }
