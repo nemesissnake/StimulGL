@@ -150,33 +150,33 @@ void qmlWidget::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyTo
 		tmpString = QColor(87,87,87).name();//gives "#575757";
 		colorBackground = QColor(tmpString);
 		if(!bSetOnlyToDefault)
-			insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,tmpString);
+			//sven insertExpObjectParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,tmpString);
 		tmpString = "";
 		QString qmlMainFilePath = tmpString;
 		if(!bSetOnlyToDefault)
-			insertExperimentObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAINFILEPATH,tmpString);
+			//sven insertExpObjectParameter(nQMLWidgetID,QML_WIDGET_MAINFILEPATH,tmpString);
 		stimHeigthPixelAmount = rectScreenRes.height();
 		if(!bSetOnlyToDefault)
-			insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
+			//sven insertExpObjectParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
 		//stimWidthPixelAmount = stimHeigthPixelAmount; removed, not needed here!
 		stimWidthPixelAmount = rectScreenRes.width();
 		if(!bSetOnlyToDefault)
-			insertExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
+			//sven insertExpObjectParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
 		nWidgetMaxEvenTime = 5;
 		if(!bSetOnlyToDefault)
-			insertExperimentObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAX_EVENT_TIME,QString::number(nWidgetMaxEvenTime));		
+			insertExpObjectParameter(nQMLWidgetID,QML_WIDGET_MAX_EVENT_TIME,nWidgetMaxEvenTime);		
 	} 
 	else
 	{
 		ParsedParameterDefinition pParDef;//((pParDef.bIsInitialized) && (pParDef.bHasChanged == false))
 		bResolutionChanged = false;
-		pParDef = getExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
+		pParDef = getExpObjectBlockParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
 		if (pParDef.bHasChanged)
 		{
 			stimHeigthPixelAmount = pParDef.sValue.toInt();
 			bResolutionChanged = true;
 		}
-		pParDef = getExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
+		pParDef = getExpObjectBlockParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
 		if (pParDef.bHasChanged)
 		{
 			stimWidthPixelAmount = pParDef.sValue.toInt();
@@ -185,7 +185,7 @@ void qmlWidget::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyTo
 		if (bResolutionChanged)
 			setStimuliResolution(stimWidthPixelAmount,stimHeigthPixelAmount);
 
-		pParDef = getExperimentObjectBlockParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,colorBackground.name());
+		pParDef = getExpObjectBlockParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,colorBackground.name());
 		if (pParDef.bHasChanged)
 		{
 			colorBackground = QColor(pParDef.sValue.toLower());
@@ -193,12 +193,12 @@ void qmlWidget::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyTo
 			GlWidgetPallette.setColor(glWidget->backgroundRole(), colorBackground);
 			glWidget->setPalette(GlWidgetPallette);
 		}
-		pParDef = getExperimentObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAINFILEPATH,qmlMainFilePath);
+		pParDef = getExpObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAINFILEPATH,qmlMainFilePath);
 		if (pParDef.bHasChanged)
 		{
 			qmlMainFilePath = pParDef.sValue;
 		}
-		pParDef = getExperimentObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAX_EVENT_TIME,QString::number(nWidgetMaxEvenTime));
+		pParDef = getExpObjectBlockParameter(nQMLWidgetID,QML_WIDGET_MAX_EVENT_TIME,QString::number(nWidgetMaxEvenTime));
 		if (pParDef.bHasChanged)
 		{
 			nWidgetMaxEvenTime = pParDef.sValue.toInt();

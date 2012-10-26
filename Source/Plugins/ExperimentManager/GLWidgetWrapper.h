@@ -33,7 +33,6 @@
 #include "Global.h"
 #include "ContainerDlg.h"
 #include "ExperimentTimer.h"
-#include "ExperimentParameter.h"
 
 enum GLWidgetPaintFlags //An optional paint flag that can be forwarded to the FUNC_PAINTOBJECT_FULL routine 
 {
@@ -68,6 +67,59 @@ public:
 	~GLWidgetWrapper();
 	
 	void setBlockTrials();
+	
+	template< typename T1 > bool insertExpObjectParameter(const int &nObjectID,const QString &sKeyName,const T1 &tVariabele,bool bIsInitializing = true)
+	{
+		bool bRetVal = false;
+		QString sValue = "";
+
+		if (typeid(T1) == typeid(int))//||(typeid(T1) == typeid(const int)))
+		{
+			//sValue = QString::number(static_cast<int>(tVariabele));
+			//sValue = QString::number(reinterpret_cast<T1>(tVariabele));
+			sValue = QString::number((T1)tVariabele);
+		}
+		else if (typeid(T1) == typeid(double))//||(typeid(T1) == typeid(const double)))
+		{
+			sValue = QString::number((T1)tVariabele);
+		}
+		else if (typeid(T1) == typeid(float))//||(typeid(T1) == typeid(const float)))
+		{
+			sValue = QString::number((T1)tVariabele);
+		}
+		else if (typeid(T1) == typeid(bool))//||(typeid(T1) == typeid(const bool)))
+		{
+			if ((T1)tVariabele == true)
+				sValue = TYPE_BOOL_TRUE; 
+			else
+				sValue = TYPE_BOOL_FALSE;
+		}
+		else if (typeid(T1) == typeid(QString))//||(typeid(T1) == typeid(const QString)))
+		{
+			sValue = (T1)tVariabele;
+		}
+		else if (typeid(T1) == typeid(QColor))//||(typeid(T1) == typeid(const QColor)))
+		{
+			sValue = "";//(QColor)tVariabele.name();
+		}
+		//else if (typeid(T1) == typeid(char*))
+		//{
+		//	sValue = QString((char*)tVariabele);
+		//}
+		else
+		{
+			QString sTypeValue = typeid(T1).name();
+			return false;
+		}
+		if(insertExpObjectBlockParameter(nObjectID,sKeyName,sValue,bIsInitializing))
+			bRetVal = pExpConf->pExperimentManager->insertExperimentObjectVariabelePointer(nObjectID,sKeyName,tVariabele);
+		return bRetVal;
+	}
+
+	template< typename T2 > T2* getExpObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
+	{
+		return pExpConf->pExperimentManager->getExperimentObjectVariabelePointer<T2>(nObjectID,sKeyName);
+	}
 
 public slots:
 	//Can be overridden
@@ -83,9 +135,8 @@ public slots:
 	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
 	int getObjectID();
-	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
-	ParsedParameterDefinition getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
-	bool setExperimentObjectParameter(QString strParamName, QString strParamValue);
+	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
+	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 	
 protected:
 	bool checkForNextBlockTrial();

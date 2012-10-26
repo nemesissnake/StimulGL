@@ -36,6 +36,7 @@
 #include "./../../StimulGL/mainappinfo.h"
 #include "experimentlogger.h"
 #include "XmlMessageHandler.h"
+#include "ExperimentParameter.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -90,15 +91,17 @@ public:
 		ExperimentManager_Stopped		= 8  /*!< enum value 8 */
 	};
 
-	typedef struct{
+	typedef struct
+	{
 		int nObjectID;
 		int nMetaID;
 		QObject *pObject;
 		QString sObjectName;
 		ExperimentSubObjectState nCurrentState;
 		tParsedParameterList *ExpBlockParams;
+		TypedExperimentParameterContainer *typedExpParamCntnr;
 	} objectElement;
-	
+
 	static QScriptValue ctor__experimentManager(QScriptContext* context, QScriptEngine* engine);
 	bool cleanupExperiment();
 	tParsedParameterList *getObjectBlockParamListById(int nID);
@@ -106,8 +109,60 @@ public:
 	bool getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue);
 	bool expandExperimentBlockParameterValue(QString &sValue);
 
-	template< typename T > bool insertExperimentObjectBlockParameter2(const int &nObjectID,const QString &sKeyName,const T *sVariabele = NULL);
-	template< typename T > T *getExperimentObjectBlockParameter2(const int &nObjectID,const QString &sKeyName);
+	template< typename T > T* getExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
+	{
+		if (nObjectID >= 0)
+		{
+			if (!lExperimentObjectList.isEmpty())
+			{
+				int nObjectCount = lExperimentObjectList.count();
+				if (nObjectCount>0)
+				{
+					for (int i=0;i<nObjectCount;i++)
+					{
+						if (lExperimentObjectList[i].nObjectID == nObjectID)
+						{
+							//tParsedParameterList test;
+							//test = *lExperimentObjectList[i].ExpBlockParams;
+							if (lExperimentObjectList[i].ExpBlockParams->contains(sKeyName.toLower()))
+							{
+								if(lExperimentObjectList[i].typedExpParamCntnr)
+									return lExperimentObjectList[i].typedExpParamCntnr->getExperimentParameter<T>(sKeyName);
+								else
+									return NULL;
+							}
+						}
+					}
+				}
+			}
+		}
+		return NULL;
+	}
+
+	template< typename T > bool insertExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName,T &tVariabele)
+	{
+		if (nObjectID >= 0) 
+		{
+			if (!lExperimentObjectList.isEmpty())
+			{
+				int nObjectCount = lExperimentObjectList.count();
+				if (nObjectCount>0)
+				{
+					for (int i=0;i<nObjectCount;i++)
+					{
+						if (lExperimentObjectList[i].nObjectID == nObjectID)
+						{
+							if(lExperimentObjectList[i].typedExpParamCntnr == NULL)
+								lExperimentObjectList[i].typedExpParamCntnr = new TypedExperimentParameterContainer();
+							bool bRetVal = lExperimentObjectList[i].typedExpParamCntnr->insertExperimentParameter<T>(sKeyName,&tVariabele);
+							return bRetVal;
+						}
+					}
+				}
+			}
+		}
+		return NULL;
+	}
 
 public slots:
 	void SendToMainAppLogOutput(const QString &strText2Write);
@@ -162,7 +217,6 @@ private:
 	QByteArray currentExperimentFile;
 	QByteArray currentValidationFile;
 
-	TypedExperimentParameterContainer *typedExpParamCntnr;
 	QObject *parentObject;
 	QScriptEngine *currentScriptEngine;
 	ExperimentState experimentCurrentState;

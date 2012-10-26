@@ -37,8 +37,6 @@
 #define RETINOMAP_WIDGET_CYCLE_TRIGGER_AMOUNT				"cycletriggeramount"
 #define RETINOMAP_WIDGET_SHOWFIXPOINT						"showfixpoint"
 #define RETINOMAP_WIDGET_FIXSIZE							"fixationsize"
-#define RETINOMAP_WIDGET_BOOL_TRUE							"true"
-#define RETINOMAP_WIDGET_BOOL_FALSE							"false"
 #define RETINOMAP_WIDGET_POS_LEFT							"left"
 #define RETINOMAP_WIDGET_POS_RIGHT							"right"
 #define RETINOMAP_WIDGET_POS_BOTH							"both"

@@ -22,94 +22,103 @@
 #include <QObject>
 #include <QString>
 #include <QHash>
-#include <QVariant>
-
-class ExperimentParameter : public QObject
-{
-	Q_OBJECT
-	
-	public:
-		ExperimentParameter(const QString &strName) : m_name(strName) {};
-		virtual ~ExperimentParameter() {};
-
-	private:
-		QString m_name;
-};
-
-template< typename T >
-class TypedExperimentParameter : public ExperimentParameter
-{
-	public:
-		TypedExperimentParameter(const QString &strName, const T& data) : ExperimentParameter(strName), m_data(data) {};
-
-	private:
-		T m_data;
-};
+#include <QColor>
 
 class TypedExperimentParameterContainer
 {
 public:
 	TypedExperimentParameterContainer() {};
-	//TypedExperimentParameterContainer(const TypedExperimentParameterContainer& other ) {};
+	~TypedExperimentParameterContainer() 
+	{
+		hIntContainer.clear();
+		hDoubleContainer.clear();
+		hFloatContainer.clear();
+		hBoolContainer.clear();
+		hQStringContainer.clear();
+		hQColorContainer.clear();
+	};
 
-	template< typename T > bool insertExperimentParameter(const QString &strKeyName, T *pExpParam = NULL)
+	template< typename T1 > bool insertExperimentParameter(const QString &strKeyName, T1 *pExpParam = NULL)
 	{
 		if(pExpParam == NULL)
 			return false;
-		if (typeid(T) == typeid(int))
+		if (typeid(T1) == typeid(int))
 		{
-			hIntContainer.insert(strKeyName,pExpParam);
+			hIntContainer.insert(strKeyName.toLower(),(int *)pExpParam);
 			return true;
+		}
+		else if (typeid(T1) == typeid(double))
+		{
+			hDoubleContainer.insert(strKeyName.toLower(),(double *)pExpParam);
+			return true;
+		}
+		else if (typeid(T1) == typeid(float))
+		{
+			hFloatContainer.insert(strKeyName.toLower(),(float *)pExpParam);
+			return true;
+		}
+		else if (typeid(T1) == typeid(bool))
+		{
+			hBoolContainer.insert(strKeyName.toLower(),(bool *)pExpParam);
+			return true;
+		}
+		else if (typeid(T1) == typeid(QString))
+		{
+			hQStringContainer.insert(strKeyName.toLower(),(QString *)pExpParam);
+			return true;
+		}
+		else if (typeid(T1) == typeid(QColor))
+		{
+			hQColorContainer.insert(strKeyName.toLower(),(QColor *)pExpParam);
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 		return false;
 	}
 
-	template< typename T > T *getExperimentParameter(const QString &strKeyName)
+	template< typename T2 > T2 *getExperimentParameter(const QString &strKeyName)
 	{
-		if (typeid(T) == typeid(int))
+		if (typeid(T2) == typeid(int))
 		{
-			return hIntContainer.value(strKeyName);
+			return (T2*)hIntContainer.value(strKeyName.toLower());
+		}
+		else if (typeid(T2) == typeid(double))
+		{
+			return (T2*)hDoubleContainer.value(strKeyName.toLower());
+		}
+		else if (typeid(T2) == typeid(float))
+		{
+			return (T2*)hFloatContainer.value(strKeyName.toLower());
+		}
+		else if (typeid(T2) == typeid(bool))
+		{
+			return (T2*)hBoolContainer.value(strKeyName.toLower());
+		}
+		else if (typeid(T2) == typeid(QString))
+		{
+			return (T2*)hQStringContainer.value(strKeyName.toLower());
+		}
+		else if (typeid(T2) == typeid(QColor))
+		{
+			return (T2*)hQColorContainer.value(strKeyName.toLower());
+		}
+		else
+		{
+			return NULL;
 		}
 		return NULL;
 	};
 
 private:
-	//QHash<QString, TypedExperimentParameter<int>> hIntContainer;
 	QHash<QString, int*> hIntContainer;
-};
-
-class ExperimentParameterContainer : public QObject
-{
-	Q_OBJECT
-
-public:
-	ExperimentParameterContainer() {};
-	//ExperimentParameterContainer(const ExperimentParameterContainer& other ) {};
-
-	bool insertExperimentParameter(const QString &strKeyName, QVariant vExpParam)
-	{
-	//	if(pExpParam == NULL)
-	//		return false;
-	//	if (typeid(T) == typeid(int))
-	//	{
-	//		hIntContainer.insert(strKeyName,pExpParam);
-			return true;
-	//	}
-	//	return false;
-	}
-
-	//template< typename T > T *getExperimentParameter(const QString &strKeyName)
-	//{
-	//	if (typeid(T) == typeid(int))
-	//	{
-	//		return hIntContainer.value(strKeyName);// insert(strKeyName,pExpParam);
-	//	}
-	//	return NULL;
-	//};
-
-private:
-	//QHash<QString, TypedExperimentParameter<int>> hIntContainer;
-	QHash<QString, int*> hIntContainer;
+	QHash<QString, double*> hDoubleContainer;
+	QHash<QString, float*> hFloatContainer;
+	QHash<QString, bool*> hBoolContainer;
+	QHash<QString, QColor*> hQColorContainer;
+	QHash<QString, QString*> hQStringContainer;
 };
 
 #endif // EXPERIMENTPARAMETER_H

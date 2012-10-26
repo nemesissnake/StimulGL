@@ -109,17 +109,18 @@ void GLWidgetWrapper::setVerticalSyncSwap()
 	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
 }
 
-bool GLWidgetWrapper::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing)
+bool GLWidgetWrapper::insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing)
 {
 	if (ExpBlockParams == NULL)
 	{
-		ExpBlockParams = new tParsedParameterList();//new QHash<QString, QString>();
+		ExpBlockParams = new tParsedParameterList();
 		pExpConf->pExperimentManager->setExperimentObjectBlockParameterStructure(nObjectID,ExpBlockParams);
 	}
-	return (pExpConf->pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName,sValue,bIsInitializing));
+	bool bRetVal = pExpConf->pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName,sValue,bIsInitializing);
+	return bRetVal;
 }
 
-ParsedParameterDefinition GLWidgetWrapper::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue)
+ParsedParameterDefinition GLWidgetWrapper::getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue)
 {
 	ParsedParameterDefinition PPDResult;
 	PPDResult.bHasChanged = false;
@@ -822,7 +823,7 @@ bool GLWidgetWrapper::initExperimentObject()
 	bCurrentSubObjectReadyToUnlock = false;
 	nRefreshRate = 0;
 	dAdditionalRefreshDelayTime = 0.0;
-	insertExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,QString::number(nRefreshRate));
+	insertExpObjectParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,nRefreshRate);
 	bool bRetVal;
 	if (thisMetaObject)
 	{
@@ -1021,42 +1022,6 @@ void GLWidgetWrapper::incrementExternalTrigger()
 	}
 }
 
-bool GLWidgetWrapper::setExperimentObjectParameter(QString strParamName, QString strParamValue)
-{
-	if (ExpBlockParams == NULL)
-		return false;
-
-	ParsedParameterDefinition tmpPP;
-	tmpPP.bHasChanged = true;
-	tmpPP.bIsInitialized = true;
-	tmpPP.sValue = strParamValue;
-	strParamName = strParamName.toLower();
-	ExpBlockParams->insert(strParamName, tmpPP);
-
-	//Set all the parameter bHasChanged attributes too false again
-	//QList<ParsedParameterDefinition> tmpStrValueList = ExpBlockParams->values();//The order is guaranteed to be the same as that used by keys()!
-	//QList<QString> tmpStrKeyList = ExpBlockParams->keys();//The order is guaranteed to be the same as that used by values()!
-	//for(int i=0;i<tmpStrKeyList.count();i++)
-	//{
-	//	tmpStrValueList[i].bHasChanged = false;
-	//	ExpBlockParams->insert(tmpStrKeyList[i], tmpStrValueList[i]);
-	//}
-	
-	bool bRetVal = false;
-	if (thisMetaObject)
-	{
-		if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PARSEEXPOBJECTPARAMETER_FULL)) == -1))//Is the slot present?
-		{
-			//Invoke the slot
-			if(!(thisMetaObject->invokeMethod(this, FUNC_PARSEEXPOBJECTPARAMETER, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal), Q_ARG(QString, strParamName))))
-			{
-				qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_INITOBJECTBLOCKTRIAL_FULL << ")!";		
-			}		
-		}
-	}
-	return bRetVal;
-}
-
 void GLWidgetWrapper::initBlockTrial()
 {
 	//stimContainerDlg->activateWindow();
@@ -1081,7 +1046,7 @@ void GLWidgetWrapper::initBlockTrial()
 		mutExpSnapshot.unlock();
 	getExperimentBlockParamsFromDomNodeList(tmpExpBlock,nObjectID,ExpBlockParams);//Should be moved to the manager?!
 	ParsedParameterDefinition pParDef;
-	pParDef = getExperimentObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,QString::number(nRefreshRate));
+	pParDef = getExpObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,QString::number(nRefreshRate));
 	nRefreshRate = pParDef.sValue.toInt();
 	bool bRetVal;
 	if (thisMetaObject)
