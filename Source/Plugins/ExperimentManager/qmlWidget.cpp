@@ -145,23 +145,19 @@ void qmlWidget::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyTo
 	int tmpInteger = -1;
 	if (bInit)
 	{	
-		QString tmpString = "";
-
-		tmpString = QColor(87,87,87).name();//gives "#575757";
-		colorBackground = QColor(tmpString);
+		colorBackground = QColor(87,87,87);//gives "#575757";
 		if(!bSetOnlyToDefault)
-			//sven insertExpObjectParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,tmpString);
-		tmpString = "";
-		QString qmlMainFilePath = tmpString;
+			insertExpObjectParameter(nQMLWidgetID,GLWIDGET_BACKGROUNDCOLOR,colorBackground);
+		QString qmlMainFilePath = "";
 		if(!bSetOnlyToDefault)
-			//sven insertExpObjectParameter(nQMLWidgetID,QML_WIDGET_MAINFILEPATH,tmpString);
+			insertExpObjectParameter(nQMLWidgetID,QML_WIDGET_MAINFILEPATH,qmlMainFilePath);
 		stimHeigthPixelAmount = rectScreenRes.height();
 		if(!bSetOnlyToDefault)
-			//sven insertExpObjectParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
+			insertExpObjectParameter(nQMLWidgetID,GLWIDGET_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
 		//stimWidthPixelAmount = stimHeigthPixelAmount; removed, not needed here!
 		stimWidthPixelAmount = rectScreenRes.width();
 		if(!bSetOnlyToDefault)
-			//sven insertExpObjectParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
+			insertExpObjectParameter(nQMLWidgetID,GLWIDGET_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
 		nWidgetMaxEvenTime = 5;
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQMLWidgetID,QML_WIDGET_MAX_EVENT_TIME,nWidgetMaxEvenTime);		

@@ -71,55 +71,39 @@ public:
 	template< typename T1 > bool insertExpObjectParameter(const int &nObjectID,const QString &sKeyName,const T1 &tVariabele,bool bIsInitializing = true)
 	{
 		bool bRetVal = false;
-		QString sValue = "";
-
-		if (typeid(T1) == typeid(int))//||(typeid(T1) == typeid(const int)))
-		{
-			//sValue = QString::number(static_cast<int>(tVariabele));
-			//sValue = QString::number(reinterpret_cast<T1>(tVariabele));
-			sValue = QString::number((T1)tVariabele);
-		}
-		else if (typeid(T1) == typeid(double))//||(typeid(T1) == typeid(const double)))
-		{
-			sValue = QString::number((T1)tVariabele);
-		}
-		else if (typeid(T1) == typeid(float))//||(typeid(T1) == typeid(const float)))
-		{
-			sValue = QString::number((T1)tVariabele);
-		}
-		else if (typeid(T1) == typeid(bool))//||(typeid(T1) == typeid(const bool)))
-		{
-			if ((T1)tVariabele == true)
-				sValue = TYPE_BOOL_TRUE; 
-			else
-				sValue = TYPE_BOOL_FALSE;
-		}
-		else if (typeid(T1) == typeid(QString))//||(typeid(T1) == typeid(const QString)))
-		{
-			sValue = (T1)tVariabele;
-		}
-		else if (typeid(T1) == typeid(QColor))//||(typeid(T1) == typeid(const QColor)))
-		{
-			sValue = "";//(QColor)tVariabele.name();
-		}
-		//else if (typeid(T1) == typeid(char*))
-		//{
-		//	sValue = QString((char*)tVariabele);
-		//}
-		else
-		{
-			QString sTypeValue = typeid(T1).name();
-			return false;
-		}
+		QString tVarName = typeid(tVariabele).name();
+		QString sValue = templateVariabeleToString(tVariabele);
 		if(insertExpObjectBlockParameter(nObjectID,sKeyName,sValue,bIsInitializing))
 			bRetVal = pExpConf->pExperimentManager->insertExperimentObjectVariabelePointer(nObjectID,sKeyName,tVariabele);
 		return bRetVal;
 	}
 
+	QString templateVariabeleToString(const QString &Var) {return QString(Var);}
+	QString templateVariabeleToString(const QColor &Var) {return Var.name();}
+	QString templateVariabeleToString(const int &Var) {return QString::number(Var);}
+	QString templateVariabeleToString(const float &Var) {return QString::number(Var);}
+	QString templateVariabeleToString(const double &Var) {return QString::number(Var);}
+	QString templateVariabeleToString(const bool &Var) 
+	{
+		if (Var)
+			return TYPE_BOOL_TRUE; 
+		else
+			return TYPE_BOOL_FALSE;
+	}
+	//QString templateVariabeleToString(const QString &Var) {return QString::number(Var);}
+	//QString templateVariabeleToString(const int &Var) {return QString::number(Var);}
+	//QString templateVariabeleToString(const int &Var) {return QString::number(Var);}
+
+
 	template< typename T2 > T2* getExpObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
 	{
 		return pExpConf->pExperimentManager->getExperimentObjectVariabelePointer<T2>(nObjectID,sKeyName);
 	}
+
+	QString colorFunc(QColor &colValue)
+	{
+		return colValue.name();
+	};
 
 public slots:
 	//Can be overridden

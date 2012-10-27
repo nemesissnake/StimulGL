@@ -74,7 +74,17 @@ public:
 		}
 		else
 		{
-			return false;
+			QString strUnknownTypeName = typeid(T1).name();
+			if (strUnknownTypeName.contains("char",Qt::CaseInsensitive))
+			{
+				hQStringContainer.insert(strKeyName.toLower(),(QString *)pExpParam);
+				return true;
+			}
+			else
+			{
+				qDebug() << __FUNCTION__ << "::Could not cast type (" + strUnknownTypeName + ")!";
+				return false;
+			}
 		}
 		return false;
 	}
