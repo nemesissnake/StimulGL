@@ -29,7 +29,6 @@ Q_DECLARE_METATYPE(QPainter*)
 
 RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent)
 {
-	currentScriptEngine = NULL;
 	customScriptHandlerFunction = NULL;
 	initialize();
 	GLWidgetWrapper::setupLayout(this);
@@ -89,10 +88,11 @@ bool RetinoMap_glwidget::makeThisAvailableInScript(QString strObjectScriptName, 
 {
 	if (engine)
 	{
-		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		QScriptEngine *currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
 		//QObject *someObject = this;//new MyObject;
 		QScriptValue objectValue = currentScriptEngine->newQObject(this);
 		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		setScriptEngine(currentScriptEngine);
 		return true;
 	}
 	return false;
@@ -422,14 +422,14 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 
 			initializeMovingDotsStructures();
 		}
-		//else if(currentExpType == RETINOMAP_WIDGET_PATTERN_FIXATION)
-		//{
+		else if(currentExpType == RETINOMAP_WIDGET_PATTERN_FIXATION)
+		{
 
-		//}
-		//else if(currentExpType == RETINOMAP_WIDGET_PATTERN_CUSTOM)
-		//{
+		}
+		else if(currentExpType == RETINOMAP_WIDGET_PATTERN_CUSTOM)
+		{
 
-		//}
+		}
 		else
 		{
 			qDebug() << __FUNCTION__ << "::Unknown RetinoMapping type!";
@@ -1504,16 +1504,16 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	stimuliPainter->setFont(textFont);
 	
 	stimuliPainter->drawPixmap(0,0,*StimulusResultImageFrame);
-	if (customScriptHandlerFunction && currentScriptEngine)
+	if (customScriptHandlerFunction && getScriptEngine())
 	{
-		scriptVal1 = currentScriptEngine->toScriptValue<QPainter *>(stimuliPainter);
+		scriptVal1 = getScriptEngine()->toScriptValue<QPainter *>(stimuliPainter);
 		if (currentExpType == RETINOMAP_WIDGET_PATTERN_FIXATION)
 		{
 			customScriptHandlerFunction->call(QScriptValue(), QScriptValueList() << scriptVal1);
 		}
 		else
 		{
-			scriptVal2 = currentScriptEngine->toScriptValue<float>(fTrialTimeProgress);
+			scriptVal2 = getScriptEngine()->toScriptValue<float>(fTrialTimeProgress);
 			customScriptHandlerFunction->call(QScriptValue(), QScriptValueList() << scriptVal1 << scriptVal2);
 		}
 	}
@@ -1577,9 +1577,9 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 
 bool RetinoMap_glwidget::installCustomScriptHandlerFunction(QString FuncName)
 {
-	if (currentScriptEngine)
+	if (getScriptEngine())
 	{
-		customScriptHandlerFunction = new QScriptValue(currentScriptEngine->globalObject().property(FuncName));
+		customScriptHandlerFunction = new QScriptValue(getScriptEngine()->globalObject().property(FuncName));
 		if(customScriptHandlerFunction->isFunction())
 		{
 			return true;

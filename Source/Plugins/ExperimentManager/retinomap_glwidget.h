@@ -93,35 +93,6 @@
 
 #define RETINOMAP_WIDGET_OUTPUT_SUBFOLDER					"/RetinoWidget/"
 
-//enum RetinoMapHemifieldPos //The position within the hemifield
-//{
-//	RetinoMap_HemifieldPos_Left		= 0,
-//	RetinoMap_HemifieldPos_Right	= 1,
-//	RetinoMap_HemifieldPos_Both		= 2
-//};
-//
-//enum RetinoMapOutputType //The output type
-//{
-//	RetinoMap_OutputType_Frame	= 0,
-//	RetinoMap_OutputType_Mask	= 1
-//};
-//
-//enum RetinoMapOutputFormat //The output format
-//{
-//	RetinoMap_OutputFormat_PNG	= 0,
-//	RetinoMap_OutputFormat_DAT	= 1
-//};
-//
-//enum RetinoMapExperimentType //The state of the main experiment object
-//{
-//	RetinoMap_Fixation		= 0,//RETINOMAP_WIDGET_PATTERN_FIXATION
-//	RetinoMap_Custom		= 1,//RETINOMAP_WIDGET_PATTERN_CUSTOM
-//	RetinoMap_PolarAngle	= 2,//RETINOMAP_WIDGET_PATTERN_POLARANGLE
-//	RetinoMap_Eccentricity	= 3,//RETINOMAP_WIDGET_PATTERN_ECCENTRICITY
-//	RetinoMap_MovingBar		= 4,//RETINOMAP_WIDGET_PATTERN_MOVINGBAR
-//	RetinoMap_MovingDots	= 5 //RETINOMAP_WIDGET_PATTERN_MOVINGDOTS
-//};
-
 typedef struct strcMovingDotsStructure
 {
 	QPolygonF Pos; //A QPolygonF is a QVector<QPointF>. The easiest way to add points to a QPolygonF is to use its streaming operator: polygon << QPointF(10.4, 20.5) << QPointF(20.2, 30.2);
@@ -156,9 +127,7 @@ private:
 	QImage RetinoMap_glwidget::fractalFillCheckeredImage(float fWidth, float fHeigth, float fSize, int nflickr);
 
 	QScriptValue *customScriptHandlerFunction;
-	QScriptEngine* currentScriptEngine;
 	int nRetinoID;								//This variable stores the ObjectID used to identify the object
-	//RetinoMapExperimentType currentExpType;		
 	QString currentExpType;						//The experiment type used, see RetinoMapExperimentType
 	bool firstBlockTrialPaintFrame;				//To determine whether it's the first frame to paint from a new Block trial
 	QColor colorBackground;						//The color of the background
@@ -198,7 +167,6 @@ private:
 	QString tmpParamValue;
 	float fStimulusDiameter;
 	float fTrialTimeProgress;
-	//float fLastTrialTimeProgress;
 	float fCortMagTrialTimeProgress;
 	bool bCreateActivationMap;
 	int currExpBlockTrialCycle;
@@ -218,13 +186,6 @@ private:
 	bool enableCortMagTiming;
 	int emptyTriggerLastIndex;
 	int emptyTriggerStepCount;
-	//QTime debugTime;							//For debugging purpose...
-	//int debugElapsedTime;						//For debugging purpose...
-	//int debugTestSamples;						//For debugging purpose...
-	//int debugUsedTestSamples;					//For debugging purpose...
-	//int debugTotalElapsedTime;				//For debugging purpose...
-	//int debugInitBlockTrialTime;				//For debugging purpose...
-	//QString debugString;						//For debugging purpose...
 
 	//Polar
 	float polarWedgeSpan;
@@ -275,11 +236,8 @@ private:
 	RandomGenerator *randStimStateGenerator;		 //To hold the Stimuli Trigger Step
 	RandomGenerator *randEmptyStimGenerator;		 //To hold the Empty Block Trials
 	RandomGenerator *previousRandEmptyStimGenerator; //To hold the processed Empty Block Trials
-
 	QScriptValue scriptVal1;
 	QScriptValue scriptVal2;
-	//QScriptValue funcReturnValue;
-	//QPixmap* tmpPixmap;
 };
 Q_DECLARE_METATYPE(RetinoMap_glwidget)
 #endif // RETINOMAP_GLWIDGET_H

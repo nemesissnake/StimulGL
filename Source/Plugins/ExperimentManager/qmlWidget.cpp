@@ -25,7 +25,6 @@
 
 qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent), parentWidget(parent)
 {
-	currentScriptEngine = NULL;
 	initialize();
 }
 
@@ -100,10 +99,11 @@ bool qmlWidget::makeThisAvailableInScript(QString strObjectScriptName, QObject *
 {
 	if (engine)
 	{
-		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		QScriptEngine *currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
 		//QObject *someObject = this;//new MyObject;
 		QScriptValue objectValue = currentScriptEngine->newQObject(this);
 		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		setScriptEngine(currentScriptEngine);
 		return true;
 	}
 	return false;
@@ -142,7 +142,6 @@ void qmlWidget::initialize()
 
 void qmlWidget::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyToDefault)
 {
-	int tmpInteger = -1;
 	if (bInit)
 	{	
 		colorBackground = QColor(87,87,87);//gives "#575757";

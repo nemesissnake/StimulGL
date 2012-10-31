@@ -29,6 +29,7 @@
 #include <QBoxLayout>
 #include <QCustomEvent>
 #include <QMutex>
+#include <QScriptValue>
 #include <omp.h>
 #include "Global.h"
 #include "ContainerDlg.h"
@@ -60,7 +61,6 @@ signals:
 	void NewInitBlockTrial();
 	void ExternalTriggerIncremented(int);
 	void ExperimentStructureChanged(int,int,int);//Block,Trial,InternalTrigger
-	//void LogToOutputWindow(const QString &strText2Write);
 
 public:
 	GLWidgetWrapper(QWidget *parent = NULL);
@@ -77,7 +77,6 @@ public:
 			bRetVal = pExpConf->pExperimentManager->insertExperimentObjectVariabelePointer(nObjectID,sKeyName,tVariabele);
 		return bRetVal;
 	}
-
 	QString templateVariabeleToString(const QString &Var) {return QString(Var);}
 	QString templateVariabeleToString(const QColor &Var) {return Var.name();}
 	QString templateVariabeleToString(const int &Var) {return QString::number(Var);}
@@ -90,24 +89,15 @@ public:
 		else
 			return TYPE_BOOL_FALSE;
 	}
-	//QString templateVariabeleToString(const QString &Var) {return QString::number(Var);}
-	//QString templateVariabeleToString(const int &Var) {return QString::number(Var);}
-	//QString templateVariabeleToString(const int &Var) {return QString::number(Var);}
-
-
 	template< typename T2 > T2* getExpObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
 	{
 		return pExpConf->pExperimentManager->getExperimentObjectVariabelePointer<T2>(nObjectID,sKeyName);
 	}
-
-	QString colorFunc(QColor &colValue)
-	{
-		return colValue.name();
-	};
+	bool setScriptEngine(QScriptEngine *currScriptEngine) {currentScriptEngine = currScriptEngine; return true;};
+	QScriptEngine *getScriptEngine() {return currentScriptEngine;};
 
 public slots:
-	//Can be overridden
-	//virtual 
+	//Can be overridden, virtual 
 	bool initExperimentObject();
 	bool startExperimentObject();
 	bool stopExperimentObject();
@@ -121,19 +111,17 @@ public slots:
 	int getObjectID();
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
+	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);
+	bool setExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal);
 	
 protected:
 	bool checkForNextBlockTrial();
-	//bool getExperimentBlockParameter(int nBlockNumber, int nObjectID, QString strParamName, ParsedParameterDefinition &pParDef);//QString &Result);
 	bool getExperimentBlockParamsFromDomNodeList(int nBlockNumber, int nObjectID, tParsedParameterList *hParams = NULL);//QHash<QString, QString> *hParams = NULL);
 	void setupLayout(QWidget* layoutWidget);
-	//void installKeyFilter()
 	bool isDebugMode();
 	bool getCurrentExperimentProgressSnapshot(ExperimentSnapshotStructure *expSnapshotstrc);
-	//bool getExperimentBlockTrialStructureCopy(ExperimentBlockTrialStructure &expBlockTrialStructure);
 	bool getCurrentExpBlockTrialInternalTriggerAmount(int &nInternalTriggerAmount);
 	int getCurrentStimuliRefreshRate() {return nRefreshRate;};
-	//int getElapsedFrameTime();
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
 	void setDoubleBufferCheck(bool bShouldCheck) {bCheckForDoubleBuffering = bShouldCheck;};
 	void paintEvent(QPaintEvent *event);
@@ -147,15 +135,8 @@ protected slots:
 	void incrementExternalTrigger();
 	void animate(bool bOnlyCheckBlockTrials = false);
 	void finalizePaintEvent();
-	//void proceedPaintEventLoop();;
 
 private:
-	//int getCurrentExperimentBlockTrialFrame() {return nBlockTrialFrameCounter;}
-	//int getCurrentExperimentTrial() {return nCurrentExperimentTrial;}
-	//int getCurrentExperimentBlock() {return nCurrentExperimentBlock;}
-	//int getCurrentExperimentTrigger() {return nCurrentExperimentTrigger;}
-	//int getCurrentExperimentBlockTrialTrigger() {return nCurrentExperimentBlockTrialReceivedTriggers;}
-	//int getExperimentBlockTrialTriggerAmount(int nBlock, int nTrial);
 	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool unlockExperimentObject();
 	bool setExperimentObjectReadyToUnlock();
@@ -168,7 +149,6 @@ private:
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
 
 private:
-	//bool bIsPainting;
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bFirstTriggerAfterUnlock;						//To detect the exact start of the experiment detected by the checkForNextBlockTrial() function.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
@@ -176,45 +156,35 @@ private:
 	double dWaitTime;
 	QMutex mutExpSnapshot;
 	QMutex mutRecursivePaint;
-	//QWaitCondition waitProcEvents;					//See below
 	QMutex mutProcEvents;								//Another implementation, due to qApp->processEvents() RecursiveRepaint can occur...
 	ExperimentSnapshotFullStructure expFullStruct;
-	//int nBlockTrialFrameCounter;
 	int nCurrentExperimentReceivedExternalTriggers;		//The current experiment number of external triggers received since it started, local use!
 	int nCurrentExperimentProcessedExternalTriggers;	//The current experiment processed external triggers, local use!
 	int nCurrentExperimentLastProcExternalTriggers;		//The current experiment last processed external trigger, local use!
 	int nCurrentExperimentReceivedInternalTriggers;		//The current experiment number of internal triggers incremented since it started, local use!
-	//int nCurrentExperimentTrigger;					//The current experiment trigger
-	//int nCurrentExperimentTrial;						//The current experiment trial within the block 
-	//int nCurrentExperimentBlockTrialReceivedTriggers;	//The current experiment number of trigger received within the current block trial
-	//int nCurrentExperimentBlock;						//The current experiment block
-	//int nTotalProcessedExperimentTrials;				//The total number of trials processed within experiment, might be that this Trial is not fully processed
 	int nRefreshRate;									//The refresh rate of the screen
 	double dLastPreSwapTime;
 	double dAdditionalRefreshDelayTime;
 	ContainerDlg *stimContainerDlg;
 	QObject *alternativeContainerDlg;
-	//bool bForceToStop;
 	bool bExperimentShouldStop;
 	QRectF rScreenResolution;
-	//int nMinScreenUpdateTime;
 	QVBoxLayout *mainLayout;
 	int nObjectID;
 	QTimer tStimTimer;
 	QDomNodeList *pExpBlockTrialDomNodeList;
-	//int nNextThresholdTriggerCount;//When we should switch to the next block
 	ExperimentBlockTrialStructure strcExperimentBlockTrials;
 	QEvent::Type tEventObjectStopped;
 	ExperimentSubObjectState currentSubObjectState;
 	ExperimentSubObjectStateHistory subObjectStateHistory;
 	int nFrameTimerIndex;
 	int nTrialTimerIndex;
-	//QHash<QString, QString> *ExpBlockParams;
 	tParsedParameterList *ExpBlockParams;
 	ExperimentConfiguration *pExpConf;
 	ExperimentTimer expTrialTimer;
 	const QMetaObject* thisMetaObject;
 	QPainter *lockedPainter;
+	QScriptEngine* currentScriptEngine;
 };
 
 #endif // GLWIDGET_H

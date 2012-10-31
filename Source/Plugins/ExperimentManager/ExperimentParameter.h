@@ -122,6 +122,101 @@ public:
 		return NULL;
 	};
 
+	bool getExperimentParameter(const QString &strKeyName, QScriptValue &scriptVal)
+	{
+		QString strKeyNameLow = strKeyName.toLower();
+		if (hIntContainer.contains(strKeyNameLow))
+		{
+			scriptVal = QScriptValue(*hIntContainer.value(strKeyNameLow));
+			return true;
+		} 
+		else if (hDoubleContainer.contains(strKeyNameLow))
+		{
+			scriptVal = QScriptValue(*hDoubleContainer.value(strKeyNameLow));
+			return true;
+		}
+		else if (hFloatContainer.contains(strKeyNameLow))
+		{
+			scriptVal = QScriptValue(*hFloatContainer.value(strKeyNameLow));
+			return true;
+		}
+		else if (hBoolContainer.contains(strKeyNameLow))
+		{
+			scriptVal = QScriptValue(*hBoolContainer.value(strKeyNameLow));
+			return true;
+		}
+		else if (hQStringContainer.contains(strKeyNameLow))
+		{
+			scriptVal = QScriptValue(*hQStringContainer.value(strKeyNameLow));
+			return true;
+		}
+		else if (hQColorContainer.contains(strKeyNameLow))
+		{
+			scriptVal = QScriptValue((*hQColorContainer.value(strKeyNameLow)).name());
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		return false;
+	};
+
+	bool setExperimentParameter(const QString &strKeyName, const QScriptValue &scriptVal)
+	{
+		QString strKeyNameLow = strKeyName.toLower();
+		if (hIntContainer.contains(strKeyNameLow))
+		{
+			int *tmpInt = hIntContainer.value(strKeyNameLow);
+			*tmpInt = scriptVal.toInteger();
+			return true;
+		} 
+		else if (hDoubleContainer.contains(strKeyNameLow))
+		{
+			double *tmpDouble = hDoubleContainer.value(strKeyNameLow);
+			*tmpDouble = scriptVal.toNumber();
+			return true;
+		}
+		else if (hFloatContainer.contains(strKeyNameLow))
+		{
+			float *tmpFloat = hFloatContainer.value(strKeyNameLow);
+			*tmpFloat = scriptVal.toNumber();//Creates a double
+			return true;
+		}
+		else if (hBoolContainer.contains(strKeyNameLow))
+		{
+			bool *tmpBool = hBoolContainer.value(strKeyNameLow);
+			*tmpBool = scriptVal.toBool();
+			return true;
+		}
+		else if (hQStringContainer.contains(strKeyNameLow))
+		{
+			QString *tmpString = hQStringContainer.value(strKeyNameLow);
+			*tmpString = scriptVal.toString();
+			return true;
+		}
+		else if (hQColorContainer.contains(strKeyNameLow))
+		{
+			QColor tmpColor;
+			QString test = scriptVal.toString();
+			tmpColor.setNamedColor(test);
+			if(tmpColor.isValid())
+			{
+				*hQColorContainer.value(strKeyNameLow) = tmpColor;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+		return false;
+	};
+
 private:
 	QHash<QString, int*> hIntContainer;
 	QHash<QString, double*> hDoubleContainer;

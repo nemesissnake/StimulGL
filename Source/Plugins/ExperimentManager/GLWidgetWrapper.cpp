@@ -33,6 +33,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	thisMetaObject = NULL;
 	stimContainerDlg = NULL;
 	pExpBlockTrialDomNodeList = NULL;
+	currentScriptEngine = NULL;
 	//bForceToStop = false;
 	bExperimentShouldStop = false;
 	//bIsPainting = false;
@@ -98,6 +99,10 @@ GLWidgetWrapper::~GLWidgetWrapper()
 	{
 		alternativeContainerDlg = NULL;//not owned by this class
 	}
+	if (currentScriptEngine)
+	{
+		currentScriptEngine = NULL;//not owned by this class
+	}
 	cleanupExperimentBlockTrialStructure();	
 }
 
@@ -127,13 +132,9 @@ ParsedParameterDefinition GLWidgetWrapper::getExpObjectBlockParameter(const int 
 	PPDResult.sValue = sDefValue;
 	PPDResult.bIsInitialized = true;
 	if (pExpConf->pExperimentManager->getExperimentObjectBlockParameter(nObjectID,sName,PPDResult))
-	{
 		return PPDResult;
-	}
 	else
-	{
 		return PPDResult;
-	}
 }
 
 void GLWidgetWrapper::init()
@@ -1417,4 +1418,26 @@ void GLWidgetWrapper::finalizePaintEvent()
 			}
 		}
 	}
+}
+
+QScriptValue GLWidgetWrapper::getExperimentObjectParameter(const int &nObjectID, const QString &strName)
+{
+	if (currentScriptEngine)
+	{
+		//return currentScriptEngine->toScriptValue(getExpObjectVariabelePointer<QString>(nObjectID,strName));
+		QScriptValue sScriptValue;
+		if(pExpConf->pExperimentManager->getExperimentObjectScriptValue(nObjectID,strName,sScriptValue))
+		{
+			//QString test = sScriptValue.toString();
+			return sScriptValue;
+		}
+		return currentScriptEngine->undefinedValue();
+	}
+	qDebug() << __FUNCTION__ << ":No Script Engine available!";
+	return NULL;	
+}
+
+bool GLWidgetWrapper::setExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal)
+{
+	return pExpConf->pExperimentManager->setExperimentObjectFromScriptValue(nObjectID,strName,sScriptVal);
 }

@@ -108,6 +108,8 @@ public:
 	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);
 	bool getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue);
 	bool expandExperimentBlockParameterValue(QString &sValue);
+	bool getExperimentObjectScriptValue(const int &nObjectID,const QString &sKeyName,QScriptValue &sScriptValue);
+	bool setExperimentObjectFromScriptValue(const int &nObjectID,const QString &sKeyName,const QScriptValue &sScriptValue);
 
 	template< typename T > T* getExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
 	{

@@ -231,6 +231,62 @@ bool ExperimentManager::setExperimentObjectBlockParameterStructure(const int nOb
 	return false;
 }
 
+bool ExperimentManager::getExperimentObjectScriptValue(const int &nObjectID,const QString &sKeyName,QScriptValue &sScriptValue)
+{
+	if (nObjectID >= 0)
+	{
+		if (!lExperimentObjectList.isEmpty())
+		{
+			int nObjectCount = lExperimentObjectList.count();
+			if (nObjectCount>0)
+			{
+				for (int i=0;i<nObjectCount;i++)
+				{
+					if (lExperimentObjectList[i].nObjectID == nObjectID)
+					{
+						if (lExperimentObjectList[i].ExpBlockParams->contains(sKeyName.toLower()))
+						{
+							if(lExperimentObjectList[i].typedExpParamCntnr)
+								return lExperimentObjectList[i].typedExpParamCntnr->getExperimentParameter(sKeyName,sScriptValue);
+							else
+								return false;
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool ExperimentManager::setExperimentObjectFromScriptValue(const int &nObjectID,const QString &sKeyName,const QScriptValue &sScriptValue)
+{
+	if (nObjectID >= 0)
+	{
+		if (!lExperimentObjectList.isEmpty())
+		{
+			int nObjectCount = lExperimentObjectList.count();
+			if (nObjectCount>0)
+			{
+				for (int i=0;i<nObjectCount;i++)
+				{
+					if (lExperimentObjectList[i].nObjectID == nObjectID)
+					{
+						if (lExperimentObjectList[i].ExpBlockParams->contains(sKeyName.toLower()))
+						{
+							if(lExperimentObjectList[i].typedExpParamCntnr)
+								return lExperimentObjectList[i].typedExpParamCntnr->setExperimentParameter(sKeyName,sScriptValue);
+							else
+								return false;
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
 bool ExperimentManager::logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage, const QString &strValue)
 {
 /*! \brief Use this function to log Experiment Data to a logfile.

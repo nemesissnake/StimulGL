@@ -44,7 +44,6 @@ public:
 	qmlWidget(QWidget *parent = NULL);
 	~qmlWidget();
 	qmlWidget(const qmlWidget& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
-
 	static QScriptValue ctor_QmlWidget(QScriptContext* context, QScriptEngine* engine);
 	
 public:	
@@ -59,9 +58,7 @@ public slots:
 	bool setObjectID(int nObjID);
 	bool initObjectBlockTrial();
 	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
-	//bool invokeQmlMethod(QString strRootObjectName = "", QString strMethodName = "", QVariant &returnedValue = QVariant(), QVariant inputValue1 = "", QVariant inputValue2 = "", QVariant inputValue3 = NULL, QVariant inputValue4 = NULL, QVariant inputValue5 = NULL, QVariant inputValue6 = NULL, QVariant inputValue7 = NULL, QVariant inputValue8 = NULL, QVariant inputValue9 = NULL);
-	QVariant invokeQmlMethod(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());
-	
+	QVariant invokeQmlMethod(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());	
 	QString addPixmapToImageBuffer(const QPixmap &pixmap);
 	bool getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
 	bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
@@ -70,7 +67,6 @@ public slots:
 private slots:
 	void callAnimate();
 	void onStatusChanged(QDeclarativeView::Status status);
-	//void processQMLEngineWarning(const QList<QDeclarativeError> & warnings);
 
 private:
 	void initialize();
@@ -85,7 +81,6 @@ private:
 	QPalette GlWidgetPallette;
 	QString qmlMainFilePath;
 	QObject *rootObject;
-	QScriptEngine* currentScriptEngine;
 	ExperimentSnapshotStructure expSnapshot;
 	QPainter *stimuliPainter;
 	ExperimentConfiguration *currExpConfStruct;
@@ -94,7 +89,6 @@ private:
 	QGLWidget *glWidget;						//The QGLWidget that acts as the viewport for the QML
 	int nQMLWidgetID;							//This variable stores the ObjectID used to identify the object
 	QRectF rectScreenRes;						//The screen resolution
-	//bool firstBlockTrialPaintFrame;				//To determine whether it's the first frame to paint from a new Block trial
 	QColor colorBackground;						//The color of the background
 	float stimWidthPixelAmount;					//The amount of visible stimuli pixels(height)
 	float stimHeigthPixelAmount;				//The amount of visible stimuli pixels(width)
