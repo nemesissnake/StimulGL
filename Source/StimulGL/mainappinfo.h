@@ -42,7 +42,6 @@ class MainAppInfo
 private:
 	static QFile *mainLogFile;
 	static QWidget *mainWindow;
-	//static std::ofstream *mainLogFile;
 public:
 
 	static bool Initialize(QWidget *mainWin = NULL);
@@ -90,7 +89,7 @@ public:
 	};
 	Q_DECLARE_FLAGS(ActiveScriptModes, ActiveScriptMode)	
 
-		enum ScriptRunMode
+	enum ScriptRunMode
 	{
 		Execute					= 0x00000,
 		Debug					= 0x00001,
@@ -98,7 +97,7 @@ public:
 	};
 	Q_DECLARE_FLAGS(ScriptRunModes, ScriptRunMode)
 
-		enum MainProgramModeFlag
+	enum MainProgramModeFlag
 	{
 		Default						= 0,
 		DisableAllScriptBindings	= 1,
@@ -107,22 +106,30 @@ public:
 	};
 	Q_DECLARE_FLAGS(MainProgramModeFlags, MainProgramModeFlag)
 
-		enum DocType 
+	enum DocType 
 	{
 		DOCTYPE_UNDEFINED		= 0x00000,
 		DOCTYPE_QSCRIPT			= 0x00001,
 		DOCTYPE_SVG				= 0x00002,
 		DOCTYPE_PLUGIN_DEFINED	= 0x00003
-		//DOCTYPE_EXML			= 0x00003,
-		//DOCTYPE_PLUGIN_WIDGET	= 0x00004
 	};
 	Q_DECLARE_FLAGS(DocTypes, DocType)
+
+	enum DocTypeStyle
+	{
+		DOCTYPE_STYLE_UNDEFINED		= 0,
+		DOCTYPE_STYLE_ECMA			= 1,
+		DOCTYPE_STYLE_PLAINTEXT		= 2,
+		DOCTYPE_STYLE_XML			= 3
+	};
+	Q_DECLARE_FLAGS(DocTypeStyles, DocTypeStyle)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MainAppInfo::ScriptRunModes)
 Q_DECLARE_OPERATORS_FOR_FLAGS(MainAppInfo::MainProgramModeFlags)
 Q_DECLARE_OPERATORS_FOR_FLAGS(MainAppInfo::ActiveScriptModes)
 Q_DECLARE_OPERATORS_FOR_FLAGS(MainAppInfo::DocTypes)
+Q_DECLARE_OPERATORS_FOR_FLAGS(MainAppInfo::DocTypeStyles)
 
 #endif // MAINAPPINFO_H
 //#ifdef Q_WS_WIN

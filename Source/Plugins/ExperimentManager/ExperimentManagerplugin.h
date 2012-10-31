@@ -69,6 +69,11 @@ public slots:
 	bool ExperimentManagerQMLDocumentHandler(const QString &docContent, const QString &strHomePath);
 	QObject *GetScriptMetaObject(int nIndex);
 	int GetScriptMetaObjectCount();
+	int GetAdditionalFileTypeStyle(const QString &strExtensions)
+	{
+		sven
+		return MainAppInfo::DOCTYPE_STYLE_UNDEFINED;
+	};
 };
 
 #endif//ExperimentManagerPLUGIN_H

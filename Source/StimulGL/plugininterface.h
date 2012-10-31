@@ -23,7 +23,8 @@
 #include <QString>
 #include <QtScript>
 #include <QMessageBox>
-#include "maindefines.h"
+//#include "maindefines.h"
+#include "mainappinfo.h"
 
 
 class PluginInterface
@@ -64,6 +65,7 @@ public slots:
 	virtual QStringList GetAdditionalFileSlotHandlers() {return QStringList();};
 	virtual QObject *GetScriptMetaObject(int nIndex = 0) {return NULL;};
 	virtual int GetScriptMetaObjectCount() {return 0;};
+	int GetAdditionalFileTypeStyle(const QString &strExtensions) {return MainAppInfo::DOCTYPE_STYLE_UNDEFINED;};//should return a DocTypeStyle
 
 protected:
 	QString strPluginInformation;

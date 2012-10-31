@@ -270,7 +270,7 @@ private:
 	QAction* integratePlugin(QObject *plugin, PluginCollection *collection);
 	void setupToolBars();
 	void setRenderer();
-	void newDocument(const MainAppInfo::DocType &docType, int &DocIndex);
+	void newDocument(const MainAppInfo::DocType &docType, int &DocIndex, const QString &strExtension = "");
 	//void setupSyntaxHighlighting(MdiChild *childWindow,MDIDocumentType tempFileType);
 	void parseRemainingGlobalSettings();
 	bool configureDebugger();

@@ -118,7 +118,6 @@ public slots:
 	bool initObjectBlockTrial();
 	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
 	bool installCustomScriptHandlerFunction(QString FuncName);
-	bool parseExperimentObjectParameter(QString strParamName);
 
 private:
 	void initialize();

@@ -149,10 +149,6 @@ MainAppInfo::DocType DocumentManager::getDocType(const QString strExtension)
 	{
 		return MainAppInfo::DOCTYPE_SVG;
 	}
-	//else if (tmpExt == "exml")
-	//{
-	//	return MainAppInfo::DOCTYPE_EXML;
-	//}
 	else if(getKnownDocumentFileHandlerIndex(tmpExt) >= 0)
 	{
 		return MainAppInfo::DOCTYPE_PLUGIN_DEFINED;
@@ -211,7 +207,7 @@ bool DocumentManager::getLexer(QsciLexer *lexer, const QString &lexerName, QObje
 	return bRetVal;
 }
 
-CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocIndex)//QMdiSubWindow *subWindow)
+CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocIndex, const QString &strExtension)//QMdiSubWindow *subWindow)
 {
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
@@ -322,7 +318,43 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 		}
 	case MainAppInfo::DOCTYPE_PLUGIN_DEFINED:
 		{
-			//custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+			if(pluginDocHandlerStore.strDocHandlerInfoList.isEmpty() == false)
+			{
+				if(pluginDocHandlerStore.strDocHandlerInfoList.count() >= 1);
+				for (int i=0;i<pluginDocHandlerStore.strDocHandlerInfoList.count();i++)
+				{
+					if(pluginDocHandlerStore.strDocHandlerInfoList.at(i).split("|",QString::SkipEmptyParts).at(0).toLower() == strExtension.toLower())
+					{
+						if(pluginDocHandlerStore.pluginObject.at(i))
+						{
+							QObject* pluginObject = pluginDocHandlerStore.pluginObject.at(i);
+							if(pluginObject)
+							{
+								if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE_FULL)) == -1))//Is the slot present?
+								{
+									//Invoke the slot
+									int nRetVal = 5;
+									bool bResult = false;
+									bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nRetVal), Q_ARG(QString,strExtension.toLower()));//, Q_ARG(QString,strDocumentContent), Q_ARG(QString,getSelectedScriptFileLocation()));				
+									//if(bResult)
+									//{
+									//	break;
+									//}
+									//else
+									//{
+									//	break;
+									//}
+									break;
+								}
+								break;
+							}
+							break;
+						}
+						break;
+					}
+				}
+			}
 			break;
 		}
 	case MainAppInfo::DOCTYPE_UNDEFINED:

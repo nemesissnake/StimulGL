@@ -124,8 +124,8 @@ public:
 					{
 						if (lExperimentObjectList[i].nObjectID == nObjectID)
 						{
-							//tParsedParameterList test;
-							//test = *lExperimentObjectList[i].ExpBlockParams;
+							if ((lExperimentObjectList[i].ExpBlockParams == NULL) || (lExperimentObjectList[i].ExpBlockParams->isEmpty()))
+								return NULL;
 							if (lExperimentObjectList[i].ExpBlockParams->contains(sKeyName.toLower()))
 							{
 								if(lExperimentObjectList[i].typedExpParamCntnr)
@@ -154,6 +154,8 @@ public:
 					{
 						if (lExperimentObjectList[i].nObjectID == nObjectID)
 						{
+							if ((lExperimentObjectList[i].ExpBlockParams == NULL) || (lExperimentObjectList[i].ExpBlockParams->isEmpty()))
+								return false;
 							if(lExperimentObjectList[i].typedExpParamCntnr == NULL)
 								lExperimentObjectList[i].typedExpParamCntnr = new TypedExperimentParameterContainer();
 							bool bRetVal = lExperimentObjectList[i].typedExpParamCntnr->insertExperimentParameter<T>(sKeyName,&tVariabele);
@@ -163,7 +165,7 @@ public:
 				}
 			}
 		}
-		return NULL;
+		return false;
 	}
 
 public slots:

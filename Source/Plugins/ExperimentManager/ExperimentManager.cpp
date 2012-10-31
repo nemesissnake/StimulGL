@@ -185,8 +185,8 @@ bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,co
 				{
 					if (lExperimentObjectList[i].nObjectID == nObjectID)
 					{
-						//tParsedParameterList test;
-						//test = *lExperimentObjectList[i].ExpBlockParams;
+						if ((lExperimentObjectList[i].ExpBlockParams == NULL) || (lExperimentObjectList[i].ExpBlockParams->isEmpty()))
+							return false;
 						if (lExperimentObjectList[i].ExpBlockParams->contains(sName))
 						{
 							strcParDef = lExperimentObjectList[i].ExpBlockParams->value(sName,strcParDef);
@@ -244,6 +244,8 @@ bool ExperimentManager::getExperimentObjectScriptValue(const int &nObjectID,cons
 				{
 					if (lExperimentObjectList[i].nObjectID == nObjectID)
 					{
+						if ((lExperimentObjectList[i].ExpBlockParams == NULL) || (lExperimentObjectList[i].ExpBlockParams->isEmpty()))
+							return false;
 						if (lExperimentObjectList[i].ExpBlockParams->contains(sKeyName.toLower()))
 						{
 							if(lExperimentObjectList[i].typedExpParamCntnr)
@@ -272,6 +274,9 @@ bool ExperimentManager::setExperimentObjectFromScriptValue(const int &nObjectID,
 				{
 					if (lExperimentObjectList[i].nObjectID == nObjectID)
 					{
+						if ((lExperimentObjectList[i].ExpBlockParams == NULL) || (lExperimentObjectList[i].ExpBlockParams->isEmpty()))
+							return false;
+						//int nCount = lExperimentObjectList[i].ExpBlockParams->count();
 						if (lExperimentObjectList[i].ExpBlockParams->contains(sKeyName.toLower()))
 						{
 							if(lExperimentObjectList[i].typedExpParamCntnr)
@@ -1754,6 +1759,7 @@ bool ExperimentManager::createExperimentObjects()
 						tmpElement.sObjectName = sName;
 						tmpElement.pObject = static_cast< QObject* > ( QMetaType::construct(metaID) );
 						tmpElement.typedExpParamCntnr = NULL;
+						tmpElement.ExpBlockParams = NULL;
 					
 						const QMetaObject* metaObject = tmpElement.pObject->metaObject();
 

@@ -1664,7 +1664,7 @@ bool MainWindow::parseFile(const QFile &file)
 	fileExtension = fileInfo.suffix();
 	MainAppInfo::DocType tempDocType = DocManager->getDocType(fileExtension);
 	int DocIndex;
-	newDocument(tempDocType,DocIndex);
+	newDocument(tempDocType,DocIndex,fileExtension);
 
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	if (DocManager->loadFile(DocIndex,file.fileName()))
@@ -1808,10 +1808,10 @@ void MainWindow::newFile()
 	statusBar()->showMessage(tr("New File created"), 2000);
 }
 
-void MainWindow::newDocument(const MainAppInfo::DocType &docType, int &DocIndex)
+void MainWindow::newDocument(const MainAppInfo::DocType &docType, int &DocIndex, const QString &strExtension)
 {
 	DocIndex = 0;
-	QsciScintilla *newChild = DocManager->add(docType,DocIndex);
+	QsciScintilla *newChild = DocManager->add(docType,DocIndex,strExtension);
 	QMdiSubWindow *subWindow = mdiArea->addSubWindow(newChild);
 	subWindow->setAttribute(Qt::WA_DeleteOnClose);
 	DocManager->setSubWindow(DocIndex,subWindow);

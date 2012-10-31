@@ -54,7 +54,7 @@ public:
 	CustomQsciScintilla *getDocHandler(const int &DocIndex);
 	CustomQsciScintilla *getDocHandler(QMdiSubWindow *subWindow);
 	int count(void);
-	CustomQsciScintilla *add(MainAppInfo::DocType docType,int &DocIndex);
+	CustomQsciScintilla *add(MainAppInfo::DocType docType,int &DocIndex, const QString &strExtension);
 	bool remove(QMdiSubWindow *subWindow);
 	bool setSubWindow(int DocIndex, QMdiSubWindow *subWindow);
 	bool loadFile(int DocIndex, const QString &fileName);
