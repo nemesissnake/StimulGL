@@ -50,14 +50,14 @@
 #define MAIN_PROGRAM_EXAMPLES_DIRNAME					"examples"
 #define MAIN_PROGRAM_XSD_DIRNAME						"xsd"
 #define MAIN_PROGRAM_DOC_BINARYCOLLFILE					"MainDocumentation.qhc"
-#define MAIN_PROGRAM_FILE_DESCRIPTION					"Open Source Cross Platform Scriptable Application"
+#define MAIN_PROGRAM_FILE_DESCRIPTION					MAIN_PROGRAM_INTERNAL_NAME ", a Open Source Cross Platform Scriptable Application"
 #define MAIN_PROGRAM_FILESEXTENSION_LIST				"Any files (*);;" MAIN_PROGRAM_INTERNAL_NAME "standard files (*.qs *.svg *.svgz *.svg.gz);;QT Script files (*.qs);;SVG files (*.svg *.svgz *.svg.gz);;"
 #define MAIN_PROGRAM_POST_FILESEXTENSION_LIST			""//"Any files (*)"
 #define MAIN_PROGRAM_UNTITLED_NAME						"Untitled"
 #define UNKNOWNENUMSTRING								"Unknown_Enumeration Value"
 #define MAIN_PROGRAM_STANDARD_DATETIME_FORMAT			"yyyyMMddHHmmsszzz"
-#define MAIN_PROGRAM_DEVICE_INTERFACE					"StimulGL.Plugins.DeviceInterface/1.1"
-#define MAIN_PROGRAM_EXTENSION_INTERFACE				"StimulGL.Plugins.ExtensionInterface/1.1"
+#define MAIN_PROGRAM_DEVICE_INTERFACE					"StimulGL.Plugins.DeviceInterface/1.2"
+#define MAIN_PROGRAM_EXTENSION_INTERFACE				"StimulGL.Plugins.ExtensionInterface/1.2"
 //Only edit until here!
 
 #define SCRIPT_API_CLASS_NAME_TAG						"ScriptAPIClassName"

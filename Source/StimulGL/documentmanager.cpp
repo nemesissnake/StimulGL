@@ -207,23 +207,96 @@ bool DocumentManager::getLexer(QsciLexer *lexer, const QString &lexerName, QObje
 	return bRetVal;
 }
 
-CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocIndex, const QString &strExtension)//QMdiSubWindow *subWindow)
+bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, MainAppInfo::DocTypeStyle dStyle, const QString &strAPIFileName)
+{
+	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
+
+	switch (dStyle)
+	{
+		case MainAppInfo::DOCTYPE_STYLE_ECMA:
+		{
+			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+			QDir dir(MainAppInfo::apiDirPath());
+			QsciLexer *Qjslexer = new QsciLexerJavaScript(custQsci);
+			custQsci->setLexer(Qjslexer);
+			Qjslexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
+			if(strAPIFileName.isEmpty() == false)
+			{
+				if ( dir.entryList(QDir::Files).contains(strAPIFileName) ) 
+				{
+					QsciAPIs* apis = new QsciAPIs(Qjslexer);
+					if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
+					{
+						custQsci->setCallTipsStyle(QsciScintilla::CallTipsStyle::CallTipsNoAutoCompletionContext);
+						QStringList apiEntries = getAdditionalApiEntries();
+						if (apiEntries.isEmpty() == false)
+						{
+							for (int i=0;i<apiEntries.count();i++)
+							{
+								apis->add(apiEntries.at(i));
+							}
+						}
+						apis->prepare();
+						Qjslexer->setAPIs(apis);
+					}
+					else 
+					{
+						delete apis;
+					}
+				}
+			}
+			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+			return true;
+		}
+		case MainAppInfo::DOCTYPE_STYLE_XML:
+		{
+			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+			QDir dir(MainAppInfo::apiDirPath());
+			QsciLexer *QxmlLexer = new QsciLexerXML(custQsci);
+			custQsci->setLexer(QxmlLexer);
+			QxmlLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
+			if(strAPIFileName.isEmpty() == false)
+			{
+				if ( dir.entryList(QDir::Files).contains(strAPIFileName) ) 
+				{
+					QsciAPIs* apis = new QsciAPIs(QxmlLexer);
+					if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
+					{
+						apis->prepare();
+						QxmlLexer->setAPIs(apis);
+					}
+					else 
+					{
+						delete apis;
+					}
+				}
+			}
+			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+			return true;
+		}
+	}
+	return false;
+}
+
+CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocIndex, const QString &strExtension)
 {
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
-
 	custQsci->setPaper(QColor(255,255,255));
 	custQsci->setAutoIndent(true);
 	custQsci->setAutoCompletionThreshold(2);
 	custQsci->setCaretLineVisible(true);//selected line
 	custQsci->setCaretLineBackgroundColor(QColor(240,240,255));
-
 	custQsci->setMarginLineNumbers(1, true);
 	custQsci->setMarginSensitivity(1, true);
-	custQsci->setMarginWidth(2, 12);
-	//	Show the first two margins (number 1 and 2) --> (binary mask 00000110 == 6)
-	custQsci->setMarginMarkerMask(1, 6);
-	//	Set the 1st margin to accept markers
+	custQsci->setMarginWidth(2, 12);//	Show the first two margins (number 1 and 2) --> (binary mask 00000110 == 6)	
+	custQsci->setMarginMarkerMask(1, 6);//	Set the 1st margin to accept markers	
 	custQsci->markerDefine(QsciScintilla::RightTriangle, 1);
 	custQsci->markerDefine(QsciScintilla::Background, 2);
 	custQsci->setMarkerForegroundColor(QColor(100, 100, 100));
@@ -231,7 +304,6 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 	custQsci->setSelectionBackgroundColor(QColor(150,150,155));//selected text
 	custQsci->setSelectionForegroundColor(QColor(100,100,100));
 	custQsci->setPaper(cPaper);//Here we make the paper background color light Grey instead of White (Better for the subject watching...)
-
 	NrOfLinesChangedMapper = new QSignalMapper(this);
 	NrOfLinesChangedMapper->setMapping(custQsci, custQsci);//QScintillaChildren.at(DocCount)
 	connect(custQsci, SIGNAL(linesChanged()),NrOfLinesChangedMapper, SLOT (map()));
@@ -242,75 +314,9 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 	{
 	case MainAppInfo::DOCTYPE_QSCRIPT:
 		{
-			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
-
-			//QsciLexer* lexer = NULL;
-			QString fileName = "";
-			QDir dir(MainAppInfo::apiDirPath());
-			QsciLexer *Qjslexer = new QsciLexerJavaScript(custQsci);
-			custQsci->setLexer(Qjslexer);
-			Qjslexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
-			fileName = "qscript.api";
-			if ( dir.entryList(QDir::Files).contains(fileName) ) 
-			{
-				QsciAPIs* apis = new QsciAPIs(Qjslexer);
-				if ( apis->load(dir.absoluteFilePath(fileName)) ) 
-				{
-					custQsci->setCallTipsStyle(QsciScintilla::CallTipsStyle::CallTipsNoAutoCompletionContext);
-					QStringList apiEntries = getAdditionalApiEntries();
-					if (apiEntries.isEmpty() == false)
-					{
-						for (int i=0;i<apiEntries.count();i++)
-						{
-							apis->add(apiEntries.at(i));
-						}
-					}
-					apis->prepare();
-					Qjslexer->setAPIs(apis);
-				}
-				else 
-				{
-					delete apis;
-				}
-			}
-			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
-			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+			bool bResult = customizeDocumentStyle(custQsci,MainAppInfo::DOCTYPE_STYLE_ECMA,"qscript.api");
 			break;
 		}
-	//case MainAppInfo::DOCTYPE_EXML:
-	//	{
-	//		custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-	//		custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
-
-	//		//QsciLexer* lexer = NULL;
-	//		QString fileName = "";
-	//		QDir dir(MainAppInfo::apiDirPath());
-
-	//		//QsciLexerXML()
-	//		QsciLexer *QxmlLexer = new QsciLexerXML(custQsci);
-	//		custQsci->setLexer(QxmlLexer);
-	//		QxmlLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
-	//		fileName = "exml.api";
-	//		if ( dir.entryList(QDir::Files).contains(fileName) ) 
-	//		{
-	//			QsciAPIs* apis = new QsciAPIs(QxmlLexer);
-	//			if ( apis->load(dir.absoluteFilePath(fileName)) ) 
-	//			{
-	//				apis->prepare();
-	//				QxmlLexer->setAPIs(apis);
-	//			}
-	//			else 
-	//			{
-	//				delete apis;
-	//			}
-	//		}
-	//		custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-	//		custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
-	//		custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
-	//		break;
-	//	}
 	case MainAppInfo::DOCTYPE_SVG:
 		{
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
@@ -331,22 +337,23 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 							QObject* pluginObject = pluginDocHandlerStore.pluginObject.at(i);
 							if(pluginObject)
 							{
+								bool bResult = false;
+								MainAppInfo::DocTypeStyle sDocStyle = MainAppInfo::DOCTYPE_STYLE_UNDEFINED;
 								if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE_FULL)) == -1))//Is the slot present?
 								{
-									//Invoke the slot
-									int nRetVal = 5;
-									bool bResult = false;
-									bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nRetVal), Q_ARG(QString,strExtension.toLower()));//, Q_ARG(QString,strDocumentContent), Q_ARG(QString,getSelectedScriptFileLocation()));				
-									//if(bResult)
-									//{
-									//	break;
-									//}
-									//else
-									//{
-									//	break;
-									//}
-									break;
+									
+									int nTmpRetVal = 0;
+									bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nTmpRetVal), Q_ARG(QString,strExtension.toLower()));				
+									if(bResult)
+										sDocStyle = (MainAppInfo::DocTypeStyle)nTmpRetVal;						
 								}
+
+								QString sAPIFileName = "";
+								if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME_FULL)) == -1))//Is the slot present?
+								{
+									bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME),Qt::DirectConnection, Q_RETURN_ARG(QString,sAPIFileName), Q_ARG(QString,strExtension.toLower()));		
+								}
+								bResult = customizeDocumentStyle(custQsci,sDocStyle,sAPIFileName);
 								break;
 							}
 							break;

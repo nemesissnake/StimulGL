@@ -202,4 +202,28 @@ bool ExperimentManagerPlugin::ExecuteContent(const DocContentInfoStructure &docS
 	return false;
 }
 
+int ExperimentManagerPlugin::GetAdditionalFileTypeStyle(QString strExtension) 
+{
+	if(strExtension.toLower() == "exml")
+	{
+		return MainAppInfo::DOCTYPE_STYLE_XML;
+	} 
+	else if(strExtension.toLower() == "qml")
+	{
+		return MainAppInfo::DOCTYPE_STYLE_QML;
+	}	
+}
+
+QString ExperimentManagerPlugin::GetAdditionalFileTypeApiName(QString strExtension) 
+{
+	if(strExtension.toLower() == "exml")
+	{
+		return "exml.api";
+	} 
+	else if(strExtension.toLower() == "qml")
+	{
+		return "";//not jet implemented
+	}
+}
+
 Q_EXPORT_PLUGIN2(experimentmanagerplugin, ExperimentManagerPlugin);

@@ -100,6 +100,7 @@ private:
 	void setFileName(int DocIndex, QString fileName);
 	bool getLexer(QsciLexer *lexer, const QString &lexerName, QObject *parent = 0);
 	QStringList getAdditionalApiEntries() {return additionalApiEntries;};
+	bool customizeDocumentStyle(CustomQsciScintilla *custQsci,MainAppInfo::DocTypeStyle dStyle = MainAppInfo::DOCTYPE_STYLE_UNDEFINED, const QString &strAPIFileName = "");
 
 private slots:
 	void documentWasModified(QWidget *subWindow);
