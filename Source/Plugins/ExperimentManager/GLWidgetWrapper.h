@@ -109,6 +109,7 @@ public slots:
 	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
 	int getObjectID();
+	QString getAbsoluteExperimentStructure();
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);
@@ -147,6 +148,8 @@ private:
 	bool cleanupExperimentBlockTrialStructure();
 	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
+	void resetScriptExperimentStructure();
+	void updateScriptExperimentStructure(const int &absTrigger);
 
 private:
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
@@ -174,6 +177,7 @@ private:
 	QTimer tStimTimer;
 	QDomNodeList *pExpBlockTrialDomNodeList;
 	ExperimentBlockTrialStructure strcExperimentBlockTrials;
+	ScriptExperimentStructure strcScriptExpStruct;
 	QEvent::Type tEventObjectStopped;
 	ExperimentSubObjectState currentSubObjectState;
 	ExperimentSubObjectStateHistory subObjectStateHistory;

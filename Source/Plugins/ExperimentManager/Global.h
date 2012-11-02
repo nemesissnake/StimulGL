@@ -127,6 +127,18 @@ typedef struct strcExperimentSnapshotFullStructure
 	int nNextThresholdTriggerCount;				//When we should switch to the next block
 } ExperimentSnapshotFullStructure;
 
+//The following structure looks like the ExperimentSnapshotStructure, but this structure should NOT be used internally by the Experiment Manager but only by the script context!
+//It's sole purpose is to support an easy way to automatically step trough (and buffer) the Experiment Structure just before a new ExternalTriggerIncremented() signal is emitted,
+//It Allows the script then to fetch the correct structure using the getAbsoluteExperimentStructure(int nAbsoluteTrigger) slot!
+typedef struct strcScriptExperimentStructure
+{
+	int currExpExternalTrigger;			//The current experiment external trigger
+	int currExpInternalTrigger;			//The current experiment internal trigger
+	int currExpBlockTrialTrigger;		//This is different!! It is now the current trigger within a Block Trial
+	int currExpTrial;					//The current experiment trial within the block 	
+	int currExpBlock;					//The current experiment block
+} ScriptExperimentStructure;
+
 /*! \struct strcParsedParameterDefinition
  * A structure for the Experiment Manager parameter definitions.
  */

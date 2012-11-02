@@ -210,14 +210,34 @@ bool DocumentManager::getLexer(QsciLexer *lexer, const QString &lexerName, QObje
 bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, MainAppInfo::DocTypeStyle dStyle, const QString &strAPIFileName)
 {
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
+	QDir dir(MainAppInfo::apiDirPath());
 
 	switch (dStyle)
 	{
+		case MainAppInfo::DOCTYPE_STYLE_UNDEFINED:
+		{
+			custQsci->setFolding(QsciScintilla::NoFoldStyle);
+			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+			custQsci->setPaper(cPaper);
+			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+			return true;
+		}
+		case MainAppInfo::DOCTYPE_STYLE_PLAINTEXT:
+			{
+				custQsci->setFolding(QsciScintilla::NoFoldStyle);
+				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+				custQsci->setPaper(cPaper);
+				custQsci->setBraceMatching(QsciScintilla::NoBraceMatch);
+				custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+				custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+				return true;
+			}
 		case MainAppInfo::DOCTYPE_STYLE_ECMA:
 		{
 			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
-			QDir dir(MainAppInfo::apiDirPath());
 			QsciLexer *Qjslexer = new QsciLexerJavaScript(custQsci);
 			custQsci->setLexer(Qjslexer);
 			Qjslexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
@@ -255,7 +275,6 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Main
 		{
 			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
-			QDir dir(MainAppInfo::apiDirPath());
 			QsciLexer *QxmlLexer = new QsciLexerXML(custQsci);
 			custQsci->setLexer(QxmlLexer);
 			QxmlLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
@@ -280,6 +299,43 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Main
 			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
 			return true;
 		}
+		case MainAppInfo::DOCTYPE_STYLE_QML:
+			{
+				custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+				custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+				QsciLexer *Qjslexer = new QsciLexerJavaScript(custQsci);
+				custQsci->setLexer(Qjslexer);
+				Qjslexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
+				if(strAPIFileName.isEmpty() == false)
+				{
+					if ( dir.entryList(QDir::Files).contains(strAPIFileName) ) 
+					{
+						QsciAPIs* apis = new QsciAPIs(Qjslexer);
+						if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
+						{
+							custQsci->setCallTipsStyle(QsciScintilla::CallTipsStyle::CallTipsNoAutoCompletionContext);
+							QStringList apiEntries = getAdditionalApiEntries();
+							if (apiEntries.isEmpty() == false)
+							{
+								for (int i=0;i<apiEntries.count();i++)
+								{
+									apis->add(apiEntries.at(i));
+								}
+							}
+							apis->prepare();
+							Qjslexer->setAPIs(apis);
+						}
+						else 
+						{
+							delete apis;
+						}
+					}
+				}
+				custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+				custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+				custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+				return true;
+			}
 	}
 	return false;
 }

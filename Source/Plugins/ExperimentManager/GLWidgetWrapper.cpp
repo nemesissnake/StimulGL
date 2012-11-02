@@ -139,6 +139,7 @@ ParsedParameterDefinition GLWidgetWrapper::getExpObjectBlockParameter(const int 
 
 void GLWidgetWrapper::init()
 {
+	resetScriptExperimentStructure();
 	cleanupExperimentBlockTrialStructure();
 	mutExpSnapshot.lock();
 	nCurrentExperimentReceivedExternalTriggers = 0;
@@ -818,6 +819,7 @@ bool GLWidgetWrapper::unlockExperimentObject()
 
 bool GLWidgetWrapper::initExperimentObject()
 {
+	resetScriptExperimentStructure();
 	nFrameTimerIndex = pExpConf->pExperimentManager->createExperimentTimer();
 	nTrialTimerIndex = pExpConf->pExperimentManager->createExperimentTimer();
 	bCurrentSubObjectIsLocked = true;
@@ -899,6 +901,7 @@ bool GLWidgetWrapper::stopExperimentObject()
 			}		
 		}
 	}
+	resetScriptExperimentStructure();
 	return true;
 }
 
@@ -1017,6 +1020,7 @@ void GLWidgetWrapper::incrementExternalTrigger()
 	else
 	{
 		nCurrentExperimentReceivedExternalTriggers++;//Externally Triggered
+		updateScriptExperimentStructure(nCurrentExperimentReceivedExternalTriggers);
 		emit ExternalTriggerIncremented(nCurrentExperimentReceivedExternalTriggers);
 		if(isDebugMode())
 			pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Externally Triggered!, Received="),QString::number(nCurrentExperimentReceivedExternalTriggers));
@@ -1126,11 +1130,6 @@ bool GLWidgetWrapper::checkForNextBlockTrial()
 						QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped));//,Qt::HighEventPriority);
 						bExperimentShouldStop = true;
 						pExpConf->pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("No More BlockTrials to process"),QString("Block=") + QString::number(expFullStruct.parentStruct.currExpBlock) + ", Trial=" + QString::number(expFullStruct.parentStruct.currExpTrial) +", Trigger=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialTrigger) + ", Frame=" + QString::number(expFullStruct.parentStruct.currExpBlockTrialFrame) + ")");
-						//if (bExperimentStructureChanged)
-						//{
-						//	if(getSubObjectState() == Experiment_SubObject_Started)
-						//		emit ExperimentStructureChanged(expFullStruct.parentStruct.currExpBlock,expFullStruct.parentStruct.currExpTrial,expFullStruct.parentStruct.currExpBlockTrialTrigger);//,expFullStruct.parentStruct.currExpBlockTrialInternalTriggerAmount);
-						//}
 						mutExpSnapshot.unlock();
 						return false;
 				} 
@@ -1440,4 +1439,44 @@ QScriptValue GLWidgetWrapper::getExperimentObjectParameter(const int &nObjectID,
 bool GLWidgetWrapper::setExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal)
 {
 	return pExpConf->pExperimentManager->setExperimentObjectFromScriptValue(nObjectID,strName,sScriptVal);
+}
+
+QString GLWidgetWrapper::getAbsoluteExperimentStructure()
+{
+	return QString::number(strcScriptExpStruct.currExpBlock) + "," + QString::number(strcScriptExpStruct.currExpTrial) + "," + QString::number(strcScriptExpStruct.currExpBlockTrialTrigger) + "," + QString::number(strcScriptExpStruct.currExpInternalTrigger) + "," + QString::number(strcScriptExpStruct.currExpExternalTrigger);
+}
+
+void GLWidgetWrapper::resetScriptExperimentStructure()
+{
+	strcScriptExpStruct.currExpBlock = 0;
+	strcScriptExpStruct.currExpTrial = 0;
+	strcScriptExpStruct.currExpBlockTrialTrigger = 0;	//Relative within BlockTrial
+	strcScriptExpStruct.currExpExternalTrigger = 0;		//Absolute
+	strcScriptExpStruct.currExpInternalTrigger = 0;
+}
+
+void GLWidgetWrapper::updateScriptExperimentStructure(const int &absExternalTrigger)
+{
+	int nAbsTriggerCounter = 0;
+	int nCurrentTrialInternalTriggerCounter = 0;
+	for (int i=0;i<strcExperimentBlockTrials.nNrOfBlocks;i++)
+	{
+		for (int j=0;j<strcExperimentBlockTrials.lBlockTrialStructure.at(i).nNrOfTrials;j++)
+		{
+			nCurrentTrialInternalTriggerCounter = strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfInternalTriggers * strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfExternalSubTriggers;
+			if(nAbsTriggerCounter + nCurrentTrialInternalTriggerCounter > absExternalTrigger)
+			{sven
+				strcScriptExpStruct.currExpBlock = i;
+				strcScriptExpStruct.currExpTrial = j;
+				strcScriptExpStruct.currExpBlockTrialTrigger = absExternalTrigger - nAbsTriggerCounter;
+				strcScriptExpStruct.currExpExternalTrigger = absExternalTrigger;
+				return;
+				//return QString::number(i) + "," + QString::number(j) + "," + QString::number();
+			}
+			else
+			{
+				nAbsTriggerCounter = nAbsTriggerCounter + nCurrentTrialExternalTriggerCounter;
+			}
+		}
+	}
 }
