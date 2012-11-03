@@ -132,11 +132,11 @@ typedef struct strcExperimentSnapshotFullStructure
 //It Allows the script then to fetch the correct structure using the getAbsoluteExperimentStructure(int nAbsoluteTrigger) slot!
 typedef struct strcScriptExperimentStructure
 {
-	int currExpExternalTrigger;			//The current experiment external trigger
-	int currExpInternalTrigger;			//The current experiment internal trigger
-	int currExpBlockTrialTrigger;		//This is different!! It is now the current trigger within a Block Trial
-	int currExpTrial;					//The current experiment trial within the block 	
-	int currExpBlock;					//The current experiment block
+	int currExpAbsExternalTrigger;				//The current experiment external trigger
+	int currExpAbsInternalTrigger;				//The current experiment internal trigger
+	int currExpBlockTrialRelInternalTrigger;	//This is different!! It is now the current trigger within a Block Trial
+	int currExpTrial;							//The current experiment trial within the block 	
+	int currExpBlock;							//The current experiment block
 } ScriptExperimentStructure;
 
 /*! \struct strcParsedParameterDefinition

@@ -43,12 +43,12 @@ ParallelPort::~ParallelPort()
 	if (captureThread)
 	{
 		delete captureThread;
-		captureThread = NULL;
+		//captureThread = NULL;
 	}
 	if (generateThread)
 	{
 		delete generateThread;
-		generateThread = NULL;
+		//generateThread = NULL;
 	}
 }
 

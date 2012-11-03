@@ -1443,39 +1443,43 @@ bool GLWidgetWrapper::setExperimentObjectParameter(const int &nObjectID, const Q
 
 QString GLWidgetWrapper::getAbsoluteExperimentStructure()
 {
-	return QString::number(strcScriptExpStruct.currExpBlock) + "," + QString::number(strcScriptExpStruct.currExpTrial) + "," + QString::number(strcScriptExpStruct.currExpBlockTrialTrigger) + "," + QString::number(strcScriptExpStruct.currExpInternalTrigger) + "," + QString::number(strcScriptExpStruct.currExpExternalTrigger);
+	return QString::number(strcScriptExpStruct.currExpBlock) + "," + QString::number(strcScriptExpStruct.currExpTrial) + "," + QString::number(strcScriptExpStruct.currExpBlockTrialRelInternalTrigger) + "," + QString::number(strcScriptExpStruct.currExpAbsInternalTrigger) + "," + QString::number(strcScriptExpStruct.currExpAbsExternalTrigger);
 }
 
 void GLWidgetWrapper::resetScriptExperimentStructure()
 {
 	strcScriptExpStruct.currExpBlock = 0;
 	strcScriptExpStruct.currExpTrial = 0;
-	strcScriptExpStruct.currExpBlockTrialTrigger = 0;	//Relative within BlockTrial
-	strcScriptExpStruct.currExpExternalTrigger = 0;		//Absolute
-	strcScriptExpStruct.currExpInternalTrigger = 0;
+	strcScriptExpStruct.currExpBlockTrialRelInternalTrigger = 0;	//Relative within BlockTrial
+	strcScriptExpStruct.currExpAbsExternalTrigger = 0;					//Absolute
+	strcScriptExpStruct.currExpAbsInternalTrigger = 0;					//Absolute
 }
 
 void GLWidgetWrapper::updateScriptExperimentStructure(const int &absExternalTrigger)
 {
-	int nAbsTriggerCounter = 0;
+	int nAbsExternalTriggerCounter = 0;
+	int nAbsInternalTriggerCounter = 0;
+	int nCurrentTrialExternalTriggerCounter = 0;
 	int nCurrentTrialInternalTriggerCounter = 0;
 	for (int i=0;i<strcExperimentBlockTrials.nNrOfBlocks;i++)
 	{
 		for (int j=0;j<strcExperimentBlockTrials.lBlockTrialStructure.at(i).nNrOfTrials;j++)
 		{
-			nCurrentTrialInternalTriggerCounter = strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfInternalTriggers * strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfExternalSubTriggers;
-			if(nAbsTriggerCounter + nCurrentTrialInternalTriggerCounter > absExternalTrigger)
-			{sven
+			nCurrentTrialExternalTriggerCounter = strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfInternalTriggers * strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfExternalSubTriggers;
+			nCurrentTrialInternalTriggerCounter = nCurrentTrialExternalTriggerCounter/strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfExternalSubTriggers;
+			if(nAbsExternalTriggerCounter + nCurrentTrialExternalTriggerCounter > absExternalTrigger)
+			{
 				strcScriptExpStruct.currExpBlock = i;
 				strcScriptExpStruct.currExpTrial = j;
-				strcScriptExpStruct.currExpBlockTrialTrigger = absExternalTrigger - nAbsTriggerCounter;
-				strcScriptExpStruct.currExpExternalTrigger = absExternalTrigger;
-				return;
-				//return QString::number(i) + "," + QString::number(j) + "," + QString::number();
+				strcScriptExpStruct.currExpBlockTrialRelInternalTrigger = (absExternalTrigger - nAbsExternalTriggerCounter)/strcExperimentBlockTrials.lBlockTrialStructure.at(i).lTrialStructure.at(j).nNrOfExternalSubTriggers;
+				strcScriptExpStruct.currExpAbsExternalTrigger = absExternalTrigger;
+				strcScriptExpStruct.currExpAbsInternalTrigger = nAbsInternalTriggerCounter + strcScriptExpStruct.currExpBlockTrialRelInternalTrigger;
+				return;				
 			}
 			else
 			{
-				nAbsTriggerCounter = nAbsTriggerCounter + nCurrentTrialExternalTriggerCounter;
+				nAbsExternalTriggerCounter = nAbsExternalTriggerCounter + nCurrentTrialExternalTriggerCounter;
+				nAbsInternalTriggerCounter = nAbsInternalTriggerCounter + nCurrentTrialInternalTriggerCounter;
 			}
 		}
 	}
