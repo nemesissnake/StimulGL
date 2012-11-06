@@ -120,16 +120,9 @@ typedef struct strcExperimentSnapshotStructure
 	//int currExpBlockTrialCycle;--> inside widget
 } ExperimentSnapshotStructure;
 
-typedef struct strcExperimentSnapshotFullStructure
-{
-	ExperimentSnapshotStructure parentStruct;
-	int nTotalProcessedExperimentTrials;		//The total number of trials processed within experiment, might be that this Trial is not fully processed
-	int nNextThresholdTriggerCount;				//When we should switch to the next block
-} ExperimentSnapshotFullStructure;
-
 //The following structure looks like the ExperimentSnapshotStructure, but this structure should NOT be used internally by the Experiment Manager but only by the script context!
 //It's sole purpose is to support an easy way to automatically step trough (and buffer) the Experiment Structure just before a new ExternalTriggerIncremented() signal is emitted,
-//It Allows the script then to fetch the correct structure using the getAbsoluteExperimentStructure(int nAbsoluteTrigger) slot!
+//It Allows the script then to fetch the correct structure using the getExperimentStructure(int nAbsoluteTrigger) slot!
 typedef struct strcScriptExperimentStructure
 {
 	int currExpAbsExternalTrigger;				//The current experiment external trigger
@@ -138,6 +131,13 @@ typedef struct strcScriptExperimentStructure
 	int currExpTrial;							//The current experiment trial within the block 	
 	int currExpBlock;							//The current experiment block
 } ScriptExperimentStructure;
+
+typedef struct strcExperimentSnapshotFullStructure
+{
+	ExperimentSnapshotStructure parentStruct;
+	int nTotalProcessedExperimentTrials;		//The total number of trials processed within experiment, might be that this Trial is not fully processed
+	int nNextThresholdTriggerCount;				//When we should switch to the next block
+} ExperimentSnapshotFullStructure;
 
 /*! \struct strcParsedParameterDefinition
  * A structure for the Experiment Manager parameter definitions.
@@ -204,6 +204,7 @@ typedef QHash<QString, ParsedParameterDefinition> tParsedParameterList;
 #define IMAGEPROCESSOR_NAME						"ImageProcessor"
 #define PRTFORMATMANAGER_NAME					"PRTFormatManager"
 #define QMLWIDGET_NAME							"qmlWidget"
+#define EXPERIMENTSTRUCTURE_NAME				"ExperimentStructure"
 #define EXPERIMENTMANAGER_NAME					"ExperimentManager"
 #define MODULE_NAME								"Experiment Parser"
 #define MAX_INVOKE_ARG_COUNT					10

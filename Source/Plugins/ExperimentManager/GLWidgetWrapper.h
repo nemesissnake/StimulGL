@@ -109,7 +109,8 @@ public slots:
 	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
 	int getObjectID();
-	QString getAbsoluteExperimentStructure();
+	//QString getExperimentStructure();
+	strcScriptExperimentStructure getExperimentStructure();
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);

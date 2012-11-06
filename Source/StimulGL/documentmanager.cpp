@@ -95,6 +95,8 @@ QString DocumentManager::getFilePath(QMdiSubWindow *subWindow)
 	{
 		if (SubWindowChildren.at(i) == subWindow)
 		{
+			if (ChildrenFileNames.at(i).isEmpty())
+					return "";
 			QFileInfo fInfo(ChildrenFileNames.at(i));
 			return fInfo.absolutePath();
 		}

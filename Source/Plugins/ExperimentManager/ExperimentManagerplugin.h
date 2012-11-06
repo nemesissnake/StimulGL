@@ -35,9 +35,6 @@
 #include "TriggerTimer.h"
 #include "defines.h"
 
-QT_BEGIN_NAMESPACE
-QT_END_NAMESPACE
-
 class ExperimentManagerPlugin : public QObject, ExtensionInterface
 {
     Q_OBJECT

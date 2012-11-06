@@ -1441,9 +1441,14 @@ bool GLWidgetWrapper::setExperimentObjectParameter(const int &nObjectID, const Q
 	return pExpConf->pExperimentManager->setExperimentObjectFromScriptValue(nObjectID,strName,sScriptVal);
 }
 
-QString GLWidgetWrapper::getAbsoluteExperimentStructure()
+//QString GLWidgetWrapper::getExperimentStructure()
+//{
+//	return QString::number(strcScriptExpStruct.currExpBlock) + "," + QString::number(strcScriptExpStruct.currExpTrial) + "," + QString::number(strcScriptExpStruct.currExpBlockTrialRelInternalTrigger) + "," + QString::number(strcScriptExpStruct.currExpAbsInternalTrigger) + "," + QString::number(strcScriptExpStruct.currExpAbsExternalTrigger);
+//}
+
+strcScriptExperimentStructure GLWidgetWrapper::getExperimentStructure()
 {
-	return QString::number(strcScriptExpStruct.currExpBlock) + "," + QString::number(strcScriptExpStruct.currExpTrial) + "," + QString::number(strcScriptExpStruct.currExpBlockTrialRelInternalTrigger) + "," + QString::number(strcScriptExpStruct.currExpAbsInternalTrigger) + "," + QString::number(strcScriptExpStruct.currExpAbsExternalTrigger);
+	return strcScriptExpStruct;
 }
 
 void GLWidgetWrapper::resetScriptExperimentStructure()

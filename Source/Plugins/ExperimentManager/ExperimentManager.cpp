@@ -128,6 +128,7 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
+	qRegisterMetaType<strcScriptExperimentStructure>(EXPERIMENTSTRUCTURE_NAME);
 }
 
 void ExperimentManager::SendToMainAppLogOutput(const QString &strText2Write)
