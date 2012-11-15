@@ -290,63 +290,64 @@ QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine
 #ifdef DEBUG
 QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine)
 {
-	context->setActivationObject(context->parentContext()->activationObject());
-	context->setThisObject(context->parentContext()->thisObject());
+	//context->setActivationObject(context->parentContext()->activationObject());
+	//context->setThisObject(context->parentContext()->thisObject());
 
-	QScriptValue allArgumentsArray = context->argumentsObject();//containing all parameters as array
+	//QScriptValue allArgumentsArray = context->argumentsObject();//containing all parameters as array
 
-	QString result1;
-	for (int i = 0; i < context->argumentCount(); ++i)
-	{
-		if (i > 0)
-			result1.append(" ");
-		result1.append(context->argument(i).toString());		
-	}
+	//QString result1;
+	//for (int i = 0; i < context->argumentCount(); ++i)
+	//{
+	//	if (i > 0)
+	//		result1.append(" ");
+	//	result1.append(context->argument(i).toString());		
+	//}
 
-	QString result2;
-	QScriptValue self = context->thisObject();
-	result2 += self.property("firstName").toString();
-	result2 += QLatin1String(" ");
-	result2 += self.property("lastName").toString();
+	//QString result2;
+	//QScriptValue self = context->thisObject();
+	//result2 += self.property("firstName").toString();
+	//result2 += QLatin1String(" ");
+	//result2 += self.property("lastName").toString();
 
-	QStringList result3 = context->backtrace();//<function-name>(<arguments>)@<file-name>:<line-number>
-	QString result4 = context->toString();
+	//QStringList result3 = context->backtrace();//<function-name>(<arguments>)@<file-name>:<line-number>
+	//QString result4 = context->toString();
 
-	QScriptContextInfo result5 = QScriptContextInfo(context);
+	//QScriptContextInfo result5 = QScriptContextInfo(context);
 
-	QStringList result6;
-	QScriptValue obj = context->parentContext()->thisObject();
-	while (obj.isObject()) 
-	{
-		QScriptValueIterator it(obj);
-		while (it.hasNext()) 
-		{
-			result6 << it.name();
-			result6 << it.scriptName();
-			result6 << it.value().toString();
+	//QStringList result6;
+	//QScriptValue obj = context->parentContext()->thisObject();
+	//while (obj.isObject()) 
+	//{
+	//	QScriptValueIterator it(obj);
+	//	while (it.hasNext()) 
+	//	{
+	//		result6 << it.name();
+	//		result6 << it.scriptName();
+	//		result6 << it.value().toString();
 
-			it.next();
-			if (it.flags() & QScriptValue::SkipInEnumeration)//Note that QScriptValueIterator will not automatically skip over properties that have the QScriptValue::SkipInEnumeration flag set; that flag only affects iteration in script code. If you want, you can skip over such properties with code like the following:
-				continue;
-			result6 << "found enumerated property:" << it.name();			
-		}
-		obj = obj.prototype();
-	}
-	
+	//		it.next();
+	//		if (it.flags() & QScriptValue::SkipInEnumeration)//Note that QScriptValueIterator will not automatically skip over properties that have the QScriptValue::SkipInEnumeration flag set; that flag only affects iteration in script code. If you want, you can skip over such properties with code like the following:
+	//			continue;
+	//		result6 << "found enumerated property:" << it.name();			
+	//	}
+	//	obj = obj.prototype();
+	//}
+	//
 
 
-	//QScriptValue calleeData = context->callee().data();
-	//QListWidget *outputObject = qobject_cast<QListWidget*>(calleeData.toQObject());
-	//outputObject->addItem(result);
-	//return engine->undefinedValue();
+	////QScriptValue calleeData = context->callee().data();
+	////QListWidget *outputObject = qobject_cast<QListWidget*>(calleeData.toQObject());
+	////outputObject->addItem(result);
+	////return engine->undefinedValue();
 
-	//outputObject->setItemDelegate(new OutputListDelegate(outputObject));
-	//QListWidgetItem *item = new QListWidgetItem();
-	//item->setData(Qt::DisplayRole, "Title");
-	//item->setData(Qt::UserRole + 1, "Description");
-	//outputObject->addItem(item);
+	////outputObject->setItemDelegate(new OutputListDelegate(outputObject));
+	////QListWidgetItem *item = new QListWidgetItem();
+	////item->setData(Qt::DisplayRole, "Title");
+	////item->setData(Qt::UserRole + 1, "Description");
+	////outputObject->addItem(item);
 
-	return result1;//engine->undefinedValue();
+	//return result1;//engine->undefinedValue();
+	return NULL;
 }
 #endif
 
@@ -365,7 +366,7 @@ void MainWindow::setupScriptEngine()
 		{
 			if (!AppScriptEngine->ImportScriptExtensions())
 			{
-				QMessageBox msgBox(QMessageBox::Warning,"QT Script Extensions","Some of the defined QT Script Extensions could not be loaded!",QMessageBox::Ok);
+				QMessageBox msgBox(QMessageBox::Warning,"QT Script Extensions","Some of the defined QT Script Extensions could not be loaded!", QMessageBox::Ok);
 				msgBox.exec();
 			}
 		}
@@ -1613,7 +1614,10 @@ void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesTo
 	//					"Any files (*)");
 	if ((fileToLoad.isNull()) && (filesToLoad.count() == 0))
 	{
-		fileNames = QFileDialog::getOpenFileNames(this, tr("Open File(s)"),m_currentPath, DocManager->getKnownFileExtensionList());
+		QString sPath = m_currentPath;
+		if(sPath.isEmpty())
+			sPath = MainAppInfo::appExampleDirPath();			
+		fileNames = QFileDialog::getOpenFileNames(this, tr("Open File(s)"),sPath,DocManager->getKnownFileExtensionList());
 	}
 	
 	if (!fileToLoad.isNull())

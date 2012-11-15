@@ -56,24 +56,11 @@ class SerialPortDevice : public QObject, protected QScriptable
 	Q_CLASSINFO("ScriptAPIClassName", "SerialPort")//Can't use defines here!, moc doesn't handle defines
 
 signals:
-	//! The CaptureThreadTriggered Signal.
+	//! The CaptureThreadReadyRead Signal.
 	/*!
-		You can use this Signal for receiving a notification when the capture thread gets triggered by the received port value.
-		The PortValue parameter(one byte) holds the triggered port value when it gets triggered.
+		You can use this Signal to keep track of when the capture thread is ready for reading data.
+		There's no parameter.
 	*/
-	//void CaptureThreadTriggered(short PortValue);
-	//! The CaptureThreadStarted Signal.
-	/*!
-		You can use this Signal to keep track of when the capture thread starts.
-		Parameter DateTimeStamp holds the date/time of when the capture thread started.
-	*/
-	//void CaptureThreadStarted(QString);
-	//! The CaptureThreadStopped Signal.
-	/*!
-		You can use this Signal to keep track of when the capture thread stops.
-		Parameter DateTimeStamp holds the date/time of when the capture thread stopped.
-	*/
-	//void CaptureThreadStopped(QString);
 	void CaptureThreadReadyRead();
 
 public:

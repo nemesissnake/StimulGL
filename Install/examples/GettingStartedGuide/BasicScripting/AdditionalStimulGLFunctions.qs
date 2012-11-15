@@ -19,6 +19,7 @@ Log("User: " + result + " is currently logged on this system.");
 StimulGL.write2OutputWindow("You can also make use of the StimulGL.write2OutputWindow() function \
 													to write to the Log Output Pane");
 Log("\tTAB is inserted first");//This appends an TAB (\t) and some text to the Log Output Pane
+Log("\n\n\n");//This appends some empty lines (\n) to the Log Output Pane
 
 //StimulGL.find(false,"getSelectedScriptFileName");
 //StimulGL.clearOutputWindow();
