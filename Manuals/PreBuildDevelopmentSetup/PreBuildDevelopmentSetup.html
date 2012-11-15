@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../css/Default.css" rel="stylesheet" type="text/css" />
+<script src="../../js/jquery.min.js" type="text/javascript"></script>
+<script src="../../js/jquery.tableofcontents.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function()
+		{ 
+			$("#toc").tableOfContents(
+				$("#toc_Area"),        // Scoped to div#toc_Area
+				{
+					startLevel: 2,    // H2 and up
+					depth:      4,    // H2 through H5,
+				}
+			); 
+		}
+	);
+	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);
+	document.write("<title>" + DocTitle + "</title>");	
+</script>
+
+</head>
+<body>
+<script type="text/javascript">StimulGLInfo.GetDocumentHeader(window.location.pathname)</script>
+<div id="toc_Area">
+<ul id="toc"></ul>
+<h2>Introduction</h2>
+<p>For developers who wish to build their own StimulGL program or one of its default Plug-ins they can clone a git repository from <a href="http://github.com/svengijsen/StimulGL" target="_blank">https://github.com/svengijsen/StimulGL</a>. This repository can be build/used/distributed under the terms of the GNU General Public License (GPL version 3), see <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">http://www.gnu.org/licenses/gpl.html</a></p>
+<h2>The StimulGL repository</h2>
+<p>The repository contains the following directories structure:  </p>
+<p><strong>/Source</strong> directory:<br />
+  Here you can find all the StimulGL source code together with the Project/Solution files. Inside the /Source directory you find a /Plugin and /StimulGL folder. The /Plugin folder contains all the Plugin projects that can be used by the StimulGL main program. The source code for the StimulGL program can be found in the /StimulGL folder.  </p>
+<p><strong>/Install</strong> directory:<br />
+  This directory contains all the needed files and binaries that you need for a valid installation. Some of them first need to be build by your IDE and some of them are already available in the /Install directory. A post build can copy the build output from the IDE to this folder.  </p>
+<p><strong>/InstallJammer</strong> directory:
+  This directory is the root directory for the InstallJammer project files and generated files. InstallJammer is used for building the various installers for the StimulGL application.</p>
+<h2>Build Tools</h2>
+<p> You can build your own version of StimulGL using Qt Creator or Microsoft Visual Studio 10.0. Both solution/project files can be found inside the repository. StimulGL can be build in the future for various platforms (Windows/Linux/Mac) with 32bit or 64bit support, at this moment only Windows 32 and 64-bit platforms are supported. StimulGL development will always try to stay closely in sync with the latest version of the Qt library. Only plugins that are build using the same version of the Qt library are compatible.  </p>
+<h3>Development Environment Setup</h3>
+<p> The following guide shows how to install and configure a successful installation for VS2010 and Qt4.8.0 that is ready for building your own version of StimulGL.  </p>
+<h4>Visual Studio 2010 (SP1)</h4>
+<ul>
+  <li> Install Visual Studio 2010 (32+64bit)</li>
+  <li>Install Visual Studio 2010 SP1</li>
+  <li>Install the Microsoft Windows SDK for Windows 7 and .NET Framework 4, make sure to select the Debugging Tools option under the Common Utilities and to select the Debugging Tools option under the Redistributable Packages.
+    see <a href="http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=8279" target="_blank">http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=8279</a></li>
+</ul>
+<h4>Qt library for Windows</h4>
+<p>Building the win32 Qt library:</p>
+ <ul>
+   <li> Download and run the Qt libraries 4.8.0 for Windows (VS 2010) from <a href="http://qt.nokia.com/downloads" target="_blank">http://qt.nokia.com/downloads</a> and install in C:\Qt\4.8.0\win32, remaining installation options may be kept default</li>
+ </ul>
+ <p>Building the x64 Qt library:</p>
+ <ul>
+   <li> Copy/Paste and Rename the folder “C:\Qt\4.8.0\win32” to “C:\Qt\4.8.0\x64”     </li>
+   <li>Rename the file syncqt.bat to syncqt.bat_ in directory C:\Qt\4.8.0\x64\bin     </li>
+   <li>Rename the file syncqt to syncqt_ in directory C:\Qt\4.8.0\x64\bin     </li>
+   <li>Open the VS2010 X64 Win64 Command prompt     
+     <ul>
+       <li>cd C:\Qt\4.8.0\x64         </li>
+       <li>configure -qt-libpng -qt-libmng -qt-libtiff -qt-libjpeg         </li>
+       <li>nmake         </li>
+       <li>nmake install</li>
+      </ul>
+   </li>
+</ul>
+ <h4>Qt Creator for Windows</h4>
+ <ul>
+   <li> Download and run the Qt Creator 2.4.0 for Windows from <a href="http://qt.nokia.com/downloads" target="_blank">http://qt.nokia.com/downloads</a> and install in C:\Qt\qtcreator-2.4.0</li>
+   <li> Open Qt Creator     
+     <ul>
+       <li>Goto menu Tools->Options->Build&run->Qt Versions->Add</li>
+       <li>Create the target "Qt 4.8.0 (win32)", C:\Qt\4.8.0\win32\bin\qmake.exe</li>
+       <li> Create the target "Qt 4.8.0 (x64)", C:\Qt\4.8.0\x64\bin\qmake.exe</li>
+      </ul>
+   </li>
+   <li> Close and open Qt Creator again         
+     <ul>
+       <li>Open an example *.pro file and set file association (*.pro) to be opened with Qt Creator         </li>
+       <li>Build the (win32) project and verify that it successfully build         </li>
+       <li>Build the (x64) project and verify that it successfully build </li>
+     </ul>
+   </li>
+  </ul>
+<h4>Qt Visual Studio Plugin</h4>
+<ul>
+  <li> Install the Qt Visual Studio Plugin from <a href="http://qt.nokia.com/downloads" target="_blank">http://qt.nokia.com/downloads</a> (does not work with the Visual Studio Express edition!) </li>
+  <li>Open Visual Studio 10.0    
+    <ul>
+      <li>Goto the menu Qt -> Qt Options -> Add Qt versions:        
+        <ul>
+          <li>4.8.0 (32bit) -> C:\Qt\4.8.0\win32            </li>
+          <li>4.8.0 (64bit) -> C:\Qt\4.8.0\x64
+            Close Visual Studio  </li>
+        </ul>
+      </li>
+      </ul>
+  </li>
+  </ul>
+<h4>Additional StimulGL Headers and Libraries</h4>
+<ul>
+  <li> Download and extract the <a href="http://github.com/downloads/svengijsen/StimulGL/Qt%204.8.0%20Script%20bindings%20(32+64bit).rar" target="_blank">additional StimulGL files</a></li>
+  <li> Merge from this archive the folder "4.8.0" with "C:\Qt\4.8.0\" (Adds all needed additional headers and libraries)</li>
+</ul>
+<h4>Environment Variabeles</h4>
+<ul>
+  <li>Add the string <em>;C:\Qt\4.8.0\win32\bin;C:\Qt\4.8.0\x64\bin;C:\Qt\4.8.0\win32\lib;C:\Qt\4.8.0\x64\lib</em> to the end of the System PATH environment variable</li>
+</ul>
+<h4>Optional usefull Tools</h4>
+<ul>
+  <li>Download and install the Git Extensions from <a href="http://code.google.com/p/gitextensions/downloads/list" target="_blank">http://code.google.com/p/gitextensions/downloads/list</a></li>
+  <li> Download and install TortoiseGIT from <a href="http://code.google.com/p/tortoisegit/downloads/list" target="_blank">http://code.google.com/p/tortoisegit/downloads/list</a></li>
+  </ul>
+<p>&nbsp;</p>
+</div>
+
+
+</body>
+</html>

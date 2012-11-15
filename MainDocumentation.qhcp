@@ -2,15 +2,15 @@
 <QHelpCollectionProject version="1.0">
     <assistant>
         <title>StimulGL</title>
-        <applicationIcon>Generated/images/logo_small.png</applicationIcon>
-        <cacheDirectory>Trolltech/StimulGL</cacheDirectory>
-        <startPage>qthelp://com.trolltech.stimulgl/doc/index.html</startPage>
+        <applicationIcon>Images/logo_small.png</applicationIcon>
+        <cacheDirectory>SvenGijsen/StimulGL</cacheDirectory>
+        <startPage>qthelp://com.svengijsen.stimulgl/doc/index.html</startPage>
         <aboutMenuText>
             <text>About StimulGL</text>
         </aboutMenuText>
         <aboutDialog>
-            <file>Generated/about.txt</file>
-            <icon>Generated/images/icon.png</icon>
+            <file>Additional/about.txt</file>
+            <icon>Images/icon.png</icon>
         </aboutDialog>
         <enableDocumentationManager>false</enableDocumentationManager>
         <enableAddressBar>false</enableAddressBar>
