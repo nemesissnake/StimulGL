@@ -8,9 +8,16 @@ var bDoCleanup;
 var bFileProccessed;
 var nCounter;
 var bSkipStep;
+var fileDest;
+var changeSet;
+var fileSource = "PluginTemplate.cfg";
+var preFix = "-*/*-";
+var postFix = "-*/*-";
 
 var sScriptPath = StimulGL.getSelectedScriptFileLocation();
 var sBinairyPath;
+
+Include("GenerateDoxyConfigFile.qs");//Make sure to call the cleanup when not needed anymore!
 
 QByteArray.prototype.toString = function()
 {
@@ -22,6 +29,7 @@ function CleanUpScript()
 {
 	Log("CleanUpScript started...");
 	ConnectDisconnectScriptFunctions(false);
+	GDCF_Cleanup();
 	tr=null;
 	tmpByteArray=null;
 	tmpStringList=null;
@@ -32,7 +40,8 @@ function CleanUpScript()
 	InstallProcess=null;
 	ConnectDisconnectScriptFunctions=null;
 	processFinished=null;
-	CleanUpScript=null;	
+	CleanUpScript=null;
+	getString = null;
 	Log("CleanUpScript exited Successfully!");
 	StimulGL.cleanupScript();
 }
@@ -109,7 +118,7 @@ ConnectDisconnectScriptFunctions(true);
 //Log(getString("This is an Title", "Some Text....","default x"));
 
 bDoCleanup = false;
-sBinairySteps = 6;
+sBinairySteps = 1;//6;
 for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 {
 	bFileProccessed = false;
@@ -118,9 +127,35 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 	Log("** STEP "  + nCounter + " **");
 	if(nCounter==1)
 	{
+//		tmpStringList = new Array();//Reset list
+//		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\Doxygen\\ExperimentManager.cfg";
+//		sBinairyPath = "doxywizard";
+
+		fileDest = "ExperimentManager.cfg";
+		changeSet = GDCF_CreateArray(7,2); //See the doxygen template document for parameter descriptions!!
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"ExperimentManager script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"2.0.0.2\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"The Experiment Manager script class definition.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/ExperimentManagerPlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentManager.cpp \\\n" +
+		                          "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentManager.h \\\n" +
+		                          "../../StimulGL/Source/Plugins/ExperimentManager/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";			  
+		
+		GDCF_ReplaceInFiles(fileSource,fileDest,changeSet);
+		//doxygen -w html header.html footer.html stylesheet.css <config_file>
 		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\Doxygen\\ExperimentManager.cfg";
-		sBinairyPath = "doxywizard";
+		tmpStringList[0] =  "E:\\Projects\\StimulGL documentation\\Doxygen\\ExperimentManager.cfg";
+		sBinairyPath = "doxygen";	
+		Log("DOXY");
 	}
 	else if (nCounter==2)
 	{

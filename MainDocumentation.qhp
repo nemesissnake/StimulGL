@@ -9,23 +9,23 @@
 								<section title="Getting Started Guide" ref="./Tutorials/GettingStarted/GettingStartedGuide.html"></section>
             </section>
             <section title="Scripting" ref="./References/Script/ScriptingReference.html">
-							<section title="ExperimentManager Script Object" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
-							<section title="ParallelPortDevice Script Object" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
-							<section title="USBHIDDevice Script Object" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
-							<section title="SerialPortDevice Script Object" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port.html"></section>
+							<section title="ExperimentManager Script Class" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
+							<section title="ParallelPortDevice Script Class" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
+							<section title="USBHIDDevice Script Class" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
+							<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port.html"></section>
             </section>             
             <section title="Plugins (default)" ref="./References/Plugins/PluginReference.html">
                 <section title="ExperimentManager Plugin" ref="./References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">
-									<section title="ExperimentManager Script Object" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
+									<section title="ExperimentManager Script Class" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
 								</section>
 								<section title="ParallelPortDevice Plugin" ref="./References/Plugins/ParallelPortDevicePlugin/ParallelPortDevicePlugin.html">
-									<section title="ParallelPortDevice Script Object" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
+									<section title="ParallelPortDevice Script Class" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
 								</section>
 								<section title="USBHIDDevice Plugin" ref="./References/Plugins/USBHIDDevicePlugin/USBHIDDevicePlugin.html">
-									<section title="USBHIDDevice Script Object" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
+									<section title="USBHIDDevice Script Class" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
 								</section>
 								<section title="SerialPortDevice Plugin" ref="">
-									<section title="SerialPortDevice Script Object" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"></section>
+									<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"></section>
 								</section>								
 								<section title="Extension Plugin Template" ref="./References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html"></section>								
             </section>
@@ -35,7 +35,7 @@
         </toc>
         <keywords>
             <keyword name="StimulGL" ref="index.html"/>
-            <keyword name="history" ref="history.html"/>
+            <keyword name="History" ref="history.html"/>
             <keyword name="License" ref="index.html"/>
             <keyword name="Scripting Reference" ref="./References/Script/ScriptingReference.html"/>
             <keyword name="Plugin Reference" ref="./References/Plugins/PluginReference.html"/>
