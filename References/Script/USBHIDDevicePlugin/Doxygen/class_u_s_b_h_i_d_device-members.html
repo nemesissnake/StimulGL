@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>USB HID Device class: Member List</title>
+<title>USBHIDDevicescriptclass: Member List</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -22,8 +22,8 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">USB HID Device class
-   &#160;<span id="projectnumber">2.0.0.1</span>
+   <div id="projectname">USBHIDDevicescriptclass
+   &#160;<span id="projectnumber">2.0.0.2</span>
    </div>
    <div id="projectbrief">The USB HID Device script class definition.</div>
   </td>
@@ -45,17 +45,29 @@
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a>, including all inherited members.<table>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a26eab3fd195a138de503ea0099585a45">Calibrate</a>()</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a6445630240cd13d17ea05553279825f1">CalibrateThreadStarted</a>(QString DateTimeStamp)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [signal]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a606d2a145df4e3e13ae87646149c7727">CalibrateThreadStopped</a>(QString DateTimeStamp)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [signal]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a3476e6fdceb0836e4faa964990407fab">CaptureThreadButtonTriggered</a>(unsigned char NewValue, unsigned char ChangedBits)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [signal]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a6145c00d18ff41b5aa7827c69f3d9911">CaptureThreadJoystickChanged</a>(int Xpos, int Ypos)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [signal]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#af55bf0fbe5c42fb5e2b40bfa53a8058c">CaptureThreadStarted</a>(QString DateTimeStamp)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [signal]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#ad94924344aa93f584ea6c0ffb8964b10">CaptureThreadStopped</a>(QString DateTimeStamp)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [signal]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a3e737de7e12fed099de8a0782c0409cb">ConfigureHIDFiltering</a>(bool bActivateJoystickStabilisation, int nJoystickStabilisationThreshold, bool bActivateJoystickHistory, int nJoystickHistorySize)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#ac187a28da7db8652eeccf36c51b62cb0">ConfigureHIDTriggers</a>(bool bActivateJoystickTrigger, bool bActivateButtonTriggers, unsigned char cButtonMask, short ButtonDetectCaptureMethod)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a6054f805e28c8155394308a39bba163e">EmulateHIDMouse</a>(bool bEnable, bool bFullScreenMode, bool bEnableLeftMouse=false, bool bEnableRightMouse=false)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a1bb7583e6251eb8dcb2e7fbc5431dde4">ResetCalibrationData</a>()</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a4b9ffbe720140c67cce5eaec775232c2">SetProductID</a>(unsigned short product_id)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#ab201260249b99b9958e1a298fb3cd163">SetVendorID</a>(unsigned short vendor_id)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a4fe9a92e801e5976ca55e80080817233">StartCaptureThread</a>(bool bIsCalibrationThread=false)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#ac55e3e7e20e470b2e2ec53416f75a10b">StopCaptureThread</a>(bool bWasCalibrationThread=false)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a9526eb7e52423bdc0f96abd1a16719c1">USBHIDDevice</a>(unsigned short vendor_id=0x181b, unsigned short product_id=0x4002, QObject *parent=0)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#ae8e7d949364704afc9cc3202ca63f6a8">WriteCapturedDataToFile</a>(bool bWriteToFile, QString qsFileName, bool bWriteHeaderInfo, bool bWriteFilteredData)</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_u_s_b_h_i_d_device.html#a955a88c6cc69f15d29ad310a73c03801">~USBHIDDevice</a>()</td><td><a class="el" href="class_u_s_b_h_i_d_device.html">USBHIDDevice</a></td><td></td></tr>
 </table></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 12 2012 16:37:19 for USB HID Device class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 16 2012 14:52:47 for USBHIDDevicescriptclass by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

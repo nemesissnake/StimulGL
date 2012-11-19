@@ -5,6 +5,10 @@
 <title>Main Index</title>
 <link href="css/Default.css" rel="stylesheet" type="text/css" />
 <script src="js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	StimulGLInfo = new StimulGL_Information();
+	var currentRelease = StimulGLInfo.GetCurrentRelease();
+</script>
 </head>
 <body>
 <!--
@@ -14,7 +18,7 @@
 -->
 <h1>Welcome</h1>
 <p>
-StimulGL v<script type="text/javascript">document.write(StimulGLInfo.GetCurrentRelease());</script> is a free/open source application.
+StimulGL v<script type="text/javascript">document.write(currentRelease);</script> is a free/open source application.
 </p>
 <p>
 It's optimized for creating flexible behavioral experiments supported by the script engine and plugin framework.

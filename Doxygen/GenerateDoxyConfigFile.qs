@@ -11,6 +11,8 @@ function GDCF_Cleanup()
 
 function GDCF_ReplaceInFiles(strTemplate, strDestination, changeSetArr)
 {
+	//if(dstFile.exists())
+	//dstFile.remove();//Copy Doesn't Overwrite!
 	var templateFile = new QFile(strTemplate);
 	templateFile.open(QIODevice.OpenMode(QIODevice.ReadOnly) || QIODevice.OpenMode(QIODevice.Text));
 	var inStream = new QTextStream(templateFile);

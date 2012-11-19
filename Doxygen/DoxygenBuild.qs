@@ -15,9 +15,19 @@ var preFix = "-*/*-";
 var postFix = "-*/*-";
 
 var sScriptPath = StimulGL.getSelectedScriptFileLocation();
-var sBinairyPath;
+var sBinairyPath = "doxygen";
+var sDoxyFileDir = "E:\\Projects\\StimulGL documentation\\Doxygen\\";
 
 Include("GenerateDoxyConfigFile.qs");//Make sure to call the cleanup when not needed anymore!
+Include("../js/StimulGL.js");//Make sure to call the cleanup when not needed anymore!
+
+var StimulGL_Info = new StimulGL_Information();
+var CurrentStimulGLRelease = StimulGL_Info.GetCurrentRelease();
+var CurrentStimulGLReleaseIndex = StimulGL_Info.GetNumberOfReleases()-1;
+var LastComponentIndex;
+var LastComponentReleaseIndex;
+var LastComponentVersion;
+var ComponentName;
 
 QByteArray.prototype.toString = function()
 {
@@ -30,6 +40,7 @@ function CleanUpScript()
 	Log("CleanUpScript started...");
 	ConnectDisconnectScriptFunctions(false);
 	GDCF_Cleanup();
+	StimulGL_Cleanup();
 	tr=null;
 	tmpByteArray=null;
 	tmpStringList=null;
@@ -118,25 +129,32 @@ ConnectDisconnectScriptFunctions(true);
 //Log(getString("This is an Title", "Some Text....","default x"));
 
 bDoCleanup = false;
-sBinairySteps = 1;//6;
+sBinairySteps = 6;
 for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 {
 	bFileProccessed = false;
 	bSkipStep = false;
 	
 	Log("** STEP "  + nCounter + " **");
+	
+		
+	changeSet = StimulGL_CreateArray(7,2); //See the doxygen template document for parameter descriptions!!
 	if(nCounter==1)
 	{
-//		tmpStringList = new Array();//Reset list
-//		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\Doxygen\\ExperimentManager.cfg";
-//		sBinairyPath = "doxywizard";
-
-		fileDest = "ExperimentManager.cfg";
-		changeSet = GDCF_CreateArray(7,2); //See the doxygen template document for parameter descriptions!!
+		ComponentName = "ExperimentManagerPlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
 		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
 		changeSet[0][1] = "\"ExperimentManager script class\"";
 		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
-		changeSet[1][1] = "\"2.0.0.2\"";
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
 		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
 		changeSet[2][1] = "\"The Experiment Manager script class definition.\"";
 		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
@@ -148,45 +166,166 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		                          "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentManager.h \\\n" +
 		                          "../../StimulGL/Source/Plugins/ExperimentManager/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
-		changeSet[6][1] = "StimulGL.doxygen.Project";			  
-		
-		GDCF_ReplaceInFiles(fileSource,fileDest,changeSet);
-		//doxygen -w html header.html footer.html stylesheet.css <config_file>
-		tmpStringList = new Array();//Reset list
-		tmpStringList[0] =  "E:\\Projects\\StimulGL documentation\\Doxygen\\ExperimentManager.cfg";
-		sBinairyPath = "doxygen";	
-		Log("DOXY");
+		changeSet[6][1] = "StimulGL.doxygen.Project";
 	}
 	else if (nCounter==2)
 	{
-		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\Doxygen\\ParallelPortDevice.cfg";
-		sBinairyPath = "doxywizard";		
+		ComponentName = "ParallelPortPlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"Parallel Port Device script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"Parallel Port Device script class definition.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/ParallelPortDevicePlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/ParallelPortDevice/ParallelPort.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ParallelPortDevice/ParallelPort.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ParallelPortDevice/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";	
 	}
 	else if (nCounter==3)
 	{
-		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\Doxygen\\USBHIDDevice.cfg";
-		sBinairyPath = "doxywizard";		
+		ComponentName = "SerialPortPlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"Serial Port Device script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"The Serial Port Device script class definition.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/SerialPortDevicePlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/SerialPortDevice/SerialPortDevice.h \\\n" +
+		                          "../../StimulGL/Source/Plugins/SerialPortDevice/SerialPortDevice.cpp \\\n" +
+		                          "../../StimulGL/Source/Plugins/SerialPortDevice/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";		
 	}
-	else if(nCounter==4)
+	else if (nCounter==4)
 	{
-		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\Doxygen\\KeyBoard.cfg";
-		sBinairyPath = "doxywizard";
+		ComponentName = "USBHIDDevicePlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\USB HID Device script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"The USB HID Device script class definition.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/USBHIDDevicePlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/USBHIDDevice/USBHIDDevice.cpp \\\n" +
+		                          "../../StimulGL/Source/Plugins/USBHIDDevice/USBHIDDevice.h \\\n" +
+		                          "../../StimulGL/Source/Plugins/USBHIDDevice/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";		
 	}
 	else if (nCounter==5)
 	{
-		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\Doxygen\\SerialPortDevice.cfg";
-		sBinairyPath = "doxywizard";		
+		ComponentName = "KeyBoardPlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"KeyBoard Device script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"The KeyBoard Device script class definition.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/KeyBoardDevicePlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/KeyBoardDevice/KeyBoardCapture.cpp \\\n" +
+		                          "../../StimulGL/Source/Plugins/KeyBoardDevice/KeyBoardCapture.h \\\n" +
+		                          "../../StimulGL/Source/Plugins/KeyBoardDevice/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";		
 	}
 	else if (nCounter==6)
 	{
+//		ComponentName = "DefaultQMLPlugin";		
+//		Log("Component Name: " + ComponentName);
+//		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+//		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+//		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+//		Log("Last Component Index: " + LastComponentIndex);
+//		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+//		Log("Last Component Version: " + LastComponentVersion);
+//		Log("\n");
+//		fileDest = ComponentName + ".cfg";
+//		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+//		changeSet[0][1] = "\"DefaultQML Plugin script class\"";
+//		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+//		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+//		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+//		changeSet[2][1] = "\"The DefaultQML Plugin script class definition.\"";
+//		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+//		changeSet[3][1] = "";//No quotes for empty!
+//		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+//		changeSet[4][1] = "\"../References/Script/DefaultQMLPlugin\"";
+//		changeSet[5][0] = preFix + "INPUT" + postFix;
+//		changeSet[5][1] = "../../StimulGL/Source/Plugins/ExtensionPluginTemplate/ExperimentManager.cpp \\\n" +
+//		                          "../../StimulGL/Source/Plugins/ExtensionPluginTemplate/ExperimentManager.h \\\n" +
+//		                          "../../StimulGL/Source/Plugins/ExtensionPluginTemplate/Global.h \\\n";
+//		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+//		changeSet[6][1] = "StimulGL.doxygen.Project";
+		bSkipStep = true;
+	}
+	else
+	{
+		bSkipStep = true;
+	}
+	
+	if(!bSkipStep)
+	{
+		GDCF_ReplaceInFiles(fileSource,fileDest,changeSet);
+		//doxygen -w html header.html footer.html stylesheet.css <config_file>
 		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\Doxygen\\DefaultQML.cfg";
-		sBinairyPath = "doxywizard";		
-	}	
+		tmpStringList[0] = sDoxyFileDir + fileDest;
+	}
 	
 	if(!bSkipStep)
 	{

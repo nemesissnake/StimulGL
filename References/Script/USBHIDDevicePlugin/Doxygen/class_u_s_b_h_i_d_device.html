@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>USB HID Device class: USBHIDDevice Class Reference</title>
+<title>USBHIDDevicescriptclass: USBHIDDevice Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -22,8 +22,8 @@
   
   
   <td style="padding-left: 0.5em;">
-   <div id="projectname">USB HID Device class
-   &#160;<span id="projectnumber">2.0.0.1</span>
+   <div id="projectname">USBHIDDevicescriptclass
+   &#160;<span id="projectnumber">2.0.0.2</span>
    </div>
    <div id="projectbrief">The USB HID Device script class definition.</div>
   </td>
@@ -41,7 +41,9 @@
 </div>
 <div class="header">
   <div class="summary">
-<a href="#signals">Signals</a>  </div>
+<a href="#pub-slots">Public Slots</a> &#124;
+<a href="#signals">Signals</a> &#124;
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">USBHIDDevice Class Reference</div>  </div>
 </div><!--header-->
@@ -52,6 +54,23 @@
 
 <p><a href="class_u_s_b_h_i_d_device-members.html">List of all members.</a></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-slots"></a>
+Public Slots</h2></td></tr>
+<tr class="memitem:a26eab3fd195a138de503ea0099585a45"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a26eab3fd195a138de503ea0099585a45">Calibrate</a> ()</td></tr>
+<tr class="memitem:a4fe9a92e801e5976ca55e80080817233"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a4fe9a92e801e5976ca55e80080817233">StartCaptureThread</a> (bool bIsCalibrationThread=false)</td></tr>
+<tr class="memdesc:a4fe9a92e801e5976ca55e80080817233"><td class="mdescLeft">&#160;</td><td class="mdescRight">For starting a new <a class="el" href="class_u_s_b_h_i_d_device.html" title="The USBHIDDevice class.">USBHIDDevice</a> Capture thread, only one instance can be active at the same moment.  <a href="#a4fe9a92e801e5976ca55e80080817233"></a><br/></td></tr>
+<tr class="memitem:ac55e3e7e20e470b2e2ec53416f75a10b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#ac55e3e7e20e470b2e2ec53416f75a10b">StopCaptureThread</a> (bool bWasCalibrationThread=false)</td></tr>
+<tr class="memitem:ab201260249b99b9958e1a298fb3cd163"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#ab201260249b99b9958e1a298fb3cd163">SetVendorID</a> (unsigned short vendor_id)</td></tr>
+<tr class="memitem:a4b9ffbe720140c67cce5eaec775232c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a4b9ffbe720140c67cce5eaec775232c2">SetProductID</a> (unsigned short product_id)</td></tr>
+<tr class="memitem:ae8e7d949364704afc9cc3202ca63f6a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#ae8e7d949364704afc9cc3202ca63f6a8">WriteCapturedDataToFile</a> (bool bWriteToFile, QString qsFileName, bool bWriteHeaderInfo, bool bWriteFilteredData)</td></tr>
+<tr class="memdesc:ae8e7d949364704afc9cc3202ca63f6a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">For configuring the logging of the captured data.  <a href="#ae8e7d949364704afc9cc3202ca63f6a8"></a><br/></td></tr>
+<tr class="memitem:ac187a28da7db8652eeccf36c51b62cb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#ac187a28da7db8652eeccf36c51b62cb0">ConfigureHIDTriggers</a> (bool bActivateJoystickTrigger, bool bActivateButtonTriggers, unsigned char cButtonMask, short ButtonDetectCaptureMethod)</td></tr>
+<tr class="memdesc:ac187a28da7db8652eeccf36c51b62cb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">For configuring the current HID Device Joystick Triggers for the capture thread.  <a href="#ac187a28da7db8652eeccf36c51b62cb0"></a><br/></td></tr>
+<tr class="memitem:a3e737de7e12fed099de8a0782c0409cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a3e737de7e12fed099de8a0782c0409cb">ConfigureHIDFiltering</a> (bool bActivateJoystickStabilisation, int nJoystickStabilisationThreshold, bool bActivateJoystickHistory, int nJoystickHistorySize)</td></tr>
+<tr class="memdesc:a3e737de7e12fed099de8a0782c0409cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">For configuring the current HID Device Joystick Position Filtering for the capture thread.  <a href="#a3e737de7e12fed099de8a0782c0409cb"></a><br/></td></tr>
+<tr class="memitem:a6054f805e28c8155394308a39bba163e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a6054f805e28c8155394308a39bba163e">EmulateHIDMouse</a> (bool bEnable, bool bFullScreenMode, bool bEnableLeftMouse=false, bool bEnableRightMouse=false)</td></tr>
+<tr class="memdesc:a6054f805e28c8155394308a39bba163e"><td class="mdescLeft">&#160;</td><td class="mdescRight">For configuring the Mouse Emulation feature of the current HID Device Joystick during a capture thread.  <a href="#a6054f805e28c8155394308a39bba163e"></a><br/></td></tr>
+<tr class="memitem:a1bb7583e6251eb8dcb2e7fbc5431dde4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a1bb7583e6251eb8dcb2e7fbc5431dde4">ResetCalibrationData</a> ()</td></tr>
 <tr><td colspan="2"><h2><a name="signals"></a>
 Signals</h2></td></tr>
 <tr class="memitem:af55bf0fbe5c42fb5e2b40bfa53a8058c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#af55bf0fbe5c42fb5e2b40bfa53a8058c">CaptureThreadStarted</a> (QString DateTimeStamp)</td></tr>
@@ -66,11 +85,90 @@ Signals</h2></td></tr>
 <tr class="memdesc:a6145c00d18ff41b5aa7827c69f3d9911"><td class="mdescLeft">&#160;</td><td class="mdescRight">The CaptureThreadJoystickChanged Signal.  <a href="#a6145c00d18ff41b5aa7827c69f3d9911"></a><br/></td></tr>
 <tr class="memitem:a3476e6fdceb0836e4faa964990407fab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a3476e6fdceb0836e4faa964990407fab">CaptureThreadButtonTriggered</a> (unsigned char NewValue, unsigned char ChangedBits)</td></tr>
 <tr class="memdesc:a3476e6fdceb0836e4faa964990407fab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The CaptureThreadButtonTriggered Signal.  <a href="#a3476e6fdceb0836e4faa964990407fab"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a9526eb7e52423bdc0f96abd1a16719c1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a9526eb7e52423bdc0f96abd1a16719c1">USBHIDDevice</a> (unsigned short vendor_id=0x181b, unsigned short product_id=0x4002, QObject *parent=0)</td></tr>
+<tr class="memdesc:a9526eb7e52423bdc0f96abd1a16719c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_u_s_b_h_i_d_device.html" title="The USBHIDDevice class.">USBHIDDevice</a> constructor.  <a href="#a9526eb7e52423bdc0f96abd1a16719c1"></a><br/></td></tr>
+<tr class="memitem:a955a88c6cc69f15d29ad310a73c03801"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_s_b_h_i_d_device.html#a955a88c6cc69f15d29ad310a73c03801">~USBHIDDevice</a> ()</td></tr>
+<tr class="memdesc:a955a88c6cc69f15d29ad310a73c03801"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_u_s_b_h_i_d_device.html" title="The USBHIDDevice class.">USBHIDDevice</a> destructor.  <a href="#a955a88c6cc69f15d29ad310a73c03801"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_u_s_b_h_i_d_device.html" title="The USBHIDDevice class.">USBHIDDevice</a> class. </p>
 <p>The <a class="el" href="class_u_s_b_h_i_d_device.html" title="The USBHIDDevice class.">USBHIDDevice</a> can be used to communicate with a USB HID Device. </p>
-</div><hr/><h2>Member Function Documentation</h2>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a9526eb7e52423bdc0f96abd1a16719c1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_u_s_b_h_i_d_device.html#a9526eb7e52423bdc0f96abd1a16719c1">USBHIDDevice::USBHIDDevice</a> </td>
+          <td>(</td>
+          <td class="paramtype">unsigned short&#160;</td>
+          <td class="paramname"><em>vendor_id</em> = <code>0x181b</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned short&#160;</td>
+          <td class="paramname"><em>product_id</em> = <code>0x4002</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QObject *&#160;</td>
+          <td class="paramname"><em>parent</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>The <a class="el" href="class_u_s_b_h_i_d_device.html" title="The USBHIDDevice class.">USBHIDDevice</a> constructor. </p>
+<p>The vendor_id should be set to the Vendor ID of the USB HID Device, the product_id should be set to the Product ID of the USB HID Device. You do not need to specify the parent object, the StimulGL script engine automatically retrieves the parent role </p>
+
+</div>
+</div>
+<a class="anchor" id="a955a88c6cc69f15d29ad310a73c03801"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_u_s_b_h_i_d_device.html#a955a88c6cc69f15d29ad310a73c03801">USBHIDDevice::~USBHIDDevice</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>The <a class="el" href="class_u_s_b_h_i_d_device.html" title="The USBHIDDevice class.">USBHIDDevice</a> destructor. </p>
+<p>You do not need call the destructor. The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends </p>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a26eab3fd195a138de503ea0099585a45"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_u_s_b_h_i_d_device.html#a26eab3fd195a138de503ea0099585a45">USBHIDDevice::Calibrate</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Starts a Calibration wizard for an easy calibration for the current USB HID Device. Returns true if the calibration was successful and accepted by the user.</p>
+
+</div>
+</div>
 <a class="anchor" id="a6445630240cd13d17ea05553279825f1"></a>
 <div class="memitem">
 <div class="memproto">
@@ -211,11 +309,309 @@ Signals</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a3e737de7e12fed099de8a0782c0409cb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_u_s_b_h_i_d_device.html#a3e737de7e12fed099de8a0782c0409cb">USBHIDDevice::ConfigureHIDFiltering</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bActivateJoystickStabilisation</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nJoystickStabilisationThreshold</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bActivateJoystickHistory</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>nJoystickHistorySize</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>For configuring the current HID Device Joystick Position Filtering for the capture thread. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bActivateJoystickStabilisation</td><td>whether the Joystick Stabilizing filter should be enabled during a capture thread. </td></tr>
+    <tr><td class="paramname">nJoystickStabilisationThreshold</td><td>the threshold for the Joystick Stabilizing filter during a capture thread. </td></tr>
+    <tr><td class="paramname">bActivateJoystickHistory</td><td>whether the Joystick History (LowPass) filter should be enabled during a capture thread. </td></tr>
+    <tr><td class="paramname">nJoystickHistorySize</td><td>the size for the Joystick History (LowPass) filter during a capture thread. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac187a28da7db8652eeccf36c51b62cb0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_u_s_b_h_i_d_device.html#ac187a28da7db8652eeccf36c51b62cb0">USBHIDDevice::ConfigureHIDTriggers</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bActivateJoystickTrigger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bActivateButtonTriggers</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>cButtonMask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">short&#160;</td>
+          <td class="paramname"><em>sButtonDetectCaptureMethod</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>For configuring the current HID Device Joystick Triggers for the capture thread. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bActivateJoystickTrigger</td><td>determines whether the Joysticks position changes should be used/captured during a capture thread. </td></tr>
+    <tr><td class="paramname">bActivateButtonTriggers</td><td>determines whether the Joysticks button changes should be used/captured during a capture thread. </td></tr>
+    <tr><td class="paramname">cButtonMask</td><td>a bit-mask pattern (one byte) representing which bits(buttons) should be taken into account during the capture thread. </td></tr>
+    <tr><td class="paramname">sButtonDetectCaptureMethod</td><td>the capture detection method to use(see the <a class="el" href="namespace_u_s_b_h_i_d_device_name_space.html#a0d199fe13f35be13b4fc6ad8700c3b48">USBHIDDeviceNameSpace::CaptureMethod</a>). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a6054f805e28c8155394308a39bba163e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_u_s_b_h_i_d_device.html#a6054f805e28c8155394308a39bba163e">USBHIDDevice::EmulateHIDMouse</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bEnable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bFullScreenMode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bEnableLeftMouse</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bEnableRightMouse</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>For configuring the Mouse Emulation feature of the current HID Device Joystick during a capture thread. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bEnable</td><td>whether the Mouse Emulation should be enabled (or disabled) for the capture thread. </td></tr>
+    <tr><td class="paramname">bFullScreenMode</td><td>whether the Mouse Emulation should be performed in Full Screen Mode (or not) for the capture thread. </td></tr>
+    <tr><td class="paramname">bEnableLeftMouse</td><td>whether the Left Mouse button should be emulated during the Mouse Emulation of capture thread. </td></tr>
+    <tr><td class="paramname">bEnableRightMouse</td><td>whether the Right Mouse button should be emulated during the Mouse Emulation of capture thread. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a1bb7583e6251eb8dcb2e7fbc5431dde4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_u_s_b_h_i_d_device.html#a1bb7583e6251eb8dcb2e7fbc5431dde4">USBHIDDevice::ResetCalibrationData</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Resets the internal calibration data for the current USB HID Device. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4b9ffbe720140c67cce5eaec775232c2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_u_s_b_h_i_d_device.html#a4b9ffbe720140c67cce5eaec775232c2">USBHIDDevice::SetProductID</a> </td>
+          <td>(</td>
+          <td class="paramtype">unsigned short&#160;</td>
+          <td class="paramname"><em>product_id</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Sets the Product ID for the USB HID Device. </p>
+
+</div>
+</div>
+<a class="anchor" id="ab201260249b99b9958e1a298fb3cd163"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_u_s_b_h_i_d_device.html#ab201260249b99b9958e1a298fb3cd163">USBHIDDevice::SetVendorID</a> </td>
+          <td>(</td>
+          <td class="paramtype">unsigned short&#160;</td>
+          <td class="paramname"><em>vendor_id</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Sets the Vendor ID for the USB HID Device. </p>
+
+</div>
+</div>
+<a class="anchor" id="a4fe9a92e801e5976ca55e80080817233"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_u_s_b_h_i_d_device.html#a4fe9a92e801e5976ca55e80080817233">USBHIDDevice::StartCaptureThread</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bIsCalibrationThread</em> = <code>false</code></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>For starting a new <a class="el" href="class_u_s_b_h_i_d_device.html" title="The USBHIDDevice class.">USBHIDDevice</a> Capture thread, only one instance can be active at the same moment. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bIsCalibrationThread</td><td>whether the internal calibration data should be automatically updated (or not) if needed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>Whether the capture thread could be successfully started. </dd></dl>
+<dl class="section see"><dt>See also:</dt><dd><a class="el" href="class_u_s_b_h_i_d_device.html#ac55e3e7e20e470b2e2ec53416f75a10b">StopCaptureThread()</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac55e3e7e20e470b2e2ec53416f75a10b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_u_s_b_h_i_d_device.html#ac55e3e7e20e470b2e2ec53416f75a10b">USBHIDDevice::StopCaptureThread</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bWasCalibrationThread</em> = <code>false</code></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Stops the Capture Thread(if started), see <a class="el" href="class_u_s_b_h_i_d_device.html#a4fe9a92e801e5976ca55e80080817233" title="For starting a new USBHIDDevice Capture thread, only one instance can be active at the same moment...">StartCaptureThread</a>. </p>
+
+</div>
+</div>
+<a class="anchor" id="ae8e7d949364704afc9cc3202ca63f6a8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_u_s_b_h_i_d_device.html#ae8e7d949364704afc9cc3202ca63f6a8">USBHIDDevice::WriteCapturedDataToFile</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bWriteToFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>qsFileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bWriteHeaderInfo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bWriteCalibratedData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>For configuring the logging of the captured data. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bWriteToFile</td><td>whether the captured data should be written to a file (or not) during the capture thread. </td></tr>
+    <tr><td class="paramname">qsFileName</td><td>the file-name of the file where the captured data is written to during the capture thread. </td></tr>
+    <tr><td class="paramname">bWriteHeaderInfo</td><td>whether a header (first line in file) before the captured data should be written to a file (or not) during the capture thread. </td></tr>
+    <tr><td class="paramname">bWriteCalibratedData</td><td>whether the calibrated (or raw) captured data should be written to a file during the capture thread. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 12 2012 16:37:19 for USB HID Device class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 16 2012 14:52:47 for USBHIDDevicescriptclass by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

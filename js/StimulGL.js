@@ -1,10 +1,16 @@
 // JavaScript Document
 //
-function createArray(length) 
+function StimulGL_Cleanup()
 {
-	//createArray();     // [] or new Array()
-	//createArray(2);    // new Array(2)
-	//createArray(3, 2); // [new Array(2),
+	//window.StimulGLInfo = null;
+	StimulGL_CreateArray = null;
+}
+
+function StimulGL_CreateArray(length) 
+{
+	//StimulGL_CreateArray();     // [] or new Array()
+	//StimulGL_CreateArray(2);    // new Array(2)
+	//StimulGL_CreateArray(3, 2); // [new Array(2),
                     	 //  new Array(2),
                     	 //  new Array(2)]
     var a = new Array(length || 0);
@@ -13,15 +19,15 @@ function createArray(length)
         var args = Array.prototype.slice.call(arguments, 1);
         for (var i = 0; i < length; i++) 
 		{
-            a[i] = createArray.apply(this, args);
+            a[i] = StimulGL_CreateArray.apply(this, args);
         }
     }
     return a;
 }
 
 ///////////////////////////////////////////////////////////
-window.StimulGLInfo = new StimulGL();
-function StimulGL()
+//window.StimulGLInfo = new StimulGL_Information();
+function StimulGL_Information()
 {
 	//alert('StimulGL constructor');
 	this.StimulGLReleases = [['2.0.0.2','4.8.0'],['2.0.0.3','4.8.0'],['2.0.0.4','5.0.0']];
@@ -55,7 +61,7 @@ function StimulGL()
 	var MediaPlayer_Comp_Index = ComponentCounter++;
 	
 	
-	this.componentVersioning = createArray(1,ComponentCounter,PropCounter);//Default constructor!
+	this.componentVersioning = StimulGL_CreateArray(1,ComponentCounter,PropCounter);//Default constructor!
 	//StimulGL version (2.0.0.2)
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.Name_Index] = 'ExperimentManagerPlugin';
@@ -125,7 +131,7 @@ function StimulGL()
 	//StimulGL version (2.0.0.3)
 	///////////////////////////////////////////////////////////////
 	nNumberOfComponentChanges = 9;//See below, increment by adding new changes for this release!
-	tmpArray = createArray(1,nNumberOfComponentChanges,PropCounter);
+	tmpArray = StimulGL_CreateArray(1,nNumberOfComponentChanges,PropCounter);
 	this.componentVersioning.push.apply(this.componentVersioning, tmpArray)
 	this.componentVersioning[1][ExperimentManagerPlugin_Comp_Index] = 	['ExperimentManagerPlugin',	'2.0.0.3',	1,'2.0.0.2','1.1',	'1.1'];
 	this.componentVersioning[1][ParallelPortPlugin_Comp_Index] = 		['ParallelPortPlugin',		'2.0.0.2',	0,'x',		'1.1',	'1.1'];
@@ -137,7 +143,7 @@ function StimulGL()
 	this.componentVersioning[1][StimulGLExtensions_Comp_Index] = 		['StimulGLExtensions',		'1.1',		0,'x',		'x',	'x'];
 	this.componentVersioning[1][MediaPlayer_Comp_Index] = 				['MediaPlayer',				'1.1',		0,'x',		'x',	'x'];
 	
-	this.DocumentAuditing = createArray(2,5);//Default constructor!
+	this.DocumentAuditing = StimulGL_CreateArray(2,5);//Default constructor!
 	///////////////////////////////////////////////////////////////
 	this.DocumentAuditing[0][this.Doc_FileName_Index] = 'GettingStartedGuide.html';
 	this.DocumentAuditing[0][this.Doc_Title_Index] = 'Getting Started Guide';
@@ -148,12 +154,12 @@ function StimulGL()
 	this.DocumentAuditing[1] = ['PreBuildDevelopmentSetup.html','Pre Build Development Setup','1.0.0.2','November 2012','Sven Gijsen'];
 }
 
-StimulGL.prototype.GetStrippedFileName = function (strFileUrl)//var strFileUrl=window.location.pathname;
+StimulGL_Information.prototype.GetStrippedFileName = function (strFileUrl)//var strFileUrl=window.location.pathname;
 {
 	return strFileUrl.replace(/^.*[\\\/]/, '');
 }
 
-StimulGL.prototype.GetDocumentIndex = function (strFileUrl)//var strFileUrl=window.location.pathname;
+StimulGL_Information.prototype.GetDocumentIndex = function (strFileUrl)//var strFileUrl=window.location.pathname;
 {
 	//alert('GetDocumentIndex ' + strFileUrl);
 	if ((strFileUrl===undefined) || (strFileUrl==''))
@@ -172,7 +178,7 @@ StimulGL.prototype.GetDocumentIndex = function (strFileUrl)//var strFileUrl=wind
 	return -1;
 }
 
-StimulGL.prototype.GetDocumentTitle = function (strFileUrl)
+StimulGL_Information.prototype.GetDocumentTitle = function (strFileUrl)
 {
 	//alert('GetDocumentTitle');
 	var nDocIndex = this.GetDocumentIndex(strFileUrl);
@@ -181,7 +187,7 @@ StimulGL.prototype.GetDocumentTitle = function (strFileUrl)
 	return this.GetStrippedFileName(strFileUrl);
 }
 
-StimulGL.prototype.GetDocumentHeader = function (strFileUrl)
+StimulGL_Information.prototype.GetDocumentHeader = function (strFileUrl)
 {
 	//alert('GetDocumentHeader ' + strFileUrl);
 	var nDocIndex = this.GetDocumentIndex(strFileUrl);
@@ -198,31 +204,31 @@ StimulGL.prototype.GetDocumentHeader = function (strFileUrl)
 	document.write('<p>&nbsp;</p>');
 }
 
-StimulGL.prototype.GetCurrentRelease = function ()
+StimulGL_Information.prototype.GetCurrentRelease = function ()
 {
 	//alert('GetCurrentRelease');
 	return this.StimulGLReleases[this.StimulGLReleases.length-1][0];
 }
 
-StimulGL.prototype.GetReleaseByIndex = function (nIndex)
+StimulGL_Information.prototype.GetReleaseByIndex = function (nIndex)
 {
 	//alert('GetReleaseByIndex');
 	return this.StimulGLReleases[nIndex][0];
 }
 
-StimulGL.prototype.GetReleaseQtVersionByIndex = function (nIndex)
+StimulGL_Information.prototype.GetReleaseQtVersionByIndex = function (nIndex)
 {
 	//alert('GetReleaseQtVersionByIndex');
 	return this.StimulGLReleases[nIndex][1];
 }
 
-StimulGL.prototype.GetNumberOfReleases = function ()
+StimulGL_Information.prototype.GetNumberOfReleases = function ()
 {
 	//alert('GetNumberOfReleases');
 	return this.StimulGLReleases.length;
 }
 
-StimulGL.prototype.GetNumberOfComponentsByReleaseIndex = function (nReleaseIndex)
+StimulGL_Information.prototype.GetNumberOfComponentsByReleaseIndex = function (nReleaseIndex)
 {
 	//alert('GetComponentRelease ' + nReleaseIndex);
 	if(this.componentVersioning.length > nReleaseIndex)
@@ -232,13 +238,13 @@ StimulGL.prototype.GetNumberOfComponentsByReleaseIndex = function (nReleaseIndex
 	return 0;
 }
 
-//StimulGL.prototype.GetComponentReleaseByName = function (strName)
+//StimulGL_Information.prototype.GetComponentReleaseByName = function (strName)
 //{
 	//alert('GetComponentRelease');
 //	return this.componentVersioning[0][0][2];
 //}
 
-StimulGL.prototype.CheckComponentByIndexes = function (nReleaseIndex, nComponentIndex)
+StimulGL_Information.prototype.CheckComponentByIndexes = function (nReleaseIndex, nComponentIndex)
 {
 	//alert('CheckComponentByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
 	if(this.componentVersioning.length > nReleaseIndex)
@@ -251,7 +257,36 @@ StimulGL.prototype.CheckComponentByIndexes = function (nReleaseIndex, nComponent
 	return false;
 }
 
-StimulGL.prototype.GetComponentNameByIndexes = function (nReleaseIndex, nComponentIndex)
+StimulGL_Information.prototype.GetLatestComponentReleaseByName = function (strComponentName)
+{
+	//alert('GetLatestComponentReleaseByName ' + strComponentName);
+	for(var i=this.componentVersioning.length-1;i>=0;i--)
+	{
+		for(var j=0;j<this.componentVersioning[i].length;j++)
+		{		
+			if(this.componentVersioning[i][j][0] == strComponentName)
+			{		
+				return i;
+			}
+		}
+	}	
+	return -1;
+}
+
+StimulGL_Information.prototype.GetLatestComponentIndexByName = function (nReleaseIndex, strComponentName)
+{
+	//alert('GetLatestComponentIndexByName ' + strComponentName);
+	for(var j=0;j<this.componentVersioning[nReleaseIndex].length;j++)
+	{		
+		if(this.componentVersioning[nReleaseIndex][j][0] == strComponentName)
+		{		
+			return j;
+		}
+	}	
+	return -1;
+}
+
+StimulGL_Information.prototype.GetComponentNameByIndexes = function (nReleaseIndex, nComponentIndex)
 {
 	//alert('GetComponentNameByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
 	if(this.CheckComponentByIndexes(nReleaseIndex, nComponentIndex))
@@ -259,7 +294,7 @@ StimulGL.prototype.GetComponentNameByIndexes = function (nReleaseIndex, nCompone
 	return '';
 }
 
-StimulGL.prototype.GetComponentStimGLVersionByIndexes = function (nReleaseIndex, nComponentIndex)
+StimulGL_Information.prototype.GetComponentStimGLVersionByIndexes = function (nReleaseIndex, nComponentIndex)
 {
 	//alert('GetComponentStimGLVersionByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
 	if(this.CheckComponentByIndexes(nReleaseIndex, nComponentIndex))
@@ -269,7 +304,7 @@ StimulGL.prototype.GetComponentStimGLVersionByIndexes = function (nReleaseIndex,
 	return '';
 }
 
-StimulGL.prototype.GetComponentVersionByIndexes = function (nReleaseIndex, nComponentIndex)
+StimulGL_Information.prototype.GetComponentVersionByIndexes = function (nReleaseIndex, nComponentIndex)
 {
 	//alert('GetComponentVersionByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
 	if(this.CheckComponentByIndexes(nReleaseIndex, nComponentIndex))
@@ -277,7 +312,7 @@ StimulGL.prototype.GetComponentVersionByIndexes = function (nReleaseIndex, nComp
 	return '';
 }
 
-StimulGL.prototype.GetComponentMinimalEXMLVersionByIndexes = function (nReleaseIndex, nComponentIndex)
+StimulGL_Information.prototype.GetComponentMinimalEXMLVersionByIndexes = function (nReleaseIndex, nComponentIndex)
 {
 	//alert('GetComponentMinimalEXMLVersionByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
 	if(this.CheckComponentByIndexes(nReleaseIndex, nComponentIndex))
@@ -285,7 +320,7 @@ StimulGL.prototype.GetComponentMinimalEXMLVersionByIndexes = function (nReleaseI
 	return '';
 }
 
-StimulGL.prototype.GetComponentDeviceInterfaceVersionByIndexes = function (nReleaseIndex, nComponentIndex)
+StimulGL_Information.prototype.GetComponentDeviceInterfaceVersionByIndexes = function (nReleaseIndex, nComponentIndex)
 {
 	//alert('GetComponentDeviceInterfaceVersionByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
 	if(this.CheckComponentByIndexes(nReleaseIndex, nComponentIndex))
@@ -293,7 +328,7 @@ StimulGL.prototype.GetComponentDeviceInterfaceVersionByIndexes = function (nRele
 	return '';
 }
 
-StimulGL.prototype.GetComponentExtensionInterfaceVersionByIndexes = function (nReleaseIndex, nComponentIndex)
+StimulGL_Information.prototype.GetComponentExtensionInterfaceVersionByIndexes = function (nReleaseIndex, nComponentIndex)
 {
 	//alert('GetComponentExtensionInterfaceVersionByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
 	if(this.CheckComponentByIndexes(nReleaseIndex, nComponentIndex))

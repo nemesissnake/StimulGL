@@ -12,7 +12,7 @@
 							<section title="ExperimentManager Script Class" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
 							<section title="ParallelPortDevice Script Class" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
 							<section title="USBHIDDevice Script Class" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
-							<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port.html"></section>
+							<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"></section>
             </section>             
             <section title="Plugins (default)" ref="./References/Plugins/PluginReference.html">
                 <section title="ExperimentManager Plugin" ref="./References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">
@@ -47,7 +47,7 @@
             <keyword name="Plugin Template" ref="./References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html"/>
             <keyword name="ExperimentManager Script" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"/>
             <keyword name="ParallelPort Script" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"/>
-            <keyword name="SerialPort Script" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_serial_port_device.html"/>
+            <keyword name="SerialPort Script" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"/>
             <keyword name="USBHIDDevice Script" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"/>
             </keywords>
         <files>
