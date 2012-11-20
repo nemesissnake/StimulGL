@@ -3,10 +3,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="../../css/Default.css" rel="stylesheet" type="text/css" />
+<link href="../../google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
 <script src="../../js/jquery.min.js" type="text/javascript"></script>
 <script src="../../js/jquery.tableofcontents.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../../js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../google-code-prettify/prettify.js" type="text/javascript"></script>
 <script type="text/javascript" charset="utf-8">
+	var StimulGLInfo = new StimulGL_Information();
+	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);	
 	$(document).ready(function()
 		{ 
 			$("#toc").tableOfContents(
@@ -16,13 +20,11 @@
 					depth:      4,    // H2 through H5,
 				}
 			); 
+			prettyPrint();			
 		}
 	);
-	StimulGLInfo = new StimulGL_Information();
-	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);
-	document.write("<title>" + DocTitle + "</title>");
+	document.write("<title>" + DocTitle + "</title>");	
 </script>
-
 </head>
 <body>
 <script type="text/javascript">StimulGLInfo.GetDocumentHeader(window.location.pathname)</script>
@@ -36,278 +38,266 @@ in mind that some tutorials expect you to gained some knowledge of previous tuto
 not perfect and continuously under construction, so I would be happy to receive feedback about bugs, typos, comments, 
 new ideas, etc at sven.gijsen at maastrichtuniversity dot nl.</p>
 <h2>Installation</h2>
-<p>Installing StimulGL on your computer is easy, you can download the latest installer file from https://github.com/svengijsen/StimulGL/downloads, 
+<p>Installing StimulGL on your computer is easy, you can download the latest installer file from <a href="http://github.com/svengijsen/StimulGL/downloads" target="_blank">https://github.com/svengijsen/StimulGL/downloads</a>, 
 this site also hosts the public StimulGL repository. Before installing you should make sure to logon with administrator rights. There are some virus scanners which trigger a false virus detection, like Norton. If you should receive a detection message like this, which doesn’t apply for the mostly used virus scanners, then you could consider turning the realtime protection off for the installation process. StimulGL is available for WinXP/Windows7 in a 32-bit(win32) and a 64-bit(x64) architecture. Please make sure to install the correct architecture for your OS. If you’re not sure which one you have then you can execute the following Command Prompt command:</p>
-<p><code>echo %PROCESSOR_ARCHITECTURE%</code></p>
-<p>&nbsp;</p>
-<p>If it echoes with ‘x86’ then you’re on a 32-bit architecture, otherwise on a 64-bit.</p>
+<table class="codeframe"><tr><td><pre class="prettyprint">
+echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
+<br />
+<p>If it echoes with <em>‘x86’</em> then you’re on a 32-bit architecture, otherwise on a 64-bit.</p>
 <p>StimulGL can be easily installed with the default installation options. Test whether it installs correctly after the installation.</p>
 <h3>Installation directory</h3>
-<p>The StimulGL installer places all files in a single directory, normally this is a directory like C:\Program Files (x86)\StimulGL. Inside this installation directory you can find the following files and directories:</p>
+<p>The StimulGL installer places all files in a single directory, normally this is a directory like <em>C:\Program Files (x86)\StimulGL</em>. Inside this installation directory you can find the following files and directories:</p>
 <h4>Default Files<br />
 </h4>
-<p>StimulGL.exe - This is the main StimulGl program executable.<br />
-  StimulGL_NoBindings.bat - This batch file starts StimulGL with a special option to make sure that no script binding are automatically loaded during startup, see &lt;todo&gt;.<br />
-  logfile.txt - This logfile saves all StimulGL information, exception, warnings and debugging information, use this file to analyse program execution.<br />
-  uninstall.exe - Use this file to uninstall StimulGL, you can also use the automatic Windows Uninstall feature or simply delete the whole StimulGL installation directory. You should also perform one of these operations before installing another version of StimulGL.<br />
-  vcredist_[architecture].exe - this file installs the Microsoft Visual C++ Redistributable Package, this is automatically performed during installation(needs admin rights!).<br />
-  assistant.exe - This executable is used from within StimulGL to show you the help files (F1).<br />
-  *.dll - Multiple Dynamic-link library (shared libraries) needed and used (linked) by StimulGL to perform various tasks.<br />
-  LICENSE.txt - This file contains the license agreement information for StimulGL.</p>
+<p><strong>StimulGL.exe</strong> - This is the main StimulGl program executable.<br />
+  <strong>StimulGL_NoBindings.bat</strong> - This batch file starts StimulGL with a special option to make sure that no script binding are automatically loaded during startup, see &lt;todo&gt;.<br />
+  <strong>logfile.txt</strong> - This logfile saves all StimulGL information, exception, warnings and debugging information, use this file to analyse program execution.<br />
+  <strong>uninstall.exe</strong> - Use this file to uninstall StimulGL, you can also use the automatic Windows Uninstall feature or simply delete the whole StimulGL installation directory. You should also perform one of these operations before installing another version of StimulGL.<br />
+  <strong>vcredist_[architecture].exe</strong> - this file installs the <em>Microsoft Visual C++ Redistributable Package</em>, this is automatically performed during installation(needs admin rights!).<br />
+  <strong>assistant.exe</strong> - This executable is used from within StimulGL to show you the help files (<em>'F1'</em> key).<br />
+  <strong>*.dll</strong> - Multiple Dynamic-link library (shared libraries) needed and used (linked) by StimulGL to perform various tasks.<br />
+  <strong>LICENSE.txt</strong> - This file contains the license agreement information for StimulGL.</p>
 <h4>Default Directories<br />
 </h4>
-<p>apis - The files inside this directory are used for the implementation of the textual Application Program Interface information used in call tips and for autocompletion during the StimulGL various file editing.<br />
-  documents - This directory contains all the necessary files for the StimulGL Help functionality.<br />
-  examples - This directory contains many various example files, also used by this document, which provide the user with some specific examples to gain a better understanding of the program capabilities.<br />
-  outputs - This directory is used by the StimulGL plugins for the storage of all kind of output, like log-files, generated files, etc.<br />
-  plugins - This is the root directory in which StimulGL searches for plugins during startup, if they are compatible then they are automatically included in StimulGL for further usage.<br />
-  plugins/[architecture]/script - This directory contains the default build Qt script bindings, which make it possible to get access to substantial portions of the Qt API from within Qt Script.<br />
-  qml/plugins/[architecture]/ - This is the root directory in which StimulGL searches for QML-plugins to include during the startup of a QML viewing component like &lt;todo&gt;<br />
-  xsd - This directory contains XML Schema (*.xsd) files, which let StimulGL validate experiment (*.exml) files. It is used to express a set of rules to which an experiment must conform in order to be considered 'valid' according to that schema.</p>
+<p><strong>apis</strong> - The files inside this directory are used for the implementation of the textual Application Program Interface information used in call tips and for autocompletion during the StimulGL various file editing.<br />
+  <strong>documents</strong> - This directory contains all the necessary files for the StimulGL Help functionality.<br />
+  <strong>examples</strong> - This directory contains many various example files, also used by this document, which provide the user with some specific examples to gain a better understanding of the program capabilities.<br />
+  <strong>outputs</strong> - This directory is used by the StimulGL plugins for the storage of all kind of output, like log-files, generated files, etc.<br />
+  <strong>plugins</strong> - This is the root directory in which StimulGL searches for plugins during startup, if they are compatible then they are automatically included in StimulGL for further usage.<br />
+  <strong>plugins/[architecture]/script</strong> - This directory contains the default build Qt script bindings, which make it possible to get access to substantial portions of the Qt API from within Qt Script.<br />
+  <strong>qml/plugins/[architecture]/</strong> - This is the root directory in which StimulGL searches for QML-plugins to include during the startup of a QML viewing component like &lt;todo&gt;<br />
+  <strong>xsd</strong> - This directory contains XML Schema (<em>*.xsd</em>) files, which let StimulGL validate experiment (<em>*.exml</em>) files. It is used to express a set of rules to which an experiment must conform in order to be considered 'valid' according to that schema.</p>
 <h2>User Interface</h2>
 <p>The StimulGL User interface consists out an menu bar, one or more document editing pane(s) and an output log pane. The menu bar contains the following items:</p>
-<p>File - this menu item contains commands for various file operations like opening, saving and printing files.<br />
-  Edit - this menu contains commands for the editing of files and search and replace functionalities.<br />
-  Window - this menu contains commands for organizing, selecting and viewing one or more document editing pane(s).<br />
-  Script - this menu contains commands for controlling the internal script engine that can execute script (*.qs) files.<br />
-  Tools - this menu contains an option command where you can configure StimulGL settings.<br />
-  Plugins - this menu is automatically populated with commands that let you open a the User Interface from plugins that are detected and implemented during the startup of the program. Some plugin and statically linked to StimulGL and therefore its UI is always available through this menu.<br />
-  Help - this menu contains commands for opening the main StimulGL help and for viewing StimulGL build and detected plugin(s) information. </p>
+<p><strong>File</strong> - this menu item contains commands for various file operations like opening, saving and printing files.<br />
+  <strong>Edit</strong> - this menu contains commands for the editing of files and search and replace functionalities.<br />
+  <strong>Window</strong> - this menu contains commands for organizing, selecting and viewing one or more document editing pane(s).<br />
+  <strong>Script</strong> - this menu contains commands for controlling the internal script engine that can execute script (<em>*.qs</em>) files.<br />
+  <strong>Tools</strong> - this menu contains an option command where you can configure StimulGL settings.<br />
+  <strong>Plugins</strong> - this menu is automatically populated with commands that let you open a the User Interface from plugins that are detected and implemented during the startup of the program. Some plugin and statically linked to StimulGL and therefore its UI is always available through this menu.<br />
+  <strong>Help</strong> - this menu contains commands for opening the main StimulGL help and for viewing StimulGL build and detected plugin(s) information. </p>
 <h2>Editing and Scripting</h2>
 <p>With StimulGL you can edit various files like features found in standard text editing components and multiple documents can be simultaneously opened. StimulGL automatically detects the file type (see &lt;todo&gt;) and configures the editor (if the file type is compatible) for this. This configurations contains features like styling choices, support for syntax styling, code completion and call tips which makes the editing process more user-friendly.<br />
-  The main default compatible StimulGL filetype is that of a script (*.qs) file. This file may contain QtScript code and can be executed by the StimulGL internal Script Engine. The QtScript scripting language is based on the ECMAScript standard with a few extensions, such as QObject-style signal and slot connections. The library contains the engine, and a C++ API for evaluating QtScript code and exposing custom QObject-derived C++ classes to QtScript.</p>
+  The main default compatible StimulGL filetype is that of a script (<em>*.qs</em>) file. This file may contain <a href="http://en.wikipedia.org/wiki/QtScript" target="_blank">QtScript</a> code and can be executed by the StimulGL internal Script Engine. The QtScript scripting language is based on the <a href="http://en.wikipedia.org/wiki/ECMAScript" target="_blank">ECMAScript</a>standard with a few extensions, such as <a href="http://qt-project.org/doc/qt-4.8/signalsandslots.html" target="_blank">QObject-style signal and slot connections</a>. The library contains the engine, and a C++ API for evaluating QtScript code and exposing custom QObject-derived C++ classes to QtScript.</p>
 <h3>Exercises - Scripting</h3>
 <h4>Hello World</h4>
-<p>Start StimulGL if it is not yet started</p>
-<p>Open the file (File ? Open... or use the Ctrl+’o’ key combination) HelloWorld.qs found in the directory StimulGL\examples\GettingStartedGuide\BasicScripting\.</p>
-<p>&nbsp;</p>
-<p>You can see that the text is automatically highlighted/styled according to the syntax it contains. Text/code can be commented using the single line comment ‘//’ or the multi-line ‘/*’ and ‘*/’ combination. Three variables are declared (using the var statement) and value is assigned to them except for one variable which is calculated out of the other two. The value of this variable is then used in a special function called Log() that can write to the StimulGL output log pane. To clear the output log pane right-click on it and select Clear Output.</p>
-<p>Execute the Qtscript code by the internal StimulGL script engine by using the key ‘F5’ or through the Script ? Run Script command.</p>
-<p>&nbsp;</p>
-<p>The Qtscript code of the current selected document pane is then evaluated and executed. If the script is valid then you can see in the output log pane when the script started/stopped evaluation and how many time it took. For each Log() function call there’s also an additional line appended to the log output pane.</p>
-<p>&nbsp;</p>
+<ul>
+  <li>Start StimulGL if it is not yet started</li>
+  <li>Open the file (<em>File -&gt; Open</em>... or use the <em>Ctrl+’o’</em> key combination) <em>HelloWorld.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
+</ul>
+<p>You can see that the text is automatically highlighted/styled according to the syntax it contains. Text/code can be commented using the single line comment <em>‘//’</em> or the multi-line <em>‘/*’</em> and <em>‘*/’</em> combination. Three variables are declared (using the <em>var</em> statement) and value is assigned to them except for one variable which is calculated out of the other two. The value of this variable is then used in a special function called <em>Log()</em> that can write to the StimulGL output log pane. To clear the output log pane right-click on it and select <em>Clear Output</em>.</p>
+<ul>
+  <li>Execute the Qtscript code by the internal StimulGL script engine by using the key<em> ‘F5’</em> or through the <em>Script -&gt; Run Script</em> command.</li>
+</ul>
+<p>The Qtscript code of the current selected document pane is then evaluated and executed. If the script is valid then you can see in the output log pane when the script started/stopped evaluation and how many time it took. For each <em>Log()</em> function call there’s also an additional line appended to the log output pane.</p>
 <h4>Functions and includes</h4>
 <p>Within Qtscript you can define functions and includes that allows you to structure the script in a more modular way and reuse code. </p>
-<p>Start StimulGL.</p>
-<p>&nbsp;</p>
-<p>Open the FunctionsAndIncludes1.qs and the FunctionsAndIncludes2.qs files found in the directory StimulGL\examples\GettingStartedGuide\BasicScripting\.</p>
-<p>View/activate the FunctionsAndIncludes1.qs file you can use the Window menu for this purpose or use the Ctrl+TAB key combination to scroll through the opened documents.</p>
-<p>&nbsp;</p>
-<p>Notice that the script starts with an Include statement that allows you to embed other script (*.qs) files. In this case a function named testFunction3 is defined in the included script file. The string parameter from the Include statement holds the script file to add, this can be a absolute or a relative path, if only a filename is defined than the Include function searches for the filename inside the directory where the current running script file is stored. <br />
-  You can see that a function header doesn’t need to specify the amount and type of parameter(s) it accepts, nor the return value(see testFunction3) of a function. testFunction1 shows how you can iterate through the parameters it receives, but maybe you want to define this like testFunction2 to make a better code overview. <br />
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Open the <em>FunctionsAndIncludes1.qs</em> and the <em>FunctionsAndIncludes2.qs</em> files found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
+  <li>View/activate the <em>FunctionsAndIncludes1.qs</em> file you can use the Window menu for this purpose or use the<em> Ctrl+TAB</em> key combination to scroll through the opened documents.</li>
+</ul>
+<p>Notice that the script starts with an Include statement that allows you to embed other script (*.qs) files. In this case a function named <em>testFunction3</em> is defined in the included script file. The <em>string</em> parameter from the <em>Include</em> statement holds the script file to add, this can be a absolute or a relative path, if only a filename is defined than the <em>Include</em>function searches for the filename inside the directory where the current running script file is stored. <br />
+  You can see that a function header doesn’t need to specify the amount and type of parameter(s) it accepts, nor the return value(see <em>testFunction3</em>) of a function. <em>testFunction1</em> shows how you can iterate through the parameters it receives, but maybe you want to define this like <em>testFunction2</em> to make a better code overview. <br />
   Before the script ends we should set the defined functions again to null to make sure that the script engine can perform a better garbage collection&lt;todo&gt;, this is explained later .</p>
-<p>Execute the Qtscript code by the internal StimulGL script engine by using the key ‘F5’ or through the Script ? Run Script command.</p>
-<p>&nbsp;</p>
+<ul>
+  <li>Execute the Qtscript code by the internal StimulGL script engine by using the key <em>‘F5’</em> or through the <em>Script -&gt; Run Script</em> command.</li>
+</ul>
 <h4>Additional StimulGL Functions</h4>
-<p>In a previous exercise we already made use of the additional Log() function to write text to the log output pane which can be very useful for debugging purpose. Aside from this Log() function there are more functions made available to the Script Engine of which you can make use of. </p>
-<p>Start StimulGL.</p>
-<p>Open the file AdditionalStimulGLFunctions.qs found in the directory StimulGL\examples\GettingStartedGuide\BasicScripting\.</p>
-<p>Execute the Qtscript code.</p>
-<p>&nbsp;</p>
-<p>When we look at the script code we see that it uses some additional functions prepended with the “StimulGL” namespace because these functions belong to the StimulGL main program. We see some functions that can retrieve absolute directory paths, environment information etc, but also some functions that perform StimulGL functionality like find() and closeSelectedScriptFile(). All available additional StimulGL script functions are described here&lt;todo&gt;.</p>
+<p>In a previous exercise we already made use of the additional <em>Log()</em> function to write text to the log output pane which can be very useful for debugging purpose. Aside from this <em>Log()</em> function there are more functions made available to the Script Engine of which you can make use of. </p>
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Open the file <em>AdditionalStimulGLFunctions.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
+  <li>Execute the Qtscript code.</li>
+</ul>
+<p>When we look at the script code we see that it uses some additional functions prepended with the “<em>StimulGL</em>” namespace because these functions belong to the StimulGL main program. We see some functions that can retrieve absolute directory paths, environment information etc, but also some functions that perform StimulGL functionality like <em>find()</em> and<em> closeSelectedScriptFile()</em>. All available additional StimulGL script functions are described here&lt;todo&gt;.</p>
 <h4>Dynamic Object construction and Garbage Collection</h4>
 <p>The internal StimulGL Script engine uses garbage collection to reclaim memory used by the script objects when they are no longer needed. An object's memory can be automatically reclaimed when it is no longer referenced anywhere in the scripting environment context by the script engine garbage collector. For this to work properly you need to make sure that you follow the guidelines before ending the script context:</p>
-<p>Disconnect all signal/slot connections, signal slot connections are explained later in chapter &lt;todo&gt;</p>
-<p>Set all dynamical constructed object (where you used the new statement) to null.</p>
-<p>Set all defined script functions to null.</p>
-<p>Before ending the script finally call the StimulGL.cleanupScript() function to force a garbage collection.</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>Start StimulGL.</p>
-<p>&nbsp;</p>
-<p>Open the ObjectConstructionAndGarbageCollection.qs file found in the directory StimulGL\examples\GettingStartedGuide\BasicScripting\.</p>
-<p>Execute the Qtscript code.</p>
-<p>&nbsp;</p>
-<p>If you look at the code you can see that an local (built-in type) String object is constructed using the new keyword. This object is constructed from a primitive String and its member functions can now be used to change the String. Before we end the script context we call a function that makes sure that the above guidelines for a successful garbage collection are followed.</p>
+<ol>
+  <li>Disconnect all signal/slot connections, signal slot connections are explained later in chapter &lt;todo&gt;</li>
+  <li>Set all dynamical constructed object (where you used the new statement) to null.</li>
+  <li>Set all defined script functions to null.</li>
+  <li>Before ending the script finally call the <em>StimulGL.cleanupScript()</em> function to force a garbage collection.</li>
+</ol>
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Open the ObjectConstructionAndGarbageCollection.qs file found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
+  <li>Execute the Qtscript code.</li>
+</ul>
+<p>If you look at the code you can see that an local (built-in type) <em>String</em> object is constructed using the <em>new</em> keyword. This object is constructed from a primitive <em>String</em> and its member functions can now be used to change the <em>String</em>. Before we end the script context we call a function that makes sure that the above guidelines for a successful garbage collection are followed.</p>
 <h4>Qt Library Script Bindings</h4>
-<p>To further extend the script engine functionality StimulGL has a feature that automatically detects and integrates (pre generated) Qt bindings for Qt Script to the script environment. With the generated bindings you get access to substantial portions of the Qt API from within Qt Script. These script binding are automatically loaded from the shared libraries inside the StimulGL/plugins/[architecture]/script/ directory during startup. These shared libraries include script binding for the Qt libraries: QtCore, QtGui, QtXml, QtXmlPatterns, QtSvg, QtSql, QtOpenGl, QtUiTools and QtPhonon.</p>
-<p>Start StimulGL.</p>
-<p>Make sure that the shared library named qtscript_gui.dll exists in directory StimulGL\plugins\[architecture]Win32\script\.</p>
-<p>Open the file QtLibraryScriptBindings.qs found in the directory StimulGL\examples\GettingStartedGuide\BasicScripting\.</p>
-<p>&nbsp;</p>
-<p>This example makes use of the QColor and the QColorDialog class from the QtGui library which is made available in the scripting environment due to the automatic linkage to the Qt Bindings (qtscript_gui.dll), as explained above. <br />
-  The script first constructs a QColor object. The passed parameter in the QColor constructor is used to preset the color. The QColorDialog class (not object!), is used to present to the user a color picking dialog allowing a selection of a custom color that is then copied to the QColor object.<br />
-  The script makes use of an static getColor() member function which shows the dialog, and allows the user to specify a color. The static member function is called directly from the class QColorDialog. The dialog then prevents further script execution and gives the control back after the user accepted or rejected the color picking dialog. </p>
-<p>Examine and execute the Qtscript code.</p>
-<p>&nbsp;</p>
-<p>Notice how the output log pane notes that the script is fully Evaluated after the script engine actually ends (after the ScriptCleanupFunction()). We’ll see in the next chapter that this doesn’t have to be like this.</p>
+<p>To further extend the script engine functionality StimulGL has a feature that automatically detects and integrates (pre generated) Qt bindings for Qt Script to the script environment. With the generated bindings you get access to substantial portions of the Qt API from within Qt Script. These script binding are automatically loaded from the shared libraries inside the <em>StimulGL/plugins/[architecture]/script/ directory</em> during startup. 
+These shared libraries include script binding for the Qt libraries: 
+<a href="http://doc-snapshot.qt-project.org/4.8/qtcore.html" target="_blank">QtCore</a>, 
+<a href="http://doc-snapshot.qt-project.org/4.8/qtgui.html" target="_blank">QtGui</a>, 
+<a href="http://doc-snapshot.qt-project.org/4.8/qtxml.html" target="_blank">QtXml</a>, 
+<a href="http://doc-snapshot.qt-project.org/4.8/qtxmlpatterns.html" target="_blank">QtXmlPatterns</a>, 
+<a href="http://doc-snapshot.qt-project.org/4.8/qtsvg.html" target="_blank">QtSvg</a>, 
+<a href="http://doc-snapshot.qt-project.org/4.8/qtsql.html" target="_blank">QtSql</a>, 
+<a href="http://qt-project.org/doc/qt-4.8/QtOpenGL.html" target="_blank">QtOpenGl</a>, 
+<a href="http://qt-project.org/doc/qt-4.8/qtuitools.html" target="_blank">QtUiTools </a>and 
+<a href="http://qt-project.org/doc/qt-4.8/phonon-module.html" target="_blank">QtPhonon</a>
+</p>
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Make sure that the shared library named <em>qtscript_gui.dll</em> exists in directory <em>StimulGL\plugins\[architecture]Win32\script\</em>.</li>
+  <li>Open the file <em>QtLibraryScriptBindings.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
+</ul>
+<p>This example makes use of the <a href="http://qt-project.org/doc/qt-4.8/QColor.html" target="_blank">QColor</a> and the <a href="http://doc-snapshot.qt-project.org/4.8/qcolordialog.html" target="_blank">QColorDialog</a> class from the QtGui library which is made available in the scripting environment due to the automatic linkage to the Qt Bindings (<em>qtscript_gui.dll</em>), as explained above. <br />
+  The script first constructs a <em>QColor</em> object. The passed parameter in the <em>QColor</em> constructor is used to preset the color. The <em>QColorDialog</em> class (not object!), is used to present to the user a color picking dialog allowing a selection of a custom color that is then copied to the <em>QColor</em> object.<br />
+  The script makes use of an static<a href="http://doc.qt.digia.com/4.8-snapshot/qcolordialog.html#getColor" target="_blank">getColor()</a> member function which shows the dialog, and allows the user to specify a color. The static member function is called directly from the class <em>QColorDialog</em>. The dialog then prevents further script execution and gives the control back after the user accepted or rejected the color picking dialog. </p>
+<ul>
+  <li>Examine and execute the Qtscript code.</li>
+</ul>
+<p>Notice how the output log pane notes that the script is fully Evaluated after the script engine actually ends (after the <em>ScriptCleanupFunction()</em>). We’ll see in the next chapter that this doesn’t have to be like this.</p>
 <h4>The Signal/Slots mechanism</h4>
-<p>The StimuGL script engine also has support for Qt-style signal and slot connections available, which makes the script very flexible. It allows the script to dynamically connect/disconnect various Qt objects to each other by their defined signal/slots. It is currently not possible to define a new signal in the script; i.e., all signals must be defined by C++ classes. </p>
-<p>Start StimulGL.</p>
-<p>Make sure that the shared library named qtscript_gui.dll exists in directory StimulGL\plugins\[architecture]Win32\script\.</p>
-<p>Open the file SignalSlotMechanism.qs found in the directory StimulGL\examples\GettingStartedGuide\BasicScripting\.</p>
-<p>&nbsp;</p>
-<p>This example is almost the same as the previous example, it only differs in the way the color picking dialog is created and handled. This example makes use of the QColor and the QColorDialog class from the QtGui library which is made available in the scripting environment due to the automatic linkage to the Qt Bindings (qtscript_gui.dll). <br />
-  The script starts with constructing two objects, a QColor and a QColorDialog object. In this example the color picking dialog creation is done through the constructed object from the class QColorDialog with the use of an non-static member function. The script receives the control back right after the showing the color picking dialog. We now need to make sure that we detect in the script when the dialog is closed (accepted or rejected) so we can further cleanup the script environment. To make sure that we can do this we’ll connect the finished signal (derived from QDialog) from the QColorDialog object and connect it to a script function which can then further finish the script. </p>
-<p>Examine and execute the Qtscript code.</p>
-<p>&nbsp;</p>
-<p>Notice how the output log pane notes that the script is fully Evaluated before the script engine actually ends (after the ScriptCleanupFunction()).</p>
+<p>The StimuGL script engine also has support for <a href="http://qt-project.org/doc/qt-4.8/signalsandslots.html" target="_blank">Qt-style signal and slot connections</a> available, which makes the script very flexible. It allows the script to dynamically connect/disconnect various Qt objects to each other by their defined signal/slots. It is currently not possible to define a new signal in the script; i.e., all signals must be defined by C++ classes. </p>
+<ul>
+  <li>Start StimulGL.</li>
+</ul>
+<p>Make sure that the shared library named <em>qtscript_gui.dll</em> exists in directory <em>StimulGL\plugins\[architecture]Win32\script\</em>.</p>
+<ul>
+  <li>Open the file SignalSlotMechanism.qs found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
+</ul>
+<p>This example is almost the same as the previous example, it only differs in the way the color picking dialog is created and handled. This example makes use of the <em>QColor</em> and the <em>QColorDialog</em> class from the <em>QtGui</em> library which is made available in the scripting environment due to the automatic linkage to the <em>Qt Bindings</em> (<em>qtscript_gui.dll</em>). <br />
+  The script starts with constructing two objects, a <em>QColor</em> and a <em>QColorDialog</em> object. In this example the color picking dialog creation is done through the constructed object from the class <em>QColorDialog</em> with the use of an non-static member function. The script receives the control back right after the showing the color picking dialog. We now need to make sure that we detect in the script when the dialog is closed (accepted or rejected) so we can further cleanup the script environment. To make sure that we can do this we’ll connect the <a href="http://qt-project.org/doc/qt-4.8/qdialog.html#finished" target="_blank">finished() signal</a> (derived from<a href="http://qt-project.org/doc/qt-4.8/QDialog.html" target="_blank">QDialog</a>) from the <em>QColorDialog</em> object and connect it to a script function which can then further finish the script. </p>
+<ul>
+  <li>Examine and execute the Qtscript code.</li>
+</ul>
+<p>Notice how the output log pane notes that the script is fully Evaluated before the script engine actually ends (after the <em>ScriptCleanupFunction()</em>).</p>
 <h4>StimulGL Plugin Script Bindings</h4>
-<p>StimulGL has the ability to automatically integrate plugins that can extend the features of StimulGL and/or add new functionality, see &lt;todo&gt; plugins. These plugins may also expose this functionality to the StimulGL Script engine, allowing the user to take advantage of these functionalities in the script engine. Each plugin has the ability to implement its own UI for convenient access and testing. StimulGL has totally no knowledge of the plugins implementation and does not define how or what they should do, making it a very flexible solution. Some plugins are build-in or delivered with StimulGL and therefore always available and fully up2date after an installation. Plugins can be grouped in either Device or Extension plugins. Furthermore the plugin can define a class where object can be constructed from inside the script. Important: The UI dialog plugin object and all of it’s settings have no link with any script object created from this plugin! Let us first view the plugins implemented UI and its features:</p>
-<p>Start StimulGL.</p>
-<p>Make sure that the static StimulGL plugin named KeyBoardPlugin exists by pressing the ‘F2’ key or by opening the menu Help ? About StimulGL.</p>
-<p>Open the KeyBoardPlugin User Interface by opening the menu Plugins ? Device Plugins ? KeyBoardDevice Plugin.</p>
-<p>Play around with the plugins dialog features to get an understanding of what the plugin can do (It can detect/capture key presses and/or releases...).</p>
-<p>Stop the Capture Thread and Close the plugins dialog.</p>
-<p>&nbsp;</p>
+<p>StimulGL has the ability to automatically integrate plugins that can extend the features of StimulGL and/or add new functionality, see &lt;todo&gt; plugins. These plugins may also expose this functionality to the StimulGL Script engine, allowing the user to take advantage of these functionalities in the script engine. Each plugin has the ability to implement its own UI for convenient access and testing. StimulGL has totally no knowledge of the plugins implementation and does not define how or what they should do, making it a very flexible solution. Some plugins are build-in or delivered with StimulGL and therefore always available and fully up to date after an installation. Plugins can be grouped in either <em>Device</em> or <em>Extension</em> plugins. Furthermore the plugin can define a class where object can be constructed from inside the script. <u>Important</u>: <strong>The UI dialog plugin object and all of it’s settings have no link with any script object created from this plugin!</strong> Let us first view the plugins implemented UI and its features:</p>
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Make sure that the static StimulGL plugin named <em>KeyBoardPlugin</em> exists by pressing the<em> ‘F2’</em> key or by opening the menu <em>Help -&gt; About</em> StimulGL.</li>
+  <li>Open the KeyBoardPlugin User Interface by opening the menu <em>Plugins -&gt; Device Plugins -&gt; KeyBoardDevice Plugin</em>.</li>
+  <li>Play around with the plugins dialog features to get an understanding of what the plugin can do (It can detect/capture key presses and/or releases...).</li>
+  <li><em>Stop</em> the Capture Thread and <em>Close</em> the plugins dialog.</li>
+</ul>
 <p>We can also construct objects from the plugin:</p>
-<p>Open the file StimulGLPluginScriptBindings.qs found in the directory StimulGL\examples\GettingStartedGuide\BasicScripting\.</p>
-<p>Examine and then execute the Qtscript code.</p>
-<p>Press 4 keyboard keys until the script finishes.</p>
-<p>&nbsp;</p>
+<ul>
+  <li>Open the file <em>StimulGLPluginScriptBindings.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
+  <li>Examine and then execute the Qtscript code.</li>
+  <li>Repeat pressing the <em>'4'</em> keyboard  key until the script finishes.</li>
+</ul>
 <p>The script first creates a new object from a class defined by the plugin. This object is then further used to capture key presses. If you take a look to the log output pane then you’ll see a log entry for each key you just pressed. Each key has a Key Code (a unique number for each key) which is also shown in the entry. After pressing 4 keys the script automatically stops capturing keys and finalizes. </p>
 <h2>Creating Experiments with the Experiment Manager</h2>
-<p>StimulGL its main purpose is let the user create/edit and execute behavioral experiments. The functionality for this is completely implemented through a plugin named the ExperimentManager, see the Experiment Manager documentation.This chapter we’ll take a look at it’s features and how it can be used to create and run experiments.</p>
+<p>StimulGL its main purpose is let the user create/edit and execute behavioral experiments. The functionality for this is completely implemented through a plugin named the <em>ExperimentManager</em>, see the <a href="../../References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">Experiment Manager documentation</a>.This chapter we’ll take a look at it’s features and how it can be used to create and run experiments.</p>
 <h3>Running an Experiment File from the EM Plugin UI</h3>
-<p>The Experiment Manager User Interface is available through the Plugins ? Extensions Plugins menu. </p>
-<p>Start StimulGL.</p>
-<p>Make sure that the static StimulGL plugin named ExperimentManagerPlugin exists by pressing the ‘F2’ key or by opening the menu Help ? About StimulGL.</p>
-<p>Open the Experiment Manager plugins User Interface by opening the Plugins ? Extensions Plugins ? Experiment Manager Plugin menu option.</p>
-<p>Click Run Experiment File button and browse to open and execute the PolarAngle.exml Experiment file found in the directory StimulGL\examples\GettingStartedGuide\ExperimentManager\.</p>
-<p>&nbsp;</p>
-<p>We should now see a default screen that allows us to start the experiment (by pressing the ‘ALT’ key) or abort (by pressing the CTRL + ‘a’ key combination). After we have started the experiment we should see a Polar angle retinotopic experiment running. We can always abort an experiment by pressing the CTRL + ‘a’ key combination or wait until the experiment is finished.</p>
-<p>Abort (CTRL + ‘a’) the experiment or wait until it has finished and close the Experiment Manager User Interface.</p>
-<p>&nbsp;</p>
+<p>The Experiment Manager User Interface is available through the <em>Plugins -&gt; Extensions Plugins</em> menu. </p>
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Make sure that the static StimulGL plugin named <em>ExperimentManagerPlugin</em> exists by pressing the <em>‘F2’</em> key or by opening the menu <em>Help -&gt; About StimulGL</em>.</li>
+  <li>Open the <em>Experiment Manager plugins User Interface</em> by opening the <em>Plugins -&gt; Extensions Plugins -&gt; Experiment Manager Plugin</em> menu option.</li>
+  <li>Click the<em>Run Experiment File</em> button and browse to open and execute the <em>PolarAngle.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\</em>.</li>
+</ul>
+<p>We should now see a default screen that allows us to start the experiment (by pressing the<em> ‘ALT’ key</em>) or abort (by pressing the <em>CTRL + ‘a’ key</em> combination). After we have started the experiment we should see a <em>Polar angle retinotopic experiment</em> running. We can always abort an experiment by pressing the <em>CTRL + ‘a’</em> key combination or wait until the experiment is finished.</p>
+<ul>
+  <li>Abort (<em>CTRL + ‘a’</em>) the experiment or wait until it has finished and close the Experiment Manager User Interface.</li>
+</ul>
 <h3>Running an Experiment File directly from StimulGL</h3>
-<p>Plugins can register specific file types (by file-extension) and link this to a custom block of code from the plugin that can execute the selected file whenever the StimulGL Run Script command gets executed. The Experiment Manager Plugin automatically registers the (*.exml) file type in StimulGL, it also implements a custom execution handler for this type of file. Due to this it’s possible to directly start an experiment file from the StimulGL UI.</p>
-<p>Start StimulGL.</p>
-<p>Open the file PolarAngle.exml Experiment file found in the directory StimulGL\examples\GettingStartedGuide\ExperimentManager\.</p>
-<p>Execute the Experiment file directly by using the key ‘F5’ or through the Script ? Run Script command.</p>
-<p>Press the “TAB” key to start the experiment.</p>
-<p>Abort (CTRL + ‘a’) the experiment or wait until it has finished completely.</p>
-<p>&nbsp;</p>
+<p>Plugins can register specific file types (by file-extension) and link this to a custom block of code from the plugin that can execute the selected file whenever the StimulGL Run Script command gets executed. The Experiment Manager Plugin automatically registers the (<em>*.exml</em>) file type in StimulGL, it also implements a custom execution handler for this type of file. Due to this it’s possible to directly start an experiment file from the StimulGL UI.</p>
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Open the file <em>PolarAngle.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\</em>.</li>
+  <li>Execute the Experiment file directly by using the key <em>‘F5’</em> or through the <em>Script -&gt; Run Script</em> command.</li>
+  <li>Press the <em>'TAB'</em> key to start the experiment.</li>
+  <li>Abort (<em>CTRL + ‘a’</em>) the experiment or wait until it has finished completely.</li>
+</ul>
 <h3>The Experiment File (*.exml)</h3>
-<p>The Experiment File (*.exml) is an sort of XML file type that describes an experiment. The Experiment file consist out of different sections that determine the behaviour of the experiment, these sections are automatically processed by the EM. If we take a look at the example Experiment file we can see that after a standard header that there are different elements defined starting with a start-tag ( for example: &lt;section&gt;) and ending with a end-tag (for example: &lt;/section&gt;) or empty-element tags (for example: &lt;param1/&gt;). These elements may also include other element, named child-elements. The child-elements from the &lt;EXML&gt; element have a special meaning, these are:</p>
-<p>&lt;defines&gt; : Here we can define some global Experiment parameters.</p>
-<p>&lt;declarations&gt; : This section declares objects are used in the experiment. It can be standard Qt objects or objects from plugins! These objects are then automatically constructed (and afterwards destructed) and managed by the EM.</p>
-<p>&lt;connections&gt; : the constructed objects have less or no functionality on their own. Therefore using this section it is possible to connect them using the Qt-style signal and slot connections. The objects are automatically disconnected before the experiment has been stopped.</p>
-<p>&lt;initializations&gt; : often you want to prepare or initialize an object before you actually start the Experiment, this section allows you to do this.</p>
-<p>&lt;actions&gt; : This section contains the actual actions that should be performed when running the experiment. Inside the &lt;blocks&gt; child-element you can for example describe an Block-design experiment.</p>
-<p>&lt;finalizations&gt; : This section allows you to perform operations before the script ends.</p>
-<p>&nbsp;</p>
-<p>The declared objects (&lt;declarations&gt;) have an unique &lt;object ID=&quot;&quot;&gt; tag that is used in all of the remaining above sections to address that object. In the experiment file, in the declarations section, we see that an object named Timer_Object_1, with ID number 0, is declared and derived from the TriggerTimer class. This object is used for the triggering of the experiment. This TriggerTimer class can perform very accurate timing and triggering (by emitting a signal) other objects.</p>
-<p>The second object it declares is named RetinoMap_Object_1, with ID number 0, this object is derived from the RetinoMap_glwidget class. It’s purpose is to support the calculation and drawing (with the use of OpenGL) for various kind of retinotopic stimuli. At the moment there are 2 classes of which you can derive from for presenting visual or other kind of stimuli. These are made available within the Experiment Manager plugin:</p>
-<p>Retinotopic mapping experiments which make use of the RetinoMap_glwidget class.</p>
-<p>QML based experiments&lt;todo link and description&gt; which make use of the qmlWidget class.</p>
-<p>&nbsp;</p>
-<p>Inside the &lt;connections&gt; section we then connect (&lt;connections&gt;) the timeout() signal from the TriggerTimer object to the incrementExternalTrigger() slot of the RetinoMap_glwidget object. We then initialize (&lt;initializations&gt;) the TriggerTimer object with the startTimer(1000) function. This function initializes and starts the TriggerTimer object which then emits the timeout() signal each 1000 milli-seconds. Before the Block-design experiment actually starts the user is presented a screen where the experiment can be started or aborted. After the user has presses the “TAB” key to start the experiment, the EM executes the experiment defined in the (&lt;actions&gt;, &lt;blocks&gt;) sections.</p>
+<p>The <a href="../../References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html#exml-file-definition">Experiment File (<em>*.exml</em>)</a> is an sort of <a href="http://en.wikipedia.org/wiki/XML" target="_blank">XML file type</a> that describes an experiment. The Experiment file consist out of different sections that determine the behaviour of the experiment, these sections are automatically processed by the <em>EM</em>. If we take a look at the example Experiment file we can see that after a standard header that there are different elements defined starting with a start-tag ( for example: &lt;section&gt;) and ending with a end-tag (for example: &lt;/section&gt;) or empty-element tags (for example: &lt;param1/&gt;). These elements may also include other element, named child-elements. The child-elements from the &lt;EXML&gt; element have a special meaning, these are:</p>
+<p><strong>&lt;defines&gt;</strong> : Here we can define some global Experiment parameters.<br />
+  <strong>&lt;declarations&gt;</strong> : This section declares objects are used in the experiment. It can be standard Qt objects or objects from plugins! These objects are then automatically constructed (and afterwards destructed) and managed by the EM.<br />
+  <strong>&lt;connections&gt;</strong> : the constructed objects have less or no functionality on their own. Therefore using this section it is possible to connect them using the <a href="http://qt-project.org/doc/qt-4.8/signalsandslots.html" target="_blank">Qt-style signal and slot connections</a>. The objects are automatically disconnected before the experiment has been stopped.<br />
+  <strong>&lt;initializations&gt;</strong> : often you want to prepare or initialize an object before you actually start the Experiment, this section allows you to do this.<br />
+  <strong>&lt;actions&gt;</strong> : This section contains the actual actions that should be performed when running the experiment. Inside the &lt;blocks&gt; child-element you can for example describe an Block-design experiment.<br />
+  <strong>&lt;finalizations&gt;</strong> : This section allows you to perform operations before the script ends.</p>
+<p>The declared objects (&lt;declarations&gt;) have an unique &lt;object ID=&quot;&quot;&gt; tag that is used in all of the remaining above sections to address that object. In the experiment file, in the declarations section, we see that an object named <em>Timer_Object_1</em>, with ID number 0, is declared and derived from the <em>TriggerTimer</em> class. This object is used for the triggering of the experiment. This <em>TriggerTimer</em> class can perform very accurate timing and triggering (by emitting a signal) other objects.</p>
+<p>The second object it declares is named <em>RetinoMap_Object_1</em>, with ID number 0, this object is derived from the <em>RetinoMap_glwidget</em> class. It’s purpose is to support the calculation and drawing (with the use of OpenGL) for various kind of retinotopic stimuli. At the moment there are 2 classes of which you can derive from for presenting visual or other kind of stimuli. These are made available within the <em>Experiment Manager plugin</em>:</p>
+<ol>
+  <li><strong>Retinotopic mapping</strong> experiments which make use of the <em>RetinoMap_glwidget</em> class, see the <a href="../../References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html#retinotopic-mapping">detailed explanation</a>.</li>
+  <li><strong>QML based</strong> experiments&lt;todo link and description&gt; which make use of the <em>qmlWidget</em> class.</li>
+</ol>
+<p>Inside the &lt;connections&gt; section we then connect (&lt;connections&gt;) the timeout() signal from the <em>TriggerTimer</em> object to the<em> incrementExternalTrigger()</em> slot of the <em>RetinoMap_glwidget</em> object. We then initialize (&lt;initializations&gt;) the <em>TriggerTimer</em> object with the<em> startTimer(1000) </em>function. This function initializes and starts the <em>TriggerTimer</em> object which then emits the<em> timeout()</em> signal each 1000 milli-seconds. Before the Block-design experiment actually starts the user is presented a screen where the experiment can be started or aborted. After the user has presses the <em>'TAB'</em> key to start the experiment, the EM executes the experiment defined in the (&lt;actions&gt;, &lt;blocks&gt;) sections.</p>
 <h3>Block-design and Retinotopic mapping Experiments</h3>
 <p>The Block-design definition inside the (&lt;actions&gt;, &lt;blocks&gt;) sections defines one or more experiment blocks (for example: &lt;block ID=&quot;0&quot;&gt;), each block again has an unique ID. Each block is defined by the elements:</p>
-<p>&lt;name&gt; : With this element you can define the name for the block. At the moment this parameter is not yet used by the EM.</p>
-<p>&lt;block_number&gt; : This element defines the block number and thus when the block is active. All numbering inside the EM starts counting at 0. Please note that the position of the block sections and their ID do not define when the block is active.</p>
-<p>&lt;nr_of_trials&gt; : This element defines the number of trials for this block. For each trial all defined block settings inside the block element are used. Each trial can be triggered by one or more other object(s) (i.e. this could be a timer like the example experiment but also a special hardware port that can emit a signal). This other object then defines how fast it triggers the EM by connecting its signal to the incrementExternalTrigger() slot of the EM. The EM then processes these incoming triggers (signals) automatically by changing the state of the experiment structure automatically. This experiment structure is defined by the current block, trial and internal trigger number. </p>
-<p>&lt;nr_of_internal_triggers&gt; : This element defines after how many internal triggers the EM should switch to the next trial for the block (or next block if there are no more trials, or end the experiment if there are no more blocks defined).</p>
-<p>&lt;nr_of_external_triggers&gt; : This element defines after how many external triggers received by the EM (by invoking the slot incrementExternalTrigger()) the internal trigger counter should be incremented with one. Normally this is element is set to value ‘1’ making the internal and external trigger counter increment synchronously.</p>
-<p>&lt;object ID=&quot;&lt;ID&gt;&quot;&gt;{&lt;parameters&gt;} : The parameters section defines all the parameter(s) for the experiment object (with Object ID=&lt;ID&gt;). These parameters can here be defined for each block section. These parameters are then automatically parsed and used by the experiment object in our example case by, the object with ID=1, the RetinoMap_glwidget object. </p>
-<p>&nbsp;</p>
-<p>We see that each parameter has an unique name and a corresponding value. In the example experiment file there’s a parameter named RetinoPattern. This parameter defines which type of retinotopic mapping visual pattern is shown on the screen for the current block. The first block (with block_number 0) shows an fixation cross (fixation) on the screen, the second block shown a polar angle (PolarAngle) retino pattern on the screen. All parameter names are case insensitive and hold (buffer) their last set value during the whole experiment and therefore you do not need to define the values for them if they don’t change.</p>
+<p><strong>&lt;name&gt;</strong> : With this element you can define the name for the block. At the moment this parameter is not yet used by the EM.<br />
+  <strong>&lt;block_number&gt;</strong> : This element defines the block number and thus when the block is active. All numbering inside the EM starts counting at 0. Please note that the position of the block sections and their ID do not define when the block is active.<br />
+  <strong>&lt;nr_of_trials&gt;</strong> : This element defines the number of trials for this block. For each trial all defined block settings inside the block element are used. Each trial can be triggered by one or more other object(s) (i.e. this could be a timer like the example experiment but also a special hardware port that can emit a signal). This other object then defines how fast it triggers the EM by connecting its signal to the incrementExternalTrigger() slot of the EM. The EM then processes these incoming triggers (signals) automatically by changing the state of the experiment structure automatically. This experiment structure is defined by the current block, trial and internal trigger number. <br />
+  <strong>&lt;nr_of_internal_triggers&gt;</strong> : This element defines after how many internal triggers the EM should switch to the next trial for the block (or next block if there are no more trials, or end the experiment if there are no more blocks defined).<br />
+  <strong>&lt;nr_of_external_triggers&gt;</strong> : This element defines after how many external triggers received by the EM (by invoking the slot incrementExternalTrigger()) the internal trigger counter should be incremented with one. Normally this is element is set to value ‘1’ making the internal and external trigger counter increment synchronously.<br />
+  <strong>&lt;object ID=&quot;&lt;ID&gt;&quot;&gt;{&lt;parameters&gt;}</strong> : The parameters section defines all the parameter(s) for the experiment object (with Object ID=&lt;ID&gt;). These parameters can here be defined for each block section. These parameters are then automatically parsed and used by the experiment object in our example case by, the object with ID=1, the <em>RetinoMap_glwidget</em> object. </p>
+<p>We see that each parameter has an unique name and a corresponding value. In the example experiment file there’s a parameter named RetinoPattern. This parameter defines which type of retinotopic mapping visual pattern is shown on the screen for the current block. The first block (with block_number 0) shows an fixation cross (<em>fixation</em>) on the screen, the second block shown a polar angle (<em>PolarAngle</em>) retino pattern on the screen. All parameter names are case insensitive and hold (buffer) their last set value during the whole experiment and therefore you do not need to define the values for them if they don’t change.</p>
 <h3>Running an Experiment File from script</h3>
 <p>Another way to run Experiment files is by doing this inside the script context. We can construct an Experiment Manager plugin object and use this constructed object to run an Experiment. Running experiments like this gives us much more features and control over the Experiment. This is done by integrating/using the EM’s public signals and slots inside the script context:</p>
-<p>Open the file RetinotopicMapping.qs found in the directory StimulGL\examples\GettingStartedGuide\ExperimentManager\.</p>
-<p>Quickly examine the Qtscript code.</p>
-<p>&nbsp;</p>
+<ul>
+  <li>Open the file <em>RetinotopicMapping.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\</em>.</li>
+  <li>Quickly examine the Qtscript code.</li>
+</ul>
 <p>The script first constructs a EM object and defines some functions that are connected to the EM signals for further integration within the script context. <br />
-  In the example script we set the main experiment filename by using the EM Slot setExperimentFileName() (see code at the end of the document). </p>
+  In the example script we set the main experiment filename by using the EM Slot <em>setExperimentFileName()</em> (see code at the end of the document). </p>
 <h4>Experiment Manager public signal and slots</h4>
-<p>We’ve just seen some slots that are available to us</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>Next the script code executes the EM slot runExperiment(). The EM then tries to run the Experiment and returns the boolean result. If the Experiment could not be started because something is wrong it returns false and the script then runs the CleanupScript() code and exits.</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p>We’ve just seen some slots that are made available (<em>public</em>) within the script context, see the <a href="../../References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html">Experiment Manager script class reference</a> for a detailed description of all available signal/slots.</p>
+<p>&lt;todo&gt; give a more detailed overview of when signal/slots occur</p>
+<p>Next the script code executes the EM slot<em> runExperiment()</em>. The EM then tries to run the Experiment and returns the boolean result. If the Experiment could not be started because something is wrong it returns false and the script then runs the <em>CleanupScript()</em> code and exits.</p>
 <h4>Experiment states</h4>
-<p>The EM can pass different states after it has been constructed and works like a sort of state machine for running experiments. A signal named ExperimentStateHasChanged() is emitted each time after the EM state changes. You can connect this signal to a script function, as the example does. By doing this you have more control and information about the EM. The example makes use of this option to automatically call the CleanupScript() function after the state changes to ExperimentManager_Stopped. The Experiment Manager state can be:</p>
-<p>ExperimentManager_NoState (=0):<br />
-  This state is only internally used by the object while it’s constructed and therefore cannot be used in the script environment.</p>
-<p>ExperimentManager_Constructed (=1)<br />
-  This state is used to determine whenever the object has been constructed and therefore cannot be use in the script environment, it’s also internally used.</p>
-<p>ExperimentManager_Loaded (=2)<br />
-  After the Experiment file (*.exml) is successfully loaded (and validated) the EM state changes to this state.</p>
-<p>ExperimentManager_Configured (=3)<br />
-  After the function runExperiment() is called the EM (validates if not done yet) and configures the experiment, it then changes to this state if the configuration was done.</p>
-<p>ExperimentManager_Initialized (=4)<br />
-  After the Experiment configuration the EM tries to initialized and changes the state to this state if this step was successful.</p>
-<p>ExperimentManager_IsStarting (=5)<br />
-  After the Experiment initialization the EM is ready to actually start the Experiment but first it changes the state to this state.</p>
-<p>ExperimentManager_Started (=6)<br />
-  After the Experiment is successfully started the EM changes to this state.</p>
-<p>ExperimentManager_IsStopping (=7)<br />
-  Before the EM tries to stop the Experiment it first changes to this state.</p>
-<p>ExperimentManager_Stopped (=8)<br />
+<p>The EM can pass different states after it has been constructed and works like a sort of <a href="http://en.wikipedia.org/wiki/State_machine" target="_blank">state machine</a> for running experiments. A signal named <em>ExperimentStateHasChanged()</em> is emitted each time after the EM state changes. You can connect this signal to a script function, as the example does. By doing this you have more control and information about the EM. The example makes use of this option to automatically call the <em>CleanupScript()</em> function after the state changes to <em>ExperimentManager_Stopped</em>. The Experiment Manager state can be:</p>
+<p><strong>ExperimentManager_NoState (=0):</strong><br />
+  This state is only internally used by the object while it’s constructed and therefore cannot be used in the script environment.<br />
+  <strong>ExperimentManager_Constructed (=1)</strong><br />
+  This state is used to determine whenever the object has been constructed and therefore cannot be use in the script environment, it’s also internally used.<br />
+  <strong>ExperimentManager_Loaded (=2)</strong><br />
+  After the Experiment file (*.exml) is successfully loaded (and validated) the EM state changes to this state.<br />
+  <strong>ExperimentManager_Configured (=3)</strong><br />
+  After the function <em>runExperiment()</em> is called the EM (validates if not done yet) and configures the experiment, it then changes to this state if the configuration was done.<br />
+  <strong>ExperimentManager_Initialized (=4)</strong><br />
+  After the Experiment configuration the EM tries to initialized and changes the state to this state if this step was successful.<br />
+  <strong>ExperimentManager_IsStarting (=5)</strong><br />
+  After the Experiment initialization the EM is ready to actually start the Experiment but first it changes the state to this state.<br />
+  <strong>ExperimentManager_Started (=6)</strong><br />
+  After the Experiment is successfully started the EM changes to this state.<br />
+  <strong>ExperimentManager_IsStopping (=7)</strong><br />
+  Before the EM tries to stop the Experiment it first changes to this state.<br />
+  <strong>ExperimentManager_Stopped (=8)</strong><br />
   After the EM could finalize and stop the Experiment it changes to this state.</p>
-<p>&nbsp;</p>
-<p>The experiment can be stopped(or aborted) by several reasons, the user can normally abort it by pressing CTRL+’a’ when it has been started or when something goes wrong or when the Experiment has been completely executed.</p>
-<p>Parameters</p>
-<p>parameters!! directly indirectly etc {}</p>
-<p>slots and signals (at which time do they occur)</p>
-<p>structure. getting setting</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p>The experiment can be stopped (or aborted) by several reasons, the user can normally abort it by pressing <em>CTRL+’a’</em> when it has been started or when something goes wrong or when the Experiment has been completely executed.</p>
+<p>&lt;Todo&gt; Parameters, inline{} and other signal/slots etc</p>
+<p>&lt;Todo &gt;structure. getting setting</p>
+<p>&lt;Todo&gt; custom painting, overriding</p>
 <h3>QML based Experiments</h3>
-<p>An huge advantage of using a Retinotopic mapping experiment object is it’s speed, accuracy and flexible parameter configurability. Aside Retinotopic experiments there’s also a need for a more less complex experiment type that allows the presentation of rich content like text, movies, sounds, pictures etc. For this purpose the EM also supports the usage of QML based experiments (*.qml) files by implementing the qmlWidget experiment object (instead of the RetinoMap_glwidget object) in the &lt;declarations&gt; section of the Experiment File.</p>
-<p>Start StimulGL.</p>
-<p>Make sure that the static StimulGL plugin named ExperimentManagerPlugin exists by pressing the ‘F2’ key or by opening the menu Help ? About StimulGL.</p>
-<p>Open the Experiment Manager plugins User Interface by opening the Plugins ? Extensions Plugins ? Experiment Manager Plugin menu option.</p>
-<p>Click the Run QtQuick File button and browse to open and execute the Example_1.qml QML based file found in the directory StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\.</p>
-<p>&nbsp;</p>
-<p>The EM now tries to parse the file and hereafter we can execute the file by pressing again the ALT key or abort with the CTRL + ‘a’ key combination.</p>
-<p>Press the ALT key to execute the qml experiment. </p>
-<p>&nbsp;</p>
-<p>We now see a yellow rectangle on the screen with inside a black text and two other smaller rectangles (red and blue), by pressing the CTRL + ‘a’ key combination we can abort the experiment again.</p>
-<p>Close the EM plugin User Interface.</p>
-<p>Open the Example_1.qml QML based file again but now directly from within StimulGL.</p>
-<p>&nbsp;</p>
+<p>An huge advantage of using a Retinotopic mapping experiment object is it’s speed, accuracy and flexible parameter configurability. Aside Retinotopic experiments there’s also a need for a more less complex experiment type that allows the presentation of rich content like text, movies, sounds, pictures etc. For this purpose the EM also supports the usage of <a href="http://qt-project.org/doc/qt-4.8/gettingstartedqml.html" target="_blank">QML based experiments</a> (*.qml) files by implementing the qmlWidget experiment object (instead of the RetinoMap_glwidget object) in the &lt;declarations&gt; section of the Experiment File.</p>
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Make sure that the static StimulGL plugin named <em>ExperimentManagerPlugin</em> exists by pressing the <em>‘F2’</em> key or by opening the menu <em>Help -&gt; About StimulGL</em>.</li>
+  <li>Open the <em>Experiment Manager plugins User Interface</em> by opening the<em> Plugins -&gt; Extensions Plugins -&gt; Experiment Manager</em> Plugin menu option.</li>
+  <li>Click the <em>Run QtQuick File</em> button and browse to open and execute the <em>Example_1.qml</em> QML based file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\</em>.</li>
+</ul>
+<p>The EM now tries to parse the file and hereafter we can execute the file by pressing again the <em>'ALT'</em> key or abort with the <em>CTRL + ‘a’</em> key combination.</p>
+<ul>
+  <li>Press the ALT key to execute the qml experiment. </li>
+</ul>
+<p>We now see a yellow rectangle on the screen with inside a black text and two other smaller rectangles (red and blue), by pressing the <em>CTRL + ‘a’</em> key combination we can abort the experiment again.</p>
+<ul>
+  <li>Close the EM plugin User Interface.</li>
+  <li>Open the <em>Example_1.qml</em> QML based file again but now directly from within StimulGL.</li>
+</ul>
 <p>We now see the content of the file, and it’s just a document containing declarations.</p>
-<p>Examine the file and try to find out for yourself how the document contents work, if you are further interested in reading you should start with the online Qt documentation (QML based experiments (*.qml)).</p>
-<p>&nbsp;</p>
+<ul>
+  <li>Examine the file and try to find out for yourself how the document contents work, if you are further interested in reading you should start with the online Qt documentation (<a href="http://qt-project.org/doc/qt-4.8/gettingstartedqml.html" target="_blank">QML based experiments</a> (<em>*.qml</em>)).</li>
+</ul>
 <h4>Editing QML based files with Qt Creator</h4>
-<p>Qt offers an extensive Integrated Development Environment (IDE) package for designing Qt based applications; the Qt Creator IDE. This package also contains the Qt Quick designer. This is a textual and visual editor for QML files which supports WYSIWYG. It allows you to rapidly design and build Qt Quick (*.qml files) components from scratch. It is completely integrated into Qt Creator and works seamlessly with the QML code editor. Both modes (design and edit) can be used according to requirements. You can download the IDE here. See a youtube movie demonstrating some of the basic Qt Quick editing features using Qt Creator.</p>
+<p>Qt offers an extensive Integrated Development Environment (IDE) package for designing Qt based applications; the <a href="http://qt.digia.com/product/developer-tools/" target="_blank">Qt Creator IDE</a>. This package also contains the <a href="http://doc.qt.digia.com/qtcreator-2.4/creator-using-qt-quick-designer.html" target="_blank">Qt Quick designer</a>. This is a textual and visual editor for QML files which supports WYSIWYG. It allows you to rapidly design and build Qt Quick (*.qml files) components from scratch. It is completely integrated into Qt Creator and works seamlessly with the QML code editor. Both modes (design and edit) can be used according to requirements. You can download the IDE <a href="http://qt-project.org/downloads#qt-creator" target="_blank">here</a>. See a <a href="http://www.youtube.com/watch?v=k5gMAMSz77Q" target="_blank">youtube movie</a> demonstrating some of the basic Qt Quick editing features using Qt Creator.</p>
 <h4>Access QML based files from an EXML based Experiment File</h4>
-<p>We can also access QML based files directly from EXML based Experiment files. This can be really convenient because we can then combine the advantages (speed, accuracy and flexibility) from the Experiment files (*.exml files) together with the advantages (rich and easy to setup content) of QtQuick (*.qml files) within the Experiment Manager. Let’s take a look at an example:</p>
-<p>Open the Experiment Manager plugins User Interface by opening the Plugins ? Extensions Plugins ? Experiment Manager Plugin menu option.</p>
-<p>Click Run Experiment File button and browse to open and execute the Example_2.exml Experiment file found in the directory StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\.</p>
-<p>Press the ‘Alt’ key to start the experiment file and observe what happens, wait until the experiment automatically finishes.</p>
+<p>We can also access <em>QML based</em> files directly from <em>EXML based</em> Experiment files. This can be really convenient because we can then combine the advantages (speed, accuracy and flexibility) from the <em>Experiment files (*.exml files)</em> together with the advantages (rich and easy to setup content) of <em>QtQuick (*.qml files)</em> within the <em>Experiment Manager</em>. Let’s take a look at an example:</p>
+<ul>
+  <li>Open the <em>Experiment Manager plugins User Interface</em> by opening the <em>Plugins -&gt; Extensions Plugins -&gt; Experiment Manager Plugin</em> menu option.</li>
+  <li>Click <em>Run Experiment File</em> button and browse to open and execute the<em> Example_2.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\</em>.</li>
+  <li>Press the<em> ‘Alt’</em> key to start the experiment file and observe what happens, wait until the experiment automatically finishes.</li>
+</ul>
 <p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>help</p>
-<p>registy : HKEY_CURRENT_USER\Software\MBIC, Maastricht Brain Imaging Center</p>
-<p>versioning</p>
-<p>bat file</p>
-<p>&nbsp;</p>
-<p>“EM” script access</p>
-<p>&nbsp;</p>
-<p>share/support some default basic features and functionality responsible for:</p>
-<p>Loading and executing user-defined Experiment files (*.exml)</p>
-<p>Managing the user-defined Block/Trial/Trigger internal structure (for block design experiments)</p>
-<p>Managing the accurate experiment timing</p>
-<p>Managing the user-defined experiment object</p>
-<p>Managing the user-defined experiment parameters</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p></p>
-<p> aa </p>
+<p>&lt;todo&gt; using help</p>
+<p>&lt;todo&gt; registy : HKEY_CURRENT_USER\Software\MBIC, Maastricht Brain Imaging Center</p>
+<p>&lt;todo&gt;“EM” script access</p>
 </div>
 
 

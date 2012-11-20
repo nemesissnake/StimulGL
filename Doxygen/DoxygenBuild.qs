@@ -156,7 +156,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
 		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
 		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
-		changeSet[2][1] = "\"The Experiment Manager script class definition.\"";
+		changeSet[2][1] = "\"The Experiment Manager script class reference.\"";
 		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
 		changeSet[3][1] = "";//No quotes for empty!
 		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
@@ -185,7 +185,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
 		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
 		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
-		changeSet[2][1] = "\"Parallel Port Device script class definition.\"";
+		changeSet[2][1] = "\"Parallel Port Device script class reference.\"";
 		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
 		changeSet[3][1] = "";//No quotes for empty!
 		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
@@ -214,7 +214,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
 		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
 		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
-		changeSet[2][1] = "\"The Serial Port Device script class definition.\"";
+		changeSet[2][1] = "\"The Serial Port Device script class reference.\"";
 		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
 		changeSet[3][1] = "";//No quotes for empty!
 		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
@@ -243,7 +243,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
 		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
 		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
-		changeSet[2][1] = "\"The USB HID Device script class definition.\"";
+		changeSet[2][1] = "\"The USB HID Device script class reference.\"";
 		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
 		changeSet[3][1] = "";//No quotes for empty!
 		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
@@ -272,7 +272,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
 		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
 		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
-		changeSet[2][1] = "\"The KeyBoard Device script class definition.\"";
+		changeSet[2][1] = "\"The KeyBoard Device script class reference.\"";
 		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
 		changeSet[3][1] = "";//No quotes for empty!
 		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
@@ -301,7 +301,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 //		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
 //		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
 //		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
-//		changeSet[2][1] = "\"The DefaultQML Plugin script class definition.\"";
+//		changeSet[2][1] = "\"The DefaultQML Plugin script class reference.\"";
 //		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
 //		changeSet[3][1] = "";//No quotes for empty!
 //		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;

@@ -59,19 +59,21 @@
             <file>Tutorials/GettingStarted/GettingStartedGuide.html</file>
 						<file>Manuals/PreBuildDevelopmentSetup/PreBuildDevelopmentSetup.html</file>            
             <file>References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html</file>
-            <file>References/Plugins/ExperimentManagerPlugin/images/*.png</file>
+            <file>References/Plugins/ExperimentManagerPlugin/images/*.*</file>
 					  <file>References/Script/ExperimentManagerPlugin/Doxygen/*.*</file>
 						<file>References/Plugins/ParallelPortDevicePlugin/ParallelPortDevicePlugin.html</file>
-            <file>References/Plugins/ParallelPortDevicePlugin/images/*.png</file>
+            <file>References/Plugins/ParallelPortDevicePlugin/images/*.*</file>
 					  <file>References/Script/ParallelPortDevicePlugin/Doxygen/*.*</file>
 						<file>References/Plugins/USBHIDDevicePlugin/USBHIDDevicePlugin.html</file>
-            <file>References/Plugins/USBHIDDevicePlugin/images/*.jpg</file>
+            <file>References/Plugins/USBHIDDevicePlugin/images/*.*</file>
 					  <file>References/Script/USBHIDDevicePlugin/Doxygen/*.*</file>
 					  <file>References/Script/SerialPortDevicePlugin/Doxygen/*.*</file>					  
 						<file>References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html</file>						
 						<file>css/*.css</file>
 						<file>js/*.js</file>
-						<file>Images/*.png</file>	
+						<file>google-code-prettify/*.*</file>
+						<file>Images/*.png</file>
+						<file>Images/*.gif</file>
             </files>
         </filterSection>
     </QtHelpProject>

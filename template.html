@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/Default.css" rel="stylesheet" type="text/css" />
+<link href="google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery.tableofcontents.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script src="google-code-prettify/prettify.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+	var StimulGLInfo = new StimulGL_Information();
+	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);	
+	$(document).ready(function()
+		{ 
+			$("#toc").tableOfContents(
+				$("#toc_Area"),        // Scoped to div#toc_Area
+				{
+					startLevel: 2,    // H2 and up
+					depth:      4,    // H2 through H5,
+				}
+			); 
+			prettyPrint();			
+		}
+	);
+	document.write("<title>" + DocTitle + "</title>");	
+</script>
+</head>
+<body>
+<script type="text/javascript">StimulGLInfo.GetDocumentHeader(window.location.pathname)</script>
+<div id="toc_Area">
+<ul id="toc"></ul>
+
+
+</div>
+</body>
+</html>

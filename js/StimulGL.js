@@ -143,7 +143,7 @@ function StimulGL_Information()
 	this.componentVersioning[1][StimulGLExtensions_Comp_Index] = 		['StimulGLExtensions',		'1.1',		0,'x',		'x',	'x'];
 	this.componentVersioning[1][MediaPlayer_Comp_Index] = 				['MediaPlayer',				'1.1',		0,'x',		'x',	'x'];
 	
-	this.DocumentAuditing = StimulGL_CreateArray(2,5);//Default constructor!
+	this.DocumentAuditing = StimulGL_CreateArray(6,5);//Default constructor!
 	///////////////////////////////////////////////////////////////
 	this.DocumentAuditing[0][this.Doc_FileName_Index] = 'GettingStartedGuide.html';
 	this.DocumentAuditing[0][this.Doc_Title_Index] = 'Getting Started Guide';
@@ -152,6 +152,10 @@ function StimulGL_Information()
 	this.DocumentAuditing[0][this.Doc_Authors_Index] = 'Sven Gijsen';
 	
 	this.DocumentAuditing[1] = ['PreBuildDevelopmentSetup.html','Pre Build Development Setup','1.0.0.2','November 2012','Sven Gijsen'];
+	this.DocumentAuditing[2] = ['ExperimentManagerPlugin.html','Experiment Manager Plug-in Documentation','1.0.0.3','November 2012','Sven Gijsen'];
+	this.DocumentAuditing[3] = ['ParallelPortDevicePlugin.html','Parallel Port Plug-in Documentation','2.0.0.2','November 2012','Sven Gijsen'];	
+	this.DocumentAuditing[4] = ['USBHIDDevicePlugin.html','USBHID Device Plug-in Documentation','2.0.0.2','November 2012','Sven Gijsen'];		
+	this.DocumentAuditing[5] = ['ExtensionPluginTemplate.html','Extension Plug-in Template Documentation','2.0.0.2','November 2012','Sven Gijsen'];	
 }
 
 StimulGL_Information.prototype.GetStrippedFileName = function (strFileUrl)//var strFileUrl=window.location.pathname;
@@ -170,11 +174,11 @@ StimulGL_Information.prototype.GetDocumentIndex = function (strFileUrl)//var str
 	{
 		if(this.DocumentAuditing[i][this.Doc_FileName_Index] == filename)
 		{
-			//alert('found it!');
+			//alert('found it! -> ' + filename);
 			return i;
 		}
 	}
-	//alert('not found it...');
+	//alert('not found it... -> ' + filename);
 	return -1;
 }
 
@@ -191,6 +195,7 @@ StimulGL_Information.prototype.GetDocumentHeader = function (strFileUrl)
 {
 	//alert('GetDocumentHeader ' + strFileUrl);
 	var nDocIndex = this.GetDocumentIndex(strFileUrl);
+	//alert('GetDocumentHeader ' + nDocIndex);
 	if(nDocIndex >= 0)
 	{
 		document.write('<h1>' + this.DocumentAuditing[nDocIndex][this.Doc_Title_Index] + '</h1>');

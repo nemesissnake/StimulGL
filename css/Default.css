@@ -16,11 +16,11 @@ a img { /* this selector removes the default blue border displayed in some brows
 }
 /* ~~ Styling for your site's links must remain in this order - including the group of selectors that create the hover effect. ~~ */
 a:link {
-	color: #42413C;
+	color: #1115CC;
 	text-decoration: underline; /* unless you style your links to look extremely unique, it's best to provide underlines for quick visual identification */
 }
 a:visited {
-	color: #6E6C64;
+	color: #5892F1;
 	text-decoration: underline;
 }
 a:hover, a:active, a:focus { /* this group of selectors will give a keyboard navigator the same hover experience as the person using a mouse. */
@@ -79,6 +79,7 @@ body
 	font-size: small;
 	color: #363534);	
 }
+
 /*
 head
 {
@@ -118,14 +119,11 @@ p
 	color: #363534);
 }
 
-code {
-	padding: 5px;
-	border: dotted 1px #aaa;
-	background: #e8e8e8;
-	font-family: monospace;
-	white-space: pre-wrap;
-	white-space: -moz-pre-wrap !important;
-	word-wrap: break-word;
+.codeframe 
+{
+	summary="code example"
+	padding: 10px 10px 10px 10px;
+	margin-left: 10px;
 }
 
 #toc {
@@ -136,4 +134,22 @@ code {
 	background: #efffb1;
 	border: solid 1px #ccd136;
 	margin: 0 0 10px 15px;
+}
+
+.paramtable
+{
+	border: 1px solid grey;
+	bgcolor="#DDDDDD";
+}
+
+.paramtable th
+{
+	background-color:grey;
+	color:white;
+	text-align:left;
+}
+
+.paramtable td
+{
+	vertical-align: top;
 }
