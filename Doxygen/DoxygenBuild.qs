@@ -138,7 +138,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 	Log("** STEP "  + nCounter + " **");
 	
 		
-	changeSet = StimulGL_CreateArray(7,2); //See the doxygen template document for parameter descriptions!!
+	changeSet = StimulGL_CreateArray(8,2); //See the doxygen template document for parameter descriptions!!
 	if(nCounter==1)
 	{
 		ComponentName = "ExperimentManagerPlugin";		
@@ -167,6 +167,8 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		                          "../../StimulGL/Source/Plugins/ExperimentManager/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 		changeSet[6][1] = "StimulGL.doxygen.Project";
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";		
 	}
 	else if (nCounter==2)
 	{
@@ -196,6 +198,8 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 					  "../../StimulGL/Source/Plugins/ParallelPortDevice/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 		changeSet[6][1] = "StimulGL.doxygen.Project";	
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";		
 	}
 	else if (nCounter==3)
 	{
@@ -224,7 +228,9 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		                          "../../StimulGL/Source/Plugins/SerialPortDevice/SerialPortDevice.cpp \\\n" +
 		                          "../../StimulGL/Source/Plugins/SerialPortDevice/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
-		changeSet[6][1] = "StimulGL.doxygen.Project";		
+		changeSet[6][1] = "StimulGL.doxygen.Project";
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "Q_OS_WIN";
 	}
 	else if (nCounter==4)
 	{
@@ -253,7 +259,9 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		                          "../../StimulGL/Source/Plugins/USBHIDDevice/USBHIDDevice.h \\\n" +
 		                          "../../StimulGL/Source/Plugins/USBHIDDevice/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
-		changeSet[6][1] = "StimulGL.doxygen.Project";		
+		changeSet[6][1] = "StimulGL.doxygen.Project";
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";
 	}
 	else if (nCounter==5)
 	{
@@ -282,7 +290,9 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		                          "../../StimulGL/Source/Plugins/KeyBoardDevice/KeyBoardCapture.h \\\n" +
 		                          "../../StimulGL/Source/Plugins/KeyBoardDevice/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
-		changeSet[6][1] = "StimulGL.doxygen.Project";		
+		changeSet[6][1] = "StimulGL.doxygen.Project";	
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";	
 	}
 	else if (nCounter==6)
 	{
@@ -312,6 +322,8 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 //		                          "../../StimulGL/Source/Plugins/ExtensionPluginTemplate/Global.h \\\n";
 //		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 //		changeSet[6][1] = "StimulGL.doxygen.Project";
+		//changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		//changeSet[7][1] = "";
 		bSkipStep = true;
 	}
 	else

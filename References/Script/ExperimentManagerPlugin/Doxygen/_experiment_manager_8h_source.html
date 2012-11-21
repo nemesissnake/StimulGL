@@ -25,7 +25,7 @@
    <div id="projectname">ExperimentManager script class
    &#160;<span id="projectnumber">2.0.0.3</span>
    </div>
-   <div id="projectbrief">The Experiment Manager script class definition.</div>
+   <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
   
   
@@ -98,7 +98,7 @@
 <a name="l00055"></a><a class="code" href="class_experiment_manager.html">00055</a> <span class="keyword">class </span><a class="code" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> : <span class="keyword">public</span> QObject, <span class="keyword">protected</span> QScriptable
 <a name="l00056"></a>00056 {
 <a name="l00057"></a>00057         Q_OBJECT
-<a name="l00058"></a>00058         <span class="comment">//Q_CLASSINFO(&quot;ScriptAPIClassName&quot;, &quot;ExperimentManager&quot;)//Can&#39;t use defines here!, moc doesn&#39;t handle defines, not needed here</span>
+<a name="l00058"></a>00058         <span class="comment">//Q_CLASSINFO(&quot;ScriptAPIClassName&quot;, &quot;ExperimentManager&quot;);//Can&#39;t use defines here!, moc doesn&#39;t handle defines, not needed here</span>
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060 signals:
 <a name="l00062"></a>00062 
@@ -205,7 +205,7 @@
 <a name="l00169"></a>00169         }
 <a name="l00170"></a>00170 
 <a name="l00171"></a>00171 <span class="keyword">public</span> slots:
-<a name="l00172"></a>00172         <span class="keywordtype">void</span> SendToMainAppLogOutput(<span class="keyword">const</span> QString &amp;strText2Write);
+<a name="l00172"></a>00172         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a8ca23e16ea2647e2c7ebe83153045296">sendToMainAppLogOutput</a>(<span class="keyword">const</span> QString &amp;strText2Write);
 <a name="l00173"></a>00173         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
 <a name="l00174"></a>00174         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">setExperimentFileName</a>(<span class="keyword">const</span> QString qstrExpFileName);
 <a name="l00175"></a>00175         QString <a class="code" href="class_experiment_manager.html#ae9b3d50bb3af7d85fde90cb97b59e555">getExperimentFileName</a>();
@@ -225,10 +225,10 @@
 <a name="l00189"></a>00189         <span class="keywordtype">double</span> <a class="code" href="class_experiment_manager.html#af4756da1ac430d043a38929310f30fe1">restartExperimentTimer</a>(<span class="keywordtype">int</span> nIndex);
 <a name="l00190"></a>00190         <span class="keywordtype">double</span> <a class="code" href="class_experiment_manager.html#a76821df1152ce7dd6c8dae8dafc2e702">elapsedExperimentTimerTime</a>(<span class="keywordtype">int</span> nIndex);
 <a name="l00191"></a>00191         QString <a class="code" href="class_experiment_manager.html#afecc244df6a6a8118406fd3e3a0ad8a4">getCurrentExperimentState</a>();
-<a name="l00192"></a>00192         <span class="keywordtype">void</span> setDebugMode(<span class="keywordtype">bool</span> mode);
-<a name="l00193"></a>00193         <span class="keywordtype">bool</span> getDebugMode();
-<a name="l00194"></a>00194         <span class="keywordtype">void</span> setExperimentName(QString name);
-<a name="l00195"></a>00195         QString getExperimentName();    
+<a name="l00192"></a>00192         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a34102a745b34ce80c9402b00562b148d">setDebugMode</a>(<span class="keywordtype">bool</span> mode);
+<a name="l00193"></a>00193         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a407b993f8251e9a23502a1cd44772e41">getDebugMode</a>();
+<a name="l00194"></a>00194         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a9f50a2cc340ec61292cbf527d6dd4673">setExperimentName</a>(QString name);
+<a name="l00195"></a>00195         QString <a class="code" href="class_experiment_manager.html#ad80a833d24cba75fe10b88328629a8da">getExperimentName</a>();    
 <a name="l00196"></a>00196 
 <a name="l00197"></a>00197 <span class="keyword">private</span>:
 <a name="l00198"></a>00198         <span class="keywordtype">void</span> DefaultConstruct();
@@ -275,7 +275,7 @@
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 20 2012 08:27:19 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 21 2012 15:52:47 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>
