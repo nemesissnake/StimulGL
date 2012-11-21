@@ -55,7 +55,7 @@ class ExperimentTree;
 class ExperimentManager : public QObject, protected QScriptable
 {
 	Q_OBJECT
-	//Q_CLASSINFO("ScriptAPIClassName", "ExperimentManager")//Can't use defines here!, moc doesn't handle defines, not needed here
+	//Q_CLASSINFO("ScriptAPIClassName", "ExperimentManager");//Can't use defines here!, moc doesn't handle defines, not needed here
 
 signals:
 	//! The ExperimentStateHasChanged Signal.
@@ -169,7 +169,7 @@ public:
 	}
 
 public slots:
-	void SendToMainAppLogOutput(const QString &strText2Write);
+	void sendToMainAppLogOutput(const QString &strText2Write);
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool setExperimentFileName(const QString qstrExpFileName);
 	QString getExperimentFileName();

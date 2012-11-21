@@ -122,11 +122,13 @@ void SerialPortDevice::ProcessSerialData()
 
 QString SerialPortDevice::portName() const
 {
+/*! Returns the Serial Port Name. */
 	return serialPort->portName();
 } 
 
 void SerialPortDevice::setPortName(const QString & name)
 {
+/*! Changes the Serial Port Name to the string parameter(name). */
 	return serialPort->setPortName(name);
 }
 
@@ -137,6 +139,7 @@ BaudRateType SerialPortDevice::baudRate() const
 
 QString SerialPortDevice::baudRateToString() const 
 {
+/*! Returns the Serial Port BaudRate as a string representation, see SerialPortDevice::BaudRateType_. */
 	return baudRateHash.key((int)serialPort->baudRate(),UNKNOWNENUMSTRING);
 } 
 
@@ -147,6 +150,7 @@ void SerialPortDevice::setBaudRate(BaudRateType baudRate)
 
 bool SerialPortDevice::setBaudRate(QString baudRate)
 {
+/*! Changes the Serial Port BaudRate configuration to the string parameter(baudrate), see SerialPortDevice::BaudRateType_. */
 	nTmpEnumIndex =  baudRateHash.value(baudRate,-1);
 	if (nTmpEnumIndex>=0)
 	{
@@ -163,6 +167,7 @@ DataBitsType SerialPortDevice::dataBits () const
 
 QString SerialPortDevice::dataBitsToString() const
 {
+/*! Returns the Serial Port DataBits as a string representation, see SerialPortDevice::DataBitsType_. */
 	return dataBitsHash.key((int)serialPort->dataBits(),UNKNOWNENUMSTRING);
 }
 
@@ -173,6 +178,7 @@ void SerialPortDevice::setDataBits(DataBitsType dataBits)
 
 bool SerialPortDevice::setDataBits(QString dataBits)
 {
+/*! Changes the Serial Port DataBits configuration to the string parameter(dataBits), see SerialPortDevice::DataBitsType_. */
 	nTmpEnumIndex =  dataBitsHash.value(dataBits,-1);
 	if (nTmpEnumIndex>=0)
 	{
@@ -189,6 +195,7 @@ ParityType SerialPortDevice::parity() const
 
 QString SerialPortDevice::parityToString() const
 {
+/*! Returns the Serial Port Parity as a string representation, see SerialPortDevice::ParityType_. */
 	return parityHash.key((int)serialPort->parity(),UNKNOWNENUMSTRING);
 }
 
@@ -199,6 +206,7 @@ void SerialPortDevice::setParity(ParityType parity)
 
 bool SerialPortDevice::setParity(QString parity)
 {
+/*! Changes the Serial Port Parity configuration to the string parameter(parity), see SerialPortDevice::ParityType_. */
 	nTmpEnumIndex =  parityHash.value(parity,-1);
 	if (nTmpEnumIndex>=0)
 	{
@@ -215,6 +223,7 @@ FlowType SerialPortDevice::flowControl() const
 
 QString SerialPortDevice::flowControlToString() const
 {
+/*! Returns the Serial Port Flow Control as a string representation, see SerialPortDevice::FlowType_. */
 	return flowControlHash.key((int)serialPort->flowControl(),UNKNOWNENUMSTRING);
 }
 
@@ -225,6 +234,7 @@ void SerialPortDevice::setFlowControl(FlowType flow)
 
 bool SerialPortDevice::setFlowControl(QString flow)
 {
+/*! Changes the Serial Port Flow Control configuration to the string parameter(flow), see SerialPortDevice::FlowType_. */
 	nTmpEnumIndex =  flowControlHash.value(flow,-1);
 	if (nTmpEnumIndex>=0)
 	{
@@ -241,6 +251,7 @@ StopBitsType SerialPortDevice::stopBits() const
 
 QString SerialPortDevice::stopBitsToString() const
 {
+/*! Returns the Serial Port Stop Bits as a string representation, see SerialPortDevice::StopBitsType_. */
 	return stopBitsHash.key((int)serialPort->stopBits(),UNKNOWNENUMSTRING);
 }
 
@@ -251,6 +262,7 @@ void SerialPortDevice::setStopBits(StopBitsType stopBits)
 
 bool SerialPortDevice::setStopBits(QString stopBits)
 {
+/*! Changes the Serial Port Stop Bits configuration to the string parameter(stopBits), see SerialPortDevice::StopBitsType_. */
 	nTmpEnumIndex =  stopBitsHash.value(stopBits,-1);
 	if (nTmpEnumIndex>=0)
 	{
@@ -262,11 +274,13 @@ bool SerialPortDevice::setStopBits(QString stopBits)
 
 void SerialPortDevice::setTimeout(long millisec)
 {
+/*! Changes the Serial Port Timeout configuration to the long parameter(millisec) in milliseconds. */
 	serialPort->setTimeout(millisec);
 }
 
 void SerialPortDevice::setTimeout(qlonglong millisec)
 {
+/*! Changes the Serial Port Timeout configuration to the qlonglong parameter(millisec) in milliseconds. */
 	serialPort->setTimeout(millisec);
 }
 
@@ -277,6 +291,7 @@ QextSerialPort::QueryMode SerialPortDevice::queryMode() const
 
 QString SerialPortDevice::queryModeToString() const
 {
+/*! Returns the Serial Port Query Mode as a string representation, see SerialPortDevice::QueryMode_. */
 	return queryModeHash.key((int)serialPort->queryMode(),UNKNOWNENUMSTRING);
 }
 
@@ -287,6 +302,7 @@ void SerialPortDevice::setQueryMode(QextSerialPort::QueryMode mode)
 
 bool SerialPortDevice::setQueryMode(QString mode)
 {
+/*! Changes the Serial Port Query Mode configuration to the string parameter(mode), see SerialPortDevice::QueryMode_. */
 	nTmpEnumIndex = queryModeHash.value(mode,-1);
 	if (nTmpEnumIndex>=0)
 	{
@@ -303,6 +319,7 @@ bool SerialPortDevice::open(QIODevice::OpenMode mode)
 
 bool SerialPortDevice::open(QString mode)
 {
+/*! Opens the Serial Port for further usage in the mode string parameter(mode), see SerialPortDevice::OpenMode_. */
 	QStringList tmpStrLst = mode.split("|",QString::SplitBehavior::SkipEmptyParts);
 	int nFlags = 0;
 	bool bValueFound = false;
@@ -339,6 +356,7 @@ bool SerialPortDevice::open(QString mode)
 
 bool SerialPortDevice::isOpen() const
 {
+/*! Returns whether the Serial Port is currently open. */
 	return serialPort->isOpen();
 }
 
@@ -349,11 +367,13 @@ QIODevice::OpenMode SerialPortDevice::openMode() const
 
 QString SerialPortDevice::openModeToString() const
 {
+/*! Returns the Serial Port Open Mode as a string representation, see SerialPortDevice::OpenMode_. */
 	return openModeHash.key((int)serialPort->openMode(),UNKNOWNENUMSTRING);
 }
 
 void SerialPortDevice::close()
 {
+/*! Closes the Serial Port. */
 	return serialPort->close();
 }
 

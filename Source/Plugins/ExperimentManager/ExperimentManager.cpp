@@ -131,8 +131,13 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<strcScriptExperimentStructure>(EXPERIMENTSTRUCTURE_NAME);
 }
 
-void ExperimentManager::SendToMainAppLogOutput(const QString &strText2Write)
+void ExperimentManager::sendToMainAppLogOutput(const QString &strText2Write)
 {
+/*! \brief Sends a string of text to the StimulGL Log output Window.
+ *
+ *  The string parameter (strText2Write) is appended to the StimulGL Log output Window, this 
+ *  is done by emitting a signal that is automatically connected to a slot that does the job.
+ */
 	emit WriteToLogOutput(strText2Write);
 }
 
@@ -1070,20 +1075,36 @@ bool ExperimentManager::configureExperiment()
 
 void ExperimentManager::setDebugMode(bool mode)
 {
+/*! \brief Set the debug mode
+ *
+ *  The debug mode for the current experiment is changed to the boolean parameter(mode).
+ */
 	strcExperimentConfiguration.bDebugMode = mode;
 }
 
 bool ExperimentManager::getDebugMode()
 {
+/*! \brief Get the debug mode
+ *
+ *  Returns the configured debug mode for the current experiment.
+ */
 	return strcExperimentConfiguration.bDebugMode;
 }
 
 void ExperimentManager::setExperimentName(QString name)
 {
+/*! \brief Set the current experiment name
+ *
+ *  The experiment name for the current experiment is changed to the string parameter(name).
+ */
 	strcExperimentConfiguration.nExperimentName = name;
 }
 QString ExperimentManager::getExperimentName()
 {
+/*! \brief Get the current experiment name
+ *
+ *  Returns the configured experiment name for the current experiment.
+ */
 	return strcExperimentConfiguration.nExperimentName;
 }
 

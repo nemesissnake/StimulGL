@@ -507,7 +507,7 @@ void qmlWidget::onStatusChanged(QDeclarativeView::Status status)
 			if(currExpConfStruct)
 			{
 				if(currExpConfStruct->pExperimentManager)
-					currExpConfStruct->pExperimentManager->SendToMainAppLogOutput(errMessage);
+					currExpConfStruct->pExperimentManager->sendToMainAppLogOutput(errMessage);
 				else
 					QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
 			}

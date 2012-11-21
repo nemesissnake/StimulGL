@@ -36,7 +36,7 @@ class ParallelPort : public QObject, protected QScriptable
 {
 	Q_OBJECT
 	Q_PROPERTY( short BaseAddress WRITE setBaseAddress READ getBaseAddress )
-	//Q_CLASSINFO("ScriptAPIClassName", "ParallelPort")//Can't use defines here!, moc doesn't handle defines, not needed here
+	//Q_CLASSINFO("ScriptAPIClassName", "ParallelPort");//Can't use defines here!, moc doesn't handle defines, not needed here
 
 signals:
 	//! The GenerateThreadTriggered Signal.

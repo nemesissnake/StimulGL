@@ -37,8 +37,7 @@ class QTScriptEngine;
 class KeyBoardCapture : public QObject, protected QScriptable
 {
 	Q_OBJECT
-	//Q_CLASSINFO("ScriptAPIClassName", "ExperimentManager")//Can't use defines here!, moc doesn't handle defines, not needed here
-	//Q_PROPERTY( short BaseAddress WRITE setBaseAddress READ getBaseAddress )
+	//Q_CLASSINFO("ScriptAPIClassName", "ExperimentManager");//Can't use defines here!, moc doesn't handle defines, not needed here
 
 signals:
 	//void TestSignal(QPixmap *);

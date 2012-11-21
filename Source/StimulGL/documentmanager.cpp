@@ -147,6 +147,10 @@ MainAppInfo::DocType DocumentManager::getDocType(const QString strExtension)
 	{
 		return MainAppInfo::DOCTYPE_QSCRIPT;
 	}
+	else if (tmpExt == "js")
+	{
+		return MainAppInfo::DOCTYPE_JAVASCRIPT;
+	}
 	else if ((tmpExt == "gz") || (tmpExt == "svg") || (tmpExt == "svgz")) 
 	{
 		return MainAppInfo::DOCTYPE_SVG;
@@ -375,6 +379,11 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 			bool bResult = customizeDocumentStyle(custQsci,MainAppInfo::DOCTYPE_STYLE_ECMA,"qscript.api");
 			break;
 		}
+	case MainAppInfo::DOCTYPE_JAVASCRIPT:
+		{
+			bool bResult = customizeDocumentStyle(custQsci,MainAppInfo::DOCTYPE_STYLE_ECMA,"javascript.api");
+			break;
+		}		
 	case MainAppInfo::DOCTYPE_SVG:
 		{
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);

@@ -74,7 +74,7 @@ typedef QList<ConditionsDefinition> PRTConditionsDefinitionList;
 class PrtFormatManager : public QObject, protected QScriptable
 {
 	Q_OBJECT
-	Q_CLASSINFO("ScriptAPIClassName", "PrtFormatManager")//Can't use defines here!, moc doesn't handle defines, not needed here
+	Q_CLASSINFO("ScriptAPIClassName", "PrtFormatManager");//Can't use defines here!, moc doesn't handle defines, not needed here
 
 public:
 	PrtFormatManager(QObject *parent = NULL);

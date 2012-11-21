@@ -197,7 +197,7 @@ int ParallelPort::GetEppTimeoutBit()
 //! For starting a new Parallel Port Generate thread, only one instance can be active at the same moment.
 /*!
     \param baseAddress the base address.
-	\param method the generation method to use(see the ParallelPortNameSpace::GenerationMethod).
+	\param method the generation method to use(see the ParallelPortNameSpace.GenerationMethod).
 	\param outputMask a bit-mask pattern (one byte) representing which output bits can be changed by this generate thread.
 	\param activeValue a bit-mask pattern (one byte) representing the Active output value.
 	\param inActiveValue a bit-mask pattern (one byte) representing the In-active output value..
@@ -235,7 +235,7 @@ void ParallelPort::StopGenerateThread()
 /*!
     \param baseAddress the base address.
 	\param mask a bit-mask pattern (one byte) representing which bits should be taken into account for the capture thread.
-	\param method the capture method to use(see the ParallelPortNameSpace::CaptureMethod).
+	\param method the capture method to use(see the ParallelPortNameSpace.CaptureMethod).
 	\param postLHDelay the delay-time (in msec) after a Low->High Transition when the capture thread does nothing.
 	\param postHLDelay the delay-time (in msec) after a High->Low Transition when the capture thread does nothing.
     \return Whether the thread could be successfully started.

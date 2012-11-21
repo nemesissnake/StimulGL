@@ -41,7 +41,7 @@ class HIDCalibrateDialog;
 class USBHIDDevice : public QObject, protected QScriptable
 {
 	Q_OBJECT
-	//Q_CLASSINFO("ScriptAPIClassName", "USBHIDDevice")//Can't use defines here!, moc doesn't handle defines, not needed here
+	//Q_CLASSINFO("ScriptAPIClassName", "USBHIDDevice");//Can't use defines here!, moc doesn't handle defines, not needed here
 										 
 signals:
 	//! The CaptureThreadStarted Signal.

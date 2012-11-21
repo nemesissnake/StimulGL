@@ -27,7 +27,7 @@
 
 //Only edit the below!
 
-//Also search and change "Q_CLASSINFO("ScriptAPIClassName""!!!
+//Also search and change "Q_CLASSINFO("ScriptAPIClassName"..!!!
 
 #define MAIN_PROGRAM_COMPANY_NAME						"MBIC, Maastricht Brain Imaging Center"
 #define MAIN_PROGRAM_LEGAL_COPYRIGHT					"Copyright (C) 2012"

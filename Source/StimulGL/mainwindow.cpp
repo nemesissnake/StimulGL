@@ -526,6 +526,16 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 				printAction->setEnabled(true);
 				break;
 			}
+		case MainAppInfo::DOCTYPE_JAVASCRIPT:
+			{
+				//statusBar()->showMessage("DOCTYPE_JAVASCRIPT");
+				if (currentRunningScriptID == 0)
+				{
+					setScriptRunningStatus(MainAppInfo::Pending);
+				}
+				printAction->setEnabled(true);
+				break;
+			}			
 		case MainAppInfo::DOCTYPE_SVG:
 			{
 				//statusBar()->showMessage("DOCTYPE_SVG");
@@ -1436,6 +1446,10 @@ void MainWindow::executeScript()
 		{ 
 			break; 
 		}
+		case MainAppInfo::DOCTYPE_JAVASCRIPT:
+		{ 
+			break; 
+		}		
 		case MainAppInfo::DOCTYPE_SVG: 
 		{
 			if (DocManager->getDocHandler(currentActiveWindow)->isModified())
