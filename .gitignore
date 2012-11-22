@@ -58,8 +58,10 @@ Source/Plugins/USBHIDDevice/documents/~*.tmp
 InstallJammer/output/*.*
 Install/*
 !Install/examples
+!Install/apis
 Source/QmlExtensions/Plugins/DefaultPlugin/DefaultPlugin.sdf
 Source/QmlExtensions/Plugins/DefaultPlugin/plugins.opensdf
 Source/QmlExtensions/Plugins/DefaultPlugin/plugins.sdf
 
 /Publish
+output

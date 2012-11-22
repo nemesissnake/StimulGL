@@ -1,3 +1,5 @@
+Include("ReplaceInFile.qs");
+
 var tmpString;
 var InstallProcess = new QProcess();
 var tmpByteArray = new QByteArray();
@@ -9,6 +11,7 @@ var bFileProccessed;
 var nCounter;
 var bSkipStep;
 var sBinairyPath;
+var changeSet;
 
 //var sQTDirWin32 = tr("C:/Qt/4.8.0/win32/");
 //var sQTDirx64 = tr("C:/Qt/4.8.0/x64/");
@@ -22,6 +25,10 @@ var arrConfigList = new Array("win32","x64");
 var sInstallerConfiguration = tr(arrConfigList[0]);//win32 or x64
 var sInstallerVersion = tr("2.0.0.2");//<Major>.<Minor>.<Build>.<Revision>
 var sInstallerPlatform = tr("Windows");
+var sQtDirectory_default = tr("C:/Qt/4.8.0");
+var sStimulGLProjectDirectory_default = tr("E:/Projects/StimulGL");
+var sQtDirectory = sQtDirectory_default;
+var sStimulGLProjectDirectory = sStimulGLProjectDirectory_default;
 var srcFile = new QFile(strInstallConfigurationFile);
 var dstFile = new QFile(strInstallConfigurationFileCopy);
 
@@ -35,6 +42,7 @@ function CleanUpScript()
 {
 	Log("CleanUpScript started...");
 	ConnectDisconnectScriptFunctions(false);
+	ReplaceInFile_Cleanup();
 	tr=null;
 	tmpByteArray=null;
 	tmpStringList=null;
@@ -170,15 +178,29 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		Log("StimulGL version = " + sInstallerVersion);
 		
 		sInstallerConfiguration = getItem("Choose the StimulGL configuration","StimulGL configuration:",arrConfigList);
-		Log("StimulGL configuration = " + sInstallerConfiguration);		
+		Log("StimulGL configuration = " + sInstallerConfiguration);
+		
+		sQtDirectory = getString("Choose the Qt directory","Qt directory:",sQtDirectory);
+		Log("Qt directory = " + sQtDirectory);
+
+		sStimulGLProjectDirectory = getString("Choose the StimulGL project directory","StimulGL project directory:",sStimulGLProjectDirectory);
+		Log("StimulGL project directory = " + sStimulGLProjectDirectory);	
+		
 		bSkipStep = true;
 	}	
 	else if(nCounter==2)
 	{
 		if(dstFile.exists())
 			dstFile.remove();//Copy Doesn't Overwrite!
-		if (srcFile.copy(strInstallConfigurationFileCopy))//Copy Doesn't Overwrite!
-			Log("File (" + strInstallConfigurationFile + ") copied!");
+		//if (srcFile.copy(strInstallConfigurationFileCopy))//Copy Doesn't Overwrite!
+		//	Log("File (" + strInstallConfigurationFile + ") copied!");
+		changeSet = ReplaceInFile_CreateArray(2,2);
+		changeSet[0][0] = sQtDirectory_default;
+		changeSet[0][1] = sQtDirectory;
+		changeSet[1][0] = sStimulGLProjectDirectory_default;
+		changeSet[1][1] = sStimulGLProjectDirectory;
+		ReplaceInFile_ReplaceInFiles(strInstallConfigurationFile,strInstallConfigurationFileCopy,changeSet);//
+		
 		bSkipStep = true;
 	}
 	else if (nCounter==3)
