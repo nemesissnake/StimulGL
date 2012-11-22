@@ -13,6 +13,7 @@
 							<section title="ParallelPortDevice Script Class" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
 							<section title="USBHIDDevice Script Class" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
 							<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"></section>
+							<section title="KeyBoardDevice Script Class" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/class_key_board_capture.html"></section>
             </section>             
             <section title="Plugins (default)" ref="./References/Plugins/PluginReference.html">
                 <section title="ExperimentManager Plugin" ref="./References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">
@@ -49,6 +50,7 @@
             <keyword name="ParallelPort Script" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"/>
             <keyword name="SerialPort Script" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"/>
             <keyword name="USBHIDDevice Script" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"/>
+            <keyword name="KeyBoardDevice Script" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/class_key_board_capture.html"/>
             </keywords>
         <files>
             <file>index.html</file>
@@ -67,7 +69,8 @@
 						<file>References/Plugins/USBHIDDevicePlugin/USBHIDDevicePlugin.html</file>
             <file>References/Plugins/USBHIDDevicePlugin/images/*.*</file>
 					  <file>References/Script/USBHIDDevicePlugin/Doxygen/*.*</file>
-					  <file>References/Script/SerialPortDevicePlugin/Doxygen/*.*</file>					  
+					  <file>References/Script/SerialPortDevicePlugin/Doxygen/*.*</file>
+					  <file>References/Script/KeyBoardDevicePlugin/Doxygen/*.*</file>			  
 						<file>References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html</file>						
 						<file>css/*.css</file>
 						<file>js/*.js</file>

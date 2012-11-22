@@ -16,7 +16,7 @@ var postFix = "-*/*-";
 
 var sScriptPath = StimulGL.getSelectedScriptFileLocation();
 var sBinairyPath = "doxygen";
-var sDoxyFileDir = "E:\\Projects\\StimulGL documentation\\Doxygen\\";
+var sDoxyFileDir = sScriptPath + "/";
 
 Include("GenerateDoxyConfigFile.qs");//Make sure to call the cleanup when not needed anymore!
 Include("../js/StimulGL.js");//Make sure to call the cleanup when not needed anymore!

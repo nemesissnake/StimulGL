@@ -12,7 +12,7 @@ var bSkipStep;
 var sQTDirWin32 = tr("C:/Qt/4.8.0/win32/");
 var sQTDirx64 = tr("C:/Qt/4.8.0/x64/");
 var sMainDocName = tr("MainDocumentation");
-var sScriptPath = StimulGL.getSelectedScriptFileLocation();
+var sScriptPath = StimulGL.getSelectedScriptFileLocation() + "/";
 var sBinairyPath;
 
 var sInstallerAppName = tr("StimulGL");//StimulGL
@@ -20,16 +20,27 @@ var sInstallerConfiguration = tr("win32");//win32 or x64
 var sInstallerVersion = tr("2.0.0.2");//<Major>.<Minor>.<Build>.<Revision>
 var sInstallerPlatform = tr("Windows");
 
+//var sQtDirectory_default = tr("C:/Qt/4.8.0");
+//var sQtDirectory = sQtDirectory_default;
+var sStimulGLProjectDirectory_default = tr("E:\\Projects\\StimulGL");
+var sStimulGLProjectDirectory = sStimulGLProjectDirectory_default;
+
 QByteArray.prototype.toString = function()
 {
 	ts = new QTextStream( this, QIODevice.ReadOnly );
 	return ts.readAll();
 }
 
+function ToWindowsPath(path)
+{
+	return path.replace( /\//gi,"\\");//  first argument = /regex/ (g=all occurrences, i=case insensitive), second = <replace_string>
+}
+
 function CleanUpScript()
 {
 	Log("CleanUpScript started...");
 	ConnectDisconnectScriptFunctions(false);
+	ToWindowsPath=null;
 	tr=null;
 	tmpByteArray=null;
 	tmpStringList=null;
@@ -131,6 +142,11 @@ ConnectDisconnectScriptFunctions(true);
 //							such as custom filters.
 bDoCleanup = false;
 sBinairySteps = 5;
+sScriptPath = ToWindowsPath(sScriptPath);//Important!
+//sQtDirectory = getString("Choose the Qt directory","Qt directory:",sQtDirectory_default);
+//Log("Qt directory = " + sQtDirectory);
+sStimulGLProjectDirectory = getString("Choose the StimulGL project directory","StimulGL project directory:",sStimulGLProjectDirectory);
+Log("StimulGL project directory = " + sStimulGLProjectDirectory);
 for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 {
 	bFileProccessed = false;
@@ -141,9 +157,9 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 	{
 		//qhelpgenerator doc.qhp -o doc.qch
 		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = sScriptPath + "/" + sMainDocName + ".qhp";
+		tmpStringList[0] = sScriptPath + sMainDocName + ".qhp";
 		tmpStringList[1] = "-o"
-		tmpStringList[2] = sScriptPath + "/" + sMainDocName + ".qch";//	Log(tmpStringList.length);
+		tmpStringList[2] = sScriptPath + sMainDocName + ".qch";//	Log(tmpStringList.length);
 		sBinairyPath = sQTDirWin32 + "bin/qhelpgenerator";
 		bSkipStep = true;
 	}
@@ -151,16 +167,16 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 	{
 	//	qcollectiongenerator mycollection.qhcp -o mycollection.qhc
 		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = sScriptPath + "/" + sMainDocName + ".qhcp";
+		tmpStringList[0] = sScriptPath + sMainDocName + ".qhcp";
 		tmpStringList[1] = "-o"
-		tmpStringList[2] = sScriptPath + "/" + sMainDocName + ".qhc";
+		tmpStringList[2] = sScriptPath + sMainDocName + ".qhc";
 		sBinairyPath = sQTDirWin32 + "bin/qcollectiongenerator";
 	}
 	else if (nCounter==3)
 	{
 		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\" + sMainDocName + ".qhc";//Xcopy only works with "\" for directories!
-		tmpStringList[1] = "E:\\Projects\\StimulGL\\Install\\documents\\";
+		tmpStringList[0] = sScriptPath + sMainDocName + ".qhc";//Xcopy only works with "\" for directories!
+		tmpStringList[1] = sStimulGLProjectDirectory + "\\Install\\documents\\";
 		tmpStringList[2] = "/Y";
 		tmpStringList[3] = "/F";
 		sBinairyPath = "xcopy";
@@ -168,8 +184,8 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 	else if (nCounter==4)
 	{
 		tmpStringList = new Array();//Reset list
-		tmpStringList[0] = "E:\\Projects\\StimulGL documentation\\" + sMainDocName + ".qch";
-		tmpStringList[1] = "E:\\Projects\\StimulGL\\Install\\documents\\";
+		tmpStringList[0] = sScriptPath + sMainDocName + ".qch";
+		tmpStringList[1] = sStimulGLProjectDirectory + "\\Install\\documents\\";
 		tmpStringList[2] = "/Y";
 		tmpStringList[3] = "/F";
 		sBinairyPath = "xcopy";
@@ -179,8 +195,8 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		//assistant -collectionFile MainDocumentation.qhc
 		tmpStringList = new Array();//Reset list
 		tmpStringList[0] = "-collectionFile";
-		//tmpStringList[1] = sScriptPath + "/" + sMainDocName + ".qhc";
-		tmpStringList[1] = "E:\\\projects\\stimulgl\\Install\\documents\\"  + sMainDocName + ".qhc";
+		//tmpStringList[1] = sScriptPath + sMainDocName + ".qhc";
+		tmpStringList[1] = sStimulGLProjectDirectory + "\\Install\\documents\\"  + sMainDocName + ".qhc";
 		sBinairyPath = "assistant";		
 	}	
 	

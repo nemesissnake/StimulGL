@@ -6,3 +6,8 @@ Generated/*
 *.qch
 MainDocumentation.qch
 MainDocumentation.qhc
+/Doxygen/SerialPortPlugin.cfg
+/Doxygen/USBHIDDevicePlugin.cfg
+/Doxygen/ExperimentManagerPlugin.cfg
+/Doxygen/KeyBoardPlugin.cfg
+/Doxygen/ParallelPortPlugin.cfg
