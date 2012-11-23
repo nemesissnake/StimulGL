@@ -23,11 +23,22 @@
 #include <QMessageBox>
 #include <QMetaObject>
 
+/*! \brief The qmlWidget constructor.
+*
+*   You do not need to specify the parent object. 
+*	The StimulGL script engine automatically retrieves the parent role
+*/
 qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent), parentWidget(parent)
 {
 	initialize();
 }
 
+
+/*! \brief The qmlWidget destructor.
+*
+*   You do not need call the destructor. 
+*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+*/
 qmlWidget::~qmlWidget()
 {
 	//qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,20);//To make sure that the qmlEventRoutine(bool dShowWidget) function is finished in case of an qml error!
@@ -296,6 +307,14 @@ bool qmlWidget::initObject()
 
 QString qmlWidget::addPixmapToImageBuffer(const QPixmap &pixmap)
 {
+/*! \brief Adds a QPixmap to the internal Image Buffer.
+ *
+ *  This function can add a QPixmap to the internal Image Buffer.
+ *  These images can then be rapidly presented because they are already loaded in memory.
+ * @param pixmap the QPixmap to be added to the internal Image Buffer.
+ * @return a Unique string created by the Image Buffer holding a key to access the newly added image.
+ * See qmlWidget::getPixmapFromImageBuffer and qmlWidget::updatePixmapFromImageBuffer.
+ */
 	if (!imgLstModel)
 		return false;
 	return imgLstModel->addPixmap(pixmap);
@@ -303,6 +322,13 @@ QString qmlWidget::addPixmapToImageBuffer(const QPixmap &pixmap)
 
 bool qmlWidget::getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 {
+/*! \brief Retrieves a QPixmap to the internal Image Buffer.
+ *
+ *  This function can retrieve a QPixmap to the internal Image Buffer.
+ * @param pixmap the retrieved QPixmap from the internal Image Buffer.
+ * @return a boolean value representing whether the function executed successfully.
+ * See qmlWidget::addPixmapToImageBuffer.
+ */
 	if (!imgLstModel)
 		return false;
 	if(imgLstModel->getPixmap(*pixmap,ID))
@@ -314,6 +340,14 @@ bool qmlWidget::getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 
 bool qmlWidget::updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 {
+/*! \brief Updates a QPixmap inside the internal Image Buffer.
+ *
+ *  This function can update a QPixmap that is stored in the internal Image Buffer.
+ * @param pixmap the new QPixmap to which the stored QPixmap inside the Image Buffer should update to.
+ * @param ID the String containing the unique String previously created by the Image Buffer.
+ * @return a boolean value representing whether the function executed successfully.
+ * See qmlWidget::addPixmapToImageBuffer.
+ */
 	if (!imgLstModel)
 		return false;
 	if(imgLstModel->updatePixmap(*pixmap,ID))
@@ -325,6 +359,13 @@ bool qmlWidget::updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 
 bool qmlWidget::removePixmapFromImageBuffer(const QString &ID)
 {
+/*! \brief Removes a QPixmap inside the internal Image Buffer.
+ *
+ *  This function can remove a QPixmap that is stored in the internal Image Buffer.
+ * @param ID the String containing the unique String previously created by the Image Buffer.
+ * @return a boolean value representing whether the function executed successfully.
+ * See qmlWidget::addPixmapToImageBuffer.
+ */
 	if (!imgLstModel)
 		return false;
 	if(imgLstModel->removePixmap(ID))
@@ -381,6 +422,14 @@ bool qmlWidget::initObjectBlockTrial()
 
 QVariant qmlWidget::invokeQmlMethod(QString strRootObjectName, QString strMethodName, QVariant inputValue1, QVariant inputValue2, QVariant inputValue3, QVariant inputValue4, QVariant inputValue5, QVariant inputValue6, QVariant inputValue7, QVariant inputValue8, QVariant inputValue9)
 {
+/*! \brief Invokes a QML Method.
+ *
+ *  This function can invoke/call a defined function within the current QML context.
+ * @param strRootObjectName the name of the root item containing the function definition in the QML context.
+ * @param strMethodName the name of the function to be called
+ * @param inputValue1 - these parameters are automatically passed to the function if they are defined.
+ * @return a QVariant containing the invoked function return value converted to a QVariant.
+ */
 	if (!rootObject)
 	{
 		rootObject = dynamic_cast<QObject *>(qmlViewer->rootObject());// get root object

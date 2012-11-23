@@ -23,6 +23,10 @@
 #include <QMessageBox>
 //#include <QBuffer>
 
+//!  The "MediaPlayer" QML extension, internally known as the PhononPlayer class. 
+/*!
+  The "MediaPlayer" QML extension can be used to play different types of media.
+*/
 class PhononPlayer : public QObject
 {
 	Q_OBJECT

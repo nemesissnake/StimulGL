@@ -26,6 +26,8 @@
 #include <QTreeWidget>
 #include "Global.h"
 
+using namespace ExperimentManagerNameSpace;
+
 class ExperimentTree : public QTreeWidget
 {
 	Q_OBJECT

@@ -27,6 +27,11 @@
 Q_DECLARE_METATYPE(QPixmap*)
 Q_DECLARE_METATYPE(QPainter*)
 
+/*! \brief The RetinoMap_glwidget constructor.
+*
+*   You do not need to specify the parent object. 
+*	The StimulGL script engine automatically retrieves the parent role
+*/
 RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent)
 {
 	customScriptHandlerFunction = NULL;
@@ -35,6 +40,11 @@ RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent
 	GLWidgetWrapper::setDoubleBufferCheck(true);
 }
 
+/*! \brief The RetinoMap_glwidget destructor.
+*
+*   You do not need call the destructor. 
+*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+*/
 RetinoMap_glwidget::~RetinoMap_glwidget()
 {
 	if (customScriptHandlerFunction)
@@ -1577,6 +1587,12 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 
 bool RetinoMap_glwidget::installCustomScriptHandlerFunction(QString FuncName)
 {
+/*! \brief Install a custom function that is defined inside the script as an alternative painter.
+ *
+ *  This slot can be used for custom painting in the script.
+ *	The String parameter(FuncName) is the name of the script function which is automatically called when a repaint is requested.
+ *  The custom paint function then automatically receives an QPainter pointer that can be further used for custom painting purpose.
+ */
 	if (getScriptEngine())
 	{
 		customScriptHandlerFunction = new QScriptValue(getScriptEngine()->globalObject().property(FuncName));

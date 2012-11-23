@@ -36,6 +36,11 @@
 #define QML_WIDGET_MAINFILEPATH							"qmlmainfilepath"
 #define QML_WIDGET_MAX_EVENT_TIME						"qmlmineventtime"
 
+//!  The qmlWidget class. 
+/*!
+  The qmlWidget class can be used in combination with the ExperimentManager for presenting visual or 
+  other kind of stimuli using QML/QtQuick.
+*/
 class qmlWidget : public GLWidgetWrapper
 {
 	Q_OBJECT
@@ -58,6 +63,7 @@ public slots:
 	bool setObjectID(int nObjID);
 	bool initObjectBlockTrial();
 	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
+	
 	QVariant invokeQmlMethod(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());	
 	QString addPixmapToImageBuffer(const QPixmap &pixmap);
 	bool getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);

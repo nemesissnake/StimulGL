@@ -16,7 +16,6 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #ifndef RETINOMAP_GLWIDGET_H
 #define RETINOMAP_GLWIDGET_H
 
@@ -25,71 +24,88 @@
 #include <QScriptEngine>
 
 //Below defines must be all in lower case!
-//Shared defines
-#define GLWWRAP_WIDGET_STIMULI_REFRESHRATE					"stimulirefreshrate"
-#define RETINOMAP_WIDGET_PATTERN_POLARANGLE					"polarangle"
-#define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY				"eccentricity"
-#define RETINOMAP_WIDGET_PATTERN_MOVINGBAR					"movingbar"
-#define RETINOMAP_WIDGET_PATTERN_MOVINGDOTS					"movingdots"
-#define RETINOMAP_WIDGET_PATTERN_FIXATION					"fixation"
-#define RETINOMAP_WIDGET_PATTERN_CUSTOM						"custom"
-#define RETINOMAP_WIDGET_PATTERN							"retinopattern"
-#define RETINOMAP_WIDGET_CYCLE_TRIGGER_AMOUNT				"cycletriggeramount"
-#define RETINOMAP_WIDGET_SHOWFIXPOINT						"showfixpoint"
-#define RETINOMAP_WIDGET_FIXSIZE							"fixationsize"
-#define RETINOMAP_WIDGET_POS_LEFT							"left"
-#define RETINOMAP_WIDGET_POS_RIGHT							"right"
-#define RETINOMAP_WIDGET_POS_BOTH							"both"
-#define RETINOMAP_WIDGET_GAP_DIAMETER						"gapdiameter"
-#define RETINOMAP_WIDGET_FLICKRSPEED_HZ						"flickrfrequency"
-#define RETINOMAP_WIDGET_CORTMAG_FACTOR						"corticalmagnitudefactor"
-#define RETINOMAP_WIDGET_TRIGGERDURATION_MSEC				"internaltriggerduration"
-#define RETINOMAP_WIDGET_DISCRETETRIGGERSTEPS				"discretetriggersteps"
-#define RETINOMAP_WIDGET_RANDOMIZETRIGGERSTEPS				"randomizetriggersteps"
-#define RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS					"emptytriggersteps"
-#define RETINOMAP_WIDGET_OUTPUTTRIGGERFRAME					"outputtriggerframe"
-#define RETINOMAP_WIDGET_OUTPUTFRAMETYPE					"outputframetype"
-#define RETINOMAP_WIDGET_OUTPUTTYPE_FRAME					"frame"
-#define RETINOMAP_WIDGET_OUTPUTTYPE_MASK					"mask"
-#define RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT					"outputframeformat"
-#define RETINOMAP_WIDGET_OUTPUTFORMAT_DAT					"dat"
-#define RETINOMAP_WIDGET_OUTPUTFORMAT_PNG					"png"
-#define RETINOMAP_WIDGET_ANTIALIASING						"antialiasing"
-#define RETINOMAP_WIDGET_DISABLECORTMAGFAC					"disablecortmagfac"
-#define RETINOMAP_WIDGET_CHECKERCOLOR1						"checkercolor1"
-#define RETINOMAP_WIDGET_CHECKERCOLOR2						"checkercolor2"
-#define RETINOMAP_WIDGET_FIXATIONCOLOR						"fixationcolor"
-//PolarAngle specific defines
-#define RETINOMAP_WIDGET_POLAR_RING_AMOUNT					"polarringamount"
-#define RETINOMAP_WIDGET_POLAR_ROTATION_DIRECTION			"polarrotationdirection"
-#define RETINOMAP_WIDGET_POLAR_WEDGE_SPAN					"polarwedgespan"
-#define RETINOMAP_WIDGET_POLAR_CHECK_AMOUNT					"polarcheckamount"
-//Eccentricity specific defines
-#define RETINOMAP_WIDGET_ECCENTRICITY_DIRECTION				"eccentricitydirection"
-#define RETINOMAP_WIDGET_ECCENTRICITY_CHECK_AMOUNT			"eccentricitycheckamount"
-#define RETINOMAP_WIDGET_ECCENTRICITY_RING_AMOUNT			"eccentricityringamount"
-#define RETINOMAP_WIDGET_ECCENTRICITY_ENABLE_CORTMAG_TIMING	"enablecortmagtiming"//Not documented!
-//MovingBar specific defines
-#define RETINOMAP_WIDGET_MOVINGBAR_ANGLE					"movingbarangle" 
-#define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE					"movingbarcoverage"
-#define RETINOMAP_WIDGET_MOVINGBAR_HEIGHT					"movingbarheight"
-#define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION				"movingbardirection"
+
+/*!
+ * \defgroup RetinoUniversalParamDefs Retinotopic (Universal) parameter Names
+ * @{
+ */
+#define GLWWRAP_WIDGET_STIMULI_REFRESHRATE					"stimulirefreshrate"			/*!< "stimulirefreshrate" */ 
+#define RETINOMAP_WIDGET_PATTERN_POLARANGLE					"polarangle"					/*!< "polarangle" */
+#define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY				"eccentricity"					/*!< "eccentricity" */
+#define RETINOMAP_WIDGET_PATTERN_MOVINGBAR					"movingbar"						/*!< "movingbar" */
+#define RETINOMAP_WIDGET_PATTERN_MOVINGDOTS					"movingdots"					/*!< "movingdots" */
+#define RETINOMAP_WIDGET_PATTERN_FIXATION					"fixation"						/*!< "fixation" */
+#define RETINOMAP_WIDGET_PATTERN_CUSTOM						"custom"						/*!< "custom" */
+#define RETINOMAP_WIDGET_PATTERN							"retinopattern"					/*!< "retinopattern" */
+#define RETINOMAP_WIDGET_CYCLE_TRIGGER_AMOUNT				"cycletriggeramount"			/*!< "cycletriggeramount" */
+#define RETINOMAP_WIDGET_SHOWFIXPOINT						"showfixpoint"					/*!< "showfixpoint" */
+#define RETINOMAP_WIDGET_FIXSIZE							"fixationsize"					/*!< "fixationsize" */
+#define RETINOMAP_WIDGET_POS_LEFT							"left"							/*!< "left" */
+#define RETINOMAP_WIDGET_POS_RIGHT							"right"							/*!< "right" */
+#define RETINOMAP_WIDGET_POS_BOTH							"both"							/*!< "both" */
+#define RETINOMAP_WIDGET_GAP_DIAMETER						"gapdiameter"					/*!< "gapdiameter" */
+#define RETINOMAP_WIDGET_FLICKRSPEED_HZ						"flickrfrequency"				/*!< "flickrfrequency" */
+#define RETINOMAP_WIDGET_CORTMAG_FACTOR						"corticalmagnitudefactor"		/*!< "corticalmagnitudefactor" */
+#define RETINOMAP_WIDGET_TRIGGERDURATION_MSEC				"internaltriggerduration"		/*!< "internaltriggerduration" */
+#define RETINOMAP_WIDGET_DISCRETETRIGGERSTEPS				"discretetriggersteps"			/*!< "discretetriggersteps" */
+#define RETINOMAP_WIDGET_RANDOMIZETRIGGERSTEPS				"randomizetriggersteps"			/*!< "randomizetriggersteps" */
+#define RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS					"emptytriggersteps"				/*!< "emptytriggersteps" */
+#define RETINOMAP_WIDGET_OUTPUTTRIGGERFRAME					"outputtriggerframe"			/*!< "outputtriggerframe" */
+#define RETINOMAP_WIDGET_OUTPUTFRAMETYPE					"outputframetype"				/*!< "outputframetype" */
+#define RETINOMAP_WIDGET_OUTPUTTYPE_FRAME					"frame"							/*!< "frame" */
+#define RETINOMAP_WIDGET_OUTPUTTYPE_MASK					"mask"							/*!< "mask" */
+#define RETINOMAP_WIDGET_OUTPUTFRAMEFORMAT					"outputframeformat"				/*!< "outputframeformat" */
+#define RETINOMAP_WIDGET_OUTPUTFORMAT_DAT					"dat"							/*!< "dat" */
+#define RETINOMAP_WIDGET_OUTPUTFORMAT_PNG					"png"							/*!< "png" */
+#define RETINOMAP_WIDGET_ANTIALIASING						"antialiasing"					/*!< "antialiasing" */
+#define RETINOMAP_WIDGET_DISABLECORTMAGFAC					"disablecortmagfac"				/*!< "disablecortmagfac" */
+#define RETINOMAP_WIDGET_CHECKERCOLOR1						"checkercolor1"					/*!< "checkercolor1" */
+#define RETINOMAP_WIDGET_CHECKERCOLOR2						"checkercolor2"					/*!< "checkercolor2" */
+#define RETINOMAP_WIDGET_FIXATIONCOLOR						"fixationcolor"					/*!< "fixationcolor" */
+/**@}*/
+/*!
+ * \defgroup RetinoPolarAngleParamDefs Retinotopic (PolarAngle) parameter Names
+ * @{
+ */
+#define RETINOMAP_WIDGET_POLAR_RING_AMOUNT					"polarringamount"				/*!< "polarringamount" */
+#define RETINOMAP_WIDGET_POLAR_ROTATION_DIRECTION			"polarrotationdirection"		/*!< "polarrotationdirection" */
+#define RETINOMAP_WIDGET_POLAR_WEDGE_SPAN					"polarwedgespan"				/*!< "polarwedgespan" */
+#define RETINOMAP_WIDGET_POLAR_CHECK_AMOUNT					"polarcheckamount"				/*!< "polarcheckamount" */
+/**@}*/
+/*!
+ * \defgroup RetinoEccentricityParamDefs Retinotopic (Eccentricity) parameter Names
+ * @{
+ */
+#define RETINOMAP_WIDGET_ECCENTRICITY_DIRECTION				"eccentricitydirection"			/*!< "eccentricitydirection" */
+#define RETINOMAP_WIDGET_ECCENTRICITY_CHECK_AMOUNT			"eccentricitycheckamount"		/*!< "eccentricitycheckamount" */
+#define RETINOMAP_WIDGET_ECCENTRICITY_RING_AMOUNT			"eccentricityringamount"		/*!< "eccentricityringamount" */
+#define RETINOMAP_WIDGET_ECCENTRICITY_ENABLE_CORTMAG_TIMING	"enablecortmagtiming"			//Not documented!
+/**@}*/
+/*!
+ * \defgroup RetinoMovingBarParamDefs Retinotopic (MovingBar) parameter Names
+ * @{
+ */
+#define RETINOMAP_WIDGET_MOVINGBAR_ANGLE					"movingbarangle"				/*!< "movingbarangle" */
+#define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE					"movingbarcoverage"				/*!< "movingbarcoverage" */
+#define RETINOMAP_WIDGET_MOVINGBAR_HEIGHT					"movingbarheight"				/*!< "movingbarheight" */
+#define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION				"movingbardirection"			/*!< "movingbardirection" */
 //#define RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR				"movingbarincludeoppositedirection"
-#define RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT		"movingbarheightcheckamount"
+#define RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT		"movingbarheightcheckamount"	/*!< "movingbarheightcheckamount" */
 //MovingDots specific defines
-#define	RETINOMAP_WIDGET_MOVINGDOTS_COLOR					"movingdotscolor"
-#define	RETINOMAP_WIDGET_MOVINGDOTS_MIN_MOVESPEED			"movingdotsminmovespeed"
-#define	RETINOMAP_WIDGET_MOVINGDOTS_MAX_MOVESPEED			"movingdotsmaxmovespeed"
-#define	RETINOMAP_WIDGET_MOVINGDOTS_MIN_MOVEANGLE			"movingdotsminmoveangle"
-#define	RETINOMAP_WIDGET_MOVINGDOTS_MAX_MOVEANGLE			"movingdotsmaxmoveangle"
-#define RETINOMAP_WIDGET_MOVINGDOTS_NROFDOTS				"movingdotsnrofdots"
-#define RETINOMAP_WIDGET_MOVINGDOTS_DOTSIZE					"movingdotsdotsize"
-#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD				"movingdotshemifield"
-#define RETINOMAP_WIDGET_MOVINGDOTS_PIXELFROMCENTER			"movingdotspixelfromcenter"
-#define RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY				"movingdotsstationairy"
+#define	RETINOMAP_WIDGET_MOVINGDOTS_COLOR					"movingdotscolor"				/*!< "movingdotscolor" */
+#define	RETINOMAP_WIDGET_MOVINGDOTS_MIN_MOVESPEED			"movingdotsminmovespeed"		/*!< "movingdotsminmovespeed" */
+#define	RETINOMAP_WIDGET_MOVINGDOTS_MAX_MOVESPEED			"movingdotsmaxmovespeed"		/*!< "movingdotsmaxmovespeed" */
+#define	RETINOMAP_WIDGET_MOVINGDOTS_MIN_MOVEANGLE			"movingdotsminmoveangle"		/*!< "movingdotsminmoveangle" */
+#define	RETINOMAP_WIDGET_MOVINGDOTS_MAX_MOVEANGLE			"movingdotsmaxmoveangle"		/*!< "movingdotsmaxmoveangle" */
+#define RETINOMAP_WIDGET_MOVINGDOTS_NROFDOTS				"movingdotsnrofdots"			/*!< "movingdotsnrofdots" */
+#define RETINOMAP_WIDGET_MOVINGDOTS_DOTSIZE					"movingdotsdotsize"				/*!< "movingdotsdotsize" */
+#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD				"movingdotshemifield"			/*!< "movingdotshemifield" */
+#define RETINOMAP_WIDGET_MOVINGDOTS_PIXELFROMCENTER			"movingdotspixelfromcenter"		/*!< "movingdotspixelfromcenter" */
+#define RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY				"movingdotsstationairy"			/*!< "movingdotsstationairy" */
 //#define RETINOMAP_WIDGET_MOVINGDOTS_RETINALPOSITION		"movingdotsretinalposition"
-#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDWIDTH			"movingdotshemifieldwidth"
-#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDHEIGHT			"movingdotshemifieldheight"
+#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDWIDTH			"movingdotshemifieldwidth"		/*!< "movingdotshemifieldwidth" */
+#define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDHEIGHT			"movingdotshemifieldheight"		/*!< "movingdotshemifieldheight" */
+/**@}*/
 
 #define RETINOMAP_WIDGET_OUTPUT_SUBFOLDER					"/RetinoWidget/"
 
@@ -100,6 +116,11 @@ typedef struct strcMovingDotsStructure
 	QList<QLineF> Mov;
 } MovingDotsStructure;
 
+//!  The RetinoMap_glwidget class. 
+/*!
+  The RetinoMap_glwidget class can be used in combination with the ExperimentManager for presenting 
+  various retinotopic (mapping) stimuli.
+*/
 class RetinoMap_glwidget : public GLWidgetWrapper
 {
 	Q_OBJECT

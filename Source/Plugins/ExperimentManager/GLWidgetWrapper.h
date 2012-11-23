@@ -35,6 +35,8 @@
 #include "ContainerDlg.h"
 #include "ExperimentTimer.h"
 
+using namespace ExperimentManagerNameSpace;
+
 enum GLWidgetPaintFlags //An optional paint flag that can be forwarded to the FUNC_PAINTOBJECT_FULL routine 
 {
 	GLWidgetPaintFlags_NoFlag		= 0,
@@ -50,17 +52,55 @@ class QWidget;
 class ContainerDlg;
 class QDomNodeList;
 
+//!  The GLWidgetWrapper class. 
+/*!
+  The GLWidgetWrapper class can be derived from to create custom classes that can again be used in combination with the ExperimentManager for presenting visual or other kind of stimuli.
+  This class is optimized for various painting operations supported by OpenGL.
+*/
 class GLWidgetWrapper : public QGLWidget
 {
 	Q_OBJECT
 
 signals:
+	//! The UserWantsToClose Signal.
+	/*!
+		You can use this Signal to detect whenever the user tries to abort the experiment.
+		No Parameter.
+	*/
 	void UserWantsToClose(void);
+	//! The ObjectShouldStop Signal.
+	/*!
+		You can use this Signal to detect whenever this object tries to abort/stop the experiment.
+		No Parameter.
+	*/
 	void ObjectShouldStop(void);
-	void ObjectStateHasChanged(ExperimentSubObjectState);
-	void NewInitBlockTrial();
-	void ExternalTriggerIncremented(int);
-	void ExperimentStructureChanged(int,int,int);//Block,Trial,InternalTrigger
+	//! The ObjectStateHasChanged Signal.
+	/*!
+		You can use this Signal to detect whenever the Experiment State for this object changes.
+		Parameter expSubObjectState is type of the enum ExperimentManagerNameSpace::ExperimentSubObjectState.
+	*/
+	void ObjectStateHasChanged(ExperimentSubObjectState expSubObjectState);
+	//! The NewInitBlockTrial Signal.
+	/*!
+		You can use this Signal to keep track of whenever the Experiment Manager tries to Initialize a new BlockTrial for this object.
+		No Parameter.
+	*/
+	void NewInitBlockTrial(void);
+	//! The ExternalTriggerIncremented Signal.
+	/*!
+		You can use this Signal to keep track of whenever the External Trigger gets incremented, see GLWidgetWrapper::incrementExternalTrigger
+		Please bear in mind that this is already emitted before a new BlockTrial is initialized.
+		Parameter nTrigger holds the number of received external triggers after the start of the experiment.
+	*/
+	void ExternalTriggerIncremented(int nTrigger);
+	//! The ExperimentStructureChanged Signal.
+	/*!
+		You can use this Signal to keep track Experiment structure changes.
+		Parameter nBlock represents the current Block number.
+		Parameter nTrial represents the current Trial number.
+		Parameter nInternalTrigger represents the current Internal Trigger number.
+	*/
+	void ExperimentStructureChanged(int nBlock,int nTrial,int nInternalTrigger);
 
 public:
 	GLWidgetWrapper(QWidget *parent = NULL);
@@ -108,8 +148,8 @@ public slots:
 	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);	
 	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
+	
 	int getObjectID();
-	//QString getExperimentStructure();
 	strcScriptExperimentStructure getExperimentStructure();
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);

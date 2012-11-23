@@ -21,7 +21,7 @@
 #define DEFAULTQMLPLUGINDEFINES_H
 //#include "./../../StimulGL/maindefines.h"
 
-#define DEFAULT_STIMULGL_PLUGIN_QML_NAME		"StimulGLExtensions"
+#define DEFAULT_STIMULGL_PLUGIN_QML_NAME		"StimulGL_QMLExtensions"
 #define STIMULGL_VERSION_STRING_MAJOR			1
 #define STIMULGL_VERSION_STRING_MINOR			0
 #define TIMEMODEL_TYPE_QML_NAME					"Time"

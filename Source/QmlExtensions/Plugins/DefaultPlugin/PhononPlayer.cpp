@@ -22,6 +22,10 @@
 
 //int	PhononPlayer::instances=NULL;
 
+/*! \brief The PhononPlayer constructor.
+*
+*   You do not have to specify the parent object. 
+*/
 PhononPlayer::PhononPlayer(QObject *parent) : QObject(parent)
 {
 	//if (++instances == 1) 
@@ -43,6 +47,11 @@ PhononPlayer::PhononPlayer(QObject *parent) : QObject(parent)
 	//}
 }
 
+/*! \brief The PhononPlayer destructor.
+*
+*   You do not have to call the destructor. 
+*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+*/
 PhononPlayer::~PhononPlayer()
 {
 	//if (--instances == 0) 
@@ -74,6 +83,12 @@ PhononPlayer::~PhononPlayer()
 
 QStringList PhononPlayer::getOutputDevices()
 {
+/*! \brief Returns a list containing the available Output Devices.
+ *
+ *  A QStringList is returned after calling this function that
+ *  contains the names of the available Output Devices found.
+ *  See also PhononPlayer::setOutputDevice.
+ */
 	QStringList lstOutputDevices;
 	//QList<Phonon::EffectDescription> effectDescriptions = Phonon::BackendCapabilities::availableAudioEffects();
 	QList<Phonon::AudioOutputDevice> audioOutputDevices = Phonon::BackendCapabilities::availableAudioOutputDevices();
@@ -92,6 +107,11 @@ QStringList PhononPlayer::getOutputDevices()
 
 bool PhononPlayer::setOutputDevice(const int nIndex)
 {
+/*! \brief Sets the Output Devices that should be used.
+ *
+ *  Sets the output device index to the integer parameter(nIndex).
+ *  See also PhononPlayer::getOutputDevices.
+ */
 	QList<Phonon::AudioOutputDevice> audioOutputDevices = Phonon::BackendCapabilities::availableAudioOutputDevices();
 	if(audioOutputDevices.count() > nIndex)
 	{
@@ -102,6 +122,12 @@ bool PhononPlayer::setOutputDevice(const int nIndex)
 
 int PhononPlayer::addFile(const QString strFile)
 {
+/*! \brief Adds a Media object to a internal playlist.
+ *
+ *  The Media object at the path, represented by the string parameter(strfile),
+ *  is added to the internal playlist.
+ *  The index of the newly added media object in the playlist is returned.
+ */
 	if(strFile.isEmpty())
 		return -1;
 	int index = mediaSources.size();
@@ -133,6 +159,11 @@ bool PhononPlayer::addFiles(QStringList strFiles)
 
 bool PhononPlayer::play(const int index)
 {
+/*! \brief Plays a Media object.
+ *
+ *  The Media object at the integer parameter (index) is played after calling this function. 
+ */
+
 	//QFile file("E:\\Projects\\StimulGL\\Install\\examples\\Sounds\\level2.wav");//level2.wav");
 	//if(file.open(QIODevice::ReadOnly))
 	//{
@@ -198,12 +229,20 @@ bool PhononPlayer::play(const int index)
 
 bool PhononPlayer::pause()
 {
+/*! \brief Pauses the current playing Media object.
+ *
+ *  The Media object that is currently playing is paused. 
+ */
 	mediaObject->pause();
 	return true;
 }
 
 bool PhononPlayer::stop()
 {
+/*! \brief Stops the current playing Media object.
+ *
+ *  The Media object that is currently playing is stopped. 
+ */
 	mediaObject->stop();
 	return true;
 }
