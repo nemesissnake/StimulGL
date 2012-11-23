@@ -64,7 +64,7 @@ Public Slots</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a407b993f8251e9a23502a1cd44772e41">getDebugMode</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ae9b3d50bb3af7d85fde90cb97b59e555">getExperimentFileName</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ad80a833d24cba75fe10b88328629a8da">getExperimentName</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, <a class="el" href="structstrc_parsed_parameter_definition.html">ParsedParameterDefinition</a> &amp;strcParDef)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, <a class="el" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html">ParsedParameterDefinition</a> &amp;strcParDef)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#aaf890d3172645a1d1d427e593013470e">insertExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, const QString sValue, bool bIsInitializing=true)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ab1847af6af9e6acd4b7fca51ed93b70f">loadExperiment</a> (QString strSource=&quot;&quot;, bool bViewEditTree=true, bool bIsFile=true)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a439531c8aad7ea5a05df418fb24fcab6">logExperimentObjectData</a> (const int &amp;nObjectIndex, const int &amp;nTimerIndex, const QString &amp;strFunction=&quot;&quot;, const QString &amp;strTag=&quot;&quot;, const QString &amp;strMessage=&quot;&quot;, const QString &amp;strValue=&quot;&quot;)</td></tr>
@@ -401,7 +401,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structstrc_parsed_parameter_definition.html">ParsedParameterDefinition</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html">ParsedParameterDefinition</a> &amp;&#160;</td>
           <td class="paramname"><em>strcParDef</em>&#160;</td>
         </tr>
         <tr>
@@ -457,7 +457,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 
 <p><p>Inserts a specified object parameter for the current experiment block.</p>
-<p>Inserts a specified object parameter with objectID(nObjectID), parameter name(sName) and parameter value(sValue) for the current experiment block. If bIsInitializing is true then this new parameter is marked as Initializing, see <a class="el" href="structstrc_parsed_parameter_definition.html#a92665c76a9d6ba85dfefb8b0d1d7143f" title="A Boolean value determing wheter the parameter already has been initialized.">ParsedParameterDefinition.bIsInitialized</a>, this marks the parameter as unused which can be helpful for further setting the default value.</p>
+<p>Inserts a specified object parameter with objectID(nObjectID), parameter name(sName) and parameter value(sValue) for the current experiment block. If bIsInitializing is true then this new parameter is marked as Initializing, see #ParsedParameterDefinition.bIsInitialized, this marks the parameter as unused which can be helpful for further setting the default value.</p>
 </p>
 
 </div>
@@ -783,7 +783,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Nov 22 2012 14:38:23 for ExperimentManager script class by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 23 2012 17:52:49 for ExperimentManager script class by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

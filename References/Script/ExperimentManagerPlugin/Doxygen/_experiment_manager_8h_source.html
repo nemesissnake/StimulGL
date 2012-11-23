@@ -72,8 +72,8 @@
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 <span class="preprocessor">#define EXPERIMENTMANAGER_SCRIPTCONTEXT_NAME    &quot;EM&quot;</span>
 <a name="l00046"></a>00046 <span class="preprocessor"></span>
-<a name="l00047"></a>00047 <span class="keyword">class </span>RetinoMap_glwidget;
-<a name="l00048"></a>00048 <span class="keyword">class </span>qmlWidget;
+<a name="l00047"></a>00047 <span class="keyword">class </span><a class="code" href="class_retino_map__glwidget.html" title="The RetinoMap_glwidget class.">RetinoMap_glwidget</a>;
+<a name="l00048"></a>00048 <span class="keyword">class </span><a class="code" href="classqml_widget.html" title="The qmlWidget class.">qmlWidget</a>;
 <a name="l00049"></a>00049 <span class="keyword">class </span>ExperimentTree;
 <a name="l00050"></a>00050 
 <a name="l00052"></a>00052 
@@ -115,7 +115,7 @@
 <a name="l00097"></a>00097                 <span class="keywordtype">int</span> nMetaID;
 <a name="l00098"></a>00098                 QObject *pObject;
 <a name="l00099"></a>00099                 QString sObjectName;
-<a name="l00100"></a>00100                 ExperimentSubObjectState nCurrentState;
+<a name="l00100"></a>00100                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81">ExperimentSubObjectState</a> nCurrentState;
 <a name="l00101"></a>00101                 tParsedParameterList *ExpBlockParams;
 <a name="l00102"></a>00102                 TypedExperimentParameterContainer *typedExpParamCntnr;
 <a name="l00103"></a>00103         } objectElement;
@@ -197,10 +197,10 @@
 <a name="l00179"></a>00179         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f">runExperiment</a>();
 <a name="l00180"></a>00180         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#abc41d989602e34036630fcaa279d6a4e">abortExperiment</a>();
 <a name="l00181"></a>00181         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a045c8153c0d23530be3f897dee40a8b1">stopExperiment</a>();
-<a name="l00182"></a>00182         <span class="keywordtype">void</span> changeExperimentSubObjectState(ExperimentSubObjectState nState);
+<a name="l00182"></a>00182         <span class="keywordtype">void</span> changeExperimentSubObjectState(<a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81">ExperimentSubObjectState</a> nState);
 <a name="l00183"></a>00183         QString <a class="code" href="class_experiment_manager.html#a7382ab00376028482a7c8cce177f7363">getCurrentDateTimeStamp</a>();
 <a name="l00184"></a>00184         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#aaf890d3172645a1d1d427e593013470e">insertExperimentObjectBlockParameter</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nObjectID,<span class="keyword">const</span> QString sName,<span class="keyword">const</span> QString sValue, <span class="keywordtype">bool</span> bIsInitializing = <span class="keyword">true</span>);
-<a name="l00185"></a>00185         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nObjectID,<span class="keyword">const</span> QString sName, <a class="code" href="structstrc_parsed_parameter_definition.html">ParsedParameterDefinition</a> &amp;strcParDef);
+<a name="l00185"></a>00185         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nObjectID,<span class="keyword">const</span> QString sName, <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html">ParsedParameterDefinition</a> &amp;strcParDef);
 <a name="l00186"></a>00186         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a439531c8aad7ea5a05df418fb24fcab6">logExperimentObjectData</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nObjectIndex, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nTimerIndex, <span class="keyword">const</span> QString &amp;strFunction = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strTag = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strMessage = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strValue = <span class="stringliteral">&quot;&quot;</span>);
 <a name="l00187"></a>00187         <span class="keywordtype">int</span> <a class="code" href="class_experiment_manager.html#a8162f235ced558e1dd45c804656633db">createExperimentTimer</a>();
 <a name="l00188"></a>00188         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#ad71b7b4a17e1e3781fbb7160ea33c399">startExperimentTimer</a>(<span class="keywordtype">int</span> nIndex);
@@ -255,7 +255,7 @@
 <a name="l00237"></a>00237 <span class="preprocessor">#endif // ExperimentManager_H</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Nov 22 2012 14:38:23 for ExperimentManager script class by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 23 2012 17:52:49 for ExperimentManager script class by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

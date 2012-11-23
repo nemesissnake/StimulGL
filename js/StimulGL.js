@@ -56,8 +56,7 @@ function StimulGL_Information()
 	var KeyBoardPlugin_Comp_Index = ComponentCounter++;
 	var USBHIDDevicePlugin_Comp_Index = ComponentCounter++;
 	var _extensionname_plugin_Comp_Index = ComponentCounter++;
-	var DefaultQMLPlugin_Comp_Index = ComponentCounter++;
-	var	StimulGLExtensions_Comp_Index = ComponentCounter++;	
+	var StimulGL_QMLExtensions_Comp_Index = ComponentCounter++;
 	var MediaPlayer_Comp_Index = ComponentCounter++;
 	
 	
@@ -106,19 +105,12 @@ function StimulGL_Information()
 	this.componentVersioning[0][_extensionname_plugin_Comp_Index][this.DevInterface_Index] = '1.0';
 	this.componentVersioning[0][_extensionname_plugin_Comp_Index][this.ExtInterface_Index] = '1.0';
 	///////////////////////////////////////////////////////////////
-	this.componentVersioning[0][DefaultQMLPlugin_Comp_Index][this.Name_Index] = 'DefaultQMLPlugin';
-	this.componentVersioning[0][DefaultQMLPlugin_Comp_Index][this.Version_Index] = '1.0';
-	this.componentVersioning[0][DefaultQMLPlugin_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
-	this.componentVersioning[0][DefaultQMLPlugin_Comp_Index][this.EXML_Index] = 'x';
-	this.componentVersioning[0][DefaultQMLPlugin_Comp_Index][this.DevInterface_Index] = 'x';
-	this.componentVersioning[0][DefaultQMLPlugin_Comp_Index][this.ExtInterface_Index] = 'x';
-	///////////////////////////////////////////////////////////////
-	this.componentVersioning[0][StimulGLExtensions_Comp_Index][this.Name_Index] = 'StimulGLExtensions';
-	this.componentVersioning[0][StimulGLExtensions_Comp_Index][this.Version_Index] = '1.0';
-	this.componentVersioning[0][StimulGLExtensions_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
-	this.componentVersioning[0][StimulGLExtensions_Comp_Index][this.EXML_Index] = 'x';
-	this.componentVersioning[0][StimulGLExtensions_Comp_Index][this.DevInterface_Index] = 'x';
-	this.componentVersioning[0][StimulGLExtensions_Comp_Index][this.ExtInterface_Index] = 'x';
+	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.Name_Index] = 'StimulGL_QMLExtensions';
+	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.Version_Index] = '1.0';
+	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
+	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.EXML_Index] = 'x';
+	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.DevInterface_Index] = 'x';
+	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.ExtInterface_Index] = 'x';
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.Name_Index] = 'MediaPlayer';
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.Version_Index] = '1.0';
@@ -130,7 +122,7 @@ function StimulGL_Information()
 		
 	//StimulGL version (2.0.0.3)
 	///////////////////////////////////////////////////////////////
-	nNumberOfComponentChanges = 9;//See below, increment by adding new changes for this release!
+	nNumberOfComponentChanges = 8;//See below, increment by adding new changes for this release!
 	tmpArray = StimulGL_CreateArray(1,nNumberOfComponentChanges,PropCounter);
 	this.componentVersioning.push.apply(this.componentVersioning, tmpArray)
 	this.componentVersioning[1][ExperimentManagerPlugin_Comp_Index] = 	['ExperimentManagerPlugin',	'2.0.0.3',	1,'2.0.0.2','1.1',	'1.1'];
@@ -139,8 +131,7 @@ function StimulGL_Information()
 	this.componentVersioning[1][KeyBoardPlugin_Comp_Index] = 			['KeyBoardPlugin',			'1.0.0.2',	0,'x',		'1.1',	'1.1'];
 	this.componentVersioning[1][USBHIDDevicePlugin_Comp_Index] = 		['USBHIDDevicePlugin',		'2.0.0.2',	0,'x',		'1.1',	'1.1'];
 	this.componentVersioning[1][_extensionname_plugin_Comp_Index] = 	['_extensionname_plugin',	'1.0.0.2',	0,'x',		'1.1',	'1.1'];
-	this.componentVersioning[1][DefaultQMLPlugin_Comp_Index] = 			['DefaultQMLPlugin',		'1.1',		0,'x',		'x',	'x'];
-	this.componentVersioning[1][StimulGLExtensions_Comp_Index] = 		['StimulGLExtensions',		'1.1',		0,'x',		'x',	'x'];
+	this.componentVersioning[1][StimulGL_QMLExtensions_Comp_Index] = 			['StimulGL_QMLExtensions',		'1.1',		0,'x',		'x',	'x'];
 	this.componentVersioning[1][MediaPlayer_Comp_Index] = 				['MediaPlayer',				'1.1',		0,'x',		'x',	'x'];
 	
 	this.DocumentAuditing = StimulGL_CreateArray(6,5);//Default constructor!

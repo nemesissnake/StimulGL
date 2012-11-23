@@ -7,32 +7,35 @@
         <toc>
             <section title="StimulGL" ref="index.html">            
 								<section title="Getting Started Guide" ref="./Tutorials/GettingStarted/GettingStartedGuide.html"></section>
-            </section>
-            <section title="Scripting" ref="./References/Script/ScriptingReference.html">
-							<section title="ExperimentManager Script Class" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
-							<section title="ParallelPortDevice Script Class" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
-							<section title="USBHIDDevice Script Class" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
-							<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"></section>
-							<section title="KeyBoardDevice Script Class" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/class_key_board_capture.html"></section>
-            </section>             
-            <section title="Plugins (default)" ref="./References/Plugins/PluginReference.html">
-                <section title="ExperimentManager Plugin" ref="./References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">
+		            <section title="Scripting" ref="./References/Script/ScriptingReference.html">
 									<section title="ExperimentManager Script Class" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
-								</section>
-								<section title="ParallelPortDevice Plugin" ref="./References/Plugins/ParallelPortDevicePlugin/ParallelPortDevicePlugin.html">
 									<section title="ParallelPortDevice Script Class" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
-								</section>
-								<section title="USBHIDDevice Plugin" ref="./References/Plugins/USBHIDDevicePlugin/USBHIDDevicePlugin.html">
 									<section title="USBHIDDevice Script Class" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
-								</section>
-								<section title="SerialPortDevice Plugin" ref="">
 									<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"></section>
-								</section>								
-								<section title="Extension Plugin Template" ref="./References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html"></section>								
-            </section>
-            <section title="Development" ref="">            
-								<section title="Pre Development Setup" ref="./Manuals/PreBuildDevelopmentSetup/PreBuildDevelopmentSetup.html"></section>
-            </section>            
+									<section title="KeyBoardDevice Script Class" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/class_key_board_capture.html"></section>
+		            </section>             
+		            <section title="Plugins" ref="./References/Plugins/PluginReference.html">
+		                <section title="ExperimentManager Plugin" ref="./References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">
+											<section title="ExperimentManager Script Class" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"></section>
+										</section>
+										<section title="ParallelPortDevice Plugin" ref="./References/Plugins/ParallelPortDevicePlugin/ParallelPortDevicePlugin.html">
+											<section title="ParallelPortDevice Script Class" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"></section>
+										</section>
+										<section title="USBHIDDevice Plugin" ref="./References/Plugins/USBHIDDevicePlugin/USBHIDDevicePlugin.html">
+											<section title="USBHIDDevice Script Class" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
+										</section>
+										<section title="SerialPortDevice Plugin" ref="">
+											<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"></section>
+										</section>								
+										<section title="Extension Plugin Template" ref="./References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html"></section>								
+		            </section>
+		            <section title="QtQuick" ref="">
+									<section title="QML Extensions Class references" ref="./References/QtQuick/StimulGL_QMLExtensions/Doxygen/index.html"></section>
+		            </section>              
+		            <section title="Development" ref="">            
+										<section title="Pre Development Setup" ref="./Manuals/PreBuildDevelopmentSetup/PreBuildDevelopmentSetup.html"></section>
+		            </section>
+            </section>       
         </toc>
         <keywords>
             <keyword name="StimulGL" ref="index.html"/>
@@ -51,6 +54,8 @@
             <keyword name="SerialPort Script" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"/>
             <keyword name="USBHIDDevice Script" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"/>
             <keyword name="KeyBoardDevice Script" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/class_key_board_capture.html"/>
+            <keyword name="QML Extensions" ref="./References/QtQuick/StimulGL_QMLExtensions/Doxygen/index.html"/>
+            <keyword name="Media Player" ref="./References/QtQuick/StimulGL_QMLExtensions/Doxygen/class_phonon_player.html"/>
             </keywords>
         <files>
             <file>index.html</file>
@@ -71,7 +76,8 @@
 					  <file>References/Script/USBHIDDevicePlugin/Doxygen/*.*</file>
 					  <file>References/Script/SerialPortDevicePlugin/Doxygen/*.*</file>
 					  <file>References/Script/KeyBoardDevicePlugin/Doxygen/*.*</file>			  
-						<file>References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html</file>						
+						<file>References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html</file>
+						<file>References/QtQuick/StimulGL_QMLExtensions/Doxygen/*.*</file>				
 						<file>css/*.css</file>
 						<file>js/*.js</file>
 						<file>google-code-prettify/*.*</file>

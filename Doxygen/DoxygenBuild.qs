@@ -164,7 +164,13 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[5][0] = preFix + "INPUT" + postFix;
 		changeSet[5][1] = "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentManager.cpp \\\n" +
 		                          "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentManager.h \\\n" +
-		                          "../../StimulGL/Source/Plugins/ExperimentManager/Global.h \\\n";
+					  "../../StimulGL/Source/Plugins/ExperimentManager/qmlWidget.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/qmlWidget.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/GLWidgetWrapper.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/GLWidgetWrapper.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/retinomap_glwidget.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/retinomap_glwidget.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 		changeSet[6][1] = "StimulGL.doxygen.Project";
 		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
@@ -296,35 +302,36 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 	}
 	else if (nCounter==6)
 	{
-//		ComponentName = "DefaultQMLPlugin";		
-//		Log("Component Name: " + ComponentName);
-//		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
-//		Log("Last Component Release Index: " + LastComponentReleaseIndex);
-//		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
-//		Log("Last Component Index: " + LastComponentIndex);
-//		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
-//		Log("Last Component Version: " + LastComponentVersion);
-//		Log("\n");
-//		fileDest = ComponentName + ".cfg";
-//		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
-//		changeSet[0][1] = "\"DefaultQML Plugin script class\"";
-//		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
-//		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
-//		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
-//		changeSet[2][1] = "\"The DefaultQML Plugin script class reference.\"";
-//		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
-//		changeSet[3][1] = "";//No quotes for empty!
-//		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
-//		changeSet[4][1] = "\"../References/Script/DefaultQMLPlugin\"";
-//		changeSet[5][0] = preFix + "INPUT" + postFix;
-//		changeSet[5][1] = "../../StimulGL/Source/Plugins/ExtensionPluginTemplate/ExperimentManager.cpp \\\n" +
-//		                          "../../StimulGL/Source/Plugins/ExtensionPluginTemplate/ExperimentManager.h \\\n" +
-//		                          "../../StimulGL/Source/Plugins/ExtensionPluginTemplate/Global.h \\\n";
-//		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
-//		changeSet[6][1] = "StimulGL.doxygen.Project";
-		//changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
-		//changeSet[7][1] = "";
-		bSkipStep = true;
+		ComponentName = "StimulGL_QMLExtensions";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"StimulGL QML Extensions\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"The StimulGL QML Extensions class references.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/QtQuick/StimulGL_QMLExtensions\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/PhononPlayer.h \\\n" +
+					  "../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/PhononPlayer.cpp \\\n" //+
+					  //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.h \\\n" +
+		                          //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.cpp \\\n" +
+		                          //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/defines.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";
 	}
 	else
 	{
