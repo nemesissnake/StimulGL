@@ -53,6 +53,7 @@ function CleanUpScript()
 	processFinished=null;
 	CleanUpScript=null;	
 	Log("CleanUpScript exited successfully!");
+	Beep();
 	StimulGL.cleanupScript();
 }
 

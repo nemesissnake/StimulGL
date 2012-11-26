@@ -54,6 +54,7 @@ function CleanUpScript()
 	CleanUpScript=null;
 	getString = null;
 	Log("CleanUpScript exited Successfully!");
+	Beep();
 	StimulGL.cleanupScript();
 }
 
@@ -170,6 +171,12 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 					  "../../StimulGL/Source/Plugins/ExperimentManager/GLWidgetWrapper.cpp \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/retinomap_glwidget.h \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/retinomap_glwidget.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/TriggerTimer.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/TriggerTimer.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/prtformatmanager.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/prtformatmanager.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/ImageProcessor.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/ImageProcessor.cpp \\\n" +					 
 					  "../../StimulGL/Source/Plugins/ExperimentManager/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 		changeSet[6][1] = "StimulGL.doxygen.Project";
