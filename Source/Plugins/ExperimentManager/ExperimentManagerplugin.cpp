@@ -62,6 +62,7 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	ExperimentManagerDiagObject = NULL;
 	ExperimentManagerObject = NULL;
 	TriggerTimerObject = NULL;
+	RandomGeneratorObject = NULL;
 	ImageProcessorObject = NULL;
 	PrtFormatManagerObject = NULL;
 	QmlWidgetObject = NULL;
@@ -87,6 +88,11 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 		delete TriggerTimerObject;
 		TriggerTimerObject = NULL;
 	}
+	if(RandomGeneratorObject)
+	{
+		delete RandomGeneratorObject;
+		RandomGeneratorObject = NULL;
+	}	
 	if(ImageProcessorObject)
 	{
 		delete ImageProcessorObject;
@@ -135,6 +141,13 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	qScriptRegisterMetaType(&engine, ExperimentStructureToScriptValue, ExperimentStructureFromScriptValue);
 	QScriptValue ctorExperimentStructure = engine.newFunction(CreateExperimentStructureFromScript);
 	engine.globalObject().setProperty(EXPERIMENTSTRUCTURE_NAME, ctorExperimentStructure);
+
+	if(RandomGeneratorObject == NULL)
+		RandomGeneratorObject = new RandomGenerator();
+	QScriptValue RandomGeneratorProto = engine.newQObject(RandomGeneratorObject);
+	engine.setDefaultPrototype(qMetaTypeId<RandomGenerator*>(), RandomGeneratorProto);
+	QScriptValue RandomGeneratorCtor = engine.newFunction(RandomGenerator::ctor__randomGenerator, RandomGeneratorProto);
+	engine.globalObject().setProperty(RANDOMGENERATOR_NAME, RandomGeneratorCtor);
 
 
 	//if(QmlWidgetObject == NULL)
@@ -199,6 +212,10 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 		if(PrtFormatManagerObject == NULL)
 			PrtFormatManagerObject = new PrtFormatManager();
 		return (QObject *)PrtFormatManagerObject->metaObject();
+	case 4:
+		if(RandomGeneratorObject == NULL)
+			RandomGeneratorObject = new RandomGenerator();
+		return (QObject *)RandomGeneratorObject->metaObject();
 	default:
 		return NULL;
 	}

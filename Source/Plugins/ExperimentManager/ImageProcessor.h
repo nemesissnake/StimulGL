@@ -24,12 +24,26 @@
 #include <QtScript>
 #include <QScriptable>
 
+//!  The ImageProcessor class. 
+/*!
+  The Image Processor can be used to edit Png (*.png) and custom Dat (*.dat) files.  
+*/
 class ImageProcessor : public QObject, protected QScriptable
 {
 	Q_OBJECT
 	Q_CLASSINFO("ScriptAPIClassName", "ImageProcessor");//Can't use defines here!, moc doesn't handle defines, not needed here
 
 public:
+
+	 /*! The enum ScalingMethod holds a Scaling Method for the ImageProcessor object */
+	enum ScalingMethod
+	{	
+		ScalingMethod_MonoColored							= 0, /*!< default, Mono Colored. */
+		ScalingMethod_SmoothGreyColored						= 1, /*!< Smoothed (Grey value Colored). */
+		ScalingMethod_SmoothMonoColored						= 2, /*!< Smoothed and converted to a Mono Color values, threshold value = 255. */
+		ScalingMethod_SmoothMonoColoredCustomThreshold		= 3  /*!< Smoothed and converted to a Mono Color values, custom threshold value. */
+	};
+
 	ImageProcessor(QObject *parent = NULL);
 	ImageProcessor(const ImageProcessor& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	~ImageProcessor();

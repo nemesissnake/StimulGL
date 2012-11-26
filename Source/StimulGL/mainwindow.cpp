@@ -223,6 +223,8 @@ QScriptValue myBeepFunction(QScriptContext *ctx, QScriptEngine *eng)
 	//result.append(ctx->argument(i).toString());
 	//}
 	qApp->beep();
+
+	//system("beep -f 200 -l 100");
 	return 0;
 }
 

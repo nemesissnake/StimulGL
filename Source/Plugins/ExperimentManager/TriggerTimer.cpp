@@ -21,6 +21,10 @@
 
 #define THREADACTIVATIONTRIGGERTIME		5 //This is the minimal trigger period, the time resolution/accuracy can be higher!
 
+/*! \brief The TriggerTimer constructor.
+*
+*   No parameter
+*/
 TriggerTimer::TriggerTimer() : QObject(NULL)
 {
 	currentScriptEngine = NULL;
@@ -39,6 +43,11 @@ TriggerTimer::TriggerTimer() : QObject(NULL)
 	bTimerIsRunning = false;
 }
 
+/*! \brief The TriggerTimer destructor.
+*
+*   You do not need call the destructor. 
+*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+*/
 TriggerTimer::~TriggerTimer()
 {	
 	bDoStopTimer = true;
@@ -109,6 +118,10 @@ QString TriggerTimer::getTimerType() const
 
 void TriggerTimer::startTimer(double dMSec)//Do not change the function name without changing the below!
 {
+/*! \brief Starts the Trigger Timer.
+ *  This function starts the Trigger Timer and then automatically emits a TriggerTimer::timeout() signal when triggered.
+ * @param dMSec the period trigger time in milliseconds.
+ */
 	if(((currentTimerType == QPC_TriggerTimerType) || (currentTimerType == QPCNew_TriggerTimerType)) && (QThread::currentThread() != &_thread))//Wrong thread
 	{
 		QMetaObject::invokeMethod(this, "startTimer", Qt::QueuedConnection,Q_ARG(double, dMSec));//Cannot be a DirectConnection !!
@@ -178,8 +191,20 @@ void TriggerTimer::resetIntervalTestResults()
 	intervalTest.dSampleSpeedToUse = THREADACTIVATIONTRIGGERTIME;
 }
 
+double TriggerTimer::currentTime() 
+{
+/*! \brief Returns the current UTC time.
+*   This function returns the current UTC time as a double value in seconds, counted from January 1, 1970.
+*   Precision varies depending on platform but is usually as good or better than a millisecond.
+*/
+	return WTF::currentTime();
+}
+
 void TriggerTimer::stopTimer()//Do not change the function name without changing the below!
 {
+/*! \brief Stops the Trigger Timer.
+ *  This function immediately stops the Trigger Timer.
+ */
 	if(((currentTimerType == QPC_TriggerTimerType) || (currentTimerType == QPCNew_TriggerTimerType)) && (QThread::currentThread() != &_thread))//Wrong thread
 	//if((QThread::currentThread() != &_thread))//Wrong thread
 	{

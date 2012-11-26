@@ -26,51 +26,67 @@
 #include <QScriptable>
 #include <QColor>
 
-#define PRT_DEFAULT_VERSION				2
-#define PRT_UNDEF_VALUE_STRING			"<undefined value>"
-#define PRT_UNDEF_DESC_STRING			"<undefined description>"
-#define PRT_UNDEF_NAME_STRING			"<undefined name>"
-#define PRT_UNDEF_COLOR_STRING			"192 192 192"
-#define PRT_LAST_PARAM_NAME				"NrOfConditions"
-#define PRT_COLOR_PARAM_NAME			"Color"
-
-typedef struct strcPRTParameters
+/*! The namespace for the PrtFormat Manager */
+namespace PrtFormatManagerNameSpace
 {
-	strcPRTParameters()
+/*!
+ * \defgroup PrtFormatManagerDefines PrtFormat Manager Definitions
+ * @{
+ */
+	#define PRT_DEFAULT_VERSION				2							/*!< Default PRT Document Type */
+	#define PRT_UNDEF_VALUE_STRING			"<undefined value>"			/*!< "<undefined value>" */ 
+	#define PRT_UNDEF_DESC_STRING			"<undefined description>"   /*!< "<undefined description>" */
+	#define PRT_UNDEF_NAME_STRING			"<undefined name>"			/*!< "<undefined name>" */
+	#define PRT_UNDEF_COLOR_STRING			"192 192 192"				/*!< "192 192 192" */
+	#define PRT_LAST_PARAM_NAME				"NrOfConditions"
+	#define PRT_COLOR_PARAM_NAME			"Color"
+/**@}*/
+
+	typedef struct strcPRTParameters
 	{
-		sValue =						PRT_UNDEF_VALUE_STRING;
-		sDescription =					PRT_UNDEF_DESC_STRING;
-	}
-	QString sValue;
-	QString sDescription;
-} PRTDefinitionParameters;
-typedef QHash<QString, PRTDefinitionParameters> PRTDefinitionParameterList;
+		strcPRTParameters()
+		{
+			sValue =						PRT_UNDEF_VALUE_STRING;
+			sDescription =					PRT_UNDEF_DESC_STRING;
+		}
+		QString sValue;
+		QString sDescription;
+	} PRTDefinitionParameters;
+	typedef QHash<QString, PRTDefinitionParameters> PRTDefinitionParameterList;
 
-typedef struct strcIntervals
-{
-	strcIntervals()
+	typedef struct strcIntervals
 	{
-		nBegin =						0;
-		nEnd =							1;
-	}
-	int nBegin;
-	int nEnd;
-} IntervalsDefinition;
+		strcIntervals()
+		{
+			nBegin =						0;
+			nEnd =							1;
+		}
+		int nBegin;
+		int nEnd;
+	} IntervalsDefinition;
 
-typedef struct strcConditions
-{
-	strcConditions()
+	typedef struct strcConditions
 	{
-		sName =							PRT_UNDEF_NAME_STRING;
-		sColor =						PRT_UNDEF_COLOR_STRING;
-	}
-	QString sName;
-	QString sColor;
-	QList<IntervalsDefinition> Intervals;
-} ConditionsDefinition;
+		strcConditions()
+		{
+			sName =							PRT_UNDEF_NAME_STRING;
+			sColor =						PRT_UNDEF_COLOR_STRING;
+		}
+		QString sName;
+		QString sColor;
+		QList<IntervalsDefinition> Intervals;
+	} ConditionsDefinition;
 
-typedef QList<ConditionsDefinition> PRTConditionsDefinitionList;
+	typedef QList<ConditionsDefinition> PRTConditionsDefinitionList;
+}
 
+using namespace PrtFormatManagerNameSpace;
+
+//!  The PrtFormatManager class. 
+/*!
+  The PrtFormat Manager can be used to create and edit stimulation protocol (*.prt) files.
+  See also http://www.brainvoyager.de/BV2000OnlineHelp/BrainVoyagerWebHelp/mergedProjects/FileFormats/The_format_of_PRT_files.htm
+*/
 class PrtFormatManager : public QObject, protected QScriptable
 {
 	Q_OBJECT
@@ -91,8 +107,8 @@ public slots:
 	QString getParameterValue(const QString sParamName);
 	QString getParameterDescription(const QString sParamName);
 	bool clearConditions();
-	bool clearParameters() {return setDefaultParameters(PRT_DEFAULT_VERSION);};
-	bool clearAll() {return (clearConditions() && clearParameters());}; 
+	bool clearParameters();
+	bool clearAll(); 
 	int appendCondition(const QString sConditionName = PRT_UNDEF_NAME_STRING, const QString sConditionColor = PRT_UNDEF_COLOR_STRING);
 	int appendInterval(const int nConditionIndex = 0, const int nBegin = 0, const int nEnd = 1);
 	QString getRGBPaletteColorString(const int nSteps, const int nIndex);

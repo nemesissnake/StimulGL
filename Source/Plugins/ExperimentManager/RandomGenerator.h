@@ -23,6 +23,8 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include <QtScript>
+#include <QScriptEngine>
 #include "randomc.h"
 
 #ifdef Q_OS_WIN
@@ -30,6 +32,7 @@
 #endif
 
 #define RANDOMIZE_DATETIME_FORMAT			"HHmmsszzz"
+//RANDOMGENERATOR_NAME
 
 // This template class combines two different random number generators
 // for improved randomness. R1 and R2 are any two different random number
@@ -56,12 +59,12 @@ public:
 		if(min == max)
 			return min;
 		// get integer random number in desired interval
-		int iinterval = max - min + 1;
-		if (iinterval <= 0) 
+		int iinterval = max - min;// + 1;
+		if (iinterval < 0)//<= 0) 
 			return 0x80000000; // error
-		int r = int(iinterval * Random()); // truncate
-		if (r >= iinterval) 
-			return max;//r = iinterval-1;
+		int r = int((iinterval+1) * Random()); // truncate, Random() returns <1.0
+		//if (r >= iinterval) 
+		//	return max;//r = iinterval-1;
 		return min + r;
 	}
 
@@ -70,12 +73,13 @@ public:
 		if(min == max)
 			return min;
 		// get double random number in desired interval
-		double iinterval = max - min + 1;
-		if (iinterval <= 0) 
+		double iinterval = max - min;// + 1;
+		if (iinterval <= 0)//<= 0) 
 			return 0x80000000; // error
-		double r = double(iinterval * Random()); // truncate
-		if (r >= iinterval) 
-			return max;//	r = iinterval-1;
+		double dsmall = DBL_MIN;
+		double r = (iinterval+DBL_MIN) * Random(); // truncate
+		//if (r >= iinterval) 
+		//	return max;//	r = iinterval-1;
 		return min + r;
 	}
 };
@@ -93,15 +97,43 @@ class RandomGenerator : public QObject, public QStringList
 
 public:
 	RandomGenerator(QObject *parent = NULL);
+	RandomGenerator(const RandomGenerator& other ){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 	~RandomGenerator();
 
-public slots:
-	int randomizeInt(int nMin, int nMax) {return tCombinedRandGen->IRandom(nMin,nMax);};											//just for <int> randomization
-	int randomizeDouble(double nMin, double nMax) {return tCombinedRandGen->DRandom(nMin,nMax);};									//just for <double> randomization
-	bool randomizeList(RandomGenerator_RandomizeMethod rMethod = RandomGenerator_RandomizeStandard, QStringList *sList = NULL);		//Randomizes the class inherited QStringList
+	static QScriptValue ctor__randomGenerator(QScriptContext* context, QScriptEngine* engine);
 
+	bool randomizeList(RandomGenerator_RandomizeMethod rMethod = RandomGenerator_RandomizeStandard, QStringList *sList = NULL);		//Randomizes the class inherited QStringList
+	void setScriptEngine(QScriptEngine* engine);
+
+public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
+
+	int randomizeInt(int nMin, int nMax);											//just for <int> randomization
+	double randomizeDouble(double nMin, double nMax);									//just for <double> randomization
+	QScriptValue randomize(int rMethod  = (int)RandomGenerator_RandomizeStandard);//, QScriptValue sList = QScriptValue());
+	QScriptValue toScriptArray();
+
+	const QString at(int i) const {return QStringList::at(i);};
+	int count() const {return QStringList::count();};
+	int count(const QString &sValue) const {return QStringList::count(sValue);};
+	bool isEmpty() const {return QStringList::isEmpty();};
+	void append(const QString &sValue) {QStringList::append(sValue);};
+	QString takeFirst() {return QStringList::takeFirst();};
+	QString takeLast() {return QStringList::takeLast();};
+	QString takeAt(int i) {return QStringList::takeAt(i);};
+	void clear() {QStringList::clear();};
+	int removeAll(const QString &sValue) {return QStringList::removeAll(sValue);};
+	void removeAt(int i) {return QStringList::removeAt(i);};
+	int indexOf(const QString &sValue, int nFrom = 0) const {return QStringList::indexOf(sValue,nFrom);};
+	void swap(int i, int j) {QStringList::swap(i,j);};
+	void insert(int i, const QString &sValue) {QStringList::insert(i,sValue);};
+
+	
 private:
+	QScriptEngine* currentScriptEngine;
 	TRandomCombined<CRandomMersenne,CRandomMother> *tCombinedRandGen;
 	int nSeed;
 };
+
+Q_DECLARE_METATYPE(RandomGenerator*)
 #endif // RANDOMGENERATOR_H

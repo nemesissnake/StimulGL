@@ -317,6 +317,7 @@ File ::D52BC55C-6ABB-4069-9DFF-921B10FE285B -name E:/Projects/StimulGL/Source/Pl
 File ::A91D18B9-2F4D-4802-91A2-66FAAB3C6CA8 -name E:/Projects/StimulGL/Source/Plugins/SerialPortDevice/scripts/QScriptExampleSerialPortDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::42799612-F05F-490E-8107-10EA0EBB05A3 -name E:/Projects/StimulGL/Source/Plugins/KeyBoardDevice/scripts/QScriptExample_KeyBoard.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::ED42D892-E1F0-467B-B152-C8184EA2433B -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/TriggerTimer.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::E8D22DE7-8E19-4E00-A4F5-156E09A59C14 -name D:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/RandomGenerator.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 FileGroup ::E5DE8D2A-E046-4945-B382-97B2670A7E75 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name Documents -parent FileGroups
 File ::182C849A-4C78-4BB0-8AB8-DBA019559C3C -name E:/Projects/StimulGL/Install/documents/MainDocumentation.qhc -parent E5DE8D2A-E046-4945-B382-97B2670A7E75
 File ::92D1763F-22CE-4811-860C-50DE5667D48D -name E:/Projects/StimulGL/Install/documents/MainDocumentation.qch -parent E5DE8D2A-E046-4945-B382-97B2670A7E75

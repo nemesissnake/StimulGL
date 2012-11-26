@@ -210,6 +210,7 @@ namespace ExperimentManagerNameSpace
 	#define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
 	#define QML_WIDGET_NAME							"qmlWidget"   
 	#define TRIGGERTIMER_NAME						"TriggerTimer"
+	#define RANDOMGENERATOR_NAME					"RandomGenerator"
 	#define IMAGEPROCESSOR_NAME						"ImageProcessor"
 	#define PRTFORMATMANAGER_NAME					"PRTFormatManager"
 	#define QMLWIDGET_NAME							"qmlWidget"

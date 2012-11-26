@@ -24,9 +24,35 @@
 
 RandomGenerator::RandomGenerator(QObject *parent):QObject(parent)
 {
+	currentScriptEngine = NULL;
 	tCombinedRandGen == NULL;
 	nSeed = QDateTime::currentDateTime().toString(RANDOMIZE_DATETIME_FORMAT).toInt();
 	tCombinedRandGen = new TRandomCombined<CRandomMersenne,CRandomMother>(nSeed);
+}
+
+QScriptValue RandomGenerator::ctor__randomGenerator(QScriptContext* context, QScriptEngine* engine)
+{
+	RandomGenerator *RandomGeneratorObj = new RandomGenerator();
+	RandomGeneratorObj->setScriptEngine(engine);
+	return engine->newQObject(RandomGeneratorObj, QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
+}
+
+void RandomGenerator::setScriptEngine(QScriptEngine* engine)
+{
+	currentScriptEngine = engine;
+}
+
+bool RandomGenerator::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
 }
 
 RandomGenerator::~RandomGenerator()
@@ -45,12 +71,54 @@ RandomGenerator::~RandomGenerator()
 //			int b = tCombinedRandGen->IRandom(0,99);
 //			b = b;
 
+int RandomGenerator::randomizeInt(int nMin, int nMax) 
+{//nMin>nMax? --> return 0x80000000;
+	return tCombinedRandGen->IRandom(nMin,nMax);
+}
+
+double RandomGenerator::randomizeDouble(double nMin, double nMax) 
+{
+	return tCombinedRandGen->DRandom(nMin,nMax);
+}
+
+QScriptValue RandomGenerator::randomize(int rMethod)//, QScriptValue sList)
+{
+	if(currentScriptEngine == NULL)
+		return NULL;
+	RandomGenerator_RandomizeMethod rndMethod = (RandomGenerator_RandomizeMethod) rMethod;
+	//QStringList tmpList = currentScriptEngine->fromScriptValue<QStringList>(sList);
+
+	if(randomizeList(rndMethod))//&tmpList))
+	{
+		//tmpList << "1" << "2" << "3";
+		return currentScriptEngine->toScriptValue((QStringList)*this);//tmpList);
+	}
+	else
+	{
+		return currentScriptEngine->undefinedValue();
+	}
+}
+
+QScriptValue RandomGenerator::toScriptArray()
+{
+	if(currentScriptEngine == NULL)
+		return NULL;
+	if(QStringList::isEmpty() == false)
+	{
+		return currentScriptEngine->toScriptValue((QStringList)*this);
+	}
+	else
+	{
+		return currentScriptEngine->undefinedValue();
+	}
+}
+
 bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QStringList *sList)
 {
 	//int a = randomizeInt(0,700);
 	//InitRandomizer();
 	bool bRetVal = false;
-	int nListCount = this->count();
+	int nListCount = QList::count();
 	int i,j;
 	int nIndexFound;
 	int nRandom;
@@ -62,7 +130,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 		for(i=(nListCount-1);i>0;--i)
 		{
 			nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
-			this->swap(i,nRandom);
+			QList::swap(i,nRandom);
 		}
 		bRetVal = true;
 		break;
@@ -71,7 +139,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 		for(i=(nListCount-1);i>0;--i)
 		{//first start with an randomize
 			nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
-			this->swap(i,nRandom);
+			QList::swap(i,nRandom);
 		}
 		if (sList == NULL)
 		{
@@ -85,14 +153,14 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 		}
 		for(i=0;i<sList->count();i++)
 		{
-			nIndexFound = this->indexOf(sList->at(i));
+			nIndexFound = QList::indexOf(sList->at(i));
 			if (nIndexFound == -1)
 			{
-				this->replace(i,sList->at(i));
+				QList::replace(i,sList->at(i));
 			} 
 			else if(i!=nIndexFound)
 			{
-				this->swap(i,nIndexFound);
+				QList::swap(i,nIndexFound);
 			}
 		}
 		bRetVal = true;
@@ -104,7 +172,7 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 			for(i=(nListCount-1);i>0;--i)
 			{
 				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
-				this->swap(i,nRandom);
+				QList::swap(i,nRandom);
 			}
 			bRetVal = true;
 			break;
@@ -114,12 +182,12 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 			for(i=(nListCount-1);i>0;--i)
 			{
 				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
-				this->swap(i,nRandom);
+				QList::swap(i,nRandom);
 			}
 			bRetVal = true;
 			break;
 		}
-		else if(sList->count() >= (this->count()-1))
+		else if(sList->count() >= (QList::count()-1))
 		{//nothing to do
 			bRetVal = true;
 			break;
@@ -127,12 +195,12 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 		else
 		{
 			QStringList tmpCopyLst;
-			tmpCopyLst = this->mid(0);//copy the current list
+			tmpCopyLst = QStringList::mid(0);//copy the current list
 			//first start with an randomize
 			for(i=(nListCount-1);i>0;--i)
 			{
 				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
-				this->swap(i,nRandom);
+				QList::swap(i,nRandom);
 			}
 
 			int nRecoverCount = sList->count();
@@ -141,16 +209,16 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 				//recover the preserved items
 				for(j=0;j<nRecoverCount;j++)
 				{
-					nIndexFound = this->indexOf(tmpCopyLst.at(sList->at(j).toInt()));
+					nIndexFound = QList::indexOf(tmpCopyLst.at(sList->at(j).toInt()));
 					if(nIndexFound >= 0)//is the preserved item still in the current list?
-						this->swap(sList->at(j).toInt(),nIndexFound);				
+						QList::swap(sList->at(j).toInt(),nIndexFound);				
 				}
 				if (nRecoverCount > 1)
 				{
 					//randomize the recovered values
 					for(i=(nRecoverCount-1);i>0;--i)
 					{
-						this->swap(sList->at(i).toInt(),sList->at(tCombinedRandGen->IRandom(0,nRecoverCount-1)).toInt());
+						QList::swap(sList->at(i).toInt(),sList->at(tCombinedRandGen->IRandom(0,nRecoverCount-1)).toInt());
 					}
 				}
 			}

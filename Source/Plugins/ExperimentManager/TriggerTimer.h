@@ -34,6 +34,11 @@ enum TriggerTimerType
 	QPCNew_TriggerTimerType			= 2  //!< 2: The Query Performance Counter Timer type, new implementation
 };
 
+
+//!  The TriggerTimer class. 
+/*!
+  The Trigger Timer Manager can be used to create a accurate triggered timer.
+*/
 class TriggerTimer : public QObject, protected QScriptable
 {
 	Q_OBJECT
@@ -41,7 +46,6 @@ class TriggerTimer : public QObject, protected QScriptable
 
 	struct strcIntervalTest
 	{
-		//! The default constructor of the structure
 		/*		strcIntervalTest()
 		{
 		dFirstSample = 0.0;
@@ -55,9 +59,22 @@ class TriggerTimer : public QObject, protected QScriptable
 	};
 
 signals:
+	//! The timeout Signal.
+	/*!
+		This signal is emitted automatically at each period time after the trigger is started.
+	*/
 	void timeout();
+	//! The started Signal.
+	/*!
+		This signal is emitted automatically after the Trigger Timer has been started, see TriggerTimer::startTimer().
+	*/
 	void started();
-	void goingAccurate(double);
+	//! The goingAccurate Signal.
+	/*!
+		This signal is emitted just before the TriggerTimer::timeout signal, the Trigger Timer is then more actively observed (higher CPU load) in order to achieve a more higher accuracy.
+		@param dRemainingTime a double value that represents the remaining time it should take for the Trigger Timer to timeout.
+	*/
+	void goingAccurate(double dRemainingTime);
 
 public:
 	TriggerTimer();
@@ -72,7 +89,7 @@ public slots:
 
 	void startTimer(double nMSec);
 	void stopTimer();
-	double currentTime() {return WTF::currentTime();};
+	static double currentTime();
 	bool setTimerType(const QString &sNewTimerType);
 	QString getTimerType() const;
 	//QObject *GetScriptMetaObject(int nIndex) {return (QObject *)this->metaObject();};

@@ -53,6 +53,7 @@ private:
 	ExperimentManager *ExperimentManagerObject; 
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;
 	TriggerTimer *TriggerTimerObject;
+	RandomGenerator *RandomGeneratorObject;
 	ImageProcessor *ImageProcessorObject;
 	PrtFormatManager *PrtFormatManagerObject;
 	qmlWidget *QmlWidgetObject;
