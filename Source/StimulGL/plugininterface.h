@@ -34,14 +34,15 @@ public:
 	virtual QString GetPluginInformation(void) {return strPluginInformation;}
 	virtual QString Test(const QString &message) {return "I'm oke(" + message + ")" + " --> " + strPluginInformation;}	
 	virtual bool ConfigureScriptEngine(QScriptEngine &eng) = 0;
-	virtual QString GetMinimalMainProgramVersion() {return MAIN_PROGRAM_FILE_VERSION_STRING;};
+	virtual QString GetMinimalMainProgramVersion() {return GlobalAppInfo->getFileVersionString();}; //MAIN_PROGRAM_FILE_VERSION_STRING;};
+	void setGlobalAppInfo(GlobalApplicationInformation *pGlobalAppInfo) {GlobalAppInfo=pGlobalAppInfo;};
 	
 public slots:
 	virtual bool IsCompatible() 
 	{
 		QString strMainProgramMinimalVersion = GetMinimalMainProgramVersion();
 		//return (MainAppInfo::isCompatibleVersion(GetMinimalMainProgramVersion(),QString(MAIN_PROGRAM_FILE_VERSION_STRING)));			
-		QStringList lstMainProgramCurrentVersion = QString(MAIN_PROGRAM_FILE_VERSION_STRING).split(".");
+		QStringList lstMainProgramCurrentVersion = QString(GlobalAppInfo->getFileVersionString()).split(".");
 		QStringList lstMainProgramMinimalVersion = strMainProgramMinimalVersion.split(".");
 		if ((lstMainProgramCurrentVersion.count() == 4) && (lstMainProgramMinimalVersion.count() == 4))
 		{
@@ -69,7 +70,7 @@ public slots:
 
 protected:
 	QString strPluginInformation;
-
+	GlobalApplicationInformation *GlobalAppInfo;
 };
 
 

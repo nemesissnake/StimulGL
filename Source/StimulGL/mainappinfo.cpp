@@ -190,17 +190,9 @@ void MainAppInfo::CloseMainLogFile()
 bool MainAppInfo::Initialize(QWidget *mainWin)
 {
 	mainWindow = mainWin;
-	bool bRetval = false;
-	bRetval = InitializeMainAppNaming();
-	return bRetval;
-}
-
-bool MainAppInfo::InitializeMainAppNaming()
-{
-	QCoreApplication::setOrganizationDomain(MAIN_PROGRAM_COMPANY_NAME);
-	QCoreApplication::setOrganizationName(MAIN_PROGRAM_COMPANY_NAME);
-	QCoreApplication::setApplicationName(MAIN_PROGRAM_INTERNAL_NAME);
-	QCoreApplication::setApplicationVersion(MAIN_PROGRAM_FILE_VERSION_STRING);
+	//bool bRetval = false;
+	//bRetval = InitializeMainAppNaming();
+	//return bRetval;
 	return true;
 }
 

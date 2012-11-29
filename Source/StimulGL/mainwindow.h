@@ -31,6 +31,9 @@
 #include <QDir>
 #include <QtGui>
 #include <QTime>
+#include <QWebView>
+#include <QWebFrame>
+#include <QWebPage>
 #include <QDateTime> //QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat())!!!!!
 
 #include "documentmanager.h"
@@ -67,6 +70,8 @@ signals:
 	//void AbortScript();
 		
 public slots:
+	QVariant invokeJavaScriptConfigurationFile(const QString &sCode);//undocumented!
+	void showJavaScriptConfigurationFile();//undocumented!
 	void setStartupFiles(const QString &path = QString());
 	void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList());
 	void executeScript();
@@ -91,6 +96,8 @@ public slots:
 #endif
 
 private slots:
+	void parseJavaScriptConfigurationFile(bool bLoadStatus);
+	void composeJavaScriptConfigurationFile();
 	bool restartScriptEngine();
 	void abortScript();
 	void setupContextMenus();
@@ -193,6 +200,7 @@ private:
 	QAction *aboutStimulGLAct;
 	QAction *assistantAct;
 	QAction *aboutQtAct;
+	QAction *historyQtAct;
 	QAction *separatorAct;
 
 	QLabel *StatusPositionLabel;
@@ -252,6 +260,9 @@ private:
     QStringList pluginFileNames;
 	
 	PluginCollection *Plugins;
+
+	QWebView *webView;
+	GlobalApplicationInformation *globAppInfo;
 
 	enum { MaxRecentFiles = 5 };
 	QAction *recentFileActs[MaxRecentFiles];

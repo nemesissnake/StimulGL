@@ -37,6 +37,8 @@ MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 {
 	DocManager = NULL;
 	AppScriptEngine = NULL;
+	webView = NULL;
+	globAppInfo = NULL;
 	PluginsFound = false;
 	DevicePluginsFound = false;
 	ExtensionPluginsFound = false;
@@ -59,20 +61,81 @@ MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
 QString MainWindow::testFunction(QString inp)
 {
 	return inp;
-	//CustomQsciScintilla *tmpSci;
-	//tmpSci = DocManager->getDocHandler(activeMdiChild());
-	//if (tmpSci)
-	//{
-	//	//bool b4 = connect(tmpSci, SIGNAL(textChanged()), this, SLOT(testFunction()));
-	//	//b4=b4;
-	//	return tmpSci->testFunction(inp);
-	//}
-	//else
-	//{
-	//	return QString("");
-	//}
 }
 #endif
+
+void MainWindow::composeJavaScriptConfigurationFile()
+{
+	if(webView == NULL)
+	{
+		webView = new QWebView();
+		webView->setObjectName(QString::fromUtf8("webView"));
+		connect(webView, SIGNAL(loadFinished(bool)), SLOT(parseJavaScriptConfigurationFile(bool)),Qt::DirectConnection);
+	}
+	QString sPath = (":/resources/StimulGL.js");
+	QResource res(sPath);
+	QByteArray bResourceData;
+	bResourceData=reinterpret_cast< const char* >( res.data() ), res.size();
+	webView->page()->mainFrame()->evaluateJavaScript(bResourceData);
+	
+	sPath = (":/resources/versioning.html");
+	res.setFileName(sPath);
+	bResourceData = reinterpret_cast< const char* >( res.data() ), res.size();
+	webView->setContent(bResourceData);//Invokes the loadFinished() signal after loading
+}
+
+void MainWindow::parseJavaScriptConfigurationFile(bool bLoadStatus)
+{
+	if (bLoadStatus)
+	{
+		if(globAppInfo == NULL)
+		{
+			globAppInfo = new GlobalApplicationInformation(this);
+			globAppInfo->setCompanyName(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppCompanyName()").toString());
+			globAppInfo->setInternalName(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppInternalName()").toString());
+			globAppInfo->setFileVersionString(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppFileVersionString()").toString());
+			globAppInfo->setPluginDeviceInterfaceString(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppPluginDeviceInterfaceString()").toString());
+			globAppInfo->setPluginExtensionInterfaceString(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppPluginExtensionInterfaceString()").toString());
+		}
+		//MainAppInfo::setCompanyName(invokeJavaScriptConfigurationFile("StimulGLInfo.GetCompanyName()").toString());
+		//= mainWindow->invokeJavaScriptConfigurationFile("");// MAIN_PROGRAM_COMPANY_NAME;
+		//QCoreApplication::setOrganizationDomain(m_MainAppInfo.sCompanyName);
+		//QCoreApplication::setOrganizationName(m_MainAppInfo.sCompanyName);
+		//m_MainAppInfo.sInternalName = MAIN_PROGRAM_INTERNAL_NAME;
+		//QCoreApplication::setApplicationName(m_MainAppInfo.sInternalName);
+		//m_MainAppInfo.sInternalName = MAIN_PROGRAM_FILE_VERSION_STRING;
+		//QCoreApplication::setApplicationVersion(MAIN_PROGRAM_FILE_VERSION_STRING);
+		//return true;
+
+
+		//QVariant varRet;
+		//varRet = webView->page()->mainFrame()->evaluateJavaScript("test()");//"function abc(){alert('This page has finished loading!');return 'he'} abc();");
+		//varRet = webView->page()->mainFrame()->evaluateJavaScript("window.getval()");
+		//varRet = webView->page()->mainFrame()->evaluateJavaScript("getval()");
+		//varRet = invokeJavaScriptConfigurationFile("StimulGLInfo.GetCurrentRelease()");//StimulGLInfo.GetReleaseQtVersionByIndex(n)
+		//bool bRetval;
+		//int nTemp = varRet.toInt(&bRetval);
+		//if (!bRetval)
+		//	qWarning() << "Error getting int from JS";
+	}
+}
+
+QVariant MainWindow::invokeJavaScriptConfigurationFile(const QString &sCode)
+{
+	if(webView)
+	{
+		return webView->page()->mainFrame()->evaluateJavaScript(sCode);
+	}
+	return NULL;
+}
+
+void MainWindow::showJavaScriptConfigurationFile()
+{
+	if(webView)
+	{
+		webView->show();
+	}
+}
 
 void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
 {
@@ -94,6 +157,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//DisableSplash				= 0x00002
 	//QWaitCondition sleep;
 	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
+	composeJavaScriptConfigurationFile();
 	MainAppInfo::Initialize(this);
 	//MainAppInfo::setMainWindow(this);
 	QApplication::setGraphicsSystem("opengl");//"raster");
@@ -101,7 +165,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
     AppScriptStatus = MainAppInfo::NoScript;
 	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash) == false)
 	{
-		QPixmap pixmap(":/Resources/splash.png");
+		QPixmap pixmap(":/resources/splash.png");
 		MainSplashScreen = new QSplashScreen(pixmap);
 		MainSplashScreen->show();
 		showSplashMessage("Initializing Program...");
@@ -604,13 +668,13 @@ void MainWindow::createDefaultMenus()
 	toolsMenu = new QMenu(tr("&Tools"), this);
 	windowMenu = new QMenu(tr("&Window"), this);
 
-	newScriptAction = new QAction(QIcon(":/Resources/new.png"),tr("&New QT Script"), this);
+	newScriptAction = new QAction(QIcon(":/resources/new.png"),tr("&New QT Script"), this);
 	newScriptAction->setStatusTip(tr("Create a new QT Script document"));
 	newScriptAction->setData(MainAppInfo::DOCTYPE_QSCRIPT);
 	connect(newScriptAction, SIGNAL(triggered()), this, SLOT(newFile()));
 	fileMenu->addAction(newScriptAction);
 
-	//newAction = new QAction(QIcon(":/Resources/new.png"),tr("&New Document"), this);
+	//newAction = new QAction(QIcon(":/resources/new.png"),tr("&New Document"), this);
 	//newAction->setShortcuts(QKeySequence::New);
 	//newAction->setStatusTip(tr("Create a new document"));
 	//newAction->setData(DOCTYPE_UNDEFINED);
@@ -623,13 +687,13 @@ void MainWindow::createDefaultMenus()
 	//connect(newSVGAction, SIGNAL(triggered()), this, SLOT(newFile()));
 	//fileMenu->addAction(newSVGAction);
 
-	openAction = new QAction(QIcon(":/Resources/open.png"),tr("&Open..."), this);
+	openAction = new QAction(QIcon(":/resources/open.png"),tr("&Open..."), this);
 	openAction->setShortcut(QKeySequence(QKeySequence::Open));
 	openAction->setStatusTip(tr("Open an existing file"));
 	connect(openAction, SIGNAL(triggered()), this, SLOT(openFiles()));
 	fileMenu->addAction(openAction);
 
-	saveAction = new QAction(QIcon(":/Resources/save.png"), tr("&Save"), this);
+	saveAction = new QAction(QIcon(":/resources/save.png"), tr("&Save"), this);
 	saveAction->setShortcuts(QKeySequence::Save);
 	saveAction->setStatusTip(tr("Save the document to disk"));
 	connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
@@ -641,7 +705,7 @@ void MainWindow::createDefaultMenus()
 	connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 	fileMenu->addAction(saveAsAction);
 
-	printAction = new QAction(QIcon(":/Resources/print.png"), tr("&Print..."), this);
+	printAction = new QAction(QIcon(":/resources/print.png"), tr("&Print..."), this);
 	printAction->setShortcuts(QKeySequence::Print);
 	printAction->setStatusTip(tr("Print the current document"));
 	printAction->setEnabled(false);
@@ -680,19 +744,19 @@ void MainWindow::createDefaultMenus()
 	fileMenu->addAction(quitAction);
 	menuBar()->addMenu(fileMenu);//the file menu..........................................................
 
-	cutAction = new QAction(QIcon(":/Resources/cut.png"), tr("Cu&t"), this);
+	cutAction = new QAction(QIcon(":/resources/cut.png"), tr("Cu&t"), this);
 	cutAction->setShortcuts(QKeySequence::Cut);
 	cutAction->setStatusTip(tr("Cut the current selection's contents to the clipboard"));
 	connect(cutAction, SIGNAL(triggered()), this, SLOT(cut()));
 	editMenu->addAction(cutAction);
 
-	copyAction = new QAction(QIcon(":/Resources/copy.png"), tr("&Copy"), this);
+	copyAction = new QAction(QIcon(":/resources/copy.png"), tr("&Copy"), this);
 	copyAction->setShortcuts(QKeySequence::Copy);
 	copyAction->setStatusTip(tr("Copy the current selection's contents to the clipboard"));
 	connect(copyAction, SIGNAL(triggered()), this, SLOT(copy()));
 	editMenu->addAction(copyAction);
 
-	pasteAction = new QAction(QIcon(":/Resources/paste.png"), tr("&Paste"), this);
+	pasteAction = new QAction(QIcon(":/resources/paste.png"), tr("&Paste"), this);
 	pasteAction->setShortcuts(QKeySequence::Paste);
 	pasteAction->setStatusTip(tr("Paste the clipboard's contents into the current selection"));
 	connect(pasteAction, SIGNAL(triggered()), this, SLOT(paste()));
@@ -725,7 +789,7 @@ void MainWindow::createDefaultMenus()
 	editMenu->addAction(replaceAction);
 
 
-	//searchAction = new QAction(tr("Search"), this);//QIcon(":/Resources/comment.png")
+	//searchAction = new QAction(tr("Search"), this);//QIcon(":/resources/comment.png")
 	//searchAction->setShortcut(tr("Ctrl+F"));
 	//searchAction->setStatusTip(tr("Search through the current document."));
 	//connect(searchAction, SIGNAL(triggered()), this, SLOT(search()));
@@ -741,13 +805,13 @@ void MainWindow::createDefaultMenus()
 
 	editMenu->addSeparator();
 
-	//commentAction = new QAction(QIcon(":/Resources/comment.png"), tr("Comment"), this);
+	//commentAction = new QAction(QIcon(":/resources/comment.png"), tr("Comment"), this);
 	//commentAction->setShortcut(tr("Ctrl+K"));
 	//commentAction->setStatusTip(tr("Comment out the selected lines."));
 	//connect(commentAction, SIGNAL(triggered()), this, SLOT(comment()));
 	//editMenu->addAction(commentAction);
 
-	//uncommentAction = new QAction(QIcon(":/Resources/uncomment.png"), tr("Uncomment"), this);
+	//uncommentAction = new QAction(QIcon(":/resources/uncomment.png"), tr("Uncomment"), this);
 	//uncommentAction->setShortcut(tr("Ctrl+U"));
 	//uncommentAction->setStatusTip(tr("Uncomment out the selected lines."));
 	//connect(uncommentAction, SIGNAL(triggered()), this, SLOT(unComment()));
@@ -854,21 +918,21 @@ void MainWindow::createDefaultMenus()
 	menuBar()->addMenu(markersMenu);
 	updateMarkersMenu();//the markers menu..........................................................
 
-	runScriptAction = scriptMenu->addAction(QIcon(":/Resources/runScript.png"),tr("Run Script"));
+	runScriptAction = scriptMenu->addAction(QIcon(":/resources/runScript.png"),tr("Run Script"));
 	runScriptAction->setEnabled(false);
 	runScriptAction->setShortcut(QKeySequence(tr("F5")));
 	runScriptAction->setStatusTip(tr("Run the current script"));
 	runScriptAction->setData(MainAppInfo::Execute);
 	connect(runScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
 
-	//debugScriptAction = scriptMenu->addAction(tr("Debug Script"));//QIcon(":/Resources/runScript.png"),tr("&Run Script"));
+	//debugScriptAction = scriptMenu->addAction(tr("Debug Script"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
 	//debugScriptAction->setEnabled(false);//(false);
 	//debugScriptAction->setShortcut(QKeySequence(tr("F6")));
 	//debugScriptAction->setStatusTip(tr("Open the current script in the Debugger"));
 	//debugScriptAction->setData(MainAppInfo::Debug);
 	//connect(debugScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
 
-	abortScriptAction = scriptMenu->addAction(tr("Abort Script"));//QIcon(":/Resources/runScript.png"),tr("&Run Script"));
+	abortScriptAction = scriptMenu->addAction(tr("Abort Script"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
 	abortScriptAction->setEnabled(false);//false);
 	abortScriptAction->setShortcut(QKeySequence(tr("F7")));
 	abortScriptAction->setStatusTip(tr("Stop the current script from running"));
@@ -932,6 +996,11 @@ void MainWindow::setupHelpMenu()
 	aboutQtAct->setStatusTip(tr("Show the Qt About Dialog"));
 	helpMenu->addAction(aboutQtAct);
 	connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+
+	historyQtAct = new QAction(tr("StimulGL History"), this);
+	historyQtAct->setStatusTip(tr("Show the StimulGL History"));
+	helpMenu->addAction(historyQtAct);
+	connect(historyQtAct, SIGNAL(triggered()), this, SLOT(showJavaScriptConfigurationFile()));
 
 	menuBar()->addMenu(helpMenu);//the help menu..........................................................
 }
@@ -1009,6 +1078,19 @@ void MainWindow::setupDynamicPlugins()
 
 		foreach (QObject *plugin, QPluginLoader::staticInstances())
 		{
+			DeviceInterface *iDevice = qobject_cast<DeviceInterface *>(plugin);
+			if (iDevice) 
+			{
+				iDevice->setGlobalAppInfo(globAppInfo);
+			}
+			else 
+			{
+				ExtensionInterface *iExtension = qobject_cast<ExtensionInterface *>(plugin);
+				if (iExtension) 
+				{
+					iExtension->setGlobalAppInfo(globAppInfo);
+				}				
+			}
 			metaObject = plugin->metaObject();
 			//QStringList methods;
 			//for(i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
@@ -1096,6 +1178,19 @@ void MainWindow::setupDynamicPlugins()
 			QObject *plugin = loader.instance();//The QObject provided by the plugin, if it was compiled against an incompatible version of the Qt library, QPluginLoader::instance() returns a null pointer.
 			if (plugin) 
 			{
+				DeviceInterface *iDevice = qobject_cast<DeviceInterface *>(plugin);
+				if (iDevice) 
+				{
+					iDevice->setGlobalAppInfo(globAppInfo);
+				}
+				else 
+				{
+					ExtensionInterface *iExtension = qobject_cast<ExtensionInterface *>(plugin);
+					if (iExtension) 
+					{
+						iExtension->setGlobalAppInfo(globAppInfo);
+					}				
+				}
 				metaObject = plugin->metaObject();
 				//QStringList properties;
 				//for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i)
@@ -2148,6 +2243,16 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		disconnect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
 		disconnect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));	
 		delete DocManager;
+	}
+	if(webView)
+	{
+		delete webView;
+		webView = NULL;
+	}
+	if(globAppInfo)
+	{
+		delete globAppInfo;
+		globAppInfo = NULL;
 	}
 }
 
