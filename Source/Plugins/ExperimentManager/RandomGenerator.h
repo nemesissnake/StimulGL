@@ -91,6 +91,11 @@ enum RandomGenerator_RandomizeMethod
 	RandomGenerator_RandomizePreservedValues = 2
 };
 
+//!  The Random Generator class. 
+/*!
+The Random Generator can be used to create and edit randomized lists and numbers. For the randomization it combines two 
+different random number generators (Mersenne twister and Mother-of-All (Multiply with carry).
+*/
 class RandomGenerator : public QObject, public QStringList
 {
 	Q_OBJECT
@@ -108,27 +113,27 @@ public:
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 
-	int randomizeInt(int nMin, int nMax);											//just for <int> randomization
-	double randomizeDouble(double nMin, double nMax);									//just for <double> randomization
-	QScriptValue randomize(int rMethod  = (int)RandomGenerator_RandomizeStandard);//, QScriptValue sList = QScriptValue());
-	QScriptValue toScriptArray();
+	int randomizeInt(int nMin, int nMax);									//just for <int> randomization
+	double randomizeDouble(double dMin, double dMax);						//just for <double> randomization
 
-	const QString at(int i) const {return QStringList::at(i);};
-	int count() const {return QStringList::count();};
-	int count(const QString &sValue) const {return QStringList::count(sValue);};
-	bool isEmpty() const {return QStringList::isEmpty();};
-	void append(const QString &sValue) {QStringList::append(sValue);};
-	QString takeFirst() {return QStringList::takeFirst();};
-	QString takeLast() {return QStringList::takeLast();};
-	QString takeAt(int i) {return QStringList::takeAt(i);};
-	void clear() {QStringList::clear();};
-	int removeAll(const QString &sValue) {return QStringList::removeAll(sValue);};
-	void removeAt(int i) {return QStringList::removeAt(i);};
-	int indexOf(const QString &sValue, int nFrom = 0) const {return QStringList::indexOf(sValue,nFrom);};
-	void swap(int i, int j) {QStringList::swap(i,j);};
-	void insert(int i, const QString &sValue) {QStringList::insert(i,sValue);};
+	QStringList toStringList();
+	QStringList randomize(int rMethod  = (int)RandomGenerator_RandomizeStandard);
+	const QString at(int i) const;
+	int count() const;
+	int count(const QString &sValue) const;
+	bool isEmpty() const;
+	void append(const QString &sValue);
+	int appendStringList(const QStringList &sList);
+	QString takeFirst();
+	QString takeLast();
+	QString takeAt(int i);
+	void clear();
+	int removeAll(const QString &sValue);
+	void removeAt(int i);
+	int indexOf(const QString &sValue, int nFrom = 0) const;
+	void swap(int i, int j);
+	void insert(int i, const QString &sValue);
 
-	
 private:
 	QScriptEngine* currentScriptEngine;
 	TRandomCombined<CRandomMersenne,CRandomMother> *tCombinedRandGen;
@@ -136,4 +141,5 @@ private:
 };
 
 Q_DECLARE_METATYPE(RandomGenerator*)
+
 #endif // RANDOMGENERATOR_H

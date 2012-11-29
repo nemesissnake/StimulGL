@@ -22,6 +22,13 @@
 #include "randomc/mersenne.cpp"
 #include "randomc/mother.cpp"
 
+Q_DECLARE_METATYPE(QStringList)
+
+/*! \brief The RandomGenerator constructor.
+*
+*   You do not need to specify the parent object. 
+*	The StimulGL script engine automatically retrieves the parent role
+*/
 RandomGenerator::RandomGenerator(QObject *parent):QObject(parent)
 {
 	currentScriptEngine = NULL;
@@ -32,7 +39,25 @@ RandomGenerator::RandomGenerator(QObject *parent):QObject(parent)
 
 QScriptValue RandomGenerator::ctor__randomGenerator(QScriptContext* context, QScriptEngine* engine)
 {
+	//QString sArgs;
+	//int nArgCount = context->argumentCount();
+	//bool bIsArray;
+	//for(int i=0;i<nArgCount;i++)
+	//{
+	//	bIsArray = context->argument(i).isArray();
+	//	sArgs = sArgs + context->argument(i).toString();
+	//	if((i+1)<nArgCount)
+	//		sArgs = sArgs + " , ";
+	//	
+	//}
 	RandomGenerator *RandomGeneratorObj = new RandomGenerator();
+	if(context->argumentCount()>0)
+	{
+		if(context->argument(0).isArray())
+		{
+			RandomGeneratorObj->appendStringList(qscriptvalue_cast<QStringList> (context->argument(0)));
+		}
+	}
 	RandomGeneratorObj->setScriptEngine(engine);
 	return engine->newQObject(RandomGeneratorObj, QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 }
@@ -40,6 +65,7 @@ QScriptValue RandomGenerator::ctor__randomGenerator(QScriptContext* context, QSc
 void RandomGenerator::setScriptEngine(QScriptEngine* engine)
 {
 	currentScriptEngine = engine;
+	qScriptRegisterSequenceMetaType<QStringList>(currentScriptEngine);
 }
 
 bool RandomGenerator::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
@@ -47,7 +73,6 @@ bool RandomGenerator::makeThisAvailableInScript(QString strObjectScriptName, QOb
 	if (engine)
 	{
 		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
-		//QObject *someObject = this;//new MyObject;
 		QScriptValue objectValue = currentScriptEngine->newQObject(this);
 		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
 		return true;
@@ -55,6 +80,11 @@ bool RandomGenerator::makeThisAvailableInScript(QString strObjectScriptName, QOb
 	return false;
 }
 
+/*! \brief The RandomGenerator destructor.
+*
+*   You do not need call the destructor. 
+*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+*/
 RandomGenerator::~RandomGenerator()
 {
 	if(tCombinedRandGen != NULL)
@@ -64,53 +94,215 @@ RandomGenerator::~RandomGenerator()
 	}
 }
 
-//		for (int i = 0; i < 20; i++) {
-//			// generate 20 random floating point numbers and 20 random integers
-//			//printf("\n%14.10f   %2i",  RG.Random(),  RG.IRandom(0,99));
-//			float a = tCombinedRandGen->Random();
-//			int b = tCombinedRandGen->IRandom(0,99);
-//			b = b;
-
 int RandomGenerator::randomizeInt(int nMin, int nMax) 
-{//nMin>nMax? --> return 0x80000000;
+{
+/*! \brief Creates a random Integer value.
+ *
+ *  This function creates a random integer value between (and including) a defined range.
+ * @param nMin an integer value that determines the minimal integer value of the range where a random number is picked from.
+ * @param nMax an integer value that determines the maximal integer value of the range where a random number is picked from.
+ * @return an random integer value between (and including) a defined range. If the range is not correct it returns 0x80000000;
+ */
 	return tCombinedRandGen->IRandom(nMin,nMax);
 }
 
-double RandomGenerator::randomizeDouble(double nMin, double nMax) 
+double RandomGenerator::randomizeDouble(double dMin, double dMax) 
 {
-	return tCombinedRandGen->DRandom(nMin,nMax);
+/*! \brief Creates a random Double value.
+ *
+ *  This function creates a random double value between (and including) a defined range.
+ * @param dMin an integer value that determines the minimal double value of the range where a random number is picked from.
+ * @param dMax an integer value that determines the maximal double value of the range where a random number is picked from.
+ * @return an random integer value between (and including) a defined range. If the range is not correct it returns 0x80000000;
+ */
+	return tCombinedRandGen->DRandom(dMin,dMax);
 }
 
-QScriptValue RandomGenerator::randomize(int rMethod)//, QScriptValue sList)
+const QString RandomGenerator::at(int i) const 
 {
-	if(currentScriptEngine == NULL)
-		return NULL;
+/*! \brief Returns the String at index position i in the StringList.
+ *
+ *  This function returns the String at index position i in the list, 
+ *  i must be a valid index position in the list (i.e., 0 <= i < RandomGenerator::count()).
+ *  This function is very fast (constant time).
+ * @param i an integer value that holds the index position.
+ * @return an String value containing the item at index position in the list.
+ */
+	return QStringList::at(i);
+}
+
+int RandomGenerator::count() const 
+{
+/*! \brief Returns the number of String items in the list.
+ *
+ * @return an integer value containing the number of String items in the list.
+ */
+	return QStringList::count();
+}
+
+int RandomGenerator::count(const QString &sValue) const 
+{
+/*! \brief Returns the number of a particular String occurrences in the list.
+ *
+ * @param sValue an String value that holds the String to search for in the list.
+ * @return an integer value containing the number of a particular String occurrences in the list.
+ */
+	return QStringList::count(sValue);
+}
+
+bool RandomGenerator::isEmpty() const 
+{
+/*! \brief Returns true if the list contains no Strings; otherwise returns false.
+ *
+ * @return an boolean value representing whether the list was empty or not.
+ */
+	return QStringList::isEmpty();
+}
+
+void RandomGenerator::append(const QString &sValue) 
+{
+/*! \brief Inserts a defined String at the end of the list.
+ *
+ * This operation is typically very fast (constant time), because the list preallocates extra space on both sides of its internal buffer to allow for fast growth at both ends of the list.
+ * @param sValue an String value that should be inserted at the end of the list.
+ */
+	QStringList::append(sValue);
+}
+
+QString RandomGenerator::takeFirst() 
+{
+/*! \brief Removes the first String in the list and returns it.
+ * 
+ * This function assumes the list is not empty. To avoid failure, call RandomGenerator::isEmpty() before calling this function. This operation takes constant time.
+ * @return a String value containing the removed String from the list.
+ */
+	return QStringList::takeFirst();
+}
+
+QString RandomGenerator::takeLast() 
+{
+/*! \brief Removes the last String in the list and returns it.
+ * 
+ * This function assumes the list is not empty. To avoid failure, call RandomGenerator::isEmpty() before calling this function. This operation takes constant time.
+ * @return a String value containing the removed String from the list.
+ */
+	return QStringList::takeLast();
+}
+
+QString RandomGenerator::takeAt(int i) 
+{
+/*! \brief Removes the String at a defined index position in the list and returns it.
+ * 
+ * This function assumes the list is not empty. To avoid failure, call RandomGenerator::isEmpty() before calling this function. This operation takes constant time.
+ * @param i an integer value holding the index position.
+ * @return a String value containing the removed String from the list.
+ */
+	return QStringList::takeAt(i);
+}
+
+void RandomGenerator::clear() 
+{
+/*! \brief Removes all items from the list.
+ *
+ * This function removes all items from the list.
+ */
+	QStringList::clear();
+}
+
+int RandomGenerator::removeAll(const QString &sValue) 
+{
+/*! \brief Removes all occurrences of a String in the list and returns the number of entries removed.
+ * 
+ * @param sValue the String value that should be removed (all) from the list.
+ * @return an integer value representing the number of entries that were removed.
+ */
+	return QStringList::removeAll(sValue);
+}
+
+void RandomGenerator::removeAt(int i) 
+{
+/*! \brief Removes the String at a defined index position in the list.
+ * 
+ * This function assumes the list is not empty. To avoid failure, call RandomGenerator::isEmpty() before calling this function. This operation takes constant time.
+ * @param i an integer value holding the index position.
+ */
+	return QStringList::removeAt(i);
+}
+
+int RandomGenerator::indexOf(const QString &sValue, int nFrom) const 
+{
+/*! \brief Returns the index position of the first occurrence of the defined String in the list.
+ * 
+ * This function Returns the index position of the first occurrence of the defined String in the list, searching forward from index position from. Note that QList uses 0-based indexes.
+ * @param sValue the String value to search for in the list.
+ * @nFrom an integer value holding the starting index position for the search operation. This value is 0 if not defined.
+ * @return an integer holding the index of the first occurrence of the defined String in the list. This function returns -1 if no item matched.
+ */
+	return QStringList::indexOf(sValue,nFrom);
+}
+
+void RandomGenerator::swap(int i, int j) 
+{
+/*! \brief Exchange the String value at index position i with the String value at index position j.
+ * 
+ * This function assumes that both i and j are at least 0 but less than RandomGenerator::count(). To avoid failure, test that both i and j are at least 0 and less than RandomGenerator::count().
+ * @param i an integer value holding the first index position.
+ * @param j an integer value holding the second index position.
+ */
+	QStringList::swap(i,j);
+}
+
+void RandomGenerator::insert(int i, const QString &sValue) 
+{
+/*! \brief Inserts a defined String value at specific index position i.
+ * 
+ * This function inserts a String value at index position i in the list. If i is 0, the value is prepended to the list. If i is RandomGenerator::count(), the value is appended to the list.
+ * @param i an integer value holding the index position.
+ * @param sValue the String value to insert to the list.
+ */
+	QStringList::insert(i,sValue);
+}
+
+QStringList RandomGenerator::randomize(int rMethod)
+{
+/*! \brief Randomizes and return the String List.
+ * 
+ * This function randomizes and then returns the randomized String List.
+ * @param rMethod <todo>.
+ * @return a randomized StringList (array).
+ */
 	RandomGenerator_RandomizeMethod rndMethod = (RandomGenerator_RandomizeMethod) rMethod;
-	//QStringList tmpList = currentScriptEngine->fromScriptValue<QStringList>(sList);
 
-	if(randomizeList(rndMethod))//&tmpList))
+	if(randomizeList(rndMethod))
 	{
-		//tmpList << "1" << "2" << "3";
-		return currentScriptEngine->toScriptValue((QStringList)*this);//tmpList);
+		return (QStringList)*this;
 	}
 	else
 	{
-		return currentScriptEngine->undefinedValue();
+		return QStringList();
 	}
 }
 
-QScriptValue RandomGenerator::toScriptArray()
+QStringList RandomGenerator::toStringList()
 {
-	if(currentScriptEngine == NULL)
-		return NULL;
-	if(QStringList::isEmpty() == false)
-	{
-		return currentScriptEngine->toScriptValue((QStringList)*this);
-	}
-	else
-	{
-		return currentScriptEngine->undefinedValue();
-	}
+/*! \brief Returns the String List.
+ * 
+ * This function returns the String List.
+ * @return the StringList (array).
+ */
+	return (QStringList)*this;
+}
+
+int RandomGenerator::appendStringList(const QStringList &sList)
+{
+/*! \brief Inserts a defined StringList at the end of the list.
+ *
+ * This function inserts a defined StringList to the end of the list and returns the number of Strings in the list.
+ * @param sList an StringList (array) that should be inserted at the end of the list.
+ * @return an integer value representing the number of Strings in the list.
+ */
+	QStringList::append(sList);
+	return QStringList::count();
 }
 
 bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QStringList *sList)

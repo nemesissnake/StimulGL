@@ -38,7 +38,8 @@ for(nCounter1=0;nCounter1<10;nCounter1++)
 for(nCounter2=0;nCounter2<10;nCounter2++)
 {
 	TmpString = "";
-	NumberArray = RandomGeneratorObj.randomize(0);
+	//NumberArray = RandomGeneratorObj.randomize(0);
+	Log("ScriptArray: " + NumberArray);
 	for(nCounter1=0;nCounter1<NumberArray.length;nCounter1++)
 	{
 		TmpString = TmpString + NumberArray[nCounter1];
@@ -69,7 +70,7 @@ Log("IsEmpty()? : " + RandomGeneratorObj.isEmpty());
 for(nCounter1=0;nCounter1<5;nCounter1++)
 {
 	for(nCounter2=0;nCounter2<2;nCounter2++)
-	{	
+	{
 		RandomGeneratorObj.append(nCounter1);
 	}
 }
@@ -82,8 +83,19 @@ RandomGeneratorObj.insert(nPosition, nSearchNumber);
 Log("Index of (" + nSearchNumber + ") is : " + RandomGeneratorObj.indexOf(nSearchNumber,0));
 RandomGeneratorObj.swap(1,nPosition);
 Log("Index of (" + nSearchNumber + ") is : " + RandomGeneratorObj.indexOf(nSearchNumber,0));
-TmpArray = RandomGeneratorObj.toScriptArray();
+TmpArray = RandomGeneratorObj.toStringList();
 Log(TmpArray);
+
+RandomGeneratorObj.clear();
+RandomGeneratorObj = new RandomGenerator();
+Log("Count() : " + RandomGeneratorObj.count());
+Log("Count() : " + RandomGeneratorObj.appendStringList(TmpArray));
+Log("Count() : " + RandomGeneratorObj.appendStringList(TmpArray));
+Log(RandomGeneratorObj.toStringList());
+
+RandomGeneratorObj.clear();
+RandomGeneratorObj = new RandomGenerator(TmpArray);
+Log("Count() : " + RandomGeneratorObj.count());
 
 RandomGeneratorObj.deleteLater();
 NumberArray = null;
