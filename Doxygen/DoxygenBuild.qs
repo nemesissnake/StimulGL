@@ -176,7 +176,9 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 					  "../../StimulGL/Source/Plugins/ExperimentManager/prtformatmanager.h \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/prtformatmanager.cpp \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/ImageProcessor.h \\\n" +
-					  "../../StimulGL/Source/Plugins/ExperimentManager/ImageProcessor.cpp \\\n" +					 
+					  "../../StimulGL/Source/Plugins/ExperimentManager/ImageProcessor.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/RandomGenerator.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/RandomGenerator.cpp \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 		changeSet[6][1] = "StimulGL.doxygen.Project";
