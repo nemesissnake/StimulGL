@@ -33,6 +33,7 @@ ParallelPortPlugin::ParallelPortPlugin(short BaseAddress, QObject *parent)
 
 ParallelPortPlugin::~ParallelPortPlugin()
 {
+	//QString ss = GlobalAppInfo->getCompanyName();
 	delete PPortDiagObject;
 	delete PPortObject;
 }

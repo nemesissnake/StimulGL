@@ -37,6 +37,47 @@ typedef struct strcDocContentInfoStructure
 	bool bIsFile;
 } DocContentInfoStructure;
 
+typedef struct strMainAppInformation 
+{
+	QString sCompanyName;
+	QString sInternalName;
+	QString sFileVersion;
+	QString sDeviceInterfaceString;
+	QString sExtensionInterfaceString;
+};
+
+class GlobalApplicationInformation : public QObject
+{
+	Q_OBJECT
+
+	public:
+		GlobalApplicationInformation(QObject *parent = NULL)
+		{
+			mainAppInformation.sCompanyName = "";
+			mainAppInformation.sFileVersion = "";
+			mainAppInformation.sInternalName = "";
+			mainAppInformation.sDeviceInterfaceString = "";
+			mainAppInformation.sExtensionInterfaceString = "";
+		};
+		~GlobalApplicationInformation(){};
+		
+		void setCompanyName(const QString &sName) {mainAppInformation.sCompanyName = sName;QCoreApplication::setOrganizationDomain(mainAppInformation.sCompanyName);QCoreApplication::setOrganizationName(mainAppInformation.sCompanyName);};
+		QString getCompanyName() {return mainAppInformation.sCompanyName;};
+		void setFileVersionString(const QString &sVersion) {mainAppInformation.sFileVersion = sVersion;QCoreApplication::setApplicationVersion(mainAppInformation.sFileVersion);};
+		QString getFileVersionString() {return mainAppInformation.sFileVersion;};
+		void setInternalName(const QString &sIntName) {mainAppInformation.sInternalName = sIntName;QCoreApplication::setApplicationName(mainAppInformation.sInternalName);};
+		QString getInternalName() {return mainAppInformation.sInternalName;};
+		void setPluginDeviceInterfaceString(const QString &sValue) {mainAppInformation.sDeviceInterfaceString = sValue;};
+		QString getPluginDeviceInterfaceString() {return mainAppInformation.sDeviceInterfaceString;};
+		void setPluginExtensionInterfaceString(const QString &sValue) {mainAppInformation.sExtensionInterfaceString = sValue;};
+		QString getPluginExtensionInterfaceString() {return mainAppInformation.sExtensionInterfaceString;};
+
+
+
+	private:
+		strMainAppInformation mainAppInformation;
+};
+
 class MainAppInfo 
 {
 private:
@@ -45,7 +86,6 @@ private:
 public:
 
 	static bool Initialize(QWidget *mainWin = NULL);
-	static bool InitializeMainAppNaming();
 	static QString MainProgramName()				{return MAIN_PROGRAM_INTERNAL_NAME;}
 	static QString MainOrganizationName()			{return MAIN_PROGRAM_COMPANY_NAME;}
 	static QString MainProgramFileVersion()			{return MAIN_PROGRAM_FILE_VERSION_STRING;}
@@ -61,8 +101,7 @@ public:
 	static QWidget* getMainWindow()					{return mainWindow;};
 	static QString getMainWindowLogSlotName()		{return MAIN_PROGRAM_LOG_SLOT_NAME;};
 	static QString getScriptApiClassName()			{return SCRIPT_API_CLASS_NAME_TAG;};
-
-
+	
 	static QString getDefaultFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}
 	static QStringList getQTScriptBindingList();
 	static QString apiDirPath();
@@ -75,7 +114,7 @@ public:
 	static void CloseMainLogFile();
 	static bool CreateHashTableFromEnumeration(const QString &sTypeName, QHash<QString, int> &hTable, const QMetaObject metaObject);
 
-private:
+private:	
 	static QDir appDebugDirPath();
 
 public:
