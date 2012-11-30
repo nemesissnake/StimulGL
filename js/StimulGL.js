@@ -30,7 +30,7 @@ function StimulGL_CreateArray(length)
 function StimulGL_Information()
 {
 	//alert('StimulGL constructor');
-	this.StimulGLReleases = [['2.0.0.2','4.8.0'],['2.0.0.3','4.8.0'],['2.0.0.4','5.0.0']];
+	this.StimulGLReleases = [['2.0.0.2','4.8.0'],['2.0.0.3','4.8.0']];
 	var PropCounter = 0;
 	var AuthorCounter = 0;
 	var ComponentCounter = 0;
