@@ -24,6 +24,7 @@
 #include <QtScript>
 #include <QMessageBox>
 #include "mainappinfo.h"
+#include "GlobalApplicationInformation.h"
 
 
 class PluginInterface
@@ -34,14 +35,13 @@ public:
 	virtual QString GetPluginInformation(void) {return strPluginInformation;}
 	virtual QString Test(const QString &message) {return "I'm oke(" + message + ")" + " --> " + strPluginInformation;}	
 	virtual bool ConfigureScriptEngine(QScriptEngine &eng) = 0;
-	virtual QString GetMinimalMainProgramVersion() {return GlobalAppInfo->getFileVersionString();}; //MAIN_PROGRAM_FILE_VERSION_STRING;};
+	virtual QString GetMinimalMainProgramVersion() {return GlobalAppInfo->getFileVersionString();};
 	void setGlobalAppInfo(GlobalApplicationInformation *pGlobalAppInfo) {GlobalAppInfo=pGlobalAppInfo;};
 	
 public slots:
 	virtual bool IsCompatible() 
 	{
 		QString strMainProgramMinimalVersion = GetMinimalMainProgramVersion();
-		//return (MainAppInfo::isCompatibleVersion(GetMinimalMainProgramVersion(),QString(MAIN_PROGRAM_FILE_VERSION_STRING)));			
 		QStringList lstMainProgramCurrentVersion = QString(GlobalAppInfo->getFileVersionString()).split(".");
 		QStringList lstMainProgramMinimalVersion = strMainProgramMinimalVersion.split(".");
 		if ((lstMainProgramCurrentVersion.count() == 4) && (lstMainProgramMinimalVersion.count() == 4))
@@ -63,7 +63,7 @@ public slots:
 	};
 	virtual QStringList GetAdditionalFileExtensions() {return QStringList();};
 	virtual QStringList GetAdditionalFileSlotHandlers() {return QStringList();};
-	virtual QObject *GetScriptMetaObject(int nIndex = 0) {return NULL;};
+	virtual QObject *GetScriptMetaObject(int nIndex = 0) {nIndex = nIndex; return NULL;};
 	virtual int GetScriptMetaObjectCount() {return 0;};
 	virtual int GetAdditionalFileTypeStyle(QString strExtension) {return MainAppInfo::DOCTYPE_STYLE_UNDEFINED;};//should return a DocTypeStyle
 	virtual QString GetAdditionalFileTypeApiName(QString strExtension) {return "";};

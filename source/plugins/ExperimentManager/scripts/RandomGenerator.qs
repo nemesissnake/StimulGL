@@ -38,7 +38,7 @@ for(nCounter1=0;nCounter1<10;nCounter1++)
 for(nCounter2=0;nCounter2<10;nCounter2++)
 {
 	TmpString = "";
-	//NumberArray = RandomGeneratorObj.randomize(0);
+	NumberArray = RandomGeneratorObj.randomize(0);
 	Log("ScriptArray: " + NumberArray);
 	for(nCounter1=0;nCounter1<NumberArray.length;nCounter1++)
 	{

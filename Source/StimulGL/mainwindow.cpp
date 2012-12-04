@@ -93,30 +93,8 @@ void MainWindow::parseJavaScriptConfigurationFile(bool bLoadStatus)
 			globAppInfo = new GlobalApplicationInformation(this);
 			globAppInfo->setCompanyName(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppCompanyName()").toString());
 			globAppInfo->setInternalName(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppInternalName()").toString());
-			globAppInfo->setFileVersionString(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppFileVersionString()").toString());
-			globAppInfo->setPluginDeviceInterfaceString(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppPluginDeviceInterfaceString()").toString());
-			globAppInfo->setPluginExtensionInterfaceString(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppPluginExtensionInterfaceString()").toString());
+			globAppInfo->setFileVersionString(invokeJavaScriptConfigurationFile("StimulGLInfo.GetCurrentRelease()").toString());
 		}
-		//MainAppInfo::setCompanyName(invokeJavaScriptConfigurationFile("StimulGLInfo.GetCompanyName()").toString());
-		//= mainWindow->invokeJavaScriptConfigurationFile("");// MAIN_PROGRAM_COMPANY_NAME;
-		//QCoreApplication::setOrganizationDomain(m_MainAppInfo.sCompanyName);
-		//QCoreApplication::setOrganizationName(m_MainAppInfo.sCompanyName);
-		//m_MainAppInfo.sInternalName = MAIN_PROGRAM_INTERNAL_NAME;
-		//QCoreApplication::setApplicationName(m_MainAppInfo.sInternalName);
-		//m_MainAppInfo.sInternalName = MAIN_PROGRAM_FILE_VERSION_STRING;
-		//QCoreApplication::setApplicationVersion(MAIN_PROGRAM_FILE_VERSION_STRING);
-		//return true;
-
-
-		//QVariant varRet;
-		//varRet = webView->page()->mainFrame()->evaluateJavaScript("test()");//"function abc(){alert('This page has finished loading!');return 'he'} abc();");
-		//varRet = webView->page()->mainFrame()->evaluateJavaScript("window.getval()");
-		//varRet = webView->page()->mainFrame()->evaluateJavaScript("getval()");
-		//varRet = invokeJavaScriptConfigurationFile("StimulGLInfo.GetCurrentRelease()");//StimulGLInfo.GetReleaseQtVersionByIndex(n)
-		//bool bRetval;
-		//int nTemp = varRet.toInt(&bRetval);
-		//if (!bRetval)
-		//	qWarning() << "Error getting int from JS";
 	}
 }
 
@@ -173,7 +151,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	initAndParseGlobalSettings();//See also parseRemainingGlobalSettings()!
 	showSplashMessage("Setup User Interface...");
 	setupMDI();
-	setWindowTitle(MainAppInfo::MainProgramTitle());
+	setWindowTitle(globAppInfo->getTitle());//  MainAppInfo::MainProgramTitle());
 	setUnifiedTitleAndToolBarOnMac(true);
 	createDockWindows();
 	setAppDirectories();
@@ -214,7 +192,7 @@ void MainWindow::showSplashMessage(const QString message)
 }
 void MainWindow::initAndParseGlobalSettings()//See also ParseRemainingGlobalSettings()!
 {
-	settings = new QSettings(MainAppInfo::MainOrganizationName(),MainAppInfo::MainProgramName());
+	settings = new QSettings(globAppInfo->getCompanyName(),globAppInfo->getInternalName());
 	settings->beginGroup("General");
 	if (settings->contains("DoNotLoadScriptExtension")) 
 	{
@@ -577,7 +555,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		{
 			docTitle = MainAppInfo::UntitledDocName();
 		}		
-		setWindowTitle(tr("%1 - %2").arg(MainAppInfo::MainProgramTitle()).arg(docTitle));
+		setWindowTitle(tr("%1 - %2").arg(globAppInfo->getTitle()).arg(docTitle));//MainAppInfo::MainProgramTitle()).arg(docTitle));
 		MainAppInfo::DocType d;
 		d = DocManager->getDocType(currentSub);
 		switch (d)
@@ -635,7 +613,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	}
 	else
 	{
-		setWindowTitle(tr("%1").arg(MainAppInfo::MainProgramTitle()));
+		setWindowTitle(tr("%1").arg(globAppInfo->getTitle()));//MainAppInfo::MainProgramTitle()));
 		if (currentRunningScriptID == 0)
 		{
             setScriptRunningStatus(MainAppInfo::NoScript);
@@ -1007,7 +985,7 @@ void MainWindow::setupHelpMenu()
 
 void MainWindow::showDocumentation()
 {
-	helpAssistant->showDocumentation("index.html");
+	helpAssistant->showDocumentation("index.html", globAppInfo);
 }
 
 void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined MAIN_PROGRAM_LOG_SLOT_NAME
@@ -1647,7 +1625,7 @@ void MainWindow::executeScript()
 	}
 	if(!bSyntaxValidated)
 	{
-		write2OutputWindow("... Script Syntax error at(col " + QString::number(syntaxChkResult.errorColumnNumber()) + ", line " + QString::number(syntaxChkResult.errorLineNumber()) + "): " + syntaxChkResult.errorMessage() + " ...");
+		write2OutputWindow("... Script Syntax error at(line " + QString::number(syntaxChkResult.errorLineNumber()) + ", col " + QString::number(syntaxChkResult.errorColumnNumber()) + "): " + syntaxChkResult.errorMessage() + " ...");
 		DocManager->getDocHandler(currentActiveWindow)->setCursorPosition(syntaxChkResult.errorLineNumber()-1,syntaxChkResult.errorColumnNumber());
 	}
 	else
@@ -1708,7 +1686,7 @@ void MainWindow::openOptionsDialog()
 
 void MainWindow::aboutStimulGL()
 {
-	aboutQTDialog aboutQTDlg(MainAppInfo::MainProgramTitle(),pluginFileNames,MainAppInfo::pluginsDirPath(), pluginFileNames, this);
+	aboutQTDialog aboutQTDlg(globAppInfo->getTitle(),pluginFileNames,MainAppInfo::pluginsDirPath(), pluginFileNames, this);
 	aboutQTDlg.exec();
 }
 
@@ -1847,15 +1825,15 @@ void MainWindow::setRenderer()
 void MainWindow::setCurrentFile(const QString &fileName)
 {
 	if (fileName.isEmpty())
-		setWindowTitle(MainAppInfo::MainProgramTitle());
+		setWindowTitle(globAppInfo->getTitle());//MainAppInfo::MainProgramTitle());
 	else if (fileName == MainAppInfo::UntitledDocName())
 	{
-		setWindowTitle(tr("%1 - %2").arg(MainAppInfo::MainProgramTitle()).arg(MainAppInfo::UntitledDocName()));
+		setWindowTitle(tr("%1 - %2").arg(globAppInfo->getTitle()).arg(MainAppInfo::UntitledDocName()));
 	}	
 	else if (!fileName.startsWith(":/")) 
 	{
 		m_currentPath = fileName;
-		setWindowTitle(tr("%1 - %2").arg(MainAppInfo::MainProgramTitle()).arg(strippedName(m_currentPath)));
+		setWindowTitle(tr("%1 - %2").arg(globAppInfo->getTitle()).arg(strippedName(m_currentPath)));
 		updateRecentFileList(fileName);
 	}
 }

@@ -78,7 +78,7 @@ signals:
 
 public:
 	ParallelPort(short BaseAddress = 888, QObject *parent = 0);
-	ParallelPort(const ParallelPort& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	ParallelPort(const ParallelPort& other){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	~ParallelPort();
 
 public slots:

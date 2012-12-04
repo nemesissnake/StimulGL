@@ -42,7 +42,7 @@ public:
 	~ParallelPortPlugin();
 
 	bool ConfigureScriptEngine(QScriptEngine &engine);
-	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};
+	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};//here we override the virtual function to set a custom value
 	
 private:
 	short nBaseAddress;

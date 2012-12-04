@@ -513,7 +513,7 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bo
 		currentExperimentFile = strSource.toAscii();
 	}
 
-	QFile validationFile(MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME));
+	QFile validationFile(MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME));//MainAppInfo::appXsdFilePath()
 	if (validationFile.open(QFile::ReadOnly | QFile::Text)) 
 		currentValidationFile = validationFile.readAll();
 	validationFile.close();

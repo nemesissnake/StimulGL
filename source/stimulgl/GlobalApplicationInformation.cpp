@@ -16,28 +16,8 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef ASSISTANT_H
-#define ASSISTANT_H
+//QFile * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
+//QWidget * MainAppInfo::mainWindow = NULL;//Needed to initialize the static variable!
+//std::ofstream * MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
 
-#include <QtCore/QString>
-#include <QFile>
-#include "mainappinfo.h"
-#include "GlobalApplicationInformation.h"
 
-QT_BEGIN_NAMESPACE
-class QProcess;
-QT_END_NAMESPACE
-
-class Assistant
-{
-public:
-    Assistant();
-    ~Assistant();
-    void showDocumentation(const QString &file, GlobalApplicationInformation *GlobAppInfo);
-    
-private:
-    bool startAssistant(GlobalApplicationInformation *GlobAppInfo);
-    QProcess *proc;
-};
-
-#endif

@@ -37,9 +37,9 @@ Assistant::~Assistant()
     delete proc;
 }
 
-void Assistant::showDocumentation(const QString &page)
+void Assistant::showDocumentation(const QString &page, GlobalApplicationInformation *GlobAppInfo)
 {
-    if (!startAssistant())
+    if (!startAssistant(GlobAppInfo))
         return;
 
     QByteArray ba("SetSource ");
@@ -48,7 +48,7 @@ void Assistant::showDocumentation(const QString &page)
     proc->write(ba + page.toLocal8Bit() + '\n');
 }
 
-bool Assistant::startAssistant()
+bool Assistant::startAssistant(GlobalApplicationInformation *GlobAppInfo)
 {
     if (!proc)
         proc = new QProcess();
@@ -61,7 +61,7 @@ bool Assistant::startAssistant()
 		//Does the help binary package exist?
 		if(!file.exists(strHelpPackagePath))
 		{
-			QMessageBox::critical(0, QObject::tr(MAIN_PROGRAM_INTERNAL_NAME),
+			QMessageBox::critical(0, GlobAppInfo->getInternalName(),
 				QObject::tr("The help file does not exist (%1)").arg(strHelpPackagePath));
 			return false;
 		}
@@ -97,7 +97,7 @@ bool Assistant::startAssistant()
         proc->start(app, args);
 
         if (!proc->waitForStarted()) {
-            QMessageBox::critical(0, QObject::tr(MAIN_PROGRAM_INTERNAL_NAME),
+            QMessageBox::critical(0, GlobAppInfo->getInternalName(),
                 QObject::tr("Unable to launch the help Assistant (%1)").arg(app));
             return false;
         }    
