@@ -47,7 +47,7 @@ public:
 
 	void ConfigureDebugger(bool state);
 	QMenu *createDebuggerMenu(QWidget *parent = 0);
-	QMainWindow *DebuggerStandardWindow();
+	QMainWindow *DebuggerStandardWindow(); 
 	bool ImportScriptExtensions();
 
 protected:

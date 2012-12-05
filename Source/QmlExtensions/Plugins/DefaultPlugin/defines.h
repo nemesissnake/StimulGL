@@ -22,12 +22,12 @@
 //#include "./../../StimulGL/maindefines.h"
 
 #define DEFAULT_STIMULGL_PLUGIN_QML_NAME		"StimulGL_QMLExtensions"
-#define STIMULGL_VERSION_STRING_MAJOR			1
-#define STIMULGL_VERSION_STRING_MINOR			0
+#define QML_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define QML_VERSION_STRING_MINOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 #define TIMEMODEL_TYPE_QML_NAME					"Time"
 #define TIMEMODEL_VERSION_STRING_REVISION		1
 #define PHONONPLAYER_TYPE_QML_NAME				"MediaPlayer"
-#define PHONONPLAYER_VERSION_STRING_REVISION	1
+#define PHONONPLAYER_VERSION_STRING_REVISION	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 
 #endif // DEFAULTQMLPLUGINDEFINES_H
 

@@ -45,7 +45,7 @@ private:
 public:
 
 	static bool Initialize(QWidget *mainWin = NULL);
-	static QString appDirPath()						{return QCoreApplication::applicationDirPath();}
+	static QString appDirPath()						{return QDir(QCoreApplication::applicationDirPath()).absolutePath();}
 	static QString appDocDirPath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}
 	static QString appExampleDirPath()				{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}
 	static QString appLogFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_LOGFILE_NAME);}

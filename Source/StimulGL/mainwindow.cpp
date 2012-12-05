@@ -33,7 +33,7 @@
 #include "../Plugins/ExperimentManager/ExperimentManager.h"
 #include "../Plugins/KeyBoardDevice/KeyBoardCapture.h"
 
-MainWindow::MainWindow() : QMainWindow(), SVGPreviewer(new SvgView)
+MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 {
 	DocManager = NULL;
 	AppScriptEngine = NULL;
@@ -63,6 +63,12 @@ QString MainWindow::testFunction(QString inp)
 	return inp;
 }
 #endif
+
+bool MainWindow::openDroppedFiles(const QStringList &pathList)
+{
+	this->openFiles(NULL,pathList);
+	return true;
+}
 
 void MainWindow::composeJavaScriptConfigurationFile()
 {
@@ -135,9 +141,9 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//DisableSplash				= 0x00002
 	//QWaitCondition sleep;
 	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
+	//registerFileTypeByDefinition("StimulGL.QtScript","StimulGL Qt Script File",".qs");
 	composeJavaScriptConfigurationFile();
 	MainAppInfo::Initialize(this);
-	//MainAppInfo::setMainWindow(this);
 	QApplication::setGraphicsSystem("opengl");//"raster");
 	StimulGLFlags = mainFlags;
     AppScriptStatus = MainAppInfo::NoScript;
@@ -182,6 +188,21 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//}
 	return true;
 }
+
+//void MainWindow::registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension)
+//{
+//	//registerFileType("GiMdi.Document",          // Document type name
+//	//	"MDI Text Editor Document",// User readable file type name
+//	//	".gidoc",                  // file extension
+//	//	0,                         // index of the icon to use for the files.
+//	//	true);                     // register for DDE events
+//	registerFileType(DocTypeName, DocTypeDesc, DocTypeExtension, 0, true);
+//	//registerFileType("GiMdi.Document", "MDI Text Editor Document", ".gidoc", 0, true);
+//	registerCommand("fancyCommand", DocTypeName, "-fancy %1", "[fancy(\"%1\")]");
+//	enableShellOpen();
+//	//QMessageBox msgBox(QMessageBox::Information,"Info","enableShellOpen() called",QMessageBox::Ok,this);
+//	//msgBox.exec();
+//}
 
 void MainWindow::showSplashMessage(const QString message)
 {
@@ -1493,21 +1514,61 @@ void MainWindow::setScriptRunningStatus(MainAppInfo::ActiveScriptMode state)
 	}
 }
 
+/*! \brief Returns the path to the current active document.
+ *
+ * This function returns the path to the document that is currently opened and active.
+ * @return a String value holding a path to the requested document.
+ */
 QString MainWindow::getSelectedScriptFileLocation()
 {
 	return DocManager->getFilePath(activeMdiChild());
 }
 
+/*! \brief Returns the path to the StimulGL Root directory.
+ *
+ * This function returns the path to the StimulGL Root directory, where the binary is running in.
+ * @return a String value holding the path to the Root directory.
+ */
+QString MainWindow::getApplicationRootDirPath() 
+{
+	return QDir(QCoreApplication::applicationDirPath()).absolutePath();
+}
+
+/*! \brief Returns the filename of the current active document.
+ *
+ * This function returns the filename of the document that is currently opened and active.
+ * @return a String value holding the filename of the requested document.
+ */
 QString MainWindow::getSelectedScriptFileName()
 {
 	return DocManager->getFileName(activeMdiChild(),true);
 }
 
+/*! \brief Returns the requested Environment Variable.
+ *
+ * This function can return a Environment Variable value by providing the name of the variable.
+ * @param strName a String value holding the name of the requested Environment Variable.
+ * @return a String value holding the value of the requested Environment Variable.
+ */
+QString MainWindow::getEnvironmentVariabele(QString strName) 
+{
+	return QProcessEnvironment::systemEnvironment().value(strName);
+}
+
+/*! \brief Closes the current active document.
+ *
+ * This function closes the document that is currently opened and active.
+ * @param bAutoSaveChanges a boolean value determing whether the document should first save unsaved changes or not.
+ */
 void MainWindow::closeSelectedScriptFile(bool bAutoSaveChanges)
 {
 	closeSubWindow(bAutoSaveChanges);
 }
 
+/*! \brief Executes the current active document.
+ *
+ * This function executes the current active document (file that is opened and active).
+ */
 void MainWindow::executeScript()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
@@ -1695,6 +1756,13 @@ void MainWindow::setStartupFiles(const QString &path)
 	startUpFiles = path.split(";");
 }
 
+
+/*! \brief Opens one or more files.
+ *
+ *  This function can open one or more files.
+ * @param fileToLoad a String containing a single path to a file that should be loaded.
+ * @param filesToLoad a String Array containing multiple Strings containing the paths to the files that should be loaded.
+ */
 void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesToLoad)
 {
 	QStringList fileNames;

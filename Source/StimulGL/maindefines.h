@@ -29,22 +29,22 @@
 
 //Also search and change "Q_CLASSINFO("ScriptAPIClassName"..!!!
 
-#define MAIN_PROGRAM_COMPANY_NAME						"MBIC, Maastricht Brain Imaging Center"
-#define MAIN_PROGRAM_LEGAL_COPYRIGHT					"Copyright (C) 2012"
-#define MAIN_PROGRAM_FILE_VERSION_STRING_MAJOR			2
-#define MAIN_PROGRAM_FILE_VERSION_STRING_MINOR			0
-#define MAIN_PROGRAM_FILE_VERSION_STRING_REVISION		0
-#define MAIN_PROGRAM_FILE_VERSION_STRING_BUILD			3
-#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_MAJOR		1
-#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_MINOR		0
-#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_REVISION	0
-#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_BUILD		1
-#define MAIN_PROGRAM_INTERNAL_NAME						"StimulGL"
+#define MAIN_PROGRAM_COMPANY_NAME	"MBIC, Maastricht Brain Imaging Center"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_LEGAL_COPYRIGHT	"Copyright (C) 2012"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_FILE_VERSION_STRING_MAJOR	2   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_FILE_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_FILE_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_FILE_VERSION_STRING_BUILD	3   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_BUILD	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_INTERNAL_NAME	"StimulGL"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 #define MAIN_PROGRAM_FULL_NAME							MAIN_PROGRAM_INTERNAL_NAME "(v" MAIN_PROGRAM_FILE_VERSION_STRING ")"
 #define MAIN_PROGRAM_PRODUCT_NAME                       MAIN_PROGRAM_INTERNAL_NAME
 #define MAIN_PROGRAM_AUTHOR_NAME						"Sven Gijsen"
 #define MAIN_PROGRAM_AUTHOR_EMAIL						"svengijsen@gmail.com"
-#define MAIN_PROGRAM_ORIGINAL_FILENAME					"StimulGL.exe"
+#define MAIN_PROGRAM_ORIGINAL_FILENAME					MAIN_PROGRAM_INTERNAL_NAME ".exe"
 #define MAIN_PROGRAM_LOGFILE_NAME						"logfile.txt"
 #define MAIN_PROGRAM_DOC_DIRNAME						"documents"
 #define MAIN_PROGRAM_EXAMPLES_DIRNAME					"examples"
@@ -57,8 +57,8 @@
 #define MAIN_PROGRAM_UNTITLED_NAME						"Untitled"
 #define UNKNOWNENUMSTRING								"Unknown_Enumeration Value"
 #define MAIN_PROGRAM_STANDARD_DATETIME_FORMAT			"yyyyMMddHHmmsszzz"
-#define MAIN_PROGRAM_DEVICE_INTERFACE					"StimulGL.Plugins.DeviceInterface/1.2"
-#define MAIN_PROGRAM_EXTENSION_INTERFACE				"StimulGL.Plugins.ExtensionInterface/1.2"
+#define MAIN_PROGRAM_DEVICE_INTERFACE	"StimulGL.Plugins.DeviceInterface/1.2"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_EXTENSION_INTERFACE	"StimulGL.Plugins.ExtensionInterface/1.2"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 
 //Only edit until here!
 #define SCRIPT_API_CLASS_NAME_TAG						"ScriptAPIClassName"

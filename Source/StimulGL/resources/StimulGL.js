@@ -122,7 +122,7 @@ function StimulGL_Information()
 	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.ExtInterface_Index] = 'x';
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.Name_Index] = 'MediaPlayer';
-	this.componentVersioning[0][MediaPlayer_Comp_Index][this.Version_Index] = '1.0';
+	this.componentVersioning[0][MediaPlayer_Comp_Index][this.Version_Index] = '1';
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.ProductVersion_Index] = 'x';
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.EXML_Index] = 'x';
@@ -142,7 +142,7 @@ function StimulGL_Information()
 	this.componentVersioning[1][USBHIDDevicePlugin_Comp_Index] =        ['USBHIDDevicePlugin',      '2.0.0.2', '1.0.0.1', 0, 'x',       '1.1',  '1.1'];
 	this.componentVersioning[1][_extensionname_plugin_Comp_Index] =     ['_extensionname_plugin',   '1.0.0.2', '1.0.0.1', 0, 'x',       '1.1',  '1.1'];
 	this.componentVersioning[1][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.1',     '1.0.0.1', 0, 'x',       'x',    'x'];
-	this.componentVersioning[1][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '1.1',     '1.0.0.1', 0, 'x',       'x',    'x'];
+	this.componentVersioning[1][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '1',       '1.0.0.1', 0, 'x',       'x',    'x'];
 
 //	//StimulGL version (2.0.0.4)
 //	///////////////////////////////////////////////////////////////

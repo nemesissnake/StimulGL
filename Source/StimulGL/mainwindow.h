@@ -25,7 +25,6 @@
 #define MAINWINDOW_H
 //#define QT_NO_PLUGIN_CHECK
 
-#include <QMainWindow>
 #include <QString>
 #include <QStringList>
 #include <QDir>
@@ -36,6 +35,7 @@
 #include <QWebPage>
 #include <QDateTime> //QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat())!!!!!
 
+#include "documentwindow.h"
 #include "documentmanager.h"
 #include "plugininterface.h"
 #include "plugincollection.h"
@@ -57,7 +57,11 @@ class QGraphicsRectItem;
 class QSplashScreen;
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+//!  The StimulGL Main Application. 
+/*!
+  The StimulGL Main Application can be directly accessed within the script by using the default 'StimulGL' object.
+*/
+class MainWindow : public DocumentWindow//QMainWindow
 {
     Q_OBJECT
 	Q_CLASSINFO("ScriptAPIClassName", "StimulGL");//Can't use defines here!, moc doesn't handle defines
@@ -76,9 +80,9 @@ public slots:
 	void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList());
 	void executeScript();
 	QString getSelectedScriptFileLocation();
-	QString getApplicationRootDirPath() {return QDir(QCoreApplication::applicationDirPath()).absolutePath();};
+	QString getApplicationRootDirPath();
 	QString getSelectedScriptFileName();
-	QString getEnvironmentVariabele(QString strName) {return QProcessEnvironment::systemEnvironment().value(strName);}
+	QString getEnvironmentVariabele(QString strName);
 	void closeSelectedScriptFile(bool bAutoSaveChanges = false);
 	//void debugScript();
 	bool initialize(MainAppInfo::MainProgramModeFlags mainFlags = 0);
@@ -144,6 +148,8 @@ private slots:
 	void scriptUnloaded(qint64 id);
 
 private:
+	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
+
 	QString strAdditionalFileExtensions;
 	MainAppInfo::MainProgramModeFlags StimulGLFlags;
 	MainAppInfo::ScriptRunMode StimulGLScriptRunMode;
@@ -246,7 +252,7 @@ private:
 	QDockWidget *debuggerDock;
 
 	QListWidget *outputWindowList;
-	QMainWindow *debuggerMainWindow;
+	MainWindow *debuggerMainWindow;
 	
 	DocumentManager *DocManager;
     QMdiArea *mdiArea;
@@ -306,7 +312,7 @@ public:
 
 protected:
 	void closeEvent(QCloseEvent *event);
-
+	virtual bool openDroppedFiles(const QStringList &pathList);
 };
 
 #endif

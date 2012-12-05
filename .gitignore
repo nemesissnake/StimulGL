@@ -64,3 +64,4 @@ Source/QmlExtensions/Plugins/DefaultPlugin/plugins.opensdf
 Source/QmlExtensions/Plugins/DefaultPlugin/plugins.sdf
 output
 Publish/*.lnk
+*.h

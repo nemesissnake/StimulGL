@@ -133,7 +133,7 @@ void QTScriptEngine::scriptHasLoaded(qint64 id)
 //	worker->start();
 //}
 
-QMainWindow *QTScriptEngine::DebuggerStandardWindow() 
+QMainWindow *QTScriptEngine::DebuggerStandardWindow()
 {
 	return debugger->standardWindow();
 }

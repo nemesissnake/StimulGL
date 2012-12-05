@@ -33,6 +33,8 @@
 
 using namespace std;
 
+class MainWindow;
+
 int main(int argc, char **argv)
 {
     Q_INIT_RESOURCE(StimulGL);

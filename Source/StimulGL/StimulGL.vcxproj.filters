@@ -339,6 +339,27 @@
     <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_GlobalApplicationInformation.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
+    <ClCompile Include="documentwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StimulGL.h">
@@ -462,6 +483,9 @@
     <CustomBuild Include="GlobalApplicationInformation.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="documentwindow.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StimulGL.rc" />
@@ -470,6 +494,9 @@
     <None Include="licenseHeader.licenseheader" />
     <None Include="resources\StimulGL.js">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\StimulGL_Documentation\Tutorials\GettingStarted\GettingStartedGuide.html">
+      <Filter>Generated Files</Filter>
     </None>
   </ItemGroup>
 </Project>

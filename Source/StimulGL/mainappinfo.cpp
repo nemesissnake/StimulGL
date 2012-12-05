@@ -29,7 +29,6 @@ QWidget * MainAppInfo::mainWindow = NULL;//Needed to initialize the static varia
 QDir MainAppInfo::appDebugDirPath()
 {
 	QDir appDebugDir = QDir(appDirPath());
-	QString strAppDebugDir = appDirPath();
 #if defined(Q_OS_WIN)
 	if (appDebugDir.dirName().toLower() == "debug" || appDebugDir.dirName().toLower() == "release")
 	{
@@ -49,8 +48,7 @@ QDir MainAppInfo::appDebugDirPath()
 		appDebugDir.cdUp();
 	}
 #endif
-	strAppDebugDir = appDebugDir.absolutePath();
-	return strAppDebugDir;
+	return appDebugDir.absolutePath();
 }
 
 QString MainAppInfo::pluginsDirPath()

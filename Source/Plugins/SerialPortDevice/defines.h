@@ -22,14 +22,14 @@
 #include "./../../StimulGL/maindefines.h"
 
 //Only edit the below!
-#define PLUGIN_FILE_VERSION_STRING_MAJOR			1
-#define PLUGIN_FILE_VERSION_STRING_MINOR			0
-#define PLUGIN_FILE_VERSION_STRING_REVISION			0
-#define PLUGIN_FILE_VERSION_STRING_BUILD			1
-#define PLUGIN_PRODUCT_VERSION_STRING_MAJOR			1
-#define PLUGIN_PRODUCT_VERSION_STRING_MINOR			0
-#define PLUGIN_PRODUCT_VERSION_STRING_REVISION		0
-#define PLUGIN_PRODUCT_VERSION_STRING_BUILD			1
+#define PLUGIN_FILE_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define PLUGIN_FILE_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define PLUGIN_FILE_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define PLUGIN_FILE_VERSION_STRING_BUILD	2   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define PLUGIN_PRODUCT_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define PLUGIN_PRODUCT_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define PLUGIN_PRODUCT_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define PLUGIN_PRODUCT_VERSION_STRING_BUILD	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 #define PLUGIN_LEGAL_COPYRIGHT						MAIN_PROGRAM_LEGAL_COPYRIGHT
 #define PLUGIN_AUTHOR_NAME							MAIN_PROGRAM_AUTHOR_NAME
 #define PLUGIN_AUTHOR_EMAIL							MAIN_PROGRAM_AUTHOR_EMAIL
@@ -42,7 +42,7 @@
 #define PLUGIN_FULL_NAME							PLUGIN_INTERNAL_NAME "(v" PLUGIN_FILE_VERSION_STRING ")"
 #define PLUGIN_FILE_DESCRIPTION						"Library that controls the communication with an Serial Port Device"
 #define PLUGIN_INFORMATION							PLUGIN_INTERNAL_NAME " Plugin(v" PLUGIN_FILE_VERSION_STRING ") by " PLUGIN_AUTHOR_NAME
-#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION			"2.0.0.2"
+#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION	"2.0.0.3"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 //Only edit until here!
 
 
