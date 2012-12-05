@@ -130,7 +130,7 @@ ConnectDisconnectScriptFunctions(true);
 //Log(getString("This is an Title", "Some Text....","default x"));
 
 bDoCleanup = false;
-sBinairySteps = 6;
+sBinairySteps = 7;
 for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 {
 	bFileProccessed = false;
@@ -341,6 +341,39 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[6][1] = "StimulGL.doxygen.Project";
 		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
 		changeSet[7][1] = "";
+	}
+	else if (nCounter==7)
+	{
+		ComponentName = "StimulGLMainApplication";		
+		//Log("Component Name: " + ComponentName);
+		LastComponentVersion = StimulGL_Info.GetCurrentRelease();
+		Log("StimulGL Release Index: " + LastComponentVersion);
+		//LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		//Log("Last Component Index: " + LastComponentIndex);
+		//LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		//Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"StimulGL Main Application\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"The StimulGL Main Application class references.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/StimulGLMainApp\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/StimulGL/mainwindow.h \\\n" +
+					  "../../StimulGL/Source/StimulGL/mainwindow.cpp \\\n" //+
+					  //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.h \\\n" +
+		                          //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.cpp \\\n" +
+		                          //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/defines.h \\\n";
+//		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+//		changeSet[6][1] = "StimulGL.doxygen.Project";
+//		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+//		changeSet[7][1] = "";		
 	}
 	else
 	{
