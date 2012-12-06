@@ -1,5 +1,6 @@
 // JavaScript Document
 //
+
 function StimulGL_Cleanup()
 {
 	//window.StimulGLInfo = null;
@@ -30,7 +31,7 @@ function StimulGL_CreateArray(length)
 function StimulGL_Information()
 {
 	//alert('StimulGL constructor');
-	this.StimulGLReleases = [['2.0.0.2','4.8.0'],['2.0.0.3','4.8.0']];
+    this.StimulGLReleases = [['2.0.0.2', '4.8.0', '1.0.0.1'], ['2.0.0.3', '4.8.0', '1.0.0.1'], ['2.0.0.4', '4.8.0', '1.0.0.1']];
 	var PropCounter = 0;
 	var AuthorCounter = 0;
 	var ComponentCounter = 0;
@@ -45,6 +46,7 @@ function StimulGL_Information()
 	
 	this.Name_Index = PropCounter++;
 	this.Version_Index = PropCounter++;
+	this.ProductVersion_Index = PropCounter++;
 	this._StimulGLVersion_Index = PropCounter++;
 	this.EXML_Index = PropCounter++;
 	this.DevInterface_Index = PropCounter++;
@@ -65,13 +67,15 @@ function StimulGL_Information()
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.Name_Index] = 'ExperimentManagerPlugin';
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.Version_Index] = '2.0.0.2';
-	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this._StimulGLVersion_Index] = 0;
+	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
+    this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this._StimulGLVersion_Index] = 0;
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.EXML_Index] = '2.0.0.1';
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.DevInterface_Index] = '1.0';
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.ExtInterface_Index] = '1.0';
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][ParallelPortPlugin_Comp_Index][this.Name_Index] = 'ParallelPortPlugin';
 	this.componentVersioning[0][ParallelPortPlugin_Comp_Index][this.Version_Index] = '2.0.0.1';
+	this.componentVersioning[0][ParallelPortPlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
 	this.componentVersioning[0][ParallelPortPlugin_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
 	this.componentVersioning[0][ParallelPortPlugin_Comp_Index][this.EXML_Index] = 'x';
 	this.componentVersioning[0][ParallelPortPlugin_Comp_Index][this.DevInterface_Index] = '1.0';
@@ -79,6 +83,7 @@ function StimulGL_Information()
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][SerialPortPlugin_Comp_Index][this.Name_Index] = 'SerialPortPlugin';
 	this.componentVersioning[0][SerialPortPlugin_Comp_Index][this.Version_Index] = '1.0.0.1';
+	this.componentVersioning[0][SerialPortPlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
 	this.componentVersioning[0][SerialPortPlugin_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
 	this.componentVersioning[0][SerialPortPlugin_Comp_Index][this.EXML_Index] = 'x';
 	this.componentVersioning[0][SerialPortPlugin_Comp_Index][this.DevInterface_Index] = '1.0';
@@ -86,6 +91,7 @@ function StimulGL_Information()
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][KeyBoardPlugin_Comp_Index][this.Name_Index] = 'KeyBoardPlugin';
 	this.componentVersioning[0][KeyBoardPlugin_Comp_Index][this.Version_Index] = '1.0.0.1';
+	this.componentVersioning[0][KeyBoardPlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
 	this.componentVersioning[0][KeyBoardPlugin_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
 	this.componentVersioning[0][KeyBoardPlugin_Comp_Index][this.EXML_Index] = 'x';
 	this.componentVersioning[0][KeyBoardPlugin_Comp_Index][this.DevInterface_Index] = '1.0';
@@ -93,6 +99,7 @@ function StimulGL_Information()
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][USBHIDDevicePlugin_Comp_Index][this.Name_Index] = 'USBHIDDevicePlugin';
 	this.componentVersioning[0][USBHIDDevicePlugin_Comp_Index][this.Version_Index] = '2.0.0.1';
+	this.componentVersioning[0][USBHIDDevicePlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
 	this.componentVersioning[0][USBHIDDevicePlugin_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
 	this.componentVersioning[0][USBHIDDevicePlugin_Comp_Index][this.EXML_Index] = 'x';
 	this.componentVersioning[0][USBHIDDevicePlugin_Comp_Index][this.DevInterface_Index] = '1.0';
@@ -100,6 +107,7 @@ function StimulGL_Information()
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][_extensionname_plugin_Comp_Index][this.Name_Index] = '_extensionname_plugin';
 	this.componentVersioning[0][_extensionname_plugin_Comp_Index][this.Version_Index] = '1.0.0.1';
+	this.componentVersioning[0][_extensionname_plugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
 	this.componentVersioning[0][_extensionname_plugin_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
 	this.componentVersioning[0][_extensionname_plugin_Comp_Index][this.EXML_Index] = 'x';
 	this.componentVersioning[0][_extensionname_plugin_Comp_Index][this.DevInterface_Index] = '1.0';
@@ -107,13 +115,15 @@ function StimulGL_Information()
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.Name_Index] = 'StimulGL_QMLExtensions';
 	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.Version_Index] = '1.0';
+	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.ProductVersion_Index] = 'x';
 	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
 	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.EXML_Index] = 'x';
 	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.DevInterface_Index] = 'x';
 	this.componentVersioning[0][StimulGL_QMLExtensions_Comp_Index][this.ExtInterface_Index] = 'x';
 	///////////////////////////////////////////////////////////////
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.Name_Index] = 'MediaPlayer';
-	this.componentVersioning[0][MediaPlayer_Comp_Index][this.Version_Index] = '1.0';
+	this.componentVersioning[0][MediaPlayer_Comp_Index][this.Version_Index] = '1';
+	this.componentVersioning[0][MediaPlayer_Comp_Index][this.ProductVersion_Index] = 'x';
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this._StimulGLVersion_Index] = 0; //-->2.0.0.2
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.EXML_Index] = 'x';
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.DevInterface_Index] = 'x';
@@ -125,16 +135,24 @@ function StimulGL_Information()
 	nNumberOfComponentChanges = 8;//See below, increment by adding new changes for this release!
 	tmpArray = StimulGL_CreateArray(1,nNumberOfComponentChanges,PropCounter);
 	this.componentVersioning.push.apply(this.componentVersioning, tmpArray)
-	this.componentVersioning[1][ExperimentManagerPlugin_Comp_Index] = 	['ExperimentManagerPlugin',	'2.0.0.3',	1,'2.0.0.2','1.1',	'1.1'];
-	this.componentVersioning[1][ParallelPortPlugin_Comp_Index] = 		['ParallelPortPlugin',		'2.0.0.2',	0,'x',		'1.1',	'1.1'];
-	this.componentVersioning[1][SerialPortPlugin_Comp_Index] =          ['SerialPortPlugin',		'1.0.0.2',	0,'x',		'1.1',	'1.1'];
-	this.componentVersioning[1][KeyBoardPlugin_Comp_Index] = 			['KeyBoardPlugin',			'1.0.0.2',	0,'x',		'1.1',	'1.1'];
-	this.componentVersioning[1][USBHIDDevicePlugin_Comp_Index] = 		['USBHIDDevicePlugin',		'2.0.0.2',	0,'x',		'1.1',	'1.1'];
-	this.componentVersioning[1][_extensionname_plugin_Comp_Index] = 	['_extensionname_plugin',	'1.0.0.2',	0,'x',		'1.1',	'1.1'];
-	this.componentVersioning[1][StimulGL_QMLExtensions_Comp_Index] = 			['StimulGL_QMLExtensions',		'1.1',		0,'x',		'x',	'x'];
-	this.componentVersioning[1][MediaPlayer_Comp_Index] = 				['MediaPlayer',				'1.1',		0,'x',		'x',	'x'];
-	
-	this.DocumentAuditing = StimulGL_CreateArray(6,5);//Default constructor!
+	this.componentVersioning[1][ExperimentManagerPlugin_Comp_Index] = 	['ExperimentManagerPlugin',	'2.0.0.3', '1.0.0.1', 1, '2.0.0.2', '1.1',  '1.1'];
+	this.componentVersioning[1][ParallelPortPlugin_Comp_Index] =        ['ParallelPortPlugin',      '2.0.0.2', '1.0.0.1', 0, 'x',       '1.1',  '1.1'];
+	this.componentVersioning[1][SerialPortPlugin_Comp_Index] =          ['SerialPortPlugin',        '1.0.0.2', '1.0.0.1', 0, 'x',       '1.1',  '1.1'];
+	this.componentVersioning[1][KeyBoardPlugin_Comp_Index] =            ['KeyBoardPlugin',          '1.0.0.2', '1.0.0.1', 0, 'x',       '1.1',  '1.1'];
+	this.componentVersioning[1][USBHIDDevicePlugin_Comp_Index] =        ['USBHIDDevicePlugin',      '2.0.0.2', '1.0.0.1', 0, 'x',       '1.1',  '1.1'];
+	this.componentVersioning[1][_extensionname_plugin_Comp_Index] =     ['_extensionname_plugin',   '1.0.0.2', '1.0.0.1', 0, 'x',       '1.1',  '1.1'];
+	this.componentVersioning[1][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.1',     '1.0.0.1', 0, 'x',       'x',    'x'];
+	this.componentVersioning[1][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '1',       '1.0.0.1', 0, 'x',       'x',    'x'];
+
+//	//StimulGL version (2.0.0.4)
+//	///////////////////////////////////////////////////////////////
+//	nNumberOfComponentChanges = 1; //See below, increment by adding new changes for this release!
+//	tmpArray = StimulGL_CreateArray(1, nNumberOfComponentChanges, PropCounter);
+//	this.componentVersioning.push.apply(this.componentVersioning, tmpArray)
+//	this.componentVersioning[2][ExperimentManagerPlugin_Comp_Index] = ['ExperimentManagerPlugin', '2.0.0.4', '1.0.0.3', 0, '2.0.0.3', '1.4', '1.5'];
+
+
+	this.DocumentAuditing = StimulGL_CreateArray(6, AuthorCounter); //Default constructor!
 	///////////////////////////////////////////////////////////////
 	this.DocumentAuditing[0][this.Doc_FileName_Index] = 'GettingStartedGuide.html';
 	this.DocumentAuditing[0][this.Doc_Title_Index] = 'Getting Started Guide';
@@ -218,6 +236,11 @@ StimulGL_Information.prototype.GetReleaseQtVersionByIndex = function (nIndex)
 	return this.StimulGLReleases[nIndex][1];
 }
 
+StimulGL_Information.prototype.GetReleaseProductVersionByIndex = function (nIndex) {
+    //alert('GetReleaseProductVersionByIndex');
+    return this.StimulGLReleases[nIndex][2];
+}
+
 StimulGL_Information.prototype.GetNumberOfReleases = function ()
 {
 	//alert('GetNumberOfReleases');
@@ -233,12 +256,6 @@ StimulGL_Information.prototype.GetNumberOfComponentsByReleaseIndex = function (n
 	}
 	return 0;
 }
-
-//StimulGL_Information.prototype.GetComponentReleaseByName = function (strName)
-//{
-	//alert('GetComponentRelease');
-//	return this.componentVersioning[0][0][2];
-//}
 
 StimulGL_Information.prototype.CheckComponentByIndexes = function (nReleaseIndex, nComponentIndex)
 {
@@ -259,8 +276,8 @@ StimulGL_Information.prototype.GetLatestComponentReleaseByName = function (strCo
 	for(var i=this.componentVersioning.length-1;i>=0;i--)
 	{
 		for(var j=0;j<this.componentVersioning[i].length;j++)
-		{		
-			if(this.componentVersioning[i][j][0] == strComponentName)
+		{
+		    if (this.componentVersioning[i][j][this.Name_Index] == strComponentName)
 			{		
 				return i;
 			}
@@ -273,8 +290,8 @@ StimulGL_Information.prototype.GetLatestComponentIndexByName = function (nReleas
 {
 	//alert('GetLatestComponentIndexByName ' + strComponentName);
 	for(var j=0;j<this.componentVersioning[nReleaseIndex].length;j++)
-	{		
-		if(this.componentVersioning[nReleaseIndex][j][0] == strComponentName)
+	{
+	    if (this.componentVersioning[nReleaseIndex][j][this.Name_Index] == strComponentName)
 		{		
 			return j;
 		}
@@ -308,6 +325,13 @@ StimulGL_Information.prototype.GetComponentVersionByIndexes = function (nRelease
 	return '';
 }
 
+StimulGL_Information.prototype.GetComponentProductVersionByIndexes = function (nReleaseIndex, nComponentIndex) {
+    //alert('GetComponentProductVersionByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
+    if (this.CheckComponentByIndexes(nReleaseIndex, nComponentIndex))
+        return this.componentVersioning[nReleaseIndex][nComponentIndex][this.ProductVersion_Index];
+    return '';
+}
+
 StimulGL_Information.prototype.GetComponentMinimalEXMLVersionByIndexes = function (nReleaseIndex, nComponentIndex)
 {
 	//alert('GetComponentMinimalEXMLVersionByIndexes ' + nReleaseIndex + ", " + nComponentIndex);
@@ -331,3 +355,18 @@ StimulGL_Information.prototype.GetComponentExtensionInterfaceVersionByIndexes = 
 		return this.componentVersioning[nReleaseIndex][nComponentIndex][this.ExtInterface_Index];
 	return '';
 }
+
+StimulGL_Information.prototype.GetMainAppCopyrightString = function ()
+{ return 'Copyright (C) 2012'; }
+
+StimulGL_Information.prototype.GetMainAppCompanyName = function ()
+{	return 'MBIC, Maastricht Brain Imaging Center'; }
+
+StimulGL_Information.prototype.GetMainAppInternalName = function ()
+{	return 'StimulGL'; }
+
+StimulGL_Information.prototype.GetMainAppPluginDeviceInterfaceString = function ()
+{	return 'StimulGL.Plugins.DeviceInterface/1.2'; }
+
+StimulGL_Information.prototype.GetMainAppPluginExtensionInterfaceString = function ()
+{	return 'StimulGL.Plugins.ExtensionInterface/1.2'; }

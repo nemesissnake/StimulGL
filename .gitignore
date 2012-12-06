@@ -11,3 +11,4 @@ MainDocumentation.qhc
 /Doxygen/ExperimentManagerPlugin.cfg
 /Doxygen/KeyBoardPlugin.cfg
 /Doxygen/ParallelPortPlugin.cfg
+Doxygen/StimulGLMainApplication.cfg
