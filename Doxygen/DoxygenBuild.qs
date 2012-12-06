@@ -366,10 +366,8 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[4][1] = "\"../References/Script/StimulGLMainApp\"";
 		changeSet[5][0] = preFix + "INPUT" + postFix;
 		changeSet[5][1] = "../../StimulGL/Source/StimulGL/mainwindow.h \\\n" +
-					  "../../StimulGL/Source/StimulGL/mainwindow.cpp \\\n" //+
-					  //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.h \\\n" +
-		                          //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.cpp \\\n" +
-		                          //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/defines.h \\\n";
+					  "../../StimulGL/Source/StimulGL/mainwindow.cpp \\\n" +
+					  "../../StimulGL/Source/StimulGL/scifinddialog.h \\\n";
 //		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 //		changeSet[6][1] = "StimulGL.doxygen.Project";
 //		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
