@@ -74,6 +74,7 @@ signals:
 	//void AbortScript();
 		
 public slots:
+	bool receiveExchangeMessage(const QString &sMessage);
 	QVariant invokeJavaScriptConfigurationFile(const QString &sCode);//undocumented!
 	void showJavaScriptConfigurationFile();//undocumented!
 	void setStartupFiles(const QString &path = QString());
@@ -87,7 +88,7 @@ public slots:
 	//void debugScript();
 	bool initialize(MainAppInfo::MainProgramModeFlags mainFlags = 0);
 	void write2OutputWindow(const QString &text2Write = "");
-	void clearOutputWindow() {clearDebugger();};
+	void clearOutputWindow();
 	void processEvents() {qApp->processEvents();};
 	void cleanupScript();
 	

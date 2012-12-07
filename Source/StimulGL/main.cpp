@@ -30,6 +30,7 @@
 #include <iostream>
 #include "mainwindow.h"
 #include "mainappinfo.h"
+#include "mainappexchange.h"
 
 using namespace std;
 
@@ -37,11 +38,20 @@ class MainWindow;
 
 int main(int argc, char **argv)
 {
-    Q_INIT_RESOURCE(StimulGL);
+	MainAppExchange appExchange(argc, argv, MAIN_PROGRAM_FULL_NAME);
 
-	QApplication app(argc, argv);
+	if (appExchange.isRunning())
+	{
+		appExchange.sendMessage("message from other instance.");
+		return 0;
+	}
+
+	Q_INIT_RESOURCE(StimulGL);
+
+	//QApplication app(argc, argv);
 	QString PluginDir = MainAppInfo::pluginsDirPath();
-	app.addLibraryPath(PluginDir);
+	//app.addLibraryPath(PluginDir);
+	appExchange.addLibraryPath(PluginDir);
 
 	//only for console window, change Linker->System->SubSystem..
 	//cerr << "=-=-=-=- Start of Program -=-=-=-=" << endl;
@@ -50,8 +60,8 @@ int main(int argc, char **argv)
 	//QMessageBox msgBox(QMessageBox::Information,"PluginDirInfo",PluginDir,QMessageBox::Ok);
 	//msgBox.exec();
 
-	MainWindow *window;
-	window = new MainWindow();
+	MainWindow *appWindow;
+	appWindow = new MainWindow();
 	MainAppInfo::MainProgramModeFlags flags = MainAppInfo::Default;
 
 	if (argc > 2)
@@ -65,7 +75,7 @@ int main(int argc, char **argv)
 				if (i<(argc-1))//another argument available?
 				{
 					i = i + 1;
-					window->setStartupFiles(argv[i]);//separate multiple files using a ';' Character!
+					appWindow->setStartupFiles(argv[i]);//separate multiple files using a ';' Character!
 				}
 			}
 			else if (tempStr == "-o" | tempStr == "-O")//valid argument?
@@ -81,11 +91,15 @@ int main(int argc, char **argv)
 	}
 	else if (argc == 2)//only path declared!
 	{
-		window->setStartupFiles(argv[1]);
+		appWindow->setStartupFiles(argv[1]);
 	}
 	else
 	{}
-	window->initialize(flags);
-    window->showMaximized();
-	return app.exec();
+	appWindow->initialize(flags);
+	// connect message queue to the main window.
+	QObject::connect(&appExchange, SIGNAL(messageAvailable(QString)), appWindow, SLOT(receiveExchangeMessage(QString)));
+    appWindow->showMaximized();
+	//return app.exec();
+	int nRetVal = appExchange.exec();
+	return nRetVal;
 }

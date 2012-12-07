@@ -27,6 +27,11 @@
 #include <QtScript>
 #include "ui_scifinddialog.h"
 
+/*!
+ * \defgroup sciFindDialogStructures Find/Replace Dialog Structures
+ * @{
+ */
+/*! The structure (DocFindFlags) can store a specification for the Find/replace Dialog */
 typedef struct _DocFindFlags 
 {
 	_DocFindFlags(bool Replace = false, bool MatchCase = false, bool Backwards = false, 
@@ -39,13 +44,14 @@ typedef struct _DocFindFlags
 		wholeWords = WholeWords;
 		multiLine = MultiLine;
 	}
-	bool replace;
-	bool matchCase;
-	bool backwards;
-	bool isRegExp;
-	bool wholeWords;
-	bool multiLine;
+	bool replace;		//!< Whether the search value should also be replaced.
+	bool matchCase;		//!< Whether the search action is CaseSensitive.
+	bool backwards;		//!< Whether the search action should go backwards from the current cursor position.
+	bool isRegExp;		//!< Whether the search String contains a Regular Expression String.
+	bool wholeWords;	//!< Whether the search action should only search for whole words.
+	bool multiLine;		//!< Whether the serach action wraps around the end of the text.
 } DocFindFlags;
+/**@}*/
 
 //Add the #include <QtScript>
 //Declare the Type in Meta

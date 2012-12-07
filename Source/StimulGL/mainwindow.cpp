@@ -104,6 +104,11 @@ void MainWindow::parseJavaScriptConfigurationFile(bool bLoadStatus)
 	}
 }
 
+bool MainWindow::receiveExchangeMessage(const QString &sMessage)
+{
+	return true;
+}
+
 QVariant MainWindow::invokeJavaScriptConfigurationFile(const QString &sCode)
 {
 	if(webView)
@@ -1009,9 +1014,23 @@ void MainWindow::showDocumentation()
 	helpAssistant->showDocumentation("index.html", globAppInfo);
 }
 
+/*! \brief Appends a text String to the Output Log Window.
+ *
+ * This function appends a provided String to the Output Log Window.
+ * @param text2Write a String value holding the text that should be appended.
+ */
 void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined MAIN_PROGRAM_LOG_SLOT_NAME
 {
 	outputWindowList->addItem(text2Write);
+}
+
+/*! \brief Clears the Output Log Window.
+ *
+ * This function clears the Output Log Window.
+ */
+void MainWindow::clearOutputWindow() 
+{
+	clearDebugger();
 }
 
 void MainWindow::clearDebugger()
@@ -1714,7 +1733,11 @@ void MainWindow::executeScript()
 	outputWindowList->scrollToBottom();
 }
 
-void MainWindow::cleanupScript()//Safe way to make sure the script is unloaded/aborted trough the script
+/*! \brief Forces the script engine to perform a garbage collection.
+ *
+ * This function forces the script engine to perform a garbage collection and is therefore a safe and good practice to execute as last command before ending the script.
+ */
+void MainWindow::cleanupScript()
 {
 	QTimer::singleShot(10, this, SLOT(abortScript()));
 }
@@ -2469,16 +2492,52 @@ void MainWindow::findImpl(bool bReplace, bool useParams, QString strFindString, 
 	}
 }
 
+/*! \brief Searches for a provided String inside the currently active document.
+ *
+ * This function searches for a provided String of text inside the currently active document. Furthermore this action can be specified with special flags.
+ * @param useParams a boolean value that determines whether the optional provided parameters should be used. If useParams is false then a Search window appears allowing the user to
+ * make further changes. If some text from the document was selected than this String is automatically used for the find String, otherwise the word around the cursor position is used.
+ * If useParams is true then no Search window appears and the optional provided parameters are used for the search action, the first found occurrence (starting from the cursor position) 
+ * of the find result is then automatically selected.
+ * @param strFindString a String holding the text value to use.
+ * @param DocFindFlags a String holding the text value to use, you can create this structure in the script like: 
+ * \code 
+ * var varName=DocFindFlags; 
+ * varName.backwards = true; 
+ * \endcode 
+ * see _DocFindFlags.
+ */
 void MainWindow::find(bool useParams, QString strFindString, DocFindFlags findFlags) 
 {
 	findImpl(false,useParams,strFindString,"",findFlags,false);
 }
 
+/*! \brief Searches and replaces a provided String inside the currently active document.
+ *
+ * This function searches and replaces a provided String of text inside the currently active document. Furthermore this action can be specified with special flags.
+ * @param bReplaceAll a boolean value that determines whether all occurrences of the found String should be replaced.
+ * @param useParams a boolean value that determines whether the optional provided parameters should be used. If useParams is false then a Replace window appears allowing the user to
+ * make further changes. If some text from the document was selected than this String is automatically used for the find String, otherwise the word around the cursor position is used.
+ * If useParams is true then no Search window appears and the optional provided parameters are used for the search action, the first found occurrence (starting from the cursor position) 
+ * of the find result is then automatically selected.
+ * @param strFindString a String holding the String value to search for.
+ * @param strReplaceString a String holding the text value to replace the found String strFindString with.
+ * @param DocFindFlags a String holding the text value to use, you can create this structure in the script like: 
+ * \code 
+ * var varName=DocFindFlags; 
+ * varName.backwards = true; 
+ * \endcode 
+ * see _DocFindFlags.
+ */
 void MainWindow::replace(bool bReplaceAll, bool useParams, QString strFindString, QString strReplaceString, DocFindFlags findFlags) 
 {
 	findImpl(true,useParams,strFindString,strReplaceString,findFlags,bReplaceAll);
 }
 
+/*! \brief Searches for the last provided String inside the currently active document.
+ *
+ * This function searches (forwards) for the last provided String of text inside the currently active document starting from the current cursor position.
+ */
 void MainWindow::findNext() 
 {
 	CustomQsciScintilla *tmpSci;
@@ -2496,6 +2555,10 @@ void MainWindow::findNext()
 	}
 }
 
+/*! \brief Searches for the last provided String inside the currently active document.
+ *
+ * This function searches (backwards) for the last provided String of text inside the currently active document starting from the current cursor position.
+ */
 void MainWindow::findPrev() 
 {
 	CustomQsciScintilla *tmpSci;

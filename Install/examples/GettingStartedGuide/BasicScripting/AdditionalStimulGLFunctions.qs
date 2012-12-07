@@ -24,7 +24,7 @@ StimulGL.write2OutputWindow("You can also make use of the StimulGL.write2OutputW
 Log("\tTAB is inserted first");//This appends an TAB (\t) and some text to the Log Output Pane
 Log("\n\n\n");//This appends some empty lines (\n) to the Log Output Pane
 
-//StimulGL.find(false,"getSelectedScriptFileName");
+//StimulGL.find(false);
 //StimulGL.clearOutputWindow();
 //StimulGL.closeSelectedScriptFile();
 //ThrowError("This is an dummy error message"); This function Throw an error, see output log window and aborts the script immediately (this is not a clean way of exiting your script!).
