@@ -23,18 +23,19 @@
 #include <QDialog>
 #include <QSettings>
 #include "ui_optionpage.h"
+#include "GlobalApplicationInformation.h"
 
 class OptionPage : public QDialog
 {
 	Q_OBJECT
 
 public:
-	OptionPage(QSettings &settings, QWidget *parent = 0);
+	OptionPage(QWidget *parent, GlobalApplicationInformation *g_AppInfo);
 	~OptionPage();
 
 private:
 	Ui::OptionPageClass ui;
-	QSettings *mainSettings;
+	GlobalApplicationInformation *glob_AppInfo;
 
 private slots:
 	void on_rdb_3DRenderer_3_toggled(bool);

@@ -65,7 +65,7 @@ CustomQsciScintilla *DocumentManager::getDocHandler(QMdiSubWindow *subWindow)
 	return 0;
 }
 
-MainAppInfo::DocType DocumentManager::getDocType(QMdiSubWindow *subWindow)
+GlobalApplicationInformation::DocType DocumentManager::getDocType(QMdiSubWindow *subWindow)
 {
 	int i;
 	for (i=0;i<DocCount;i++)
@@ -75,7 +75,7 @@ MainAppInfo::DocType DocumentManager::getDocType(QMdiSubWindow *subWindow)
 			return ChildrenDocTypes.at(i);
 		}
 	}
-	return MainAppInfo::DOCTYPE_UNDEFINED;
+	return GlobalApplicationInformation::DOCTYPE_UNDEFINED;
 }
 
 QString DocumentManager::getFileName(int DocIndex, bool bFileNameOnly)
@@ -140,28 +140,28 @@ int DocumentManager::count(void)
 	return DocCount;
 }
 
-MainAppInfo::DocType DocumentManager::getDocType(const QString strExtension)
+GlobalApplicationInformation::DocType DocumentManager::getDocType(const QString strExtension)
 {
 	QString tmpExt = strExtension.toLower();
 	if (tmpExt == "qs")
 	{
-		return MainAppInfo::DOCTYPE_QSCRIPT;
+		return GlobalApplicationInformation::DOCTYPE_QSCRIPT;
 	}
 	else if (tmpExt == "js")
 	{
-		return MainAppInfo::DOCTYPE_JAVASCRIPT;
+		return GlobalApplicationInformation::DOCTYPE_JAVASCRIPT;
 	}
 	else if ((tmpExt == "gz") || (tmpExt == "svg") || (tmpExt == "svgz")) 
 	{
-		return MainAppInfo::DOCTYPE_SVG;
+		return GlobalApplicationInformation::DOCTYPE_SVG;
 	}
 	else if(getKnownDocumentFileHandlerIndex(tmpExt) >= 0)
 	{
-		return MainAppInfo::DOCTYPE_PLUGIN_DEFINED;
+		return GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED;
 	}
 	else//extension not found
 	{
-		return MainAppInfo::DOCTYPE_UNDEFINED;
+		return GlobalApplicationInformation::DOCTYPE_UNDEFINED;
 	}
 }
 
@@ -213,14 +213,14 @@ bool DocumentManager::getLexer(QsciLexer *lexer, const QString &lexerName, QObje
 	return bRetVal;
 }
 
-bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, MainAppInfo::DocTypeStyle dStyle, const QString &strAPIFileName)
+bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, GlobalApplicationInformation::DocTypeStyle dStyle, const QString &strAPIFileName)
 {
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	QDir dir(MainAppInfo::apiDirPath());
 
 	switch (dStyle)
 	{
-		case MainAppInfo::DOCTYPE_STYLE_UNDEFINED:
+		case GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED:
 		{
 			custQsci->setFolding(QsciScintilla::NoFoldStyle);
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
@@ -230,7 +230,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Main
 			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
 			return true;
 		}
-		case MainAppInfo::DOCTYPE_STYLE_PLAINTEXT:
+		case GlobalApplicationInformation::DOCTYPE_STYLE_PLAINTEXT:
 			{
 				custQsci->setFolding(QsciScintilla::NoFoldStyle);
 				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
@@ -240,7 +240,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Main
 				custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
 				return true;
 			}
-		case MainAppInfo::DOCTYPE_STYLE_ECMA:
+		case GlobalApplicationInformation::DOCTYPE_STYLE_ECMA:
 		{
 			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
@@ -277,7 +277,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Main
 			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
 			return true;
 		}
-		case MainAppInfo::DOCTYPE_STYLE_XML:
+		case GlobalApplicationInformation::DOCTYPE_STYLE_XML:
 		{
 			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
@@ -305,7 +305,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Main
 			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
 			return true;
 		}
-		case MainAppInfo::DOCTYPE_STYLE_QML:
+		case GlobalApplicationInformation::DOCTYPE_STYLE_QML:
 			{
 				custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
 				custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
@@ -346,7 +346,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Main
 	return false;
 }
 
-CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocIndex, const QString &strExtension)
+CustomQsciScintilla *DocumentManager::add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension)
 {
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
@@ -374,22 +374,22 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 
 	switch (docType)
 	{
-	case MainAppInfo::DOCTYPE_QSCRIPT:
+	case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
 		{
-			bool bResult = customizeDocumentStyle(custQsci,MainAppInfo::DOCTYPE_STYLE_ECMA,"qscript.api");
+			bool bResult = customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"qscript.api");
 			break;
 		}
-	case MainAppInfo::DOCTYPE_JAVASCRIPT:
+	case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
 		{
-			bool bResult = customizeDocumentStyle(custQsci,MainAppInfo::DOCTYPE_STYLE_ECMA,"javascript.api");
+			bool bResult = customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"javascript.api");
 			break;
 		}		
-	case MainAppInfo::DOCTYPE_SVG:
+	case GlobalApplicationInformation::DOCTYPE_SVG:
 		{
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
 			break;
 		}
-	case MainAppInfo::DOCTYPE_PLUGIN_DEFINED:
+	case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
 		{
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
 			if(pluginDocHandlerStore.strDocHandlerInfoList.isEmpty() == false)
@@ -405,14 +405,14 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 							if(pluginObject)
 							{
 								bool bResult = false;
-								MainAppInfo::DocTypeStyle sDocStyle = MainAppInfo::DOCTYPE_STYLE_UNDEFINED;
+								GlobalApplicationInformation::DocTypeStyle sDocStyle = GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;
 								if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE_FULL)) == -1))//Is the slot present?
 								{
 									
 									int nTmpRetVal = 0;
 									bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nTmpRetVal), Q_ARG(QString,strExtension.toLower()));				
 									if(bResult)
-										sDocStyle = (MainAppInfo::DocTypeStyle)nTmpRetVal;						
+										sDocStyle = (GlobalApplicationInformation::DocTypeStyle)nTmpRetVal;						
 								}
 
 								QString sAPIFileName = "";
@@ -431,7 +431,7 @@ CustomQsciScintilla *DocumentManager::add(MainAppInfo::DocType docType,int &DocI
 			}
 			break;
 		}
-	case MainAppInfo::DOCTYPE_UNDEFINED:
+	case GlobalApplicationInformation::DOCTYPE_UNDEFINED:
 		{
 			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
 			break;

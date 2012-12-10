@@ -21,15 +21,29 @@
 #define GLOBALAPPLICATIONINFORMATION_H
 
 #include <QCoreApplication>
+#include <QSettings>
+#include "svgview.h"
+#include "maindefines.h"
+
+typedef struct strcDocContentInfoStructure
+{
+	QString strDocContent;
+	QString strDocExtension;
+	QString strDocHomeDir;
+	bool bIsFile;
+} DocContentInfoStructure;
 
 typedef struct strMainAppInformation 
 {
 	QString sCompanyName;
 	QString sInternalName;
 	QString sFileVersion;
-
-	//QString sDeviceInterfaceString;
-	//QString sExtensionInterfaceString;
+	bool bDoNotLoadScriptBindings;
+	bool bOpenExtDebug;
+	SvgView::RendererType rRendererType;
+	bool bHQAntiAlias;
+	bool bAllowMultipleInheritance;
+	//See also serialization!!!
 } MainAppInformationStructure;
 
 class GlobalApplicationInformation : public QObject
@@ -37,36 +51,100 @@ class GlobalApplicationInformation : public QObject
 	Q_OBJECT
 
 public:
-	GlobalApplicationInformation(QObject *parent = NULL)
-	{
-		parent = parent;
-		mainAppInformation.sCompanyName = "";
-		mainAppInformation.sFileVersion = "";
-		mainAppInformation.sInternalName = "";
-		//mainAppInformation.sDeviceInterfaceString = "";
-		//mainAppInformation.sExtensionInterfaceString = "";
-	};
-	~GlobalApplicationInformation(){};
+	GlobalApplicationInformation(QObject *parent = NULL);
+	~GlobalApplicationInformation();
 
-	void setCompanyName(const QString &sName)			{mainAppInformation.sCompanyName = sName;QCoreApplication::setOrganizationDomain(mainAppInformation.sCompanyName);QCoreApplication::setOrganizationName(mainAppInformation.sCompanyName);};
-	QString getCompanyName()							{return mainAppInformation.sCompanyName;};
-	void setFileVersionString(const QString &sVersion)	{mainAppInformation.sFileVersion = sVersion;QCoreApplication::setApplicationVersion(mainAppInformation.sFileVersion);};
-	QString getFileVersionString()						{return mainAppInformation.sFileVersion;};
-	void setInternalName(const QString &sIntName)		{mainAppInformation.sInternalName = sIntName;QCoreApplication::setApplicationName(mainAppInformation.sInternalName);};
-	QString getInternalName()							{return mainAppInformation.sInternalName;};
-	QString getTitle()									{return mainAppInformation.sInternalName +  "(v" + mainAppInformation.sFileVersion + ")";};
+	MainAppInformationStructure getMainAppInformationStructure() {return mainAppInformation;};
+	static MainAppInformationStructure getStaticMainAppInformationStructureFromSharedMemory();
+	static bool copyMainAppInformationStructureToSharedMemory(const MainAppInformationStructure &mainAppInformationStructure);
 
+	void setCompanyName(const QString &sName);
+	QString getCompanyName();
+	void setFileVersionString(const QString &sVersion);
+	QString getFileVersionString();
+	void setInternalName(const QString &sIntName);
+	QString getInternalName();
+	QString getTitle();
+	bool shouldLoadScriptBindings();
 
+	void initAndParseRegistrySettings();
 
-	//void setPluginDeviceInterfaceString(const QString &sValue) {mainAppInformation.sDeviceInterfaceString = sValue;};
-	//QString getPluginDeviceInterfaceString() {return mainAppInformation.sDeviceInterfaceString;};
-	//void setPluginExtensionInterfaceString(const QString &sValue) {mainAppInformation.sExtensionInterfaceString = sValue;};
-	//QString getPluginExtensionInterfaceString() {return mainAppInformation.sExtensionInterfaceString;};
+	bool checkRegistryInformation(const QString &sName);
+	QVariant getRegistryInformation(const QString &sName);
+	bool setRegistryInformation(const QString &sName, const QVariant &vValue);
 
+	QVariant invokeJavaScriptConfigurationFile(const QString &sCode);
+	void showJavaScriptConfigurationFile();
+	
 
+public slots:
+	void parseJavaScriptConfigurationFile();
 
 private:
-	strMainAppInformation mainAppInformation;
+	void Initialize();
+	void composeJavaScriptConfigurationFile();
+	//bool fetchMainAppInformationStructure();
+
+	MainAppInformationStructure mainAppInformation;
+	QSettings *AppRegistrySettings;
+	QObject *webView;
+
+public:
+	enum ActiveScriptMode
+	{
+		NoScript				= 0x00000,
+		Pending					= 0x00001,
+		Executing				= 0x00002,
+		Debugging				= 0x00003,
+		Stopping				= 0x00004
+	};
+	Q_DECLARE_FLAGS(ActiveScriptModes, ActiveScriptMode)	
+
+	enum ScriptRunMode
+	{
+		Execute					= 0x00000,
+		Debug					= 0x00001,
+		Abort					= 0x00002
+	};
+	Q_DECLARE_FLAGS(ScriptRunModes, ScriptRunMode)
+
+	enum MainProgramModeFlag
+	{
+		Default						= 0,
+		DisableAllScriptBindings	= 1,
+		DisableAllPlugins			= 2,
+		DisableSplash				= 4
+	};
+	Q_DECLARE_FLAGS(MainProgramModeFlags, MainProgramModeFlag)
+
+	enum DocType 
+	{
+		DOCTYPE_UNDEFINED		= 0x00000,
+		DOCTYPE_QSCRIPT			= 0x00001,
+		DOCTYPE_JAVASCRIPT		= 0x00002,
+		DOCTYPE_SVG				= 0x00003,
+		DOCTYPE_PLUGIN_DEFINED	= 0x00004
+	};
+	Q_DECLARE_FLAGS(DocTypes, DocType)
+
+	enum DocTypeStyle
+	{
+		DOCTYPE_STYLE_UNDEFINED		= 0,
+		DOCTYPE_STYLE_ECMA			= 1,
+		DOCTYPE_STYLE_PLAINTEXT		= 2,
+		DOCTYPE_STYLE_XML			= 3,
+		DOCTYPE_STYLE_QML			= 4
+	};
+	Q_DECLARE_FLAGS(DocTypeStyles, DocTypeStyle)
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(GlobalApplicationInformation::ScriptRunModes)
+Q_DECLARE_OPERATORS_FOR_FLAGS(GlobalApplicationInformation::MainProgramModeFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(GlobalApplicationInformation::ActiveScriptModes)
+Q_DECLARE_OPERATORS_FOR_FLAGS(GlobalApplicationInformation::DocTypes)
+Q_DECLARE_OPERATORS_FOR_FLAGS(GlobalApplicationInformation::DocTypeStyles)
+
+QDataStream &operator<<(QDataStream &out, const MainAppInformationStructure &mainAppInformationStructure);
+QDataStream &operator>>(QDataStream &in, MainAppInformationStructure &mainAppInformationStructure);
 
 #endif // GLOBALAPPLICATIONINFORMATION_H

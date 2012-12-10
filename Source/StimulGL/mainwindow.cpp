@@ -18,6 +18,7 @@
 
 #include "mainwindow.h"
 #include "mainappinfo.h"
+#include "globalapplicationinformation.h"
 #include "StimulGL.h"
 #include "svgview.h"
 #include "aboutqtdialog.h"  
@@ -37,12 +38,13 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 {
 	DocManager = NULL;
 	AppScriptEngine = NULL;
-	webView = NULL;
 	globAppInfo = NULL;
+	mainAppInfoStruct = NULL;
 	PluginsFound = false;
 	DevicePluginsFound = false;
 	ExtensionPluginsFound = false;
 	helpAssistant = new Assistant;
+	bMainWindowIsInitialized = false;
 
 #ifndef QT_NO_DEBUG_OUTPUT	
 	qInstallMsgHandler(MainAppInfo::MyOutputHandler);
@@ -70,60 +72,20 @@ bool MainWindow::openDroppedFiles(const QStringList &pathList)
 	return true;
 }
 
-void MainWindow::composeJavaScriptConfigurationFile()
-{
-	if(webView == NULL)
-	{
-		webView = new QWebView();
-		webView->setObjectName(QString::fromUtf8("webView"));
-		connect(webView, SIGNAL(loadFinished(bool)), SLOT(parseJavaScriptConfigurationFile(bool)),Qt::DirectConnection);
-	}
-	QString sPath = (":/resources/StimulGL.js");
-	QResource res(sPath);
-	QByteArray bResourceData;
-	bResourceData=reinterpret_cast< const char* >( res.data() ), res.size();
-	webView->page()->mainFrame()->evaluateJavaScript(bResourceData);
-	
-	sPath = (":/resources/versioning.html");
-	res.setFileName(sPath);
-	bResourceData = reinterpret_cast< const char* >( res.data() ), res.size();
-	webView->setContent(bResourceData);//Invokes the loadFinished() signal after loading
-}
-
-void MainWindow::parseJavaScriptConfigurationFile(bool bLoadStatus)
-{
-	if (bLoadStatus)
-	{
-		if(globAppInfo == NULL)
-		{
-			globAppInfo = new GlobalApplicationInformation(this);
-			globAppInfo->setCompanyName(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppCompanyName()").toString());
-			globAppInfo->setInternalName(invokeJavaScriptConfigurationFile("StimulGLInfo.GetMainAppInternalName()").toString());
-			globAppInfo->setFileVersionString(invokeJavaScriptConfigurationFile("StimulGLInfo.GetCurrentRelease()").toString());
-		}
-	}
-}
-
-bool MainWindow::receiveExchangeMessage(const QString &sMessage)
-{
-	return true;
-}
-
 QVariant MainWindow::invokeJavaScriptConfigurationFile(const QString &sCode)
 {
-	if(webView)
-	{
-		return webView->page()->mainFrame()->evaluateJavaScript(sCode);
-	}
-	return NULL;
+	return globAppInfo->invokeJavaScriptConfigurationFile(sCode);
 }
 
 void MainWindow::showJavaScriptConfigurationFile()
 {
-	if(webView)
-	{
-		webView->show();
-	}
+	globAppInfo->showJavaScriptConfigurationFile();
+}
+
+bool MainWindow::receiveExchangeMessage(const QString &sMessage)
+{
+	write2OutputWindow("-> SocketData Received [" + sMessage + "]");
+	return true;
 }
 
 void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
@@ -139,7 +101,7 @@ void MainWindow::setupContextMenus()
 	connect(outputWindowList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(DebugcontextMenuEvent(QPoint)));
 }
 
-bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
+bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags)
 {
 	//Default					= 0x00000,
 	//DisablePlugins			= 0x00001,
@@ -147,19 +109,17 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//QWaitCondition sleep;
 	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
 	//registerFileTypeByDefinition("StimulGL.QtScript","StimulGL Qt Script File",".qs");
-	composeJavaScriptConfigurationFile();
-	MainAppInfo::Initialize(this);
+	//MainAppInfo::Initialize(this);
 	QApplication::setGraphicsSystem("opengl");//"raster");
 	StimulGLFlags = mainFlags;
-    AppScriptStatus = MainAppInfo::NoScript;
-	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash) == false)
+    AppScriptStatus = GlobalApplicationInformation::NoScript;
+	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash) == false)
 	{
 		QPixmap pixmap(":/resources/splash.png");
 		MainSplashScreen = new QSplashScreen(pixmap);
 		MainSplashScreen->show();
 		showSplashMessage("Initializing Program...");
 	}
-	initAndParseGlobalSettings();//See also parseRemainingGlobalSettings()!
 	showSplashMessage("Setup User Interface...");
 	setupMDI();
 	setWindowTitle(globAppInfo->getTitle());//  MainAppInfo::MainProgramTitle());
@@ -176,7 +136,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	parseRemainingGlobalSettings();
 	setupContextMenus();
 	if (startUpFiles.count()> 0) { openFiles(NULL,startUpFiles);}
-	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash)==false)
+	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash)==false)
 	{
 		MainSplashScreen->finish(this);
 	}
@@ -191,6 +151,7 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 	//	label->setGeometry(QApplication::desktop()->availableGeometry(1));
 	//	label->showMaximized();
 	//}
+	bMainWindowIsInitialized = true;
 	return true;
 }
 
@@ -211,32 +172,18 @@ bool MainWindow::initialize(MainAppInfo::MainProgramModeFlags mainFlags)
 
 void MainWindow::showSplashMessage(const QString message)
 {
-	if (StimulGLFlags.testFlag(MainAppInfo::DisableSplash) == false)
+	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash) == false)
 	{
 		MainSplashScreen->showMessage(message,Qt::AlignBottom ,Qt::white);
 	}	
 }
-void MainWindow::initAndParseGlobalSettings()//See also ParseRemainingGlobalSettings()!
+
+void MainWindow::setGlobalApplicationInformationObject(GlobalApplicationInformation *globAppInformation)
 {
-	settings = new QSettings(globAppInfo->getCompanyName(),globAppInfo->getInternalName());
-	settings->beginGroup("General");
-	if (settings->contains("DoNotLoadScriptExtension")) 
-	{
-		if (Qt::CheckState(settings->value("DoNotLoadScriptExtension").toInt())==0)
-		{
-			DoNotLoadScriptBindings = false;
-		}
-		else
-		{
-			DoNotLoadScriptBindings = true;
-		}
-	}
-	else //key doesn't exist, default value here!
-	{
-		DoNotLoadScriptBindings = false;
-	}
-	settings->endGroup();
+	globAppInfo = globAppInformation;
+	mainAppInfoStruct = new MainAppInformationStructure(globAppInformation->getMainAppInformationStructure());
 }
+
 void MainWindow::setupMDI()
 {
 	mdiArea = new QMdiArea;
@@ -430,9 +377,9 @@ void MainWindow::setupScriptEngine()
 		AppScriptEngine = NULL;
 	}
 	AppScriptEngine = new QTScriptEngine(this);
-	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllScriptBindings) == false)
+	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableAllScriptBindings) == false)
 	{
-		if (!DoNotLoadScriptBindings)
+		if (globAppInfo->shouldLoadScriptBindings())
 		{
 			if (!AppScriptEngine->ImportScriptExtensions())
 			{
@@ -515,13 +462,13 @@ bool MainWindow::restartScriptEngine()
 void MainWindow::scriptLoaded(qint64 id)
 {
 	currentRunningScriptID = id;
-    setScriptRunningStatus(MainAppInfo::Executing);
+    setScriptRunningStatus(GlobalApplicationInformation::Executing);
 }
 
 void MainWindow::scriptUnloaded(qint64 id)
 {
 	currentRunningScriptID = 0;
-    setScriptRunningStatus(MainAppInfo::Pending);
+    setScriptRunningStatus(GlobalApplicationInformation::Pending);
 }
 
 void MainWindow::setActiveSubWindow(QWidget *window)
@@ -582,51 +529,51 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 			docTitle = MainAppInfo::UntitledDocName();
 		}		
 		setWindowTitle(tr("%1 - %2").arg(globAppInfo->getTitle()).arg(docTitle));//MainAppInfo::MainProgramTitle()).arg(docTitle));
-		MainAppInfo::DocType d;
+		GlobalApplicationInformation::DocType d;
 		d = DocManager->getDocType(currentSub);
 		switch (d)
 		{
-		case MainAppInfo::DOCTYPE_QSCRIPT:
+		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
 			{
 				//statusBar()->showMessage("DOCTYPE_QSCRIPT");
 				if (currentRunningScriptID == 0)
 				{
-                    setScriptRunningStatus(MainAppInfo::Pending);
+                    setScriptRunningStatus(GlobalApplicationInformation::Pending);
 				}
 				printAction->setEnabled(true);
 				break;
 			}
-		case MainAppInfo::DOCTYPE_JAVASCRIPT:
+		case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
 			{
 				//statusBar()->showMessage("DOCTYPE_JAVASCRIPT");
 				if (currentRunningScriptID == 0)
 				{
-					setScriptRunningStatus(MainAppInfo::Pending);
+					setScriptRunningStatus(GlobalApplicationInformation::Pending);
 				}
 				printAction->setEnabled(true);
 				break;
 			}			
-		case MainAppInfo::DOCTYPE_SVG:
+		case GlobalApplicationInformation::DOCTYPE_SVG:
 			{
 				//statusBar()->showMessage("DOCTYPE_SVG");
 				//setScriptRunningStatus(AppScriptStatus);
 				if (currentRunningScriptID == 0)
 				{
-                    setScriptRunningStatus(MainAppInfo::Pending);
+                    setScriptRunningStatus(GlobalApplicationInformation::Pending);
 				}
 				printAction->setEnabled(true);
 				break;
 			}
-		case MainAppInfo::DOCTYPE_PLUGIN_DEFINED:
+		case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
 			{
 				if (currentRunningScriptID == 0)
 				{
-					setScriptRunningStatus(MainAppInfo::Pending);
+					setScriptRunningStatus(GlobalApplicationInformation::Pending);
 				}
 				printAction->setEnabled(true);
 				break;
 			}
-		case MainAppInfo::DOCTYPE_UNDEFINED:
+		case GlobalApplicationInformation::DOCTYPE_UNDEFINED:
 			{
 				//statusBar()->showMessage("DOCTYPE_UNDEFINED");
 				//setScriptRunningStatus(AppScriptStatus);
@@ -642,7 +589,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		setWindowTitle(tr("%1").arg(globAppInfo->getTitle()));//MainAppInfo::MainProgramTitle()));
 		if (currentRunningScriptID == 0)
 		{
-            setScriptRunningStatus(MainAppInfo::NoScript);
+            setScriptRunningStatus(GlobalApplicationInformation::NoScript);
 		}
 		printAction->setEnabled(false);
 	}
@@ -674,7 +621,7 @@ void MainWindow::createDefaultMenus()
 
 	newScriptAction = new QAction(QIcon(":/resources/new.png"),tr("&New QT Script"), this);
 	newScriptAction->setStatusTip(tr("Create a new QT Script document"));
-	newScriptAction->setData(MainAppInfo::DOCTYPE_QSCRIPT);
+	newScriptAction->setData(GlobalApplicationInformation::DOCTYPE_QSCRIPT);
 	connect(newScriptAction, SIGNAL(triggered()), this, SLOT(newFile()));
 	fileMenu->addAction(newScriptAction);
 
@@ -926,14 +873,14 @@ void MainWindow::createDefaultMenus()
 	runScriptAction->setEnabled(false);
 	runScriptAction->setShortcut(QKeySequence(tr("F5")));
 	runScriptAction->setStatusTip(tr("Run the current script"));
-	runScriptAction->setData(MainAppInfo::Execute);
+	runScriptAction->setData(GlobalApplicationInformation::Execute);
 	connect(runScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
 
 	//debugScriptAction = scriptMenu->addAction(tr("Debug Script"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
 	//debugScriptAction->setEnabled(false);//(false);
 	//debugScriptAction->setShortcut(QKeySequence(tr("F6")));
 	//debugScriptAction->setStatusTip(tr("Open the current script in the Debugger"));
-	//debugScriptAction->setData(MainAppInfo::Debug);
+	//debugScriptAction->setData(GlobalApplicationInformation::Debug);
 	//connect(debugScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
 
 	abortScriptAction = scriptMenu->addAction(tr("Abort Script"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
@@ -1021,7 +968,8 @@ void MainWindow::showDocumentation()
  */
 void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined MAIN_PROGRAM_LOG_SLOT_NAME
 {
-	outputWindowList->addItem(text2Write);
+	if(bMainWindowIsInitialized)
+		outputWindowList->addItem(text2Write);
 }
 
 /*! \brief Clears the Output Log Window.
@@ -1082,7 +1030,7 @@ void MainWindow::createDockWindows()
 
 void MainWindow::setupDynamicPlugins()
 {
-	if (StimulGLFlags.testFlag(MainAppInfo::DisableAllPlugins) == false)
+	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableAllPlugins) == false)
 	{
 		extendAPICallTips(this->metaObject());
 		showSplashMessage("Loading Static Plugins...");
@@ -1099,14 +1047,14 @@ void MainWindow::setupDynamicPlugins()
 			DeviceInterface *iDevice = qobject_cast<DeviceInterface *>(plugin);
 			if (iDevice) 
 			{
-				iDevice->setGlobalAppInfo(globAppInfo);
+				iDevice->fetchGlobalAppInfo();
 			}
 			else 
 			{
 				ExtensionInterface *iExtension = qobject_cast<ExtensionInterface *>(plugin);
 				if (iExtension) 
 				{
-					iExtension->setGlobalAppInfo(globAppInfo);
+					iExtension->fetchGlobalAppInfo();
 				}				
 			}
 			metaObject = plugin->metaObject();
@@ -1199,14 +1147,14 @@ void MainWindow::setupDynamicPlugins()
 				DeviceInterface *iDevice = qobject_cast<DeviceInterface *>(plugin);
 				if (iDevice) 
 				{
-					iDevice->setGlobalAppInfo(globAppInfo);
+					iDevice->fetchGlobalAppInfo();
 				}
 				else 
 				{
 					ExtensionInterface *iExtension = qobject_cast<ExtensionInterface *>(plugin);
 					if (iExtension) 
 					{
-						iExtension->setGlobalAppInfo(globAppInfo);
+						iExtension->fetchGlobalAppInfo();
 					}				
 				}
 				metaObject = plugin->metaObject();
@@ -1485,12 +1433,12 @@ void MainWindow::showPluginGUI()
 	Plugins->GetInterface(Plugins->GetIndex(action->data().toString()))->ShowGUI();	
 }
 
-void MainWindow::setScriptRunningStatus(MainAppInfo::ActiveScriptMode state)
+void MainWindow::setScriptRunningStatus(GlobalApplicationInformation::ActiveScriptMode state)
 {
 	AppScriptStatus = state;
 	switch (state)
 	{
-	case MainAppInfo::Debugging:
+	case GlobalApplicationInformation::Debugging:
 		{ 
 			runScriptAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
@@ -1498,7 +1446,7 @@ void MainWindow::setScriptRunningStatus(MainAppInfo::ActiveScriptMode state)
 			restartScriptEngineAction->setEnabled(true);
 			break; 
 		}	
-	case MainAppInfo::Executing:
+	case GlobalApplicationInformation::Executing:
 		{ 
 			runScriptAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
@@ -1506,7 +1454,7 @@ void MainWindow::setScriptRunningStatus(MainAppInfo::ActiveScriptMode state)
 			restartScriptEngineAction->setEnabled(true);
 			break; 
 		}	
-	case MainAppInfo::NoScript:
+	case GlobalApplicationInformation::NoScript:
 		{ 
 			runScriptAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
@@ -1514,7 +1462,7 @@ void MainWindow::setScriptRunningStatus(MainAppInfo::ActiveScriptMode state)
 			restartScriptEngineAction->setEnabled(false);
 			break; 
 		}	
-	case MainAppInfo::Pending:
+	case GlobalApplicationInformation::Pending:
 		{ 
 			runScriptAction->setEnabled(true);
 //			debugScriptAction->setEnabled(true);
@@ -1522,7 +1470,7 @@ void MainWindow::setScriptRunningStatus(MainAppInfo::ActiveScriptMode state)
 			restartScriptEngineAction->setEnabled(false);
 			break; 
 		}	
-	case MainAppInfo::Stopping:
+	case GlobalApplicationInformation::Stopping:
 		{ 
 			runScriptAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
@@ -1591,21 +1539,21 @@ void MainWindow::closeSelectedScriptFile(bool bAutoSaveChanges)
 void MainWindow::executeScript()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
-	StimulGLScriptRunMode = (MainAppInfo::ScriptRunMode)action->data().toInt();
+	StimulGLScriptRunMode = (GlobalApplicationInformation::ScriptRunMode)action->data().toInt();
 	QMdiSubWindow *currentActiveWindow = activeMdiChild();
 	QString strFileName = DocManager->getFileName(currentActiveWindow);
 
 	switch (DocManager->getDocType(currentActiveWindow))
 	{
-		case MainAppInfo::DOCTYPE_QSCRIPT:
+		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
 		{ 
 			break; 
 		}
-		case MainAppInfo::DOCTYPE_JAVASCRIPT:
+		case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
 		{ 
 			break; 
 		}		
-		case MainAppInfo::DOCTYPE_SVG: 
+		case GlobalApplicationInformation::DOCTYPE_SVG: 
 		{
 			if (DocManager->getDocHandler(currentActiveWindow)->isModified())
 			{
@@ -1638,7 +1586,7 @@ void MainWindow::executeScript()
 			return;
 			break;
 		}
-		case MainAppInfo::DOCTYPE_PLUGIN_DEFINED:
+		case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
 		{
 			clearDebugger();
 			//QTime t;
@@ -1681,7 +1629,7 @@ void MainWindow::executeScript()
 	QTime t;
 	QDir::setCurrent(getSelectedScriptFileLocation());
 	QString strScriptProgram = DocManager->getDocHandler(currentActiveWindow)->text();
-	if (StimulGLScriptRunMode == MainAppInfo::Debug)
+	if (StimulGLScriptRunMode == GlobalApplicationInformation::Debug)
 	{
 		if (!AppScriptEngine->eng->canEvaluate(strScriptProgram))
 		{
@@ -1750,7 +1698,7 @@ void MainWindow::abortScript()
 void MainWindow::openOptionsDialog()
 {
 	int returnVal;
-	OptionPage MainOptionPage(*settings,this);
+	OptionPage MainOptionPage(this, globAppInfo);
 	returnVal = MainOptionPage.exec();
 
 	switch (returnVal) {
@@ -1846,7 +1794,7 @@ bool MainWindow::parseFile(const QFile &file)
 	QFileInfo fileInfo(file);
 	QString fileExtension;
 	fileExtension = fileInfo.suffix();
-	MainAppInfo::DocType tempDocType = DocManager->getDocType(fileExtension);
+	GlobalApplicationInformation::DocType tempDocType = DocManager->getDocType(fileExtension);
 	int DocIndex;
 	newDocument(tempDocType,DocIndex,fileExtension);
 
@@ -1870,26 +1818,26 @@ bool MainWindow::parseFile(const QFile &file)
 	QApplication::restoreOverrideCursor();
 	return true;
 }
+
 void MainWindow::setRenderer()
 {
-	settings->beginGroup("Rendering");
-	if (settings->contains("RenderType"))	
+	if (globAppInfo->checkRegistryInformation(REGISTRY_RENDERTYPE))	
 	{
-		int type;
-		type = settings->value("RenderType").toInt();
+		SvgView::RendererType type;
+		type = (SvgView::RendererType)globAppInfo->getRegistryInformation(REGISTRY_RENDERTYPE).toInt();
 		switch (type)
 		{
-		case 1://Native
+		case SvgView::Native://Native
 			{
 				SVGPreviewer->setHighQualityAntialiasing(false);
 				SVGPreviewer->setRenderer(SvgView::Native);
 				break;
 			}
-		case 2://OpenGL
+		case SvgView::OpenGL://OpenGL
 			{
-				if (settings->contains("HQAntiAlias"))
+				if (globAppInfo->checkRegistryInformation(REGISTRY_HQANTIALIAS))
 				{
-					SVGPreviewer->setHighQualityAntialiasing(settings->value("HQAntiAlias").toBool());
+					SVGPreviewer->setHighQualityAntialiasing(globAppInfo->getRegistryInformation(REGISTRY_HQANTIALIAS).toInt());
 				}
 				else
 				{
@@ -1898,7 +1846,7 @@ void MainWindow::setRenderer()
 				SVGPreviewer->setRenderer(SvgView::OpenGL);
 				break;
 			}
-		case 3://Image
+		case SvgView::Image://Image
 			{
 				SVGPreviewer->setHighQualityAntialiasing(false);
 				SVGPreviewer->setRenderer(SvgView::Image);
@@ -1910,7 +1858,6 @@ void MainWindow::setRenderer()
 	{
 		SVGPreviewer->setRenderer(SvgView::Native);
 	}
-	settings->endGroup();
 }
 
 void MainWindow::setCurrentFile(const QString &fileName)
@@ -1931,13 +1878,15 @@ void MainWindow::setCurrentFile(const QString &fileName)
 
 void MainWindow::updateRecentFileList(const QString &fileName)
 {
-	QStringList files = settings->value("recentFileList").toStringList();
+	QStringList files;
+	if(globAppInfo->checkRegistryInformation(REGISTRY_RECENTFILELIST))
+		files = globAppInfo->getRegistryInformation(REGISTRY_RECENTFILELIST).toStringList();
 	files.removeAll(fileName);
 	files.prepend(fileName);
 	while (files.size() > MaxRecentFiles)
 		files.removeLast();
 
-	settings->setValue("recentFileList", files);
+	globAppInfo->setRegistryInformation(REGISTRY_RECENTFILELIST,files);
 
 	foreach (QWidget *widget, QApplication::topLevelWidgets()) {
 		MainWindow *mainWin = qobject_cast<MainWindow *>(widget);
@@ -1955,7 +1904,9 @@ void MainWindow::openRecentFile()
 
 void MainWindow::updateRecentFileActions()
 {
-	QStringList files = settings->value("recentFileList").toStringList();
+	QStringList files;
+	if(globAppInfo->checkRegistryInformation(REGISTRY_RECENTFILELIST))
+		files = globAppInfo->getRegistryInformation(REGISTRY_RECENTFILELIST).toStringList();
 
 	int numRecentFiles = qMin(files.size(), (int)MaxRecentFiles);
 
@@ -1979,11 +1930,11 @@ QString MainWindow::strippedName(const QString &fullFileName)
 void MainWindow::newFile()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
-	MainAppInfo::DocType docType;
+	GlobalApplicationInformation::DocType docType;
 	if (action)
-	{docType = (MainAppInfo::DocType)action->data().toInt();}
+	{docType = (GlobalApplicationInformation::DocType)action->data().toInt();}
 	else
-	{docType = MainAppInfo::DOCTYPE_UNDEFINED;}	
+	{docType = GlobalApplicationInformation::DOCTYPE_UNDEFINED;}	
 
 	int DocIndex;
 	newDocument(docType,DocIndex);
@@ -1992,7 +1943,7 @@ void MainWindow::newFile()
 	statusBar()->showMessage(tr("New File created"), 2000);
 }
 
-void MainWindow::newDocument(const MainAppInfo::DocType &docType, int &DocIndex, const QString &strExtension)
+void MainWindow::newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension)
 {
 	DocIndex = 0;
 	QsciScintilla *newChild = DocManager->add(docType,DocIndex,strExtension);
@@ -2192,43 +2143,66 @@ void MainWindow::setupToolBars()
 
 void MainWindow::parseRemainingGlobalSettings()
 {
-	QPoint pos = settings->value("pos", QPoint(200, 200)).toPoint();
-	QSize size = settings->value("size", QSize(400, 400)).toSize();
-	move(pos);
-	resize(size);
 	setRenderer();
 	configureDebugger();
 }
 
+void MainWindow::RecoverLastScreenWindowSettings()
+{
+	if(globAppInfo->checkRegistryInformation(REGISTRY_MAINWINDOWPOS))
+	{
+		QPoint tmpPoint = globAppInfo->getRegistryInformation(REGISTRY_MAINWINDOWPOS).toPoint();
+		this->move(tmpPoint);
+	}
+	if(globAppInfo->checkRegistryInformation(REGISTRY_MAINWINDOWSIZE))
+	{
+		QSize tmpSize = globAppInfo->getRegistryInformation(REGISTRY_MAINWINDOWSIZE).toSize();
+		this->resize(tmpSize);
+	}
+	if(globAppInfo->checkRegistryInformation(REGISTRY_DEBUGWINDOWWIDTH))
+	{
+		int tmpWidth = globAppInfo->getRegistryInformation(REGISTRY_DEBUGWINDOWWIDTH).toInt();
+		setDockSize(debugLogDock,tmpWidth,debugLogDock->height());
+	}
+}
+
+void MainWindow::returnToOldMaxMinSizes()
+{
+	debugLogDock->setMinimumSize(oldDockMinSize);
+	debugLogDock->setMaximumSize(oldDockMaxSize);
+}
+
+void MainWindow::setDockSize(QDockWidget *dock, int setWidth, int setHeight)
+{
+	oldDockMaxSize=dock->maximumSize();
+	oldDockMinSize=dock->minimumSize();
+
+	if (setWidth>=0)
+		if (dock->width()<setWidth)
+			dock->setMinimumWidth(setWidth);
+		else dock->setMaximumWidth(setWidth);
+		if (setHeight>=0)
+			if (dock->height()<setHeight)
+				dock->setMinimumHeight(setHeight);
+			else dock->setMaximumHeight(setHeight);
+
+			QTimer::singleShot(1, this, SLOT(returnToOldMaxMinSizes()));
+}
+
 bool MainWindow::configureDebugger()
 {
-	settings->beginGroup("Debugging");
-	if (settings->contains("OpenExtDebug"))	
-	{
-		AppScriptEngine->ConfigureDebugger(settings->value("OpenExtDebug").toBool());
-	}
+	if(globAppInfo->checkRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER))
+		AppScriptEngine->ConfigureDebugger((bool)globAppInfo->getRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER).toInt());
 	else//default
-	{
 		AppScriptEngine->ConfigureDebugger(false);
-	}
-	settings->endGroup();
-	settings->beginGroup("General");
-	if (settings->contains("OpenExtDebug"))	
-	{
-		AppScriptEngine->ConfigureDebugger(settings->value("OpenExtDebug").toBool());
-	}
-	else//default
-	{
-		AppScriptEngine->ConfigureDebugger(false);
-	}
-	settings->endGroup();
 	return true;
 }
 
 void MainWindow::writeMainWindowSettings()
 {
-	settings->setValue("pos", pos());
-	settings->setValue("size", size());
+	globAppInfo->setRegistryInformation(REGISTRY_MAINWINDOWPOS, pos());
+	globAppInfo->setRegistryInformation(REGISTRY_MAINWINDOWSIZE, size());
+	globAppInfo->setRegistryInformation(REGISTRY_DEBUGWINDOWWIDTH, debugLogDock->width());
 }
 
 bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
@@ -2313,15 +2287,15 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		disconnect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));	
 		delete DocManager;
 	}
-	if(webView)
-	{
-		delete webView;
-		webView = NULL;
-	}
 	if(globAppInfo)
 	{
 		delete globAppInfo;
 		globAppInfo = NULL;
+	}
+	if(mainAppInfoStruct)
+	{
+		delete mainAppInfoStruct;
+		mainAppInfoStruct = NULL;
 	}
 }
 

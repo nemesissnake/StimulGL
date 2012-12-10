@@ -23,9 +23,8 @@
 #include <QString>
 #include <QtScript>
 #include <QMessageBox>
-#include "mainappinfo.h"
+//#include "mainappinfo.h"
 #include "GlobalApplicationInformation.h"
-
 
 class PluginInterface
 {
@@ -35,14 +34,15 @@ public:
 	virtual QString GetPluginInformation(void) {return strPluginInformation;}
 	virtual QString Test(const QString &message) {return "I'm oke(" + message + ")" + " --> " + strPluginInformation;}	
 	virtual bool ConfigureScriptEngine(QScriptEngine &eng) = 0;
-	virtual QString GetMinimalMainProgramVersion() {return GlobalAppInfo->getFileVersionString();};
-	void setGlobalAppInfo(GlobalApplicationInformation *pGlobalAppInfo) {GlobalAppInfo=pGlobalAppInfo;};
-	
+	virtual QString GetMinimalMainProgramVersion() {return m_MainAppInfo->sFileVersion;};
+	void fetchGlobalAppInfo() {m_MainAppInfo = NULL; m_MainAppInfo = new MainAppInformationStructure(GlobalApplicationInformation::getStaticMainAppInformationStructureFromSharedMemory());};
+	void deleteGlobalAppInfo() {delete m_MainAppInfo; m_MainAppInfo = NULL;};
+
 public slots:
 	virtual bool IsCompatible() 
 	{
 		QString strMainProgramMinimalVersion = GetMinimalMainProgramVersion();
-		QStringList lstMainProgramCurrentVersion = QString(GlobalAppInfo->getFileVersionString()).split(".");
+		QStringList lstMainProgramCurrentVersion = QString(m_MainAppInfo->sFileVersion).split(".");
 		QStringList lstMainProgramMinimalVersion = strMainProgramMinimalVersion.split(".");
 		if ((lstMainProgramCurrentVersion.count() == 4) && (lstMainProgramMinimalVersion.count() == 4))
 		{
@@ -65,12 +65,14 @@ public slots:
 	virtual QStringList GetAdditionalFileSlotHandlers() {return QStringList();};
 	virtual QObject *GetScriptMetaObject(int nIndex = 0) {nIndex = nIndex; return NULL;};
 	virtual int GetScriptMetaObjectCount() {return 0;};
-	virtual int GetAdditionalFileTypeStyle(QString strExtension) {return MainAppInfo::DOCTYPE_STYLE_UNDEFINED;};//should return a DocTypeStyle
+	virtual int GetAdditionalFileTypeStyle(QString strExtension) {return GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;};//should return a DocTypeStyle
 	virtual QString GetAdditionalFileTypeApiName(QString strExtension) {return "";};
 
 protected:
 	QString strPluginInformation;
-	GlobalApplicationInformation *GlobalAppInfo;
+
+private:
+	MainAppInformationStructure *m_MainAppInfo;
 };
 
 

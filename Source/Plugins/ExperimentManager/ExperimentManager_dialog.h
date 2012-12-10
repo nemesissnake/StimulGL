@@ -30,6 +30,7 @@
 #include "qmlWidget.h"
 #include "ExperimentManager.h"
 #include "ContainerDlg.h"
+#include "GlobalApplicationInformation.h"
 
 class ExperimentManager_Dialog : public QDialog, private Ui::ExperimentManager_DialogClass
 {

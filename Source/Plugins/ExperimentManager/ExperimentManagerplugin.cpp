@@ -260,11 +260,11 @@ int ExperimentManagerPlugin::GetAdditionalFileTypeStyle(QString strExtension)
 {
 	if(strExtension.toLower() == "exml")
 	{
-		return MainAppInfo::DOCTYPE_STYLE_XML;
+		return GlobalApplicationInformation::DOCTYPE_STYLE_XML;
 	} 
 	else if(strExtension.toLower() == "qml")
 	{
-		return MainAppInfo::DOCTYPE_STYLE_QML;
+		return GlobalApplicationInformation::DOCTYPE_STYLE_QML;
 	}	
 }
 

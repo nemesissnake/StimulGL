@@ -64,6 +64,14 @@ bool PluginCollection::Cleanup()
 		return true;
 	for (int i=0;i<NrofPlugins;i++)
 	{
+		if(PlgTypes.at(i) == DevicePlugin)
+		{
+			qobject_cast<DeviceInterface *>(PlgInterfaces.at(i))->deleteGlobalAppInfo();
+		}
+		else if(PlgTypes.at(i) == ExtensionPlugin)
+		{
+			qobject_cast<ExtensionInterface *>(PlgInterfaces.at(i))->deleteGlobalAppInfo();
+		}
 		delete PlgInterfaces.at(i);
 	}
 	PlgNames.clear();

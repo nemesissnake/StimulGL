@@ -19,11 +19,9 @@
 
 #include "optionpage.h"
 
-OptionPage::OptionPage(QSettings &settings,QWidget *parent)
-	: QDialog(parent)
+OptionPage::OptionPage(QWidget *parent, GlobalApplicationInformation *g_AppInfo) : QDialog(parent), glob_AppInfo(g_AppInfo)
 {
 	ui.setupUi(this);
-	mainSettings = &settings;
 	connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(applySettings()));	
 	connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
@@ -36,54 +34,36 @@ OptionPage::~OptionPage()
 
 void OptionPage::applySettings()
 {
-	mainSettings->beginGroup("General");
-	//mainSettings.setValue("name",control);
-	mainSettings->setValue("DoNotLoadScriptExtension",ui.chkDoNotLoadQTBindings->checkState());
-	mainSettings->endGroup();
-
-	mainSettings->beginGroup("Debugging");
-	mainSettings->setValue("OpenExtDebug",ui.chk_OpenDebOnError->checkState());
-	//mainSettings->setValue("OpenExtDebug",Qt::Checked);
-	mainSettings->endGroup();
-
-	mainSettings->beginGroup("Rendering");
+	glob_AppInfo->setRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION,(int)ui.chkDoNotLoadQTBindings->checkState());
+	glob_AppInfo->setRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER,(int)ui.chk_OpenDebOnError->checkState());
+		
 	if (ui.rdb_3DRenderer->isChecked())	
 	{		
-		mainSettings->setValue("RenderType",1);//SvgView::Native);	
-		mainSettings->setValue("HQAntiAlias",Qt::Unchecked);
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 1);//SvgView::Native);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (int)Qt::Unchecked);
 	}
 	else if (ui.rdb_3DRenderer_2->isChecked()) 
 	{
-		mainSettings->setValue("RenderType",2);//SvgView::OpenGL);	
-		mainSettings->setValue("HQAntiAlias",ui.chk_HighAntiAFilter->checkState());
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 2);//SvgView::OpenGL);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (int)ui.chk_HighAntiAFilter->checkState());
 	}
 	else if (ui.rdb_3DRenderer_3->isChecked()) 
 	{
-		mainSettings->setValue("RenderType",3);//SvgView::Image);	
-		mainSettings->setValue("HQAntiAlias",Qt::Unchecked);
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 3);//SvgView::Image);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (int)Qt::Unchecked);
 	}
-	mainSettings->endGroup();
 }
 
 void OptionPage::readSettings()
 {
-	mainSettings->beginGroup("General");
-	//
-	if (mainSettings->contains("DoNotLoadScriptExtension")) {ui.chkDoNotLoadQTBindings->setCheckState(Qt::CheckState(mainSettings->value("DoNotLoadScriptExtension").toInt()));}
-	else {}//key doesn't exist, default value!
-	mainSettings->endGroup();
-
-	mainSettings->beginGroup("Debugging");
-	if (mainSettings->contains("OpenExtDebug"))	{ui.chk_OpenDebOnError->setCheckState(Qt::CheckState(mainSettings->value("OpenExtDebug").toInt()));}
-	else {}//key doesn't exist, default value!
-	mainSettings->endGroup();
-
-	mainSettings->beginGroup("Rendering");
-	if (mainSettings->contains("RenderType"))	
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION))
+		ui.chkDoNotLoadQTBindings->setCheckState((Qt::CheckState)glob_AppInfo->getRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION).toInt());
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER))
+		ui.chk_OpenDebOnError->setCheckState((Qt::CheckState)glob_AppInfo->getRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER).toInt());
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_RENDERTYPE))
 	{
-		int type;
-		type = mainSettings->value("RenderType").toInt();
-		switch (type)
+		int nValue = glob_AppInfo->getRegistryInformation(REGISTRY_RENDERTYPE).toInt();
+		switch (nValue)
 		{
 		case 1://Native
 			{
@@ -93,9 +73,9 @@ void OptionPage::readSettings()
 			}
 		case 2://OpenGL
 			{
-				if (mainSettings->contains("HQAntiAlias"))
+				if(glob_AppInfo->checkRegistryInformation(REGISTRY_HQANTIALIAS))
 				{
-					ui.chk_HighAntiAFilter->setCheckState(Qt::CheckState(mainSettings->value("HQAntiAlias").toInt()));
+					ui.chk_HighAntiAFilter->setCheckState((Qt::CheckState)glob_AppInfo->getRegistryInformation(REGISTRY_HQANTIALIAS).toInt());
 				}
 				else
 				{
@@ -112,8 +92,6 @@ void OptionPage::readSettings()
 			}
 		}
 	}
-	else {}//key doesn't exist, default value!
-	mainSettings->endGroup();
 }
 
 void OptionPage::on_rdb_3DRenderer_toggled(bool)//native

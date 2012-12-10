@@ -4,6 +4,10 @@
 #include <QApplication>
 #include <QSharedMemory>
 #include <QLocalServer>
+#include <QBuffer>
+#include <GlobalApplicationInformation.h>
+
+#define SEGMENT_ALLOWMULTIPLEINSTANCE  "AllowMultipleInstance"
 
 class MainAppExchange : public QApplication
 {	
@@ -18,10 +22,16 @@ public:
 	bool isRunning();
 	bool sendMessage(const QString &message);
 
+	GlobalApplicationInformation *getGlobalAppInformationObjectPointer();
+
 public slots:
 	void receiveMessage();
 
 private:
+	//QString getSharedDataSegment(const QString &sName);
+	//bool setSharedDataSegment(const QString &sName, const QString &sValue);
+
+	GlobalApplicationInformation *m_globAppInformation;
 	bool _isRunning;
 	QString _uniqueKey;
 	QSharedMemory sharedMemory;

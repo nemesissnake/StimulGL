@@ -54,12 +54,12 @@ public:
 	CustomQsciScintilla *getDocHandler(const int &DocIndex);
 	CustomQsciScintilla *getDocHandler(QMdiSubWindow *subWindow);
 	int count(void);
-	CustomQsciScintilla *add(MainAppInfo::DocType docType,int &DocIndex, const QString &strExtension);
+	CustomQsciScintilla *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension);
 	bool remove(QMdiSubWindow *subWindow);
 	bool setSubWindow(int DocIndex, QMdiSubWindow *subWindow);
 	bool loadFile(int DocIndex, const QString &fileName);
-	MainAppInfo::DocType getDocType(QMdiSubWindow *subWindow);
-	MainAppInfo::DocType getDocType(const QString strExtension);
+	GlobalApplicationInformation::DocType getDocType(QMdiSubWindow *subWindow);
+	GlobalApplicationInformation::DocType getDocType(const QString strExtension);
 	QString getFileName(QMdiSubWindow *subWindow, bool bFileNameOnly = false);
 	QString getFileName(int DocIndex, bool bFileNameOnly = false);
 	QString getFilePath(QMdiSubWindow *subWindow);
@@ -91,7 +91,7 @@ private:
 	QStringList ChildrenFileNames;
 	QString strFileExtensionList;
 	strcPluginDocHandlerInfo pluginDocHandlerStore;	
-	QList<MainAppInfo::DocType> ChildrenDocTypes;
+	QList<GlobalApplicationInformation::DocType> ChildrenDocTypes;
 	QList<CustomQsciScintilla *> QScintillaChildren;
 	QList<QMdiSubWindow *> SubWindowChildren;
 	QList<bool> ChildrenModification;
@@ -100,7 +100,7 @@ private:
 	void setFileName(int DocIndex, QString fileName);
 	bool getLexer(QsciLexer *lexer, const QString &lexerName, QObject *parent = 0);
 	QStringList getAdditionalApiEntries() {return additionalApiEntries;};
-	bool customizeDocumentStyle(CustomQsciScintilla *custQsci,MainAppInfo::DocTypeStyle dStyle = MainAppInfo::DOCTYPE_STYLE_UNDEFINED, const QString &strAPIFileName = "");
+	bool customizeDocumentStyle(CustomQsciScintilla *custQsci,GlobalApplicationInformation::DocTypeStyle dStyle = GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED, const QString &strAPIFileName = "");
 
 private slots:
 	void documentWasModified(QWidget *subWindow);

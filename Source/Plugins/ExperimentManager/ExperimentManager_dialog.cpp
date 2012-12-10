@@ -18,7 +18,7 @@
 
 
 #include "ExperimentManager_dialog.h"
-#include "mainappinfo.h"
+#include "globalapplicationinformation.h"
 
 ExperimentManager_Dialog::ExperimentManager_Dialog(QWidget *parent)	: QDialog(parent)
 {

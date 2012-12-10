@@ -30,9 +30,6 @@
 #include <QDir>
 #include <QtGui>
 #include <QTime>
-#include <QWebView>
-#include <QWebFrame>
-#include <QWebPage>
 #include <QDateTime> //QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat())!!!!!
 
 #include "documentwindow.h"
@@ -86,7 +83,7 @@ public slots:
 	QString getEnvironmentVariabele(QString strName);
 	void closeSelectedScriptFile(bool bAutoSaveChanges = false);
 	//void debugScript();
-	bool initialize(MainAppInfo::MainProgramModeFlags mainFlags = 0);
+	bool initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags = 0);
 	void write2OutputWindow(const QString &text2Write = "");
 	void clearOutputWindow();
 	void processEvents() {qApp->processEvents();};
@@ -101,15 +98,14 @@ public slots:
 #endif
 
 private slots:
-	void parseJavaScriptConfigurationFile(bool bLoadStatus);
-	void composeJavaScriptConfigurationFile();
+	void returnToOldMaxMinSizes();
 	bool restartScriptEngine();
 	void abortScript();
 	void setupContextMenus();
 	void DebugcontextMenuEvent(const QPoint &pos);
 	void clearDebugger();
 	void setupScriptEngine();
-	void setScriptRunningStatus(MainAppInfo::ActiveScriptMode state);
+	void setScriptRunningStatus(GlobalApplicationInformation::ActiveScriptMode state);
 	void showPluginGUI();
 	void openOptionsDialog();
 	void aboutStimulGL();
@@ -151,9 +147,10 @@ private slots:
 private:
 	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
 
+	QSize oldDockMaxSize, oldDockMinSize;
 	QString strAdditionalFileExtensions;
-	MainAppInfo::MainProgramModeFlags StimulGLFlags;
-	MainAppInfo::ScriptRunMode StimulGLScriptRunMode;
+	GlobalApplicationInformation::MainProgramModeFlags StimulGLFlags;
+	GlobalApplicationInformation::ScriptRunMode StimulGLScriptRunMode;
 	QSplashScreen *MainSplashScreen;
 	Assistant *helpAssistant;
 	QStringList startUpFiles;
@@ -221,10 +218,10 @@ private:
 	bool DevicePluginsFound;
 	bool ExtensionPluginsFound;
 	bool PluginsFound;
-	bool DoNotLoadScriptBindings;
+	bool bMainWindowIsInitialized;
 
 	QTScriptEngine *AppScriptEngine;
-	MainAppInfo::ActiveScriptMode AppScriptStatus;
+	GlobalApplicationInformation::ActiveScriptMode AppScriptStatus;
 	qint64 currentRunningScriptID;	
 
 	QPushButton button;
@@ -247,7 +244,7 @@ private:
     //QAction *deviceAct3;
     //DeviceControl *devices;
 	//QString curFile;
-	QSettings *settings;
+	//QSettings *settings;
 
 	QDockWidget *debugLogDock;
 	QDockWidget *debuggerDock;
@@ -263,19 +260,15 @@ private:
 	QToolBar *toolsToolBar;
 
     QString m_currentPath;
-    //QDir pluginsDir;
     QStringList pluginFileNames;
-	
 	PluginCollection *Plugins;
-
-	QWebView *webView;
 	GlobalApplicationInformation *globAppInfo;
+	MainAppInformationStructure *mainAppInfoStruct;
 
-	enum { MaxRecentFiles = 5 };
+	enum { MaxRecentFiles = 8 };
 	QAction *recentFileActs[MaxRecentFiles];
 
 	void showSplashMessage(const QString message);
-	void initAndParseGlobalSettings();
 	void setupMDI();
 	void setupDocumentManager();
 	void setAppDirectories();
@@ -288,7 +281,7 @@ private:
 	QAction* integratePlugin(QObject *plugin, PluginCollection *collection);
 	void setupToolBars();
 	void setRenderer();
-	void newDocument(const MainAppInfo::DocType &docType, int &DocIndex, const QString &strExtension = "");
+	void newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension = "");
 	//void setupSyntaxHighlighting(MdiChild *childWindow,MDIDocumentType tempFileType);
 	void parseRemainingGlobalSettings();
 	bool configureDebugger();
@@ -304,16 +297,16 @@ private:
 	QString activeMdiChildFilePath();
 	QMdiSubWindow *findMdiChild(const QString &fileName);
 	void updateRecentFileList(const QString &fileName);
-	
-	//std::ofstream mainLogFile;
-	//void MyOutputHandler(QtMsgType type, const char *msg);
+	void setDockSize(QDockWidget *dock, int setWidth, int setHeight);	
 
 public:
 	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);
+	void setGlobalApplicationInformationObject(GlobalApplicationInformation *globAppInformation);
+	void RecoverLastScreenWindowSettings();
 
 protected:
 	void closeEvent(QCloseEvent *event);
-	virtual bool openDroppedFiles(const QStringList &pathList);
+	virtual bool openDroppedFiles(const QStringList &pathList);	
 };
 
 #endif

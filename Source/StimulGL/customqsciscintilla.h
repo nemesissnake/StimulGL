@@ -27,7 +27,7 @@
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qsciprinter.h>
 #include "scifinddialog.h"
-#include "mainappinfo.h"
+#include "GlobalApplicationInformation.h"
 
 class CustomQsciScintilla : public QsciScintilla//, QObject
 {
@@ -35,7 +35,7 @@ class CustomQsciScintilla : public QsciScintilla//, QObject
 
 	public:
 		//CustomQsciScintilla(){};
-		CustomQsciScintilla(MainAppInfo::DocType docType);
+		CustomQsciScintilla(GlobalApplicationInformation::DocType docType);
 		//CustomQsciScintilla(const CustomQsciScintilla& other ){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 		~CustomQsciScintilla();
 

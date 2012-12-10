@@ -38,68 +38,82 @@ class MainWindow;
 
 int main(int argc, char **argv)
 {
-	MainAppExchange appExchange(argc, argv, MAIN_PROGRAM_FULL_NAME);
-
+	bool bProceed = true;
+	MainAppExchange appExchange(argc, argv, MAIN_PROGRAM_SHARED_MEM_KEY);
+	GlobalApplicationInformation *globAppInformation = appExchange.getGlobalAppInformationObjectPointer();
 	if (appExchange.isRunning())
 	{
-		appExchange.sendMessage("message from other instance.");
-		return 0;
+		appExchange.sendMessage("New StimulGL Instance Initializing...");
+		//if (appExchange.getSharedDataSegment("AllowMultipleInstance") == "false")
+		if(globAppInformation->checkRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE) == false)
+			bProceed = false;
+		if(globAppInformation->getRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE) == false)
+			bProceed = false;
+	}
+	else//First occurrence
+	{
+		//globAppInformation->setMainAppInformationStructure();
 	}
 
-	Q_INIT_RESOURCE(StimulGL);
-
-	//QApplication app(argc, argv);
-	QString PluginDir = MainAppInfo::pluginsDirPath();
-	//app.addLibraryPath(PluginDir);
-	appExchange.addLibraryPath(PluginDir);
-
-	//only for console window, change Linker->System->SubSystem..
-	//cerr << "=-=-=-=- Start of Program -=-=-=-=" << endl;
-	//qDebug() <<"=-=-=-=- Start of Program -=-=-=-=";
-	//qWarning() << "Usage: mainwindow [-SizeHint<color> <width>x<height>] ...";
-	//QMessageBox msgBox(QMessageBox::Information,"PluginDirInfo",PluginDir,QMessageBox::Ok);
-	//msgBox.exec();
-
-	MainWindow *appWindow;
-	appWindow = new MainWindow();
-	MainAppInfo::MainProgramModeFlags flags = MainAppInfo::Default;
-
-	if (argc > 2)
+	if(bProceed)
 	{
-		QString tempStr = "";
-		for (int i = 1; i<argc;i++)
+		Q_INIT_RESOURCE(StimulGL);
+
+		//QApplication app(argc, argv);
+		QString PluginDir = MainAppInfo::pluginsDirPath();
+		//app.addLibraryPath(PluginDir);
+		appExchange.addLibraryPath(PluginDir);
+
+		//only for console window, change Linker->System->SubSystem..
+		//cerr << "=-=-=-=- Start of Program -=-=-=-=" << endl;
+		//qDebug() <<"=-=-=-=- Start of Program -=-=-=-=";
+		//qWarning() << "Usage: mainwindow [-SizeHint<color> <width>x<height>] ...";
+		//QMessageBox msgBox(QMessageBox::Information,"PluginDirInfo",PluginDir,QMessageBox::Ok);
+		//msgBox.exec();
+
+		MainWindow *appWindow = new MainWindow();
+		appWindow->setGlobalApplicationInformationObject(globAppInformation);
+		MainAppInfo::Initialize(appWindow);
+		GlobalApplicationInformation::MainProgramModeFlags flags = GlobalApplicationInformation::Default;
+		if (argc > 2)
 		{
-			tempStr = argv[i];
-			if (tempStr == "-f" | tempStr == "-F")//path exists?
-			{				
-				if (i<(argc-1))//another argument available?
+			QString tempStr = "";
+			for (int i = 1; i<argc;i++)
+			{
+				tempStr = argv[i];
+				if (tempStr == "-f" | tempStr == "-F")//path exists?
+				{				
+					if (i<(argc-1))//another argument available?
+					{
+						i = i + 1;
+						appWindow->setStartupFiles(argv[i]);//separate multiple files using a ';' Character!
+					}
+				}
+				else if (tempStr == "-o" | tempStr == "-O")//valid argument?
 				{
-					i = i + 1;
-					appWindow->setStartupFiles(argv[i]);//separate multiple files using a ';' Character!
+					if (i<(argc-1))//another argument available?
+					{
+						i = i + 1;
+						tempStr = argv[i];					
+						flags = (GlobalApplicationInformation::Default | GlobalApplicationInformation::MainProgramModeFlag(tempStr.toInt()));
+					}				
 				}
 			}
-			else if (tempStr == "-o" | tempStr == "-O")//valid argument?
-			{
-				if (i<(argc-1))//another argument available?
-				{
-					i = i + 1;
-					tempStr = argv[i];					
-					flags = (MainAppInfo::Default | MainAppInfo::MainProgramModeFlag(tempStr.toInt()));
-				}				
-			}
 		}
+		else if (argc == 2)//only path declared!
+		{
+			appWindow->setStartupFiles(argv[1]);
+		}
+		appWindow->initialize(flags);
+		// connect message queue to the main window.
+		QObject::connect(&appExchange, SIGNAL(messageAvailable(QString)), appWindow, SLOT(receiveExchangeMessage(QString)));
+		appWindow->showMaximized();
+		appWindow->RecoverLastScreenWindowSettings();
+		//return app.exec();
+		int nRetVal = appExchange.exec();
+		delete appWindow;
+		appWindow = NULL;
+		return nRetVal;
 	}
-	else if (argc == 2)//only path declared!
-	{
-		appWindow->setStartupFiles(argv[1]);
-	}
-	else
-	{}
-	appWindow->initialize(flags);
-	// connect message queue to the main window.
-	QObject::connect(&appExchange, SIGNAL(messageAvailable(QString)), appWindow, SLOT(receiveExchangeMessage(QString)));
-    appWindow->showMaximized();
-	//return app.exec();
-	int nRetVal = appExchange.exec();
-	return nRetVal;
+	return 0;
 }

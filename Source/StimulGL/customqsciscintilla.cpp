@@ -20,7 +20,7 @@
 #include "customqsciscintilla.h"
 #include "documentmanager.h"
 
-CustomQsciScintilla::CustomQsciScintilla(MainAppInfo::DocType docType)
+CustomQsciScintilla::CustomQsciScintilla(GlobalApplicationInformation::DocType docType)
 {	
 
 }
