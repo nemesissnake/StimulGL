@@ -56,22 +56,30 @@ void OptionPage::applySettings()
 
 void OptionPage::readSettings()
 {
+	//ui.chkAllowMultipleInstances
+	bool bTemp;
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION))
-		ui.chkDoNotLoadQTBindings->setCheckState((Qt::CheckState)glob_AppInfo->getRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION).toInt());
+	{
+		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION).toBool();
+		ui.chkDoNotLoadQTBindings->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
+	}
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER))
-		ui.chk_OpenDebOnError->setCheckState((Qt::CheckState)glob_AppInfo->getRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER).toInt());
+	{
+		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER).toBool();
+		ui.chk_OpenDebOnError->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
+	}
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_RENDERTYPE))
 	{
-		int nValue = glob_AppInfo->getRegistryInformation(REGISTRY_RENDERTYPE).toInt();
-		switch (nValue)
+		SvgView::RendererType rValue = (SvgView::RendererType)glob_AppInfo->getRegistryInformation(REGISTRY_RENDERTYPE).toInt();
+		switch (rValue)
 		{
-		case 1://Native
+		case SvgView::Native://Native
 			{
 				ui.chk_HighAntiAFilter->setChecked(false);
 				ui.rdb_3DRenderer->setChecked(true);
 				break;
 			}
-		case 2://OpenGL
+		case SvgView::OpenGL://OpenGL
 			{
 				if(glob_AppInfo->checkRegistryInformation(REGISTRY_HQANTIALIAS))
 				{
