@@ -84,7 +84,28 @@ void MainWindow::showJavaScriptConfigurationFile()
 
 bool MainWindow::receiveExchangeMessage(const QString &sMessage)
 {
-	write2OutputWindow("-> SocketData Received [" + sMessage + "]");
+	bool bWasNotJetInitialized = false;
+	while(bMainWindowIsInitialized == false)
+	{
+		processEvents();
+		bWasNotJetInitialized = true;
+	}
+	if(bWasNotJetInitialized)
+		write2OutputWindow("-> SocketData (delayed) Received [" + sMessage + "]");
+	else
+		write2OutputWindow("-> SocketData Received [" + sMessage + "]");
+	
+	QScriptValue scriptVal = executeScriptContent(sMessage);
+
+	QString strResult = scriptVal.toString();
+	if (scriptVal.isError()) 
+	{
+		write2OutputWindow("... Script stopped Evaluating due to an error: --> " + strResult + "...");
+	}
+	else
+	{
+		write2OutputWindow("-> SocketData Successfully executed by the Script Engine.");
+	}
 	return true;
 }
 
@@ -1662,7 +1683,7 @@ void MainWindow::executeScript()
 		t.start();
 
 		QScriptValue result;
-		result = AppScriptEngine->eng->evaluate(DocManager->getDocHandler(currentActiveWindow)->text());
+		result = executeScriptContent(DocManager->getDocHandler(currentActiveWindow)->text());
 		QString strResult;
 		strResult = result.toString();
 		if (result.isError()) 
@@ -1681,6 +1702,11 @@ void MainWindow::executeScript()
 	outputWindowList->scrollToBottom();
 }
 
+QScriptValue MainWindow::executeScriptContent(const QString &sContent)
+{
+	return AppScriptEngine->eng->evaluate(sContent);
+}
+
 /*! \brief Forces the script engine to perform a garbage collection.
  *
  * This function forces the script engine to perform a garbage collection and is therefore a safe and good practice to execute as last command before ending the script.
@@ -1688,6 +1714,21 @@ void MainWindow::executeScript()
 void MainWindow::cleanupScript()
 {
 	QTimer::singleShot(10, this, SLOT(abortScript()));
+}
+
+/*! \brief Forces the StimulGL User Interface to become activated.
+ *
+ * This function forces the the StimulGL User Interface to become activated. An active window is a visible top-level window that has the keyboard input focus.
+ * It is the same operation as clicking the mouse on the title bar of a top-level window.
+ */
+void MainWindow::activateMainWindow()
+{
+#ifdef Q_OS_WIN
+	::SetWindowPos(effectiveWinId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	::SetWindowPos(effectiveWinId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+#endif
+	this->raise();
+	this->activateWindow();
 }
 
 void MainWindow::abortScript()

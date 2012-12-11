@@ -43,17 +43,52 @@ int main(int argc, char **argv)
 	GlobalApplicationInformation *globAppInformation = appExchange.getGlobalAppInformationObjectPointer();
 	if (appExchange.isRunning())
 	{
-		appExchange.sendMessage("New StimulGL Instance Initializing...");
+		appExchange.sendMessage("Log(\"New StimulGL Instance Initializing...\");");
 		//if (appExchange.getSharedDataSegment("AllowMultipleInstance") == "false")
 		if(globAppInformation->checkRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE) == false)
 			bProceed = false;
 		if(globAppInformation->getRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE) == false)
+		{
+			QStringList sFilesToOpen;
+			int i;
+			if (argc > 2)
+			{
+				QString tempStr = "";
+				for (i = 1; i<argc;i++)
+				{
+					tempStr = argv[i];
+					if (tempStr == "-f" | tempStr == "-F")//path exists?
+					{				
+						if (i<(argc-1))//another argument available?
+						{
+							i = i + 1;
+							sFilesToOpen.append(QString(argv[i]).split(";"));//separate multiple files (cmd) using a ';' Character!
+						}
+					}
+				}
+			}
+			else if (argc == 2)//only path declared!
+			{
+				sFilesToOpen.append(QString(argv[1]).split(";"));
+			}
+			if(sFilesToOpen.isEmpty() == false)
+			{
+				for(i=0;i<sFilesToOpen.count();i++)
+				{
+					sFilesToOpen[i] = "\"" + QDir::cleanPath(sFilesToOpen.at(i)) + "\"";					
+				}
+				//StimulGL.openFiles(null,["E:/temp/1.txt","E:/temp/2.txt"]);
+				QString sFileCombination = sFilesToOpen.join(",");
+				appExchange.sendMessage("StimulGL.openFiles(null,[" + sFileCombination  + "]);");
+			}
+			appExchange.sendMessage("StimulGL.activateMainWindow();");
 			bProceed = false;
+		}
 	}
-	else//First occurrence
-	{
-		//globAppInformation->setMainAppInformationStructure();
-	}
+	//else//First occurrence
+	//{
+	//	//globAppInformation->setMainAppInformationStructure();
+	//}
 
 	if(bProceed)
 	{
@@ -86,7 +121,7 @@ int main(int argc, char **argv)
 					if (i<(argc-1))//another argument available?
 					{
 						i = i + 1;
-						appWindow->setStartupFiles(argv[i]);//separate multiple files using a ';' Character!
+						appWindow->setStartupFiles(argv[i]);//separate multiple files (cmd) using a ';' Character!
 					}
 				}
 				else if (tempStr == "-o" | tempStr == "-O")//valid argument?

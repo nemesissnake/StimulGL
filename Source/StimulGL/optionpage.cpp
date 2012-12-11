@@ -34,29 +34,29 @@ OptionPage::~OptionPage()
 
 void OptionPage::applySettings()
 {
-	glob_AppInfo->setRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION,(int)ui.chkDoNotLoadQTBindings->checkState());
-	glob_AppInfo->setRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER,(int)ui.chk_OpenDebOnError->checkState());
-		
+	glob_AppInfo->setRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION,(bool)(ui.chkDoNotLoadQTBindings->checkState() && Qt::Checked));
+	glob_AppInfo->setRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER,(bool)(ui.chk_OpenDebOnError->checkState() && Qt::Checked));
+	glob_AppInfo->setRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE,(bool)(ui.chkAllowMultipleInstances->checkState() && Qt::Checked));
+
 	if (ui.rdb_3DRenderer->isChecked())	
 	{		
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 1);//SvgView::Native);	
-		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (int)Qt::Unchecked);
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Native);//SvgView::Native);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false);
 	}
 	else if (ui.rdb_3DRenderer_2->isChecked()) 
 	{
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 2);//SvgView::OpenGL);	
-		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (int)ui.chk_HighAntiAFilter->checkState());
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::OpenGL);//SvgView::OpenGL);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (bool)(ui.chk_HighAntiAFilter->checkState() && Qt::Checked));
 	}
 	else if (ui.rdb_3DRenderer_3->isChecked()) 
 	{
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 3);//SvgView::Image);	
-		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (int)Qt::Unchecked);
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Image);//SvgView::Image);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false);
 	}
 }
 
 void OptionPage::readSettings()
 {
-	//ui.chkAllowMultipleInstances
 	bool bTemp;
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION))
 	{
@@ -83,7 +83,8 @@ void OptionPage::readSettings()
 			{
 				if(glob_AppInfo->checkRegistryInformation(REGISTRY_HQANTIALIAS))
 				{
-					ui.chk_HighAntiAFilter->setCheckState((Qt::CheckState)glob_AppInfo->getRegistryInformation(REGISTRY_HQANTIALIAS).toInt());
+					bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_HQANTIALIAS).toBool();
+					ui.chk_HighAntiAFilter->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
 				}
 				else
 				{
@@ -92,13 +93,18 @@ void OptionPage::readSettings()
 				ui.rdb_3DRenderer_2->setChecked(true);
 				break;
 			}
-		case 3://Image
+		case SvgView::Image://Image
 			{
 				ui.chk_HighAntiAFilter->setChecked(false);
 				ui.rdb_3DRenderer_3->setChecked(true);
 				break;
 			}
 		}
+	}
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE))
+	{
+		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE).toBool();
+		ui.chkAllowMultipleInstances->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
 	}
 }
 

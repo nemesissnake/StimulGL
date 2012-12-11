@@ -88,6 +88,7 @@ public slots:
 	void clearOutputWindow();
 	void processEvents() {qApp->processEvents();};
 	void cleanupScript();
+	void activateMainWindow();
 	
 	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
@@ -297,7 +298,8 @@ private:
 	QString activeMdiChildFilePath();
 	QMdiSubWindow *findMdiChild(const QString &fileName);
 	void updateRecentFileList(const QString &fileName);
-	void setDockSize(QDockWidget *dock, int setWidth, int setHeight);	
+	void setDockSize(QDockWidget *dock, int setWidth, int setHeight);
+	QScriptValue executeScriptContent(const QString &sContent);
 
 public:
 	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);

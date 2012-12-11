@@ -145,6 +145,8 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg)
 		}
 	}
 	QString strMessage;
+	bool bIsUnknown = false;
+	bIsUnknown = (QString(msg) == QString("Unknown error"));
 	switch (type) 
 	{
 	case QtDebugMsg:
@@ -164,7 +166,8 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg)
 	ts << QDate::currentDate().toString().toAscii().data() << QString("\t") << QTime::currentTime().toString().toAscii().data() << QString("\t") << strMessage << QString("\n"); //endl macro doesn't work?
 	if(MainAppInfo::getMainWindow())
 	{
-		QMetaObject::invokeMethod((QObject *)MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, strMessage));
+		if(bIsUnknown == false)
+			QMetaObject::invokeMethod((QObject *)MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, strMessage));
 	}	
 	if (bDoAbort)
 	{
