@@ -21,6 +21,7 @@
 #include "ExperimentManager.h"
 #include "ImageProcessor.h"
 #include "TriggerTimer.h"
+#include "ExperimentStructures.h"
 #include "defines.h"
 
 Q_DECLARE_METATYPE(ExperimentManager*)
@@ -65,6 +66,9 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	RandomGeneratorObject = NULL;
 	ImageProcessorObject = NULL;
 	PrtFormatManagerObject = NULL;
+	cExperimentStructureObject = NULL;
+	cBlockStructureObject = NULL;
+	cLoopStructureObject = NULL;
 	QmlWidgetObject = NULL;
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
 	ExperimentManagerObject = new ExperimentManager(ExperimentManagerDiagObject,NULL);
@@ -93,6 +97,21 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 		delete RandomGeneratorObject;
 		RandomGeneratorObject = NULL;
 	}	
+	if(cExperimentStructureObject)
+	{
+		delete cExperimentStructureObject;
+		cExperimentStructureObject = NULL;
+	}
+	if(cBlockStructureObject)
+	{
+		delete cBlockStructureObject;
+		cBlockStructureObject = NULL;
+	}
+	if(cLoopStructureObject)
+	{
+		delete cLoopStructureObject;
+		cLoopStructureObject = NULL;
+	}
 	if(ImageProcessorObject)
 	{
 		delete ImageProcessorObject;
@@ -149,6 +168,30 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue RandomGeneratorCtor = engine.newFunction(RandomGenerator::ctor__randomGenerator, RandomGeneratorProto);
 	engine.globalObject().setProperty(RANDOMGENERATOR_NAME, RandomGeneratorCtor);
 
+	if(cExperimentStructureObject == NULL)
+		cExperimentStructureObject = new cExperimentStructure();
+	QScriptValue cExperimentStructureProto = engine.newQObject(cExperimentStructureObject);
+	engine.setDefaultPrototype(qMetaTypeId<cExperimentStructure*>(), cExperimentStructureProto);
+	QScriptValue cExperimentStructureCtor = engine.newFunction(cExperimentStructure::ctor__cExperimentStructure, cExperimentStructureProto);
+	engine.globalObject().setProperty(CEXPERIMENTSTRUCTURE_NAME, cExperimentStructureCtor);
+
+	if(cBlockStructureObject == NULL)
+		cBlockStructureObject = new cBlockStructure();
+	QScriptValue cBlockStructureProto = engine.newQObject(cBlockStructureObject);
+	engine.setDefaultPrototype(qMetaTypeId<cBlockStructure*>(), cBlockStructureProto);
+	QScriptValue cBlockStructureCtor = engine.newFunction(cBlockStructure::ctor__cBlockStructure, cBlockStructureProto);
+	engine.globalObject().setProperty(CBLOCKSTRUCTURE_NAME, cBlockStructureCtor);
+
+	if(cLoopStructureObject == NULL)
+		cLoopStructureObject = new cLoopStructure();
+	QScriptValue cLoopStructureProto = engine.newQObject(cLoopStructureObject);
+	engine.setDefaultPrototype(qMetaTypeId<cLoopStructure*>(), cLoopStructureProto);
+	QScriptValue cLoopStructureCtor = engine.newFunction(cLoopStructure::ctor__cLoopStructure, cLoopStructureProto);
+	engine.globalObject().setProperty(CLOOPSTRUCTURE_NAME, cLoopStructureCtor);
+
+	qScriptRegisterMetaType(&engine, cExperimentStructure::ExperimentStructureStateToScriptValue, cExperimentStructure::ExperimentStructureStateFromScriptValue);
+	QScriptValue ctorExperimentStructureState = engine.newFunction(cExperimentStructure::CreateExperimentStructureStateFromScript);
+	engine.globalObject().setProperty(CEXPERIMENTSTRUCTURESTATE_NAME, ctorExperimentStructureState);
 
 	//if(QmlWidgetObject == NULL)
 	//	QmlWidgetObject = new qmlWidget();
@@ -216,6 +259,18 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 		if(RandomGeneratorObject == NULL)
 			RandomGeneratorObject = new RandomGenerator();
 		return (QObject *)RandomGeneratorObject->metaObject();
+	case 5:
+		if(cExperimentStructureObject == NULL)
+			cExperimentStructureObject = new cExperimentStructure();
+		return (QObject *)cExperimentStructureObject->metaObject();
+	case 6:
+		if(cBlockStructureObject == NULL)
+			cBlockStructureObject = new cBlockStructure();
+		return (QObject *)cBlockStructureObject->metaObject();
+	case 7:
+		if(cLoopStructureObject == NULL)
+			cLoopStructureObject = new cLoopStructure();
+		return (QObject *)cLoopStructureObject->metaObject();
 	default:
 		return NULL;
 	}

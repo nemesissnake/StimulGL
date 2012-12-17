@@ -48,6 +48,8 @@ bool keyboardCaptureThread::getKeyEventForwarding()
 
 void keyboardCaptureThread::stop()
 {
+	if(this==NULL)
+		return;
 	if (isRunning)
 	{
 		//this->terminate();

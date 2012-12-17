@@ -21,6 +21,7 @@
 #include "ImageProcessor.h"
 #include "prtformatmanager.h"
 #include "TriggerTimer.h"
+#include "ExperimentStructures.h"
 #include <QFileDialog>
 #include <QWaitCondition>
 #include <QXmlSchema>
@@ -130,6 +131,10 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
 	qRegisterMetaType<PrtFormatManager>(RANDOMGENERATOR_NAME);
 	qRegisterMetaType<strcScriptExperimentStructure>(EXPERIMENTSTRUCTURE_NAME);
+	qRegisterMetaType<strcExperimentStructureState>(CEXPERIMENTSTRUCTURESTATE_NAME);
+	qRegisterMetaType<cExperimentStructure>(CEXPERIMENTSTRUCTURE_NAME);
+	qRegisterMetaType<cBlockStructure>(CBLOCKSTRUCTURE_NAME);
+	qRegisterMetaType<cLoopStructure>(CLOOPSTRUCTURE_NAME);
 }
 
 void ExperimentManager::sendToMainAppLogOutput(const QString &strText2Write)

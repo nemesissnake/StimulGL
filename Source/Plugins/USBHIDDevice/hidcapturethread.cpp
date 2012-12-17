@@ -52,7 +52,9 @@ HIDCaptureThread::~HIDCaptureThread()
 }
 
 void HIDCaptureThread::stop()
-{	
+{
+	if(this==NULL)
+		return;
 	if(m_bIsRunning)
 	{
 		m_bAbortRunning = true;

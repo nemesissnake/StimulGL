@@ -33,6 +33,7 @@
 #include "ImageProcessor.h"
 #include "prtformatmanager.h"
 #include "TriggerTimer.h"
+#include "ExperimentStructures.h"
 #include "defines.h"
 
 class ExperimentManagerPlugin : public QObject, ExtensionInterface
@@ -54,6 +55,9 @@ private:
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;
 	TriggerTimer *TriggerTimerObject;
 	RandomGenerator *RandomGeneratorObject;
+	cExperimentStructure *cExperimentStructureObject;
+	cBlockStructure *cBlockStructureObject;
+	cLoopStructure *cLoopStructureObject;
 	ImageProcessor *ImageProcessorObject;
 	PrtFormatManager *PrtFormatManagerObject;
 	qmlWidget *QmlWidgetObject;
