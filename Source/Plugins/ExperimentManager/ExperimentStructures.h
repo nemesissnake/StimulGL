@@ -35,6 +35,13 @@ enum RepeatAmount
 	RA_UNDEFINED					= -4	//!< -4: None defined (ie. no loops defined)
 };
 
+enum LoopCounterException
+{
+	LCE_FIRSTLOOP					=  0,	//!<   0: This is the first loop
+	LCE_UNUSED						= -1,	//!<  -1: This loop is fully processed
+	LCE_FINISHED					= -2	//!<  -2: This loop is not yet used
+};
+
 enum ExperimentRunState
 {
 	ES_IDLE							=  0,	//!<  0: IDLE STATE
@@ -60,6 +67,7 @@ class cLoopStructure : public QObject
 	Q_PROPERTY(QString LoopName WRITE setLoopName READ getLoopName)
 	Q_PROPERTY(int NumberOfLoops WRITE setNumberOfLoops READ getNumberOfLoops)
 	Q_PROPERTY(int TargetBlockID WRITE setTargetBlockID READ getTargetBlockID)
+	Q_PROPERTY(int LoopCounter READ getTargetBlockID)
 
 public:
 	cLoopStructure(QObject *parent = NULL);
@@ -69,24 +77,9 @@ public:
 
 	static QScriptValue ctor__cLoopStructure(QScriptContext* context, QScriptEngine* engine);
 
-	int getCurrentLoopCounter()
-	{
-		return nCurrentLoop;
-	};
-	
-	int incrementCurrentLoopCounter() 
-	{
-		if((nCurrentLoop+1) < nNrOfLoops)
-			nCurrentLoop++;
-		else
-			nCurrentLoop = RA_FINISHED;
-		return nCurrentLoop;
-	};
-
-	void resetCurrentLoopCounter() 
-	{
-		nCurrentLoop = 0;
-	};
+	bool initializeCurrentLoopCounter();
+	int incrementCurrentLoopCounter();
+	void resetCurrentLoopCounter();
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
@@ -100,6 +93,7 @@ public slots:
 	int getNumberOfLoops() const {return nNrOfLoops;};
 	void setTargetBlockID(const int &nValue) {nTargetBlockID = nValue;};
 	int getTargetBlockID() const {return nTargetBlockID;};
+	int getLoopCounter() const {return nLoopCounter;};
 
 private:
 	bool Initialize();
@@ -110,7 +104,7 @@ private:
 	QString sLoopName;
 	int nNrOfLoops;
 	int nTargetBlockID;
-	int nCurrentLoop;
+	int nLoopCounter;
 };
 
 class cBlockStructure : public QObject
@@ -130,7 +124,7 @@ public:
 	~cBlockStructure();
 
 	static QScriptValue ctor__cBlockStructure(QScriptContext* context, QScriptEngine* engine);
-
+	
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	void setBlockID(const int &nValue) {nBlockID = nValue;};
@@ -147,7 +141,8 @@ public slots:
 	int getNumberOfExternalTriggers() const {return nNrOfExternalTriggers;};
 
 	cLoopStructure *incrementToNextLoopPointer(cLoopStructure *pCurrentLoop = NULL);
-	cLoopStructure *resetToFirstLoopPointer();
+	cLoopStructure *resetToFirstFreeLoopPointer();
+	void resetAllLoopCounters();
 	bool insertLoop(cLoopStructure *cLoop);
 
 private:
@@ -162,7 +157,6 @@ private:
 	int nNrOfInternalTriggers;
 	int nNrOfExternalTriggers;
 	QList<cLoopStructure*> lLoops;
-	int nInternalLoopCounter;
 };
 
 
@@ -179,11 +173,6 @@ class cExperimentStructure : public QObject, protected QScriptable
 	Q_PROPERTY(bool ExperimentDebugMode WRITE setExperimentDebugMode READ getExperimentDebugMode)
 
 signals:
-	////! The timeout Signal.
-	///*!
-	//	This signal is emitted automatically at each period time after the trigger is started.
-	//*/
-	//void timeout();
 	void experimentStarted();
 	void externalTriggerRecieved();
 	void experimentStopped();
@@ -230,16 +219,13 @@ private:
 	ExperimentRunState CurrentExperiment_State;		//Only for internal usage
 	strcExperimentStructureState currentExperimentState;
 	QScriptEngine* currentScriptEngine;
-	//QHash<QString, int> timerTypeHash;
 	int nExperimentID;
-	//int nExperimentNumber;
 	QString sExperimentName;
 	bool bDebugMode;
 	QList<cBlockStructure*> lBlocks;
 	cBlockStructure *currentBlockPointer;			//Only for internal usage
 	cLoopStructure *currentLoopPointer;				//Only for internal usage
 	cBlockStructure *firstBlockPointer;				//Only for internal usage
-	//ExperimentManager *pExperimentManager;	
 };
 
 Q_DECLARE_METATYPE(strcExperimentStructureState)

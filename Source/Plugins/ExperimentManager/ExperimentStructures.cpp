@@ -31,7 +31,6 @@ cBlockStructure::cBlockStructure(QObject *parent) : QObject(parent)
 
 bool cBlockStructure::Initialize()
 {
-	nInternalLoopCounter = 0;
 	nBlockID = 0;
 	nBlockNumber = 0;
 	sBlockName = "Block(ID=" + QString::number(nBlockID) + ",Number=" + QString::number(nBlockNumber) + ")";
@@ -59,9 +58,9 @@ cBlockStructure::~cBlockStructure()
 	{
 		for(int i=0;i<lLoops.count();i++)
 		{
-			if(lLoops[i])
+			if(lLoops.at(i))
 			{
-				delete lLoops[i];
+				delete lLoops.at(i);
 				lLoops[i] = NULL;
 			}
 		}
@@ -79,7 +78,6 @@ bool cBlockStructure::makeThisAvailableInScript(QString strObjectScriptName, QOb
 	if (engine)
 	{
 		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
-		//QObject *someObject = this;//new MyObject;
 		QScriptValue objectValue = currentScriptEngine->newQObject(this);
 		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
 		return true;
@@ -104,20 +102,22 @@ bool cBlockStructure::insertLoop(cLoopStructure *cLoop)
 	if(isUnusedLoopID(cLoop->getLoopID()))
 	{
 		lLoops.append(cLoop);
-		//if(lLoops.count()==1)//First loop to append?
-		//	firstBlockPointer = lBlocks[0];
 		return true;
 	}
 	return false;
 }
 
-cLoopStructure *cBlockStructure::resetToFirstLoopPointer()
+cLoopStructure *cBlockStructure::resetToFirstFreeLoopPointer()
 {
-	nInternalLoopCounter = 0;
 	if(lLoops.isEmpty() == false)
 	{
-		nInternalLoopCounter = lLoops[0]->getCurrentLoopCounter();
-		return lLoops[0];//just return the first loop
+		int nCount;
+		for(int i=0;i<lLoops.count();i++)
+		{
+			nCount = lLoops.at(i)->getLoopCounter();
+			if((nCount >= 0) || (nCount==LCE_UNUSED))
+				return lLoops.at(i);
+		}
 	}
 	return NULL;
 }
@@ -127,9 +127,8 @@ cLoopStructure *cBlockStructure::incrementToNextLoopPointer(cLoopStructure *pCur
 	if(lLoops.isEmpty() == false)
 	{
 		if(pCurrentLoop == NULL)
-			return resetToFirstLoopPointer();//just return the first loop
-		nInternalLoopCounter = pCurrentLoop->incrementCurrentLoopCounter();
-		if(nInternalLoopCounter >= 0)
+			return resetToFirstFreeLoopPointer();//just return the first loop
+		if(pCurrentLoop->incrementCurrentLoopCounter() >= 0)
 		{
 			return pCurrentLoop;
 		}
@@ -137,12 +136,26 @@ cLoopStructure *cBlockStructure::incrementToNextLoopPointer(cLoopStructure *pCur
 		for(int i=0;i<lLoops.count();i++)
 		{
 			if(bReturnNextPointer)
-				return lLoops[i];
-			if(lLoops[i] == pCurrentLoop)
+			{
+				if(lLoops.at(i)->initializeCurrentLoopCounter())//Initialization of the new loop?
+					return lLoops.at(i);
+			}
+			if(lLoops.at(i) == pCurrentLoop)
 				bReturnNextPointer = true;
 		}
 	}
-	return NULL;
+	return NULL;//This means that all loops are processed and we can take the exit
+}
+
+void cBlockStructure::resetAllLoopCounters()
+{
+	if(lLoops.isEmpty() == false)
+	{
+		for(int i=0;i<lLoops.count();i++)
+		{
+			lLoops.at(i)->resetCurrentLoopCounter();
+		}
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -161,7 +174,7 @@ bool cLoopStructure::Initialize()
 {
 	nLoopID = 0;
 	nLoopNumber = 0;
-	nCurrentLoop = 0;
+	nLoopCounter = LCE_UNUSED;
 	sLoopName = "Loop(ID=" + QString::number(nLoopID) + ",Number=" + QString::number(nLoopNumber) + ")";
 	nNrOfLoops = RepeatAmount::RA_ZERO;
 	nTargetBlockID = RepeatAmount::RA_UNDEFINED;
@@ -182,7 +195,6 @@ cLoopStructure::cLoopStructure(const int &LoopID,const int &LoopNumber,const QSt
 */
 cLoopStructure::~cLoopStructure()
 {	
-
 }
 
 QScriptValue cLoopStructure::ctor__cLoopStructure(QScriptContext* context, QScriptEngine* engine)
@@ -195,12 +207,51 @@ bool cLoopStructure::makeThisAvailableInScript(QString strObjectScriptName, QObj
 	if (engine)
 	{
 		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
-		//QObject *someObject = this;//new MyObject;
 		QScriptValue objectValue = currentScriptEngine->newQObject(this);
 		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
 		return true;
 	}
 	return false;
+}
+
+bool cLoopStructure::initializeCurrentLoopCounter()
+{
+	if(nLoopCounter==LCE_FINISHED)
+	{
+		return false;
+	}
+	else if(nLoopCounter==LCE_UNUSED)
+	{
+		nLoopCounter = LCE_FIRSTLOOP;
+		return true;
+	}
+	return true;
+}
+
+int cLoopStructure::incrementCurrentLoopCounter() 
+{
+	if(nLoopCounter==LCE_FINISHED)
+	{
+		nLoopCounter = LCE_FINISHED;
+	}
+	else if(nLoopCounter==LCE_UNUSED)
+	{
+		nLoopCounter = LCE_FIRSTLOOP;
+	}
+	else if((nLoopCounter+1) < nNrOfLoops)
+	{
+		nLoopCounter++;
+	}
+	else
+	{
+		nLoopCounter = LCE_FINISHED;
+	}
+	return nLoopCounter;
+}
+
+void cLoopStructure::resetCurrentLoopCounter() 
+{
+	nLoopCounter = LCE_UNUSED;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,9 +280,9 @@ cExperimentStructure::~cExperimentStructure()
 	{
 		for(int i=0;i<lBlocks.count();i++)
 		{
-			if(lBlocks[i])
+			if(lBlocks.at(i))
 			{
-				delete lBlocks[i];
+				delete lBlocks.at(i);
 				lBlocks[i] = NULL;
 			}
 		}
@@ -242,7 +293,6 @@ cExperimentStructure::~cExperimentStructure()
 bool cExperimentStructure::Initialize()
 {
 	nExperimentID = 0;
-	//nExperimentNumber = 0;
 	sExperimentName = "Experiment " + QString::number(nExperimentID);
 	bDebugMode = false;
 	resetExperiment();
@@ -300,7 +350,6 @@ bool cExperimentStructure::makeThisAvailableInScript(QString strObjectScriptName
 	if (engine)
 	{
 		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
-		//QObject *someObject = this;//new MyObject;
 		QScriptValue objectValue = currentScriptEngine->newQObject(this);
 		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
 		return true;
@@ -362,7 +411,7 @@ cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(con
 		tmpBlockNumber = lBlocks.at(i)->getBlockNumber();
 		if(tmpBlockNumber == startBlockNumber)
 		{//We found it although it was not at its expected location
-			return lBlocks[i];
+			return lBlocks.at(i);
 		}
 		else if(tmpBlockNumber > startBlockNumber)
 		{//We found a larger block number...
@@ -405,7 +454,7 @@ bool cExperimentStructure::isValidBlockPointer(cBlockStructure *cBlock)
 		return false;
 	for (int i=0;i<lBlocks.size();i++) 
 	{
-		if(lBlocks[i] == cBlock)
+		if(lBlocks.at(i) == cBlock)
 			return true;
 	}
 	return false;
@@ -430,7 +479,7 @@ cBlockStructure* cExperimentStructure::getBlockPointerByID(const int &nBlockID)
 	for (int i=0;i<lBlocks.size();i++) 
 	{
 		if(lBlocks.at(i)->getBlockID() == nBlockID)
-			return lBlocks[i];
+			return lBlocks.at(i);
 	}
 	return false;
 }
@@ -440,7 +489,7 @@ bool cExperimentStructure::prepareExperiment()
 	if(prepareStartBlock())
 	{
 		currentBlockPointer = firstBlockPointer;
-		currentLoopPointer = currentBlockPointer->resetToFirstLoopPointer();
+		currentLoopPointer = currentBlockPointer->resetToFirstFreeLoopPointer();
 		currentExperimentState.Experiment_ExternalTrigger = RA_REINITIALIZE;
 		currentExperimentState.CurrentBlock_BlockID = currentBlockPointer->getBlockID();
 		currentExperimentState.CurrentBlock_ExternalTrigger = RA_REINITIALIZE;
@@ -470,7 +519,7 @@ void cExperimentStructure::incrementExternalTrigger()
 		}
 		if(currentExperimentState.CurrentBlock_LoopID == RA_REINITIALIZE)
 		{
-			currentLoopPointer = currentBlockPointer->resetToFirstLoopPointer();
+			currentLoopPointer = currentBlockPointer->resetToFirstFreeLoopPointer();
 			if(currentLoopPointer == NULL)
 				currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
 			else
@@ -500,13 +549,14 @@ void cExperimentStructure::incrementExternalTrigger()
 					nextLoopBlock = currentBlockPointer->incrementToNextLoopPointer(currentLoopPointer);//Do we have a Block defined by a loop?
 					if(nextLoopBlock == NULL)//No Loop Block available
 					{
+						currentBlockPointer->resetAllLoopCounters();
 						currentBlockPointer = getNextClosestBlockNumberByFromNumber(currentBlockPointer->getBlockNumber()+1);
 						if(currentBlockPointer == NULL)
 						{
 							ExperimentStop();
 							return;					
 						}
-						currentLoopPointer = currentBlockPointer->incrementToNextLoopPointer(nextLoopBlock);
+						currentLoopPointer = currentBlockPointer->incrementToNextLoopPointer(NULL);
 					}
 					else
 					{
@@ -517,7 +567,7 @@ void cExperimentStructure::incrementExternalTrigger()
 							ExperimentAbort();
 							return;					
 						}
-						currentLoopPointer = currentBlockPointer->resetToFirstLoopPointer();
+						currentLoopPointer = currentBlockPointer->resetToFirstFreeLoopPointer();
 					}
 					currentExperimentState.CurrentBlock_BlockID = currentBlockPointer->getBlockID();
 					if(currentLoopPointer)
@@ -542,12 +592,4 @@ void cExperimentStructure::incrementExternalTrigger()
 		currentExperimentState.Experiment_ExternalTrigger++;
 	}
 	emit externalTriggerRecieved();
-
-	////currentExperimentState.InternalTrigger = 0;to be removed because this depends on the block definition 
-	//
-	//currentExperimentState.CurrentBlock_BlockID = cTmpBlock->getBlockID();
-	//currentExperimentState.CurrentBlock_ExternalTrigger = 0;
-	//currentExperimentState.CurrentBlock_InternalTrigger = 0;
-	//currentExperimentState.CurrentBlock_LoopID = RA_REINITIALIZE;
-	//currentExperimentState.CurrentBlock_TrialNumber = RA_REINITIALIZE;		
 }
