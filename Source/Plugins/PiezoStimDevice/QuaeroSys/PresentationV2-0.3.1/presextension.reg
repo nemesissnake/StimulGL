@@ -1,0 +1,5 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\NeurobehavioralSystems\Presentation\IPresentationInterface]
+"QSPiezostimulator"="{416C237F-1A6C-48B9-9794-7F40C84A8DA6}"
+

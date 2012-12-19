@@ -30,15 +30,15 @@ class PluginInterface
 {
 public:
 	virtual ~PluginInterface() {}
-	virtual bool ShowGUI() = 0;
-	virtual QString GetPluginInformation(void) {return strPluginInformation;}
-	virtual QString Test(const QString &message) {return "I'm oke(" + message + ")" + " --> " + strPluginInformation;}	
 	virtual bool ConfigureScriptEngine(QScriptEngine &eng) = 0;
-	virtual QString GetMinimalMainProgramVersion() {return m_MainAppInfo->sFileVersion;};
+	virtual QString GetPluginInformation(void) {return strPluginInformation;}
+	
 	void fetchGlobalAppInfo() {m_MainAppInfo = NULL; m_MainAppInfo = new MainAppInformationStructure(GlobalApplicationInformation::getStaticMainAppInformationStructureFromSharedMemory());};
 	void deleteGlobalAppInfo() {delete m_MainAppInfo; m_MainAppInfo = NULL;};
-
+	
 public slots:
+	virtual bool ShowGUI() = 0;
+	virtual QString GetMinimalMainProgramVersion() {return m_MainAppInfo->sFileVersion;};
 	virtual bool IsCompatible() 
 	{
 		QString strMainProgramMinimalVersion = GetMinimalMainProgramVersion();
@@ -67,7 +67,7 @@ public slots:
 	virtual int GetScriptMetaObjectCount() {return 0;};
 	virtual int GetAdditionalFileTypeStyle(QString strExtension) {return GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;};//should return a DocTypeStyle
 	virtual QString GetAdditionalFileTypeApiName(QString strExtension) {return "";};
-
+	
 protected:
 	QString strPluginInformation;
 

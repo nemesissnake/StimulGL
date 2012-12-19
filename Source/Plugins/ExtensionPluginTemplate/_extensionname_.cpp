@@ -67,11 +67,3 @@ short _extensionname_::getExampleProperty() const
 {
 	return m_ExampleProperty;
 }
-
-//bool _extensionname_::ExtendScriptContext(QScriptEngine &engine)
-//{
-//	qScriptRegisterMetaType<SomeCustom_Type_Enum_Struct>(&engine, qScriptValueFromQObject, qScriptValueToQObject);//Also make sure to add Q_DECLARE_METATYPE(SomeCustom_Type_Enum_Struct); to the header global scope
-//	QScriptValue ctor = engine.newFunction(qScriptConstructor<SomeCustom_Type_Enum_Struct>);
-//	engine.globalObject().setProperty(SOMECUSTOM_TYPE_ENUM_STRUCT_SHORT_NAME, ctor);
-//	return true;
-//}

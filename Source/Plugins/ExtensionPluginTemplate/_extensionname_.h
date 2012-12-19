@@ -26,7 +26,6 @@
 #include <QtScript>
 #include <QScriptable>
 #include "./../../StimulGL/mainappinfo.h"
-//#include "CustomScriptObjects.h"
 
 class _extensionname_ : public QObject, protected QScriptable
 {
@@ -48,9 +47,6 @@ public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	void setExampleProperty( short sExampleProperty );
 	short getExampleProperty() const;
-
-protected slots:
-	//bool ExtendScriptContext(QScriptEngine &engine);
 
 private:
 	QScriptEngine* currentScriptEngine;
