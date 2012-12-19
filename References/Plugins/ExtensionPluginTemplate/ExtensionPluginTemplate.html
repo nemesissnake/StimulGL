@@ -61,21 +61,19 @@
 <ol>
   <li>  Copy and Paste the folder &quot;ExtensionPluginTemplate&quot; (from StimulGL source directory/Source/Plugins/),  rename the new pasted folder to your own &lt;ExtensionName&gt; name (do not use blank spaces for this name!).</li>
   <li>Replace the substring &quot;_extensionname_&quot; from all file/(folder)-names with the choosen &lt;ExtensionName&gt; from the previous step.<br />
-    ie. _extensionname__plugin_global.h becomes Retinotopic_Mapping_plugin_global.h if &lt;ExtensionName&gt; = &quot;Retinotopic_Mapping&quot;</li>
-  <li>Replace all substrings &quot;_extensionname_&quot; found in the content of all files to &lt;ExtensionName&gt;, you can use a text editor like UltraEdit  to quickly “replace in files” to do this quickly</li>
-  <li>Replace all substrings &quot;_authorname_&quot; found in the content of all files to &lt;AuthorName&gt;</li>
-  <li>Open the defines.h file and further configure your custom Plug-in</li>
+    ie. _extensionname__plugin_global.h becomes Retinotopic_Mapping_plugin_global.h if &lt;ExtensionName&gt; = &quot;Retinotopic_Mapping&quot;.</li>
+  <li>Replace all substrings &quot;_extensionname_&quot; found in the content of all files to &lt;ExtensionName&gt;, you can use a text editor like UltraEdit  to quickly “replace in files” to do this quickly, select include sub-folders!</li>
+  <li>Replace all substrings &quot;_authorname_&quot; found in the content of all files to &lt;AuthorName&gt;.</li>
+  <li>Open the defines.h file and further configure your custom Plug-in.</li>
 </ol>
 <h3>  Device Type Plug-in</h3>
 <p>  If you are planning to build a Device type plug-in instead of an Extension type plug-in you need to perform the following additional steps:</p>
 <ol>
   <li>Change the class signature<br />
     class &lt;ExtensionName&gt;Plugin : public QObject, ExtensionInterface to<br />
-    class &lt;ExtensionName&gt;Plugin : public QObject, DeviceInterface in the file plugininterface.h</li>
-  <li>Change the class signature<br />
-    ExtensionInterface_H to DeviceInterface_H in the file plugininterface.h</li>
+    class &lt;ExtensionName&gt;Plugin : public QObject, DeviceInterface in the file _extensionname_Plugin.h</li>
   <li>Change the macro<br />
-    Q_INTERFACES(ExtensionInterface) to Q_INTERFACES(DeviceInterface) in the file &lt;ExtensionName&gt;Plugin.h</li>
+    Q_INTERFACES(ExtensionInterface) to Q_INTERFACES(DeviceInterface) in the file _extensionname_Plugin.h</li>
 </ol>
 <h2>  Static Plug-in Setup</h2>
 <p>  If you are planning to build a Static plug-in linked inside StimulGL then you need to perform the following additional steps:</p>

@@ -50,7 +50,8 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
 <h4>Default Files<br />
 </h4>
 <p><strong>StimulGL.exe</strong> - This is the main StimulGl program executable.<br />
-  <strong>StimulGL_NoBindings.bat</strong> - This batch file starts StimulGL with a special option to make sure that no script binding are automatically loaded during startup, see &lt;todo&gt;.<br />
+  <strong>StimulGL_NoBindings.bat</strong> - This batch file starts StimulGL with a special option to make sure that no script binding are automatically loaded during startup, 
+  see below <a href="#qt-library-script-bindings">Qt Library Script Bindings</a>.<br />
   <strong>logfile.txt</strong> - This logfile saves all StimulGL information, exception, warnings and debugging information, use this file to analyse program execution.<br />
   <strong>uninstall.exe</strong> - Use this file to uninstall StimulGL, you can also use the automatic Windows Uninstall feature or simply delete the whole StimulGL installation directory. You should also perform one of these operations before installing another version of StimulGL.<br />
   <strong>vcredist_[architecture].exe</strong> - this file installs the <em>Microsoft Visual C++ Redistributable Package</em>, this is automatically performed during installation(needs admin rights!).<br />
@@ -65,7 +66,7 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
   <strong>outputs</strong> - This directory is used by the StimulGL plugins for the storage of all kind of output, like log-files, generated files, etc.<br />
   <strong>plugins</strong> - This is the root directory in which StimulGL searches for plugins during startup, if they are compatible then they are automatically included in StimulGL for further usage.<br />
   <strong>plugins/[architecture]/script</strong> - This directory contains the default build Qt script bindings, which make it possible to get access to substantial portions of the Qt API from within Qt Script.<br />
-  <strong>qml/plugins/[architecture]/</strong> - This is the root directory in which StimulGL searches for QML-plugins to include during the startup of a QML viewing component like &lt;todo&gt;<br />
+  <strong>qml/plugins/[architecture]/</strong> - This is the root directory in which StimulGL searches for QML-plugins to include during the startup of the QML viewer.<br />
   <strong>xsd</strong> - This directory contains XML Schema (<em>*.xsd</em>) files, which let StimulGL validate experiment (<em>*.exml</em>) files. It is used to express a set of rules to which an experiment must conform in order to be considered 'valid' according to that schema.</p>
 <h2>User Interface</h2>
 <p>The StimulGL User interface consists out an menu bar, one or more document editing pane(s) and an output log pane. The menu bar contains the following items:</p>
@@ -77,7 +78,7 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
   <strong>Plugins</strong> - this menu is automatically populated with commands that let you open a the User Interface from plugins that are detected and implemented during the startup of the program. Some plugin and statically linked to StimulGL and therefore its UI is always available through this menu.<br />
   <strong>Help</strong> - this menu contains commands for opening the main StimulGL help and for viewing StimulGL build and detected plugin(s) information. </p>
 <h2>Editing and Scripting</h2>
-<p>With StimulGL you can edit various files like features found in standard text editing components and multiple documents can be simultaneously opened. StimulGL automatically detects the file type (see &lt;todo&gt;) and configures the editor (if the file type is compatible) for this. This configurations contains features like styling choices, support for syntax styling, code completion and call tips which makes the editing process more user-friendly.<br />
+<p>With StimulGL you can edit various files like features found in standard text editing components and multiple documents can be simultaneously opened. StimulGL can automatically detect pre-registered file types by extension (see for example <a href="#running-an-experiment-file-directly-from-stimulgl">Running an Experiment File directly from StimulGL</a>) and configures the editor (if the file type is compatible) for this. This configurations contains features like styling choices, support for syntax styling, code completion and call tips which makes the editing process more user-friendly.<br />
   The main default compatible StimulGL filetype is that of a script (<em>*.qs</em>) file. This file may contain <a href="http://en.wikipedia.org/wiki/QtScript" target="_blank">QtScript</a> code and can be executed by the StimulGL internal Script Engine. The QtScript scripting language is based on the <a href="http://en.wikipedia.org/wiki/ECMAScript" target="_blank">ECMAScript</a> standard with a few extensions, such as <a href="http://qt-project.org/doc/qt-4.8/signalsandslots.html" target="_blank">QObject-style signal and slot connections</a>. The library contains the engine, and a C++ API for evaluating QtScript code and exposing custom QObject-derived C++ classes to QtScript.</p>
 <h3>Exercises - Scripting</h3>
 <h4>Hello World</h4>
@@ -99,7 +100,7 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
 </ul>
 <p>Notice that the script starts with an Include statement that allows you to embed other script (*.qs) files. In this case a function named <em>testFunction3</em> is defined in the included script file. The <em>string</em> parameter from the <em>Include</em> statement holds the script file to add, this can be a absolute or a relative path, if only a filename is defined than the <em>Include</em>function searches for the filename inside the directory where the current running script file is stored. <br />
   You can see that a function header doesn’t need to specify the amount and type of parameter(s) it accepts, nor the return value(see <em>testFunction3</em>) of a function. <em>testFunction1</em> shows how you can iterate through the parameters it receives, but maybe you want to define this like <em>testFunction2</em> to make a better code overview. <br />
-  Before the script ends we should set the defined functions again to null to make sure that the script engine can perform a better garbage collection&lt;todo&gt;, this is explained later .</p>
+  Before the script ends we should set the defined functions again to null to make sure that the script engine can perform a better garbage collection, this is explained later (see <a href="#dynamic-object-construction-and-garbage-collection">Dynamic Object construction and Garbage Collection</a>).</p>
 <ul>
   <li>Execute the Qtscript code by the internal StimulGL script engine by using the key <em>‘F5’</em> or through the <em>Script -&gt; Run Script</em> command.</li>
 </ul>
@@ -114,7 +115,7 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
 <h4>Dynamic Object construction and Garbage Collection</h4>
 <p>The internal StimulGL Script engine uses garbage collection to reclaim memory used by the script objects when they are no longer needed. An object's memory can be automatically reclaimed when it is no longer referenced anywhere in the scripting environment context by the script engine garbage collector. For this to work properly you need to make sure that you follow the guidelines before ending the script context:</p>
 <ol>
-  <li>Disconnect all signal/slot connections, signal slot connections are explained later in chapter &lt;todo&gt;</li>
+  <li>Disconnect all signal/slot connections, signal slot connections are explained later in chapter (see the <a href="#the-signalslots-mechanism">The Signal/Slots mechanism</a> chapter).</li>
   <li>Set all dynamical constructed object (where you used the new statement) to null.</li>
   <li>Set all defined script functions to null.</li>
   <li>Before ending the script finally call the <em>StimulGL.cleanupScript()</em> function to force a garbage collection.</li>
@@ -135,7 +136,7 @@ These shared libraries include script binding for the Qt libraries:
 <a href="http://doc-snapshot.qt-project.org/4.8/qtsvg.html" target="_blank">QtSvg</a>, 
 <a href="http://doc-snapshot.qt-project.org/4.8/qtsql.html" target="_blank">QtSql</a>, 
 <a href="http://qt-project.org/doc/qt-4.8/QtOpenGL.html" target="_blank">QtOpenGl</a>, 
-<a href="http://qt-project.org/doc/qt-4.8/qtuitools.html" target="_blank">QtUiTools </a>and 
+<a href="http://qt-project.org/doc/qt-4.8/qtuitools.html" target="_blank">QtUiTools</a> and 
 <a href="http://qt-project.org/doc/qt-4.8/phonon-module.html" target="_blank">QtPhonon</a>
 </p>
 <ul>
@@ -145,7 +146,7 @@ These shared libraries include script binding for the Qt libraries:
 </ul>
 <p>This example makes use of the <a href="http://qt-project.org/doc/qt-4.8/QColor.html" target="_blank">QColor</a> and the <a href="http://doc-snapshot.qt-project.org/4.8/qcolordialog.html" target="_blank">QColorDialog</a> class from the QtGui library which is made available in the scripting environment due to the automatic linkage to the Qt Bindings (<em>qtscript_gui.dll</em>), as explained above. <br />
   The script first constructs a <em>QColor</em> object. The passed parameter in the <em>QColor</em> constructor is used to preset the color. The <em>QColorDialog</em> class (not object!), is used to present to the user a color picking dialog allowing a selection of a custom color that is then copied to the <em>QColor</em> object.<br />
-  The script makes use of an static<a href="http://doc.qt.digia.com/4.8-snapshot/qcolordialog.html#getColor" target="_blank">getColor()</a> member function which shows the dialog, and allows the user to specify a color. The static member function is called directly from the class <em>QColorDialog</em>. The dialog then prevents further script execution and gives the control back after the user accepted or rejected the color picking dialog. </p>
+  The script makes use of an static <a href="http://qt-project.org/doc/qt-4.8/qcolordialog.html#getColor" target="_blank">getColor()</a> member function which shows the dialog, and allows the user to specify a color. The static member function is called directly from the class <em>QColorDialog</em>. The dialog then prevents further script execution and gives the control back after the user accepted or rejected the color picking dialog. </p>
 <ul>
   <li>Examine and execute the Qtscript code.</li>
 </ul>
@@ -160,13 +161,15 @@ These shared libraries include script binding for the Qt libraries:
   <li>Open the file SignalSlotMechanism.qs found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
 </ul>
 <p>This example is almost the same as the previous example, it only differs in the way the color picking dialog is created and handled. This example makes use of the <em>QColor</em> and the <em>QColorDialog</em> class from the <em>QtGui</em> library which is made available in the scripting environment due to the automatic linkage to the <em>Qt Bindings</em> (<em>qtscript_gui.dll</em>). <br />
-  The script starts with constructing two objects, a <em>QColor</em> and a <em>QColorDialog</em> object. In this example the color picking dialog creation is done through the constructed object from the class <em>QColorDialog</em> with the use of an non-static member function. The script receives the control back right after the showing the color picking dialog. We now need to make sure that we detect in the script when the dialog is closed (accepted or rejected) so we can further cleanup the script environment. To make sure that we can do this we’ll connect the <a href="http://qt-project.org/doc/qt-4.8/qdialog.html#finished" target="_blank">finished() signal</a> (derived from<a href="http://qt-project.org/doc/qt-4.8/QDialog.html" target="_blank">QDialog</a>) from the <em>QColorDialog</em> object and connect it to a script function which can then further finish the script. </p>
+  The script starts with constructing two objects, a <em>QColor</em> and a <em>QColorDialog</em> object. In this example the color picking dialog creation is done through the constructed object from the class <em>QColorDialog</em> with the use of an non-static member function. The script receives the control back right after the showing the color picking dialog. We now need to make sure that we 
+  detect in the script when the dialog is closed (accepted or rejected) so we can further cleanup the script environment. To make sure that we can do this we’ll connect the <a href="http://qt-project.org/doc/qt-4.8/qdialog.html#finished" target="_blank">finished()</a> signal (derived from <a href="http://qt-project.org/doc/qt-4.8/QDialog.html" target="_blank">QDialog</a>) from the <em>QColorDialog</em> object and connect it to a script function which can then further finish the script. </p>
 <ul>
   <li>Examine and execute the Qtscript code.</li>
 </ul>
 <p>Notice how the output log pane notes that the script is fully Evaluated before the script engine actually ends (after the <em>ScriptCleanupFunction()</em>).</p>
 <h4>StimulGL Plugin Script Bindings</h4>
-<p>StimulGL has the ability to automatically integrate plugins that can extend the features of StimulGL and/or add new functionality, see &lt;todo&gt; plugins. These plugins may also expose this functionality to the StimulGL Script engine, allowing the user to take advantage of these functionalities in the script engine. Each plugin has the ability to implement its own UI for convenient access and testing. StimulGL has totally no knowledge of the plugins implementation and does not define how or what they should do, making it a very flexible solution. Some plugins are build-in or delivered with StimulGL and therefore always available and fully up to date after an installation. Plugins can be grouped in either <em>Device</em> or <em>Extension</em> plugins. Furthermore the plugin can define a class where object can be constructed from inside the script. <u>Important</u>: <strong>The UI dialog plugin object and all of it’s settings have no link with any script object created from this plugin!</strong> Let us first view the plugins implemented UI and its features:</p>
+<p>StimulGL has the ability to automatically integrate plugins that can extend the features of StimulGL and/or add new functionality (see the <a href="../../References/Plugins/PluginReference.html">plugin reference</a>). These plugins may also expose this functionality to the StimulGL Script engine, allowing the user to take advantage of these functionalities in the script engine. Each plugin has the ability to implement its own UI for convenient access and testing. 
+StimulGL has totally no knowledge of the plugins implementation and does not define how or what they should do, making it a very flexible solution. Some plugins are build-in or delivered with StimulGL and therefore always available and fully up to date after an installation. Plugins can be grouped in either <em>Device</em> or <em>Extension</em> plugins. Furthermore the plugin can define a class where object can be constructed from inside the script. <u>Important</u>: <strong>The UI dialog plugin object and all of it’s settings have no link with any script object created from this plugin!</strong> Let us first view the plugins implemented UI and its features:</p>
 <ul>
   <li>Start StimulGL.</li>
   <li>Make sure that the static StimulGL plugin named <em>KeyBoardPlugin</em> exists by pressing the<em> ‘F2’</em> key or by opening the menu <em>Help -&gt; About</em> StimulGL.</li>
@@ -216,7 +219,7 @@ These shared libraries include script binding for the Qt libraries:
 <p>The second object it declares is named <em>RetinoMap_Object_1</em>, with ID number 0, this object is derived from the <em>RetinoMap_glwidget</em> class. It’s purpose is to support the calculation and drawing (with the use of OpenGL) for various kind of retinotopic stimuli. At the moment there are 2 classes of which you can derive from for presenting visual or other kind of stimuli. These are made available within the <em>Experiment Manager plugin</em>:</p>
 <ol>
   <li><strong>Retinotopic mapping</strong> experiments which make use of the <em>RetinoMap_glwidget</em> class, see the <a href="../../References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html#retinotopic-mapping">detailed explanation</a>.</li>
-  <li><strong>QML based</strong> experiments&lt;todo link and description&gt; which make use of the <em>qmlWidget</em> class.</li>
+  <li><strong>QML based</strong> experiments which make use of the <em>qmlWidget</em> class, see the below<a href="#qml-based-experiments">explanations</a>.</li>
 </ol>
 <p>Inside the &lt;connections&gt; section we then connect (&lt;connections&gt;) the timeout() signal from the <em>TriggerTimer</em> object to the<em> incrementExternalTrigger()</em> slot of the <em>RetinoMap_glwidget</em> object. We then initialize (&lt;initializations&gt;) the <em>TriggerTimer</em> object with the<em> startTimer(1000) </em>function. This function initializes and starts the <em>TriggerTimer</em> object which then emits the<em> timeout()</em> signal each 1000 milli-seconds. Before the Block-design experiment actually starts the user is presented a screen where the experiment can be started or aborted. After the user has presses the <em>'TAB'</em> key to start the experiment, the EM executes the experiment defined in the (&lt;actions&gt;, &lt;blocks&gt;) sections.</p>
 <h3>Block-design and Retinotopic mapping Experiments</h3>
@@ -238,7 +241,6 @@ These shared libraries include script binding for the Qt libraries:
   In the example script we set the main experiment filename by using the EM Slot <em>setExperimentFileName()</em> (see code at the end of the document). </p>
 <h4>Experiment Manager public signal and slots</h4>
 <p>We’ve just seen some slots that are made available (<em>public</em>) within the script context, see the <a href="../../References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html">Experiment Manager script class reference</a> for a detailed description of all available signal/slots.</p>
-<p>&lt;todo&gt; give a more detailed overview of when signal/slots occur</p>
 <p>Next the script code executes the EM slot<em> runExperiment()</em>. The EM then tries to run the Experiment and returns the boolean result. If the Experiment could not be started because something is wrong it returns false and the script then runs the <em>CleanupScript()</em> code and exits.</p>
 <h4>Experiment states</h4>
 <p>The EM can pass different states after it has been constructed and works like a sort of <a href="http://en.wikipedia.org/wiki/State_machine" target="_blank">state machine</a> for running experiments. A signal named <em>ExperimentStateHasChanged()</em> is emitted each time after the EM state changes. You can connect this signal to a script function, as the example does. By doing this you have more control and information about the EM. The example makes use of this option to automatically call the <em>CleanupScript()</em> function after the state changes to <em>ExperimentManager_Stopped</em>. The Experiment Manager state can be:</p>
@@ -261,9 +263,6 @@ These shared libraries include script binding for the Qt libraries:
   <strong>ExperimentManager_Stopped (=8)</strong><br />
   After the EM could finalize and stop the Experiment it changes to this state.</p>
 <p>The experiment can be stopped (or aborted) by several reasons, the user can normally abort it by pressing <em>CTRL+’a’</em> when it has been started or when something goes wrong or when the Experiment has been completely executed.</p>
-<p>&lt;Todo&gt; Parameters, inline{} and other signal/slots etc</p>
-<p>&lt;Todo &gt;structure. getting setting</p>
-<p>&lt;Todo&gt; custom painting, overriding</p>
 <h3>QML based Experiments</h3>
 <p>An huge advantage of using a Retinotopic mapping experiment object is it’s speed, accuracy and flexible parameter configurability. Aside Retinotopic experiments there’s also a need for a more less complex experiment type that allows the presentation of rich content like text, movies, sounds, pictures etc. For this purpose the EM also supports the usage of <a href="http://qt-project.org/doc/qt-4.8/gettingstartedqml.html" target="_blank">QML based experiments</a> (*.qml) files by implementing the qmlWidget experiment object (instead of the RetinoMap_glwidget object) in the &lt;declarations&gt; section of the Experiment File.</p>
 <ul>
@@ -294,10 +293,18 @@ These shared libraries include script binding for the Qt libraries:
   <li>Click <em>Run Experiment File</em> button and browse to open and execute the<em> Example_2.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\</em>.</li>
   <li>Press the<em> ‘Alt’</em> key to start the experiment file and observe what happens, wait until the experiment automatically finishes.</li>
 </ul>
+<h4>Todo, future requests for this document</h4>
+<ul>
+  <li>Using StimulGL help</li>
+  <li>The StimulGL Registry</li>
+  <li>ExperimentManager signal and slots detailed overview</li>
+  <li>The 'EM' script object</li>
+  <li>More examples, especially with the use of QML</li>
+  <li>Parameters, inline{} statement, direct usage of object declared in EXML</li>
+  <li>Experiment Structure Script Object.</li>
+  <li>Custom retinotopic painting</li>
+  </ul>
 <p>&nbsp;</p>
-<p>&lt;todo&gt; using help</p>
-<p>&lt;todo&gt; registy : HKEY_CURRENT_USER\Software\MBIC, Maastricht Brain Imaging Center</p>
-<p>&lt;todo&gt;“EM” script access</p>
 </div>
 
 
