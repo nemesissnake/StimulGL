@@ -16,35 +16,83 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #include "ExperimentStructures.h"
 
-/*! \brief The cBlockStructure constructor.
-*
-*   No parameter
-*/
-cBlockStructure::cBlockStructure(QObject *parent) : QObject(parent)
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+cBlockStructure_SharedData::cBlockStructure_SharedData()
 {
 	currentScriptEngine = NULL;
-	this->Initialize();
-}
-
-bool cBlockStructure::Initialize()
-{
 	nBlockID = 0;
 	nBlockNumber = 0;
 	sBlockName = "Block(ID=" + QString::number(nBlockID) + ",Number=" + QString::number(nBlockNumber) + ")";
 	nNrOfTrials = RepeatAmount::RA_ZERO;
 	nNrOfInternalTriggers = RepeatAmount::RA_ZERO;
 	nNrOfExternalTriggers = RepeatAmount::RA_ZERO;
+}
+
+cBlockStructure_SharedData::cBlockStructure_SharedData(const cBlockStructure_SharedData &other) : QSharedData(other)
+{
+	currentScriptEngine = other.currentScriptEngine;
+	nBlockID = other.nBlockID;
+	nBlockNumber = other.nBlockNumber;
+	sBlockName = other.sBlockName;
+	nNrOfTrials = other.nNrOfTrials;
+	nNrOfInternalTriggers = other.nNrOfInternalTriggers;
+	nNrOfExternalTriggers = other.nNrOfExternalTriggers;
+
+	if(other.lLoops.isEmpty() == false)
+	{
+		for (int i=0;i<other.lLoops.count();i++)
+		{
+			lLoops.append(other.lLoops[i]);
+		}
+	}
+}
+
+cBlockStructure_SharedData::~cBlockStructure_SharedData()
+{	
+	lLoops.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*! \brief The cBlockStructure constructor.
+*
+*   No parameter
+*/
+cBlockStructure::cBlockStructure()
+{
+	pSharedData = new cBlockStructure_SharedData();
+}
+
+cBlockStructure::cBlockStructure(const cBlockStructure& other) : pSharedData(other.pSharedData)
+{
+
+}
+
+bool cBlockStructure::Initialize()
+{
+	pSharedData->nBlockID = 0;
+	pSharedData->nBlockNumber = 0;
+	pSharedData->sBlockName = "Block(ID=" + QString::number(pSharedData->nBlockID) + ",Number=" + QString::number(pSharedData->nBlockNumber) + ")";
+	pSharedData->nNrOfTrials = RepeatAmount::RA_ZERO;
+	pSharedData->nNrOfInternalTriggers = RepeatAmount::RA_ZERO;
+	pSharedData->nNrOfExternalTriggers = RepeatAmount::RA_ZERO;
 	return true;
 }
 
-cBlockStructure::cBlockStructure(const int &BlockID,const int &BlockNumber,const QString &BlockName,const int &NumberOfTrials) : nBlockID(BlockID), nBlockNumber(BlockNumber), sBlockName(BlockName), nNrOfTrials(NumberOfTrials)
+cBlockStructure::cBlockStructure(const int &BlockID,const int &BlockNumber,const QString &BlockName,const int &NumberOfTrials)
 {
-	currentScriptEngine = NULL;
-	if(sBlockName == "")
-		sBlockName = "Block(ID=" + QString::number(nBlockID) + ",Number=" + QString::number(nBlockNumber) + ")";
+	pSharedData = new cBlockStructure_SharedData();
+	pSharedData->nBlockID = BlockID;
+	pSharedData->nBlockNumber = BlockNumber;
+	pSharedData->sBlockName = BlockName;
+	pSharedData->nNrOfTrials = NumberOfTrials;
+	pSharedData->currentScriptEngine = NULL;
+	if(pSharedData->sBlockName == "")
+		pSharedData->sBlockName = "Block(ID=" + QString::number(pSharedData->nBlockID) + ",Number=" + QString::number(pSharedData->nBlockNumber) + ")";
 };
 
 /*! \brief The cBlockStructure destructor.
@@ -54,18 +102,7 @@ cBlockStructure::cBlockStructure(const int &BlockID,const int &BlockNumber,const
 */
 cBlockStructure::~cBlockStructure()
 {	
-	if(lLoops.isEmpty() == false)
-	{
-		for(int i=0;i<lLoops.count();i++)
-		{
-			if(lLoops.at(i))
-			{
-				delete lLoops.at(i);
-				lLoops[i] = NULL;
-			}
-		}
-		lLoops.clear();
-	}
+
 }
 
 QScriptValue cBlockStructure::ctor__cBlockStructure(QScriptContext* context, QScriptEngine* engine)
@@ -73,25 +110,36 @@ QScriptValue cBlockStructure::ctor__cBlockStructure(QScriptContext* context, QSc
 	return engine->newQObject(new cBlockStructure(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 }
 
+QScriptValue cBlockStructure::blockStructureToScriptValue(QScriptEngine *engine, cBlockStructure* const &s)
+{
+	QScriptValue obj = engine->newQObject(s);
+	return obj;
+}
+
+void cBlockStructure::blockStructureFromScriptValue(const QScriptValue &obj, cBlockStructure* &s)
+{
+	s = qobject_cast<cBlockStructure*>(obj.toQObject());
+}
+
 bool cBlockStructure::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
 {
 	if (engine)
 	{
-		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
-		QScriptValue objectValue = currentScriptEngine->newQObject(this);
-		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		pSharedData->currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		QScriptValue objectValue = pSharedData->currentScriptEngine->newQObject(this);
+		pSharedData->currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
 		return true;
 	}
 	return false;
 }
 
-bool cBlockStructure::isUnusedLoopID(const int &nLoopID)
+bool cBlockStructure::isUnusedLoopID(const int &nLoopID) const
 {
-	if(lLoops.isEmpty())
+	if(pSharedData->lLoops.isEmpty())
 		return true;
-	for (int i = 0; i < lLoops.size(); i++) 
+	for (int i = 0; i < pSharedData->lLoops.size(); i++) 
 	{
-		if (lLoops.at(i)->getLoopID() == nLoopID)
+		if (pSharedData->lLoops.at(i).getLoopID() == nLoopID)
 			return false;
 	}
 	return true;
@@ -101,7 +149,7 @@ bool cBlockStructure::insertLoop(cLoopStructure *cLoop)
 {
 	if(isUnusedLoopID(cLoop->getLoopID()))
 	{
-		lLoops.append(cLoop);
+		pSharedData->lLoops.append(*cLoop);
 		return true;
 	}
 	return false;
@@ -109,14 +157,14 @@ bool cBlockStructure::insertLoop(cLoopStructure *cLoop)
 
 cLoopStructure *cBlockStructure::resetToFirstFreeLoopPointer()
 {
-	if(lLoops.isEmpty() == false)
+	if(pSharedData->lLoops.isEmpty() == false)
 	{
 		int nCount;
-		for(int i=0;i<lLoops.count();i++)
+		for(int i=0;i<pSharedData->lLoops.count();i++)
 		{
-			nCount = lLoops.at(i)->getLoopCounter();
+			nCount = pSharedData->lLoops.at(i).getLoopCounter();
 			if((nCount >= 0) || (nCount==LCE_UNUSED))
-				return lLoops.at(i);
+				return &pSharedData->lLoops[i];
 		}
 	}
 	return NULL;
@@ -124,7 +172,7 @@ cLoopStructure *cBlockStructure::resetToFirstFreeLoopPointer()
 
 cLoopStructure *cBlockStructure::incrementToNextLoopPointer(cLoopStructure *pCurrentLoop)
 {
-	if(lLoops.isEmpty() == false)
+	if(pSharedData->lLoops.isEmpty() == false)
 	{
 		if(pCurrentLoop == NULL)
 			return resetToFirstFreeLoopPointer();//just return the first loop
@@ -133,14 +181,14 @@ cLoopStructure *cBlockStructure::incrementToNextLoopPointer(cLoopStructure *pCur
 			return pCurrentLoop;
 		}
 		bool bReturnNextPointer = false;
-		for(int i=0;i<lLoops.count();i++)
+		for(int i=0;i<pSharedData->lLoops.count();i++)
 		{
 			if(bReturnNextPointer)
 			{
-				if(lLoops.at(i)->initializeCurrentLoopCounter())//Initialization of the new loop?
-					return lLoops.at(i);
+				if(pSharedData->lLoops[i].initializeCurrentLoopCounter())//Initialization of the new loop?
+					return &pSharedData->lLoops[i];
 			}
-			if(lLoops.at(i) == pCurrentLoop)
+			if(&pSharedData->lLoops.at(i) == pCurrentLoop)
 				bReturnNextPointer = true;
 		}
 	}
@@ -149,13 +197,62 @@ cLoopStructure *cBlockStructure::incrementToNextLoopPointer(cLoopStructure *pCur
 
 void cBlockStructure::resetAllLoopCounters()
 {
-	if(lLoops.isEmpty() == false)
+	if(pSharedData->lLoops.isEmpty() == false)
 	{
-		for(int i=0;i<lLoops.count();i++)
+		for(int i=0;i<pSharedData->lLoops.count();i++)
 		{
-			lLoops.at(i)->resetCurrentLoopCounter();
+			pSharedData->lLoops[i].resetCurrentLoopCounter();
 		}
 	}
+}
+
+cLoopStructure* cBlockStructure::getLoopPointerByID(const int &nLoopID)
+{
+	if(pSharedData->lLoops.isEmpty())//Are there any loops defined?
+		return NULL;
+	for (int i=0;i<pSharedData->lLoops.size();i++) 
+	{
+		if(pSharedData->lLoops[i].getLoopID() == nLoopID)
+			return &pSharedData->lLoops[i];
+	}
+	return NULL;
+}
+
+cLoopStructure* cBlockStructure::getNextClosestLoopIDByFromID(const int &startLoopID)
+{
+	//result is an cLoopStructure* with ID=startLoopID or first closest higher value
+	if(pSharedData->lLoops.isEmpty())//Are there any loops defined?
+		return NULL;
+	//First try the expected location
+	if(pSharedData->lLoops.size()>startLoopID)
+		if (pSharedData->lLoops.at(startLoopID).getLoopID() == startLoopID)
+			return &pSharedData->lLoops[startLoopID];
+	//Now try the other items
+	int closestIndex = -1;
+	int closestLoopID = startLoopID;//This shouldn't matter
+	int tmpLoopID;
+	bool bAcceptAny = true;//Makes sure to accept any valid value from the start of the search
+	for (int i=0;i<pSharedData->lLoops.size();i++) 
+	{
+		tmpLoopID = pSharedData->lLoops.at(i).getLoopID();
+		if(tmpLoopID == startLoopID)
+		{//We found it although it was not at its expected location
+			return &pSharedData->lLoops[i];
+		}
+		else if(tmpLoopID > startLoopID)
+		{//We found a larger block number...
+			if(bAcceptAny || (tmpLoopID < closestLoopID))//First one or a more closer(thus smaller) number?
+			{
+				closestLoopID = tmpLoopID;
+				closestIndex = i;
+				bAcceptAny = false;
+			}
+		}
+	}
+	if(closestIndex>=0)//Do we have an closest result?
+		return &pSharedData->lLoops[closestIndex];
+	else
+		return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,10 +261,14 @@ void cBlockStructure::resetAllLoopCounters()
 *
 *   No parameter
 */
-cLoopStructure::cLoopStructure(QObject *parent) : QObject(parent)
+cLoopStructure::cLoopStructure()
 {
 	currentScriptEngine = NULL;
 	this->Initialize();
+}
+
+cLoopStructure::cLoopStructure(const cLoopStructure& other)
+{
 }
 
 bool cLoopStructure::Initialize()
@@ -200,6 +301,17 @@ cLoopStructure::~cLoopStructure()
 QScriptValue cLoopStructure::ctor__cLoopStructure(QScriptContext* context, QScriptEngine* engine)
 {
 	return engine->newQObject(new cLoopStructure(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
+}
+
+QScriptValue cLoopStructure::loopStructureToScriptValue(QScriptEngine *engine, cLoopStructure* const &s)
+{
+	QScriptValue obj = engine->newQObject(s);
+	return obj;
+}
+
+void cLoopStructure::loopStructureFromScriptValue(const QScriptValue &obj, cLoopStructure* &s)
+{
+	s = qobject_cast<cLoopStructure*>(obj.toQObject());
 }
 
 bool cLoopStructure::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
@@ -256,17 +368,70 @@ void cLoopStructure::resetCurrentLoopCounter()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*! \brief The cExperimentStructure constructor.
-*
-*   No parameter
-*/
-cExperimentStructure::cExperimentStructure(QObject *parent) : QObject(parent)
+cExperimentStructure_SharedData::cExperimentStructure_SharedData()
 {
 	currentScriptEngine = NULL;
 	currentBlockPointer = NULL;
 	currentLoopPointer = NULL;
 	firstBlockPointer = NULL;
-	this->Initialize();
+	nExperimentID = 0;
+	sExperimentName = "Experiment " + QString::number(nExperimentID);
+	bDebugMode = false;
+	CurrentExperiment_RunState = ES_IDLE;
+	currentExperimentState.Experiment_ExternalTrigger = RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_BlockID = RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_ExternalTrigger = RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_InternalTrigger = RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_LoopID = RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_TrialNumber = RA_REINITIALIZE;
+}
+
+cExperimentStructure_SharedData::cExperimentStructure_SharedData(const cExperimentStructure_SharedData &other) : QSharedData(other)
+{
+	CurrentExperiment_RunState = other.CurrentExperiment_RunState;
+	currentExperimentState = other.currentExperimentState;
+	currentScriptEngine = other.currentScriptEngine;
+	nExperimentID = other.nExperimentID;
+	sExperimentName = other.sExperimentName;
+	bDebugMode = other.bDebugMode;
+	currentBlockPointer = NULL;
+	firstBlockPointer = NULL;
+	currentLoopPointer = other.currentLoopPointer;
+	if(other.lBlocks.isEmpty() == false)
+	{
+		for (int i=0;i<other.lBlocks.count();i++)
+		{
+			lBlocks.append(other.lBlocks[i]);
+			if(&other.lBlocks[i] == other.currentBlockPointer)
+			{
+				currentBlockPointer = &lBlocks[i];
+			}
+			if(&other.lBlocks[i] == other.firstBlockPointer)
+				firstBlockPointer = &lBlocks[i];
+
+		}
+	}
+}
+
+cExperimentStructure_SharedData::~cExperimentStructure_SharedData()
+{	
+	lBlocks.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*! \brief The cExperimentStructure constructor.
+*
+*   No parameter
+*/
+cExperimentStructure::cExperimentStructure()
+{
+	pSharedData = new cExperimentStructure_SharedData();
+}
+
+cExperimentStructure::cExperimentStructure(const cExperimentStructure& other) : pSharedData(other.pSharedData)
+{
+	//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 }
 
 /*! \brief The cExperimentStructure destructor.
@@ -276,25 +441,14 @@ cExperimentStructure::cExperimentStructure(QObject *parent) : QObject(parent)
 */
 cExperimentStructure::~cExperimentStructure()
 {	
-	if(lBlocks.isEmpty() == false)
-	{
-		for(int i=0;i<lBlocks.count();i++)
-		{
-			if(lBlocks.at(i))
-			{
-				delete lBlocks.at(i);
-				lBlocks[i] = NULL;
-			}
-		}
-		lBlocks.clear();
-	}
 }
 
 bool cExperimentStructure::Initialize()
 {
-	nExperimentID = 0;
-	sExperimentName = "Experiment " + QString::number(nExperimentID);
-	bDebugMode = false;
+	pSharedData->nExperimentID = 0;
+	pSharedData->sExperimentName = "Experiment " + QString::number(pSharedData->nExperimentID);
+	pSharedData->bDebugMode = false;
+	pSharedData->CurrentExperiment_RunState = ES_IDLE;
 	resetExperiment();
 	return true;
 }
@@ -302,6 +456,17 @@ bool cExperimentStructure::Initialize()
 QScriptValue cExperimentStructure::ctor__cExperimentStructure(QScriptContext* context, QScriptEngine* engine)
 {
 	return engine->newQObject(new cExperimentStructure(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
+}
+
+QScriptValue cExperimentStructure::experimentStructureToScriptValue(QScriptEngine *engine, cExperimentStructure* const &s)
+{
+	QScriptValue obj = engine->newQObject(s);
+	return obj;
+}
+
+void cExperimentStructure::experimentStructureFromScriptValue(const QScriptValue &obj, cExperimentStructure* &s)
+{
+	s = qobject_cast<cExperimentStructure*>(obj.toQObject());
 }
 
 void cExperimentStructure::resetExperimentStateStruct(strcExperimentStructureState *strcExpState)
@@ -316,14 +481,14 @@ void cExperimentStructure::resetExperimentStateStruct(strcExperimentStructureSta
 	strcExpState->CurrentBlock_TrialNumber = RA_REINITIALIZE;
 };
 
-QScriptValue cExperimentStructure::CreateExperimentStructureStateFromScript(QScriptContext *, QScriptEngine *engine)
+QScriptValue cExperimentStructure::createExperimentStructureStateFromScript(QScriptContext *, QScriptEngine *engine)
 {
 	strcExperimentStructureState s;
 	cExperimentStructure::resetExperimentStateStruct(&s);
 	return engine->toScriptValue(s);
 }
 
-QScriptValue cExperimentStructure::ExperimentStructureStateToScriptValue(QScriptEngine *engine, const strcExperimentStructureState &s)
+QScriptValue cExperimentStructure::experimentStructureStateToScriptValue(QScriptEngine *engine, const strcExperimentStructureState &s)
 {
 	QScriptValue obj = engine->newObject();
 	obj.setProperty("Experiment_ExternalTrigger", s.Experiment_ExternalTrigger);
@@ -335,7 +500,7 @@ QScriptValue cExperimentStructure::ExperimentStructureStateToScriptValue(QScript
 	return obj;
 }
 
-void cExperimentStructure::ExperimentStructureStateFromScriptValue(const QScriptValue &obj, strcExperimentStructureState &s)
+void cExperimentStructure::experimentStructureStateFromScriptValue(const QScriptValue &obj, strcExperimentStructureState &s)
 {
 	s.Experiment_ExternalTrigger = obj.property("Experiment_ExternalTrigger").toInt32();
 	s.CurrentBlock_BlockID = obj.property("CurrentBlock_BlockID").toInt32();
@@ -349,9 +514,9 @@ bool cExperimentStructure::makeThisAvailableInScript(QString strObjectScriptName
 {
 	if (engine)
 	{
-		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
-		QScriptValue objectValue = currentScriptEngine->newQObject(this);
-		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		pSharedData->currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		QScriptValue objectValue = pSharedData->currentScriptEngine->newQObject(this);
+		pSharedData->currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
 		return true;
 	}
 	return false;
@@ -359,9 +524,9 @@ bool cExperimentStructure::makeThisAvailableInScript(QString strObjectScriptName
 
 void cExperimentStructure::ExperimentStop()
 {
-	if(CurrentExperiment_State == ES_RUNNING)
+	if(pSharedData->CurrentExperiment_RunState == ES_RUNNING)
 	{
-		CurrentExperiment_State = ES_IDLE ;
+		pSharedData->CurrentExperiment_RunState = ES_IDLE ;
 		emit experimentStopped();
 	}
 }
@@ -373,20 +538,20 @@ void cExperimentStructure::ExperimentAbort()
 
 void cExperimentStructure::ExperimentStart()
 {
-	if(CurrentExperiment_State == ES_WAITING_FOR_TRIGGER)
+	if(pSharedData->CurrentExperiment_RunState == ES_WAITING_FOR_TRIGGER)
 	{
-		CurrentExperiment_State = ES_RUNNING;
+		pSharedData->CurrentExperiment_RunState = ES_RUNNING;
 		emit experimentStarted();
 	}
 }
 
-bool cExperimentStructure::isUnusedBlockID(const int &nBlockID)
+bool cExperimentStructure::isUnusedBlockID(const int &nBlockID) const
 {
-	if(lBlocks.isEmpty())
+	if(pSharedData->lBlocks.isEmpty())
 		return true;
-	for (int i = 0; i < lBlocks.size(); i++) 
+	for (int i = 0; i < pSharedData->lBlocks.size(); i++) 
 	{
-		if (lBlocks.at(i)->getBlockID() == nBlockID)
+		if (pSharedData->lBlocks.at(i).getBlockID() == nBlockID)
 			return false;
 	}
 	return true;
@@ -395,23 +560,25 @@ bool cExperimentStructure::isUnusedBlockID(const int &nBlockID)
 cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(const int &startBlockNumber)
 {
 	//result is an cBlockStructure* with ID=startID or first closest higher value
-	if(lBlocks.isEmpty())//Are there any blocks defined?
+	if(pSharedData->lBlocks.isEmpty())//Are there any blocks defined?
 		return NULL;
 	//First try the expected location
-	if(lBlocks.size()>startBlockNumber)
-		if (lBlocks.at(startBlockNumber)->getBlockID() == startBlockNumber)
-			return lBlocks[startBlockNumber];
+	if(pSharedData->lBlocks.size()>startBlockNumber)
+		if (pSharedData->lBlocks.at(startBlockNumber).getBlockID() == startBlockNumber)
+		{
+			return &pSharedData->lBlocks[startBlockNumber];
+		}
 	//Now try the other items
 	int closestIndex = -1;
 	int closestBlockNumber = startBlockNumber;//This shouldn't matter
 	int tmpBlockNumber;
 	bool bAcceptAny = true;//Makes sure to accept any valid value from the start of the search
-	for (int i=0;i<lBlocks.size();i++) 
+	for (int i=0;i<pSharedData->lBlocks.size();i++) 
 	{
-		tmpBlockNumber = lBlocks.at(i)->getBlockNumber();
+		tmpBlockNumber = pSharedData->lBlocks.at(i).getBlockNumber();
 		if(tmpBlockNumber == startBlockNumber)
 		{//We found it although it was not at its expected location
-			return lBlocks.at(i);
+			return &pSharedData->lBlocks[i];
 		}
 		else if(tmpBlockNumber > startBlockNumber)
 		{//We found a larger block number...
@@ -424,19 +591,55 @@ cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(con
 		}
 	}
 	if(closestIndex>=0)//Do we have an closest result?
-		return lBlocks[closestIndex];
-	else
-		return NULL;
+	{
+		return &pSharedData->lBlocks[closestIndex];
+	}
+	return NULL;
+}
+
+int cExperimentStructure::getCurrentBlockIndex() const
+{
+	if (pSharedData->currentBlockPointer == NULL)
+		return OI_UNDEFINED;
+	if (pSharedData->lBlocks.isEmpty())
+		return OI_UNDEFINED;
+	for (int i=0;i<pSharedData->lBlocks.count();i++)
+	{
+		if(&pSharedData->lBlocks[i] == pSharedData->currentBlockPointer)
+		{
+			return i;
+		}
+	}
+	return OI_UNDEFINED;
+}
+
+cBlockStructure cExperimentStructure::getCurrentBlock(bool &bHasCurrBlock) const
+{
+	if(pSharedData->lBlocks.isEmpty() == false)
+	{
+		int nFoundIndex = getCurrentBlockIndex();
+		if(nFoundIndex >= 0)
+		{
+			bHasCurrBlock = true;
+			return pSharedData->lBlocks[nFoundIndex];
+		}
+	}
+	bHasCurrBlock = false;
+	return cBlockStructure();
 }
 
 bool cExperimentStructure::prepareStartBlock()
 {
-	if(isValidBlockPointer(firstBlockPointer) == false)
+	if(isValidBlockPointer(pSharedData->firstBlockPointer) == false)
 	{
-		if(lBlocks.isEmpty() == false)
+		if(pSharedData->lBlocks.isEmpty() == false)
 		{
-			firstBlockPointer = getNextClosestBlockNumberByFromNumber(0);//Here we just take the block with the lowest block number
-			return !(firstBlockPointer == NULL);
+			pSharedData->firstBlockPointer = getNextClosestBlockNumberByFromNumber(0);//Here we just take the block with the lowest block number
+			if(pSharedData->firstBlockPointer == NULL)
+			{
+				return false;
+			}
+			return true;
 		}
 		else
 		{
@@ -446,15 +649,15 @@ bool cExperimentStructure::prepareStartBlock()
 	return true;
 }
 
-bool cExperimentStructure::isValidBlockPointer(cBlockStructure *cBlock)
+bool cExperimentStructure::isValidBlockPointer(cBlockStructure *cBlock) const
 {
 	if(cBlock == NULL)
 		return false;
-	if(lBlocks.isEmpty())//Are there any blocks defined?
+	if(pSharedData->lBlocks.isEmpty())//Are there any blocks defined?
 		return false;
-	for (int i=0;i<lBlocks.size();i++) 
+	for (int i=0;i<pSharedData->lBlocks.size();i++) 
 	{
-		if(lBlocks.at(i) == cBlock)
+		if(&pSharedData->lBlocks[i] == cBlock)
 			return true;
 	}
 	return false;
@@ -464,132 +667,151 @@ bool cExperimentStructure::insertBlock(cBlockStructure *cBlock)
 {
 	if(isUnusedBlockID(cBlock->getBlockID()))
 	{
-		lBlocks.append(cBlock);
-		if(lBlocks.count()==1)//First block to append?
-			firstBlockPointer = lBlocks[0];
+		pSharedData->lBlocks.append(*cBlock);
+		if(pSharedData->lBlocks.count()==1)//First block to append?
+			pSharedData->firstBlockPointer = &pSharedData->lBlocks[0];
 		return true;
 	}
 	return false;
 }
 
+int cExperimentStructure::getBlockIndexByID(const int &nBlockID) const
+{
+	if(pSharedData->lBlocks.isEmpty())//Are there any blocks defined?
+		return -1;
+	for (int i=0;i<pSharedData->lBlocks.size();i++) 
+	{
+		if(pSharedData->lBlocks.at(i).getBlockID() == nBlockID)
+			return i;
+	}
+	return -1;
+}
+
 cBlockStructure* cExperimentStructure::getBlockPointerByID(const int &nBlockID)
 {
-	if(lBlocks.isEmpty())//Are there any blocks defined?
-		return NULL;
-	for (int i=0;i<lBlocks.size();i++) 
-	{
-		if(lBlocks.at(i)->getBlockID() == nBlockID)
-			return lBlocks.at(i);
-	}
-	return false;
+	int nIndex = getBlockIndexByID(nBlockID);
+	if(nIndex >= 0)
+		return &pSharedData->lBlocks[nIndex];
+	return NULL;
+}
+
+int cExperimentStructure::getBlockCount() const 
+{
+	return pSharedData->lBlocks.count();
 }
 
 bool cExperimentStructure::prepareExperiment()
 {
 	if(prepareStartBlock())
 	{
-		currentBlockPointer = firstBlockPointer;
-		currentLoopPointer = currentBlockPointer->resetToFirstFreeLoopPointer();
-		currentExperimentState.Experiment_ExternalTrigger = RA_REINITIALIZE;
-		currentExperimentState.CurrentBlock_BlockID = currentBlockPointer->getBlockID();
-		currentExperimentState.CurrentBlock_ExternalTrigger = RA_REINITIALIZE;
-		currentExperimentState.CurrentBlock_InternalTrigger = RA_REINITIALIZE;
-		if(currentLoopPointer == NULL)
-			currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
+		pSharedData->currentBlockPointer = pSharedData->firstBlockPointer;
+		pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->resetToFirstFreeLoopPointer();
+		pSharedData->currentExperimentState.Experiment_ExternalTrigger = RA_REINITIALIZE;
+		pSharedData->currentExperimentState.CurrentBlock_BlockID = pSharedData->currentBlockPointer->getBlockID();
+		pSharedData->currentExperimentState.CurrentBlock_ExternalTrigger = RA_REINITIALIZE;
+		pSharedData->currentExperimentState.CurrentBlock_InternalTrigger = RA_REINITIALIZE;
+		if(pSharedData->currentLoopPointer == NULL)
+			pSharedData->currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
 		else
-			currentExperimentState.CurrentBlock_LoopID = currentLoopPointer->getLoopID();
-		currentExperimentState.CurrentBlock_TrialNumber = RA_REINITIALIZE;
-		CurrentExperiment_State = ES_WAITING_FOR_TRIGGER;
+			pSharedData->currentExperimentState.CurrentBlock_LoopID = pSharedData->currentLoopPointer->getLoopID();
+		pSharedData->currentExperimentState.CurrentBlock_TrialNumber = RA_REINITIALIZE;
+		pSharedData->CurrentExperiment_RunState = ES_WAITING_FOR_TRIGGER;
 		return true;
 	}
 	return false;
 }
 
+int cExperimentStructure::getExternalTriggerCount() const
+{
+	return pSharedData->currentExperimentState.Experiment_ExternalTrigger;
+}
+
 void cExperimentStructure::incrementExternalTrigger()
 {
-	if(CurrentExperiment_State == ES_IDLE)
+	if(pSharedData->CurrentExperiment_RunState == ES_IDLE)
 		return;
-	if(CurrentExperiment_State == ES_WAITING_FOR_TRIGGER)//currentExperimentState.Experiment_ExternalTrigger == RA_REINITIALIZE)//First external experiment trigger!
+	if(pSharedData->CurrentExperiment_RunState == ES_WAITING_FOR_TRIGGER)//currentExperimentState.Experiment_ExternalTrigger == RA_REINITIALIZE)//First external experiment trigger!
 	{
-		if(currentExperimentState.CurrentBlock_BlockID == RA_REINITIALIZE)
+		if(pSharedData->currentExperimentState.CurrentBlock_BlockID == RA_REINITIALIZE)
 		{
 			if(prepareExperiment() == false)
 				return;
-			currentExperimentState.CurrentBlock_BlockID = currentBlockPointer->getBlockID();
+			pSharedData->currentExperimentState.CurrentBlock_BlockID = pSharedData->currentBlockPointer->getBlockID();
 		}
-		if(currentExperimentState.CurrentBlock_LoopID == RA_REINITIALIZE)
+		if(pSharedData->currentExperimentState.CurrentBlock_LoopID == RA_REINITIALIZE)
 		{
-			currentLoopPointer = currentBlockPointer->resetToFirstFreeLoopPointer();
-			if(currentLoopPointer == NULL)
-				currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
+			pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->resetToFirstFreeLoopPointer();
+			if(pSharedData->currentLoopPointer == NULL)
+				pSharedData->currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
 			else
-				currentExperimentState.CurrentBlock_LoopID = currentLoopPointer->getLoopID();
+				pSharedData->currentExperimentState.CurrentBlock_LoopID = pSharedData->currentLoopPointer->getLoopID();
 		}
-		currentExperimentState.Experiment_ExternalTrigger = 0;
-		currentExperimentState.CurrentBlock_ExternalTrigger = 0;
-		currentExperimentState.CurrentBlock_InternalTrigger = 0;
-		currentExperimentState.CurrentBlock_TrialNumber = 0;
+		pSharedData->currentExperimentState.Experiment_ExternalTrigger = 0;
+		pSharedData->currentExperimentState.CurrentBlock_ExternalTrigger = 0;
+		pSharedData->currentExperimentState.CurrentBlock_InternalTrigger = 0;
+		pSharedData->currentExperimentState.CurrentBlock_TrialNumber = 0;
 		ExperimentStart();
 	}
-	else if(CurrentExperiment_State == ES_RUNNING)
+	else if(pSharedData->CurrentExperiment_RunState == ES_RUNNING)
 	{
-		int BlockExtTriggerAmount = currentBlockPointer->getNumberOfExternalTriggers();
-		int BlockIntTriggerAmount = currentBlockPointer->getNumberOfInternalTriggers();
-		int BlockTrialAmount = currentBlockPointer->getNumberOfTrials();
+		int BlockExtTriggerAmount = pSharedData->currentBlockPointer->getNumberOfExternalTriggers();
+		int BlockIntTriggerAmount = pSharedData->currentBlockPointer->getNumberOfInternalTriggers();
+		int BlockTrialAmount = pSharedData->currentBlockPointer->getNumberOfTrials();
 		cLoopStructure *nextLoopBlock = NULL;
-		if((currentExperimentState.CurrentBlock_ExternalTrigger + 1) >= BlockExtTriggerAmount)
+		if((pSharedData->currentExperimentState.CurrentBlock_ExternalTrigger + 1) >= BlockExtTriggerAmount)
 		{
-			currentExperimentState.CurrentBlock_ExternalTrigger = 0;//Reset to zero again!
-			if((currentExperimentState.CurrentBlock_InternalTrigger + 1) >= BlockIntTriggerAmount)
+			pSharedData->currentExperimentState.CurrentBlock_ExternalTrigger = 0;//Reset to zero again!
+			if((pSharedData->currentExperimentState.CurrentBlock_InternalTrigger + 1) >= BlockIntTriggerAmount)
 			{
-				currentExperimentState.CurrentBlock_InternalTrigger = 0;//Reset to zero again!
-				if((currentExperimentState.CurrentBlock_TrialNumber + 1) >= BlockTrialAmount)
+				pSharedData->currentExperimentState.CurrentBlock_InternalTrigger = 0;//Reset to zero again!
+				if((pSharedData->currentExperimentState.CurrentBlock_TrialNumber + 1) >= BlockTrialAmount)
 				{//Next Block?
-					currentExperimentState.CurrentBlock_TrialNumber = 0;//Reset to zero again!
-					nextLoopBlock = currentBlockPointer->incrementToNextLoopPointer(currentLoopPointer);//Do we have a Block defined by a loop?
+					pSharedData->currentExperimentState.CurrentBlock_TrialNumber = 0;//Reset to zero again!
+					nextLoopBlock = pSharedData->currentBlockPointer->incrementToNextLoopPointer(pSharedData->currentLoopPointer);//Do we have a Block defined by a loop?
 					if(nextLoopBlock == NULL)//No Loop Block available
 					{
-						currentBlockPointer->resetAllLoopCounters();
-						currentBlockPointer = getNextClosestBlockNumberByFromNumber(currentBlockPointer->getBlockNumber()+1);
-						if(currentBlockPointer == NULL)
+						pSharedData->currentBlockPointer->resetAllLoopCounters();
+						int nFoundIndex = -1;
+						pSharedData->currentBlockPointer = getNextClosestBlockNumberByFromNumber(pSharedData->currentBlockPointer->getBlockNumber()+1);
+						if(pSharedData->currentBlockPointer == NULL)
 						{
 							ExperimentStop();
 							return;					
 						}
-						currentLoopPointer = currentBlockPointer->incrementToNextLoopPointer(NULL);
+						pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->incrementToNextLoopPointer(NULL);
 					}
 					else
 					{
 						int nTargetBlockID = nextLoopBlock->getTargetBlockID();
-						currentBlockPointer = getBlockPointerByID(nTargetBlockID);
-						if(currentBlockPointer == NULL)
+						pSharedData->currentBlockPointer = getBlockPointerByID(nTargetBlockID);
+						if(pSharedData->currentBlockPointer == NULL)
 						{
 							ExperimentAbort();
 							return;					
 						}
-						currentLoopPointer = currentBlockPointer->resetToFirstFreeLoopPointer();
+						pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->resetToFirstFreeLoopPointer();
 					}
-					currentExperimentState.CurrentBlock_BlockID = currentBlockPointer->getBlockID();
-					if(currentLoopPointer)
-						currentExperimentState.CurrentBlock_LoopID = currentLoopPointer->getLoopID();
+					pSharedData->currentExperimentState.CurrentBlock_BlockID = pSharedData->currentBlockPointer->getBlockID();
+					if(pSharedData->currentLoopPointer)
+						pSharedData->currentExperimentState.CurrentBlock_LoopID = pSharedData->currentLoopPointer->getLoopID();
 					else
-						currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
+						pSharedData->currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
 				}
 				else
 				{
-					currentExperimentState.CurrentBlock_TrialNumber++;//Increment with 1
+					pSharedData->currentExperimentState.CurrentBlock_TrialNumber++;//Increment with 1
 				}
 			}
 			else
 			{
-				currentExperimentState.CurrentBlock_InternalTrigger++;//Increment with 1
+				pSharedData->currentExperimentState.CurrentBlock_InternalTrigger++;//Increment with 1
 			}
 		}
 		else
 		{
-			currentExperimentState.CurrentBlock_ExternalTrigger++;//Increment with 1
+			pSharedData->currentExperimentState.CurrentBlock_ExternalTrigger++;//Increment with 1
 		}
-		currentExperimentState.Experiment_ExternalTrigger++;
+		pSharedData->currentExperimentState.Experiment_ExternalTrigger++;
 	}
 	emit externalTriggerRecieved();
 }

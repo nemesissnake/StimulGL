@@ -18,7 +18,6 @@
 
 #include "qmlWidget.h"
 #include <QDomNodeList>
-#include "ExperimentManager.h"
 #include "ModelIndexProvider.h"
 #include <QMessageBox>
 #include <QMetaObject>
@@ -32,7 +31,6 @@ qmlWidget::qmlWidget(QWidget *parent) : GLWidgetWrapper(parent), parentWidget(pa
 {
 	initialize();
 }
-
 
 /*! \brief The qmlWidget destructor.
 *
@@ -130,20 +128,21 @@ void qmlWidget::initialize()
 	//Place your custom initialization code here:
 	
 	//Default values if none defined.
-	expSnapshot.currExpBlock = 0;
-	expSnapshot.currExpBlockTrialFrame = 0;
-	expSnapshot.currExpBlockTrialTrigger = 0;
-	expSnapshot.currExpBlockTrialInternalTriggerAmount = 0;
-	expSnapshot.currExpTrial = 0;
-	expSnapshot.currExpInternalTrigger = 0;
-	expSnapshot.currExpExternalTrigger = 0;
-	expSnapshot.elapsedTrialTime = 0;
+	//1expSnapshot.currExpBlock = 0;
+	//1expSnapshot.currExpBlockTrialFrame = 0;
+	//1expSnapshot.currExpBlockTrialTrigger = 0;
+	//1expSnapshot.currExpBlockTrialInternalTriggerAmount = 0;
+	//1expSnapshot.currExpTrial = 0;
+	//1expSnapshot.currExpInternalTrigger = 0;
+	//1expSnapshot.currExpExternalTrigger = 0;
+	//1expSnapshot.elapsedTrialTime = 0;
 
+	experimentManager = NULL;
 	nQMLWidgetID = -1;
 	rectScreenRes = getScreenResolution();
 	lastTriggerNumber = -1;
 	stimuliPainter = NULL;
-	currExpConfStruct = NULL;
+	//currExpConfStruct = NULL;
 	qmlViewer = NULL;
 	glWidget = NULL;
 	imgLstModel = NULL;
@@ -221,9 +220,9 @@ bool qmlWidget::initObject()
 	} 
 	//if (currExpConfStruct)
 	//{
-	//	if (currExpConfStruct->pExperimentManager)
+	//	if (experimentManager)
 	//	{
-	//		currExpConfStruct->pExperimentManager->logExperimentObjectData(nQMLWidgetID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
+	//		experimentManager->logExperimentObjectData(nQMLWidgetID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
 	//	}
 	//}
 	qmlViewer = new QDeclarativeView(this);
@@ -399,12 +398,12 @@ bool qmlWidget::stopObject()
 	return true;
 }
 
-bool qmlWidget::setObjectConfiguration(QObject *pExpConfStruct)//ExperimentConfiguration *pExpConfStruct)
-{
-	currExpConfStruct = reinterpret_cast<ExperimentConfiguration *>(pExpConfStruct);
-	//currExpConfStruct->pExperimentManager->getExperimentObjectBlockParameter()
-	return true;
-}
+//bool qmlWidget::setObjectConfiguration(QObject *pExpConfStruct)//ExperimentConfiguration *pExpConfStruct)
+//{
+//	currExpConfStruct = reinterpret_cast<ExperimentConfiguration *>(pExpConfStruct);
+//	//experimentManager->getExperimentObjectBlockParameter()
+//	return true;
+//}
 
 bool qmlWidget::setObjectID(int nObjID)
 {
@@ -516,7 +515,7 @@ bool qmlWidget::paintObject(int paintFlags, QObject *paintEventObject)//Only get
 	//if (!firstBlockTrialPaintFrame)
 	//	return true;
 	if(isDebugMode())
-		currExpConfStruct->pExperimentManager->logExperimentObjectData(nQMLWidgetID,0,__FUNCTION__,"","Starting to paint the object for the first time");
+		experimentManager->logExperimentObjectData(nQMLWidgetID,0,__FUNCTION__,"","Starting to paint the object for the first time");
 	QPaintEvent *event = reinterpret_cast<QPaintEvent *>(paintEventObject);//qobject_cast<QPaintEvent *>(paintEventObject);
 	GLWidgetPaintFlags currentPaintFlags = (GLWidgetPaintFlags)paintFlags;
 	//getCurrentExperimentProgressSnapshot(&expSnapshot);
@@ -553,18 +552,10 @@ void qmlWidget::onStatusChanged(QDeclarativeView::Status status)
 		for (int i=0;i<errList.count();i++)
 		{
 			QString errMessage = "... QML error at(col " + QString::number(errList.at(i).column()) + ", line " + QString::number(errList.at(i).line()) + "): " + errList.at(i).description() + " ...";
-			if(currExpConfStruct)
-			{
-				if(currExpConfStruct->pExperimentManager)
-					currExpConfStruct->pExperimentManager->sendToMainAppLogOutput(errMessage);
-				else
-					QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
-			}
+			if(experimentManager)
+				experimentManager->sendToMainAppLogOutput(errMessage);
 			else
-			{
 				QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
-				break;
-			}
 		}
 	}
 }
@@ -614,16 +605,13 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget, QString strContent)
 		if (qmlViewer->status() == QDeclarativeView::Error)
 		{
 			this->stopObject();
-			if(currExpConfStruct)
+			if(experimentManager)
 			{
-				if(currExpConfStruct->pExperimentManager)
-				{
-					currExpConfStruct->pExperimentManager->abortExperiment();
-					return;
-				}
+				experimentManager->abortExperiment();
+				return;
 			}
-			//bool bInvokeSucceeded = QMetaObject::invokeMethod(currExpConfStruct->pExperimentManager, "abortExperiment",Qt::QueuedConnection);	
-			//currExpConfStruct->pExperimentManager->abortExperiment();
+			//bool bInvokeSucceeded = QMetaObject::invokeMethod(experimentManager, "abortExperiment",Qt::QueuedConnection);	
+			//experimentManager->abortExperiment();
 
 			this->abortExperimentObject();//this seems to work...
 			return;
@@ -637,5 +625,15 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget, QString strContent)
 		qmlViewer->showFullScreen();//Fastest uncomment this
 		glWidget->setFocus();
 	}
+}
+
+bool qmlWidget::setExperimentManager(ExperimentManager *expManager)
+{
+	if(experimentManager!=expManager)
+	{
+		experimentManager = expManager;
+		GLWidgetWrapper::setExperimentManager(expManager);//Important!
+	}
+	return true;
 }
 

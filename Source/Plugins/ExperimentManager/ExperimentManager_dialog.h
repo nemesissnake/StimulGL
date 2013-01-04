@@ -28,7 +28,6 @@
 #include <QThread>
 
 #include "qmlWidget.h"
-#include "ExperimentManager.h"
 #include "ContainerDlg.h"
 #include "GlobalApplicationInformation.h"
 

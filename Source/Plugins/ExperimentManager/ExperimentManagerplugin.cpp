@@ -18,45 +18,12 @@
 
 
 #include "ExperimentManagerplugin.h"
-#include "ExperimentManager.h"
 #include "ImageProcessor.h"
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"
 #include "defines.h"
 
 Q_DECLARE_METATYPE(ExperimentManager*)
-Q_DECLARE_METATYPE(strcScriptExperimentStructure)
-
-QScriptValue CreateExperimentStructureFromScript(QScriptContext *, QScriptEngine *engine)
-{
-	strcScriptExperimentStructure s;
-	s.currExpAbsExternalTrigger = 0;
-	s.currExpAbsInternalTrigger = 0;
-	s.currExpBlockTrialRelInternalTrigger = 0;
-	s.currExpTrial = 0;
-	s.currExpBlock = 0;
-	return engine->toScriptValue(s);
-}
-
-QScriptValue ExperimentStructureToScriptValue(QScriptEngine *engine, const strcScriptExperimentStructure &s)
-{
-	QScriptValue obj = engine->newObject();
-	obj.setProperty("AbsoluteExternalTrigger", s.currExpAbsExternalTrigger);
-	obj.setProperty("AbsoluteInternalTrigger", s.currExpAbsInternalTrigger);
-	obj.setProperty("RelativeInternalTrigger", s.currExpBlockTrialRelInternalTrigger);
-	obj.setProperty("RelativeBlockTrial", s.currExpTrial);
-	obj.setProperty("AbsoluteBlock", s.currExpBlock);
-	return obj;
-}
-
-void ExperimentStructureFromScriptValue(const QScriptValue &obj, strcScriptExperimentStructure &s)
-{
-	s.currExpAbsExternalTrigger = obj.property("AbsoluteExternalTrigger").toInt32();
-	s.currExpAbsInternalTrigger = obj.property("AbsoluteInternalTrigger").toInt32();
-	s.currExpBlockTrialRelInternalTrigger = obj.property("RelativeInternalTrigger").toInt32();
-	s.currExpTrial = obj.property("RelativeBlockTrial").toInt32();
-	s.currExpBlock = obj.property("AbsoluteBlock").toInt32();
-}
 
 ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 {
@@ -157,10 +124,6 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue PrtFormatManagerCtor = engine.newFunction(PrtFormatManager::ctor__PrtFormatManager, PrtFormatManagerProto);
 	engine.globalObject().setProperty(PRTFORMATMANAGER_NAME, PrtFormatManagerCtor);
 
-	qScriptRegisterMetaType(&engine, ExperimentStructureToScriptValue, ExperimentStructureFromScriptValue);
-	QScriptValue ctorExperimentStructure = engine.newFunction(CreateExperimentStructureFromScript);
-	engine.globalObject().setProperty(EXPERIMENTSTRUCTURE_NAME, ctorExperimentStructure);
-
 	if(RandomGeneratorObject == NULL)
 		RandomGeneratorObject = new RandomGenerator();
 	QScriptValue RandomGeneratorProto = engine.newQObject(RandomGeneratorObject);
@@ -174,6 +137,7 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<cExperimentStructure*>(), cExperimentStructureProto);
 	QScriptValue cExperimentStructureCtor = engine.newFunction(cExperimentStructure::ctor__cExperimentStructure, cExperimentStructureProto);
 	engine.globalObject().setProperty(CEXPERIMENTSTRUCTURE_NAME, cExperimentStructureCtor);
+	qScriptRegisterMetaType(&engine, cExperimentStructure::experimentStructureToScriptValue, cExperimentStructure::experimentStructureFromScriptValue);
 
 	if(cBlockStructureObject == NULL)
 		cBlockStructureObject = new cBlockStructure();
@@ -181,6 +145,7 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<cBlockStructure*>(), cBlockStructureProto);
 	QScriptValue cBlockStructureCtor = engine.newFunction(cBlockStructure::ctor__cBlockStructure, cBlockStructureProto);
 	engine.globalObject().setProperty(CBLOCKSTRUCTURE_NAME, cBlockStructureCtor);
+	qScriptRegisterMetaType(&engine, cBlockStructure::blockStructureToScriptValue, cBlockStructure::blockStructureFromScriptValue);
 
 	if(cLoopStructureObject == NULL)
 		cLoopStructureObject = new cLoopStructure();
@@ -188,9 +153,10 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<cLoopStructure*>(), cLoopStructureProto);
 	QScriptValue cLoopStructureCtor = engine.newFunction(cLoopStructure::ctor__cLoopStructure, cLoopStructureProto);
 	engine.globalObject().setProperty(CLOOPSTRUCTURE_NAME, cLoopStructureCtor);
+	qScriptRegisterMetaType(&engine, cLoopStructure::loopStructureToScriptValue, cLoopStructure::loopStructureFromScriptValue);
 
-	qScriptRegisterMetaType(&engine, cExperimentStructure::ExperimentStructureStateToScriptValue, cExperimentStructure::ExperimentStructureStateFromScriptValue);
-	QScriptValue ctorExperimentStructureState = engine.newFunction(cExperimentStructure::CreateExperimentStructureStateFromScript);
+	qScriptRegisterMetaType(&engine, cExperimentStructure::experimentStructureStateToScriptValue, cExperimentStructure::experimentStructureStateFromScriptValue);
+	QScriptValue ctorExperimentStructureState = engine.newFunction(cExperimentStructure::createExperimentStructureStateFromScript);
 	engine.globalObject().setProperty(CEXPERIMENTSTRUCTURESTATE_NAME, ctorExperimentStructureState);
 
 	//if(QmlWidgetObject == NULL)

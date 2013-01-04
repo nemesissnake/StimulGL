@@ -618,6 +618,7 @@ File ::46C22F21-C894-4551-A9AB-A1A7E41C4C7A -name E:/Projects/StimulGL/Install/p
 File ::5AE910D4-0B60-48F9-938E-E0A32406F4B7 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_xmlpatterns.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 FileGroup ::A2DAA637-8263-44CD-9683-9B4B3EEDCD93 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {XSD and validation} -parent FileGroups
 File ::D77FB78C-4FE1-4D75-AC2A-6D5DB1FF04FD -name E:/Projects/StimulGL/Install/xsd/exml_2001.xsd -parent A2DAA637-8263-44CD-9683-9B4B3EEDCD93
+File ::BB27F968-8F8F-46BB-9364-3F279B1C4967 -name E:/Projects/StimulGL/Install/xsd/exml_2002.xsd -parent A2DAA637-8263-44CD-9683-9B4B3EEDCD93
 FileGroup ::213874EE-2BCC-43BB-8B31-176507FEF175 -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name QMLDIR(x64) -parent FileGroups
 File ::FE331BF0-C236-495B-BADC-7B0097A12BB8 -targetfilename qmldir -name E:/Projects/StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/qmldir_Release_x64 -parent 213874EE-2BCC-43BB-8B31-176507FEF175
 FileGroup ::9B6EA236-969D-43FC-A84A-06A74E6C3DBE -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name QMLDir(win32) -parent FileGroups

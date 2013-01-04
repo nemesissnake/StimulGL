@@ -16,16 +16,20 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
-#include "ExperimentManager.h"
-#include "ImageProcessor.h"
-#include "prtformatmanager.h"
-#include "TriggerTimer.h"
-#include "ExperimentStructures.h"
 #include <QFileDialog>
 #include <QWaitCondition>
 #include <QXmlSchema>
 #include <QXmlSchemaValidator>
+#include <QGridLayout>
+#include "ExperimentManager.h"
+#include "ImageProcessor.h"
+#include "prtformatmanager.h"
+#include "TriggerTimer.h"
+
+#include "retinomap_glwidget.h"
+#include "qmlWidget.h"
+//#include "ExperimentGraphBlock.h"
+//#include "ExperimentGraphPort.h"
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
@@ -70,6 +74,7 @@ void ExperimentManager::DefaultConstruct()
 	m_RunFullScreen = true;
 	m_ExpFileName = "";
 	currentExperimentTree = NULL;
+	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
 	RegisterMetaTypes();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
@@ -130,7 +135,6 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
 	qRegisterMetaType<PrtFormatManager>(RANDOMGENERATOR_NAME);
-	qRegisterMetaType<strcScriptExperimentStructure>(EXPERIMENTSTRUCTURE_NAME);
 	qRegisterMetaType<strcExperimentStructureState>(CEXPERIMENTSTRUCTURESTATE_NAME);
 	qRegisterMetaType<cExperimentStructure>(CEXPERIMENTSTRUCTURE_NAME);
 	qRegisterMetaType<cBlockStructure>(CBLOCKSTRUCTURE_NAME);
@@ -777,6 +781,11 @@ bool ExperimentManager::cleanupExperiment()
 		delete currentExperimentTree;
 		currentExperimentTree = NULL;
 	}
+	if(cExperimentBlockTrialStructure)
+	{
+		delete cExperimentBlockTrialStructure;
+		cExperimentBlockTrialStructure = NULL;
+	}
 	return true;
 }
 
@@ -1021,11 +1030,17 @@ bool ExperimentManager::configureExperiment()
 		qDebug() << __FUNCTION__ ":No Experiment loaded!";
 		return false;
 	}
+
+	if(cExperimentBlockTrialStructure)
+	{
+		delete cExperimentBlockTrialStructure;
+		cExperimentBlockTrialStructure = NULL;
+	}
 	//Default Settings
-	strcExperimentConfiguration.bDebugMode = false;
-	strcExperimentConfiguration.nExperimentID = 0;
-	strcExperimentConfiguration.nExperimentName = "";
-	strcExperimentConfiguration.pExperimentManager = this;
+	cExperimentBlockTrialStructure = new cExperimentStructure();
+	cExperimentBlockTrialStructure->setExperimentID(0);
+	cExperimentBlockTrialStructure->setExperimentName("");
+	cExperimentBlockTrialStructure->setExperimentDebugMode(false);
 
 	QStringList strList;
 	strList.append(ROOT_TAG);
@@ -1050,13 +1065,13 @@ bool ExperimentManager::configureExperiment()
 				{
 					tmpString = tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
 					if (!tmpString.isEmpty())
-						strcExperimentConfiguration.nExperimentID =  tmpString.toInt();				
+						cExperimentBlockTrialStructure->setExperimentID(tmpString.toInt());
 				}
 
 				tmpElement = tmpNode.firstChildElement(NAME_TAG);
 				tmpString = tmpElement.text();
 				if (!tmpString.isEmpty())
-					strcExperimentConfiguration.nExperimentName =  tmpString;
+					cExperimentBlockTrialStructure->setExperimentName(tmpString);
 
 				tmpElement = tmpNode.firstChildElement(DEBUGMODE_TAG);
 				tmpString = tmpElement.text();
@@ -1064,13 +1079,13 @@ bool ExperimentManager::configureExperiment()
 				if (!tmpString.isEmpty())
 				{
 					if (tmpString == BOOL_TRUE_TAG)
-						strcExperimentConfiguration.bDebugMode = true;
+						cExperimentBlockTrialStructure->setExperimentDebugMode(true);
 					else
-						strcExperimentConfiguration.bDebugMode = false;
+						cExperimentBlockTrialStructure->setExperimentDebugMode(false);
 				}
 				else
 				{
-					strcExperimentConfiguration.bDebugMode = false;
+					cExperimentBlockTrialStructure->setExperimentDebugMode(false);
 				}
 			}
 		}
@@ -1085,7 +1100,7 @@ void ExperimentManager::setDebugMode(bool mode)
  *
  *  The debug mode for the current experiment is changed to the boolean parameter(mode).
  */
-	strcExperimentConfiguration.bDebugMode = mode;
+	cExperimentBlockTrialStructure->setExperimentDebugMode(mode);
 }
 
 bool ExperimentManager::getDebugMode()
@@ -1094,7 +1109,7 @@ bool ExperimentManager::getDebugMode()
  *
  *  Returns the configured debug mode for the current experiment.
  */
-	return strcExperimentConfiguration.bDebugMode;
+	return cExperimentBlockTrialStructure->getExperimentDebugMode();
 }
 
 void ExperimentManager::setExperimentName(QString name)
@@ -1103,7 +1118,7 @@ void ExperimentManager::setExperimentName(QString name)
  *
  *  The experiment name for the current experiment is changed to the string parameter(name).
  */
-	strcExperimentConfiguration.nExperimentName = name;
+	cExperimentBlockTrialStructure->setExperimentName(name);
 }
 QString ExperimentManager::getExperimentName()
 {
@@ -1111,8 +1126,77 @@ QString ExperimentManager::getExperimentName()
  *
  *  Returns the configured experiment name for the current experiment.
  */
-	return strcExperimentConfiguration.nExperimentName;
+	return cExperimentBlockTrialStructure->getExperimentName();
 }
+
+/*! \brief Shows the Experiment Graph Editor
+ *
+ *  Shows a dialog containing the Experiment Graph Editor.
+ * @param ExpStruct a cExperimentStructure to be edited by the Experiment Graph Editor, if this parameter is NULL than the current Experiment Structure in memory is used.
+ */
+void ExperimentManager::showExperimentGraphEditor(cExperimentStructure *ExpStruct)
+{
+	if(ExpStruct == NULL)
+	{
+		ExpStruct = cExperimentBlockTrialStructure;
+	}
+
+	QGraphicsScene *gScene = new QGraphicsScene();
+	QGraphicsView *gView = new QGraphicsView();//(gScene);
+	QGridLayout *layout = new QGridLayout();
+
+	//gScene->addText("Hello, world!");	
+	gView->setScene(gScene);
+	gView->setRenderHint(QPainter::Antialiasing);
+	//    gView.backgroundBrush = new QBrush(new QPixmap("images/cheese.png"));
+	//    gView.cacheMode = new QGraphicsView.CacheMode(QGraphicsView.CacheBackground);
+	//	  gView->dragMode = QGraphicsView.ScrollHandDrag;
+	//    gView.viewportUpdateMode = QGraphicsView.FullViewportUpdate;	
+	//layout->addWidget(gView, 0, 0);
+	//gView->setLayout(layout);
+	gView->setContextMenuPolicy(Qt::CustomContextMenu);
+	gView->setWindowTitle("Experiment Graph Editor");
+	gView->resize(400, 300);
+	// ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+
+	//ExperimentGraphBlock *b = new ExperimentGraphBlock(NULL, gScene);
+	//b->addPort("Block Action DoSomething", false, ExperimentGraphPort::NamePort);
+	//b->addPort("0: Block 1", false, ExperimentGraphPort::TypePort);
+	//b->addInputPort("input");
+	//b->addOutputPort("output");
+	//b = b->clone();
+	//b->setPos(150, 0);
+	//b = b->clone();
+	//b->setPos(150, 150);
+
+	ExperimentGraphEditor *expGraphEditor = new ExperimentGraphEditor(this);
+	expGraphEditor->install(gScene,gView);
+	if(expGraphEditor->parseExperimentStructure(ExpStruct))
+	{
+		//connect(ui->action_Save, SIGNAL(triggered()), this, SLOT(saveFile()));
+		//connect(ui->action_Load, SIGNAL(triggered()), this, SLOT(loadFile()));
+		//connect(ui->action_Quit, SIGNAL(triggered()), qApp, SLOT(quit()));
+		//ui->toolBar->addAction("Add block", this, SLOT(addBlock()));
+		gView->showMaximized();
+		//delete gScene;
+		//delete gView;
+		//delete layout;
+	}
+}
+
+/*! \brief Returns the in-memory Experiment Structure
+ *
+ *  This function returns a pointer to the in-memory Experiment Structure.
+ */
+cExperimentStructure *ExperimentManager::getExperimentStructure() 
+{
+	return cExperimentBlockTrialStructure;
+}
+
+//QObject* ExperimentManager::getExperimentStructure() 
+//{
+//	return cExperimentBlockTrialStructure;
+//}
 
 bool ExperimentManager::finalizeExperimentObjects()
 {
@@ -1693,7 +1777,6 @@ QObject *ExperimentManager::getObjectElementById(int nID)
 	return NULL;
 }
 
-//QHash<QString, QString> *ExperimentManager::getObjectBlockParamListById(int nID)
 tParsedParameterList *ExperimentManager::getObjectBlockParamListById(int nID)
 {
 	if (nID >= 0)
@@ -1715,6 +1798,237 @@ tParsedParameterList *ExperimentManager::getObjectBlockParamListById(int nID)
 	return NULL;
 }
 
+bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID)
+{
+	bool bHasCurrentBlock = false;
+	if (nObjectID >= 0)
+	{
+		if (!lExperimentObjectList.isEmpty())
+		{
+			int nObjectCount = lExperimentObjectList.count();
+			for (int i=0;i<nObjectCount;i++)
+			{
+				if (lExperimentObjectList[i].nObjectID == nObjectID)
+				{
+					if(createExperimentBlockParamsFromDomNodeList(nBlockNumber,nObjectID,&ExperimentBlockTrialsDomNodeList,lExperimentObjectList[i].ExpBlockParams) == false)
+					{
+						qDebug() << __FUNCTION__ << "::Could not create a Block Parameter List!";
+						return false;
+					}
+					return true;
+				}
+			}
+		}
+	}
+	qDebug() << __FUNCTION__ << "::Could not create a Block Parameter List, no current block or object is invalid!";
+	return false;
+}
+
+bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst, tParsedParameterList *hParams)
+{
+	if (hParams == NULL)
+		return false;
+	if(pExpBlockTrialsDomNodeLst == NULL)
+		return false;
+	if(hParams->count() == 0)
+		return false;
+	if(nObjectID < 0)
+		return false;
+	if(nBlockNumber < 0)
+		return false;
+	if (pExpBlockTrialsDomNodeLst->isEmpty())
+		return false;
+
+	//Set all the parameter bHasChanged attributes too false again
+	QList<ParsedParameterDefinition> tmpStrValueList = hParams->values();//The order is guaranteed to be the same as that used by keys()!
+	QList<QString> tmpStrKeyList = hParams->keys();//The order is guaranteed to be the same as that used by values()!
+	for(int i=0;i<tmpStrKeyList.count();i++)
+	{
+		tmpStrValueList[i].bHasChanged = false;
+		hParams->insert(tmpStrKeyList[i], tmpStrValueList[i]);
+	}
+
+	//The below code seems not to work due to the iterator...
+	//
+	//
+	////Set all the parameter bHasChanged attributes too false again
+	//tParsedParameterList::const_iterator iterPPL = hParams->constBegin();
+	//while (iterPPL != hParams->constEnd()) 
+	//{
+	//	tmpParDef = iterPPL.value();
+	//	tmpString = iterPPL.key();
+	//	tmpParDef.bHasChanged = false;
+	//	//cout << iterPPL.key() << ": " << iterPPL.value() << endl;
+	//	 hParams->insert(tmpString, tmpParDef);
+	//	++iterPPL;
+	//}
+	
+	//if(cExperimentBlockTrialStructure == NULL)
+	//	return false;
+	//int nBlockCount = cExperimentBlockTrialStructure->getBlockCount();
+	int nBlockCount = pExpBlockTrialsDomNodeLst->count();
+	if (nBlockCount <= nBlockNumber)
+		return false;
+	//if (nBlockCount != pExpBlockTrialsDomNodeLst->count())
+	//	return false;
+	
+	QDomElement tmpElement;
+	QDomNode tmpNode;
+	ParsedParameterDefinition tmpParDef;
+	QString tmpString;
+	QString tmpValue;
+
+	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
+	{
+		if(pExpBlockTrialsDomNodeLst->at(i).hasChildNodes())
+		{
+			tmpElement = pExpBlockTrialsDomNodeLst->at(i).firstChildElement(BLOCKNUMBER_TAG);
+			if(!tmpElement.isNull())//Is there a block_number defined?
+			{
+				if (nBlockNumber == tmpElement.text().toInt())//Correct block number?
+				{
+					QDomNodeList tmpObjectNodeList = pExpBlockTrialsDomNodeLst->at(i).toElement().elementsByTagName(OBJECT_TAG);//Retrieve all the objects
+					int nObjectListCount = tmpObjectNodeList.count();
+					if (nObjectListCount>0)
+					{
+						for (int j=0;j<nObjectListCount;j++)//For each object
+						{
+							if(tmpObjectNodeList.item(j).toElement().hasAttribute(ID_TAG))
+							{
+								if(nObjectID == tmpObjectNodeList.item(j).toElement().attribute(ID_TAG,"").toInt())//Correct ObjectID?
+								{
+									if(tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG).isElement())
+									{
+										tmpElement = tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG);
+										QDomNodeList tmpParameterNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
+										int nParameterListCount = tmpParameterNodeList.count();
+										if (nParameterListCount>0)
+										{
+											bool bResult = false;
+											for (int k=0;k<nParameterListCount;k++)//For each parameter
+											{
+												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
+												if(!tmpElement.isNull())
+												{
+													tmpString = tmpElement.text().toLower();
+													if (hParams->contains(tmpString))//Is the Parameter available in the predefined plugin list?
+													{
+														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
+														if(!tmpElement.isNull())
+														{
+															tmpValue = tmpElement.text();
+															expandExperimentBlockParameterValue(tmpValue);
+															tmpParDef.sValue = tmpValue;
+															tmpParDef.bHasChanged = true;
+															hParams->insert(tmpString,tmpParDef);
+															bResult = true;//To define that at least one parameter was parsed successfully
+														}
+													}
+												}
+												if(k==(nParameterListCount-1))
+													return bResult;											
+											}
+										}
+										else
+											return false;
+									}
+									else
+										return false;
+								}
+								else
+									return false;
+							}
+							else
+								return false;
+						}
+					}
+					else
+						return false;//Nothing defined		
+				}
+				else
+					continue;//Search next block
+			}
+			else
+				continue;//Search next block
+		}
+	}
+	return false;
+}
+
+bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst)
+{
+	int nNrOfBlockTrials = ExpBlockTrialsDomNodeLst.count();
+	cExperimentBlockTrialStructure->resetExperiment();
+	cBlockStructure *tmpBlock = NULL;
+	cLoopStructure *tmpLoop = NULL;
+	QDomElement tmpElement;
+	bool bUpdateSucceeded = false;
+	for (int i=0;i<nNrOfBlockTrials;i++)
+	{
+		bUpdateSucceeded = false;
+		if(ExpBlockTrialsDomNodeLst.at(i).hasChildNodes())
+		{
+			tmpElement = ExpBlockTrialsDomNodeLst.at(i).toElement();
+			if(tmpElement.hasAttribute(ID_TAG))
+			{
+				tmpBlock = new cBlockStructure();
+				tmpBlock->setBlockID(tmpElement.attribute(ID_TAG,"").toInt());//Copy the BlockID
+				tmpElement = ExpBlockTrialsDomNodeLst.at(i).firstChildElement(BLOCKNUMBER_TAG);
+				if(!tmpElement.isNull())//Is there a block_number defined?
+				{
+					tmpBlock->setBlockNumber(tmpElement.text().toInt());//Copy the BlockNumber
+					//tmpBlockTrialStruct.nBlockNumber = tmpElement.text().toInt();//Copy the BlockNumber
+					if (tmpBlock->getBlockNumber()>=0)
+					{
+						tmpElement = ExpBlockTrialsDomNodeLst.at(i).firstChildElement(TRIALAMOUNT_TAG);
+						if(!tmpElement.isNull())//Is there a TrialAmount defined?
+							tmpBlock->setNumberOfTrials(tmpElement.text().toInt());//Copy the TrialAmount
+						else
+							tmpBlock->setNumberOfTrials(1);//Default if not defined
+						tmpElement = ExpBlockTrialsDomNodeLst.at(i).firstChildElement(INTERNALTRIGGERAMOUNT_TAG);
+						if(!tmpElement.isNull())//Is there a TriggerAmount defined?
+						{
+							if (!tmpElement.text().isEmpty())
+							{
+								if (tmpElement.text().toInt() > 0)
+									tmpBlock->setNumberOfInternalTriggers(tmpElement.text().toInt());
+							}
+						}
+						tmpElement = ExpBlockTrialsDomNodeLst.at(i).firstChildElement(EXTERNALTRIGGERAMOUNT_TAG);
+						if(!tmpElement.isNull())//Is there a SubTriggerAmount defined?
+						{
+							if (!tmpElement.text().isEmpty())
+							{
+								if (tmpElement.text().toInt() > 0)
+									tmpBlock->setNumberOfExternalTriggers(tmpElement.text().toInt());
+							}
+						}
+						tmpElement = ExpBlockTrialsDomNodeLst.at(i).firstChildElement(NAME_TAG);
+						if(!tmpElement.isNull())//Is there a Name defined?
+							tmpBlock->setBlockName(tmpElement.text());//Copy the Name
+						cExperimentBlockTrialStructure->insertBlock(tmpBlock);
+						bUpdateSucceeded = true;
+					}
+				}
+			}
+		}
+		if(!bUpdateSucceeded)
+		{
+			cExperimentBlockTrialStructure->resetExperiment();
+			if(tmpBlock)
+				delete tmpBlock;
+			if(tmpLoop)
+				delete tmpLoop;
+			return false;
+		}
+	}
+	if(tmpBlock)
+		delete tmpBlock;
+	if(tmpLoop)
+		delete tmpLoop;
+	return true;
+}
+
 bool ExperimentManager::createExperimentObjects()
 {
 	if (!currentExperimentTree)
@@ -1733,7 +2047,6 @@ bool ExperimentManager::createExperimentObjects()
 		int nNrOfObjects = ExperimentObjectDomNodeList.count();
 		if (nNrOfObjects > 0)
 		{
-			int nNrOfBlockTrials = 0;
 			QDomNode tmpNode;
 			QDomElement tmpElement;
 			QString tmpString;
@@ -1747,7 +2060,15 @@ bool ExperimentManager::createExperimentObjects()
 				strList.append(BLOCK_TAG);
 				if (currentExperimentTree->getDocumentElements(strList,ExperimentBlockTrialsDomNodeList) >= 0)
 				{
-					nNrOfBlockTrials = ExperimentBlockTrialsDomNodeList.count();
+					if(createExperimentStructureFromDomNodeList(ExperimentBlockTrialsDomNodeList))
+					{
+						if(cExperimentBlockTrialStructure->prepareExperiment() == false)
+							qDebug() << __FUNCTION__ << "::Could not prepare Experiment Structure!";
+					}
+					else
+					{
+						qDebug() << __FUNCTION__ << "::Could not parse Experiment Dom Node List!";
+					}
 				}
 			}
 			for(int i=0;i<nNrOfObjects;i++)
@@ -1845,27 +2166,38 @@ bool ExperimentManager::createExperimentObjects()
 							}		
 						}
 
-						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTCONFIGURATION_FULL)) == -1))//Is the slot present?
+						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTMANAGER_FULL)) == -1))//Is the slot present?
 						{
 							//Invoke the slot
 							bRetVal = true;
-							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTCONFIGURATION, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(ExperimentConfiguration*, &strcExperimentConfiguration))))
+							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTMANAGER, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(ExperimentManager*, this))))
 							{
-								qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTCONFIGURATION << "()" << ")!";		
+								qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTMANAGER << "()" << ")!";		
 								return false;
 							}		
 						}	
 
-						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETBLOCKTRIALDOMNODELIST_FULL)) == -1))//Is the slot present?
-						{
-							//Invoke the slot
-							bRetVal = true;
-							if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETBLOCKTRIALDOMNODELIST, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentBlockTrialsDomNodeList))))
-							{
-								qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
-								return false;
-							}		
-						}
+						//if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETEXPERIMENTCONFIGURATION_FULL)) == -1))//Is the slot present?
+						//{
+						//	//Invoke the slot
+						//	bRetVal = true;
+						//	if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETEXPERIMENTCONFIGURATION, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(ExperimentConfiguration*, &strcExperimentConfiguration))))
+						//	{
+						//		qDebug() << "invokeExperimentObjectsSlots::Could not invoke the slot(" << FUNC_SETEXPERIMENTCONFIGURATION << "()" << ")!";		
+						//		return false;
+						//	}		
+						//}	
+
+						//if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_SETBLOCKTRIALDOMNODELIST_FULL)) == -1))//Is the slot present?
+						//{
+						//	//Invoke the slot
+						//	bRetVal = true;
+						//	if(!(metaObject->invokeMethod(tmpElement.pObject, FUNC_SETBLOCKTRIALDOMNODELIST, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(QDomNodeList*, &ExperimentBlockTrialsDomNodeList))))
+						//	{
+						//		qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_SETBLOCKTRIALDOMNODELIST << "()" << ")!";		
+						//		return false;
+						//	}		
+						//}
 
 						tmpElement.nCurrentState = Experiment_SubObject_Initialized;//This is still an inactive state!
 						//tmpElement.sStateHistory.nState.append(tmpElement.nCurrentState);
@@ -1913,30 +2245,3 @@ bool ExperimentManager::getScriptContextValue(const QString &sScriptContextState
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-
-ContainerDlg::ContainerDlg(QWidget *parent) : QDialog(parent)
-{
-	//Setting a black background
-	QPalette pal = palette();
-	pal.setColor(QPalette::Window, QColor(0, 0, 0));
-	setPalette(pal);
-}
-
-ContainerDlg::~ContainerDlg()
-{
-
-}
-
-void ContainerDlg::closeEvent(QCloseEvent *e)
-{
-	showNormal();
-	e->accept();
-}
-
-void ContainerDlg::reject() // called when "Esc" pressed
-{
-	showNormal(); // to get back dock on Mac, we need to call this here (restore from fullscreen mode)
-	QDialog::reject();
-}

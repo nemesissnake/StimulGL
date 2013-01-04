@@ -29,6 +29,7 @@ TriggerTimer::TriggerTimer() : QObject(NULL)
 {
 	currentScriptEngine = NULL;
 	nThreadIdealCount = QThread::idealThreadCount();
+	bool bResult = connect(this,SIGNAL(stopTimerSignal()),&ThreadActivationTrigger,SLOT(stop()));
 	moveToThread(&_thread);
 	_thread.start();
 	ThreadActivationTrigger.setInterval(THREADACTIVATIONTRIGGERTIME);
@@ -54,14 +55,22 @@ TriggerTimer::~TriggerTimer()
 	if(bTimerIsRunning)
 	{
 		if ((currentTimerType == QPC_TriggerTimerType) || (currentTimerType == QPCNew_TriggerTimerType))
-			ThreadActivationTrigger.stop();
+		{
+			//bool bResult = QMetaObject::invokeMethod(&ThreadActivationTrigger, QString("stop").toLatin1(),Qt::DirectConnection);
+			//bResult = bResult;
+			//ThreadActivationTrigger.moveToThread(this->thread());//QThread::currentThread());//QApplication::instance()->thread()
+			//ThreadActivationTrigger.stop();
+			emit stopTimerSignal();
+		}
 		else if (currentTimerType == QTimer_TriggerTimerType)
+		{
 			eTimer.stop();
+		}
 	}	
-	if( _thread.isRunning() )
+	if(_thread.isRunning())
 	{
 		_thread.terminate();//The hard way...
-		_thread.wait();
+		_thread.wait(100);
 	}
 }
 

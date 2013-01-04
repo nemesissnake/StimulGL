@@ -131,7 +131,6 @@ void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 		if(QmlWidgetObject)
 		{
 			disconnect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
-			//disconnect(QmlWidgetObject, SIGNAL(ObjectShouldStop(void)), QmlWidgetObject, SLOT(stopExperiment(void)));
 			disconnect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
 		}
 		if(ExperimentManagerObj)
@@ -145,7 +144,6 @@ void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 		if(QmlWidgetObject)
 		{
 			connect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
-			//connect(QmlWidgetObject, SIGNAL(ObjectShouldStop(void)), QmlWidgetObject, SLOT(stopExperiment(void)));
 			connect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
 		}
 		if(ExperimentManagerObj)

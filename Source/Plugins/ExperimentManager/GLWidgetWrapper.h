@@ -31,11 +31,14 @@
 #include <QMutex>
 #include <QScriptValue>
 #include <omp.h>
+#include "ExperimentManager.h"
 #include "Global.h"
 #include "ContainerDlg.h"
 #include "ExperimentTimer.h"
 
 using namespace ExperimentManagerNameSpace;
+
+#define GLWWRAP_WIDGET_STIMULI_REFRESHRATE	"stimulirefreshrate"
 
 enum GLWidgetPaintFlags //An optional paint flag that can be forwarded to the FUNC_PAINTOBJECT_FULL routine 
 {
@@ -114,7 +117,7 @@ public:
 		QString tVarName = typeid(tVariabele).name();
 		QString sValue = templateVariabeleToString(tVariabele);
 		if(insertExpObjectBlockParameter(nObjectID,sKeyName,sValue,bIsInitializing))
-			bRetVal = pExpConf->pExperimentManager->insertExperimentObjectVariabelePointer(nObjectID,sKeyName,tVariabele);
+			bRetVal = pExperimentManager->insertExperimentObjectVariabelePointer(nObjectID,sKeyName,tVariabele);
 		return bRetVal;
 	}
 	QString templateVariabeleToString(const QString &Var) {return QString(Var);}
@@ -142,15 +145,15 @@ public slots:
 	bool startExperimentObject();
 	bool stopExperimentObject();
 	bool abortExperimentObject();
-	bool setBlockTrialDomNodeList(QDomNodeList *pExpBlockTrialDomNodeList = NULL);
+	void ExperimentShouldFinish();					//Slot for a signal to connect to
 	bool setExperimentObjectID(int nObjID);			//Necessary to set the ID!
 	bool setExperimentMetaObject();					//Necessary to set the MetaObject!
-	bool setExperimentConfiguration(ExperimentConfiguration *pExpConfStruct = NULL);	
+	virtual bool setExperimentManager(ExperimentManager *expManager);
 	void setStimuliResolution(int w, int h);
 	QRectF getScreenResolution();
 	
 	int getObjectID();
-	strcScriptExperimentStructure getExperimentStructure();
+	//strcScriptExperimentStructure getExperimentStructure();
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);
@@ -158,11 +161,10 @@ public slots:
 	
 protected:
 	bool checkForNextBlockTrial();
-	bool getExperimentBlockParamsFromDomNodeList(int nBlockNumber, int nObjectID, tParsedParameterList *hParams = NULL);//QHash<QString, QString> *hParams = NULL);
 	void setupLayout(QWidget* layoutWidget);
 	bool isDebugMode();
-	bool getCurrentExperimentProgressSnapshot(ExperimentSnapshotStructure *expSnapshotstrc);
-	bool getCurrentExpBlockTrialInternalTriggerAmount(int &nInternalTriggerAmount);
+	double getElapsedTrialTime() {return dElapsedTrialTime;};
+	int getCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame;};
 	int getCurrentStimuliRefreshRate() {return nRefreshRate;};
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
 	void setDoubleBufferCheck(bool bShouldCheck) {bCheckForDoubleBuffering = bShouldCheck;};
@@ -184,28 +186,19 @@ private:
 	bool setExperimentObjectReadyToUnlock();
 	void setVerticalSyncSwap();
 	void init();
-	int getRelativeBlockTrialTrigger(int nAbsoluteTrigger);		//Returns the relative (within a BlockTrial) trigger from a absolute (within the whole Experiment) trigger
-	bool updateExperimentBlockTrialStructure();
-	bool cleanupExperimentBlockTrialStructure();
 	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
-	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;}
-	void resetScriptExperimentStructure();
-	void updateScriptExperimentStructure(const int &absTrigger);
+	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
 
-private:
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bFirstTriggerAfterUnlock;						//To detect the exact start of the experiment detected by the checkForNextBlockTrial() function.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
 	bool bCheckForDoubleBuffering;
 	double dWaitTime;
-	QMutex mutExpSnapshot;
 	QMutex mutRecursivePaint;
 	QMutex mutProcEvents;								//Another implementation, due to qApp->processEvents() RecursiveRepaint can occur...
-	ExperimentSnapshotFullStructure expFullStruct;
-	int nCurrentExperimentReceivedExternalTriggers;		//The current experiment number of external triggers received since it started, local use!
-	int nCurrentExperimentProcessedExternalTriggers;	//The current experiment processed external triggers, local use!
-	int nCurrentExperimentLastProcExternalTriggers;		//The current experiment last processed external trigger, local use!
-	int nCurrentExperimentReceivedInternalTriggers;		//The current experiment number of internal triggers incremented since it started, local use!
+	int nLastProcessedExternalTriggers;
+	int nCurrExpBlockTrialFrame;
+	double dElapsedTrialTime;
 	int nRefreshRate;									//The refresh rate of the screen
 	double dLastPreSwapTime;
 	double dAdditionalRefreshDelayTime;
@@ -216,16 +209,13 @@ private:
 	QVBoxLayout *mainLayout;
 	int nObjectID;
 	QTimer tStimTimer;
-	QDomNodeList *pExpBlockTrialDomNodeList;
-	ExperimentBlockTrialStructure strcExperimentBlockTrials;
-	ScriptExperimentStructure strcScriptExpStruct;
 	QEvent::Type tEventObjectStopped;
 	ExperimentSubObjectState currentSubObjectState;
 	ExperimentSubObjectStateHistory subObjectStateHistory;
 	int nFrameTimerIndex;
 	int nTrialTimerIndex;
 	tParsedParameterList *ExpBlockParams;
-	ExperimentConfiguration *pExpConf;
+	ExperimentManager *pExperimentManager; 
 	ExperimentTimer expTrialTimer;
 	const QMetaObject* thisMetaObject;
 	QPainter *lockedPainter;

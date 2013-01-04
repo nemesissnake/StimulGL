@@ -442,6 +442,36 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ExperimentStructures.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
+    <ClCompile Include="ExperimentGraphBlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExperimentGraphConnection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExperimentGraphEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ExperimentGraphEditor.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_ExperimentGraphEditor.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_ExperimentGraphEditor.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ExperimentGraphEditor.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_ExperimentGraphEditor.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ExperimentGraphEditor.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="ExperimentGraphPort.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -463,6 +493,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ModelRoles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExperimentGraphBlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExperimentGraphConnection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExperimentGraphPort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -531,6 +570,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ExperimentStructures.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ExperimentGraphEditor.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

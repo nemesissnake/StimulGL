@@ -22,7 +22,7 @@
 
 #include <QtScript>
 #include <QList>
-#include "ExperimentStructures.h"
+#include <QSharedData>
 #include "maindefines.h"
 
 //*! The enum (RepeatAmount) can store the remaining amount of trials or action to take */
@@ -46,7 +46,17 @@ enum ExperimentRunState
 {
 	ES_IDLE							=  0,	//!<  0: IDLE STATE
 	ES_WAITING_FOR_TRIGGER			=  1,	//!<  1: WAITING FOR TRIGGER
-	ES_RUNNING						=  2,	//!<  2: RUNNING
+	ES_RUNNING						=  2	//!<  2: RUNNING
+};
+
+enum ObjectIndex
+{
+	OI_UNDEFINED					= -1
+};
+
+enum CounterFlag
+{
+	CF_UNINITIALIZED				= -1
 };
 
 typedef struct strcExperimentStructureState
@@ -70,12 +80,14 @@ class cLoopStructure : public QObject
 	Q_PROPERTY(int LoopCounter READ getTargetBlockID)
 
 public:
-	cLoopStructure(QObject *parent = NULL);
+	cLoopStructure();
 	cLoopStructure(const int &LoopID,const int &LoopNumber,const QString &LoopName = "",const int &NumberOfLoops = RepeatAmount::RA_ZERO);
-	cLoopStructure(const cLoopStructure& other){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
+	cLoopStructure(const cLoopStructure& other);
 	~cLoopStructure();
 
 	static QScriptValue ctor__cLoopStructure(QScriptContext* context, QScriptEngine* engine);
+	static QScriptValue loopStructureToScriptValue(QScriptEngine *engine, cLoopStructure* const &s);
+	static void loopStructureFromScriptValue(const QScriptValue &obj, cLoopStructure* &s);
 
 	bool initializeCurrentLoopCounter();
 	int incrementCurrentLoopCounter();
@@ -107,6 +119,23 @@ private:
 	int nLoopCounter;
 };
 
+class cBlockStructure_SharedData : public QSharedData
+{
+public:
+	cBlockStructure_SharedData();
+	cBlockStructure_SharedData(const cBlockStructure_SharedData &other);
+	~cBlockStructure_SharedData();
+
+	QScriptEngine* currentScriptEngine;
+	int nBlockID;
+	int nBlockNumber;
+	QString sBlockName;
+	int nNrOfTrials;
+	int nNrOfInternalTriggers;
+	int nNrOfExternalTriggers;
+	QList<cLoopStructure> lLoops;
+};
+
 class cBlockStructure : public QObject
 {
 	Q_OBJECT
@@ -118,45 +147,63 @@ class cBlockStructure : public QObject
 	Q_PROPERTY(int NumberOfExternalTriggers WRITE setNumberOfExternalTriggers READ getNumberOfExternalTriggers)
 
 public:
-	cBlockStructure(QObject *parent = NULL);
+	cBlockStructure();
 	cBlockStructure(const int &BlockID,const int &BlockNumber,const QString &BlockName = "",const int &NumberOfTrials = RepeatAmount::RA_ZERO);
-	cBlockStructure(const cBlockStructure& other){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
+	cBlockStructure(const cBlockStructure& other);
 	~cBlockStructure();
 
 	static QScriptValue ctor__cBlockStructure(QScriptContext* context, QScriptEngine* engine);
+	static QScriptValue blockStructureToScriptValue(QScriptEngine *engine, cBlockStructure* const &s);
+	static void blockStructureFromScriptValue(const QScriptValue &obj, cBlockStructure* &s);
 	
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
-	void setBlockID(const int &nValue) {nBlockID = nValue;};
-	int getBlockID() const {return nBlockID;};
-	void setBlockNumber(const int &nValue) {nBlockNumber = nValue;};
-	int getBlockNumber() const {return nBlockNumber;};
-	void setBlockName(const QString &sValue) {sBlockName = sValue;};
-	QString getBlockName() const {return sBlockName;};
-	void setNumberOfTrials(const int &nValue) {nNrOfTrials = nValue;};
-	int getNumberOfTrials() const {return nNrOfTrials;};
-	void setNumberOfInternalTriggers(const int &nValue) {nNrOfInternalTriggers = nValue;};
-	int getNumberOfInternalTriggers() const {return nNrOfInternalTriggers;};
-	void setNumberOfExternalTriggers(const int &nValue) {nNrOfExternalTriggers = nValue;};
-	int getNumberOfExternalTriggers() const {return nNrOfExternalTriggers;};
+	void setBlockID(const int &nValue) {pSharedData->nBlockID = nValue;};
+	int getBlockID() const {return pSharedData->nBlockID;};
+	void setBlockNumber(const int &nValue) {pSharedData->nBlockNumber = nValue;};
+	int getBlockNumber() const {return pSharedData->nBlockNumber;};
+	void setBlockName(const QString &sValue) {pSharedData->sBlockName = sValue;};
+	QString getBlockName() const {return pSharedData->sBlockName;};
+	void setNumberOfTrials(const int &nValue) {pSharedData->nNrOfTrials = nValue;};
+	int getNumberOfTrials() const {return pSharedData->nNrOfTrials;};
+	void setNumberOfInternalTriggers(const int &nValue) {pSharedData->nNrOfInternalTriggers = nValue;};
+	int getNumberOfInternalTriggers() const {return pSharedData->nNrOfInternalTriggers;};
+	void setNumberOfExternalTriggers(const int &nValue) {pSharedData->nNrOfExternalTriggers = nValue;};
+	int getNumberOfExternalTriggers() const {return pSharedData->nNrOfExternalTriggers;};
 
 	cLoopStructure *incrementToNextLoopPointer(cLoopStructure *pCurrentLoop = NULL);
 	cLoopStructure *resetToFirstFreeLoopPointer();
 	void resetAllLoopCounters();
 	bool insertLoop(cLoopStructure *cLoop);
+	cLoopStructure* getNextClosestLoopIDByFromID(const int &startLoopID);
+	cLoopStructure* getLoopPointerByID(const int &nLoopID);
+	int getLoopCount() const {return pSharedData->lLoops.count();};
 
 private:
 	bool Initialize();
-	bool isUnusedLoopID(const int &nLoopID);
+	bool isUnusedLoopID(const int &nLoopID) const;
 
+	QSharedDataPointer<cBlockStructure_SharedData> pSharedData;
+};
+
+
+class cExperimentStructure_SharedData : public QSharedData
+{
+public:
+	cExperimentStructure_SharedData();
+	cExperimentStructure_SharedData(const cExperimentStructure_SharedData &other);
+	~cExperimentStructure_SharedData();
+
+	ExperimentRunState CurrentExperiment_RunState;			//Only for internal usage
+	strcExperimentStructureState currentExperimentState;
 	QScriptEngine* currentScriptEngine;
-	int nBlockID;
-	int nBlockNumber;
-	QString sBlockName;
-	int nNrOfTrials;
-	int nNrOfInternalTriggers;
-	int nNrOfExternalTriggers;
-	QList<cLoopStructure*> lLoops;
+	int nExperimentID;
+	QString sExperimentName;
+	bool bDebugMode;
+	QList<cBlockStructure> lBlocks;
+	cBlockStructure *currentBlockPointer;					//Only for internal usage
+	cLoopStructure *currentLoopPointer;						//Only for internal usage
+	cBlockStructure *firstBlockPointer;						//Only for internal usage
 };
 
 
@@ -178,61 +225,59 @@ signals:
 	void experimentStopped();
 
 public:
-	cExperimentStructure(QObject *parent = NULL);
-	cExperimentStructure(const cExperimentStructure& other){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
+	cExperimentStructure();
+	cExperimentStructure(const cExperimentStructure& other);
 	~cExperimentStructure();
 
 	static QScriptValue ctor__cExperimentStructure(QScriptContext* context, QScriptEngine* engine);
-	static QScriptValue CreateExperimentStructureStateFromScript(QScriptContext *, QScriptEngine *engine);
-	static QScriptValue ExperimentStructureStateToScriptValue(QScriptEngine *engine, const strcExperimentStructureState &s);
+	static QScriptValue experimentStructureToScriptValue(QScriptEngine *engine, cExperimentStructure* const &s);
+	static void experimentStructureFromScriptValue(const QScriptValue &obj, cExperimentStructure* &s);
+	static QScriptValue createExperimentStructureStateFromScript(QScriptContext *, QScriptEngine *engine);
+	static QScriptValue experimentStructureStateToScriptValue(QScriptEngine *engine, const strcExperimentStructureState &s);
 	static void resetExperimentStateStruct(strcExperimentStructureState *strcExpState);
-	static void ExperimentStructureStateFromScriptValue(const QScriptValue &obj, strcExperimentStructureState &s);
+	static void experimentStructureStateFromScriptValue(const QScriptValue &obj, strcExperimentStructureState &s);
+	cBlockStructure* getNextClosestBlockNumberByFromNumber(const int &startBlockNumber); 
+	cBlockStructure getCurrentBlock(bool &bHasCurrBlock) const;//This doesn't work within the script, see reference...
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 
-	void resetExperiment() {resetExperimentStateStruct(&currentExperimentState);};
-	strcExperimentStructureState getCurrentExperimentState() {return currentExperimentState;};
+	void resetExperiment() {resetExperimentStateStruct(&pSharedData->currentExperimentState);};
+	strcExperimentStructureState getCurrentExperimentState() const {return pSharedData->currentExperimentState;};
 
-	void setExperimentName(const QString &sValue) {sExperimentName = sValue;};
-	QString getExperimentName() const {return sExperimentName;};
-	void setExperimentID(const int &nValue) {nExperimentID = nValue;};
-	int getExperimentID() const {return nExperimentID;};
-	void setExperimentDebugMode(const bool &bValue) {bDebugMode = bValue;};
-	bool getExperimentDebugMode() const {return bDebugMode;};
+	void setExperimentName(const QString &sValue) {pSharedData->sExperimentName = sValue;};
+	QString getExperimentName() const {return pSharedData->sExperimentName;};
+	void setExperimentID(const int &nValue) {pSharedData->nExperimentID = nValue;};
+	int getExperimentID() const {return pSharedData->nExperimentID;};
+	void setExperimentDebugMode(const bool &bValue) {pSharedData->bDebugMode = bValue;};
+	bool getExperimentDebugMode() const {return pSharedData->bDebugMode;};
 
 	void incrementExternalTrigger();
 	bool prepareExperiment();
+	void startExperiment() {ExperimentStart();};
 	bool insertBlock(cBlockStructure *cBlock);
 	cBlockStructure* getBlockPointerByID(const int &nBlockID);
+	int getBlockCount() const;
+	int getExternalTriggerCount() const;
 
 private:
 	void ExperimentAbort();
 	void ExperimentStop();
 	void ExperimentStart();
 	bool Initialize();
-	bool isUnusedBlockID(const int &nBlockID);
-	bool isValidBlockPointer(cBlockStructure *cBlock);
+	bool isUnusedBlockID(const int &nBlockID) const;
+	bool isValidBlockPointer(cBlockStructure *cBlock) const;
 	bool prepareStartBlock();
-	cBlockStructure* getNextClosestBlockNumberByFromNumber(const int &startBlockNumber);
+	int getBlockIndexByID(const int &nBlockID) const;
+	int getCurrentBlockIndex() const;
 
-	ExperimentRunState CurrentExperiment_State;		//Only for internal usage
-	strcExperimentStructureState currentExperimentState;
-	QScriptEngine* currentScriptEngine;
-	int nExperimentID;
-	QString sExperimentName;
-	bool bDebugMode;
-	QList<cBlockStructure*> lBlocks;
-	cBlockStructure *currentBlockPointer;			//Only for internal usage
-	cLoopStructure *currentLoopPointer;				//Only for internal usage
-	cBlockStructure *firstBlockPointer;				//Only for internal usage
+	QSharedDataPointer<cExperimentStructure_SharedData> pSharedData;
 };
 
 Q_DECLARE_METATYPE(strcExperimentStructureState)
 Q_DECLARE_METATYPE(cExperimentStructure*)
+//Q_DECLARE_METATYPE(cExperimentStructure)
 Q_DECLARE_METATYPE(cBlockStructure*)
 Q_DECLARE_METATYPE(cLoopStructure*)
 
-//Q_DECLARE_FLAGS(TriggerTimerTypes, TriggerTimerType)
-//Q_DECLARE_OPERATORS_FOR_FLAGS(TriggerTimerTypes)
 #endif // EXPERIMENTSTRUCTURES_H
