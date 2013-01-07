@@ -6,7 +6,7 @@ Place you own text here..
 Attributes only apply to readonly non user data, like the ID
 -->
 
-<EXML version="2.0.0.1">
+<EXML version="2.0.0.2">
     <defines>
 	<experiment ID="0">
 		<name>QML Example Experiment</name>

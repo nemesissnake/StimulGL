@@ -128,21 +128,11 @@ void qmlWidget::initialize()
 	//Place your custom initialization code here:
 	
 	//Default values if none defined.
-	//1expSnapshot.currExpBlock = 0;
-	//1expSnapshot.currExpBlockTrialFrame = 0;
-	//1expSnapshot.currExpBlockTrialTrigger = 0;
-	//1expSnapshot.currExpBlockTrialInternalTriggerAmount = 0;
-	//1expSnapshot.currExpTrial = 0;
-	//1expSnapshot.currExpInternalTrigger = 0;
-	//1expSnapshot.currExpExternalTrigger = 0;
-	//1expSnapshot.elapsedTrialTime = 0;
-
 	experimentManager = NULL;
 	nQMLWidgetID = -1;
 	rectScreenRes = getScreenResolution();
 	lastTriggerNumber = -1;
 	stimuliPainter = NULL;
-	//currExpConfStruct = NULL;
 	qmlViewer = NULL;
 	glWidget = NULL;
 	imgLstModel = NULL;
@@ -514,12 +504,18 @@ bool qmlWidget::paintObject(int paintFlags, QObject *paintEventObject)//Only get
 {
 	//if (!firstBlockTrialPaintFrame)
 	//	return true;
-	if(isDebugMode())
+	if(isDebugMode() && experimentManager)
 		experimentManager->logExperimentObjectData(nQMLWidgetID,0,__FUNCTION__,"","Starting to paint the object for the first time");
 	QPaintEvent *event = reinterpret_cast<QPaintEvent *>(paintEventObject);//qobject_cast<QPaintEvent *>(paintEventObject);
 	GLWidgetPaintFlags currentPaintFlags = (GLWidgetPaintFlags)paintFlags;
-	//getCurrentExperimentProgressSnapshot(&expSnapshot);
-	//int elapsedTrialTime = (int)expSnapshot.elapsedTrialTime;
+
+	//bool bHasABlock = false;
+	//cExperimentStructure tmpExpStr = cExperimentStructure(*experimentManager->getExperimentStructure());
+	//int elapsedTrialTime = (int)getElapsedTrialTime();
+	//int nExpBlockTrialFrame = getCurrentBlockTrialFrame();
+	//strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
+	//cBlockStructure tmpBlockStrc = tmpExpStr.getCurrentBlock(bHasABlock);
+
 	if (stimuliPainter == NULL)
 	{
 		stimuliPainter = new QPainter(this);//Constructor automatically calls begin()
@@ -530,7 +526,7 @@ bool qmlWidget::paintObject(int paintFlags, QObject *paintEventObject)//Only get
 	}
 	//if (expSnapshot.currExpBlockTrialFrame == 0)
 	//{
-		//if(isDebugMode())
+		//if(isDebugMode() && experimentManager)
 		//{
 		stimuliPainter->fillRect(event->rect(), colorBackground);//brushBackground);
 		qmlEventRoutine();

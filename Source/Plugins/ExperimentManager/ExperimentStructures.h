@@ -81,7 +81,7 @@ class cLoopStructure : public QObject
 
 public:
 	cLoopStructure();
-	cLoopStructure(const int &LoopID,const int &LoopNumber,const QString &LoopName = "",const int &NumberOfLoops = RepeatAmount::RA_ZERO);
+	cLoopStructure(const int &LoopID,const int &LoopNumber,const int &LoopTargetBlockID,const QString &LoopName = "",const int &NumberOfLoops = RepeatAmount::RA_ZERO);
 	cLoopStructure(const cLoopStructure& other);
 	~cLoopStructure();
 
@@ -276,7 +276,6 @@ private:
 
 Q_DECLARE_METATYPE(strcExperimentStructureState)
 Q_DECLARE_METATYPE(cExperimentStructure*)
-//Q_DECLARE_METATYPE(cExperimentStructure)
 Q_DECLARE_METATYPE(cBlockStructure*)
 Q_DECLARE_METATYPE(cLoopStructure*)
 

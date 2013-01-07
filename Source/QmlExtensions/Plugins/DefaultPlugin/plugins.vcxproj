@@ -142,8 +142,8 @@
       <Command>echo POSTBUILDSTEP for $(ProjectName) $(Platform) $(Configuration)
 
 xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\" /i /d /y
-xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions" /s /i /y
-copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions\qmldir" /y
+xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions" /s /i /y
+copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions\qmldir" /y
 if errorlevel 1 goto BuildEventFailed
 goto BuildEventOK
 :BuildEventFailed
@@ -200,8 +200,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Command>echo POSTBUILDSTEP for $(ProjectName) $(Platform) $(Configuration)
 
 xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\" /i /d /y
-xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions" /s /i /y
-copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions\qmldir" /y
+xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions" /s /i /y
+copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions\qmldir" /y
 if errorlevel 1 goto BuildEventFailed
 goto BuildEventOK
 :BuildEventFailed
@@ -256,8 +256,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Command>echo POSTBUILDSTEP for $(ProjectName) $(Platform) $(Configuration)
 
 xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\" /i /d /y
-xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions" /s /i /y
-copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions\qmldir" /y
+xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions" /s /i /y
+copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions\qmldir" /y
 if errorlevel 1 goto BuildEventFailed
 goto BuildEventOK
 :BuildEventFailed
@@ -312,8 +312,8 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Command>echo POSTBUILDSTEP for $(ProjectName) $(Platform) $(Configuration)
 
 xcopy "$(TargetPath)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\" /i /d /y
-xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions" /s /i /y
-copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGLExtensions\qmldir" /y
+xcopy "$(ProjectDir)StimulGLExtensions\*" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions" /s /i /y
+copy "$(ProjectDir)qmldir_$(Configuration)_$(Platform)" "$(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions\qmldir" /y
 if errorlevel 1 goto BuildEventFailed
 goto BuildEventOK
 :BuildEventFailed

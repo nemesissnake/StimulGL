@@ -1134,10 +1134,15 @@ QString ExperimentManager::getExperimentName()
  *  Shows a dialog containing the Experiment Graph Editor.
  * @param ExpStruct a cExperimentStructure to be edited by the Experiment Graph Editor, if this parameter is NULL than the current Experiment Structure in memory is used.
  */
-void ExperimentManager::showExperimentGraphEditor(cExperimentStructure *ExpStruct)
+bool ExperimentManager::showExperimentGraphEditor(cExperimentStructure *ExpStruct)
 {
 	if(ExpStruct == NULL)
 	{
+		if(cExperimentBlockTrialStructure == NULL)
+		{
+			if (loadExperiment("",false,true) == false)
+				return false;
+		}
 		ExpStruct = cExperimentBlockTrialStructure;
 	}
 
@@ -1182,6 +1187,7 @@ void ExperimentManager::showExperimentGraphEditor(cExperimentStructure *ExpStruc
 		//delete gView;
 		//delete layout;
 	}
+	return true;
 }
 
 /*! \brief Returns the in-memory Experiment Structure
@@ -1960,7 +1966,7 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 	int nNrOfBlockTrials = ExpBlockTrialsDomNodeLst.count();
 	cExperimentBlockTrialStructure->resetExperiment();
 	cBlockStructure *tmpBlock = NULL;
-	cLoopStructure *tmpLoop = NULL;
+	//cLoopStructure *tmpLoop = NULL;
 	QDomElement tmpElement;
 	bool bUpdateSucceeded = false;
 	for (int i=0;i<nNrOfBlockTrials;i++)
@@ -2006,6 +2012,59 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 						tmpElement = ExpBlockTrialsDomNodeLst.at(i).firstChildElement(NAME_TAG);
 						if(!tmpElement.isNull())//Is there a Name defined?
 							tmpBlock->setBlockName(tmpElement.text());//Copy the Name
+
+						//Are there any loops defined?
+						if(!ExpBlockTrialsDomNodeLst.at(i).firstChildElement(LOOPS_TAG).isNull())
+						{
+							if(ExpBlockTrialsDomNodeLst.at(i).firstChildElement(LOOPS_TAG).hasChildNodes())
+							{
+								int nTempLoopID = 0;
+								QString sTempLoopName = "";
+								int nTempLoopNumber = 0;
+								int nTempLoopCount = 0;
+								int nTempLoopTargetBlockID = 0;
+								QDomElement tmpLoopElementParams;
+								bool bLoopParseResult = true;
+
+								tmpElement = ExpBlockTrialsDomNodeLst.at(i).firstChildElement(LOOPS_TAG).firstChildElement(LOOP_TAG);
+								while (!tmpElement.isNull()) 
+								{
+									if(tmpElement.hasAttribute(ID_TAG))
+									{
+										if (tmpElement.tagName() == LOOP_TAG) 
+										{
+											bLoopParseResult = false;
+											nTempLoopID = tmpElement.attribute(ID_TAG,"").toInt();//Copy the LoopID
+											tmpLoopElementParams = tmpElement.firstChildElement(NAME_TAG);
+											if(!tmpLoopElementParams.isNull())//Is it defined?
+											{
+												sTempLoopName = tmpLoopElementParams.text();//Copy the LoopName
+												tmpLoopElementParams = tmpElement.firstChildElement(LOOP_NUMBER);
+												if(!tmpLoopElementParams.isNull())//Is it defined?
+												{
+													nTempLoopNumber = tmpLoopElementParams.text().toInt();//Copy the LoopNumber
+													tmpLoopElementParams = tmpElement.firstChildElement(LOOP_AMOUNT_TAG);
+													if(!tmpLoopElementParams.isNull())//Is it defined?
+													{
+														nTempLoopCount = tmpLoopElementParams.text().toInt();//Copy the LoopNumber
+														tmpLoopElementParams = tmpElement.firstChildElement(LOOP_TARGETBLOCKID_TAG);
+														if(!tmpLoopElementParams.isNull())//Is it defined?
+														{
+															nTempLoopTargetBlockID = tmpLoopElementParams.text().toInt();//Copy the LoopNumber
+															//tmpLoop = new cLoopStructure(nTempLoopID,nTempLoopNumber,nTempLoopTargetBlockID,sTempLoopName,nTempLoopCount);
+															bLoopParseResult = tmpBlock->insertLoop(&cLoopStructure(nTempLoopID,nTempLoopNumber,nTempLoopTargetBlockID,sTempLoopName,nTempLoopCount));//tmpLoop);
+														}
+													}
+												}
+											}
+										} 
+										if(bLoopParseResult == false)
+											qDebug() << __FUNCTION__ << "::Could not parse loop structure, false declared loop!";
+										tmpElement = tmpElement.nextSiblingElement();											
+									}
+								}
+							}
+						}
 						cExperimentBlockTrialStructure->insertBlock(tmpBlock);
 						bUpdateSucceeded = true;
 					}
@@ -2017,15 +2076,15 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 			cExperimentBlockTrialStructure->resetExperiment();
 			if(tmpBlock)
 				delete tmpBlock;
-			if(tmpLoop)
-				delete tmpLoop;
+			//if(tmpLoop)
+			//	delete tmpLoop;
 			return false;
 		}
 	}
 	if(tmpBlock)
 		delete tmpBlock;
-	if(tmpLoop)
-		delete tmpLoop;
+	//if(tmpLoop)
+		//delete tmpLoop;
 	return true;
 }
 

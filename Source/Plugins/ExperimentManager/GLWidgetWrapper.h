@@ -160,7 +160,7 @@ public slots:
 	bool setExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal);
 	
 protected:
-	bool checkForNextBlockTrial();
+	int checkForNextBlockTrial();
 	void setupLayout(QWidget* layoutWidget);
 	bool isDebugMode();
 	double getElapsedTrialTime() {return dElapsedTrialTime;};
@@ -188,6 +188,7 @@ private:
 	void init();
 	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
+	void fetchCurrentExperimentStructures();
 
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bFirstTriggerAfterUnlock;						//To detect the exact start of the experiment detected by the checkForNextBlockTrial() function.

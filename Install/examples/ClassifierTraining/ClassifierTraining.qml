@@ -1,5 +1,6 @@
 import QtQuick 1.0
-import StimulGL_QMLExtensions  1.0 as MyStimulGLExtensions // import types from the plugin
+import StimulGL_QMLExtensions 1.1 as MyStimulGLExtensions // import types from the plugin
+//import StimulGLExtensions 1.1 as MyStimulGLExtensions
 
 Rectangle 
 {

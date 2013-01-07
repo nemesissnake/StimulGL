@@ -149,7 +149,7 @@ bool cBlockStructure::insertLoop(cLoopStructure *cLoop)
 {
 	if(isUnusedLoopID(cLoop->getLoopID()))
 	{
-		pSharedData->lLoops.append(*cLoop);
+		pSharedData->lLoops.append(cLoopStructure(*cLoop));
 		return true;
 	}
 	return false;
@@ -265,10 +265,18 @@ cLoopStructure::cLoopStructure()
 {
 	currentScriptEngine = NULL;
 	this->Initialize();
+	sLoopName = "Loop(ID=" + QString::number(nLoopID) + ",Number=" + QString::number(nLoopNumber) + ")";
 }
 
 cLoopStructure::cLoopStructure(const cLoopStructure& other)
 {
+	currentScriptEngine = other.currentScriptEngine;
+	nLoopID = other.nLoopID;
+	nLoopNumber = other.nLoopNumber;
+	sLoopName = other.sLoopName;
+	nNrOfLoops = other.nNrOfLoops;
+	nTargetBlockID = other.nTargetBlockID;
+	nLoopCounter = other.nLoopCounter;
 }
 
 bool cLoopStructure::Initialize()
@@ -276,15 +284,15 @@ bool cLoopStructure::Initialize()
 	nLoopID = 0;
 	nLoopNumber = 0;
 	nLoopCounter = LCE_UNUSED;
-	sLoopName = "Loop(ID=" + QString::number(nLoopID) + ",Number=" + QString::number(nLoopNumber) + ")";
 	nNrOfLoops = RepeatAmount::RA_ZERO;
 	nTargetBlockID = RepeatAmount::RA_UNDEFINED;
 	return true;
 }
 
-cLoopStructure::cLoopStructure(const int &LoopID,const int &LoopNumber,const QString &LoopName,const int &NumberOfLoops) : nLoopID(LoopID), nLoopNumber(LoopNumber), sLoopName(LoopName), nNrOfLoops(NumberOfLoops)
+cLoopStructure::cLoopStructure(const int &LoopID,const int &LoopNumber,const int &LoopTargetBlockID,const QString &LoopName,const int &NumberOfLoops) : nLoopID(LoopID), nLoopNumber(LoopNumber), nTargetBlockID(LoopTargetBlockID), sLoopName(LoopName), nNrOfLoops(NumberOfLoops)
 {
 	currentScriptEngine = NULL;
+	nLoopCounter = LCE_UNUSED;
 	if(sLoopName == "")
 		sLoopName = "Loop(ID=" + QString::number(nLoopID) + ",Number=" + QString::number(nLoopNumber) + ")";
 };

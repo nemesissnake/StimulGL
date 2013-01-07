@@ -197,7 +197,7 @@ public slots:
 	QString getExperimentName();
 	//QObject* getExperimentStructure();
 	cExperimentStructure *getExperimentStructure();
-	void showExperimentGraphEditor(cExperimentStructure *ExpStruct = NULL);
+	bool showExperimentGraphEditor(cExperimentStructure *ExpStruct = NULL);
 
 private:
 	void DefaultConstruct();
