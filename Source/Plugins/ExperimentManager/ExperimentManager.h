@@ -205,6 +205,8 @@ private:
 	void initializeDataLogger();
 	void RegisterMetaTypes();
 	bool invokeExperimentObjectsSlots(const QString &sSlotName);
+	bool prePassiveParseExperiment();
+	bool createExperimentStructure();
 	bool configureExperiment();
 	bool createExperimentObjects();
 	bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst);

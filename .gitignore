@@ -56,7 +56,6 @@ Source/Plugins/ParallelPortDevice/documents/~$*.doc
 Source/Plugins/USBHIDDevice/documents/~$*.doc
 Source/Plugins/USBHIDDevice/documents/~*.tmp
 InstallJammer/output/*.*
-Install/*
 !Install/examples
 !Install/apis
 Source/QmlExtensions/Plugins/DefaultPlugin/DefaultPlugin.sdf
@@ -65,3 +64,4 @@ Source/QmlExtensions/Plugins/DefaultPlugin/plugins.sdf
 output
 Publish/*.lnk
 *.h
+Install/qml/plugins

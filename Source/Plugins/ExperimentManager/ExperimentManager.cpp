@@ -652,9 +652,6 @@ bool ExperimentManager::runExperiment()
  *
  *  The current Experiment in memory is started if/after it has successfully loaded.
  */
-	if (!validateExperiment())
-		return false;
-	
 #ifdef Q_OS_WIN
 	//bool ret = 
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
@@ -663,18 +660,18 @@ bool ExperimentManager::runExperiment()
 	// QThread::TimeCriticalPriority);
 #endif
 
-	if (!configureExperiment())
-	{
-		changeCurrentExperimentState(ExperimentManager_Loaded);
-		return false;
-	}	
-
-	if (!createExperimentObjects())
+	if(!prePassiveParseExperiment())
 	{
 		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}
 
+	if(!createExperimentObjects())
+	{
+		changeCurrentExperimentState(ExperimentManager_Loaded);
+		return false;
+	}
+	
 	if(!connectExperimentObjects())
 	{
 		changeCurrentExperimentState(ExperimentManager_Loaded);
@@ -1023,6 +1020,55 @@ bool ExperimentManager::startExperimentObjects(bool bRunFullScreen)
 	return bRetVal;
 }
 
+bool ExperimentManager::prePassiveParseExperiment()
+{
+	if (!validateExperiment())
+		return false;
+
+	if (!configureExperiment())
+	{
+		changeCurrentExperimentState(ExperimentManager_Loaded);
+		return false;
+	}	
+
+	if (!createExperimentStructure())
+	{
+		changeCurrentExperimentState(ExperimentManager_Loaded);
+		return false;
+	}
+	return true;
+}
+
+bool ExperimentManager::createExperimentStructure()
+{
+	if (!currentExperimentTree)
+	{
+		qDebug() << __FUNCTION__ << "::No Experiment loaded!";
+		return false;
+	}
+	QStringList strList;
+	strList.clear();
+	strList.append(ROOT_TAG);
+	strList.append(ACTIONS_TAG);
+	strList.append(BLOCKTRIALS_TAG);
+	strList.append(BLOCK_TAG);
+	if (currentExperimentTree->getDocumentElements(strList,ExperimentBlockTrialsDomNodeList) >= 0)
+	{
+		if(createExperimentStructureFromDomNodeList(ExperimentBlockTrialsDomNodeList))
+		{
+			if(cExperimentBlockTrialStructure->prepareExperiment() == false)
+				qDebug() << __FUNCTION__ << "::Could not prepare Experiment Structure!";
+			else
+				return true;
+		}
+		else
+		{
+			qDebug() << __FUNCTION__ << "::Could not parse Experiment Dom Node List!";
+		}
+	}
+	return false;
+}
+
 bool ExperimentManager::configureExperiment()
 {
 	if (!currentExperimentTree)
@@ -1140,7 +1186,10 @@ bool ExperimentManager::showExperimentGraphEditor(cExperimentStructure *ExpStruc
 	{
 		if(cExperimentBlockTrialStructure == NULL)
 		{
-			if (loadExperiment("",false,true) == false)
+			//if(loadExperiment("",false,true) == false)
+			//	return false;
+
+			if (!prePassiveParseExperiment())
 				return false;
 		}
 		ExpStruct = cExperimentBlockTrialStructure;
@@ -2109,27 +2158,6 @@ bool ExperimentManager::createExperimentObjects()
 			QDomNode tmpNode;
 			QDomElement tmpElement;
 			QString tmpString;
-
-			if (nNrOfObjects>0)
-			{
-				strList.clear();
-				strList.append(ROOT_TAG);
-				strList.append(ACTIONS_TAG);
-				strList.append(BLOCKTRIALS_TAG);
-				strList.append(BLOCK_TAG);
-				if (currentExperimentTree->getDocumentElements(strList,ExperimentBlockTrialsDomNodeList) >= 0)
-				{
-					if(createExperimentStructureFromDomNodeList(ExperimentBlockTrialsDomNodeList))
-					{
-						if(cExperimentBlockTrialStructure->prepareExperiment() == false)
-							qDebug() << __FUNCTION__ << "::Could not prepare Experiment Structure!";
-					}
-					else
-					{
-						qDebug() << __FUNCTION__ << "::Could not parse Experiment Dom Node List!";
-					}
-				}
-			}
 			for(int i=0;i<nNrOfObjects;i++)
 			{
 				tmpNode = ExperimentObjectDomNodeList.at(i);
