@@ -26,8 +26,9 @@ void QDefaultQmlPlugin::registerTypes(const char *uri)
 	//see --> http://doc.qt.nokia.com/4.7-snapshot/qml-extending.html#qml-type-versioning !!
 
 	Q_ASSERT(uri == QLatin1String(DEFAULT_STIMULGL_PLUGIN_QML_NAME));
-	qmlRegisterType<TimeModel,TIMEMODEL_VERSION_STRING_REVISION>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, TIMEMODEL_TYPE_QML_NAME);
-	qmlRegisterType<PhononPlayer,PHONONPLAYER_VERSION_STRING_REVISION>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, PHONONPLAYER_TYPE_QML_NAME);
+	int nTypeID=-1;
+	nTypeID = qmlRegisterType<TimeModel,TIMEMODEL_VERSION_STRING_REVISION>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, TIMEMODEL_TYPE_QML_NAME);
+	nTypeID = qmlRegisterType<PhononPlayer,PHONONPLAYER_VERSION_STRING_REVISION>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, PHONONPLAYER_TYPE_QML_NAME);
 }
 
 Q_EXPORT_PLUGIN2(qmlstimulgldefaultplugin, QDefaultQmlPlugin);//qmlqtimeexampleplugin

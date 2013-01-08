@@ -435,7 +435,6 @@ bool InpOut32::IsPortInput(short nBaseAddress)
 	//you must set bit seven and this function would be incorrect
 	short nControlPortValue;
 	nControlPortValue = ControlPortRead(nBaseAddress);
-	//1 = input
 	if (BitRead(nControlPortValue, 5) == 1)
 	{ IsPortInputResult = true;	}
 	return IsPortInputResult;

@@ -29,7 +29,6 @@
  * \defgroup RetinoUniversalParamDefs Retinotopic (Universal) parameter Names
  * @{
  */
-#define GLWWRAP_WIDGET_STIMULI_REFRESHRATE					"stimulirefreshrate"			/*!< "stimulirefreshrate" */ 
 #define RETINOMAP_WIDGET_PATTERN_POLARANGLE					"polarangle"					/*!< "polarangle" */
 #define RETINOMAP_WIDGET_PATTERN_ECCENTRICITY				"eccentricity"					/*!< "eccentricity" */
 #define RETINOMAP_WIDGET_PATTERN_MOVINGBAR					"movingbar"						/*!< "movingbar" */
@@ -134,11 +133,11 @@ public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool startObject();
 	bool initObject();
-	bool setObjectConfiguration(QObject *pExpConfStruct = NULL);//ExperimentConfiguration *pExpConfStruct = NULL);
 	bool setObjectID(int nObjID);
 	bool initObjectBlockTrial();
 	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
 	bool installCustomScriptHandlerFunction(QString FuncName);
+	bool setExperimentManager(ExperimentManager *expManager);
 
 private:
 	void initialize();
@@ -168,15 +167,14 @@ private:
 	QColor fixationColor;						//The color of the fixation dot/cross
 	int fixationSize;							//The width of the fixation dot/cross
 	bool showFixationPoint;						//Should we show an fixation point?
-	bool outputTriggerFrame;					//Defines whether we should output(write to a png file) the first frame
+	bool outputTriggerFrame;					//Defines whether we should output(write to a *.png file) the first frame
 	bool discreteTriggerSteps;					//Defines whether the stimuli should run smooth or in discrete steps according to each trigger received
 	bool randomizeTriggerSteps;					//Defines whether the stimuli should randomize after each trigger received
 	bool antiAliasing;							//Defines whether the anti-aliasing filter should be used for painting to the screen
 	int lastTriggerNumber;						//To keep track of the last trigger number
 	int emptyTriggerSteps;						//Defines the number of Trigger steps in which no stimuli should be presented
 	bool bNoChangesSinceLastFrame;
-	ExperimentSnapshotStructure expSnapshot;
-	ExperimentBlockTrialStructure strcExperimentBlockTrialsCopy;
+	ExperimentManager *experimentManager;
 
 	QColor movingDotsColor;
 	QColor cCheckerColor1;
@@ -247,12 +245,11 @@ private:
 	//RetinoMapOutputFormat retinoOutputFormat;
 	QString retinoOutputFormat;
 	QImage mirrorImage;
-	QPixmap *StimulusResultImageFrame;
-	QPixmap *StimulusActivationMap;
-	QPainter *activationPainter;
-	QPainter *stimuliPainter;
-	QPainter *imgPainter;
-	ExperimentConfiguration *currExpConfStruct;
+	QPixmap StimulusResultImageFrame;
+	QPixmap StimulusActivationMap;
+	QPainter activationPainter;
+	QPainter stimuliPainter;
+	QPainter imgPainter;
 	RandomGenerator *randStimStateGenerator;		 //To hold the Stimuli Trigger Step
 	RandomGenerator *randEmptyStimGenerator;		 //To hold the Empty Block Trials
 	RandomGenerator *previousRandEmptyStimGenerator; //To hold the processed Empty Block Trials

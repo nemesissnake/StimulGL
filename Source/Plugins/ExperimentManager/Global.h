@@ -71,82 +71,11 @@ namespace ExperimentManagerNameSpace
 		int build;
 	};
 
-	typedef struct strcExperimentConfiguration
-	{
-		int nExperimentID;
-		//int nExperimentNumber;
-		QString nExperimentName;
-		bool bDebugMode;
-		ExperimentManager *pExperimentManager;
-	} ExperimentConfiguration;
-
 	typedef struct strcExperimentSubObjectStateHistory
 	{
 		QList<ExperimentManagerNameSpace::ExperimentSubObjectState> nState;
 		QList<QString> sDateTimeStamp;
 	} ExperimentSubObjectStateHistory;
-
-	typedef struct strcTrialStructure
-	{
-		int nTrialID;
-		int nTrialNumber;
-		//QString nBlockName;
-		int nNrOfInternalTriggers;
-		int nNrOfExternalSubTriggers;//Normally this is 1 which means that each ExternalSubTrigger is valid for 1 InternalTrigger, eg 3 means that only after 3 ExternalSubTriggers 1 InternalTriggers is processed!
-		//RandomGenerator *randEmptyStimGenerator;//This can hold some trial specific Information that can also be randomized
-	} TrialStructure;
-
-	typedef struct strcBlockTrialStructure
-	{
-		int nBlockID;
-		int nBlockNumber;
-		QString nBlockName;
-		int nNrOfTrials;
-		QList<TrialStructure> lTrialStructure;
-	} BlockTrialStructure;
-
-	typedef struct strcExperimentBlockTrialStructure
-	{
-		//int nExperimentID??
-		//int nExperimentName??
-		int nNrOfBlocks;
-		QList<BlockTrialStructure> lBlockTrialStructure;
-	} ExperimentBlockTrialStructure;
-
-	typedef struct strcExperimentSnapshotStructure
-	{
-		int currExpBlockTrialFrame;
-		int currExpExternalTrigger;			//The current experiment external trigger
-		int currExpInternalTrigger;			//The current experiment internal trigger
-		int currExpBlockTrialTrigger;		//This is different!! It is now the current trigger within a Block Trial
-		int currExpTrial;					//The current experiment trial within the block 	
-		int currExpBlock;					//The current experiment block
-		int currExpBlockTrialInternalTriggerAmount;
-		double elapsedTrialTime;
-		//int currExpBlockTrialCycle;--> inside widget
-	} ExperimentSnapshotStructure;
-
-	//The following structure looks like the ExperimentSnapshotStructure, but this structure should NOT be used internally by the Experiment Manager but only by the script context!
-	//It's sole purpose is to support an easy way to automatically step trough (and buffer) the Experiment Structure just before a new ExternalTriggerIncremented() signal is emitted,
-	//It Allows the script then to fetch the correct structure using the getExperimentStructure() slot!
-	/*! \struct strcScriptExperimentStructure
-	 * A structure for the Experiment Structure definition that can be used within the script context.
-	 */
-	typedef struct strcScriptExperimentStructure
-	{
-		int currExpAbsExternalTrigger;				//!< The current absolute experiment external trigger
-		int currExpAbsInternalTrigger;				//!< The current absolute experiment internal trigger
-		int currExpBlockTrialRelInternalTrigger;	//!< The current relative (within a Block Trial) experiment internal trigger
-		int currExpTrial;							//!< The current experiment trial within the current block 	
-		int currExpBlock;							//!< The current experiment block
-	} ScriptExperimentStructure;
-
-	typedef struct strcExperimentSnapshotFullStructure
-	{
-		ExperimentSnapshotStructure parentStruct;
-		int nTotalProcessedExperimentTrials;		//The total number of trials processed within experiment, might be that this Trial is not fully processed
-		int nNextThresholdTriggerCount;				//When we should switch to the next block
-	} ExperimentSnapshotFullStructure;
 
 	/*! \struct strcParsedParameterDefinition
 	 * A structure for the Experiment Manager parameter definitions.
@@ -184,8 +113,10 @@ namespace ExperimentManagerNameSpace
 	#define FUNC_STARTOBJECT_FULL					FUNC_STARTOBJECT "()"
 	#define FUNC_STOPOBJECT							"stopObject"
 	#define FUNC_STOPOBJECT_FULL					FUNC_STOPOBJECT "()"
-	#define FUNC_SETOBJECTCONFIGURATION				"setObjectConfiguration"
-	#define FUNC_SETOBJECTCONFIGURATION_FULL		FUNC_SETOBJECTCONFIGURATION "(QObject *)"
+	#define FUNC_SETEXPERIMENTMANAGER				"setExperimentManager"
+	#define FUNC_SETEXPERIMENTMANAGER_FULL			FUNC_SETEXPERIMENTMANAGER "(ExperimentManager *)" 
+	//#define FUNC_SETOBJECTCONFIGURATION				"setObjectConfiguration"
+	//#define FUNC_SETOBJECTCONFIGURATION_FULL		FUNC_SETOBJECTCONFIGURATION "(QObject *)"
 	#define FUNC_INITOBJECTBLOCKTRIAL				"initObjectBlockTrial"
 	#define FUNC_INITOBJECTBLOCKTRIAL_FULL			FUNC_INITOBJECTBLOCKTRIAL "()"
 	#define FUNC_MAKETHISAVAILABLEINSCRIPT			"makeThisAvailableInScript"
@@ -194,15 +125,15 @@ namespace ExperimentManagerNameSpace
 	#define SIGNAL_USERCLOSE_FULL					"UserWantsToClose(void)"
 	#define SIGNAL_OBJECTSTOP_FULL					"ObjectShouldStop(void)"
 	#define FUNC_OBJECTSTATECHANGED_FULL			"ObjectStateHasChanged(ExperimentSubObjectState)"
-	#define FUNC_SETBLOCKTRIALDOMNODELIST			"setBlockTrialDomNodeList"
-	#define FUNC_SETBLOCKTRIALDOMNODELIST_FULL		FUNC_SETBLOCKTRIALDOMNODELIST "(QDomNodeList*)"
+	//#define FUNC_SETBLOCKTRIALDOMNODELIST			"setBlockTrialDomNodeList"
+	//#define FUNC_SETBLOCKTRIALDOMNODELIST_FULL	FUNC_SETBLOCKTRIALDOMNODELIST "(QDomNodeList*)"
 
 	#define FUNC_SETMETAOBJECT						"setExperimentMetaObject"
 	#define FUNC_SETMETAOBJECT_FULL					FUNC_SETMETAOBJECT "()"
 	#define FUNC_SETEXPERIMENTOBJECTID				"setExperimentObjectID"
 	#define FUNC_SETEXPERIMENTOBJECTID_FULL			FUNC_SETEXPERIMENTOBJECTID "(int)"
-	#define FUNC_SETEXPERIMENTCONFIGURATION			"setExperimentConfiguration"
-	#define FUNC_SETEXPERIMENTCONFIGURATION_FULL	FUNC_SETEXPERIMENTCONFIGURATION "(ExperimentConfiguration*)"
+	//#define FUNC_SETEXPERIMENTCONFIGURATION		"setExperimentConfiguration"
+	//#define FUNC_SETEXPERIMENTCONFIGURATION_FULL	FUNC_SETEXPERIMENTCONFIGURATION "(ExperimentConfiguration*)"
 	#define FUNC_OBJECT_INIT						"initExperimentObject"
 	#define FUNC_OBJECT_START						"startExperimentObject"
 	#define FUNC_OBJECT_STOP						"stopExperimentObject"
@@ -213,6 +144,10 @@ namespace ExperimentManagerNameSpace
 	#define RANDOMGENERATOR_NAME					"RandomGenerator"
 	#define IMAGEPROCESSOR_NAME						"ImageProcessor"
 	#define PRTFORMATMANAGER_NAME					"PRTFormatManager"
+	#define CEXPERIMENTSTRUCTURE_NAME				"cExperimentStructure"
+	#define CEXPERIMENTSTRUCTURESTATE_NAME			"cExperimentStructureState"
+	#define CBLOCKSTRUCTURE_NAME					"cBlockStructure"
+	#define CLOOPSTRUCTURE_NAME						"cLoopStructure"
 	#define QMLWIDGET_NAME							"qmlWidget"
 	#define EXPERIMENTSTRUCTURE_NAME				"ExperimentStructure"
 	#define EXPERIMENTMANAGER_NAME					"ExperimentManager"
@@ -231,14 +166,19 @@ namespace ExperimentManagerNameSpace
 	#define OBJECT_TAG						"object"
 	#define DEFINES_TAG						"defines"
 	#define ACTIONS_TAG						"actions"
+	#define LOOPS_TAG						"loops"
+	#define LOOP_TAG						"loop"
+	#define LOOP_NUMBER						"loop_number"	
+	#define LOOP_AMOUNT_TAG					"nr_of_loops"
+	#define LOOP_TARGETBLOCKID_TAG			"target_block"
 	#define BLOCKTRIALS_TAG					"blocks"
 	#define BLOCK_TAG						"block"
 	#define PARAMETER_TAG					"parameter"
 	#define PARAMETERS_TAG					"parameters"
 	#define BLOCKNUMBER_TAG					"block_number"
 	#define TRIALAMOUNT_TAG					"nr_of_trials"
-	#define TRIGGERAMOUNT_TAG				"nr_of_internal_triggers"
-	#define SUBTRIGGERAMOUNT_TAG			"nr_of_external_triggers"
+	#define INTERNALTRIGGERAMOUNT_TAG		"nr_of_internal_triggers"
+	#define EXTERNALTRIGGERAMOUNT_TAG		"nr_of_external_triggers"
 	#define DECLARATIONS_TAG				"declarations"
 	#define CONNECTIONS_TAG					"connections"
 	#define INITIALIZATIONS_TAG				"initializations"

@@ -22,7 +22,6 @@
 #include <QGraphicsRectItem>
 #include <QtCore/qmath.h>
 #include <QFile>
-#include "ExperimentManager.h"
 
 Q_DECLARE_METATYPE(QPixmap*)
 Q_DECLARE_METATYPE(QPainter*)
@@ -51,31 +50,6 @@ RetinoMap_glwidget::~RetinoMap_glwidget()
 	{
 		delete customScriptHandlerFunction;
 		customScriptHandlerFunction = NULL;
-	}
-	if (StimulusResultImageFrame)
-	{
-		delete StimulusResultImageFrame;
-		StimulusResultImageFrame = NULL;
-	}
-	if (StimulusActivationMap)
-	{
-		delete StimulusActivationMap;
-		StimulusActivationMap = NULL;
-	}
-	if (activationPainter)
-	{
-		delete activationPainter;
-		activationPainter = NULL;
-	}
-	if (stimuliPainter)
-	{
-		delete stimuliPainter;
-		stimuliPainter = NULL;
-	}
-	if (imgPainter)
-	{
-		delete imgPainter;
-		imgPainter = NULL;
 	}
 	if (randStimStateGenerator)
 	{
@@ -111,18 +85,7 @@ bool RetinoMap_glwidget::makeThisAvailableInScript(QString strObjectScriptName, 
 void RetinoMap_glwidget::initialize()
 {
 	//Place your custom initialization code here:
-	
-	//setVerticalSyncSwap();
-	//Default values if none defined.
-	expSnapshot.currExpBlock = 0;
-	expSnapshot.currExpBlockTrialFrame = 0;
-	expSnapshot.currExpBlockTrialTrigger = 0;
-	expSnapshot.currExpBlockTrialInternalTriggerAmount = 0;
-	expSnapshot.currExpTrial = 0;
-	expSnapshot.currExpInternalTrigger = 0;
-	expSnapshot.currExpExternalTrigger = 0;
-	expSnapshot.elapsedTrialTime = 0;
-
+	experimentManager = NULL;
 	bNoChangesSinceLastFrame = false;
 	nRetinoID = -1;
 	rectScreenRes = getScreenResolution();
@@ -131,12 +94,6 @@ void RetinoMap_glwidget::initialize()
 	flickrSwitch = 0;
 	textContent = "";
 	textContent = "";
-	StimulusResultImageFrame = NULL;
-	StimulusActivationMap = NULL;
-	activationPainter = NULL;
-	stimuliPainter = NULL;
-	imgPainter = NULL;
-	currExpConfStruct = NULL;
 	randStimStateGenerator = NULL;
 	randEmptyStimGenerator = NULL;
 	previousRandEmptyStimGenerator = NULL;
@@ -158,7 +115,6 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 	if (bInit)
 	{	
 		QString tmpString = "";
-		//getCurrentExperimentProgressSnapshot(&expSnapshot);
 		//refreshRate = 0;
 		//insertExpObjectBlockParameter(nRetinoID,GLWWRAP_WIDGET_DISPLAY_REFRESHRATE,QString::number(refreshRate)); \\Already taking care of in GLWidgetWrapperObject
 		polarWedgeSpan = 22.5;
@@ -216,8 +172,24 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		stimWidthPixelAmount = stimHeigthPixelAmount;
 		insertExpObjectParameter(nRetinoID,GLWIDGET_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
 		cycleTriggerAmount = 1;
-		if(getCurrentExpBlockTrialInternalTriggerAmount(tmpInteger))
-			cycleTriggerAmount = tmpInteger;
+		if(experimentManager)
+		{
+			//cExperimentStructure tmpExpStructImplicitCopy = cExperimentStructure(*experimentManager->getExperimentStructure());//Creates an implicit shared safe copy
+			bool bHasCurrentBlock = false;
+			cBlockStructure tmpBlock = experimentManager->getExperimentStructure()->getCurrentBlock(bHasCurrentBlock);
+			//cBlockStructure tmpBlock = tmpExpStructImplicitCopy.getCurrentBlock(bHasCurrentBlock);
+			//tmpExpStructImplicitCopy.setExperimentName("Safe Copy");
+			//QString tmpString = tmpExpStructImplicitCopy.getExperimentName();
+			//tmpString = tmpBlock.getBlockName();
+			//tmpBlock.setBlockName("ff");
+			//tmpString = tmpBlock.getBlockName();
+			if(bHasCurrentBlock)
+			{
+				tmpInteger = tmpBlock.getNumberOfInternalTriggers();
+				if(tmpInteger > 0)
+					cycleTriggerAmount = tmpInteger;
+			}
+		}
 		insertExpObjectParameter(nRetinoID,RETINOMAP_WIDGET_CYCLE_TRIGGER_AMOUNT,cycleTriggerAmount);
 		flickrSpeedFreq = 7.5;//5 times per second
 		insertExpObjectParameter(nRetinoID,RETINOMAP_WIDGET_FLICKRSPEED_HZ,flickrSpeedFreq);
@@ -301,8 +273,13 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		} 
 		else
 		{
-			if(getCurrentExpBlockTrialInternalTriggerAmount(tmpInteger))
-				cycleTriggerAmount = tmpInteger;
+			if(experimentManager)//->getCurrExperimentState()
+			{
+				bool bHasCurrentBlock = false;
+				cBlockStructure tmpBlock = experimentManager->getExperimentStructure()->getCurrentBlock(bHasCurrentBlock);
+				if(bHasCurrentBlock)
+					cycleTriggerAmount = tmpBlock.getNumberOfInternalTriggers();
+			}
 		}
 
 		flickrSpeedFreq = getExpObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_FLICKRSPEED_HZ,QString::number(flickrSpeedFreq)).sValue.toFloat();
@@ -429,7 +406,6 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 			{
 				movingDotsHemiFieldHeight = pParDef.sValue.toInt();
 			}
-
 			initializeMovingDotsStructures();
 		}
 		else if(currentExpType == RETINOMAP_WIDGET_PATTERN_FIXATION)
@@ -450,7 +426,7 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 
 bool RetinoMap_glwidget::initObject()
 {
-	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
+	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
 	parseExperimentObjectBlockParameters(true);
 	return true;
 }
@@ -462,12 +438,12 @@ bool RetinoMap_glwidget::startObject()
 	return true;
 }
 
-bool RetinoMap_glwidget::setObjectConfiguration(QObject *pExpConfStruct)//ExperimentConfiguration *pExpConfStruct)
-{
-	currExpConfStruct = reinterpret_cast<ExperimentConfiguration *>(pExpConfStruct);
-	//currExpConfStruct->pExperimentManager->getExperimentObjectBlockParameter()
-	return true;
-}
+//bool RetinoMap_glwidget::setObjectConfiguration(QObject *pExpConfStruct)//ExperimentConfiguration *pExpConfStruct)
+//{
+//	currExpConfStruct = reinterpret_cast<ExperimentConfiguration *>(pExpConfStruct);
+//	//experimentManager->getExperimentObjectBlockParameter()
+//	return true;
+//}
 
 bool RetinoMap_glwidget::setObjectID(int nObjID)
 {
@@ -480,13 +456,14 @@ bool RetinoMap_glwidget::initObjectBlockTrial()
 	parseExperimentObjectBlockParameters(false);
 	//Some variable initializations
 	flickrSwitch = 0;
-	StimulusResultImageFrame = new QPixmap(stimWidthPixelAmount,stimHeigthPixelAmount);
-	StimulusActivationMap = new QPixmap(stimWidthPixelAmount,stimHeigthPixelAmount);
+	StimulusResultImageFrame = QPixmap(stimWidthPixelAmount,stimHeigthPixelAmount);
+	StimulusResultImageFrame.fill();
+	StimulusActivationMap = StimulusResultImageFrame;
+
 	firstBlockTrialPaintFrame = true;	
 	currExpBlockTrialCycle = 0;
 	emptyTriggerStepCount = 0;
 	emptyTriggerLastIndex = -1;
-	//fLastTrialTimeProgress = 0.0f;
 	previousRandEmptyStimGenerator->clear();
 	//randStimStateGenerator->clear();
 	return true;
@@ -575,8 +552,21 @@ void RetinoMap_glwidget::initializeMovingDotsStructures()
 bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 {
 	if(isDebugMode())
-		currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","Starting to paint the object");
-	QPaintEvent *event = reinterpret_cast<QPaintEvent *>(paintEventObject);//qobject_cast<QPaintEvent *>(paintEventObject);
+		experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","Starting to paint the object");
+
+	bool bHasABlock = false;
+	cExperimentStructure tmpExpStr = cExperimentStructure(*experimentManager->getExperimentStructure());
+	int elapsedTrialTime = (int)getElapsedTrialTime();
+	int nExpBlockTrialFrame = getCurrentBlockTrialFrame();
+	strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
+	cBlockStructure tmpBlockStrc = tmpExpStr.getCurrentBlock(bHasABlock);
+	if(bHasABlock == false)
+	{
+		qDebug() << __FUNCTION__ << "::No current Block defined, exiting...!";
+		return false;
+	}
+
+	QPaintEvent *event = reinterpret_cast<QPaintEvent *>(paintEventObject);
 	GLWidgetPaintFlags currentPaintFlags = (GLWidgetPaintFlags)paintFlags;
 	bool bRenderStimuli = true;
 	QString tmpStr = "";
@@ -592,25 +582,24 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	{
 		bCreateActivationMap = (outputTriggerFrame) && (retinoOutputType==RETINOMAP_WIDGET_OUTPUTTYPE_MASK);
 	}
-	getCurrentExperimentProgressSnapshot(&expSnapshot);
-	int elapsedTrialTime = (int)expSnapshot.elapsedTrialTime;
-	if((elapsedTrialTime >= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1)))) &&(currentExpType != RETINOMAP_WIDGET_PATTERN_FIXATION))//If the TrialTime exceeds the maximum time for the current Block-Trial Time
-		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger+1))-1;
-	else if((elapsedTrialTime <= ((triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger)))) &&(currentExpType != RETINOMAP_WIDGET_PATTERN_FIXATION))//If the TrialTime is less than the minimum time for the current Block-Trial Time
-		elapsedTrialTime = (triggerDurationMsec * (expSnapshot.currExpBlockTrialTrigger))+1;
-	if (currExpBlockTrialCycle < (int)(expSnapshot.currExpBlockTrialTrigger/cycleTriggerAmount))
+
+	if((elapsedTrialTime >= ((triggerDurationMsec * (tmpExpStrState.CurrentBlock_InternalTrigger+1)))) &&(currentExpType != RETINOMAP_WIDGET_PATTERN_FIXATION))//If the TrialTime exceeds the maximum time for the current Block-Trial Time
+		elapsedTrialTime = (triggerDurationMsec * (tmpExpStrState.CurrentBlock_InternalTrigger+1))-1;
+	else if((elapsedTrialTime <= ((triggerDurationMsec * (tmpExpStrState.CurrentBlock_InternalTrigger)))) &&(currentExpType != RETINOMAP_WIDGET_PATTERN_FIXATION))//If the TrialTime is less than the minimum time for the current Block-Trial Time
+		elapsedTrialTime = (triggerDurationMsec * (tmpExpStrState.CurrentBlock_InternalTrigger))+1;
+	if (currExpBlockTrialCycle < (int)(tmpExpStrState.CurrentBlock_InternalTrigger/cycleTriggerAmount))
 	{
 		currExpBlockTrialCycle++;
 		nextNewCycleEntered = true;
 	}
-	if (expSnapshot.currExpBlockTrialFrame == 0)
+	if (nExpBlockTrialFrame == 0)
 	{
 		nextNewCycleEntered = true;
 		nextNewBlockEntered = true;
 		randStimStateGenerator->clear();
 	}
 	//if(isDebugMode())
-	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(0));//nPaintIndex++));
+	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(0));//nPaintIndex++));
 	if (currentExpType != RETINOMAP_WIDGET_PATTERN_FIXATION)
 	{
 		if (randEmptyStimGenerator->isEmpty() && (currExpBlockTrialCycle == 0))//Initialize the "Empty" random list
@@ -650,7 +639,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 
 			if ((emptyTriggerSteps > 0))
 			{
-				currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","EmptyRandomList Filled(Block:" + QString::number(expSnapshot.currExpBlock) + ", Trial:" + QString::number(expSnapshot.currExpTrial) + ")");
+				experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","EmptyRandomList Filled(BlockNumber:" + QString::number(tmpBlockStrc.getBlockNumber()) + ", TrialNumber:" + QString::number(tmpExpStrState.CurrentBlock_TrialNumber) + ")");
 				tmpStr = "";
 				for (j=0;j<cycleTriggerAmount;j++)
 				{
@@ -659,7 +648,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					else
 						tmpStr = tmpStr + QString(",") + randEmptyStimGenerator->at(j);
 				}
-				currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","EmptyRandomList(steps) = ",tmpStr);
+				experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","EmptyRandomList(steps) = ",tmpStr);
 				//if(isDebugMode())
 					//emit LogToOutputWindow("EmptyRandomList(steps) = " + tmpStr);
 			}
@@ -679,7 +668,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			}
 			randStimStateGenerator->randomizeList(RandomGenerator_RandomizePreservedIndexes,previousRandEmptyStimGenerator);
 
-			//currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","StimRandomList Filled(Block:" + QString::number(expSnapshot.currExpBlock) + ", Trial:" + QString::number(expSnapshot.currExpTrial) + ")");
+			//experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","StimRandomList Filled(Block:" + QString::number(expSnapshot.currExpBlock) + ", Trial:" + QString::number(expSnapshot.currExpTrial) + ")");
 			tmpStr = "";
 			for (j=0;j<cycleTriggerAmount;j++)
 			{
@@ -688,7 +677,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 				else
 					tmpStr = tmpStr + QString(",") + randStimStateGenerator->at(j);
 			}
-			currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","StimRandomList = ",tmpStr);
+			experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","StimRandomList = ",tmpStr);
 			//if(isDebugMode())
 				//emit LogToOutputWindow("StimRandomList = " + tmpStr);
 		}	
@@ -716,9 +705,9 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 				}
 				int nTrialIndex;
 				if (randomizeTriggerSteps)
-					nTrialIndex = randStimStateGenerator->at(expSnapshot.currExpBlockTrialTrigger%cycleTriggerAmount).toInt()%cycleTriggerAmount;
+					nTrialIndex = randStimStateGenerator->at(tmpExpStrState.CurrentBlock_InternalTrigger%cycleTriggerAmount).toInt()%cycleTriggerAmount;
 				else
-					nTrialIndex = expSnapshot.currExpBlockTrialTrigger%cycleTriggerAmount;
+					nTrialIndex = tmpExpStrState.CurrentBlock_InternalTrigger%cycleTriggerAmount;
 
 				//if ((currentExpType == RETINOMAP_WIDGET_PATTERN_MOVINGBAR) && (movingBarIncludeOppositeDirection) && ((nTrialIndex*2)>=cycleTriggerAmount))
 				//	fTrialTimeProgress = (float)(nTrialIndex-1) / numberOfSteps;
@@ -727,9 +716,8 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			}
 			else
 			{
-				fTrialTimeProgress = (float)expSnapshot.currExpBlockTrialTrigger / cycleTriggerAmount;
+				fTrialTimeProgress = (float)tmpExpStrState.CurrentBlock_InternalTrigger / cycleTriggerAmount;
 			}
-
 			//qDebug() << fTrialTimeProgress;
 		} 
 		else
@@ -737,7 +725,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			if (randomizeTriggerSteps)
 			{
 				float subElapsedTrialTime = elapsedTrialTime%(triggerDurationMsec);
-				float newElapsedTrialTime = (float)subElapsedTrialTime + (randStimStateGenerator->at(expSnapshot.currExpBlockTrialTrigger%cycleTriggerAmount).toFloat() * triggerDurationMsec);//(randStimStateGenerator->at(currExpBlockTrialTrigger).toFloat() * triggerDurationMsec);
+				float newElapsedTrialTime = (float)subElapsedTrialTime + (randStimStateGenerator->at(tmpExpStrState.CurrentBlock_InternalTrigger%cycleTriggerAmount).toFloat() * triggerDurationMsec);//(randStimStateGenerator->at(currExpBlockTrialTrigger).toFloat() * triggerDurationMsec);
 				fTrialTimeProgress = (float)newElapsedTrialTime / (cycleTriggerAmount * triggerDurationMsec);
 			}
 			else
@@ -751,9 +739,9 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		if (nextNewCycleEntered)
 			emptyTriggerStepCount = emptyTriggerSteps;
 
-		if   (  (  (emptyTriggerSteps >0)  &&  ((emptyTriggerStepCount>0)||(emptyTriggerLastIndex==expSnapshot.currExpBlockTrialTrigger)       )  )  )
+		if   (  (  (emptyTriggerSteps >0)  &&  ((emptyTriggerStepCount>0)||(emptyTriggerLastIndex==tmpExpStrState.CurrentBlock_InternalTrigger)       )  )  )
 		{
-			if (emptyTriggerLastIndex != expSnapshot.currExpBlockTrialTrigger) 
+			if (emptyTriggerLastIndex != tmpExpStrState.CurrentBlock_InternalTrigger) 
 			{
 				if(emptyTriggerStepCount>0)
 				{
@@ -763,19 +751,19 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 						{
 							int nSelectedBlockTrialStep;
 							//if (randomizeTriggerSteps)
-							//	nSelectedBlockTrial = randStimStateGenerator->at(expSnapshot.currExpBlockTrialTrigger%cycleTriggerAmount).toInt();
+							//	nSelectedBlockTrial = randStimStateGenerator->at(tmpExpStrState.CurrentBlock_InternalTrigger%cycleTriggerAmount).toInt();
 							//else
-							//	nSelectedBlockTrial = expSnapshot.currExpBlockTrialTrigger%(cycleTriggerAmount);
+							//	nSelectedBlockTrial = tmpExpStrState.CurrentBlock_InternalTrigger%(cycleTriggerAmount);
 
-							nSelectedBlockTrialStep = expSnapshot.currExpBlockTrialTrigger%cycleTriggerAmount;
+							nSelectedBlockTrialStep = tmpExpStrState.CurrentBlock_InternalTrigger%cycleTriggerAmount;
 
 							if (randEmptyStimGenerator->at(k).toInt()==nSelectedBlockTrialStep)
 							{
 								bRenderStimuli = false;
-								emptyTriggerLastIndex = expSnapshot.currExpBlockTrialTrigger;
+								emptyTriggerLastIndex = tmpExpStrState.CurrentBlock_InternalTrigger;
 								emptyTriggerStepCount--;
 								previousRandEmptyStimGenerator->append(randEmptyStimGenerator->takeAt(k));
-								currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("Removed a empty at (step=")+QString::number(nSelectedBlockTrialStep)+QString(", size=")+QString::number(randEmptyStimGenerator->count())+QString(")"),previousRandEmptyStimGenerator->last());
+								experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("Removed a empty at (step=")+QString::number(nSelectedBlockTrialStep)+QString(", size=")+QString::number(randEmptyStimGenerator->count())+QString(")"),previousRandEmptyStimGenerator->last());
 								if (previousRandEmptyStimGenerator->count() == cycleTriggerAmount)
 								{
 									previousRandEmptyStimGenerator->clear();
@@ -791,33 +779,27 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 				bRenderStimuli = false;
 			}
 		}
-		else if(emptyTriggerLastIndex==expSnapshot.currExpBlockTrialTrigger)//This one should not be shown, the trigger is still equal to the last one where it was empty
+		else if(emptyTriggerLastIndex==tmpExpStrState.CurrentBlock_InternalTrigger)//This one should not be shown, the trigger is still equal to the last one where it was empty
 		{
 			bRenderStimuli = false;
 		}
 	}
 
 	//if(isDebugMode())
-	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(1));
+	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(1));
 	//if(currentExpType != RETINOMAP_WIDGET_PATTERN_MOVINGDOTS)
-		StimulusResultImageFrame->fill(colorBackground);
+	StimulusResultImageFrame.fill(colorBackground);
 
-	if (imgPainter == NULL)
-		imgPainter = new QPainter(StimulusResultImageFrame);//Constructor automatically calls begin()
-	else
-		imgPainter->begin(StimulusResultImageFrame);
+	imgPainter.begin(&StimulusResultImageFrame);
 	if (bCreateActivationMap)
 	{
-		StimulusActivationMap->fill(blackColor);//The activation map should be first filled with 0's
-		if (activationPainter == NULL)
-			activationPainter = new QPainter(StimulusActivationMap);//Constructor automatically calls begin()
-		else
-			activationPainter->begin(StimulusActivationMap);//For the StimulusActivationMap
+		StimulusActivationMap.fill(blackColor);//The activation map should be first filled with 0's
+		activationPainter.begin(&StimulusActivationMap);//For the StimulusActivationMap
 	}
 	if (antiAliasing)
-		imgPainter->setRenderHint(QPainter::Antialiasing);
-	imgPainter->setPen(textPen);
-	imgPainter->setFont(textFont);
+		imgPainter.setRenderHint(QPainter::Antialiasing);
+	imgPainter.setPen(textPen);
+	imgPainter.setFont(textFont);
 	if(elapsedTrialTime >= flickrThreshold)//Can we already switch the flickr state?
 	{
 		if(flickrSwitch == 0)
@@ -827,11 +809,11 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		
 		flickrThreshold += (1000 / flickrSpeedFreq);//Calculate the next flickr threshold moment in time
 	}
-	int nStimFrameHeight = StimulusResultImageFrame->height();
-	int nStimFrameWidth = StimulusResultImageFrame->width();
+	int nStimFrameHeight = StimulusResultImageFrame.height();
+	int nStimFrameWidth = StimulusResultImageFrame.width();
 
 	//if(isDebugMode())
-	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(2));
+	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(2));
 
 	if (currentExpType == RETINOMAP_WIDGET_PATTERN_POLARANGLE)
 	{		
@@ -856,9 +838,9 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			}
 			if(bCreateActivationMap)
 			{
-				activationPainter->setPen(QPen(whiteColor,(nStimFrameHeight - gapDiameter) / 2.0f, style, flatCap));
+				activationPainter.setPen(QPen(whiteColor,(nStimFrameHeight - gapDiameter) / 2.0f, style, flatCap));
 				float fHalfWedgeLenght = (nStimFrameHeight - gapDiameter) / 2.0f;
-				activationPainter->drawArc(fHalfWedgeLenght/2, fHalfWedgeLenght/2, (nStimFrameHeight - (fHalfWedgeLenght)), (nStimFrameHeight - (fHalfWedgeLenght)), (startAngle * 16.0f), (polarWedgeSpan * 16.0f));
+				activationPainter.drawArc(fHalfWedgeLenght/2, fHalfWedgeLenght/2, (nStimFrameHeight - (fHalfWedgeLenght)), (nStimFrameHeight - (fHalfWedgeLenght)), (startAngle * 16.0f), (polarWedgeSpan * 16.0f));
 			}
 			for(int i=1; i<(polarWedgeNrRings+1);i++)
 			{
@@ -869,40 +851,40 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					{
 						if((k+i)%2==0)
 						{
-							imgPainter->setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
+							imgPainter.setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
 						}
 						else
 						{
-							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
+							imgPainter.setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
 					else
 					{
 						if((k+i)%2!=0)
 						{
-							imgPainter->setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
+							imgPainter.setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
 						}
 						else
 						{
-							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
+							imgPainter.setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
 					//if((i==1) || (i==5) || (i==10)) //(i%2)==0)
 					
 					if(k==0)//draw a full wide wedge
 					{
-						imgPainter->drawArc(currentXPoint, currentYPoint, currentSize, currentSize, currentStartAngle, wedgeSpanAngle*polarWedgeNrChecks);//Same as drawing an partial ellipse
+						imgPainter.drawArc(currentXPoint, currentYPoint, currentSize, currentSize, currentStartAngle, wedgeSpanAngle*polarWedgeNrChecks);//Same as drawing an partial ellipse
 					}					
 					else if (k%2!=0)
 					{
-						imgPainter->drawArc(currentXPoint, currentYPoint, currentSize, currentSize, currentStartAngle, wedgeSpanAngle);//Same as drawing an partial ellipse
+						imgPainter.drawArc(currentXPoint, currentYPoint, currentSize, currentSize, currentStartAngle, wedgeSpanAngle);//Same as drawing an partial ellipse
 					}
 					currentStartAngle = currentStartAngle + wedgeSpanAngle;
 				}
 				//if(isDebugMode() && (debugUsedTestSamples==debugTestSamples))
 				//{
-				//	imgPainter->setPen(QPen(QColor(255,0,0), 1, style, cap));
-				//	imgPainter->drawEllipse(currentXPoint, currentYPoint, currentSize, currentSize);
+				//	imgPainter.setPen(QPen(QColor(255,0,0), 1, style, cap));
+				//	imgPainter.drawEllipse(currentXPoint, currentYPoint, currentSize, currentSize);
 				//}
 
 				currentSize = currentSize - currentWedgeDiameter;//First subtract the first wedge diameter
@@ -919,15 +901,15 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			}
 		}
 		//if(isDebugMode())
-		//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(3));
+		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(3));
 		if(showFixationPoint) // show fix cross
 		{
-			imgPainter->setPen(QPen(fixationColor, fixationSize, style, roundCap));
-			imgPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+			imgPainter.setPen(QPen(fixationColor, fixationSize, style, roundCap));
+			imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			if(bCreateActivationMap)
 			{
-				activationPainter->setPen(QPen(whiteColor, fixationSize, style, roundCap));
-				activationPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+				activationPainter.setPen(QPen(whiteColor, fixationSize, style, roundCap));
+				activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			}
 		}
 	}
@@ -1000,9 +982,9 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			currentYPoint = (nStimFrameHeight - currentOuterCompleteRingDiameter + currentWedgeDiameter) / 2.0f;
 			if(bCreateActivationMap)
 			{
-				activationPainter->setPen(QPen(whiteColor, currentCompleteWedgeDiameter, style, flatCap));
+				activationPainter.setPen(QPen(whiteColor, currentCompleteWedgeDiameter, style, flatCap));
 				float fTemp = currentOuterCompleteRingDiameter - (currentWedgeDiameter*eccentricityNrRings);
-				activationPainter->drawEllipse((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp);			
+				activationPainter.drawEllipse((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp);			
 			}
 			for(int i=1;i<eccentricityNrRings+1;i++)
 			{
@@ -1013,47 +995,47 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					{
 						if((k+i)%2==0)
 						{
-							imgPainter->setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
+							imgPainter.setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
 						}
 						else
 						{
-							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
+							imgPainter.setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
 					else
 					{
 						if((k+i)%2!=0)
 						{
-							imgPainter->setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
+							imgPainter.setPen(QPen(cCheckerColor1, currentWedgeDiameter, style, flatCap));
 						}
 						else
 						{
-							imgPainter->setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
+							imgPainter.setPen(QPen(cCheckerColor2, currentWedgeDiameter, style, flatCap));
 						}
 					}
 					if(k==0)//first checker? 
 					{
 						if(i==1)//first ring?
 						{//draw a full complete ring
-							oldPen = imgPainter->pen();
-							imgPainter->setPen(QPen(cCheckerColor1, currentCompleteWedgeDiameter, style, flatCap));
+							oldPen = imgPainter.pen();
+							imgPainter.setPen(QPen(cCheckerColor1, currentCompleteWedgeDiameter, style, flatCap));
 							float fTemp = currentOuterCompleteRingDiameter - (currentWedgeDiameter*eccentricityNrRings);
-							//imgPainter->drawArc((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp, 0.0f, 5760.0f);
-							imgPainter->drawEllipse((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp);
-							imgPainter->setPen(oldPen);
+							//imgPainter.drawArc((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp, 0.0f, 5760.0f);
+							imgPainter.drawEllipse((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp);
+							imgPainter.setPen(oldPen);
 						}
-						imgPainter->drawEllipse(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter);
+						imgPainter.drawEllipse(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter);
 					}					
 					else if (k%2!=0)
 					{
-						imgPainter->drawArc(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, wedgeSpanAngle);
+						imgPainter.drawArc(currentXPoint, currentYPoint, currentOuterCompleteRingDiameter - currentWedgeDiameter, currentOuterCompleteRingDiameter - currentWedgeDiameter, startAngle, wedgeSpanAngle);
 					}
 					startAngle = startAngle + wedgeSpanAngle;
 				}
 				//if(isDebugMode() && (debugUsedTestSamples==debugTestSamples))
 				//{
-				//	imgPainter->setPen(QPen(QColor(255,0,0), 1, style, cap));
-				//	imgPainter->drawEllipse(currentXPoint, currentYPoint, currentSize, currentSize);//To draw this it takes about 2ms additional time!!
+				//	imgPainter.setPen(QPen(QColor(255,0,0), 1, style, cap));
+				//	imgPainter.drawEllipse(currentXPoint, currentYPoint, currentSize, currentSize);//To draw this it takes about 2ms additional time!!
 				//}
 				if(eccentricityDirection == -1)//Decrease ring diameter
 				{
@@ -1068,15 +1050,15 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			}		
 		}
 		//if(isDebugMode())
-		//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(3));
+		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(3));
 		if(showFixationPoint) // show fix cross
 		{
-			imgPainter->setPen(QPen(fixationColor, fixationSize, style, roundCap));
-			imgPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+			imgPainter.setPen(QPen(fixationColor, fixationSize, style, roundCap));
+			imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			if(bCreateActivationMap)
 			{
-				activationPainter->setPen(QPen(whiteColor, fixationSize, style, roundCap));
-				activationPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+				activationPainter.setPen(QPen(whiteColor, fixationSize, style, roundCap));
+				activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			}
 		}
 	}
@@ -1084,29 +1066,29 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	{
 		//if(showFixationPoint) // show fix cross
 		//{
-		//	imgPainter->setPen(QPen(fixationColor, fixationSize, style, roundCap));
-		//	imgPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+		//	imgPainter.setPen(QPen(fixationColor, fixationSize, style, roundCap));
+		//	imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 		//	if(bCreateActivationMap)
 		//	{				
-		//		activationPainter->setPen(QPen(whiteColor, fixationSize, style, roundCap));
-		//		activationPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+		//		activationPainter.setPen(QPen(whiteColor, fixationSize, style, roundCap));
+		//		activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 		//	}
 		//}
 		//if(isDebugMode() && (debugUsedTestSamples==debugTestSamples))
 		//{
-		//	imgPainter->setPen(QPen(QColor(255,0,0), 0, style, cap));
-		//	imgPainter->drawRect((nStimFrameWidth/2)-(nStimFrameWidth/2),(nStimFrameHeight/2)-(nStimFrameHeight/2),nStimFrameWidth,nStimFrameHeight);
+		//	imgPainter.setPen(QPen(QColor(255,0,0), 0, style, cap));
+		//	imgPainter.drawRect((nStimFrameWidth/2)-(nStimFrameWidth/2),(nStimFrameHeight/2)-(nStimFrameHeight/2),nStimFrameWidth,nStimFrameHeight);
 		//}
 		float fYOffset = 0.0f;
 		if (bRenderStimuli)
 		{
 			fStimulusDiameter = qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));//qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));
-			imgPainter->translate(nStimFrameWidth/2, nStimFrameHeight/2);
-			imgPainter->rotate(movingBarAngle);
+			imgPainter.translate(nStimFrameWidth/2, nStimFrameHeight/2);
+			imgPainter.rotate(movingBarAngle);
 			if(bCreateActivationMap)
 			{
-				activationPainter->translate(nStimFrameWidth/2, nStimFrameHeight/2);
-				activationPainter->rotate(movingBarAngle);
+				activationPainter.translate(nStimFrameWidth/2, nStimFrameHeight/2);
+				activationPainter.rotate(movingBarAngle);
 			}
 			currentSize = (movingBarCoverage * fStimulusDiameter)/(movingBarHeight*movingBarHeightCheckAmount);
 			if(movingBarDirection == -1)//Down->Up (When 0 <= movingBarAngle >= 180 degrees)
@@ -1135,39 +1117,39 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			}
 
 			//if(isDebugMode())
-			//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3a"));
-			imgPainter->translate(0,fYOffset);
+			//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3a"));
+			imgPainter.translate(0,fYOffset);
 			//if(isDebugMode())
-			//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3b"));
+			//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3b"));
 			if(bCreateActivationMap)
-				activationPainter->translate(0,fYOffset);
+				activationPainter.translate(0,fYOffset);
 			currentYPoint = (-1 * movingBarHeightCheckAmount * currentSize) / 2.0f;
 			movingBarWidthCheckAmount = ((int)(fStimulusDiameter/currentSize)+1);
 			if(bCreateActivationMap)
 			{
-				activationPainter->setPen(QPen(whiteColor, currentSize*movingBarHeightCheckAmount, style, flatCap));
-				activationPainter->drawLine(-fStimulusDiameter/2, -0.5 * currentSize, -fStimulusDiameter/2+(currentSize*movingBarWidthCheckAmount), -0.5 * currentSize);
+				activationPainter.setPen(QPen(whiteColor, currentSize*movingBarHeightCheckAmount, style, flatCap));
+				activationPainter.drawLine(-fStimulusDiameter/2, -0.5 * currentSize, -fStimulusDiameter/2+(currentSize*movingBarWidthCheckAmount), -0.5 * currentSize);
 			}
 			//if(isDebugMode())
-			//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3c"));
-			imgPainter->drawImage(-fStimulusDiameter/2,currentYPoint-(0.5 * currentSize),fractalFillCheckeredImage(currentSize*movingBarWidthCheckAmount,movingBarHeightCheckAmount * currentSize,currentSize,flickrSwitch));
+			//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3c"));
+			imgPainter.drawImage(-fStimulusDiameter/2,currentYPoint-(0.5 * currentSize),fractalFillCheckeredImage(currentSize*movingBarWidthCheckAmount,movingBarHeightCheckAmount * currentSize,currentSize,flickrSwitch));
 		}
 		//if(isDebugMode())
-		//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3d"));
+		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3d"));
 		if(showFixationPoint) // show fix cross
 		{
-			imgPainter->setPen(QPen(fixationColor, fixationSize, style, roundCap));
+			imgPainter.setPen(QPen(fixationColor, fixationSize, style, roundCap));
 			if (bRenderStimuli)
-				imgPainter->drawPoint(0.0f,-fYOffset);
+				imgPainter.drawPoint(0.0f,-fYOffset);
 			else
-				imgPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+				imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			if(bCreateActivationMap)
 			{				
-				activationPainter->setPen(QPen(whiteColor, fixationSize, style, roundCap));
+				activationPainter.setPen(QPen(whiteColor, fixationSize, style, roundCap));
 				if (bRenderStimuli)
-					activationPainter->drawPoint(0.0f,-fYOffset);
+					activationPainter.drawPoint(0.0f,-fYOffset);
 				else
-					activationPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+					activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			}
 		}
 	}
@@ -1175,7 +1157,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	{
 		if (bRenderStimuli)
 		{
-			imgPainter->setPen(QPen(movingDotsColor, movingDotsDotSize, style, roundCap));
+			imgPainter.setPen(QPen(movingDotsColor, movingDotsDotSize, style, roundCap));
 			//fTrialTimeProgress = fTrialTimeProgress;//(float)elapsedTrialTime / (cycleTriggerAmount * triggerDurationMsec);
 			//float fDiffTrialTimeProgress;
 			//float fMovCorrFactor;
@@ -1241,7 +1223,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					}
 				}
 			}
-			//StimulusResultImageFrame->fill(Qt::transparent);
+			//StimulusResultImageFrame.fill(Qt::transparent);
 			//#pragma omp parallel for --> doesn't work in the drawing routines!
 			for(int i=0; i<movingDotsNrOfDots; i++)
 			{
@@ -1249,64 +1231,64 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 				{
 					if (i==0)
 					{
-						imgPainter->save();
-						imgPainter->setPen(QPen(QColor(255,0,0), movingDotsDotSize, style, roundCap));
-						imgPainter->drawPoint(movingDots.Pos.at(i));
-						imgPainter->restore();
+						imgPainter.save();
+						imgPainter.setPen(QPen(QColor(255,0,0), movingDotsDotSize, style, roundCap));
+						imgPainter.drawPoint(movingDots.Pos.at(i));
+						imgPainter.restore();
 					} 
 					else
 					{
-						imgPainter->drawPoint(movingDots.Pos.at(i));
+						imgPainter.drawPoint(movingDots.Pos.at(i));
 					}
 
 				}
 				else
 				{
-					imgPainter->drawPoint(movingDots.Pos.at(i));
+					imgPainter.drawPoint(movingDots.Pos.at(i));
 				}
 
 								
 				//Draw the remaining parts of a dot (mirrored!)
 				if (movingDots.Pos.at(i).x()>=movingDotsFirstHemiVisibleArea.p2().x()-movingDotsDotSize)
-					imgPainter->drawPoint(movingDots.Pos.at(i).x() - movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
+					imgPainter.drawPoint(movingDots.Pos.at(i).x() - movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
 				if (movingDots.Pos.at(i).x()<=movingDotsFirstHemiVisibleArea.p1().x()+movingDotsDotSize)
-					imgPainter->drawPoint(movingDots.Pos.at(i).x() + movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
+					imgPainter.drawPoint(movingDots.Pos.at(i).x() + movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
 				if (movingDots.Pos.at(i).y()>=movingDotsFirstHemiVisibleArea.p2().y()-movingDotsDotSize)
-					imgPainter->drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() - movingDotsFirstHemiVisibleArea.dy());
+					imgPainter.drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() - movingDotsFirstHemiVisibleArea.dy());
 				if (movingDots.Pos.at(i).y()<=movingDotsFirstHemiVisibleArea.p1().y()+movingDotsDotSize)
-					imgPainter->drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() + movingDotsFirstHemiVisibleArea.dy());
+					imgPainter.drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() + movingDotsFirstHemiVisibleArea.dy());
 				if (i==movingDotsNrOfDots-1)
 				{
 					//Remove the dot-parts that are outside the first hemisphere
-					imgPainter->save();
-					imgPainter->setPen(QPen(colorBackground, movingDotsDotSize*2, style, flatCap));
-					imgPainter->drawLine(movingDotsFirstHemiVisibleArea.p2().x()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p1().y()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().x()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().y()+(2*movingDotsDotSize));//Right border
-					imgPainter->drawLine(movingDotsFirstHemiVisibleArea.p1().x()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().y()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().x()+(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().y()-movingDotsDotSize);//Top border				
-					imgPainter->drawLine(movingDotsFirstHemiVisibleArea.p1().x()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p1().y()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().x()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().y()+(2*movingDotsDotSize));//Left border				
-					imgPainter->drawLine(movingDotsFirstHemiVisibleArea.p1().x()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().y()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().x()+(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().y()+movingDotsDotSize);//Bottom border				
+					imgPainter.save();
+					imgPainter.setPen(QPen(colorBackground, movingDotsDotSize*2, style, flatCap));
+					imgPainter.drawLine(movingDotsFirstHemiVisibleArea.p2().x()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p1().y()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().x()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().y()+(2*movingDotsDotSize));//Right border
+					imgPainter.drawLine(movingDotsFirstHemiVisibleArea.p1().x()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().y()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().x()+(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().y()-movingDotsDotSize);//Top border				
+					imgPainter.drawLine(movingDotsFirstHemiVisibleArea.p1().x()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p1().y()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p1().x()-movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().y()+(2*movingDotsDotSize));//Left border				
+					imgPainter.drawLine(movingDotsFirstHemiVisibleArea.p1().x()-(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().y()+movingDotsDotSize,movingDotsFirstHemiVisibleArea.p2().x()+(2*movingDotsDotSize),movingDotsFirstHemiVisibleArea.p2().y()+movingDotsDotSize);//Bottom border				
 					
-					imgPainter->restore();
+					imgPainter.restore();
 				}
 				if(movingDotsHemifieldPos == RETINOMAP_WIDGET_POS_BOTH)
 				{
 					if (i==movingDotsNrOfDots-1)
 					{
-						mirrorImage = StimulusResultImageFrame->copy(movingDotsFirstHemiVisibleArea.p1().x(),movingDotsFirstHemiVisibleArea.p1().y(),movingDotsFirstHemiVisibleArea.dx(),movingDotsFirstHemiVisibleArea.dy()).toImage();
+						mirrorImage = StimulusResultImageFrame.copy(movingDotsFirstHemiVisibleArea.p1().x(),movingDotsFirstHemiVisibleArea.p1().y(),movingDotsFirstHemiVisibleArea.dx(),movingDotsFirstHemiVisibleArea.dy()).toImage();
 						//mirrorImage = mirrorImage.mirrored(true,false);
 						//QPixmap mirror( QPixmap::fromImage( mirrorImage ) );						
-						imgPainter->drawImage((stimWidthPixelAmount/2)+movingDotsPixelFromCenter,movingDotsFirstHemiVisibleArea.p1().y(),mirrorImage);//    10+movingDotsPixelFromCenter,0,mirrorImage);//movingDotsFirstHemiVisibleArea.p2().x()+
-						//imgPainter->save();
-						//imgPainter->setPen(Qt::NoPen);
-						//imgPainter->setBrush(tmpPXMirrorMap);
-						////imgPainter->setOpacity( 0.5 );
-						////imgPainter->translate((stimWidthPixelAmount/2)+movingDotsPixelFromCenter, 0 );
-						//imgPainter->translate(300,300);
-						//int nCurrCompMode = imgPainter->compositionMode();
-						//imgPainter->setCompositionMode(QPainter::CompositionMode_Plus);
-						//nCurrCompMode = imgPainter->compositionMode();
-						//imgPainter->drawRect(0,0,movingDotsFirstHemiVisibleArea.dx(),movingDotsFirstHemiVisibleArea.dy()); //mirrorImage->boundingRect() );
-						//imgPainter->restore();
-						//nCurrCompMode = imgPainter->compositionMode();	
+						imgPainter.drawImage((stimWidthPixelAmount/2)+movingDotsPixelFromCenter,movingDotsFirstHemiVisibleArea.p1().y(),mirrorImage);//    10+movingDotsPixelFromCenter,0,mirrorImage);//movingDotsFirstHemiVisibleArea.p2().x()+
+						//imgPainter.save();
+						//imgPainter.setPen(Qt::NoPen);
+						//imgPainter.setBrush(tmpPXMirrorMap);
+						////imgPainter.setOpacity( 0.5 );
+						////imgPainter.translate((stimWidthPixelAmount/2)+movingDotsPixelFromCenter, 0 );
+						//imgPainter.translate(300,300);
+						//int nCurrCompMode = imgPainter.compositionMode();
+						//imgPainter.setCompositionMode(QPainter::CompositionMode_Plus);
+						//nCurrCompMode = imgPainter.compositionMode();
+						//imgPainter.drawRect(0,0,movingDotsFirstHemiVisibleArea.dx(),movingDotsFirstHemiVisibleArea.dy()); //mirrorImage->boundingRect() );
+						//imgPainter.restore();
+						//nCurrCompMode = imgPainter.compositionMode();	
 					}
 				}
 				movingDots.OldPos[i] = movingDots.Pos.at(i);
@@ -1359,21 +1341,21 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			//		break;
 			//	}
 			//	ret_apeture.closeSubpath();
-			//	imgPainter->setBrush(brushBackground);
-			//	imgPainter->setPen(colorBackground);//(87, 87, 87));
-			//	imgPainter->drawPath(ret_apeture);
+			//	imgPainter.setBrush(brushBackground);
+			//	imgPainter.setPen(colorBackground);//(87, 87, 87));
+			//	imgPainter.drawPath(ret_apeture);
 			//}
 		}
 		//if(isDebugMode())
-		//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(3));
+		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(3));
 		if(showFixationPoint) // show fix cross
 		{
-			imgPainter->setPen(QPen(fixationColor, fixationSize, style, roundCap));
-			imgPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+			imgPainter.setPen(QPen(fixationColor, fixationSize, style, roundCap));
+			imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			if(bCreateActivationMap)
 			{
-				activationPainter->setPen(QPen(whiteColor, fixationSize, style, roundCap));
-				activationPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+				activationPainter.setPen(QPen(whiteColor, fixationSize, style, roundCap));
+				activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			}
 		}
 	}
@@ -1381,12 +1363,12 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	{
 		if(showFixationPoint) // show fix cross
 		{
-			imgPainter->setPen(QPen(fixationColor, fixationSize, style, roundCap));
-			imgPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+			imgPainter.setPen(QPen(fixationColor, fixationSize, style, roundCap));
+			imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			if(bCreateActivationMap)
 			{
-				activationPainter->setPen(QPen(whiteColor, fixationSize, style, roundCap));			
-				activationPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+				activationPainter.setPen(QPen(whiteColor, fixationSize, style, roundCap));			
+				activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			}
 		}
 	}
@@ -1394,21 +1376,22 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	{
 		if(showFixationPoint) // show fix cross
 		{
-			imgPainter->setPen(QPen(fixationColor, fixationSize, style, roundCap));
-			imgPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+			imgPainter.setPen(QPen(fixationColor, fixationSize, style, roundCap));
+			imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			if(bCreateActivationMap)
 			{
-				activationPainter->setPen(QPen(whiteColor, fixationSize, style, roundCap));			
-				activationPainter->drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
+				activationPainter.setPen(QPen(whiteColor, fixationSize, style, roundCap));			
+				activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 			}
 		}
 	}
-	if ((bCreateActivationMap) && (activationPainter))
-		activationPainter->end();
-	imgPainter->end();
+	if ((bCreateActivationMap) && (activationPainter.isActive()))
+		activationPainter.end();
+	if(imgPainter.isActive())
+		imgPainter.end();
 	if (outputTriggerFrame)
 	{
-		if (expSnapshot.currExpInternalTrigger > lastTriggerNumber)
+		if (tmpExpStrState.CurrentBlock_InternalTrigger > lastTriggerNumber)
 		{
 			QFile file;
 			QString outputDir = MainAppInfo::outputsDirPath();
@@ -1422,7 +1405,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			{
 				QDir().mkdir(outputDir);
 			}
-			QString fileName = outputDir + QString::number(nRetinoID) + "_" + QString::number(expSnapshot.currExpBlock) + QString("_") + QString::number(expSnapshot.currExpTrial) + QString("_") + QString::number(expSnapshot.currExpInternalTrigger);
+			QString fileName = outputDir + QString::number(nRetinoID) + "_" + QString::number(tmpBlockStrc.getBlockNumber()) + QString("_") + QString::number(tmpExpStrState.CurrentBlock_TrialNumber) + QString("_") + QString::number(tmpExpStrState.CurrentBlock_InternalTrigger);
 
 			if(retinoOutputType == RETINOMAP_WIDGET_OUTPUTTYPE_FRAME)
 			{
@@ -1432,7 +1415,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					file.setFileName(fileName);
 					if (file.open(QIODevice::WriteOnly))
 					{
-						StimulusResultImageFrame->save(&file, "PNG");
+						StimulusResultImageFrame.save(&file, "PNG");
 						file.close();
 					}
 				} 
@@ -1442,7 +1425,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					file.setFileName(fileName);
 					if (file.open(QIODevice::WriteOnly))
 					{
-						QImage imgWrite = StimulusResultImageFrame->toImage().convertToFormat(QImage::Format_ARGB32);
+						QImage imgWrite = StimulusResultImageFrame.toImage().convertToFormat(QImage::Format_ARGB32);
 						QDataStream output(&file);
 						quint32 magic = ARGB_FORMAT_HEADER;
 						quint32 width = imgWrite.width();
@@ -1470,7 +1453,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					file.setFileName(fileName);
 					if (file.open(QIODevice::WriteOnly))
 					{
-						StimulusActivationMap->save(&file, "PNG");
+						StimulusActivationMap.save(&file, "PNG");
 						file.close();
 					}
 				} 
@@ -1480,7 +1463,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					file.setFileName(fileName);
 					if (file.open(QIODevice::WriteOnly))
 					{
-						QImage imgWrite = StimulusActivationMap->toImage().convertToFormat(QImage::Format_ARGB32);
+						QImage imgWrite = StimulusActivationMap.toImage().convertToFormat(QImage::Format_ARGB32);
 						QDataStream output(&file);
 						quint32 magic = ARGB_FORMAT_HEADER;
 						quint32 width = imgWrite.width();
@@ -1504,19 +1487,16 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		}
 	}
 	//if(isDebugMode())
-	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(4));
-	if (stimuliPainter == NULL)
-		stimuliPainter = new QPainter(this);//Constructor automatically calls begin()
-	else
-		stimuliPainter->begin(this);
-	stimuliPainter->fillRect(event->rect(), brushBackground);
-	stimuliPainter->setPen(textPen);
-	stimuliPainter->setFont(textFont);
+	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(4));
+	stimuliPainter.begin(this);
+	stimuliPainter.fillRect(event->rect(), brushBackground);
+	stimuliPainter.setPen(textPen);
+	stimuliPainter.setFont(textFont);
 	
-	stimuliPainter->drawPixmap(0,0,*StimulusResultImageFrame);
+	stimuliPainter.drawPixmap(0,0,StimulusResultImageFrame);//*StimulusResultImageFrame);
 	if (customScriptHandlerFunction && getScriptEngine())
 	{
-		scriptVal1 = getScriptEngine()->toScriptValue<QPainter *>(stimuliPainter);
+		scriptVal1 = getScriptEngine()->toScriptValue<QPainter *>(&stimuliPainter);
 		if (currentExpType == RETINOMAP_WIDGET_PATTERN_FIXATION)
 		{
 			customScriptHandlerFunction->call(QScriptValue(), QScriptValueList() << scriptVal1);
@@ -1537,10 +1517,10 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	//	if(tmpPixmap)
 	//		*StimulusResultImageFrame = tmpPixmap->copy();	
 	//}		
-	//stimuliPainter->drawPixmap(0,0,*StimulusResultImageFrame);
+	//stimuliPainter.drawPixmap(0,0,*StimulusResultImageFrame);
 
 	//if(isDebugMode())
-	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(5));
+	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(5));
 
 	if(isDebugMode())
 	{
@@ -1560,8 +1540,8 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		//float fAverageElapsed = debugTotalElapsedTime/debugUsedTestSamples;
 		//textContent = QString("Average elapsed time: %1").arg(fAverageElapsed); //+ ": " + debugString; //"Retinotopic Mapping";
 		//painter.drawText(QRect(10, 0, rectScreenRes.width(), 100), Qt::AlignLeft, textContent);//Takes about 5ms additional total drawing time!
-		textContent = "ExternalTriggerNr:" + QString::number(expSnapshot.currExpExternalTrigger) + ", InternalTriggerNr:" + QString::number(expSnapshot.currExpInternalTrigger) + ", TrialNr:" + QString::number(expSnapshot.currExpTrial) + ", BlockNr:" + QString::number(expSnapshot.currExpBlock);
-		stimuliPainter->drawText(QRect(10, 50, stimWidthPixelAmount, 100), Qt::AlignLeft, textContent);
+		textContent = "ExternalTriggerNr:" + QString::number(tmpExpStrState.CurrentBlock_ExternalTrigger) + ", InternalTriggerNr:" + QString::number(tmpExpStrState.CurrentBlock_InternalTrigger) + ", TrialNr:" + QString::number(tmpExpStrState.CurrentBlock_TrialNumber) + ", BlockNr:" + QString::number(tmpBlockStrc.getBlockNumber());
+		stimuliPainter.drawText(QRect(10, 50, stimWidthPixelAmount, 100), Qt::AlignLeft, textContent);
 		//debugUsedTestSamples++;
 		//}
 		//else if (debugUsedTestSamples==(debugTestSamples+1))//During this sample we reset all the information for the speed measurement again
@@ -1570,18 +1550,18 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 		//	debugUsedTestSamples = 0;
 		//}
 	}
-	stimuliPainter->end();
+	stimuliPainter.end();
 	//if(isDebugMode())
 	//{
-	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","painter.end()");
+	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","painter.end()");
 	//	//emit LogExpObjData(nRetinoID,0,"paintEvent():painter.end()2");//0 is the default experiment timer
 	//}
 	//if(isDebugMode())
-	//	currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(6));
+	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(6));
 	nextNewCycleEntered = false;
 	nextNewBlockEntered = false;
 	if(isDebugMode())
-		currExpConfStruct->pExperimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","Finished painting the object");
+		experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","Finished painting the object");
 	return true;
 }
 
@@ -1610,4 +1590,14 @@ bool RetinoMap_glwidget::installCustomScriptHandlerFunction(QString FuncName)
 		}
 	}
 	return false;
+}
+
+bool RetinoMap_glwidget::setExperimentManager(ExperimentManager *expManager)
+{
+	if(experimentManager!=expManager)
+	{
+		experimentManager = expManager;
+		GLWidgetWrapper::setExperimentManager(expManager);//Important!
+	}
+	return true;
 }

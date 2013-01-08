@@ -59,16 +59,15 @@ public slots:
 	bool initObject();
 	bool startObject();
 	bool stopObject();
-	bool setObjectConfiguration(QObject *pExpConfStruct = NULL);//ExperimentConfiguration *pExpConfStruct = NULL);
 	bool setObjectID(int nObjID);
 	bool initObjectBlockTrial();
-	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
-	
+	bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);	
 	QVariant invokeQmlMethod(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());	
 	QString addPixmapToImageBuffer(const QPixmap &pixmap);
 	bool getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
 	bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
 	bool removePixmapFromImageBuffer(const QString &ID);
+	bool setExperimentManager(ExperimentManager *expManager);
 
 private slots:
 	void callAnimate();
@@ -79,6 +78,7 @@ private:
 	void parseExperimentObjectBlockParameters(bool bInit = false, bool bSetOnlyToDefault = false);
 	void qmlEventRoutine(bool dShowWidget = true, QString strContent = "");
 
+	ExperimentManager *experimentManager;
 	QFile tmpFile;
 	QmlErrorHandler *qmlErrorHandler;
 	QWidget *parentWidget;
@@ -87,9 +87,7 @@ private:
 	QPalette GlWidgetPallette;
 	QString qmlMainFilePath;
 	QObject *rootObject;
-	ExperimentSnapshotStructure expSnapshot;
 	QPainter *stimuliPainter;
-	ExperimentConfiguration *currExpConfStruct;
 	QTimer tWidgetUpdateLoopTimer;
 	int nWidgetMaxEvenTime;
 	QGLWidget *glWidget;						//The QGLWidget that acts as the viewport for the QML

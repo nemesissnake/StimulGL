@@ -30,13 +30,13 @@
 #include <QApplication>
 #include "experimenttree.h"
 #include "Global.h"
-#include "retinomap_glwidget.h"
-#include "qmlWidget.h"
 #include "defines.h"
 #include "./../../StimulGL/mainappinfo.h"
 #include "experimentlogger.h"
 #include "XmlMessageHandler.h"
 #include "ExperimentParameter.h"
+#include "ExperimentStructures.h"
+#include "ExperimentGraphEditor.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -44,8 +44,9 @@
 
 #define EXPERIMENTMANAGER_SCRIPTCONTEXT_NAME	"EM"
 
-class RetinoMap_glwidget;
-class qmlWidget;
+class cExperimentStructure;
+//class RetinoMap_glwidget;
+//class qmlWidget;
 class ExperimentTree;
 
 //!  The Experiment Manager class. 
@@ -104,6 +105,7 @@ public:
 
 	static QScriptValue ctor__experimentManager(QScriptContext* context, QScriptEngine* engine);
 	bool cleanupExperiment();
+	bool fetchExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID);
 	tParsedParameterList *getObjectBlockParamListById(int nID);
 	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);
 	bool getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue);
@@ -192,7 +194,10 @@ public slots:
 	void setDebugMode(bool mode);
 	bool getDebugMode();
 	void setExperimentName(QString name);
-	QString getExperimentName();	
+	QString getExperimentName();
+	//QObject* getExperimentStructure();
+	cExperimentStructure *getExperimentStructure();
+	bool showExperimentGraphEditor(cExperimentStructure *ExpStruct = NULL);
 
 private:
 	void DefaultConstruct();
@@ -202,6 +207,8 @@ private:
 	bool invokeExperimentObjectsSlots(const QString &sSlotName);
 	bool configureExperiment();
 	bool createExperimentObjects();
+	bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst);
+	bool createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
 	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);
 	bool initializeExperiment(bool bFinalize = false);
 	bool finalizeExperimentObjects();
@@ -214,22 +221,24 @@ private:
 	void changeCurrentExperimentState(ExperimentState expCurrState);
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
+
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
+	cExperimentStructure *cExperimentBlockTrialStructure;
 	QList<objectElement> lExperimentObjectList;
+	ExperimentTree *currentExperimentTree;
+	//ExperimentConfiguration strcExperimentConfiguration;
+	ExperimentState experimentCurrentState;
+	QHash<QString, int> experimentStateHash;
 
 	QByteArray currentExperimentFile;
 	QByteArray currentValidationFile;
 
 	QObject *parentObject;
 	QScriptEngine *currentScriptEngine;
-	ExperimentState experimentCurrentState;
-	QHash<QString, int> experimentStateHash;
 	bool m_RunFullScreen;
 	QString m_ExpFileName;
 	QString m_ExpFolder;
-	ExperimentTree *currentExperimentTree;	
-	ExperimentConfiguration strcExperimentConfiguration;
 	ExperimentLogger *expDataLogger;
 	int nExperimentTimerIndex;
 };

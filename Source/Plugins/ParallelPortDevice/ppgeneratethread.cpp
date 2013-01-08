@@ -46,6 +46,8 @@ ppGenerateThread::~ppGenerateThread()
 
 void ppGenerateThread::stop()
 {
+	if(this==NULL)
+		return;
 	if (isRunning)
 	{
 		//this->terminate();

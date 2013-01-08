@@ -6,7 +6,7 @@ Place you own text here..
 Attributes only apply to readonly non user data, like the ID
 -->
 
-<EXML version="2.0.0.1">
+<EXML version="2.0.0.2">
 
 	<defines>
 		<experiment ID="0">
@@ -99,6 +99,10 @@ Attributes only apply to readonly non user data, like the ID
 							<name>FixationColor</name>
 							<value>#FF0000</value>
 						</parameter>
+						<parameter ID="8">
+							<name>StimuliRefreshRate</name>
+							<value>30</value>
+						</parameter>						
 					</parameters>    
 				</object>   
 			</block>
@@ -162,6 +166,7 @@ Attributes only apply to readonly non user data, like the ID
 					</parameters>			    	 
 				</object>   
 			</block>
+			
 		</blocks>
 	</actions>
 	

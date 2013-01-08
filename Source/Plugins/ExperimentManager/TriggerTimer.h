@@ -75,6 +75,8 @@ signals:
 		@param dRemainingTime a double value that represents the remaining time it should take for the Trigger Timer to timeout.
 	*/
 	void goingAccurate(double dRemainingTime);
+	
+	void stopTimerSignal();
 
 public:
 	TriggerTimer();

@@ -44,6 +44,8 @@ ppCaptureThread::~ppCaptureThread()
 
 void ppCaptureThread::stop()
 {
+	if(this==NULL)
+		return;
 	if (isRunning)
 	{
 		//this->terminate();
