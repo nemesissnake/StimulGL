@@ -98,4 +98,4 @@ bool KeyBoardPlugin::ShowGUI()
 	return true;
 }
 
-Q_EXPORT_PLUGIN2(keyboardplugin, KeyBoardPlugin);
+//Q_PLUGIN_METADATA(keyboardplugin, KeyBoardPlugin);

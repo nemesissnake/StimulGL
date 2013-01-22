@@ -215,5 +215,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="licenseHeader.licenseheader" />
+    <None Include="ParallelPortDevice.json" />
   </ItemGroup>
 </Project>

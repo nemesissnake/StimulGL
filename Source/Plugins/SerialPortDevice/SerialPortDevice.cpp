@@ -18,7 +18,7 @@
 
 
 #include "SerialPortDevice.h"
-#include <windows.h>
+//#include <windows.h>
 
 QScriptValue SerialPortDevice::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
 {

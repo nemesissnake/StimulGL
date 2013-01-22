@@ -23,7 +23,7 @@
 #include "ExperimentGraphBlock.h"
 #include "ExperimentGraphPort.h"
 
-ExperimentGraphBlock::ExperimentGraphBlock(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsPathItem(parent, scene)
+ExperimentGraphBlock::ExperimentGraphBlock(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsPathItem(parent)//, scene)
 {
 	QPainterPath p;
 	p.addRoundedRect(-50, -15, 100, 30, 5, 5);
@@ -62,7 +62,7 @@ ExperimentGraphPort* ExperimentGraphBlock::addPort(const QString &name, bool isO
 	setPath(p);
 
 	int y = -height / 2 + vertMargin + port->radius();
-	foreach(QGraphicsItem *port_, children()) {
+	foreach(QGraphicsItem *port_, childItems()) {
 		if (port_->type() != ExperimentGraphPort::Type)
 			continue;
 
@@ -105,7 +105,7 @@ void ExperimentGraphBlock::save(QDataStream &ds)
 
 	int count(0);
 
-	foreach(QGraphicsItem *port_, children())
+	foreach(QGraphicsItem *port_, childItems())
 	{
 		if (port_->type() != ExperimentGraphPort::Type)
 			continue;
@@ -115,7 +115,7 @@ void ExperimentGraphBlock::save(QDataStream &ds)
 
 	ds << count;
 
-	foreach(QGraphicsItem *port_, children())
+	foreach(QGraphicsItem *port_, childItems())
 	{
 		if (port_->type() != ExperimentGraphPort::Type)
 			continue;

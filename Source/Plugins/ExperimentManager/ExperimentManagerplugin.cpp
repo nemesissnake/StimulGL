@@ -301,4 +301,3 @@ QString ExperimentManagerPlugin::GetAdditionalFileTypeApiName(QString strExtensi
 	}
 }
 
-Q_EXPORT_PLUGIN2(experimentmanagerplugin, ExperimentManagerPlugin);

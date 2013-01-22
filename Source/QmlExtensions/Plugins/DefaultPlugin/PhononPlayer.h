@@ -19,7 +19,9 @@
 #ifndef PHONONPLAYER_H
 #define PHONONPLAYER_H
 
-#include <phonon>
+//See //QT5Phonon! and add $(QTDIR)\lib\phonon$(DebugSuffix)4.lib
+
+//QT5Phonon#include <phonon>
 #include <QMessageBox>
 //#include <QBuffer>
 
@@ -48,20 +50,20 @@ public slots:
 	bool setOutputDevice(const int nIndex);
 
 private slots:
-	void stateChanged(Phonon::State newState, Phonon::State oldState);
-	void sourceChanged(const Phonon::MediaSource &source);
-	void metaStateChanged(Phonon::State newState, Phonon::State oldState);
+	//QT5Phononvoid stateChanged(Phonon::State newState, Phonon::State oldState);
+	//QT5Phononvoid sourceChanged(const Phonon::MediaSource &source);
+	//QT5Phononvoid metaStateChanged(Phonon::State newState, Phonon::State oldState);
 	void aboutToFinish();
 
 	//signals:
 	//	void phononChanged();
 
 private:
-	Phonon::MediaObject *mediaObject;
-	Phonon::AudioOutput *audioOutput;
-	Phonon::MediaObject *metaInformationResolver;
-	QList<Phonon::MediaSource> mediaSources;
-	Phonon::Path phononPath;
+	//QT5PhononPhonon::MediaObject *mediaObject;
+	//QT5PhononPhonon::AudioOutput *audioOutput;
+	//QT5PhononPhonon::MediaObject *metaInformationResolver;
+	//QT5PhononQList<Phonon::MediaSource> mediaSources;
+	//QT5PhononPhonon::Path phononPath;
 
 	//QBuffer buffer;
 	//static int instances;

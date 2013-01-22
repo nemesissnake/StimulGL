@@ -587,7 +587,7 @@ void qmlWidget::qmlEventRoutine(bool dShowWidget, QString strContent)
 				return;
 			}
 		}
-		tmpFile.write(strContent.toAscii());
+		tmpFile.write(strContent.toLatin1());
 		tmpFile.close();
 		fi.setFile(tmpFile.fileName());
 		qmlMainFilePath = fi.canonicalFilePath();

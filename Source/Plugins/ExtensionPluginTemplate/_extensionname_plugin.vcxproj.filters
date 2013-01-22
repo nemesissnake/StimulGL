@@ -161,5 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="licenseHeader.licenseheader" />
+    <None Include="_extensionname_.json" />
   </ItemGroup>
 </Project>

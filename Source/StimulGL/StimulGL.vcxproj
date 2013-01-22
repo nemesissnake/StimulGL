@@ -56,18 +56,26 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="StimulGL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="StimulGL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="StimulGL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="StimulGL.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="StimulGL.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <Import Project="StimulGL.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -104,7 +112,7 @@
     <ClCompile>
       <AdditionalOptions>-Zm200 -w34100 -w34189 -Zm200 -w34100 -w34189 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtScriptTools;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtSvg;$(QTDIR)\mkspecs\win32-msvc2010;$(QTDIR)\include\ActiveQt;$(QTDIR)\include\QtDeclarative;$(QTDIR)\include\Qsci;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;.;$(QTDIR)\include\QtWebKit;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include\QtWidgets;$(QTDIR)\include;$(QTDIR)\include\QtScriptTools;$(QTDIR)\include\QtWebKitWidgets;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtPrintSupport;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtSvg;$(QTDIR)\mkspecs\win32-msvc2010;$(QTDIR)\include\ActiveQt;$(QTDIR)\include\QtDeclarative;$(QTDIR)\include\Qsci;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;.;$(QTDIR)\include\QtWebKit;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;QT_SCRIPT_LIB;QT_SCRIPTTOOLS_LIB;QT_DECLARATIVE_LIB;QSCINTILLA_DLL;QT_WEBKIT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
@@ -125,7 +133,7 @@
       <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Qtmaind.lib;gdi32.lib;user32.lib;QtSvgd4.lib;QtXmld4.lib;QtOpenGLd4.lib;QtGuid4.lib;QtCored4.lib;QtScriptd4.lib;QtScriptToolsd4.lib;QtSqld4.lib;qscintilla2d.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclaratived4.lib;QtWebKitd4.lib;QtNetworkd4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmain$(DebugSuffix).lib;Qt5Svg$(DebugSuffix).lib;Qt5Xml$(DebugSuffix).lib;Qt5OpenGL$(DebugSuffix).lib;Qt5Gui$(DebugSuffix).lib;Qt5Widgets$(DebugSuffix).lib;Qt5Core$(DebugSuffix).lib;Qt5Script$(DebugSuffix).lib;Qt5ScriptTools$(DebugSuffix).lib;Qt5Sql$(DebugSuffix).lib;Qt5Declarative$(DebugSuffix).lib;Qt5WebKitWidgets$(DebugSuffix).lib;Qt5Network$(DebugSuffix).lib;Qt5PrintSupport$(DebugSuffix).lib;qscintilla2$(DebugSuffix).lib;gdi32.lib;user32.lib;winmm.lib;opengl32.lib;glu32.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(ProjectDir)..\..\StaticLibs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -171,7 +179,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     <ClCompile>
       <AdditionalOptions>-Zm200 -w34100 -w34189 -Zm200 -w34100 -w34189 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtScriptTools;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtSvg;$(QTDIR)\include\ActiveQt;.;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;$(QTDIR)\include\QtDeclarative;$(QTDIR)\mkspecs\win32-msvc2010;$(QTDIR)\include\QtWebKit;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include\QtWidgets;$(QTDIR)\include;$(QTDIR)\include\QtScriptTools;$(QTDIR)\include\QtWebKitWidgets;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtPrintSupport;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtSvg;$(QTDIR)\include\ActiveQt;.;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;$(QTDIR)\include\QtDeclarative;$(QTDIR)\mkspecs\win32-msvc2010;$(QTDIR)\include\QtWebKit;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG;UNICODE;WIN64;QT_LARGEFILE_SUPPORT;QT_DLL;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;QT_SCRIPT_LIB;QT_SCRIPTTOOLS_LIB;QT_DECLARATIVE_LIB;QSCINTILLA_DLL;QT_WEBKIT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
@@ -192,7 +200,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Qtmaind.lib;QtSvgd4.lib;QtXmld4.lib;QtOpenGLd4.lib;QtGuid4.lib;QtCored4.lib;QtScriptd4.lib;QtScriptToolsd4.lib;QtSqld4.lib;qscintilla2d.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclaratived4.lib;QtWebKitd4.lib;QtNetworkd4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmain$(DebugSuffix).lib;Qt5Svg$(DebugSuffix).lib;Qt5Xml$(DebugSuffix).lib;Qt5OpenGL$(DebugSuffix).lib;Qt5Gui$(DebugSuffix).lib;Qt5Widgets$(DebugSuffix).lib;Qt5Core$(DebugSuffix).lib;Qt5Script$(DebugSuffix).lib;Qt5ScriptTools$(DebugSuffix).lib;Qt5Sql$(DebugSuffix).lib;Qt5Declarative$(DebugSuffix).lib;Qt5WebKitWidgets$(DebugSuffix).lib;Qt5Network$(DebugSuffix).lib;Qt5PrintSupport$(DebugSuffix).lib;qscintilla2$(DebugSuffix).lib;gdi32.lib;user32.lib;winmm.lib;opengl32.lib;glu32.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(ProjectDir)..\..\StaticLibs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -240,7 +248,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalOptions>-Zm200 -w34100 -w34189 -Zm200 -w34100 -w34189 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtScriptTools;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtSvg;$(QTDIR)\mkspecs\win32-msvc2010;$(QTDIR)\include\ActiveQt;.;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;$(QTDIR)\include\QtDeclarative;$(QTDIR)\include\QtWebKit;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include\QtWidgets;$(QTDIR)\include;$(QTDIR)\include\QtScriptTools;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtPrintSupport;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebKitWidgets;$(QTDIR)\include\QtSvg;$(QTDIR)\mkspecs\win32-msvc2010;$(QTDIR)\include\ActiveQt;.;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;$(QTDIR)\include\QtDeclarative;$(QTDIR)\include\QtWebKit;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>QT_NO_DEBUG;NDEBUG;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;QT_DECLARATIVE_LIB;QSCINTILLA_DLL;QT_WEBKIT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
@@ -261,7 +269,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <PreprocessorDefinitions>QT_NO_DEBUG;NDEBUG;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Qtmain.lib;gdi32.lib;user32.lib;QtSvg4.lib;QtXml4.lib;QtOpenGL4.lib;QtGui4.lib;QtCore4.lib;QtScript4.lib;QtScriptTools4.lib;QtSql4.lib;qscintilla2.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclarative4.lib;QtWebKit4.lib;QtNetwork4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmain$(DebugSuffix).lib;Qt5Svg$(DebugSuffix).lib;Qt5Xml$(DebugSuffix).lib;Qt5OpenGL$(DebugSuffix).lib;Qt5Gui$(DebugSuffix).lib;Qt5Widgets$(DebugSuffix).lib;Qt5Core$(DebugSuffix).lib;Qt5Script$(DebugSuffix).lib;Qt5ScriptTools$(DebugSuffix).lib;Qt5Sql$(DebugSuffix).lib;Qt5Declarative$(DebugSuffix).lib;Qt5WebKitWidgets$(DebugSuffix).lib;Qt5Network$(DebugSuffix).lib;Qt5PrintSupport$(DebugSuffix).lib;qscintilla2$(DebugSuffix).lib;gdi32.lib;user32.lib;winmm.lib;opengl32.lib;glu32.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(ProjectDir)..\..\StaticLibs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -306,7 +314,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalOptions>-Zm200 -w34100 -w34189 -Zm200 -w34100 -w34189 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtScriptTools;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtSvg;$(QTDIR)\include\ActiveQt;.;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;$(QTDIR)\include\QtDeclarative;$(QTDIR)\mkspecs\win32-msvc2010;$(QTDIR)\include\QtWebKit;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include\QtWidgets;$(QTDIR)\include;$(QTDIR)\include\QtScriptTools;$(QTDIR)\include\QtScript;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtPrintSupport;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtSql;$(QTDIR)\include\QtWebKitWidgets;$(QTDIR)\include\QtSvg;$(QTDIR)\include\ActiveQt;.;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;$(QTDIR)\include\QtDeclarative;$(QTDIR)\mkspecs\win32-msvc2010;$(QTDIR)\include\QtWebKit;$(QTDIR)\include\QtNetwork;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>QT_NO_DEBUG;NDEBUG;UNICODE;WIN64;QT_LARGEFILE_SUPPORT;QT_DLL;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;QT_DECLARATIVE_LIB;QSCINTILLA_DLL;QT_WEBKIT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
@@ -327,7 +335,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <PreprocessorDefinitions>QT_NO_DEBUG;NDEBUG;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_SVG_LIB;QT_XML_LIB;QT_OPENGL_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>QtSvg4.lib;QtXml4.lib;QtOpenGL4.lib;QtGui4.lib;QtCore4.lib;Qtmain.lib;QtScript4.lib;QtScriptTools4.lib;QtSql4.lib;qscintilla2.lib;winmm.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;opengl32.lib;glu32.lib;QtDeclarative4.lib;QtWebKit4.lib;QtNetwork4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmain$(DebugSuffix).lib;Qt5Svg$(DebugSuffix).lib;Qt5Xml$(DebugSuffix).lib;Qt5OpenGL$(DebugSuffix).lib;Qt5Gui$(DebugSuffix).lib;Qt5Widgets$(DebugSuffix).lib;Qt5Core$(DebugSuffix).lib;Qt5Script$(DebugSuffix).lib;Qt5ScriptTools$(DebugSuffix).lib;Qt5Sql$(DebugSuffix).lib;Qt5Declarative$(DebugSuffix).lib;Qt5WebKitWidgets$(DebugSuffix).lib;Qt5Network$(DebugSuffix).lib;Qt5PrintSupport$(DebugSuffix).lib;qscintilla2$(DebugSuffix).lib;gdi32.lib;user32.lib;winmm.lib;opengl32.lib;glu32.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(ProjectDir)..\..\Build_MSVC\$(ProjectName)\$(Platform)\$(Configuration)\$(ProjectName)_$(Platform)_$(Configuration).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(ProjectDir)..\..\StaticLibs\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -369,7 +377,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <PreprocessorDefinitions>QT_DECLARATIVE_LIB;QT_WEBKIT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtDeclarative4.lib;QtWebKit4.lib;QtNetwork4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmain$(DebugSuffix).lib;Qt5Svg$(DebugSuffix).lib;Qt5Xml$(DebugSuffix).lib;Qt5OpenGL$(DebugSuffix).lib;Qt5Gui$(DebugSuffix).lib;Qt5Widgets$(DebugSuffix).lib;Qt5Core$(DebugSuffix).lib;Qt5Script$(DebugSuffix).lib;Qt5ScriptTools$(DebugSuffix).lib;Qt5Sql$(DebugSuffix).lib;Qt5Declarative$(DebugSuffix).lib;Qt5WebKitWidgets$(DebugSuffix).lib;Qt5Network$(DebugSuffix).lib;Qt5PrintSupport$(DebugSuffix).lib;qscintilla2$(DebugSuffix).lib;gdi32.lib;user32.lib;winmm.lib;opengl32.lib;glu32.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'">
@@ -379,7 +387,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <PreprocessorDefinitions>QT_DECLARATIVE_LIB;QT_WEBKIT_LIB;QT_NETWORK_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>QtDeclarative4.lib;QtWebKit4.lib;QtNetwork4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qtmain$(DebugSuffix).lib;Qt5Svg$(DebugSuffix).lib;Qt5Xml$(DebugSuffix).lib;Qt5OpenGL$(DebugSuffix).lib;Qt5Gui$(DebugSuffix).lib;Qt5Widgets$(DebugSuffix).lib;Qt5Core$(DebugSuffix).lib;Qt5Script$(DebugSuffix).lib;Qt5ScriptTools$(DebugSuffix).lib;Qt5Sql$(DebugSuffix).lib;Qt5Declarative$(DebugSuffix).lib;Qt5WebKitWidgets$(DebugSuffix).lib;Qt5Network$(DebugSuffix).lib;Qt5PrintSupport$(DebugSuffix).lib;qscintilla2$(DebugSuffix).lib;gdi32.lib;user32.lib;winmm.lib;opengl32.lib;glu32.lib;parallelportplugin_$(Platform)_$(Configuration).lib;ExperimentManagerplugin_$(Platform)_$(Configuration).lib;KeyBoardplugin_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

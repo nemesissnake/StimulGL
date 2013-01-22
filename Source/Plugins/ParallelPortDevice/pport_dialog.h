@@ -22,7 +22,7 @@
 
 #include <QDialog>
 #include "ui_pport_dialog.h"
-#include <QtGui>
+#include <QtWidgets>
 #include <Windows.h>
 #include <QDialog>
 #include "InpOut32.h"

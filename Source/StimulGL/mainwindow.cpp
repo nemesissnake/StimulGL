@@ -28,6 +28,7 @@
 #include <QtPlugin>
 #include <QFileInfo>
 #include <QMetaObject>
+#include <QtGlobal>
 #include "OutputListDelegate.h"
 
 #include "../Plugins/ParallelPortDevice/parallelport.h"
@@ -47,7 +48,7 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 	bMainWindowIsInitialized = false;
 
 #ifndef QT_NO_DEBUG_OUTPUT	
-	qInstallMsgHandler(MainAppInfo::MyOutputHandler);
+	qInstallMessageHandler((QtMessageHandler)MainAppInfo::MyOutputHandler);
 	qDebug("StimulGL Main Constructor.");
 #endif
 //When compiling your final application, be sure to add the flags -DQT_NO_DEBUG and -DQT_NO_DEBUG_OUTPUT.  
@@ -131,7 +132,7 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
 	//registerFileTypeByDefinition("StimulGL.QtScript","StimulGL Qt Script File",".qs");
 	//MainAppInfo::Initialize(this);
-	QApplication::setGraphicsSystem("opengl");//"raster");
+	//QApplication::setGraphicsSystem("opengl");//"raster");
 	StimulGLFlags = mainFlags;
     AppScriptStatus = GlobalApplicationInformation::NoScript;
 	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash) == false)
@@ -161,7 +162,7 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 	{
 		MainSplashScreen->finish(this);
 	}
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 	if (timeBeginPeriod(1) == TIMERR_NOCANDO)
 		qWarning() << "Could not start the time period!";
 #endif
@@ -1055,9 +1056,9 @@ void MainWindow::setupDynamicPlugins()
 	{
 		extendAPICallTips(this->metaObject());
 		showSplashMessage("Loading Static Plugins...");
-        Q_IMPORT_PLUGIN(parallelportplugin)// see below
-        Q_IMPORT_PLUGIN(experimentmanagerplugin)// see below
-		Q_IMPORT_PLUGIN(keyboardplugin)// see below
+        Q_IMPORT_PLUGIN(ParallelPortPlugin)// see below
+        Q_IMPORT_PLUGIN(ExperimentManagerPlugin)// see below
+		Q_IMPORT_PLUGIN(KeyBoardPlugin)// see below
 
 		bool bRetVal = false;
 		QString strRetVal = "";
@@ -1304,7 +1305,7 @@ bool MainWindow::extendAPICallTips(const QMetaObject* metaScriptObject)
 		
 		for(i = metaScriptObject->methodOffset(); i < metaScriptObject->methodCount(); ++i)
 		{
-			sClassInfoList << QString::fromLatin1(metaScriptObject->method(i).signature());
+			sClassInfoList << QString::fromLatin1(metaScriptObject->method(i).methodSignature());
 
 			//is this an member signal or slot?
 			QString mType = METHOD_TYPE_MEMBER_TAG;
@@ -1312,7 +1313,7 @@ bool MainWindow::extendAPICallTips(const QMetaObject* metaScriptObject)
 				mType = METHOD_TYPE_SIGNAL_TAG;
 			else if(metaScriptObject->indexOfSlot(sClassInfoList.at(sClassInfoList.count()-1).toLatin1()) >= 0)
 				mType = METHOD_TYPE_SLOT_TAG;
-			DocManager->addAdditionalApiEntry(QString::fromLatin1(metaScriptObject->method(i).signature()) + " " + sDivider + sScriptClassName + sDivider + mType);
+			DocManager->addAdditionalApiEntry(QString::fromLatin1(metaScriptObject->method(i).methodSignature()) + " " + sDivider + sScriptClassName + sDivider + mType);
 		}
 
 		for(i = metaScriptObject->propertyOffset(); i < metaScriptObject->propertyCount(); ++i)
@@ -1723,7 +1724,7 @@ void MainWindow::cleanupScript()
  */
 void MainWindow::activateMainWindow()
 {
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 	::SetWindowPos(effectiveWinId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 	::SetWindowPos(effectiveWinId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 #endif
@@ -2319,7 +2320,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 #endif
 	if(Plugins)
 		delete Plugins;
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 	timeEndPeriod(1);
 #endif
 	if(DocManager)
@@ -2462,7 +2463,7 @@ void MainWindow::goToLine()
 	CustomQsciScintilla *tmpSci;
 	tmpSci = DocManager->getDocHandler(activeMdiChild());
 	bool ok = false;
-	int line = QInputDialog::getInteger(mdiArea, tr("Go to line"), 
+	int line = QInputDialog::getInt(mdiArea, tr("Go to line"), 
 		tr("Go to line") + QString(" (1 - %1):").arg(tmpSci->lineCount()), 
 		1, 1, tmpSci->lineCount(), 1, &ok);
 	if ( ok )

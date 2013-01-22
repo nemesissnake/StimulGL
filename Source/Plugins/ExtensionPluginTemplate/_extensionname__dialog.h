@@ -24,7 +24,7 @@
 
 #include <QDialog>
 #include "ui__extensionname__dialog.h"
-#include <QtGui>
+#include <QtWidgets>
 #include <Windows.h>
 #include <QDialog>
 

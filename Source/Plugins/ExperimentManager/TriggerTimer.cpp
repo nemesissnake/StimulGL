@@ -141,7 +141,7 @@ void TriggerTimer::startTimer(double dMSec)//Do not change the function name wit
 		
 		if (currentTimerType == QPC_TriggerTimerType)
 		{
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 			//use the SetThreadAffinityMask() function to make your thread stick to one core or the other, so that 'rdtsc' and 
 			//QueryPerformanceCounter() don't have timing issues in dual core systems.
 			if(nThreadIdealCount>0)
@@ -162,7 +162,7 @@ void TriggerTimer::startTimer(double dMSec)//Do not change the function name wit
 		}
 		else if (currentTimerType == QPCNew_TriggerTimerType)
 		{
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 			//use the SetThreadAffinityMask() function to make your thread stick to one core or the other, so that 'rdtsc' and 
 			//QueryPerformanceCounter() don't have timing issues in dual core systems.
 			if(nThreadIdealCount>0)

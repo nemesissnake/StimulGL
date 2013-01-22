@@ -127,7 +127,7 @@ QString MainAppInfo::apiDirPath()
 	return pluginsDir.absolutePath();
 }
 
-void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg) 
+void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &context, const char *msg) 
 {
 	bool bDoAbort = false;
 	if(MainAppInfo::mainLogFile == NULL)
@@ -163,7 +163,7 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const char *msg)
 		bDoAbort = true;		
 	}
 	QTextStream ts(mainLogFile);
-	ts << QDate::currentDate().toString().toAscii().data() << QString("\t") << QTime::currentTime().toString().toAscii().data() << QString("\t") << strMessage << QString("\n"); //endl macro doesn't work?
+	ts << QDate::currentDate().toString().toLatin1().data() << QString("\t") << QTime::currentTime().toString().toLatin1().data() << QString("\t") << strMessage << QString("\n"); //endl macro doesn't work?
 	if(MainAppInfo::getMainWindow())
 	{
 		if(bSkipErrorForLogWindow == false)

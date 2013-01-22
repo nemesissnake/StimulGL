@@ -21,7 +21,7 @@
 #define CUSTOMQSCISCINTILLA_H
 
 #include <QObject>
-#include <QtGui>
+#include <QtWidgets>
 #include <QEvent>
 #include <QKeyEvent>
 #include <Qsci/qsciscintilla.h>

@@ -22,8 +22,7 @@
 #include "ExperimentGraphPort.h"
 #include "ExperimentGraphConnection.h"
 
-ExperimentGraphPort::ExperimentGraphPort(QGraphicsItem *parent, QGraphicsScene *scene):
-	QGraphicsPathItem(parent, scene)
+ExperimentGraphPort::ExperimentGraphPort(QGraphicsItem *parent, QGraphicsScene *scene):	QGraphicsPathItem(parent)//, scene)
 {
 	label = new QGraphicsTextItem(this);
 

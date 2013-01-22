@@ -19,6 +19,7 @@
 
 #include "customqsciscintilla.h"
 #include "documentmanager.h"
+#include <QPrintDialog>
 
 CustomQsciScintilla::CustomQsciScintilla(GlobalApplicationInformation::DocType docType)
 {	

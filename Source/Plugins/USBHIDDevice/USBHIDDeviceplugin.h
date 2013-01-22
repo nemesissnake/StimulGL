@@ -23,7 +23,7 @@
 #define USBHIDDevicePLUGIN_H
 
 #include <QObject>
-#include <QtGui>
+#include <QtWidgets>
 #include <QString>
 #include <Qlibrary>
 
@@ -38,6 +38,7 @@ QT_END_NAMESPACE
 class USBHIDDevicePlugin : public QObject, DeviceInterface
 {
     Q_OBJECT
+	Q_PLUGIN_METADATA(IID "StimulGL.Plugins.Devices" "USBHIDDevice.json")
     Q_INTERFACES(DeviceInterface)
 
 public:

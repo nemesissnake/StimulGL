@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QFile>
 #include <QDir>
-#include <QtGui>
+#include <QtWidgets>
 #include <Qsci/qsciapis.h>
 #include <Qsci/qscilexerjavascript.h>
 #include <Qsci/qscilexerxml.h>

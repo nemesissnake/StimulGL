@@ -18,9 +18,9 @@
 
 #include "GlobalApplicationInformation.h"
 #include "maindefines.h"
-#include <QWebView>
-#include <QWebFrame>
-#include <QWebPage>
+#include <QtWebKitWidgets/QWebView>
+#include <QtWebKitWidgets/QWebFrame>
+#include <QtWebKitWidgets/QWebPage>
 #include <QResource>
 #include <QBuffer>
 #include <QSharedMemory>

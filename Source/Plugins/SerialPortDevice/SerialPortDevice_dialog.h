@@ -24,13 +24,15 @@
 
 #include <QDialog>
 #include "ui_SerialPortDevice_dialog.h"
-#include <QtGui>
-#include <Windows.h>
-#include <QDialog>
+//#include <QtGui>
+#include <QtWidgets>
+//#include <Windows.h>
+//#include <QDialog>
 #include <QThread>
 #include <QTimer>
 #include "qextserialenumerator.h"
 #include "qextserialport.h"
+
 
 
 class SerialPortDevice_Dialog : public QDialog, private Ui::SerialPortDevice_DialogClass

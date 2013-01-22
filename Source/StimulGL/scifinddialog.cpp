@@ -18,8 +18,8 @@
 
 
 #include "scifinddialog.h"
-#include <QtGui/QKeyEvent>
-#include <QtGui/QLineEdit>
+#include <QKeyEvent>
+#include <QLineEdit>
 
 //#include "IconManager.h"
 //#include "MainSettings.h"

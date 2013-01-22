@@ -17,7 +17,7 @@
 //
 
 
-#include <QtGui>
+#include <QtWidgets>
 #include "experimenttree.h"
 #include "defines.h"
 
@@ -35,7 +35,7 @@ ExperimentTree::ExperimentTree(QWidget *parent) : QTreeWidget(parent)
 	QStringList labels;
 	labels << tr("Elements") << tr("Properties");
 
-	header()->setResizeMode(QHeaderView::Stretch);
+	header()->setSectionResizeMode(QHeaderView::Stretch);
 	setHeaderLabels(labels);
 
 	folderIcon.addPixmap(style()->standardPixmap(QStyle::SP_DirClosedIcon), QIcon::Normal, QIcon::Off);

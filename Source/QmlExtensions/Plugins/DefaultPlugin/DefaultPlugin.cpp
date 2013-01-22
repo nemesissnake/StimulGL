@@ -31,4 +31,4 @@ void QDefaultQmlPlugin::registerTypes(const char *uri)
 	nTypeID = qmlRegisterType<PhononPlayer,PHONONPLAYER_VERSION_STRING_REVISION>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, PHONONPLAYER_TYPE_QML_NAME);
 }
 
-Q_EXPORT_PLUGIN2(qmlstimulgldefaultplugin, QDefaultQmlPlugin);//qmlqtimeexampleplugin
+//Q_PLUGIN_METADATA(qmlstimulgldefaultplugin, QDefaultQmlPlugin);//qmlqtimeexampleplugin

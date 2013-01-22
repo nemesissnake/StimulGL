@@ -242,5 +242,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="licenseHeader.licenseheader" />
+    <None Include="USBHIDDevice.json" />
   </ItemGroup>
 </Project>

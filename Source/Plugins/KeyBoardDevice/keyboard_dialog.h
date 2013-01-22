@@ -21,8 +21,9 @@
 #define KEYBOARD_DIALOG_H
 
 #include <QDialog>
+#include <QMessageBox>
 #include "ui_keyboard_dialog.h"
-#include <QtGui>
+#include <QtWidgets>
 #include <QDialog>
 #include "keyboardCaptureThread.h"
 

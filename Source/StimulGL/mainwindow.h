@@ -28,7 +28,7 @@
 #include <QString>
 #include <QStringList>
 #include <QDir>
-#include <QtGui>
+#include <QtWidgets>
 #include <QTime>
 #include <QDateTime> //QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat())!!!!!
 

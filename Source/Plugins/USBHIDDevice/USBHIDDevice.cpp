@@ -19,7 +19,7 @@
 
 #include "USBHIDDevice.h"
 #include <windows.h>
-#include <QTextOStream>
+#include <QTextStream>
 
 QScriptValue USBHIDDevice::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
 {

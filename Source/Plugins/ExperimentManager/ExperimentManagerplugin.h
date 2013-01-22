@@ -23,7 +23,7 @@
 #define ExperimentManagerPLUGIN_H
 
 #include <QObject>
-#include <QtGui>
+#include <QtWidgets>
 #include <QString>
 #include <Qlibrary>
 
@@ -39,6 +39,7 @@
 class ExperimentManagerPlugin : public QObject, ExtensionInterface
 {
     Q_OBJECT
+	Q_PLUGIN_METADATA(IID "StimulGL.Plugins.Extensions" "ExperimentManager.json")
     Q_INTERFACES(ExtensionInterface)
 
 public:

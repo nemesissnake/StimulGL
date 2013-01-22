@@ -23,7 +23,7 @@
 
 #include <QApplication>
 #include <QString>
-#include <QtGui>
+#include <QtWidgets>
 #ifndef QT_NO_OPENGL
 #include <QGLFormat>
 #endif

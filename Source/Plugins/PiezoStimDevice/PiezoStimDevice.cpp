@@ -236,7 +236,7 @@ QString PiezoStimDevice::Test(const QString &sParam)
 
 		MyPrototype myFunction = (MyPrototype) libPiezoStim->resolve("initStimulator");
 		if (myFunction)
-			return QString::number(myFunction(sParam.toAscii().data()));
+			return QString::number(myFunction(sParam.toLatin1().data()));
 		return "Function failed";
 	}
 	return LIBRARYLOADFAILEDMESSAGE;

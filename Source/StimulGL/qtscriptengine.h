@@ -28,7 +28,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QStringList>
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "qtscriptengineagent.h"
 //#include "qtscriptworker.h"
 

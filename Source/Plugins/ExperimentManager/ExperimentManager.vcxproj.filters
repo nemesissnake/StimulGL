@@ -582,5 +582,6 @@
   <ItemGroup>
     <None Include="licenseHeader.licenseheader" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ExperimentManager.json" />
   </ItemGroup>
 </Project>

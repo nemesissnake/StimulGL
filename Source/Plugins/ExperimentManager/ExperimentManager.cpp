@@ -519,7 +519,7 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bo
 		currentExperimentFile.clear();
 		currentValidationFile.clear();
 		fileName = "";
-		currentExperimentFile = strSource.toAscii();
+		currentExperimentFile = strSource.toLatin1();
 	}
 
 	QFile validationFile(MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME));//MainAppInfo::appXsdFilePath()
@@ -652,7 +652,7 @@ bool ExperimentManager::runExperiment()
  *
  *  The current Experiment in memory is started if/after it has successfully loaded.
  */
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 	//bool ret = 
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 #else
@@ -2193,7 +2193,7 @@ bool ExperimentManager::createExperimentObjects()
 						tmpElement.nObjectID = nID;
 						tmpElement.nMetaID = metaID;
 						tmpElement.sObjectName = sName;
-						tmpElement.pObject = static_cast< QObject* > ( QMetaType::construct(metaID) );
+						tmpElement.pObject = static_cast< QObject* > ( QMetaType::create(metaID) );//( QMetaType::construct(metaID) );
 						tmpElement.typedExpParamCntnr = NULL;
 						tmpElement.ExpBlockParams = NULL;
 					

@@ -21,7 +21,7 @@
 #define _extensionname_PLUGIN_H
 
 #include <QObject>
-#include <QtGui>
+#include <QtWidgets>
 #include <QString>
 #include <Qlibrary>
 
@@ -36,6 +36,7 @@ QT_END_NAMESPACE
 class _extensionname_Plugin : public QObject, ExtensionInterface
 {
     Q_OBJECT
+	Q_PLUGIN_METADATA(IID "StimulGL.Plugins.Extensions" "_extensionname_.json")
     Q_INTERFACES(ExtensionInterface)
 
 public:

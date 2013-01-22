@@ -17,7 +17,7 @@
 //
 
 
-#include <QtGui>
+#include <QtWidgets>
 #include "renderarea.h"
 
 RenderArea::RenderArea(QWidget *parent)	: QWidget(parent)

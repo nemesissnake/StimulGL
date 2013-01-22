@@ -24,7 +24,7 @@
 
 #include <QDialog>
 #include "ui_ExperimentManager_dialog.h"
-#include <QtGui>
+#include <QtWidgets>
 #include <QThread>
 
 #include "qmlWidget.h"

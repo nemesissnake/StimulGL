@@ -142,6 +142,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		QtVersion = 4.8.0 (64bit)
+		Qt5Version = Qt500_win32
 	EndGlobalSection
 	GlobalSection(Qt) = preSolution
 		Integration = True

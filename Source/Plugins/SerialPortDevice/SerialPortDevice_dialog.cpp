@@ -24,7 +24,7 @@ SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(pare
 	//Gets constructed only once during the load of the plugin
 	ui.setupUi(this);
 
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 	ui.portBox->addItems(QStringList()<<"COM1"<<"COM2"<<"COM3"<<"COM4"<<"COM5"<<"COM6"<<"COM7"<<"COM8"<<"COM9");
 #else
 	ui.portBox->addItems(QStringList()<<"/dev/ttyS0"<<"/dev/ttyS1"<<"/dev/ttyUSB0"<<"/dev/ttyUSB1");
@@ -239,7 +239,7 @@ void SerialPortDevice_Dialog::onSendButtonClicked()
 			if (sToSend.isEmpty() == false)
 			{
 				bool bNoError = false;
-				int nDecVal = sToSend.toInt(&bNoError);//(int)sToSend;//(int) str[0] - '0';//QString::fromAscii(sToSend.toAscii()).toInt();//sToSend.toInt(&bNoError);
+				int nDecVal = sToSend.toInt(&bNoError);//(int)sToSend;//(int) str[0] - '0';//QString::fromAscii(sToSend.toLatin1()).toInt();//sToSend.toInt(&bNoError);
 				if(bNoError)
 				{
 					nDecVal = nDecVal - '0';
@@ -274,7 +274,7 @@ void SerialPortDevice_Dialog::onReadyRead()
 				int nDecVal;
 				for (int i=0;i<sReceived.count();i++)
 				{
-					nDecVal = sReceived[i].toAscii();
+					nDecVal = sReceived[i].toLatin1();
 					sConverted = sConverted + QString::number(nDecVal);
 				}
 				ui.recvEdit->insertPlainText(sConverted);

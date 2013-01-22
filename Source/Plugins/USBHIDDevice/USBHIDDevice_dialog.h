@@ -24,7 +24,7 @@
 
 #include <QDialog>
 #include "ui_USBHIDDevice_dialog.h"
-#include <QtGui>
+#include <QtWidgets>
 #include <Windows.h>
 #include <QDialog>
 #include <QThread>

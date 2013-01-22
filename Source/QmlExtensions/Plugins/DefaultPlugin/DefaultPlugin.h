@@ -22,6 +22,8 @@
 class QDefaultQmlPlugin : public QDeclarativeExtensionPlugin
 {
 	Q_OBJECT
+	Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" "DefaultQMLPlugin")
+
 public:
 	void registerTypes(const char *uri);
 };

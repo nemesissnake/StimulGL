@@ -121,53 +121,17 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_SerialPortDevice.cpp">
       <Filter>Form Files\Generated Files\Template_x64</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialenumerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_qextserialenumerator.cpp">
-      <Filter>Form Files\Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_qextserialenumerator.cpp">
-      <Filter>Form Files\Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_qextserialenumerator.cpp">
-      <Filter>Form Files\Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_qextserialenumerator.cpp">
-      <Filter>Form Files\Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_qextserialenumerator.cpp">
       <Filter>Form Files\Generated Files\Template_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_qextserialenumerator.cpp">
       <Filter>Form Files\Generated Files\Template_x64</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialenumerator_win.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialport.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_qextserialport.cpp">
-      <Filter>Form Files\Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_qextserialport.cpp">
-      <Filter>Form Files\Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_qextserialport.cpp">
-      <Filter>Form Files\Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_qextserialport.cpp">
-      <Filter>Form Files\Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_qextserialport.cpp">
       <Filter>Form Files\Generated Files\Template_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_qextserialport.cpp">
       <Filter>Form Files\Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialport_win.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,15 +153,6 @@
     <ClInclude Include="..\..\StimulGL\plugininterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialenumerator_p.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialport_p.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialport_global.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="SerialPortDevice.h">
@@ -212,17 +167,12 @@
     <CustomBuild Include="SerialPortDevice_dialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialenumerator.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="C:\Qt\4.8.0\win32\include\qextserial\qextserialport.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SerialPortDeviceplugin.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="licenseHeader.licenseheader" />
+    <None Include="SerialPortDevice.json" />
   </ItemGroup>
 </Project>

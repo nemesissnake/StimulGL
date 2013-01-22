@@ -27,7 +27,7 @@
 #include <QPaintEvent>
 #include <QKeyEvent>
 #include <QBoxLayout>
-#include <QCustomEvent>
+#include <QEvent>
 #include <QMutex>
 #include <QScriptValue>
 #include <omp.h>

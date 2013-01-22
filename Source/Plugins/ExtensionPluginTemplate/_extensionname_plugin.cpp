@@ -71,4 +71,3 @@ bool _extensionname_Plugin::ShowGUI()
 	return true;
 }
 
-Q_EXPORT_PLUGIN2(_extensionname_plugin, _extensionname_Plugin);

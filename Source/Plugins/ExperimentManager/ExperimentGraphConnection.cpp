@@ -22,7 +22,7 @@
 #include "ExperimentGraphConnection.h"
 #include "ExperimentGraphPort.h"
 
-ExperimentGraphConnection::ExperimentGraphConnection(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsPathItem(parent, scene)
+ExperimentGraphConnection::ExperimentGraphConnection(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsPathItem(parent)//, scene)
 {
 	setPen(QPen(Qt::black, 2));
 	setBrush(Qt::NoBrush);

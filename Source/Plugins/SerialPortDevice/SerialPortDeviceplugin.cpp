@@ -72,4 +72,4 @@ bool SerialPortDevicePlugin::ShowGUI()
 	return true;
 }
 
-Q_EXPORT_PLUGIN2(SerialPortDeviceplugin, SerialPortDevicePlugin);
+//Q_PLUGIN_METADATA(SerialPortDeviceplugin, SerialPortDevicePlugin);

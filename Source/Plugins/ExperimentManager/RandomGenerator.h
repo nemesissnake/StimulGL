@@ -27,7 +27,7 @@
 #include <QScriptEngine>
 #include "randomc.h"
 
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 	#include "windows.h"
 #endif
 

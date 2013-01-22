@@ -38,7 +38,7 @@
 #include "ExperimentStructures.h"
 #include "ExperimentGraphEditor.h"
 
-#ifdef Q_OS_WIN
+#ifdef Q_WS_WIN
 #include <windows.h>
 #endif
 

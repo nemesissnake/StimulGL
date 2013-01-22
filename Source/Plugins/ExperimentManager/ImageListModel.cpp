@@ -277,7 +277,7 @@ bool ImageListModel::isUniqueID(const QString &ID)
 
 void ImageListModel::resetLstModelItem(strcImageListModelItem &item)
 {
-	item.pixMap = NULL;
+	item.pixMap.fill();// = NULL;
 	item.strPath = "";
 	item.strID = "";
 };

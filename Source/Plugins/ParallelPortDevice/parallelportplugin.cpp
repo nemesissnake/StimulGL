@@ -98,4 +98,3 @@ bool ParallelPortPlugin::ShowGUI()
 	return true;
 }
 
-Q_EXPORT_PLUGIN2(parallelportplugin, ParallelPortPlugin);

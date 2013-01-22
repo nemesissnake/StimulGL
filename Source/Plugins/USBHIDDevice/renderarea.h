@@ -20,9 +20,9 @@
 #ifndef RENDERAREA_H
 #define RENDERAREA_H
 
+#include <QBrush>
 #include <QWidget>
 #include "Global.h"
-//#include <QBrush>
 //#include <QPen>
 //#include <QPixmap>
 

@@ -106,4 +106,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="DefaultQMLPlugin.json" />
+  </ItemGroup>
 </Project>

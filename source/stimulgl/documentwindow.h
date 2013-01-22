@@ -20,7 +20,7 @@
 #ifndef DOCUMENTWINDOW_H
 #define DOCUMENTWINDOW_H
 
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QMainWindow>
 #include <QtCore/QStringList>
 
 class DocumentWindow : public QMainWindow

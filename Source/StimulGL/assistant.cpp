@@ -21,7 +21,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QLibraryInfo>
 #include <QtCore/QProcess>
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
 #include "assistant.h"
 
 Assistant::Assistant() : proc(0)

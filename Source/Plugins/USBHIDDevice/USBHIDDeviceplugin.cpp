@@ -70,4 +70,4 @@ bool USBHIDDevicePlugin::ShowGUI()
 	return true;
 }
 
-Q_EXPORT_PLUGIN2(USBHIDDeviceplugin, USBHIDDevicePlugin);
+//Q_PLUGIN_METADATA(USBHIDDeviceplugin, USBHIDDevicePlugin);

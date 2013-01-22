@@ -71,4 +71,4 @@ bool PiezoStimDevicePlugin::ShowGUI()
 	return true;
 }
 
-Q_EXPORT_PLUGIN2(PiezoStimDeviceplugin, PiezoStimDevicePlugin);
+//Q_PLUGIN_METADATA(PiezoStimDeviceplugin, PiezoStimDevicePlugin);

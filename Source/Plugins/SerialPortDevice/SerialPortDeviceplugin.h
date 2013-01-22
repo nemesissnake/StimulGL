@@ -23,7 +23,7 @@
 #define SerialPortDevicePLUGIN_H
 
 #include <QObject>
-#include <QtGui>
+#include <QtWidgets>
 #include <QString>
 #include <Qlibrary>
 
@@ -35,6 +35,7 @@
 class SerialPortDevicePlugin : public QObject, DeviceInterface
 {
     Q_OBJECT
+	Q_PLUGIN_METADATA(IID "StimulGL.Plugins.Devices" "SerialPortDevice.json")
     Q_INTERFACES(DeviceInterface)
 
 public:

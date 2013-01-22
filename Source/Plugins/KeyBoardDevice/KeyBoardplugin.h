@@ -21,7 +21,7 @@
 #define KeyBoardPLUGIN_H
 
 #include <QObject>
-#include <QtGui>
+#include <QtWidgets>
 #include <QString>
 #include <Qlibrary>
 #include "../../StimulGL/plugininterface.h"
@@ -36,6 +36,7 @@ QT_END_NAMESPACE
 class KeyBoardPlugin : public QObject, public DeviceInterface
 {
     Q_OBJECT
+	Q_PLUGIN_METADATA(IID "StimulGL.Plugins.Devices" "KeyBoardCapture.json")
     Q_INTERFACES(DeviceInterface)
 
 public:
