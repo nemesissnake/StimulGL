@@ -81,40 +81,42 @@ public:
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
+	QString Test(const QString &sParam = QString(""));
+	QString ReturnCodeToString(const int &nRetval);
 
 	int initStimulator(const QString &sLicense);
 	int closeStimulator();
 	int resetStimulator();
-	int setProperty(char* property, uint32_t value);
-	int getProperty(char* property);
+	int setProperty(QString property, int value) {return setProperty((char*)property.toLatin1().data(),(uint32_t)value);};
+	int getProperty(QString property) {return getProperty((char*)property.toLatin1().data());};
 	int startStimulation();
 	int stopStimulation();
-	int setDAC(uint8_t dac, uint16_t wert);
-	int setPinBlock8(uint8_t slot, uint8_t int_trigger, uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7);
-	int setPinBlock(uint8_t slot, uint8_t int_trigger, uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7);
-	int setPinBlock10(uint8_t slot, uint8_t int_trigger, uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7, uint8_t pin8, uint8_t pin9);
-	int wait(uint8_t int_trigger, uint32_t time);
-	int setVar(uint8_t var, uint16_t value);
-	int setVarImmediate(uint8_t var, uint16_t value);
-	uint16_t getVarImmediate(uint8_t var);
-	int incVar(uint8_t var);
-	int decVar(uint8_t var);
-	int outPort8(uint8_t slot, uint8_t port, uint8_t value);
-	int outPort16(uint8_t slot, uint8_t portH, uint8_t portL, uint16_t value);
-	int outPortVar16(uint8_t slot, uint8_t portH, uint8_t portL, uint8_t var);
-	int inPortVar16(uint8_t slot, uint8_t portH, uint8_t portL, uint8_t var);
-	int setTriggerMode(uint8_t slot, uint8_t port, uint8_t mode);
-	int setTriggerLength(uint8_t slot, uint8_t port, uint8_t length);
-	int waitForTrigger(uint8_t slot, uint8_t port);
-	int triggerOut(uint8_t slot, uint8_t port);
-	int set2PDProperties(uint8_t module, uint8_t slot, uint8_t subslot, uint8_t dac_x, uint8_t dac_z0, uint8_t dac_z1);
-	int set2PDCalibrationX(uint8_t module, uint16_t homeDACPos, double co0, double co1, double co2, double co3, double co4, double co5, double co6, double co7, double co8, double co9);
-	int set2PDCalibrationZ(uint8_t module, double Z0_co0, double Z0_co1, double Z1_co0, double Z1_co1);
-	int set2PDDistance(uint8_t module, double distance);
-	int set2PDHeight(uint8_t module, uint16_t promille_Z0, uint16_t promille_Z1);
-
-	QString Test(const QString &sParam = QString(""));
-	QString ReturnCodeToString(const int &nRetval);
+	int setDAC(int dac, int wert) {return setDAC((uint8_t)dac, (uint16_t)wert);};
+	int setPinBlock8(int slot, int int_trigger, int pin0, int pin1, int pin2, int pin3, int pin4, int pin5, int pin6, int pin7)
+		{return setPinBlock8((uint8_t)slot, (uint8_t)int_trigger, (uint8_t)pin0, (uint8_t)pin1, (uint8_t)pin2, (uint8_t)pin3, (uint8_t)pin4, (uint8_t)pin5, (uint8_t)pin6, (uint8_t)pin7);};
+	int setPinBlock(int slot, int int_trigger, int pin0, int pin1, int pin2, int pin3, int pin4, int pin5, int pin6, int pin7)
+		{return setPinBlock((uint8_t)slot, (uint8_t)int_trigger, (uint8_t)pin0, (uint8_t)pin1, (uint8_t)pin2, (uint8_t)pin3, (uint8_t)pin4, (uint8_t)pin5, (uint8_t)pin6, (uint8_t)pin7);}
+	int setPinBlock10(int slot, int int_trigger, int pin0, int pin1, int pin2, int pin3, int pin4, int pin5, int pin6, int pin7, int pin8, int pin9)
+		{return setPinBlock10((uint8_t)slot, (uint8_t)int_trigger, (uint8_t)pin0, (uint8_t)pin1, (uint8_t)pin2, (uint8_t)pin3, (uint8_t)pin4, (uint8_t)pin5, (uint8_t)pin6, (uint8_t)pin7, (uint8_t)pin8, (uint8_t)pin9);}
+	int wait(int int_trigger, int time) {return wait((uint8_t)int_trigger, (uint32_t)time);};
+	int setVar(int var, int value) {return setVar((uint8_t)var, (uint16_t)value);};
+	int setVarImmediate(int var, int value) {return setVarImmediate((uint8_t)var, (uint16_t)value);};
+	int getVarImmediate(int var) {return (int)getVarImmediate((uint8_t)var);};
+	int incVar(int var) {return incVar((uint8_t)var);};
+	int decVar(int var) {return decVar((uint8_t)var);};	
+	int outPort8(int slot, int port, int value) {return outPort8((uint8_t) slot, (uint8_t) port, (uint8_t) value);};
+	int outPort16(int slot, int portH, int portL, int value) {return outPort16((uint8_t) slot, (uint8_t) portH, (uint8_t) portL, (uint16_t) value);};
+	int outPortVar16(int slot, int portH, int portL, int var) {return outPortVar16((uint8_t) slot, (uint8_t) portH, (uint8_t) portL, (uint8_t) var);};
+	int inPortVar16(int slot, int portH, int portL, int var) {return inPortVar16((uint8_t) slot, (uint8_t) portH, (uint8_t) portL, (uint8_t) var);};
+	int setTriggerMode(int slot, int port, int mode) {return setTriggerMode((uint8_t) slot, (uint8_t) port, (uint8_t) mode);};
+	int setTriggerLength(int slot, int port, int length) {return setTriggerLength((uint8_t) slot, (uint8_t) port, (uint8_t) length);};
+	int waitForTrigger(int slot, int port) {return waitForTrigger((uint8_t) slot, (uint8_t) port);};
+	int triggerOut(int slot, int port) {return triggerOut((uint8_t) slot, (uint8_t) port);};
+	int set2PDProperties(int module, int slot, int subslot, int dac_x, int dac_z0, int dac_z1) {return set2PDProperties((uint8_t) module, (uint8_t) slot, (uint8_t) subslot, (uint8_t) dac_x, (uint8_t) dac_z0, (uint8_t) dac_z1);};
+	int set2PDCalibrationX(int module, int homeDACPos, double co0, double co1, double co2, double co3, double co4, double co5, double co6, double co7, double co8, double co9) {return set2PDCalibrationX((uint8_t) module, (uint16_t) homeDACPos, co0, co1, co2, co3, co4, co5, co6, co7, co8, co9);};
+	int set2PDCalibrationZ(int module, double Z0_co0, double Z0_co1, double Z1_co0, double Z1_co1) {return set2PDCalibrationZ((uint8_t) module, Z0_co0, Z0_co1, Z1_co0, Z1_co1);};
+	int set2PDDistance(int module, double distance) {return set2PDDistance((uint8_t) module, distance);};
+	int set2PDHeight(int module, int promille_Z0, int promille_Z1) {return set2PDHeight((uint8_t) module, (uint16_t) promille_Z0, (uint16_t) promille_Z1);};
 
 private:
 	QScriptEngine* currentScriptEngine;
@@ -159,6 +161,32 @@ private:
 	MyPrototype_set2PDCalibrationZ MyFunction_set2PDCalibrationZ;
 	MyPrototype_set2PDDistance MyFunction_set2PDDistance;
 	MyPrototype_set2PDHeight MyFunction_set2PDHeight;
+
+	int setProperty(char* property, uint32_t value);
+	int getProperty(char* property);
+	int setDAC(uint8_t dac, uint16_t wert);
+	int setPinBlock8(uint8_t slot, uint8_t int_trigger, uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7);
+	int setPinBlock(uint8_t slot, uint8_t int_trigger, uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7);
+	int setPinBlock10(uint8_t slot, uint8_t int_trigger, uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3, uint8_t pin4, uint8_t pin5, uint8_t pin6, uint8_t pin7, uint8_t pin8, uint8_t pin9);
+	int wait(uint8_t int_trigger, uint32_t time);
+	int setVar(uint8_t var, uint16_t value);
+	int setVarImmediate(uint8_t var, uint16_t value);
+	uint16_t getVarImmediate(uint8_t var);
+	int incVar(uint8_t var);
+	int decVar(uint8_t var);
+	int outPort8(uint8_t slot, uint8_t port, uint8_t value);
+	int outPort16(uint8_t slot, uint8_t portH, uint8_t portL, uint16_t value);
+	int outPortVar16(uint8_t slot, uint8_t portH, uint8_t portL, uint8_t var);
+	int inPortVar16(uint8_t slot, uint8_t portH, uint8_t portL, uint8_t var);
+	int setTriggerMode(uint8_t slot, uint8_t port, uint8_t mode);
+	int setTriggerLength(uint8_t slot, uint8_t port, uint8_t length);
+	int waitForTrigger(uint8_t slot, uint8_t port);
+	int triggerOut(uint8_t slot, uint8_t port);
+	int set2PDProperties(uint8_t module, uint8_t slot, uint8_t subslot, uint8_t dac_x, uint8_t dac_z0, uint8_t dac_z1);
+	int set2PDCalibrationX(uint8_t module, uint16_t homeDACPos, double co0, double co1, double co2, double co3, double co4, double co5, double co6, double co7, double co8, double co9);
+	int set2PDCalibrationZ(uint8_t module, double Z0_co0, double Z0_co1, double Z1_co0, double Z1_co1);
+	int set2PDDistance(uint8_t module, double distance);
+	int set2PDHeight(uint8_t module, uint16_t promille_Z0, uint16_t promille_Z1);
 };
 
 #endif // PIEZOSTIMDEVICE_H
