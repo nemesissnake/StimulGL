@@ -48,7 +48,7 @@ function RSSListing(parent)
     headerLabels.push(tr("Title"));
     headerLabels.push(tr("Link"));
     this.treeWidget.setHeaderLabels(headerLabels);
-    this.treeWidget.header().setResizeMode(QHeaderView.ResizeToContents);
+    //this.treeWidget.header().setResizeMode(QHeaderView.ResizeToContents);
 
     this.http = new QHttp(this);
     this.http.readyRead.connect(this, this.readData);
