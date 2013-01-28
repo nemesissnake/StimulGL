@@ -249,26 +249,26 @@ FileGroup ::D562F7E3-157E-48ED-91CE-71FBA40B332D -setup Install -active Yes -pla
 File ::7E328DE7-2654-4D26-81C8-9E5FCAF16983 -targetfilename StimulGL.exe -name E:/Projects/StimulGL/Install/StimulGL_x64_Release.exe -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::37A39DB3-A83E-4827-A49A-459E45D983DA -name E:/Projects/StimulGL/Install/LICENSE.txt -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::4434FE16-7CF0-4686-96AE-9254CC88ED91 -name E:/Projects/StimulGL/Install/bins/vcredist_x86.exe -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::1DC74C97-D411-49FA-B52B-54BFF31B6221 -name C:/Qt/4.8.0/x64/bin/hidapi_x64.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::C1E903B8-3B00-4267-860B-C1F091F0476F -name C:/Qt/4.8.0/x64/bin/qscintilla2.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::53C3D9DA-C8A4-4D9F-9605-D90D1061EFCC -name C:/Qt/4.8.0/x64/bin/QtCore4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::2B3D34FC-E604-4F5E-A7B4-56E131BCCFE1 -name C:/Qt/4.8.0/x64/bin/QtGui4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::F7A1E2EE-C40E-42A4-ABDD-68C1FADEDB9F -name C:/Qt/4.8.0/x64/bin/QtOpenGL4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::D573A685-88EB-46D5-9492-457A7A806243 -name C:/Qt/4.8.0/x64/bin/QtScript4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::D0EB9CCE-EF7D-41F0-BF91-89666E84D122 -name C:/Qt/4.8.0/x64/bin/QtScriptTools4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::DDC8AAA1-2215-44EC-95BB-060DEF259430 -name C:/Qt/4.8.0/x64/bin/QtSvg4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::95623759-1C20-4E3C-B9B2-0340BFF29B8E -name C:/Qt/4.8.0/x64/bin/QtXml4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::F349EF95-C8B5-403B-8FF5-2788CEBE0427 -name C:/Qt/4.8.0/x64/bin/QtXmlPatterns4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::B3B97544-81FA-4ED0-9B2B-736F9182571E -name C:/Qt/4.8.0/x64/bin/QtNetwork4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::5B031E42-D5BD-4B41-9977-71FE9B6DC467 -name C:/Qt/4.8.0/x64/bin/QtSql4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::E1255792-CE4B-4F24-A248-F1C402533494 -name C:/Qt/4.8.0/x64/bin/phonon4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::5A4658E0-6A9D-48D3-ABE0-F1288BC2BDEB -name C:/Qt/4.8.0/x64/bin/QtDeclarative4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::D3CE3857-CE71-4563-A7D2-0027042BA3A1 -name C:/Qt/4.8.0/x64/bin/inpoutx64.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::1DC74C97-D411-49FA-B52B-54BFF31B6221 -name C:/Qt/5.0.0/x64/bin/hidapi_x64.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::C1E903B8-3B00-4267-860B-C1F091F0476F -name C:/Qt/5.0.0/x64/bin/qscintilla2.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::D3CE3857-CE71-4563-A7D2-0027042BA3A1 -name C:/Qt/5.0.0/x64/bin/inpoutx64.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::88317E89-731A-4CC4-A7FF-459BE2CAD776 -name E:/Projects/StimulGL/Install/assistant.exe -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::F8053DF4-53ED-433B-97A3-2CB78FF9B6EA -name E:/Projects/StimulGL/Install/StimulGL_NoBindings.bat -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::FF21400E-8F8E-4D0A-93B0-ACE7CD2571CE -name C:/Qt/4.8.0/x64/bin/QtHelp4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::D3554B49-3092-4BA5-8C36-A55E7FC41518 -name C:/Qt/4.8.0/x64/bin/QtCLucene4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::95974262-5E91-458F-9DBC-B98D0E7F2A28 -name C:/Qt/4.8.0/x64/bin/QtWebKit4.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::8CE36C1E-B1FB-43A6-8726-6D24E534E121 -name C:/Qt/5.0.0/x64/bin/Qt5CLucene.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::1FA8798A-83DA-4950-9610-2E10C623748B -name C:/Qt/5.0.0/x64/bin/Qt5Core.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::A63DC816-27BF-48C0-A672-404E7A5FA68C -name C:/Qt/5.0.0/x64/bin/Qt5Declarative.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::716B97AF-558A-4A67-A751-60BBE008F7E4 -name C:/Qt/5.0.0/x64/bin/Qt5Gui.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::743BD979-B246-4042-A899-1D72833AC44B -name C:/Qt/5.0.0/x64/bin/Qt5Widgets.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::BAAD3768-87E9-4B76-9A7A-00A153607B21 -name C:/Qt/5.0.0/x64/bin/Qt5Help.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::04E55A90-EFCC-4A49-A2ED-2EE9AF9874B6 -name C:/Qt/5.0.0/x64/bin/Qt5Network.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::7C39F957-06C3-40C9-860F-E212C17389D5 -name C:/Qt/5.0.0/x64/bin/Qt5OpenGL.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::F0DD513F-9393-4967-9B93-F7AC4713AB65 -name C:/Qt/5.0.0/x64/bin/Qt5Script.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::32E75AA5-717C-48AC-8C38-442B35DE6A22 -name C:/Qt/5.0.0/x64/bin/Qt5ScriptTools.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::19485C36-93DC-419C-B6E9-DCB2FB7407A5 -name C:/Qt/5.0.0/x64/bin/Qt5Sql.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::582D68F2-500A-42FF-BB32-B82DF4FC8E79 -name C:/Qt/5.0.0/x64/bin/Qt5Svg.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::DF79A279-2585-4E04-9CE2-E267063910FE -name C:/Qt/5.0.0/x64/bin/Qt5WebKit.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::EFF6B289-BFF7-4B2E-BCFE-C8ABE522D63C -name C:/Qt/5.0.0/x64/bin/Qt5Xml.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::E118D14B-8DEE-4C41-B343-21134A091E9C -name C:/Qt/5.0.0/x64/bin/Qt5XmlPatterns.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 FileGroup ::21B9C60D-2802-481D-BF1F-F26B0588B66E -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name {StimulGL Plugins(x64)} -parent FileGroups
 File ::66FCBDDC-C900-40BF-87EE-D17EFF84FA30 -name E:/Projects/StimulGL/Install/plugins/x64/SerialPortDeviceplugin_x64_Release.dll -parent 21B9C60D-2802-481D-BF1F-F26B0588B66E
 File ::4FD768CE-15F8-4FAE-B7A5-288F0AD9D469 -name E:/Projects/StimulGL/Install/plugins/x64/USBHIDDeviceplugin_x64_Release.dll -parent 21B9C60D-2802-481D-BF1F-F26B0588B66E
@@ -311,13 +311,13 @@ FileGroup ::FE7C119F-2B67-439E-A0DF-FA1E714F2630 -setup Install -active Yes -pla
 File ::ABC1B1ED-659D-4D62-A8E0-E3EA2C33F5C0 -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/ExperimentManager.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::A84A255F-9B76-491E-A620-D2E396758465 -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/ImageConversion.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::B464ACAE-9D43-4D47-9A82-2359514B5DFB -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/PRTFormatting.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::72CE2237-D232-4CCA-8EFA-A1D0CAB7EFBC -name E:/Projects/StimulGL/Source/Plugins/ExtensionPluginTemplate/scripts/QScriptExample_ExtensionPluginTemplate_.qs -active 0 -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::042C3DF6-0B5C-4589-887B-72D893CD8D57 -name E:/Projects/StimulGL/Source/Plugins/ParallelPortDevice/scripts/QScriptExample_ParallelPort.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::D52BC55C-6ABB-4069-9DFF-921B10FE285B -name E:/Projects/StimulGL/Source/Plugins/USBHIDDevice/scripts/QScriptExampleUSBHIDDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::A91D18B9-2F4D-4802-91A2-66FAAB3C6CA8 -name E:/Projects/StimulGL/Source/Plugins/SerialPortDevice/scripts/QScriptExampleSerialPortDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::42799612-F05F-490E-8107-10EA0EBB05A3 -name E:/Projects/StimulGL/Source/Plugins/KeyBoardDevice/scripts/QScriptExample_KeyBoard.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::ED42D892-E1F0-467B-B152-C8184EA2433B -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/TriggerTimer.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::E8D22DE7-8E19-4E00-A4F5-156E09A59C14 -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts/RandomGenerator.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::B6E65DFF-15E2-4827-A12F-72EF3ED8CF84 -name E:/Projects/StimulGL/Source/Plugins/PiezoStimDevice/scripts/QScriptExample_PiezoStimDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 FileGroup ::E5DE8D2A-E046-4945-B382-97B2670A7E75 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name Documents -parent FileGroups
 File ::182C849A-4C78-4BB0-8AB8-DBA019559C3C -name E:/Projects/StimulGL/Install/documents/MainDocumentation.qhc -parent E5DE8D2A-E046-4945-B382-97B2670A7E75
 File ::92D1763F-22CE-4811-860C-50DE5667D48D -name E:/Projects/StimulGL/Install/documents/MainDocumentation.qch -parent E5DE8D2A-E046-4945-B382-97B2670A7E75
@@ -536,6 +536,26 @@ File ::C21381A7-16E4-42A7-AC7E-5393CC2D5E9C -name ObjectConstructionAndGarbageCo
 File ::3666C4BE-F07D-4277-AE37-6A2C466616DD -name QtLibraryScriptBindings.qs -parent A27094B8-E464-4FDD-B59D-6C2AD96DA31A
 File ::0CC1B405-F412-48CF-8DEE-A78B5ABA9FEF -name SignalSlotMechanism.qs -parent A27094B8-E464-4FDD-B59D-6C2AD96DA31A
 File ::BA89C5E2-6D50-4719-8A0C-320843842C59 -name StimulGLPluginScriptBindings.qs -parent A27094B8-E464-4FDD-B59D-6C2AD96DA31A
+File ::CA22E20C-9E40-4A64-ABA8-7F1918240C09 -type dir -name ExperimentManager -parent B6113D36-9E75-4112-8195-670072443A24
+File ::19CF9F05-DAB6-4E51-831C-7B10128E957F -name RetinotopicMapping.qs -parent CA22E20C-9E40-4A64-ABA8-7F1918240C09
+File ::0668D00F-943C-4733-8A5B-1E49868989F4 -type dir -name experiments -parent CA22E20C-9E40-4A64-ABA8-7F1918240C09
+File ::735E1312-9306-4C73-8C2C-A1E94888CFDF -name Button.qml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::89CB26DF-F3AC-497A-A375-37824CB8E508 -name Cell.qml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::E4D38AEB-C93D-4F00-837F-5168D9E264D0 -name DebugMode.qml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::6184B505-7DA6-40B5-A783-B7EC0BF5C638 -name Example_1.qml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::7292660F-E397-4A4A-9E83-BA162030F631 -name Example_2.exml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::8959B86F-4C54-475B-BCBA-E62C3F60EC34 -name Example_2a.qml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::A68CB512-6161-4889-A1D5-1A0C7E84B3B7 -name Example_2b.qml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::D70572E1-FB5E-459B-B07E-70F2C9DF9617 -name Example_2c.qml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::7F4D23C8-33AC-4568-A306-3E6A9D13019B -name Example_3.qml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::33E03F68-EAF4-4936-B96D-8CFC1CC3FB95 -name PolarAngle.exml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::3B94C00F-0E30-413B-A1DC-132333E911E5 -name qmlExample.exml -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::EFA729E2-943C-446A-8A19-B7F1428AA1F0 -type dir -name audio -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::4B6D8310-3F9D-4E4E-A039-141A4176D9D7 -name audio_1.wav -parent EFA729E2-943C-446A-8A19-B7F1428AA1F0
+File ::42E4811B-7B43-4FBE-95B1-A8F8A4B55805 -name audio_2.wav -parent EFA729E2-943C-446A-8A19-B7F1428AA1F0
+File ::7FCA5E76-388B-4EB7-87DE-5F1542ECD965 -type dir -name images -parent 0668D00F-943C-4733-8A5B-1E49868989F4
+File ::9BBFABA5-51AC-4186-9E43-A052C6076760 -name acai.jpg -parent 7FCA5E76-388B-4EB7-87DE-5F1542ECD965
+File ::D1AADB46-99A1-47D0-AA9A-F5F23D6D9815 -name banana.jpg -parent 7FCA5E76-388B-4EB7-87DE-5F1542ECD965
 FileGroup ::13ECD65D-69B5-4F91-B2C0-B4F9548060F8 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {QML Plugins(x64)} -parent FileGroups
 File ::F907A78E-E59A-43F9-A551-B910CAA80D0C -type dir -name E:/Projects/StimulGL/Install/qml/plugins/x64/StimulGLExtensions -parent 13ECD65D-69B5-4F91-B2C0-B4F9548060F8
 File ::CF346320-1B3F-41C9-B497-601EF236B2AB -name center.png -parent F907A78E-E59A-43F9-A551-B910CAA80D0C
@@ -549,12 +569,12 @@ FileGroup ::D09FFE2D-0C13-4F41-ABE1-1E2763E77575 -setup Install -active Yes -pla
 File ::25EBBE13-30D0-4EF2-86EF-A1265CA859AA -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_core.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 File ::EC613CB1-0C95-4C85-8558-33BD72BAA81B -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_gui.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 File ::CC66E2F0-97D2-47DE-A000-AB111B1C7531 -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_opengl.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::8EAA96EA-DB77-4A13-AA26-4D3FA43FB06F -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_phonon.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 File ::828ADD58-D8AC-4B6E-B521-2B55BDCE73AF -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_sql.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 File ::0E3FAD8E-D3D9-467E-B641-EEE3B1507B1E -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_svg.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 File ::68193671-EF8B-47F2-AEB4-A63F1FC2F43D -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_uitools.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 File ::1222F72F-9291-411C-B3E2-080FFC44C2BD -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_xml.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 File ::60BCE2A4-9D3E-479F-B211-E3E16F2B9968 -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_xmlpatterns.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::D7228137-AAFF-47F8-B196-CC2D595E60D5 -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_webkit.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 FileGroup ::6F707DE3-E5BF-4944-9F3F-B84552A89AA0 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {Language APIs} -parent FileGroups
 File ::173847FF-4250-4C17-8CAA-8301880107EE -type dir -name E:/Projects/StimulGL/Install/apis -parent 6F707DE3-E5BF-4944-9F3F-B84552A89AA0
 File ::334AEA46-BEA6-427B-804F-E40EE1ADA64C -name cplusplus.api -parent 173847FF-4250-4C17-8CAA-8301880107EE
@@ -569,30 +589,30 @@ File ::12E6D9B7-5F16-4669-A574-E93441240075 -name qscript.api -parent 173847FF-4
 File ::46D83471-8377-43BB-B766-08ABB295E1B8 -name xml.api -parent 173847FF-4250-4C17-8CAA-8301880107EE
 File ::B8D2FF5F-0C8B-449A-A167-2B599CF7E17E -name exml.api -parent 173847FF-4250-4C17-8CAA-8301880107EE
 FileGroup ::891CF076-368A-450C-890A-7E3FDCB8748B -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {Program Files(win32)} -parent FileGroups
-File ::0CE75847-D528-42B9-9CA1-8500415CFC55 -name C:/Qt/4.8.0/win32/bin/assistant.exe -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::B13BDCF5-B662-4B38-804E-0C781451A111 -name C:/Qt/4.8.0/win32/bin/hidapi_win32.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::857D2930-4C35-413A-B4E1-5C342F34F87D -name C:/Qt/4.8.0/win32/bin/inpout32.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::0CE75847-D528-42B9-9CA1-8500415CFC55 -name C:/Qt/5.0.0/win32/bin/assistant.exe -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::B13BDCF5-B662-4B38-804E-0C781451A111 -name C:/Qt/5.0.0/win32/bin/hidapi_win32.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::857D2930-4C35-413A-B4E1-5C342F34F87D -name C:/Qt/5.0.0/win32/bin/inpout32.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 File ::92646AD4-7598-4099-92AF-83C7A5E6A5C1 -name E:/Projects/StimulGL/Install/LICENSE.txt -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::7E609F26-2C13-44DC-ABC7-096C383EE781 -name C:/Qt/4.8.0/win32/bin/phonon4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::823BEAE8-0CCA-49BE-9E37-45A0F998F2FE -name C:/Qt/4.8.0/win32/bin/qscintilla2.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::870D969B-1D09-429B-9404-ECFCDCE2445B -name C:/Qt/4.8.0/win32/bin/QtCore4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::258CDE01-B521-4CD9-8131-C7FFF7D466FD -name C:/Qt/4.8.0/win32/bin/QtDeclarative4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::55BF3C3D-4784-47A1-927A-A1D8EDF534EF -name C:/Qt/4.8.0/win32/bin/QtGui4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::74516771-6566-4012-A640-37851B44ED99 -name C:/Qt/4.8.0/win32/bin/QtNetwork4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::C3D0B7FB-DB18-4BA9-8539-A0F4552FC2D9 -name C:/Qt/4.8.0/win32/bin/QtOpenGL4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::60BC0452-A6BF-4936-8403-6110443AF04F -name C:/Qt/4.8.0/win32/bin/QtScript4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::71E513ED-2C7C-4012-8A32-0E65A2168A5B -name C:/Qt/4.8.0/win32/bin/QtScriptTools4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::56873F35-8DC0-426C-BF1A-04ECC4921BAE -name C:/Qt/4.8.0/win32/bin/QtSql4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::2953A4F7-BFB4-4847-8E0B-B8D7154317C2 -name C:/Qt/4.8.0/win32/bin/QtSvg4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::30A75301-0057-486C-8E48-60AFF95CE4A6 -name C:/Qt/4.8.0/win32/bin/QtXml4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::A928D63B-AD06-41E4-87E1-30047C159A3C -name C:/Qt/4.8.0/win32/bin/QtXmlPatterns4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::823BEAE8-0CCA-49BE-9E37-45A0F998F2FE -name C:/Qt/5.0.0/win32/bin/qscintilla2.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 File ::10A0B200-93CE-46B1-BAE2-C81897C538E2 -name E:/Projects/StimulGL/README -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 File ::1E43A13A-2FEB-439C-B7DF-3B0E4EB09C5D -targetfilename StimulGL.exe -name E:/Projects/StimulGL/Install/StimulGL_Win32_Release.exe -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 File ::46544C3C-6EEF-43C0-9E2C-346CA1A3BF19 -name E:/Projects/StimulGL/Install/bins/vcredist_x86.exe -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 File ::FF95EE67-F324-49D3-9A7B-EA82B8DCE909 -name E:/Projects/StimulGL/Install/StimulGL_NoBindings.bat -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::A7133C2B-2D4E-4B92-8503-A65D9ECF0BF8 -name C:/Qt/4.8.0/win32/bin/QtHelp4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::07D294EA-2085-46C5-AADB-DDA8EF3E13C7 -name C:/Qt/4.8.0/win32/bin/QtCLucene4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::E6BEAB46-5695-4DE9-A93B-5FDF85ADD36C -name C:/Qt/4.8.0/win32/bin/QtWebKit4.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::115CEDFD-5436-4AE3-885A-8060AAB312F6 -name C:/Qt/5.0.0/win32/bin/Qt5CLucene.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::238112D8-45BE-43E4-88C5-5A9E7E098E8D -name C:/Qt/5.0.0/win32/bin/Qt5Core.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::124EBF35-6D3B-4093-AFCA-877A3F7436C9 -name C:/Qt/5.0.0/win32/bin/Qt5Declarative.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::52ABE106-95BC-412D-8859-0B66CCD73FD7 -name C:/Qt/5.0.0/win32/bin/Qt5Gui.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::61B281D9-B8FA-4338-BB72-F56B5E0AB811 -name C:/Qt/5.0.0/win32/bin/Qt5Help.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::CEE2914F-A5B6-429B-ACB6-3DFF9FCFACF7 -name C:/Qt/5.0.0/win32/bin/Qt5Network.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::B20AFA58-6DD7-470A-BE65-01C4062432B4 -name C:/Qt/5.0.0/win32/bin/Qt5OpenGL.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::EE2F5EF9-778A-49AF-BB3F-EC5C020120AB -name C:/Qt/5.0.0/win32/bin/Qt5Script.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::9EB75954-72D4-4B5C-877B-EA91817B350F -name C:/Qt/5.0.0/win32/bin/Qt5ScriptTools.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::A3CAA5AE-949F-4B50-ADB5-BA75C6E88B21 -name C:/Qt/5.0.0/win32/bin/Qt5Sql.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::02FDA3F8-7B95-4B78-8F86-F6A13E5C7175 -name C:/Qt/5.0.0/win32/bin/Qt5Svg.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::CA799E41-397E-4389-907B-B10D7DDC57A2 -name C:/Qt/5.0.0/win32/bin/Qt5WebKit.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::96AFE8EF-6AF2-44B4-B163-BE198F644ED4 -name C:/Qt/5.0.0/win32/bin/Qt5Widgets.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::64966C1E-FEE9-4F4A-823B-CC1209906F75 -name C:/Qt/5.0.0/win32/bin/Qt5Xml.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::5E9D6570-6929-428D-8F77-99EFA0FDA61A -name C:/Qt/5.0.0/win32/bin/Qt5XmlPatterns.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 FileGroup ::2C7E583A-607F-4311-9D36-84C482C13786 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {StimulGL Plugins(win32)} -parent FileGroups
 File ::1766C14E-F605-4218-A893-A16D41E077C0 -name E:/Projects/StimulGL/Install/plugins/Win32/SerialPortDeviceplugin_Win32_Release.dll -parent 2C7E583A-607F-4311-9D36-84C482C13786
 File ::D01D06B4-441B-4822-ABA2-4A2CDEABF814 -name E:/Projects/StimulGL/Install/plugins/Win32/USBHIDDeviceplugin_Win32_Release.dll -parent 2C7E583A-607F-4311-9D36-84C482C13786
@@ -608,14 +628,13 @@ File ::20F3A6C2-985C-4AE9-B62B-D2EC45D7B3FF -name qmldir -active 0 -parent F15AC
 FileGroup ::9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name {Script Plugins(win32)} -parent FileGroups
 File ::5E3A7EED-E70A-401A-B12F-3A6298999BD1 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_core.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 File ::F9C9D128-C4E3-454D-95E9-FA938A36B5F4 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_gui.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::E1996D6B-5E17-4ABB-AA29-1EA170CE2FAC -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_network.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 File ::33B52460-DEFB-49B1-BD7C-05F321E27BB3 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_opengl.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::E7BE0F2F-0F22-4E6F-85DD-5F455A1AB5D2 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_phonon.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 File ::6A613727-5279-441F-9827-D6B88B8921FD -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_sql.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 File ::5F96FCE0-4269-4F24-92D6-C02AFA69FCF5 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_svg.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 File ::E78A9DBB-5F3E-4866-A6B4-F3D952682FF8 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_uitools.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 File ::46C22F21-C894-4551-A9AB-A1A7E41C4C7A -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_xml.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 File ::5AE910D4-0B60-48F9-938E-E0A32406F4B7 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_xmlpatterns.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::C92EF0C0-3E9A-46BA-8420-FE1D1AADFE77 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_webkit.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 FileGroup ::A2DAA637-8263-44CD-9683-9B4B3EEDCD93 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {XSD and validation} -parent FileGroups
 File ::D77FB78C-4FE1-4D75-AC2A-6D5DB1FF04FD -name E:/Projects/StimulGL/Install/xsd/exml_2001.xsd -parent A2DAA637-8263-44CD-9683-9B4B3EEDCD93
 File ::BB27F968-8F8F-46BB-9364-3F279B1C4967 -name E:/Projects/StimulGL/Install/xsd/exml_2002.xsd -parent A2DAA637-8263-44CD-9683-9B4B3EEDCD93
@@ -624,33 +643,35 @@ File ::FE331BF0-C236-495B-BADC-7B0097A12BB8 -targetfilename qmldir -name E:/Proj
 FileGroup ::9B6EA236-969D-43FC-A84A-06A74E6C3DBE -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name QMLDir(win32) -parent FileGroups
 File ::834A156E-A125-4326-86EF-A8115D1DDF44 -targetfilename qmldir -name E:/Projects/StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/qmldir_Release_Win32 -parent 9B6EA236-969D-43FC-A84A-06A74E6C3DBE
 FileGroup ::339CD47A-83C5-49EE-AC9B-A96C0AF6B26F -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {QML PhononBackend(win32)} -parent FileGroups
-File ::4BA0A4B0-9AA3-43CE-8493-4607C5F6DE86 -name C:/Qt/4.8.0/win32/plugins/phonon_backend/phonon_ds94.dll -parent 339CD47A-83C5-49EE-AC9B-A96C0AF6B26F
+File ::4BA0A4B0-9AA3-43CE-8493-4607C5F6DE86 -name C:/Qt/5.0.0/win32/plugins/phonon_backend/phonon_ds94.dll -active 0 -parent 339CD47A-83C5-49EE-AC9B-A96C0AF6B26F
 FileGroup ::4EDD61CE-1738-42F3-82D2-E035E88FDF4A -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {QML PhononBackend(x64)} -parent FileGroups
-File ::A404D50A-8321-4F37-B4B0-EF09BFFA9CFC -name C:/Qt/4.8.0/x64/plugins/phonon_backend/phonon_ds94.dll -parent 4EDD61CE-1738-42F3-82D2-E035E88FDF4A
+File ::A404D50A-8321-4F37-B4B0-EF09BFFA9CFC -name C:/Qt/5.0.0/x64/plugins/phonon_backend/phonon_ds94.dll -active 0 -parent 4EDD61CE-1738-42F3-82D2-E035E88FDF4A
 FileGroup ::B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0 -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name SQLLiteDrivers(win32) -parent FileGroups
-File ::5BE0870C-979B-4CD3-A7EB-A52B3271DD2E -name C:/Qt/4.8.0/win32/plugins/sqldrivers/qsqlite4.dll -parent B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0
-File ::38D31DA2-10C1-47DC-8208-786FE8DD01A0 -name C:/Qt/4.8.0/win32/plugins/sqldrivers/qsqlodbc4.dll -parent B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0
-File ::A5166B90-9C7D-4DA1-8FFE-B044132B48A7 -name C:/Qt/4.8.0/win32/plugins/sqldrivers/qsqlpsql4.dll -parent B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0
+File ::38D31DA2-10C1-47DC-8208-786FE8DD01A0 -name C:/Qt/5.0.0/win32/plugins/sqldrivers/qsqlodbc4.dll -active 0 -parent B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0
+File ::A5166B90-9C7D-4DA1-8FFE-B044132B48A7 -name C:/Qt/5.0.0/win32/plugins/sqldrivers/qsqlpsql4.dll -active 0 -parent B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0
+File ::FCBC7D7B-7568-45D0-812A-699B0BAB1F29 -name C:/Qt/5.0.0/win32/plugins/sqldrivers/qsqlite.dll -parent B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0
 FileGroup ::F5A8C1C7-68B7-435D-857F-39DCE56C22D0 -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name SQLLiteDrivers(x64) -parent FileGroups
-File ::FDAF4F11-0192-4760-9317-D0C1DE0E6404 -name C:/Qt/4.8.0/x64/plugins/sqldrivers/qsqlite4.dll -parent F5A8C1C7-68B7-435D-857F-39DCE56C22D0
-File ::78A51F27-06CC-43A9-A942-0728B47C5DAE -name C:/Qt/4.8.0/x64/plugins/sqldrivers/qsqlodbc4.dll -parent F5A8C1C7-68B7-435D-857F-39DCE56C22D0
-File ::08FBBBAD-633B-4BEE-B883-3CDF986E1407 -name C:/Qt/4.8.0/x64/plugins/sqldrivers/qsqlpsql4.dll -parent F5A8C1C7-68B7-435D-857F-39DCE56C22D0
+File ::78A51F27-06CC-43A9-A942-0728B47C5DAE -name C:/Qt/5.0.0/x64/plugins/sqldrivers/qsqlodbc4.dll -active 0 -parent F5A8C1C7-68B7-435D-857F-39DCE56C22D0
+File ::08FBBBAD-633B-4BEE-B883-3CDF986E1407 -name C:/Qt/5.0.0/x64/plugins/sqldrivers/qsqlpsql4.dll -active 0 -parent F5A8C1C7-68B7-435D-857F-39DCE56C22D0
+File ::2E21ECC3-2DB5-4144-8D51-92C42BA78A18 -name C:/Qt/5.0.0/x64/plugins/sqldrivers/qsqlite.dll -parent F5A8C1C7-68B7-435D-857F-39DCE56C22D0
 FileGroup ::23EA39AB-E0A7-4451-8BBD-01D9ABBC739A -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {QML ImageFormats(win32)} -parent FileGroups
-File ::84E78E8E-76FE-483D-BEF4-169825FE1ADE -name C:/Qt/4.8.0/win32/plugins/imageformats/qgif4.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
-File ::E98415EC-1D7D-4B3E-8C2E-F34D17EA09C5 -name C:/Qt/4.8.0/win32/plugins/imageformats/qico4.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
-File ::F1127DBF-F8BB-44F5-952F-84C83FA228BC -name C:/Qt/4.8.0/win32/plugins/imageformats/qjpeg4.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
-File ::A379E11F-A2DB-4478-9F76-9047543EAEEB -name C:/Qt/4.8.0/win32/plugins/imageformats/qmng4.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
-File ::34B8BB30-D641-4C49-B2E3-2C2F2C8C8B1F -name C:/Qt/4.8.0/win32/plugins/imageformats/qsvg4.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
-File ::2ACD56C8-F92A-440A-ACB6-B6D09E49EEBC -name C:/Qt/4.8.0/win32/plugins/imageformats/qtga4.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
-File ::E9409B49-47A0-443F-989C-8982C3F14C9E -name C:/Qt/4.8.0/win32/plugins/imageformats/qtiff4.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
+File ::1403E73F-35BD-4898-97B6-723A307CD0F7 -name C:/Qt/5.0.0/win32/plugins/imageformats/qgif.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
+File ::94CBCA10-85F5-4F4A-A8B7-E381C86CCB10 -name C:/Qt/5.0.0/win32/plugins/imageformats/qico.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
+File ::DC276520-36F8-4BDB-B479-26FFCB2A13AD -name C:/Qt/5.0.0/win32/plugins/imageformats/qjpeg.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
+File ::BBFF3ADF-F864-46EC-BB9B-D86A88AE98A2 -name C:/Qt/5.0.0/win32/plugins/imageformats/qmng.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
+File ::D6314BBB-7748-413A-8093-3D7FEDF3691E -name C:/Qt/5.0.0/win32/plugins/imageformats/qsvg.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
+File ::890AE925-DDE0-4C30-A2DA-1C95E81A01FD -name C:/Qt/5.0.0/win32/plugins/imageformats/qtga.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
+File ::504E0C71-4728-4179-9EB0-7B87628C0816 -name C:/Qt/5.0.0/win32/plugins/imageformats/qtiff.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
+File ::8C19BAAB-240B-465B-9A6B-2C7E9D0FA6C3 -name C:/Qt/5.0.0/win32/plugins/imageformats/qwbmp.dll -parent 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A
 FileGroup ::AC052636-D32C-4BE2-8541-056511841A6C -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {QML ImageFormats(x64)} -parent FileGroups
-File ::C8C93A1A-0E12-4C29-B1B9-6FC86EF78B1C -name C:/Qt/4.8.0/x64/plugins/imageformats/qgif4.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
-File ::3DFDC392-8F53-4066-8A00-D6D79987F47F -name C:/Qt/4.8.0/x64/plugins/imageformats/qico4.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
-File ::DA167947-1668-49D8-B121-586379C3BC3A -name C:/Qt/4.8.0/x64/plugins/imageformats/qjpeg4.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
-File ::55DE0429-EC4E-4B62-89B8-C4A1EF4BDF9B -name C:/Qt/4.8.0/x64/plugins/imageformats/qmng4.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
-File ::7DBADE63-CE8D-4133-8A9C-9E45A7107E11 -name C:/Qt/4.8.0/x64/plugins/imageformats/qsvg4.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
-File ::160F3CA5-3777-438B-8B72-554F5C32BC2A -name C:/Qt/4.8.0/x64/plugins/imageformats/qtga4.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
-File ::4C708B50-5967-4B8F-99D9-927A2AF66248 -name C:/Qt/4.8.0/x64/plugins/imageformats/qtiff4.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
+File ::C0B7CAB5-EB06-4EAE-ADF6-BCA41757DB01 -name C:/Qt/5.0.0/x64/plugins/imageformats/qgif.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
+File ::5DF1C279-2F7A-4CA1-8BFA-4AF4C11662FB -name C:/Qt/5.0.0/x64/plugins/imageformats/qico.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
+File ::DB8E294C-7F10-4B5E-A109-91020F1EFC97 -name C:/Qt/5.0.0/x64/plugins/imageformats/qjpeg.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
+File ::C2B738A3-F9D8-47C7-B79E-2C0E9EA7A120 -name C:/Qt/5.0.0/x64/plugins/imageformats/qmng.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
+File ::6FC0F9CD-E646-4EC0-AB7D-97DA52817E97 -name C:/Qt/5.0.0/x64/plugins/imageformats/qsvg.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
+File ::5A7CCBD0-C3FF-4525-9C73-22B9A9F41540 -name C:/Qt/5.0.0/x64/plugins/imageformats/qtga.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
+File ::A8548FA7-4D39-4F8B-8311-803E850C13BF -name C:/Qt/5.0.0/x64/plugins/imageformats/qtiff.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
+File ::A16E91CF-AFBA-4C4C-B6EB-71AE716F8687 -name C:/Qt/5.0.0/x64/plugins/imageformats/qwbmp.dll -parent AC052636-D32C-4BE2-8541-056511841A6C
 Component ::3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files(x64)} -parent Components
 Component ::C511BCE0-5730-4B6A-B67A-9BFDC29D6A11 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files(win32)} -parent Components
 Component ::0C4197C0-9F10-4AD0-86B8-506675EEFCBC -setup Install -active Yes -platforms Windows -name Default -parent Components
@@ -857,7 +878,7 @@ array set Properties {
 {<%InstallDir%>/qml/plugins/x64}
 
 13ECD65D-69B5-4F91-B2C0-B4F9548060F8,FileSize
-{89023}
+{71615}
 
 13ECD65D-69B5-4F91-B2C0-B4F9548060F8,Name
 {QML Plugins(x64)}
@@ -947,7 +968,7 @@ array set Properties {
 {<%InstallDir%>/plugins/x64}
 
 21B9C60D-2802-481D-BF1F-F26B0588B66E,FileSize
-{267776}
+{255488}
 
 21B9C60D-2802-481D-BF1F-F26B0588B66E,Name
 {StimulGL Plugins(x64)}
@@ -960,6 +981,9 @@ array set Properties {
 
 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A,Destination
 {<%InstallDir%>/plugins/Win32/imageformats}
+
+23EA39AB-E0A7-4451-8BBD-01D9ABBC739A,FileSize
+{0}
 
 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A,Name
 {QML ImageFormats(win32)}
@@ -977,7 +1001,7 @@ array set Properties {
 {<%InstallDir%>/plugins/Win32}
 
 2C7E583A-607F-4311-9D36-84C482C13786,FileSize
-{227328}
+{216576}
 
 2C7E583A-607F-4311-9D36-84C482C13786,Name
 {StimulGL Plugins(win32)}
@@ -1001,7 +1025,7 @@ array set Properties {
 {<%InstallDir%>/plugins/Win32/phonon_backend}
 
 339CD47A-83C5-49EE-AC9B-A96C0AF6B26F,FileSize
-{197120}
+{0}
 
 339CD47A-83C5-49EE-AC9B-A96C0AF6B26F,Name
 {QML PhononBackend(win32)}
@@ -1088,7 +1112,7 @@ array set Properties {
 {<%InstallDir%>/plugins/x64/phonon_backend}
 
 4EDD61CE-1738-42F3-82D2-E035E88FDF4A,FileSize
-{243200}
+{0}
 
 4EDD61CE-1738-42F3-82D2-E035E88FDF4A,Name
 {QML PhononBackend(x64)}
@@ -1337,7 +1361,7 @@ array set Properties {
 {<%InstallDir%>}
 
 6F707DE3-E5BF-4944-9F3F-B84552A89AA0,FileSize
-{113772}
+{115732}
 
 6F707DE3-E5BF-4944-9F3F-B84552A89AA0,Name
 {Language APIs}
@@ -1454,7 +1478,7 @@ array set Properties {
 {<%InstallDir%>/examples/experiments}
 
 8233E474-11D3-4263-9C04-F6B9A95FE461,FileSize
-{85321}
+{88081}
 
 8233E474-11D3-4263-9C04-F6B9A95FE461,Name
 {Example Experiments(Retinotopic Mapping)}
@@ -1463,7 +1487,7 @@ array set Properties {
 {<%InstallDir%>}
 
 891CF076-368A-450C-890A-7E3FDCB8748B,FileSize
-{43874965}
+{44626069}
 
 891CF076-368A-450C-890A-7E3FDCB8748B,Name
 {Program Files(win32)}
@@ -1568,7 +1592,7 @@ array set Properties {
 {<%InstallDir%>/plugins/Win32/script}
 
 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F,FileSize
-{10518528}
+{9598464}
 
 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F,Name
 {Script Plugins(win32)}
@@ -1601,7 +1625,7 @@ A1E87F59-F33A-4028-AA97-952F67EB031A,Destination
 {<%InstallDir%>/qml/plugins/Win32}
 
 A1E87F59-F33A-4028-AA97-952F67EB031A,FileSize
-{75199}
+{61887}
 
 A1E87F59-F33A-4028-AA97-952F67EB031A,Name
 {QML Plugins(win32)}
@@ -1610,7 +1634,7 @@ A2DAA637-8263-44CD-9683-9B4B3EEDCD93,Destination
 {<%InstallDir%>/xsd}
 
 A2DAA637-8263-44CD-9683-9B4B3EEDCD93,FileSize
-{6366}
+{12732}
 
 A2DAA637-8263-44CD-9683-9B4B3EEDCD93,Name
 {XSD and validation}
@@ -1644,6 +1668,9 @@ ABC58F85-12AE-4CB0-BF72-B19F39FB5B6E,Message,subst
 
 AC052636-D32C-4BE2-8541-056511841A6C,Destination
 {<%InstallDir%>/plugins/x64/imageformats}
+
+AC052636-D32C-4BE2-8541-056511841A6C,FileSize
+{0}
 
 AC052636-D32C-4BE2-8541-056511841A6C,Name
 {QML ImageFormats(x64)}
@@ -1772,7 +1799,7 @@ B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0,Destination
 {<%InstallDir%>\sqldrivers}
 
 B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0,FileSize
-{676352}
+{557056}
 
 B5E2ABD5-DBD4-4BC0-A33E-5D7C803F82B0,Name
 {SQLLiteDrivers(win32)}
@@ -1781,7 +1808,7 @@ B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,Destination
 {<%InstallDir%>/examples/scripts}
 
 B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,FileSize
-{204671}
+{204657}
 
 B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,Name
 {Example Scripts(default)}
@@ -1790,7 +1817,7 @@ B9E5284F-8A18-4881-AC62-4276DF5666EC,Destination
 {<%InstallDir%>/examples}
 
 B9E5284F-8A18-4881-AC62-4276DF5666EC,FileSize
-{12900365}
+{13157842}
 
 B9E5284F-8A18-4881-AC62-4276DF5666EC,Name
 {Examples}
@@ -1958,7 +1985,7 @@ D09FFE2D-0C13-4F41-ABE1-1E2763E77575,Destination
 {<%InstallDir%>/plugins/x64/script}
 
 D09FFE2D-0C13-4F41-ABE1-1E2763E77575,FileSize
-{11404288}
+{10567680}
 
 D09FFE2D-0C13-4F41-ABE1-1E2763E77575,Name
 {Script Plugins(x64)}
@@ -1994,7 +2021,7 @@ D562F7E3-157E-48ED-91CE-71FBA40B332D,Destination
 {<%InstallDir%>}
 
 D562F7E3-157E-48ED-91CE-71FBA40B332D,FileSize
-{51504693}
+{55502330}
 
 D562F7E3-157E-48ED-91CE-71FBA40B332D,Name
 {Program Files(x64)}
@@ -2117,7 +2144,7 @@ E5DE8D2A-E046-4945-B382-97B2670A7E75,Destination
 {<%InstallDir%>/documents}
 
 E5DE8D2A-E046-4945-B382-97B2670A7E75,FileSize
-{1042432}
+{1561600}
 
 E5DE8D2A-E046-4945-B382-97B2670A7E75,Name
 {Documents}
@@ -2180,7 +2207,7 @@ F5A8C1C7-68B7-435D-857F-39DCE56C22D0,Destination
 {<%InstallDir%>sqldrivers}
 
 F5A8C1C7-68B7-435D-857F-39DCE56C22D0,FileSize
-{812032}
+{0}
 
 F5A8C1C7-68B7-435D-857F-39DCE56C22D0,Name
 {SQLLiteDrivers(x64)}
@@ -2231,7 +2258,7 @@ FE7C119F-2B67-439E-A0DF-FA1E714F2630,Destination
 {<%InstallDir%>/examples/scripts}
 
 FE7C119F-2B67-439E-A0DF-FA1E714F2630,FileSize
-{41038}
+{43239}
 
 FE7C119F-2B67-439E-A0DF-FA1E714F2630,Name
 {Example Scripts(custom)}

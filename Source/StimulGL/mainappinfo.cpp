@@ -107,9 +107,9 @@ QString MainAppInfo::qmlExtensionsPluginDirPath()
 QStringList MainAppInfo::getQTScriptBindingList()	
 {
 #ifdef WIN32
-	return	QStringList() << "qt.core" << "qt.gui" << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";//<< "qt.network" does work...
+	return	QStringList() << "qt.core" << "qt.gui" << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.webkit"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";//<< "qt.network" does work...
 #else//64 bit
-	return	QStringList() << "qt.core" << "qt.gui" << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";
+	return	QStringList() << "qt.core" << "qt.gui" << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.webkit"; //strange enough these do not jet work on winXP! << "qt.xml" << "qt.xmlpatterns" << "qt.svg" << "qt.sql" << "qt.opengl" << "qt.uitools" << "qt.phonon";
 #endif
 }
 
@@ -127,7 +127,7 @@ QString MainAppInfo::apiDirPath()
 	return pluginsDir.absolutePath();
 }
 
-void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &context, const char *msg) 
+void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) 
 {
 	bool bDoAbort = false;
 	if(MainAppInfo::mainLogFile == NULL)
@@ -156,10 +156,10 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &cont
 		strMessage = QString("Warning: %1").arg(msg);
 		break;
 	case QtCriticalMsg:
-		strMessage = QString("Critical: %1").arg(msg);
+		strMessage = QString("Critical: %1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
 		break;
 	case QtFatalMsg:
-		strMessage = QString("Fatal: %1").arg(msg);
+		strMessage = QString("Fatal: %1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
 		bDoAbort = true;		
 	}
 	QTextStream ts(mainLogFile);

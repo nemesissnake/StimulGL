@@ -56,7 +56,7 @@ public:
 
 	static bool isCompatibleVersion(const QString &strMinimalRequiredVersion, const QString &strCurrentVersion);
 
-	static void MyOutputHandler(QtMsgType type, const QMessageLogContext &context, const char *msg);
+	static void MyOutputHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 	static void CloseMainLogFile();
 	static bool CreateHashTableFromEnumeration(const QString &sTypeName, QHash<QString, int> &hTable, const QMetaObject metaObject);
 

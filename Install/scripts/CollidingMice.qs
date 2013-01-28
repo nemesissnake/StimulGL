@@ -47,7 +47,7 @@ function Mouse(parent) {
 
     this.color = new QColor(Math.random()*256, Math.random()*256,
                             Math.random()*256);
-    this.rotate(Math.random()*360);
+    //this.rotate(Math.random()*360);
 
     var timer = new QTimer(this);
     timer.singleShot = false;

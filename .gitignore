@@ -65,3 +65,13 @@ output
 Publish/*.lnk
 *.h
 Install/qml/plugins
+Install/plugins/Win32/script/*.embed.manifest
+Install/plugins/Win32/script/*manifest.rc
+Install/plugins/Win32/script/*dll_manifest.res
+Install/plugins/Win32/script/*.exp
+Install/plugins/Win32/script/*.lib
+Install/plugins/x64/script/*l.embed.manifest
+Install/plugins/x64/script/*.exp
+Install/plugins/x64/script/*.lib
+Install/plugins/x64/script/*manifest.rc
+Install/plugins/x64/script/*.res
