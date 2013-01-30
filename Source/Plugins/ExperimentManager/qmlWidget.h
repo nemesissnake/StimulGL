@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ class qmlWidget : public GLWidgetWrapper
 public:
 	qmlWidget(QWidget *parent = NULL);
 	~qmlWidget();
-	qmlWidget(const qmlWidget& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	qmlWidget(const qmlWidget& other ){};//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	static QScriptValue ctor_QmlWidget(QScriptContext* context, QScriptEngine* engine);
 	
 public:	

@@ -75,3 +75,5 @@ Install/plugins/x64/script/*.exp
 Install/plugins/x64/script/*.lib
 Install/plugins/x64/script/*manifest.rc
 Install/plugins/x64/script/*.res
+Source/Plugins/ExperimentManager/Template/*
+Source/Plugins/ExperimentManager/x64/Template/*

@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@
 #include <QThread>
 
 #include "qmlWidget.h"
+#include "QML2Viewer.h"
 #include "ContainerDlg.h"
 #include "GlobalApplicationInformation.h"
 
@@ -66,6 +67,7 @@ private slots:
 
 private:
 	qmlWidget *QmlWidgetObject;
+	QML2Viewer *Qml2ViewerObject;
 	ExperimentManager *ExperimentManagerObj;
 	ContainerDlg *tmpContainerDlg;
 	QVBoxLayout *tmpLayout;

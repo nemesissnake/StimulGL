@@ -1,5 +1,5 @@
 //_extensionname_
-//Copyright (C) 2012  _authorname_
+//Copyright (C) 2013  _authorname_
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify

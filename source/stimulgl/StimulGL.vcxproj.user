@@ -28,4 +28,13 @@ QT_QPA_PLATFORM_PLUGIN_PATH=$(QTDIR)\plugins\platforms</LocalDebuggerEnvironment
     <LocalDebuggerCommandArguments Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     </LocalDebuggerCommandArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <QTDIR>C:\Qt\5.0.0\win32</QTDIR>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <QTDIR>C:\Qt\5.0.0\win32</QTDIR>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <QTDIR>C:\Qt\5.0.0\win32</QTDIR>
+  </PropertyGroup>
 </Project>

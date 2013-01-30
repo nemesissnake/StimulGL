@@ -1,5 +1,5 @@
 //StimulGL
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -146,7 +146,9 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &cont
 	}
 	QString strMessage;
 	bool bSkipErrorForLogWindow = false;
-	bSkipErrorForLogWindow = ( (QString(msg) == QString("Unknown error")) || (QString(msg) == QString("QGLShader::link: \"No errors.\" ")) );
+	bSkipErrorForLogWindow = ( (msg == QString("Unknown error")) || (msg == QString("QGLShader::link: \"No errors.\" ")) );
+	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("Remove me: fixing toplevel window flags"));
+	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("warning X3206: implicit truncation of vector type"));
 	switch (type) 
 	{
 	case QtDebugMsg:

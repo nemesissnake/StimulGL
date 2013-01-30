@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@
 #include "ExperimentManager.h"
 #include "Global.h"
 #include "ContainerDlg.h"
+#include "Quick2ContainerWidget.h"
 #include "ExperimentTimer.h"
 
 using namespace ExperimentManagerNameSpace;
@@ -162,6 +163,7 @@ public slots:
 protected:
 	int checkForNextBlockTrial();
 	void setupLayout(QWidget* layoutWidget);
+	//void setupLayout2(QQuickView* quickView);
 	bool isDebugMode();
 	double getElapsedTrialTime() {return dElapsedTrialTime;};
 	int getCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame;};
@@ -204,6 +206,7 @@ private:
 	double dLastPreSwapTime;
 	double dAdditionalRefreshDelayTime;
 	ContainerDlg *stimContainerDlg;
+	//Quick2ContainerWidget *Quick2CntnrWdgt;
 	QObject *alternativeContainerDlg;
 	bool bExperimentShouldStop;
 	QRectF rScreenResolution;

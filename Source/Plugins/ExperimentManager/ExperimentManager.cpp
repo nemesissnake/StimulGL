@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@
 
 #include "retinomap_glwidget.h"
 #include "qmlWidget.h"
+#include "QML2Viewer.h"
 //#include "ExperimentGraphBlock.h"
 //#include "ExperimentGraphPort.h"
 
@@ -131,6 +132,7 @@ void ExperimentManager::RegisterMetaTypes()
 {//To register the Objects to the Meta, so they can be accessed trough an *.exml file
 	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
 	qRegisterMetaType<qmlWidget>(QML_WIDGET_NAME);
+	qRegisterMetaType<QML2Viewer>(QML2VIEWER_NAME);
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);

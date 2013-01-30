@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	lockedPainter = NULL;
 	thisMetaObject = NULL;
 	stimContainerDlg = NULL;
+	//Quick2CntnrWdgt = NULL;
 	pExperimentManager = NULL;
 	currentScriptEngine = NULL;
 	bExperimentShouldStop = false;
@@ -55,10 +56,17 @@ GLWidgetWrapper::GLWidgetWrapper(QWidget *parent) : QGLWidget(parent)
 	//setMinimumSize(200, 200);
 	setWindowTitle(tr("Painting a Scene"));
 	alternativeContainerDlg = NULL;
+
 	stimContainerDlg = new ContainerDlg();
 	stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-	stimContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
+	//stimContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
 	stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
+
+	//Quick2CntnrWdgt = new Quick2ContainerWidget();
+	//Quick2CntnrWdgt->setAttribute(Qt::WA_DeleteOnClose);
+	//Quick2CntnrWdgt->setAttribute(Qt::WA_PaintOnScreen);
+	//Quick2CntnrWdgt->installEventFilter(this);//re-route all stimContainerDlg events to this->bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
+	
 	mainLayout = NULL;
 	nObjectID = -1;
 	tEventObjectStopped = (QEvent::Type)(QEvent::User + 1);	
@@ -92,6 +100,11 @@ GLWidgetWrapper::~GLWidgetWrapper()
 		stimContainerDlg->close();
 		stimContainerDlg = NULL;
 	}
+	//if(Quick2CntnrWdgt)
+	//{
+	//	Quick2CntnrWdgt->close();
+	//	Quick2CntnrWdgt = NULL;
+	//}
 	if (ExpBlockParams)
 	{
 		delete ExpBlockParams;
@@ -260,6 +273,31 @@ bool GLWidgetWrapper::eventFilter(QObject *target, QEvent *event)
 			}
 		}
 	}
+	//else if(target == Quick2CntnrWdgt)
+	//{
+	//	if (event->type() == QEvent::KeyPress) 
+	//	{
+	//		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+
+	//		switch (keyEvent->key())
+	//		{
+	//		case Qt::Key_A://Key_Escape:	//To abort the experiment
+	//			if((keyEvent->modifiers() & Qt::ControlModifier))// && (keyEvent->modifiers() & Qt::AltModifier))
+	//			{
+	//				emit UserWantsToClose();
+	//			}
+	//			break;
+	//			//case Qt::Key_Tab:
+	//			//	setExperimentObjectReadyToUnlock();
+	//			//	break;
+	//		case Qt::Key_Alt:	//To start the experiment
+	//			setExperimentObjectReadyToUnlock();
+	//			//if(target == alternativeContainerDlg)//here we don't have a trigger object because of the lack of the ExperimentManager, so we trigger it automatically to start
+	//			//	tStimTimer.singleShot(100, this, SLOT(incrementExternalTrigger()));//incrementExternalTrigger();
+	//			break;
+	//		}
+	//	}		
+	//}
 	return true;
 }
 
@@ -305,6 +343,19 @@ void GLWidgetWrapper::setupLayout(QWidget* layoutWidget)
 	stimContainerDlg->showFullScreen();
 }
 
+//void GLWidgetWrapper::setupLayout2(QQuickView* quickView)//QWidget* layoutWidget)
+//{
+	//mainLayout = new QVBoxLayout;
+	//mainLayout->setAlignment(Qt::AlignCenter);
+	//mainLayout->setMargin(0);
+	//mainLayout->addWidget(layoutWidget);
+
+	//Quick2CntnrWdgt->setWindow((QQuickWindow*) quickView); //= new Quick2ContainerWidget(,this);
+	//Quick2CntnrWdgt->setLayout(mainLayout);
+	//layoutWidget->setModal(true); //Set to true because starting an experiment file from the ExperimentManager plugins User Interface requests this to work properly...
+	//Quick2CntnrWdgt->showFullScreen();
+//}
+
 bool GLWidgetWrapper::startExperimentObject()
 {
 	//QString a = thisMetaObject->className();
@@ -314,6 +365,7 @@ bool GLWidgetWrapper::startExperimentObject()
 		{
 			qDebug() << __FUNCTION__ << "RetinoMap_glwidget::No Double Buffering available!";
 			stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
+			//Quick2CntnrWdgt->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
 			return false;
 		}
 	}
@@ -648,7 +700,7 @@ int GLWidgetWrapper::checkForNextBlockTrial()
 	}
 	if(bFirstCheckAfterExperimentStarted == false)
 	{
-		if(tmpExpStr.getBlockCount() > 0)//Are there blocks defined? qmlWidgetViewer trough UI (without ExperimentManager) doesn't have any defined blocks here!
+		if(tmpExpStr.getBlockCount() > 0)//Are there blocks defined? QML Viewers trough UI (without ExperimentManager) don't have any defined blocks here!
 			if(bHasCurrentBlock)
 				goToNextBlockTrial = (tmpExpStrState.CurrentBlock_ExternalTrigger == 0);//Go to next Block Trial?
 	}
@@ -671,7 +723,7 @@ int GLWidgetWrapper::checkForNextBlockTrial()
 		}
 		else
 		{
-			if(tmpExpStr.getBlockCount() > 0)//Are there blocks defined? qmlWidgetViewer trough UI (without ExperimentManager) doesn't have any defined blocks here!
+			if(tmpExpStr.getBlockCount() > 0)//Are there blocks defined? QML Viewers trough UI (without ExperimentManager) don't have any defined blocks here!
 				if(bHasCurrentBlock)
 					QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));
 		}
