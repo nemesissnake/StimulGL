@@ -39,6 +39,13 @@ class MainWindow;
 int main(int argc, char **argv)
 {
 	bool bProceed = true;
+	QString sResult = QDir::toNativeSeparators(QDir(QCoreApplication::applicationDirPath()).absolutePath());
+	if(QProcessEnvironment::systemEnvironment().value(QString("QT_QPA_PLATFORM_PLUGIN_PATH"),sResult) == false)
+	{
+		bool bResult = qputenv("QT_QPA_PLATFORM_PLUGIN_PATH",sResult.toLatin1());
+		//sResult = "";
+		//sResult = QProcessEnvironment::systemEnvironment().value(QString("QT_QPA_PLATFORM_PLUGIN_PATH"),sResult);
+	}
 	MainAppExchange appExchange(argc, argv, MAIN_PROGRAM_SHARED_MEM_KEY);
 	GlobalApplicationInformation *globAppInformation = appExchange.getGlobalAppInformationObjectPointer();
 	if (appExchange.isRunning())

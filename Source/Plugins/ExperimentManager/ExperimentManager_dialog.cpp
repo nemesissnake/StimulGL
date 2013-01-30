@@ -24,6 +24,7 @@ ExperimentManager_Dialog::ExperimentManager_Dialog(QWidget *parent)	: QDialog(pa
 {
 	currentExperimentSubObjectState = Experiment_SubObject_Constructing;
 	QmlWidgetObject = NULL;
+	Qml2ViewerObject = NULL;
 	ExperimentManagerObj = NULL;
 	tmpContainerDlg = NULL;
 	tmpLayout = NULL;
@@ -98,6 +99,12 @@ void ExperimentManager_Dialog::cleanUp()
 		delete QmlWidgetObject;
 		QmlWidgetObject = NULL;
 	}
+	if(Qml2ViewerObject)
+	{
+		Qml2ViewerObject->stopObject();
+		delete Qml2ViewerObject;
+		Qml2ViewerObject = NULL;
+	}
 	if (tmpContainerDlg)
 	{
 		delete tmpContainerDlg;
@@ -133,6 +140,11 @@ void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 			disconnect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
 			disconnect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
 		}
+		if(Qml2ViewerObject)
+		{
+			disconnect(Qml2ViewerObject, SIGNAL(UserWantsToClose(void)), Qml2ViewerObject, SLOT(abortExperimentObject(void)));
+			disconnect(Qml2ViewerObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+		}
 		if(ExperimentManagerObj)
 		{
 			disconnect(ExperimentManagerObj, SIGNAL(ExperimentStateHasChanged(int, QString)), this, SLOT(ExperimentStateHasChanged(int, QString)));
@@ -145,6 +157,11 @@ void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 		{
 			connect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
 			connect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+		}		
+		if(Qml2ViewerObject)
+		{
+			connect(Qml2ViewerObject, SIGNAL(UserWantsToClose(void)), Qml2ViewerObject, SLOT(abortExperimentObject(void)));
+			connect(Qml2ViewerObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
 		}
 		if(ExperimentManagerObj)
 		{
@@ -180,6 +197,8 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 		{
 			if (QmlWidgetObject)
 				QmlWidgetObject->deleteLater();
+			if (Qml2ViewerObject)
+				Qml2ViewerObject->deleteLater();
 			currentExperimentSubObjectState = Experiment_SubObject_IsAborting;
 		}
 	}
@@ -189,6 +208,8 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 		{
 			if (QmlWidgetObject)
 				QmlWidgetObject->deleteLater();
+			if (Qml2ViewerObject)
+				Qml2ViewerObject->deleteLater();
 			if (tmpContainerDlg)
 				tmpContainerDlg->deleteLater();
 			currentExperimentSubObjectState = Experiment_SubObject_IsStopping;
@@ -198,6 +219,7 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 	{
 		currentExperimentSubObjectState = Experiment_SubObject_Destructing;
 		QmlWidgetObject = NULL;
+		Qml2ViewerObject = NULL;
 		tmpContainerDlg = NULL;
 		delete tmpLayout;
 		tmpLayout = NULL;

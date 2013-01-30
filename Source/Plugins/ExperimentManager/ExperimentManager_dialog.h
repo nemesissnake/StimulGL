@@ -28,6 +28,7 @@
 #include <QThread>
 
 #include "qmlWidget.h"
+#include "QML2Viewer.h"
 #include "ContainerDlg.h"
 #include "GlobalApplicationInformation.h"
 
@@ -66,6 +67,7 @@ private slots:
 
 private:
 	qmlWidget *QmlWidgetObject;
+	QML2Viewer *Qml2ViewerObject;
 	ExperimentManager *ExperimentManagerObj;
 	ContainerDlg *tmpContainerDlg;
 	QVBoxLayout *tmpLayout;

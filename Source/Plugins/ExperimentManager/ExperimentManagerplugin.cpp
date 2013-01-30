@@ -37,6 +37,7 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	cBlockStructureObject = NULL;
 	cLoopStructureObject = NULL;
 	QmlWidgetObject = NULL;
+	Qml2ViewerObject = NULL;
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
 	ExperimentManagerObject = new ExperimentManager(ExperimentManagerDiagObject,NULL);
 	strPluginInformation = PLUGIN_INFORMATION;
@@ -93,6 +94,11 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 	{
 		delete QmlWidgetObject;
 		QmlWidgetObject = NULL;
+	}
+	if(Qml2ViewerObject)
+	{
+		delete Qml2ViewerObject;
+		Qml2ViewerObject = NULL;
 	}
 }
 
@@ -158,21 +164,6 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	qScriptRegisterMetaType(&engine, cExperimentStructure::experimentStructureStateToScriptValue, cExperimentStructure::experimentStructureStateFromScriptValue);
 	QScriptValue ctorExperimentStructureState = engine.newFunction(cExperimentStructure::createExperimentStructureStateFromScript);
 	engine.globalObject().setProperty(CEXPERIMENTSTRUCTURESTATE_NAME, ctorExperimentStructureState);
-
-	//if(QmlWidgetObject == NULL)
-	//	QmlWidgetObject = new qmlWidget();
-	//QScriptValue QmlWidgetProto = engine.newQObject(QmlWidgetObject);
-	//engine.setDefaultPrototype(qMetaTypeId<qmlWidget*>(), QmlWidgetProto);
-	//QScriptValue QmlWidgetCtor = engine.newFunction(qmlWidget::ctor_QmlWidget, QmlWidgetProto);
-	//engine.globalObject().setProperty(QMLWIDGET_NAME, QmlWidgetCtor);
-
-	//if(retinoWidgetObject == NULL)
-	//	retinoWidgetObject = new RetinoMap_glwidget();
-	//RetinoMap_glwidget retinoWidgetObject;//or use new(), but make sure to use delete afterwards!
-	//QScriptValue RetinoWidgetProto = engine.newQObject(&retinoWidgetObject);
-	//engine.setDefaultPrototype(qMetaTypeId<RetinoMap_glwidget*>(), RetinoWidgetProto);
-	//QScriptValue RetinoWidgetCtor = engine.newFunction(RetinoMap_glwidget::ctor_RetinoWidget, RetinoWidgetProto);
-	//engine.globalObject().setProperty(RETINOMAP_WIDGET_NAME, RetinoWidgetCtor);
 
 	return true;
 }

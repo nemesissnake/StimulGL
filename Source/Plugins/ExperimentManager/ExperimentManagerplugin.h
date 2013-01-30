@@ -62,6 +62,7 @@ private:
 	ImageProcessor *ImageProcessorObject;
 	PrtFormatManager *PrtFormatManagerObject;
 	qmlWidget *QmlWidgetObject;
+	QML2Viewer *Qml2ViewerObject;
 
 public slots:
     bool ShowGUI();
