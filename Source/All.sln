@@ -14,6 +14,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StimulGL", "StimulGL\Stimul
 		{13EA300A-1CA2-417E-8DC0-C5217D9F9A52} = {13EA300A-1CA2-417E-8DC0-C5217D9F9A52}
 		{59487439-8950-32A2-87B4-F0F940C28C74} = {59487439-8950-32A2-87B4-F0F940C28C74}
 		{B820C439-C052-4D87-BD6C-62BFB2BA973F} = {B820C439-C052-4D87-BD6C-62BFB2BA973F}
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A} = {7FFA56A6-CE99-4724-A14F-00DE586A723A}
 		{B07B00B4-1878-447C-A985-59AF73FA9832} = {B07B00B4-1878-447C-A985-59AF73FA9832}
 		{637EE6F0-D76D-4194-B93C-007993A1C00B} = {637EE6F0-D76D-4194-B93C-007993A1C00B}
 	EndProjectSection
@@ -25,6 +26,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KeyBoardplugin", "Plugins\KeyBoardDevice\KeyBoardplugin.vcxproj", "{B07B00B4-1878-447C-A985-59AF73FA9832}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PiezoStimDeviceplugin", "Plugins\PiezoStimDevice\PiezoStimDeviceplugin.vcxproj", "{637EE6F0-D76D-4194-B93C-007993A1C00B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TBVExchangerplugin", "Plugins\TBVExchanger\TBVExchangerplugin.vcxproj", "{7FFA56A6-CE99-4724-A14F-00DE586A723A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,13 +146,25 @@ Global
 		{637EE6F0-D76D-4194-B93C-007993A1C00B}.Template|Win32.Build.0 = Template|Win32
 		{637EE6F0-D76D-4194-B93C-007993A1C00B}.Template|x64.ActiveCfg = Template|x64
 		{637EE6F0-D76D-4194-B93C-007993A1C00B}.Template|x64.Build.0 = Template|x64
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Debug|Win32.Build.0 = Debug|Win32
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Debug|x64.ActiveCfg = Debug|x64
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Debug|x64.Build.0 = Debug|x64
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Release|Win32.ActiveCfg = Release|Win32
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Release|Win32.Build.0 = Release|Win32
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Release|x64.ActiveCfg = Release|x64
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Release|x64.Build.0 = Release|x64
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Template|Win32.ActiveCfg = Template|Win32
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Template|Win32.Build.0 = Template|Win32
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Template|x64.ActiveCfg = Template|x64
+		{7FFA56A6-CE99-4724-A14F-00DE586A723A}.Template|x64.Build.0 = Template|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = Qt500_win32
 		QtVersion = 4.8.0 (64bit)
+		Qt5Version = Qt500_win32
 	EndGlobalSection
 	GlobalSection(Qt) = preSolution
 		Integration = True
