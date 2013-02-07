@@ -733,7 +733,7 @@ void ExperimentManager::abortExperiment()
  *
  *  Tries to abort the current Experiment that is running, see #runExperiment.
  */
-	if(getCurrExperimentState()==ExperimentManager_Started)
+	if((getCurrExperimentState()==ExperimentManager_Started) || (getCurrExperimentState()==ExperimentManager_IsStarting))
 	{
 		changeCurrentExperimentState(ExperimentManager_IsStopping);
 		if(!abortExperimentObjects())
@@ -901,6 +901,7 @@ void ExperimentManager::changeExperimentSubObjectState(ExperimentSubObjectState 
 	{
 		for (int i=0;i<nCount;i++)
 		{
+			//QString sName = lExperimentObjectList.at(i).sObjectName;
 			if (QObject::sender() == lExperimentObjectList.at(i).pObject)
 			{
 				//We automatically close and delete the object after a "Abort" command...
@@ -2318,18 +2319,27 @@ bool ExperimentManager::getScriptContextValue(const QString &sScriptContextState
 		QString tmpString = "... Could not expand the script object (" + sScriptContextStatement + "), the script engine is not ready!";
 		emit WriteToLogOutput(tmpString);
 		qDebug() << tmpString;
-	}
-	if (!currentScriptEngine->canEvaluate(sScriptContextStatement))
-	{
-		QString tmpString = "... Could not evaluate the script object (" + sScriptContextStatement + ")!";
-		emit WriteToLogOutput(tmpString);
-		qDebug() << tmpString;
+		return false;
 	}
 	else
 	{
-		QScriptValue tmpScriptValue = currentScriptEngine->evaluate(sScriptContextStatement);
-		sScriptContextReturnValue = tmpScriptValue.toVariant();
-		return true;
+		if (!currentScriptEngine->canEvaluate(sScriptContextStatement))
+		{
+			QString tmpString = "... Could not evaluate the script object (" + sScriptContextStatement + ")!";
+			emit WriteToLogOutput(tmpString);
+			qDebug() << tmpString;
+			return false;
+		}
+		else
+		{
+			QScriptValue tmpScriptValue = currentScriptEngine->evaluate(sScriptContextStatement);
+			if(currentScriptEngine->hasUncaughtException())
+			{
+				int c = 0;
+			}
+			sScriptContextReturnValue = tmpScriptValue.toVariant();
+			return true;
+		}
 	}
 	return false;
 }

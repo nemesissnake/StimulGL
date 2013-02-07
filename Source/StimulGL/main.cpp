@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 
 		MainWindow *appWindow = new MainWindow();
 		appWindow->setGlobalApplicationInformationObject(globAppInformation);
-		MainAppInfo::Initialize(appWindow);
+		MainAppInfo::SetMainWindow(appWindow);
 		GlobalApplicationInformation::MainProgramModeFlags flags = GlobalApplicationInformation::Default;
 		if (argc > 2)
 		{

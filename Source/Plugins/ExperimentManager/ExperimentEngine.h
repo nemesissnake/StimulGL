@@ -20,33 +20,12 @@
 #define EXPERIMENTENGINE_H
 
 #include <QObject>
-//#include <QTimer>
 #include <QKeyEvent>
-//#include <QEvent>
-//#include <QMutex>
-//#include <QScriptValue>
-
 #include "ExperimentManager.h"
-//#include "Global.h"
 #include "ExperimentTimer.h"
 
 using namespace ExperimentManagerNameSpace;
 
-//#define GLWWRAP_WIDGET_STIMULI_REFRESHRATE	"stimulirefreshrate"
-
-//enum GLWidgetPaintFlags //An optional paint flag that can be forwarded to the FUNC_PAINTOBJECT_FULL routine 
-//{
-//	GLWidgetPaintFlags_NoFlag		= 0,
-//	GLWidgetPaintFlags_LockedState	= 1,
-//	GLWidgetPaintFlags_Reserved1	= 2, //This one is reserved for future implementation
-//	GLWidgetPaintFlags_Reserved2	= 4, //This one is reserved for future implementation
-//	GLWidgetPaintFlags_Reserved3	= 8, //This one is reserved for future implementation
-//	GLWidgetPaintFlags_Reserved4	= 16 //This one is reserved for future implementation
-//};
-
-//class QPaintEvent;
-//class QWidget;
-//class ContainerDlg;
 class QDomNodeList;
 
 //!  The ExperimentEngine class. 
@@ -87,7 +66,7 @@ signals:
 	void NewInitBlockTrial(void);
 	//! The ExternalTriggerIncremented Signal.
 	/*!
-		You can use this Signal to keep track of whenever the External Trigger gets incremented, see GLWidgetWrapper::incrementExternalTrigger
+		You can use this Signal to keep track of whenever the External Trigger gets incremented, see ExperimentEngine::incrementExternalTrigger
 		Please bear in mind that this is already emitted before a new BlockTrial is initialized.
 		Parameter nTrigger holds the number of received external triggers after the start of the experiment.
 	*/
@@ -104,9 +83,7 @@ signals:
 public:
 	ExperimentEngine(QObject *parent = NULL);
 	~ExperimentEngine();
-	
-	//void setBlockTrials();
-	
+
 	template< typename T1 > bool insertExpObjectParameter(const int &nObjectID,const QString &sKeyName,const T1 &tVariabele,bool bIsInitializing = true)
 	{
 		bool bRetVal = false;
@@ -136,7 +113,6 @@ public:
 	QScriptEngine *getScriptEngine() {return currentScriptEngine;};
 
 public slots:
-	//Can be overridden, virtual 
 	bool initExperimentObject();
 	bool startExperimentObject();
 	bool stopExperimentObject();
@@ -145,11 +121,8 @@ public slots:
 	bool setExperimentObjectID(int nObjID);			//Necessary to set the ID!
 	bool setExperimentMetaObject();					//Necessary to set the MetaObject!
 	virtual bool setExperimentManager(ExperimentManager *expManager);
-	//void setStimuliResolution(int w, int h);
-	//QRectF getScreenResolution();
 	
 	int getObjectID();
-	//strcScriptExperimentStructure getExperimentStructure();
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);
@@ -157,31 +130,21 @@ public slots:
 	
 protected:
 	int checkForNextBlockTrial();
-	//void setupLayout(QWidget* layoutWidget);
-	//void setupLayout2(QQuickView* quickView);
 	bool isDebugMode();
 	double getElapsedTrialTime() {return dElapsedTrialTime;};
 	int getCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame;};
-	//int getCurrentStimuliRefreshRate() {return nRefreshRate;};
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
-	//void setDoubleBufferCheck(bool bShouldCheck) {bCheckForDoubleBuffering = bShouldCheck;};
-	//void paintEvent(QPaintEvent *event);
-	//void closeEvent(QCloseEvent *evt);
 	void customEvent(QEvent *event);
 	void initBlockTrial();
-	//void setAlternativeContainerDialog(QDialog *ContainerDlg = NULL);
-	//bool eventFilter(QObject *target, QEvent *event);
 
 protected slots:
 	void incrementExternalTrigger();
 	void animate(bool bOnlyCheckBlockTrials = false);
-	//void finalizePaintEvent();
 
 private:
 	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool unlockExperimentObject();
 	bool setExperimentObjectReadyToUnlock();
-	//void setVerticalSyncSwap();
 	void init();
 	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
@@ -190,22 +153,12 @@ private:
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bFirstTriggerAfterUnlock;						//To detect the exact start of the experiment detected by the checkForNextBlockTrial() function.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
-	//bool bCheckForDoubleBuffering;
 	double dWaitTime;
-	//QMutex mutRecursivePaint;
 	QMutex mutProcEvents;								//Another implementation, due to qApp->processEvents() RecursiveRepaint can occur...
 	int nLastProcessedExternalTriggers;
 	int nCurrExpBlockTrialFrame;
 	double dElapsedTrialTime;
-	//int nRefreshRate;									//The refresh rate of the screen
-	//double dLastPreSwapTime;
-	//double dAdditionalRefreshDelayTime;
-	//ContainerDlg *stimContainerDlg;
-	//Quick2ContainerWidget *Quick2CntnrWdgt;
-	//QObject *alternativeContainerDlg;
 	bool bExperimentShouldStop;
-	//QRectF rScreenResolution;
-	//QVBoxLayout *mainLayout;
 	int nObjectID;
 	QTimer tStimTimer;
 	QEvent::Type tEventObjectStopped;
@@ -217,7 +170,6 @@ private:
 	ExperimentManager *pExperimentManager; 
 	ExperimentTimer expTrialTimer;
 	const QMetaObject* thisMetaObject;
-	//QPainter *lockedPainter;
 	QScriptEngine* currentScriptEngine;
 };
 

@@ -2323,6 +2323,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 #ifdef Q_WS_WIN
 	timeEndPeriod(1);
 #endif
+	MainAppInfo::SetMainWindow(NULL);
 	if(DocManager)
 	{
 		disconnect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));

@@ -17,13 +17,7 @@
 //
 
 #include "ExperimentEngine.h"
-//#include <QtWidgets>
-//#include <stdlib.h>
-//#include <math.h>
-//#include <QDomDocument>
-//#include <QEventLoop>
 #include <omp.h>
-
 
 /*! \brief The ExperimentEngine constructor.
 *
@@ -33,43 +27,11 @@
 ExperimentEngine::ExperimentEngine(QObject *parent)	: QObject(parent)
 {
 	currentSubObjectState = Experiment_SubObject_Constructing;
-	//lockedPainter = NULL;
 	thisMetaObject = NULL;
-	//stimContainerDlg = NULL;
-	//Quick2CntnrWdgt = NULL;
 	pExperimentManager = NULL;
 	currentScriptEngine = NULL;
 	bExperimentShouldStop = false;
-	//bCheckForDoubleBuffering = false;
-	//#ifdef Q_WS_MACX
-	//	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // make param in interface and recommend per platform
-	//#elseabot
-	//	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // on Win (with recent OGL drivers), "swapBuffers" will wait for n retraces as indicated by "setSwapInterval" command (works like DX "flip")
-	//#endif
 	init();
-	//setAutoFillBackground(false);
-	//setAttribute(Qt::WA_OpaquePaintEvent, true);
-	//setAttribute(Qt::WA_NoSystemBackground, true);
-	//setAutoBufferSwap(false); // in order to have control over time point for buffer swap
-	//rScreenResolution = QApplication::desktop()->screenGeometry();//dDesktopWidget->screenGeometry();//availableGeometry();
-	//setFixedSize(rScreenResolution.width(), rScreenResolution.height());
-	//setStimuliResolution(rScreenResolution.width(), rScreenResolution.height());
-	//setFixedSize(768,768);
-	//setMinimumSize(200, 200);
-	//setWindowTitle(tr("Painting a Scene"));
-	//alternativeContainerDlg = NULL;
-
-	//stimContainerDlg = new ContainerDlg();
-	//stimContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-	//stimContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
-	//stimContainerDlg->installEventFilter(this);//re-route all stimContainerDlg events to this->bool ExperimentEngine::eventFilter(QObject *target, QEvent *event)
-
-	//Quick2CntnrWdgt = new Quick2ContainerWidget();
-	//Quick2CntnrWdgt->setAttribute(Qt::WA_DeleteOnClose);
-	//Quick2CntnrWdgt->setAttribute(Qt::WA_PaintOnScreen);
-	//Quick2CntnrWdgt->installEventFilter(this);//re-route all stimContainerDlg events to this->bool ExperimentEngine::eventFilter(QObject *target, QEvent *event)
-	
-	//mainLayout = NULL;
 	nObjectID = -1;
 	tEventObjectStopped = (QEvent::Type)(QEvent::User + 1);	
 	ExpBlockParams = NULL;
@@ -77,11 +39,7 @@ ExperimentEngine::ExperimentEngine(QObject *parent)	: QObject(parent)
 	nTrialTimerIndex = -1;
 	bCurrentSubObjectIsLocked = true;
 	bCurrentSubObjectReadyToUnlock = false;
-	//dLastPreSwapTime = 0.0f;
 	dElapsedTrialTime = 0.0f;
-	//nRefreshRate = 0;
-	//dAdditionalRefreshDelayTime = 0.0f;
-	//setVerticalSyncSwap();
 }
 
 /*! \brief The ExperimentEngine destructor.
@@ -92,48 +50,16 @@ ExperimentEngine::ExperimentEngine(QObject *parent)	: QObject(parent)
 ExperimentEngine::~ExperimentEngine()
 {
 	changeSubObjectState(Experiment_SubObject_Destructing);
-	//if (mainLayout)
-	//{
-		//delete mainLayout;
-		//mainLayout = NULL;
-	//}
-	//if (stimContainerDlg)
-	//{
-		//stimContainerDlg->close();
-		//stimContainerDlg = NULL;
-	//}
-	//if(Quick2CntnrWdgt)
-	//{
-	//	Quick2CntnrWdgt->close();
-	//	Quick2CntnrWdgt = NULL;
-	//}
 	if (ExpBlockParams)
 	{
 		delete ExpBlockParams;
 		ExpBlockParams = NULL;
 	}
-	//if (lockedPainter)
-	//{
-	//	delete lockedPainter;
-	//	lockedPainter = NULL;
-	//}
-	//if (alternativeContainerDlg)
-	//{
-	//	alternativeContainerDlg = NULL;//not owned by this class
-	//}
 	if (currentScriptEngine)
 	{
 		currentScriptEngine = NULL;//not owned by this class
 	}
 }
-
-//void ExperimentEngine::setVerticalSyncSwap()
-//{
-//	QGLFormat StimulGLQGLFormat;
-//	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
-//	StimulGLQGLFormat.setSampleBuffers(true);
-//	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
-//}
 
 bool ExperimentEngine::insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing)
 {
@@ -175,18 +101,6 @@ void ExperimentEngine::init()
 	nCurrExpBlockTrialFrame = CF_UNINITIALIZED;
 	changeSubObjectState(Experiment_SubObject_Initialized);
 }
-
-//QRectF ExperimentEngine::getScreenResolution()
-//{
-//	//int a = this->format().swapInterval();
-//	return rScreenResolution;
-//	//return QRectF(0.0f,0.0f,768.0f,768.0f);
-//}
-
-//void ExperimentEngine::setStimuliResolution(int w, int h)
-//{
-//	setFixedSize(w,h);
-//}
 
 int ExperimentEngine::getObjectID()
 {
@@ -243,66 +157,6 @@ void ExperimentEngine::ExperimentShouldFinish()
 	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"",QString("Finished experiment"));
 }
 
-//void ExperimentEngine::setAlternativeContainerDialog(QDialog *ContainerDlg)
-//{
-//	alternativeContainerDlg = ContainerDlg;
-//}
-
-//bool ExperimentEngine::eventFilter(QObject *target, QEvent *event)
-//{
-//	//if ((target == stimContainerDlg) || (target == alternativeContainerDlg))
-//	{
-//		if (event->type() == QEvent::KeyPress) 
-//		{
-//			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-//
-//			switch (keyEvent->key())
-//			{
-//			case Qt::Key_A://Key_Escape:	//To abort the experiment
-//				if((keyEvent->modifiers() & Qt::ControlModifier))// && (keyEvent->modifiers() & Qt::AltModifier))
-//				{
-//					emit UserWantsToClose();
-//				}
-//				break;
-//			//case Qt::Key_Tab:
-//			//	setExperimentObjectReadyToUnlock();
-//			//	break;
-//			case Qt::Key_Alt:	//To start the experiment
-//				setExperimentObjectReadyToUnlock();
-//				//if(target == alternativeContainerDlg)//here we don't have a trigger object because of the lack of the ExperimentManager, so we trigger it automatically to start
-//				//	tStimTimer.singleShot(100, this, SLOT(incrementExternalTrigger()));//incrementExternalTrigger();
-//				break;
-//			}
-//		}
-//	}
-//	//else if(target == Quick2CntnrWdgt)
-//	//{
-//	//	if (event->type() == QEvent::KeyPress) 
-//	//	{
-//	//		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-//
-//	//		switch (keyEvent->key())
-//	//		{
-//	//		case Qt::Key_A://Key_Escape:	//To abort the experiment
-//	//			if((keyEvent->modifiers() & Qt::ControlModifier))// && (keyEvent->modifiers() & Qt::AltModifier))
-//	//			{
-//	//				emit UserWantsToClose();
-//	//			}
-//	//			break;
-//	//			//case Qt::Key_Tab:
-//	//			//	setExperimentObjectReadyToUnlock();
-//	//			//	break;
-//	//		case Qt::Key_Alt:	//To start the experiment
-//	//			setExperimentObjectReadyToUnlock();
-//	//			//if(target == alternativeContainerDlg)//here we don't have a trigger object because of the lack of the ExperimentManager, so we trigger it automatically to start
-//	//			//	tStimTimer.singleShot(100, this, SLOT(incrementExternalTrigger()));//incrementExternalTrigger();
-//	//			break;
-//	//		}
-//	//	}		
-//	//}
-//	return true;
-//}
-
 bool ExperimentEngine::setExperimentManager(ExperimentManager *expManager)
 {
 	if(expManager)
@@ -334,58 +188,8 @@ bool ExperimentEngine::expandExperimentBlockParameterValue(QString &sValue)
 	return false;
 }
 
-//void ExperimentEngine::setupLayout(QWidget* layoutWidget)
-//{
-//	mainLayout = new QVBoxLayout;
-//	mainLayout->setAlignment(Qt::AlignCenter);
-//	mainLayout->setMargin(0);
-//	mainLayout->addWidget(layoutWidget);
-//	stimContainerDlg->setLayout(mainLayout);
-//	stimContainerDlg->setModal(true); //Set to true because starting an experiment file from the ExperimentManager plugins User Interface requests this to work properly...
-//	stimContainerDlg->showFullScreen();
-//}
-
-//void ExperimentEngine::setupLayout2(QQuickView* quickView)//QWidget* layoutWidget)
-//{
-	//mainLayout = new QVBoxLayout;
-	//mainLayout->setAlignment(Qt::AlignCenter);
-	//mainLayout->setMargin(0);
-	//mainLayout->addWidget(layoutWidget);
-
-	//Quick2CntnrWdgt->setWindow((QQuickWindow*) quickView); //= new Quick2ContainerWidget(,this);
-	//Quick2CntnrWdgt->setLayout(mainLayout);
-	//layoutWidget->setModal(true); //Set to true because starting an experiment file from the ExperimentManager plugins User Interface requests this to work properly...
-	//Quick2CntnrWdgt->showFullScreen();
-//}
-
 bool ExperimentEngine::startExperimentObject()
 {
-	//QString a = thisMetaObject->className();
-	//if (bCheckForDoubleBuffering)
-	//{
-		//if(!this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
-		//{
-		//	qDebug() << __FUNCTION__ << "RetinoMap_glwidget::No Double Buffering available!";
-		//	stimContainerDlg->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
-		//	//Quick2CntnrWdgt->deleteLater();//Schedules this object for deletion, the object will be deleted when control returns to the event loop
-		//	return false;
-		//}
-	//}
-	//else
-	//{
-	//	QGLFormat newFormat;
-	//	newFormat.setDoubleBuffer(false);
-	//	this->setFormat(newFormat);
-	//	if(this->format().doubleBuffer())// check whether we have double buffering, otherwise cancel
-	//	{
-	//		bool a = true;
-	//	}
-	//	else
-	//	{
-	//		bfool b = true;
-	//	}
-	//}
-
 	bFirstTriggerAfterUnlock = true;
 	pExperimentManager->startExperimentTimer(nFrameTimerIndex);//Starts the Frame timer
 	pExperimentManager->startExperimentTimer(nTrialTimerIndex);//Starts the Trial timer
@@ -433,9 +237,6 @@ bool ExperimentEngine::initExperimentObject()
 	nTrialTimerIndex = pExperimentManager->createExperimentTimer();
 	bCurrentSubObjectIsLocked = true;
 	bCurrentSubObjectReadyToUnlock = false;
-	//nRefreshRate = 0;
-	//dAdditionalRefreshDelayTime = 0.0;
-	//insertExpObjectParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,nRefreshRate);
 	bool bRetVal;
 	if (thisMetaObject)
 	{
@@ -484,15 +285,10 @@ QString ExperimentEngine::getLastLoggedObjectStateTime(ExperimentSubObjectState 
 	return "";
 }
 
-//void ExperimentEngine::closeEvent(QCloseEvent *evt)
-//{
-//	//QGLWidget::closeEvent(evt);
-//}
-
 bool ExperimentEngine::stopExperimentObject()
 {
 	bExperimentShouldStop = true;
-	//thisMetaObject->invokeMethod(this, "finalizePaintEvent",Qt::QueuedConnection);//a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
+	changeSubObjectState(Experiment_SubObject_Stop);
 	bool bRetVal;
 	if (thisMetaObject)
 	{
@@ -513,78 +309,6 @@ bool ExperimentEngine::abortExperimentObject()
 	return stopExperimentObject();
 }
 
-//void ExperimentEngine::paintEvent(QPaintEvent *event)
-//{
-//	int nPaintFlags;
-//	if(isDebugMode() && pExperimentManager)
-//		pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Starting to paint the widget");
-//	if (bCurrentSubObjectIsLocked == false)
-//	{
-//		nPaintFlags = (int)GLWidgetPaintFlags_NoFlag;
-//	//}
-//	//else
-//	//{
-//	//	nPaintFlags = (int)GLWidgetPaintFlags_LockedState;
-//	//}
-//
-//		bool bRetVal = false;		
-//		if (thisMetaObject)
-//		{
-//			if (!(thisMetaObject->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PAINTOBJECT_FULL)) == -1))//Is the slot present?
-//			{
-//				//Invoke the slot
-//				if(!(thisMetaObject->invokeMethod(this, FUNC_PAINTOBJECT, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal),Q_ARG(int,nPaintFlags),Q_ARG(QObject*, (QObject*)event))))
-//				{
-//					qDebug() << __FUNCTION__ << "::Could not invoke the slot(" << FUNC_PAINTOBJECT_FULL << ")!";		
-//				}		
-//			}
-//		}
-//	}
-//	else
-//	{
-//		if(isDebugMode() && pExperimentManager) 
-//			pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Starting to paint the initial widget");
-//		//if(isDebugMode() && pExperimentManager)
-//		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","pre Step 1");
-//		if (lockedPainter == NULL)
-//			lockedPainter = new QPainter(this);//Constructor automatically calls begin()
-//		else
-//			lockedPainter->begin(this);
-//		//if(isDebugMode() && pExperimentManager)
-//		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 1");
-//		QFont textFont("arial", 22, QFont::Bold, false);
-//		QString strText;
-//		QString strTextStart = "Experiment ready, ";
-//		if (bCurrentSubObjectReadyToUnlock)
-//			strText = strTextStart + "waiting for a trigger to start...";
-//		else
-//			strText = strTextStart + "press 'Alt' to proceed or CTRL + 'a' to abort the experiment";
-//		const QRectF windowRect = lockedPainter->window();
-//		//if(isDebugMode() && pExperimentManager)
-//		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 2");
-//		const int nBorder = 25;
-//		QPainterPath textPath;
-//		textPath.addText(0,0,textFont,strText);
-//		const QRectF textPathRect = textPath.boundingRect();
-//		lockedPainter->setRenderHint(QPainter::Antialiasing);
-//		lockedPainter->fillRect(windowRect,QColor(87,87,87));
-//		//if(isDebugMode() && pExperimentManager)
-//		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 3");
-//		lockedPainter->setPen(Qt::NoPen);
-//		lockedPainter->setBrush(Qt::white);
-//		lockedPainter->setWindow ( textPathRect.x() - nBorder , textPathRect.y() - (windowRect.height()/2) , textPathRect.width() + (nBorder*2) , windowRect.height());//translate text rect to rect window button
-//		lockedPainter->drawPath(textPath);
-//		//if(isDebugMode() && pExperimentManager)
-//		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 4");
-//		lockedPainter->end();
-//		//if(isDebugMode() && pExperimentManager)
-//		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Finished painting the initial widget");		
-//	}
-//	if(isDebugMode() && pExperimentManager)
-//		pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","painter.end()");
-//	finalizePaintEvent();
-//}
-
 void ExperimentEngine::incrementExternalTrigger()
 {
 /*! \brief Increments the External Trigger.
@@ -603,12 +327,12 @@ void ExperimentEngine::incrementExternalTrigger()
 				pExperimentManager->getExperimentStructure()->prepareExperiment();
 				pExperimentManager->getExperimentStructure()->incrementExternalTrigger();
 			}
-			else
-			{//No Experiment Manager? QML?
+			//else
+			//{//No Experiment Manager? QML?
 				//update();
 				//QTimer::singleShot(1000, this, SLOT(incrementExternalTrigger()));//Let's start!
 				//QMetaObject::invokeMethod()
-			}
+			//}
 		}
 	}
 	else
@@ -626,6 +350,13 @@ void ExperimentEngine::incrementExternalTrigger()
 			if(isDebugMode() && pExperimentManager)
 				qDebug() << __FUNCTION__ << "Automatically Externally Triggered!, no experiment manager active.";
 		}
+		if(getSubObjectState() == Experiment_SubObject_Started)
+		{
+			if (bExperimentShouldStop==false)
+			{
+				int nResult = checkForNextBlockTrial();
+			}
+		}
 	}
 }
 
@@ -633,11 +364,6 @@ void ExperimentEngine::initBlockTrial()
 {
 	emit NewInitBlockTrial();
 	bExperimentShouldStop = false;
-//#ifdef Q_WS_MACX
-//	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // make param in interface and recommend per platform
-//#else
-//	nMinScreenUpdateTime = MIN_SCREEN_UPDATE_TIME; // on Win (with recent OGL drivers), "swapBuffers" will wait for n retraces as indicated by "setSwapInterval" command (works like DX "flip")
-//#endif
 	expTrialTimer.restart();
 	if(pExperimentManager)
 	{
@@ -652,9 +378,6 @@ void ExperimentEngine::initBlockTrial()
 	{
 		qDebug() << __FUNCTION__ << "::No ExperimentManager defined!";
 	}
-	//ParsedParameterDefinition pParDef;
-	//pParDef = getExpObjectBlockParameter(nObjectID,GLWWRAP_WIDGET_STIMULI_REFRESHRATE,QString::number(nRefreshRate));
-	//nRefreshRate = pParDef.sValue.toInt();
 	bool bRetVal;
 	if (thisMetaObject)
 	{
@@ -754,44 +477,11 @@ void ExperimentEngine::animate(bool bOnlyCheckBlockTrials)
 //	//QObject *a = sender();	
 	if(getSubObjectState() == Experiment_SubObject_Started)
 	{
-//		if(mutRecursivePaint.tryLock())
-//		{
-			if (bExperimentShouldStop)
-			{
-				changeSubObjectState(Experiment_SubObject_Stop);
-//				mutRecursivePaint.unlock();
-				return;
-			}
-//
-//			if((isDebugMode()) && (pExperimentManager))
-//				pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to call update()");
-			//if (bOnlyCheckBlockTrials)
-			//{
-//				//if(a)
-//				//	QString b = a->objectName();
-				int nResult = checkForNextBlockTrial();
-				if(nResult == 0)
-				{
-					QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));
-				}
-			//} 
-//			else
-//			{
-//				//if(a)
-//				//	QString b = a->objectName();
-//				//update();
-//			}
-//			if((isDebugMode()) && (pExperimentManager))
-//				pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","update() called");
-//			//	elapsed = frameTime.elapsed();//Calculate the elapsed time since started
-//			//	frameTime.restart();
-//			//	repaint();//calls the below void GLWidget::paintEvent(QPaintEvent *event)
-//			//You should usually use 'update', as this will allow multiple queued paint events to be 'collapsed' into a single event. 
-//			//The update method will call updateGL for QGLWidgets. The 'repaint' method should be used if you want an immediate repaint.
-//			//If you have hooked up a timer to periodically call 'update', then failure to repaint regularly usually indicates 
-//			//that you're putting stress on the CPU.
-//			mutRecursivePaint.unlock();
-//		}
+		if (bExperimentShouldStop)
+		{
+			changeSubObjectState(Experiment_SubObject_Stop);
+			return;
+		}
 	}
 }
 
@@ -818,134 +508,6 @@ bool ExperimentEngine::changeSubObjectState(ExperimentSubObjectState newSubObjec
 	return false;
 }
 
-//void ExperimentEngine::finalizePaintEvent() 
-//{
-//	double dCurrentTime;
-//	double dFramePeriodTime;
-//	bool bObjectIsLocked = bCurrentSubObjectIsLocked;//buffer it..
-//
-//	bool bExperimentStructureChanged = false;
-//	bool bHasCurrentBlock = false;
-//	cExperimentStructure tmpExpStr;
-//	cBlockStructure tmpExpBlockStr;
-//	strcExperimentStructureState tmpExpStrState;
-//	if(pExperimentManager)
-//	{
-//		cExperimentStructure tmpExpStr = cExperimentStructure(*pExperimentManager->getExperimentStructure());
-//		cBlockStructure tmpExpBlockStr = tmpExpStr.getCurrentBlock(bHasCurrentBlock);
-//		strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
-//	}
-//
-//	if (nRefreshRate > 0)
-//	{
-//		dFramePeriodTime = 1000.0f/nRefreshRate; //DisplayRefreshRate
-//		dAdditionalRefreshDelayTime = dFramePeriodTime/10.0f;
-//		dWaitTime = 0.0f;
-//		//dCurrentTime = pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);	
-//		//while((dCurrentTime)<dFramePeriodTime)//Don't go too fast...//((dCurrentTime+dAdditionalRefreshDelayTime)<dFramePeriodTime)//Don't go too fast...
-//		//{
-//		//	dWaitTime = dFramePeriodTime - dCurrentTime;// + dAdditionalRefreshDelayTime;
-//		//	if(isDebugMode() && pExperimentManager)// && (bObjectIsLocked==false))
-//		//		pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Too fast --> Sleeping(" + QString::number(dWaitTime) + ")...") + QString::number(bObjectIsLocked);			
-//		//	ExperimentTimer::SleepMSecAccurate(dWaitTime);
-//		//	//Sleep(nSTime);
-//		//	dCurrentTime = pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);
-//		//}
-//		if (bObjectIsLocked == false)
-//		{
-//			double currentPreSwapTime = pExperimentManager->elapsedExperimentTimerTime(0);
-//			if((tmpExpStrState.Experiment_ExternalTrigger == 0) && (nCurrExpBlockTrialFrame == 0))
-//			{
-//				dLastPreSwapTime = currentPreSwapTime;//Just set this initial value and proceed
-//			}
-//			else
-//			{
-//				dWaitTime = (dLastPreSwapTime + dFramePeriodTime) - currentPreSwapTime;
-//				if(dWaitTime > dAdditionalRefreshDelayTime)//Do we need to wait?
-//				{
-//					if(isDebugMode() && pExperimentManager)
-//						pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Too fast --> Sleeping(" + QString::number(dWaitTime-dAdditionalRefreshDelayTime) + ")... Locked="),QString::number(bObjectIsLocked);
-//					ExperimentTimer::SleepMSecAccurate(dWaitTime-dAdditionalRefreshDelayTime);
-//				}
-//				else if(dWaitTime < 0.0f)//This means that a frame is going to be skipped!
-//				{					
-//					while(dWaitTime < 0.0f)//Search the first next available frame threshold time
-//					{
-//						pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Frame skipped!, missed=", QString::number(dWaitTime));
-//						dLastPreSwapTime = dLastPreSwapTime + dFramePeriodTime;
-//						dWaitTime = (dLastPreSwapTime + dFramePeriodTime) - currentPreSwapTime;
-//					}
-//					if(isDebugMode() && pExperimentManager)
-//						pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Sleeping for next frame(" + QString::number(dWaitTime-dAdditionalRefreshDelayTime) + ")...") + QString::number(bObjectIsLocked);
-//					ExperimentTimer::SleepMSecAccurate(dWaitTime-dAdditionalRefreshDelayTime);
-//				}
-//				dLastPreSwapTime = dLastPreSwapTime + dFramePeriodTime;
-//			}
-//		}
-//		dCurrentTime = pExperimentManager->restartExperimentTimer(nFrameTimerIndex);
-//	}
-//	if(isDebugMode() && pExperimentManager)
-//		pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Going to Swap, locked=", QString::number(bObjectIsLocked));
-//	swapBuffers();
-//	if(isDebugMode() && pExperimentManager)
-//		pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","BlockTrial Buffer Swapped, locked=",QString::number(bObjectIsLocked));
-//	if (bExperimentShouldStop)
-//	{
-//		changeSubObjectState(Experiment_SubObject_Stop);
-//		return;
-//	}
-//	//qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,1); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
-//	if (bExperimentShouldStop)
-//	{
-//		changeSubObjectState(Experiment_SubObject_Stop);
-//		return;
-//	}
-//	if (bExperimentShouldStop)
-//	{
-//		changeSubObjectState(Experiment_SubObject_Stop);
-//		return;
-//	}
-//	if (bObjectIsLocked==false)
-//	{
-//		nCurrExpBlockTrialFrame++;// = CF_UNINITIALIZED;
-//	}
-//	if((nRefreshRate > 0) && (bObjectIsLocked==false))
-//	{
-//		if(pExperimentManager)
-//		{
-//			if (dCurrentTime > (dFramePeriodTime*1.5f))
-//				pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took too long(" + QString::number(dCurrentTime) + " mSecs),(BlockID=" + QString::number(tmpExpStrState.CurrentBlock_BlockID) + ", TrialNumber=" + QString::number(tmpExpStrState.CurrentBlock_TrialNumber) +", Trigger(Int)=" + QString::number(tmpExpStrState.CurrentBlock_InternalTrigger) + ", Frame=" + QString::number(nCurrExpBlockTrialFrame) + ")",QString::number(dCurrentTime));
-//			else if(isDebugMode() && pExperimentManager)
-//				pExperimentManager->logExperimentObjectData(nObjectID,-1,__FUNCTION__,"","Paint routine took(" + QString::number(dCurrentTime) + " mSecs),(BlockID=" + QString::number(tmpExpStrState.CurrentBlock_BlockID) + ", TrialNumber=" + QString::number(tmpExpStrState.CurrentBlock_TrialNumber) +", Trigger(Int)=" + QString::number(tmpExpStrState.CurrentBlock_InternalTrigger) + ", Frame=" + QString::number(nCurrExpBlockTrialFrame) + ")",QString::number(dCurrentTime));
-//		}
-//	}
-//	int nResult = checkForNextBlockTrial();//Check whether we need to prepare for an new block Trial
-//	if(nResult == 0) //No Block Trials to check
-//	{
-//		if (bExperimentShouldStop)
-//		{
-//			changeSubObjectState(Experiment_SubObject_Stop);
-//			//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
-//			return;
-//		}
-//		else
-//		{
-//			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
-//		}
-//	}
-//	else if(nResult == -1)//No Experiment Manager set (QML), just invoke animate()
-//	{
-//		if (bObjectIsLocked==false)
-//		{
-//			if(getSubObjectState() == Experiment_SubObject_Initialized)
-//			{
-//				changeSubObjectState(Experiment_SubObject_Started);
-//				QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
-//			}
-//		}
-//	}
-//}
-//
 QScriptValue ExperimentEngine::getExperimentObjectParameter(const int &nObjectID, const QString &strName)
 {
 //*! \brief retrieves the current value of an Experiment Parameter variable.

@@ -30,7 +30,6 @@
 #include <QtCore/QStringList>
 #include <QApplication>
 #include "qtscriptengineagent.h"
-//#include "qtscriptworker.h"
 
 class QTScriptEngine : public QObject
 {
@@ -39,7 +38,6 @@ class QTScriptEngine : public QObject
 public:
 	QTScriptEngine(QObject *parent);
 	~QTScriptEngine();
-	//QScriptValue evaluate(const QString &program, const QString &fileName = QString(), int lineNumber = 1);
 
 	QScriptEngine *eng;
 	QTScriptEngineAgent *agent;
@@ -57,17 +55,11 @@ public slots:
 	void scriptHasLoaded(qint64 id);
 
 private:
-	//QScriptValue qtscript_quit(QScriptContext *ctx, QScriptEngine *eng);
-	//QScriptValue qtscript_describe(QScriptContext *ctx, QScriptEngine *eng);
-	//QScriptValue importExtension(QScriptContext *context, QScriptEngine *engine);
-
-	//void executeScript(const QString &script);
 	void setAgent();
 
 	void interactive(QScriptEngine *eng);
 	bool attachedToDebugger;
 	bool isRunning;
-	//QTScriptWorker *worker;
 
 signals:
 	void ScriptLoaded(qint64 scriptID);

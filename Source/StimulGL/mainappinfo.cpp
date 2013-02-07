@@ -189,7 +189,7 @@ void MainAppInfo::CloseMainLogFile()
 	}	
 }
 
-bool MainAppInfo::Initialize(QWidget *mainWin)
+bool MainAppInfo::SetMainWindow(QWidget *mainWin)
 {
 	mainWindow = mainWin;
 	return true;

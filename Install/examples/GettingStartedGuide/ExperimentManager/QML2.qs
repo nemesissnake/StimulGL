@@ -5,6 +5,7 @@ var ExperimentManagerObj = new ExperimentManager(); 				//Here we create the Exp
 var currentScriptLocation = StimulGL.getSelectedScriptFileLocation();		//Here we store the directory-path from this script file for further usage.
 var tmpText;											//Just a global variabele we can (re)use inside this script
 var currentEMState;										//Just a global variabele that stores the latest Experiment Manager State
+var TriggerTime = 4000;
 
 function CleanupScript() //Cleanup the script
 {
@@ -16,7 +17,6 @@ function CleanupScript() //Cleanup the script
 	ExperimentStateChanged = null;
 	ExperimentStarted = null;
 	ExperimentStopped = null;	
-	ExperimentStructureChanged = null;
 	EM_ExternalTriggerIncremented = null;
 	LogState = null;
 	cExperimentStructure_Object = null;
@@ -59,27 +59,6 @@ function ConnectDisconnectScriptFunctions(Connect)
 	}	
 }
 
-function ExperimentStructureChanged(nCurrentBlock,nCurrentTrial,nCurrentTrigger)
-{
-//The signal where this slot is connected to contains 3 parameters (Block,Trial and Trigger) we can examine the parameters that are emitted by:
-//
-//	Log("--- ExperimentStructureChanged arguments count: " + arguments.length);
-//	for (var i = 0; i < arguments.length; ++i)
-//		Log("\t argument(" + i + "):" + arguments[i]);
-//		
-//Alternatively you could use the following function signature and code to make use of the parameters:
-//function ExperimentStructureChanged()//No parameters defined in the function header
-//{	
-//	var nCurrentBlock = arguments[0];
-//	var nCurrentTrial = arguments[1];
-//	var nCurrentTrigger = arguments[2];
-	
-	
-	tmpText = "->-> Block " + nCurrentBlock + ", Trial " + nCurrentTrial + ", Trigger " + nCurrentTrigger;
-	// Here we make use of the function signature parameters to construct	a string containing the current experiment structure information
-	Log(tmpText);
-}
-
 function ExperimentStarted()
 {
 	Log("-*- Experiment Started");
@@ -104,12 +83,6 @@ function LogState(currentExperimentState)
 		Log("CurrentBlock_LoopID: RA_UNDEFINED");
 	else
 		Log("CurrentBlock_LoopID:" + currentExperimentState.CurrentBlock_LoopID);
-	if(cLoopStructure_Object0)
-		Log("CurrentBlock_LoopCounter0:" + cLoopStructure_Object0.getLoopCounter());
-	if(cLoopStructure_Object1)
-		Log("CurrentBlock_LoopCounter1:" + cLoopStructure_Object1.getLoopCounter());
-	if(cLoopStructure_Object2)
-		Log("CurrentBlock_LoopCounter2:" + cLoopStructure_Object2.getLoopCounter());
 	Log("CurrentBlock_BlockID:" + currentExperimentState.CurrentBlock_BlockID);
 	Log("CurrentBlock_TrialNumber:" + currentExperimentState.CurrentBlock_TrialNumber);
 	Log("CurrentBlock_InternalTrigger:" + currentExperimentState.CurrentBlock_InternalTrigger);

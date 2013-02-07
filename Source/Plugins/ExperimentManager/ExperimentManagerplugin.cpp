@@ -41,6 +41,7 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
 	ExperimentManagerObject = new ExperimentManager(ExperimentManagerDiagObject,NULL);
 	strPluginInformation = PLUGIN_INFORMATION;
+	Q_INIT_RESOURCE(ExperimentManager);
 }
 
 ExperimentManagerPlugin::~ExperimentManagerPlugin()

@@ -17,7 +17,6 @@
 //
 
 #include "QML2Viewer.h"
-//#include "ModelIndexProvider.h"
 #include <QQmlError>
 #include <QQmlEngine>
 #include <QMetaObject>
@@ -39,29 +38,16 @@ QML2Viewer::QML2Viewer(QObject *parent) : ExperimentEngine(parent)
 */
 QML2Viewer::~QML2Viewer()
 {
-	//disconnect(quick2Viewer, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onStatusChanged(QDeclarativeView::Status)));
-	bool bResult = disconnect(quick2Viewer, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onStatusChanged(QQuickView::Status)));
-	//disconnect(quick2Viewer, &QtQuick2ApplicationViewer::ViewClosed, this, &QML2Viewer::onQuickViewClosed);
 	//if (imgLstModel)
 	//{
 	//	delete imgLstModel;
 	//	imgLstModel = NULL;
 	//}	
+	deleteQML2ViewerWindow();
 	if (rootObject)
-	{
-		//delete rootObject; only a pointer..
-		rootObject = NULL;
+	{		
+		rootObject = NULL;//delete rootObject; only a pointer..
 	}
-	if (quick2Viewer)
-	{
-		delete quick2Viewer;
-		quick2Viewer = NULL;
-	}
-	//if(quick2Container)
-	//{
-	//	delete quick2Container;
-	//	quick2Container = NULL;
-	//}
 	//if (qmlErrorHandler)
 	//{
 	//	delete qmlErrorHandler;
@@ -71,6 +57,19 @@ QML2Viewer::~QML2Viewer()
 		if(tmpFile.remove() == false)
 			qWarning() << __FUNCTION__ << "Could not remove a temporarily file(" << tmpFile.fileName() << ")"; 
 }
+
+void QML2Viewer::deleteQML2ViewerWindow()
+{
+	if(quick2ViewerWindow)
+	{
+		bool bResult = disconnect(quick2ViewerWindow, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onStatusChanged(QQuickView::Status)));
+		bResult = disconnect(quick2ViewerWindow, &QtQuick2ApplicationViewer::QtQuickEngineQuit, this, &QML2Viewer::onQuick2ViewWindowClosed);
+		quick2ViewerWindow->close();
+		delete quick2ViewerWindow;
+		quick2ViewerWindow = NULL;
+	}
+}
+
 
 bool QML2Viewer::executeQML2Document(const QString &strSource, bool bIsFile)//QVBoxLayout *layout) 
 {
@@ -86,7 +85,7 @@ bool QML2Viewer::executeQML2Document(const QString &strSource, bool bIsFile)//QV
 		}
 		else
 		{
-			qml2EventRoutine(false,strSource);
+			qml2EventRoutine(strSource);
 			return true;
 		}
 	}
@@ -114,90 +113,42 @@ QScriptValue QML2Viewer::ctor_QML2Viewer(QScriptContext* context, QScriptEngine*
 
 void QML2Viewer::initialize()
 {
-	//Place your custom initialization code here:
-	
 	//Default values if none defined.
 	experimentManager = NULL;
+	currentExperimentStructure = NULL;
 	nQML2ViewerID = -1;
 	rectScreenRes = QApplication::desktop()->screenGeometry();
-	quick2Viewer = NULL;
-	//quick2Container = NULL;
+	quick2ViewerWindow = NULL;
 	rootObject = NULL;
-}
-
-void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyToDefault)
-{
-	if (bInit)
-	{	
-		colorBackground = QColor(87,87,87);//gives "#575757";
-		if(!bSetOnlyToDefault)
-			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_BACKGROUNDCOLOR,colorBackground);
-		QString qmlMainFilePath = "";
-		if(!bSetOnlyToDefault)
-			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_MAINFILEPATH,qmlMainFilePath);
-		stimHeigthPixelAmount = rectScreenRes.height();
-		if(!bSetOnlyToDefault)
-			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
-		stimWidthPixelAmount = rectScreenRes.width();
-		if(!bSetOnlyToDefault)
-			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
-	} 
-	else
-	{
-		ParsedParameterDefinition pParDef;//((pParDef.bIsInitialized) && (pParDef.bHasChanged == false))
-		bResolutionChanged = false;
-		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
-		if (pParDef.bHasChanged)
-		{
-			stimHeigthPixelAmount = pParDef.sValue.toInt();
-			bResolutionChanged = true;
-		}
-		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
-		if (pParDef.bHasChanged)
-		{
-			stimWidthPixelAmount = pParDef.sValue.toInt();
-			bResolutionChanged = true;
-		}
-		//if (bResolutionChanged)
-			//setStimuliResolution(stimWidthPixelAmount,stimHeigthPixelAmount);
-
-		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_BACKGROUNDCOLOR,colorBackground.name());
-		if (pParDef.bHasChanged)
-		{
-			colorBackground = QColor(pParDef.sValue.toLower());
-			//GlWidgetPallette = glWidget->palette();
-			//GlWidgetPallette.setColor(glWidget->backgroundRole(), colorBackground);
-			//glWidget->setPalette(GlWidgetPallette);
-		}
-		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_MAINFILEPATH,qmlMainFilePath);
-		if (pParDef.bHasChanged)
-		{
-			qmlMainFilePath = pParDef.sValue;
-		}
-	}
 }
 
 bool QML2Viewer::initObject()
 {
-	//quick2Container = new Quick2ContainerWidget();
-	quick2Viewer = new QtQuick2ApplicationViewer();
-
-	//qobject_cast<QQuickWindow*>(quick2Viewer)->installEventFilter(this);
-	quick2Viewer->installEventFilter(this);
-	//quick2Container->setWindow(quick2Viewer);
-	bool bResult = connect(quick2Viewer, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onStatusChanged(QQuickView::Status)));
-	//bResult = connect(quick2Viewer, SIGNAL(ViewClosed()), this, SLOT(onQuickViewClosed()));
-	//quick2Container->show();
+	bFirstQuickWindowAvtivation = true;
+	bExperimentUnlocked = false;
+	quick2ViewerWindow = new QtQuick2ApplicationViewer();
+	quick2ViewerWindow->installEventFilter(this);
+	bool bResult = connect(quick2ViewerWindow, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onStatusChanged(QQuickView::Status)));
+	bResult = connect(quick2ViewerWindow, &QtQuick2ApplicationViewer::QtQuickEngineQuit, this, &QML2Viewer::onQuick2ViewWindowClosed);
+	if(experimentManager)
+	{
+		currentExperimentStructure = experimentManager->getExperimentStructure();
+		bResult = connect(currentExperimentStructure,&cExperimentStructure::experimentStarted,this, &QML2Viewer::onStartTriggerRecieved);
+	}
+	else
+	{
+		currentExperimentStructure = NULL;
+	}		
 	//if (!imgLstModel)
 	//{
 	//	imgLstModel = new ImageListModel();
 	//	qmlViewer->engine()->addImageProvider(DEFAULT_IMAGEBUFFER_NAME, new ModelIndexProvider(*imgLstModel));//Qt::DisplayRole
 	//}	
 	QString extPluginPath = MainAppInfo::qmlExtensionsPluginDirPath();
-	QStringList importPaths = quick2Viewer->engine()->importPathList();
+	QStringList importPaths = quick2ViewerWindow->engine()->importPathList();
 	if (!importPaths.contains(extPluginPath))
 	{
-		quick2Viewer->engine()->addImportPath(extPluginPath);
+		quick2ViewerWindow->engine()->addImportPath(extPluginPath);
 		qDebug() << __FUNCTION__ "::Added the QML2 extension Plugin path (" << extPluginPath << ").";
 	}
 	//qmlErrorHandler = new QmlErrorHandler(*qmlViewer,this);
@@ -208,9 +159,10 @@ bool QML2Viewer::initObject()
 
 bool QML2Viewer::eventFilter(QObject *target, QEvent *event)
 {
-	if (target == quick2Viewer)
+	if (target == quick2ViewerWindow)
 	{
-		if (event->type() == QEvent::KeyPress) 
+		QEvent::Type tmpEvent = event->type();
+		if (tmpEvent == QEvent::KeyPress) 
 		{
 			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 
@@ -227,10 +179,13 @@ bool QML2Viewer::eventFilter(QObject *target, QEvent *event)
 				//	break;
 			case Qt::Key_Alt:	//To start the experiment
 				ExperimentEngine::setExperimentObjectReadyToUnlock();
-				//if(target == alternativeContainerDlg)//here we don't have a trigger object because of the lack of the ExperimentManager, so we trigger it automatically to start
-				//	tStimTimer.singleShot(100, this, SLOT(incrementExternalTrigger()));//incrementExternalTrigger();
+				qml2EventRoutine();
 				break;
 			}
+		}
+		else if(tmpEvent == QEvent::Close)
+		{
+			onQuick2ViewWindowClosed();
 		}
 	}
 	return false;
@@ -238,25 +193,22 @@ bool QML2Viewer::eventFilter(QObject *target, QEvent *event)
 
 bool QML2Viewer::startObject()
 {	
-	qml2EventRoutine(false);
+	quick2ViewerWindow->showFullScreen();//Fastest uncomment this
 	return true;
+}
+
+void QML2Viewer::onStartTriggerRecieved()
+{	
+	if(bExperimentUnlocked == false)
+	{
+		bExperimentUnlocked = true;
+		qml2EventRoutine();
+	}
 }
 
 bool QML2Viewer::stopObject()
 {
-	//if (qmlErrorHandler)
-	//{
-	//	if (!qmlErrorHandler->errorOccured()) 
-	//	{
-	//		int a = 9;
-	//	} 
-	//	else 
-	//	{
-	//		int a = 96;
-	//	}
-	//}
-	//disconnect(&tWidgetUpdateLoopTimer, SIGNAL(timeout()), this, SLOT(callAnimate()));
-	//tWidgetUpdateLoopTimer.stop();
+	disconnect(currentExperimentStructure,&cExperimentStructure::experimentStarted,this, &QML2Viewer::onStartTriggerRecieved);
 	return true;
 }
 
@@ -357,17 +309,17 @@ QVariant QML2Viewer::invokeQml2Method(QString strRootObjectName, QString strMeth
 	return NULL;
 }
 
-//void QML2Viewer::onQuickViewClosed()
-//{
-
-//}
+void QML2Viewer::onQuick2ViewWindowClosed()
+{
+	emit ExperimentEngine::UserWantsToClose();
+}
 
 void QML2Viewer::onStatusChanged(QQuickView::Status status)
 {
 	if (status == QQuickView::Error)
 	{
 		QList<QQmlError> errList;
-		errList = quick2Viewer->errors();
+		errList = quick2ViewerWindow->errors();
 		for (int i=0;i<errList.count();i++)
 		{
 			QString errMessage = "... QML error at(col " + QString::number(errList.at(i).column()) + ", line " + QString::number(errList.at(i).line()) + "): " + errList.at(i).description() + " ...";
@@ -379,20 +331,86 @@ void QML2Viewer::onStatusChanged(QQuickView::Status status)
 	}
 }
 
-void QML2Viewer::qml2EventRoutine(bool dShowWidget, QString strContent)
+void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyToDefault)
 {
-	//quick2Viewer->setVisible(false);
-	//if (bResolutionChanged)
-	//{
-	//	bResolutionChanged = false;
-		//quick2Viewer->setVisible(false);
-	//	quick2Viewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());		
-	//}
+	if (bInit)
+	{	
+		colorBackground = QColor(87,87,87);//gives "#575757";
+		if(!bSetOnlyToDefault)
+			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_BACKGROUNDCOLOR,colorBackground);
+		QString qmlMainFilePath = "";
+		if(!bSetOnlyToDefault)
+			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_MAINFILEPATH,qmlMainFilePath);
+		stimHeigthPixelAmount = rectScreenRes.height();
+		if(!bSetOnlyToDefault)
+			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
+		stimWidthPixelAmount = rectScreenRes.width();
+		if(!bSetOnlyToDefault)
+			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
+	} 
+	else
+	{
+		ParsedParameterDefinition pParDef;//((pParDef.bIsInitialized) && (pParDef.bHasChanged == false))
+		bParameterChanged = false;
+		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
+		if (pParDef.bHasChanged)
+		{
+			stimHeigthPixelAmount = pParDef.sValue.toInt();
+			bParameterChanged = true;
+		}
+		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
+		if (pParDef.bHasChanged)
+		{
+			stimWidthPixelAmount = pParDef.sValue.toInt();
+			bParameterChanged = true;
+		}
+		//if (bResolutionChanged)
+		//setStimuliResolution(stimWidthPixelAmount,stimHeigthPixelAmount);
+
+		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_BACKGROUNDCOLOR,colorBackground.name());
+		if (pParDef.bHasChanged)
+		{
+			colorBackground = QColor(pParDef.sValue.toLower());
+			bParameterChanged = true;
+			//GlWidgetPallette = glWidget->palette();
+			//GlWidgetPallette.setColor(glWidget->backgroundRole(), colorBackground);
+			//glWidget->setPalette(GlWidgetPallette);
+		}
+		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_MAINFILEPATH,qmlMainFilePath);
+		if (pParDef.bHasChanged)
+		{
+			qmlMainFilePath = pParDef.sValue;
+			bParameterChanged = true;
+			qml2EventRoutine();
+		}			
+	}
+}
+
+void QML2Viewer::qml2EventRoutine(QString strContent)
+{
+	QFileInfo fi;
+	QUrl fileUrl;
+	QString fileString;
+
+	if(bFirstQuickWindowAvtivation)
+	{
+		bFirstQuickWindowAvtivation = false;
+		bExperimentUnlocked = false;
+		fileString = "qrc:/resources/StartQmlFile.qml";
+		fileUrl = QUrl(fileString);		
+	}
+	else if(bExperimentUnlocked == false)
+	{
+		fileString = "qrc:/resources/UnlockedQmlFile.qml";
+		fileUrl = QUrl(fileString);		
+	}
+	else
+	{
+		fi.setFile(qmlMainFilePath);
+		fileString = fi.canonicalFilePath();
+		fileUrl = QUrl::fromLocalFile(fileString);
+	}
 	
-	QFileInfo fi(qmlMainFilePath);
-	QUrl fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
-	//QString test = fi.canonicalFilePath();
-	//QString test2 = quick2Viewer->source().toString();
 	if(strContent.isEmpty() == false)
 	{
 		int nRetries = 1;
@@ -416,36 +434,20 @@ void QML2Viewer::qml2EventRoutine(bool dShowWidget, QString strContent)
 		qmlMainFilePath = fi.canonicalFilePath();
 		fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
 	}
-	if (quick2Viewer->source() != fileUrl)
+	if(quick2ViewerWindow)
 	{
-		//QString test = quick2Viewer->source().toString();
-		//test = fileUrl.toString();
-
-		//quick2Viewer->setVisible(false);
-		quick2Viewer->setMainQmlFile(qmlMainFilePath);//fi.canonicalFilePath());//fileUrl.toString());//setSource(fileUrl);
-		
-		if (quick2Viewer->status() == QQuickView::Error)
+		if (quick2ViewerWindow->source() != fileUrl)
 		{
-			this->stopObject();
-			if(experimentManager)
+			quick2ViewerWindow->setSource(fileUrl);//setMainQmlFile(fileString);	
+			if (quick2ViewerWindow->status() == QQuickView::Error)
 			{
-				experimentManager->abortExperiment();
+				this->abortExperimentObject();
+				if(experimentManager)
+					experimentManager->abortExperiment();
 				return;
 			}
-			this->abortExperimentObject();//this seems to work...
-			return;
 		}
-		//rootObject = dynamic_cast<QObject *>(quick2Viewer->rootObject());// get root object
-		//quick2Viewer->resize((int)stimWidthPixelAmount,(int)stimHeigthPixelAmount);//rectScreenRes.width(),rectScreenRes.height());
-	}	
-	
-	//if (dShowWidget)
-	//{
-	quick2Viewer->show();
-		//quick2Container->show();
-		//quick2Viewer->showExpanded();//->showFullScreen();//Fastest uncomment this
-		//glWidget->setFocus();
-	//}
+	}
 }
 
 bool QML2Viewer::setExperimentManager(ExperimentManager *expManager)

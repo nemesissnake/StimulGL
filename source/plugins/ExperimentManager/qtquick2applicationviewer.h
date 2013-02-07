@@ -26,7 +26,10 @@ class QtQuick2ApplicationViewer : public QQuickView
     Q_OBJECT
 
 signals:
-	//void ViewClosed();
+	void QtQuickEngineQuit();
+
+private slots:
+	void qtQuick2EngineQuit();
 
 public:
     explicit QtQuick2ApplicationViewer(QObject *parent = NULL);
@@ -39,6 +42,7 @@ public:
 protected:
 	//bool event(QEvent*);
 	//bool eventFilter(QObject*, QEvent*);
+	//void closeEvent(QCloseEvent *event);
 
 private:
 	//QQuickWindow* window_;

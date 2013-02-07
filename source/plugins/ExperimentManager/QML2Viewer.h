@@ -20,10 +20,9 @@
 #ifndef QML2VIEWER_H
 #define QML2VIEWER_H
 
-#include "Quick2ContainerWidget.h"
+//#include "Quick2ContainerWidget.h"
 #include "qtquick2applicationviewer.h"
 #include "ExperimentEngine.h"
-//#include "ImageListModel.h"
 
 #define QML2VIEWER_MAINFILEPATH							"qmlmainfilepath"
 #define QML2VIEWER_MAX_EVENT_TIME						"qmlmineventtime"
@@ -44,7 +43,7 @@ public:
 	static QScriptValue ctor_QML2Viewer(QScriptContext* context, QScriptEngine* engine);
 	
 public:	
-	bool executeQML2Document(const QString &strSource, bool bIsFile = true);// QVBoxLayout *layout = NULL);
+	bool executeQML2Document(const QString &strSource, bool bIsFile = true);
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
@@ -65,30 +64,32 @@ protected:
 
 private slots:
 	void onStatusChanged(QQuickView::Status status);
-	//void onQuickViewClosed();
+	void onQuick2ViewWindowClosed();
+	void onStartTriggerRecieved();
 
 private:
 	void initialize();
 	void parseExperimentObjectBlockParameters(bool bInit = false, bool bSetOnlyToDefault = false);
-	void qml2EventRoutine(bool dShowWidget = true, QString strContent = "");
+	void qml2EventRoutine(QString strContent = "");
+	void deleteQML2ViewerWindow();
 
 	ExperimentManager *experimentManager;
+	cExperimentStructure *currentExperimentStructure;
 	QFile tmpFile;
 	//QmlErrorHandler *qmlErrorHandler;
 	//ImageListModel *imgLstModel;
-	QtQuick2ApplicationViewer *quick2Viewer;
-	//Quick2ContainerWidget *quick2Container;
+	QtQuick2ApplicationViewer *quick2ViewerWindow;
 
-	//QPalette GlWidgetPallette;
 	QString qmlMainFilePath;
 	QObject *rootObject;
-	int nQML2ViewerID;							//This variable stores the ObjectID used to identify the object
+	int nQML2ViewerID;							//The ObjectID used to identify the object
 	QRectF rectScreenRes;						//The screen resolution
 	QColor colorBackground;						//The color of the background
 	float stimWidthPixelAmount;					//The amount of visible stimuli pixels(height)
 	float stimHeigthPixelAmount;				//The amount of visible stimuli pixels(width)
-	//int lastTriggerNumber;						//To keep track of the last trigger number
-	bool bResolutionChanged;
+	bool bParameterChanged;
+	bool bFirstQuickWindowAvtivation;
+	bool bExperimentUnlocked;
 };
 Q_DECLARE_METATYPE(QML2Viewer)
 Q_DECLARE_METATYPE(QML2Viewer*)

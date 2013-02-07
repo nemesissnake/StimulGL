@@ -47,9 +47,15 @@ QString QtQuick2ApplicationViewerPrivate::adjustPath(const QString &path)
 QtQuick2ApplicationViewer::QtQuick2ApplicationViewer(QObject *parent) : QQuickView(), d(new QtQuick2ApplicationViewerPrivate())
 {
 	//configureEventFilter(parent);
-    bool bResult = connect(engine(), &QQmlEngine::quit, this, &QWindow::close);
-	//bResult = connect(engine(), &QQmlEngine::quit, this, &QtQuick2ApplicationViewer::close);
+    //bool bResult = connect(engine(), &QQmlEngine::quit, this, &QWindow::close);
+	bool bResult = connect(engine(), &QQmlEngine::quit, this, &QtQuick2ApplicationViewer::qtQuick2EngineQuit);
     setResizeMode(QQuickView::SizeRootObjectToView);
+}
+
+void QtQuick2ApplicationViewer::qtQuick2EngineQuit()
+{
+	QWindow::close();
+	emit QtQuickEngineQuit();
 }
 
 QtQuick2ApplicationViewer::~QtQuick2ApplicationViewer()
@@ -76,6 +82,11 @@ void QtQuick2ApplicationViewer::showExpanded()
     show();
 #endif
 }
+
+//void QtQuick2ApplicationViewer::closeEvent(QCloseEvent *event)
+//{
+//	int ee =4;
+//};
 
 //void QtQuick2ApplicationViewer::configureEventFilter(QObject* parentObject)
 //{

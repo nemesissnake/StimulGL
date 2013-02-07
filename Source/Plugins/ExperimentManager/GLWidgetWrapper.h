@@ -34,7 +34,6 @@
 #include "ExperimentManager.h"
 #include "Global.h"
 #include "ContainerDlg.h"
-#include "Quick2ContainerWidget.h"
 #include "ExperimentTimer.h"
 
 using namespace ExperimentManagerNameSpace;
