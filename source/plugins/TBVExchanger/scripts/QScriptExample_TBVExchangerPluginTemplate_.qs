@@ -142,16 +142,16 @@ Log(TBVExchangerobject.tGetMeanOfROI(2));
 Log(TBVExchangerobject.tGetNrOfVoxelsOfROI(2));
 Log(TBVExchangerobject.tGetBetaOfROI(1,2));
 Log(TBVExchangerobject.tGetCoordsOfVoxelOfROI(1, 2));
-//Log(TBVExchangerobject.int *tGetAllCoordsOfVoxelsOfROI(int roi) {return tbvNetwIntFace->tGetAllCoordsOfVoxelsOfROI(roi);};
+Log(TBVExchangerobject.tGetAllCoordsOfVoxelsOfROI(1));
 //	Volume Data Access Functions
 Log(TBVExchangerobject.tGetValueOfVoxelAtTime(1,2,3,4));
-//Log(TBVExchangerobject.tGetTimeCourseData(1));
-//Log(TBVExchangerobject.short int *tGetRawTimeCourseData(int timepoint) {return tbvNetwIntFace->tGetRawTimeCourseData(timepoint);};
+Log(TBVExchangerobject.tGetTimeCourseData(1));
+Log(TBVExchangerobject.tGetRawTimeCourseData(1));
 Log(TBVExchangerobject.tGetBetaOfVoxel(1,2,3,4));
-//Log(TBVExchangerobject.double *tGetBetaMaps() {return tbvNetwIntFace->tGetBetaMaps();};
+Log(TBVExchangerobject.tGetBetaMaps());
 Log(TBVExchangerobject.tGetMapValueOfVoxel(1,2,3,4));// {return tbvNetwIntFace->tGetMapValueOfVoxel(map, x, y, z);};
-//Log(TBVExchangerobject.float *tGetContrastMaps() {return tbvNetwIntFace->tGetContrastMaps();};
-//Log(TBVExchangerobject.bool connectToServer(QString sIPAddress,qint64 port) {return tbvNetwIntFace->connectToServer(sIPAddress.toLatin1().data(),port);};
+Log(TBVExchangerobject.tGetContrastMaps());
+Log(TBVExchangerobject.connectToServer("127.0.0.1",80));
 Log(TBVExchangerobject.disconnectFromServer());
 
 //CleanupScript();

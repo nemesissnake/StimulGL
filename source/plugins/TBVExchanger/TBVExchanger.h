@@ -57,13 +57,11 @@ public slots:
 	//Basic Project Functions
 	int tGetCurrentTimePoint() {return tbvNetwIntFace->tGetCurrentTimePoint();};
 	int tGetExpectedNrOfTimePoints() {return tbvNetwIntFace->tGetExpectedNrOfTimePoints();};
-
-	QList<int> tGetDimsOfFunctionalData() {QList<int> tmpList; tmpList<<0<<0<<0; tbvNetwIntFace->tGetDimsOfFunctionalData(tmpList[0], tmpList[1], tmpList[2]); return tmpList;};
-	
-	QString tGetProjectName() {char* tmpChar = "";tbvNetwIntFace->tGetProjectName(tmpChar);return QString(tmpChar);};
-	QString tGetWatchFolder() {char* tmpChar = "";tbvNetwIntFace->tGetWatchFolder(tmpChar);return QString(tmpChar);};
-	QString tGetTargetFolder() {char* tmpChar = "";tbvNetwIntFace->tGetTargetFolder(tmpChar);return QString(tmpChar);};
-	QString tGetFeedbackFolder() {char* tmpChar = "";tbvNetwIntFace->tGetFeedbackFolder(tmpChar);return QString(tmpChar);};
+	QList<int> tGetDimsOfFunctionalData() {return tbvNetwIntFace->tGetDimsOfFunctionalData();};
+	QString tGetProjectName() {return tbvNetwIntFace->tGetProjectName();};
+	QString tGetWatchFolder() {return tbvNetwIntFace->tGetWatchFolder();};
+	QString tGetTargetFolder() {return tbvNetwIntFace->tGetTargetFolder();};
+	QString tGetFeedbackFolder() {return tbvNetwIntFace->tGetFeedbackFolder();};
 	//Protocol, DM, GLM Functions:
 	int tGetCurrentProtocolCondition() {return tbvNetwIntFace->tGetCurrentProtocolCondition();};
 	int tGetFullNrOfPredictors() {return tbvNetwIntFace->tGetFullNrOfPredictors();};
@@ -76,24 +74,18 @@ public slots:
 	float tGetMeanOfROI(int roi) {return tbvNetwIntFace->tGetMeanOfROI(roi);};
 	int tGetNrOfVoxelsOfROI(int roi) {return tbvNetwIntFace->tGetNrOfVoxelsOfROI(roi);};
 	float tGetBetaOfROI(int roi,int beta) {return tbvNetwIntFace->tGetBetaOfROI(roi,beta);};
-	QList<int> tGetCoordsOfVoxelOfROI(int roi, int voxel) {QList<int> tmpList; tmpList<<0<<0<<0<<0; tmpList[3] = tbvNetwIntFace->tGetCoordsOfVoxelOfROI(roi, voxel, tmpList[0], tmpList[1], tmpList[2]); return tmpList;};
-	//QList<int> tGetAllCoordsOfVoxelsOfROI(int roi) 
-	//{
-	//	int *nResArray = tbvNetwIntFace->tGetAllCoordsOfVoxelsOfROI(roi);
-	//	int normalarray[] = {1,2,3,4,5};
-
-	//	int nSize = arraysize(normalarray);
-	//	QList<int> tmpList; int nSize = arraysize()   QList<int> tmpList = 
-	//};
+	QList<int> tGetCoordsOfVoxelOfROI(int roi, int voxel) {return tbvNetwIntFace->tGetCoordsOfVoxelOfROI(roi, voxel);};
+	QList<int> tGetAllCoordsOfVoxelsOfROI(int roi) {return tbvNetwIntFace->tGetAllCoordsOfVoxelsOfROI(roi);};
 	//Volume Data Access Functions
 	float tGetValueOfVoxelAtTime(int x, int y, int z, int timepoint) {return tbvNetwIntFace->tGetValueOfVoxelAtTime(x, y, z, timepoint);};
-	short int *tGetTimeCourseData(int timepoint) {return tbvNetwIntFace->tGetTimeCourseData(timepoint);};
-	short int *tGetRawTimeCourseData(int timepoint) {return tbvNetwIntFace->tGetRawTimeCourseData(timepoint);};
+	
+	QList<short> tGetTimeCourseData(int timepoint) {return tbvNetwIntFace->tGetTimeCourseData(timepoint);};
+	QList<short> tGetRawTimeCourseData(int timepoint) {return tbvNetwIntFace->tGetRawTimeCourseData(timepoint);};
 	double tGetBetaOfVoxel(int beta, int x, int y, int z) {return tbvNetwIntFace->tGetBetaOfVoxel(beta, x, y, z);};
-	double *tGetBetaMaps() {return tbvNetwIntFace->tGetBetaMaps();};
+	QList<double> tGetBetaMaps() {return tbvNetwIntFace->tGetBetaMaps();};
 	float tGetMapValueOfVoxel(int map, int x, int y, int z) {return tbvNetwIntFace->tGetMapValueOfVoxel(map, x, y, z);};
-	float *tGetContrastMaps() {return tbvNetwIntFace->tGetContrastMaps();};
-	bool connectToServer(QString sIPAddress,qint64 port) {return tbvNetwIntFace->connectToServer(sIPAddress.toLatin1().data(),port);};
+	QList<float> tGetContrastMaps() {return tbvNetwIntFace->tGetContrastMaps();};
+	bool connectToServer(QString sIPAddress,int port) {return tbvNetwIntFace->connectToServer(sIPAddress.toLatin1().data(),port);};
 	bool disconnectFromServer() {return tbvNetwIntFace->disconnectFromServer();};
 
 private:

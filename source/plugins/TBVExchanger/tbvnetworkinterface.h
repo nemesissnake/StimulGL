@@ -11,15 +11,15 @@ public:
 	//Basic Project Functions
 	int tGetCurrentTimePoint();
 	int tGetExpectedNrOfTimePoints();
-	void tGetDimsOfFunctionalData(int &dim_x, int &dim_y, int &dim_z);
-	void tGetProjectName(char *cProjectName);
-	void tGetWatchFolder(char *cWatchFolder);
-	void tGetTargetFolder(char *cTargetFolder);
-	void tGetFeedbackFolder(char *cFeedbackFolder);
+    QList<int> tGetDimsOfFunctionalData();
+    QString tGetProjectName();
+    QString tGetWatchFolder();
+    QString tGetTargetFolder();
+    QString tGetFeedbackFolder();
 
 	//Protocol, DM, GLM Functions:
 	int tGetCurrentProtocolCondition();
-	int tGetFullNrOfPredictors();
+    int tGetFullNrOfPredictors();
 	int tGetCurrentNrOfPredictors();
 	int tGetNrOfConfoundPredictors();
 	float tGetValueOfDesignMatrix(int pred, int timepoint);
@@ -30,19 +30,19 @@ public:
 	float tGetMeanOfROI(int roi);
 	int tGetNrOfVoxelsOfROI(int roi);
 	float tGetBetaOfROI(int roi,int beta);
-	bool tGetCoordsOfVoxelOfROI(int roi, int voxel, int &x, int &y, int &z);
-	int *tGetAllCoordsOfVoxelsOfROI(int roi);
+    QList<int> tGetCoordsOfVoxelOfROI(int roi, int voxel);
+    QList<int> tGetAllCoordsOfVoxelsOfROI(int roi);
 
 	//Volume Data Access Functions
 	float tGetValueOfVoxelAtTime(int x, int y, int z, int timepoint);
-	short int *tGetTimeCourseData(int timepoint);
-	short int *tGetRawTimeCourseData(int timepoint);
-	double tGetBetaOfVoxel(int beta, int x, int y, int z);
-	double *tGetBetaMaps();
+    QList<short int> tGetTimeCourseData(int timepoint);
+    QList<short int> tGetRawTimeCourseData(int timepoint);
+    double tGetBetaOfVoxel(int beta, int x, int y, int z);
+    QList<double> tGetBetaMaps();
 	float tGetMapValueOfVoxel(int map, int x, int y, int z);
-	float *tGetContrastMaps();
+    QList<float> tGetContrastMaps();
 
-	bool connectToServer(char *ipAddress,qint64 port);
+    bool connectToServer(char *ipAddress,quint16 port);
 	bool disconnectFromServer();
 
 private:

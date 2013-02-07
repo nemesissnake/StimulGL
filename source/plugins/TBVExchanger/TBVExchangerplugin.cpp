@@ -29,6 +29,14 @@ TBVExchangerPlugin::TBVExchangerPlugin(QObject *parent)
 	TBVExchangerObject = new TBVExchanger(parent);
 	TBVExchangerDiagObject = new TBVExchanger_Dialog();	
 	strPluginInformation = QString(PLUGIN_INTERNAL_NAME) + " Plugin" + "(v" + PLUGIN_FILE_VERSION_STRING + ")" + " by " + PLUGIN_AUTHOR_NAME;
+	
+	//Q_DECLARE_METATYPE(short);
+	
+	//int shortlistID = qRegisterMetaType<QList<short>>("QList<short>");
+	//int shortID = qRegisterMetaType<short>("short");
+	//shortlistID=shortlistID;
+
+	
 }
 
 TBVExchangerPlugin::~TBVExchangerPlugin()

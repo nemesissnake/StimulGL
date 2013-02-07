@@ -1,7 +1,8 @@
 #include "tbvnetworkinterface.h"
 
 
-TBVNetworkInterface::TBVNetworkInterface() : QThread()
+TBVNetworkInterface::TBVNetworkInterface()
+    : QThread()
 {
 	tcpSocket = new QTcpSocket();
 	rTcpSocket = new QTcpSocket();
@@ -51,7 +52,7 @@ void TBVNetworkInterface::connectionLost()
     udpSocket->bind(55555, QUdpSocket::ShareAddress);
 }
 
-bool TBVNetworkInterface::connectToServer(char *ipAddress,qint64 port)
+bool TBVNetworkInterface::connectToServer(char *ipAddress,quint16 port)
 {
 	tcpSocket->connectToHost(tr(ipAddress),port);
 	if(!tcpSocket->waitForConnected(3000))
@@ -188,75 +189,88 @@ int	TBVNetworkInterface::tGetExpectedNrOfTimePoints()
 	doRequest.getDataOfByteArray(ExpectedNrOfTimePoints);
 	return ExpectedNrOfTimePoints;
 }
-void TBVNetworkInterface::tGetDimsOfFunctionalData(int &dim_x, int &dim_y, int &dim_z)
+QList<int> TBVNetworkInterface::tGetDimsOfFunctionalData()
 {
+    QList<int> tempList;
+    tempList<<0<<0<<0<<0;
+
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetDimsOfFunctionalData"));
 	doRequest.sendData("tGetDimsOfFunctionalData");
 	QString status = doRequest.getReply();
 	
 	if(!status.isEmpty())
 	{
-		return;
+        return tempList;
 	}
-	doRequest.getDataOfByteArray(dim_x);
-	doRequest.getDataOfByteArray(dim_y);
-	doRequest.getDataOfByteArray(dim_z);
+    doRequest.getDataOfByteArray(tempList[0]);
+    doRequest.getDataOfByteArray(tempList[1]);
+    doRequest.getDataOfByteArray(tempList[2]);
+    tempList[3] = 1;
+    return tempList;
 }
-void TBVNetworkInterface::tGetProjectName(char *cProjectName)
+QString TBVNetworkInterface::tGetProjectName()
 {
+    QString cProjectName;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetProjectName"));
 	doRequest.sendData("tGetProjectName");
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-		return;
+        return cProjectName;
 	}
 	char *ProjectName;
-	doRequest.getDataOfByteArray(ProjectName);
-	strcpy(cProjectName,ProjectName);
+    doRequest.getDataOfByteArray(ProjectName);
+    cProjectName = tr(ProjectName);
+    return cProjectName;
 }
-void TBVNetworkInterface::tGetWatchFolder(char *cWatchFolder)
+QString TBVNetworkInterface::tGetWatchFolder()
 {
+    QString cWatchFolder;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetWatchFolder"));
 	doRequest.sendData("tGetWatchFolder");
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-		return;
+        return cWatchFolder;
 	}
 	char *WatchFolder;
 	doRequest.getDataOfByteArray(WatchFolder);
-	strcpy(cWatchFolder,WatchFolder);
+    cWatchFolder = tr(WatchFolder);
+    return cWatchFolder;
 }
-void TBVNetworkInterface::tGetTargetFolder(char *cTargetFolder)
+QString TBVNetworkInterface::tGetTargetFolder()
 {
+    QString cTargetFolder;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetTargetFolder"));
 	doRequest.sendData("tGetTargetFolder");
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-		return;
+        return cTargetFolder;
 	}
 	char *TargetFolder;
 	doRequest.getDataOfByteArray(TargetFolder);
-	strcpy(cTargetFolder,TargetFolder);
+    cTargetFolder = tr(TargetFolder);
+    return cTargetFolder;
 }
-void TBVNetworkInterface::tGetFeedbackFolder(char *cFeedbackFolder)
+QString TBVNetworkInterface::tGetFeedbackFolder()
 {
+    QString cFeedbackFolder;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetFeedbackFolder"));
 	doRequest.sendData("tGetFeedbackFolder");
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-		return;
+        return cFeedbackFolder;
 	}
 	char *FeedbackFolder;
 	doRequest.getDataOfByteArray(FeedbackFolder);
-	strcpy(cFeedbackFolder,FeedbackFolder);
+    cFeedbackFolder = tr(FeedbackFolder);
+    return cFeedbackFolder;
 }
 
 //TBV Protocol, DM, GLM Functions:
@@ -404,24 +418,31 @@ float TBVNetworkInterface::tGetBetaOfROI(int roi,int beta)
 	return BetaOfROI;
 
 }
-bool TBVNetworkInterface::tGetCoordsOfVoxelOfROI(int roi, int voxel, int &x, int &y, int &z)
+QList<int> TBVNetworkInterface::tGetCoordsOfVoxelOfROI(int roi, int voxel)
 {
+    QList<int> tempList;
+    tempList<<0<<0<<0<<0;
+
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetCoordsOfVoxelOfROI"));
 	doRequest.sendData("tGetCoordsOfVoxelOfROI",roi,voxel);
 	QString status = doRequest.getReply();
 	
 	if(!status.isEmpty())
 	{
-		return false;
+        return tempList;
 	}
-	doRequest.getDataOfByteArray(x);
-	doRequest.getDataOfByteArray(y);
-	doRequest.getDataOfByteArray(z);
-	
-	return true;
+
+    doRequest.getDataOfByteArray(tempList[0]);
+    doRequest.getDataOfByteArray(tempList[1]);
+    doRequest.getDataOfByteArray(tempList[2]);
+    tempList[3] = 1;
+    return tempList;
 }
-int *TBVNetworkInterface::tGetAllCoordsOfVoxelsOfROI(int roi)
+
+QList<int> TBVNetworkInterface::tGetAllCoordsOfVoxelsOfROI(int roi)
 {
+    QList<int> tempList;
+    tempList<<0;
 	int NrOfVoxelsOfROI = tGetNrOfVoxelsOfROI(roi);
 
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetAllCoordsOfVoxelsOfROI"));
@@ -430,38 +451,42 @@ int *TBVNetworkInterface::tGetAllCoordsOfVoxelsOfROI(int roi)
 	
 	if(!status.isEmpty())
 	{
-		return 0;
+        return tempList;
 	}
-
-	
 	CoordsOfVoxelsOfROI.resize(NrOfVoxelsOfROI*3);
 
 	doRequest.getDataOfByteArray((char *)CoordsOfVoxelsOfROI.data(),NrOfVoxelsOfROI*3*sizeof(int));
-	
-	return CoordsOfVoxelsOfROI.data();
+
+    tempList = CoordsOfVoxelsOfROI.toList();
+    tempList.append(1);
+
+    return tempList;
 }
 
 
 //TBV Volume Data Access Functions
 float TBVNetworkInterface::tGetValueOfVoxelAtTime(int x, int y, int z, int timepoint)
 {
+
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetValueOfVoxelAtTime"));
 	doRequest.sendData("tGetValueOfVoxelAtTime",x,y,z,timepoint);
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-		return false;
+        return false;
 	}
 	float ValueOfVoxelAtTime;
 	doRequest.getDataOfByteArray(ValueOfVoxelAtTime);
 	return ValueOfVoxelAtTime;
 }
-short int *TBVNetworkInterface::tGetTimeCourseData(int timepoint)
+QList<short int> TBVNetworkInterface::tGetTimeCourseData(int timepoint)
 {
-	int dim_x,dim_y,dim_z,dim_xyz;
-	tGetDimsOfFunctionalData(dim_x,dim_y,dim_z);
-	dim_xyz = dim_x * dim_y * dim_z;
+    QList<short int> tempList;
+	tempList<<0;
+
+    QList<int> temperList = tGetDimsOfFunctionalData();
+    int dim_xyz = temperList.at(0) * temperList.at(1) * temperList.at(2);
 		
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetTimeCourseData"));
 	doRequest.sendData("tGetTimeCourseData", timepoint);
@@ -469,18 +494,22 @@ short int *TBVNetworkInterface::tGetTimeCourseData(int timepoint)
 	
 	if(!status.isEmpty())
 	{
-		return 0;
+        return tempList;
 	}
-	
+
 	TimeCourseData.resize(dim_xyz);
 	doRequest.getDataOfByteArray((char *)TimeCourseData.data(),dim_xyz*sizeof(short int));
-	return TimeCourseData.data();
+    tempList = TimeCourseData.toList();
+    tempList.append((1));
+    return tempList;
 }
-short int *TBVNetworkInterface::tGetRawTimeCourseData(int timepoint)
+QList<short int> TBVNetworkInterface::tGetRawTimeCourseData(int timepoint)
 {
-	int dim_x,dim_y,dim_z,dim_xyz;
-	tGetDimsOfFunctionalData(dim_x,dim_y,dim_z);
-	dim_xyz = dim_x * dim_y * dim_z;
+    QList<short int> tempList;
+    tempList<<0;
+
+    QList<int> temperList = tGetDimsOfFunctionalData();
+    int dim_xyz = temperList.at(0) * temperList.at(1) * temperList.at(2);
 
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetRawTimeCourseData"));
 	doRequest.sendData("tGetRawTimeCourseData", timepoint);
@@ -488,11 +517,15 @@ short int *TBVNetworkInterface::tGetRawTimeCourseData(int timepoint)
 	
 	if(!status.isEmpty())
 	{
-		return 0;
+        return tempList;
 	}
+
 	RawTimeCourseData.resize(dim_xyz);
 	doRequest.getDataOfByteArray((char *)RawTimeCourseData.data(),dim_xyz*sizeof(short int));
-	return RawTimeCourseData.data();
+
+    tempList = RawTimeCourseData.toList();
+    tempList.append(1);
+    return tempList;
 }
 double TBVNetworkInterface::tGetBetaOfVoxel(int beta, int x, int y, int z)
 {
@@ -508,11 +541,14 @@ double TBVNetworkInterface::tGetBetaOfVoxel(int beta, int x, int y, int z)
 	doRequest.getDataOfByteArray(BetaOfVoxel);
 	return BetaOfVoxel;
 }
-double *TBVNetworkInterface::tGetBetaMaps()
+QList<double> TBVNetworkInterface::tGetBetaMaps()
 {
-	int dim_x,dim_y,dim_z,dim_xyz;
-	tGetDimsOfFunctionalData(dim_x,dim_y,dim_z);
-	dim_xyz = dim_x * dim_y * dim_z;
+    QList<double> tempList;
+    tempList<<0;
+
+    QList<int> temperList = tGetDimsOfFunctionalData();
+    int dim_xyz = temperList.at(0) * temperList.at(1) * temperList.at(2);
+
 	int n_predictors_current = tGetCurrentNrOfPredictors();
 	
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetBetaMaps"));
@@ -521,11 +557,14 @@ double *TBVNetworkInterface::tGetBetaMaps()
 	
 	if(!status.isEmpty())
 	{
-		return 0;
+        return tempList;
 	}
+
 	BetaMaps.resize(n_predictors_current*dim_xyz);
 	doRequest.getDataOfByteArray((char *)BetaMaps.data(), n_predictors_current*dim_xyz*8*sizeof(unsigned char));
-	return BetaMaps.data();
+    tempList = BetaMaps.toList();
+    tempList.append(1);
+    return tempList;
 }
 float TBVNetworkInterface::tGetMapValueOfVoxel(int map, int x, int y, int z)
 {
@@ -541,11 +580,14 @@ float TBVNetworkInterface::tGetMapValueOfVoxel(int map, int x, int y, int z)
 	doRequest.getDataOfByteArray(MapValueOfVoxel);
 	return MapValueOfVoxel;
 }
-float *TBVNetworkInterface::tGetContrastMaps()
+QList<float> TBVNetworkInterface::tGetContrastMaps()
 {
-	int dim_x,dim_y,dim_z,dim_xyz;
-	tGetDimsOfFunctionalData(dim_x,dim_y,dim_z);
-	dim_xyz = dim_x * dim_y * dim_z;
+    QList<float> tempList;
+    tempList.append(0);
+
+    QList<int> temperList = tGetDimsOfFunctionalData();
+    int dim_xyz = temperList.at(0) * temperList.at(1) * temperList.at(2);
+
 	int n_contrast_maps = tGetNrOfContrasts();
 	
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetContrastMaps"));
@@ -554,11 +596,13 @@ float *TBVNetworkInterface::tGetContrastMaps()
 	
 	if(!status.isEmpty())
 	{
-		return 0;
+        return tempList;
 	}
 	ContrastMaps.resize(n_contrast_maps*dim_xyz*sizeof(float));
 	doRequest.getDataOfByteArray((char *)ContrastMaps.data(), n_contrast_maps*dim_xyz*4*sizeof(unsigned char));
-	return ContrastMaps.data();
+    tempList = ContrastMaps.toList();
+    tempList.append(1);
+    return tempList;
 }
 
 void TBVNetworkInterface::writeError(QAbstractSocket::SocketError Error)

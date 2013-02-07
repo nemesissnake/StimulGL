@@ -466,6 +466,10 @@ void MainWindow::setupScriptEngine()
 	//engine.globalObject().setProperty("MyStruct", ctor);
 	QScriptValue ctor = AppScriptEngine->eng->newFunction(sciFindDialog::DocFindFlagsConstructor);
 	AppScriptEngine->eng->globalObject().setProperty("DocFindFlags", ctor);
+
+	int nShortListId = qScriptRegisterSequenceMetaType<QList<short>>(AppScriptEngine->eng);
+	int nFloatListId = qScriptRegisterSequenceMetaType<QList<float>>(AppScriptEngine->eng);
+	int nDoubleListId = qScriptRegisterSequenceMetaType<QList<double>>(AppScriptEngine->eng);
 }
 
 bool MainWindow::restartScriptEngine()
