@@ -152,10 +152,18 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &cont
 	switch (type) 
 	{
 	case QtDebugMsg:
+#ifdef QT_NO_DEBUG
 		strMessage = QString("Debug: %1").arg(msg);
+#else
+		strMessage = QString("Debug: %1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
+#endif
 		break;
 	case QtWarningMsg:
+#ifdef QT_NO_DEBUG
 		strMessage = QString("Warning: %1").arg(msg);
+#else
+		strMessage = QString("Warning: %1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
+#endif
 		break;
 	case QtCriticalMsg:
 		strMessage = QString("Critical: %1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);

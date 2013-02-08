@@ -2018,8 +2018,9 @@ void MainWindow::NumberOfLinesChanged(int nrOfLines)
 
 void MainWindow::save()
 {
-	QString tmpFileName = DocManager->getFileName(activeMdiChild());
-	if (activeMdiChild())
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	QString tmpFileName = DocManager->getFileName(tmpMdiChildPointer);
+	if (tmpMdiChildPointer)
 	{
 		if (tmpFileName == "")
 		{
@@ -2027,7 +2028,7 @@ void MainWindow::save()
 		}
 		else
 		{
-			if (DocManager->saveFile(activeMdiChild(),tmpFileName))
+			if (DocManager->saveFile(tmpMdiChildPointer,tmpFileName))
 			{
 				statusBar()->showMessage(tr("File saved"), 2000);
 				return;
@@ -2039,17 +2040,18 @@ void MainWindow::save()
 
 void MainWindow::saveAs()
 {
-	if (activeMdiChild())
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (tmpMdiChildPointer)
 	{
 		//QString selExt = "SVG files (*.svg *.svgz *.svg.gz)";
-		QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),DocManager->getFileName(activeMdiChild()));//,DocManager->getKnownFileExtensionList(),&selExt);
+		QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),DocManager->getFileName(tmpMdiChildPointer));//,DocManager->getKnownFileExtensionList(),&selExt);
 		if (fileName.isEmpty())
 		{
 			return;
 		}
 		else
 		{
-			if (DocManager->saveFile(activeMdiChild(),fileName))
+			if (DocManager->saveFile(tmpMdiChildPointer,fileName))
 			{
 				setCurrentFile(fileName);
 				statusBar()->showMessage(tr("File saved"), 2000);
@@ -2062,20 +2064,23 @@ void MainWindow::saveAs()
 
 void MainWindow::cut()
 {
-	if (DocManager->getDocHandler(activeMdiChild()))
-		DocManager->getDocHandler(activeMdiChild())->cut();
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (DocManager->getDocHandler(tmpMdiChildPointer))
+		DocManager->getDocHandler(tmpMdiChildPointer)->cut();
 }
 
 void MainWindow::copy()
 {
-	if (DocManager->getDocHandler(activeMdiChild()))
-		DocManager->getDocHandler(activeMdiChild())->copy();
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (DocManager->getDocHandler(tmpMdiChildPointer))
+		DocManager->getDocHandler(tmpMdiChildPointer)->copy();
 }
 
 void MainWindow::paste()
 {
-	if (DocManager->getDocHandler(activeMdiChild()))
-		DocManager->getDocHandler(activeMdiChild())->paste();
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (DocManager->getDocHandler(tmpMdiChildPointer))
+		DocManager->getDocHandler(tmpMdiChildPointer)->paste();
 }
 
 void MainWindow::lineComment()
@@ -2265,11 +2270,12 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 	}
 	if (action->data().toString() == "Close")//From menu(Close)
 	{
-		if (!DocManager->maybeSave(activeMdiChild(),bAutoSaveChanges)) 
+		QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+		if (!DocManager->maybeSave(tmpMdiChildPointer,bAutoSaveChanges)) 
 		{
 			return false;
 		}
-		DocManager->remove(activeMdiChild());
+		DocManager->remove(tmpMdiChildPointer);
 		mdiArea->closeActiveSubWindow();
 		return true;
 	}
@@ -2289,11 +2295,12 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 	}
 	else //This must be called from the script?
 	{
-		if (!DocManager->maybeSave(activeMdiChild(),bAutoSaveChanges)) 
+		QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+		if (!DocManager->maybeSave(tmpMdiChildPointer,bAutoSaveChanges)) 
 		{
 			return false;
 		}
-		DocManager->remove(activeMdiChild());
+		DocManager->remove(tmpMdiChildPointer);
 		mdiArea->closeActiveSubWindow();
 		return true;
 	}
@@ -2473,8 +2480,9 @@ void MainWindow::goToLine()
 
 void MainWindow::findImpl(bool bReplace, bool useParams, QString strFindString, QString strReplaceString, DocFindFlags findFlags, bool bReplaceAll) 
 {
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
 	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
+	tmpSci = DocManager->getDocHandler(tmpMdiChildPointer);
 	DocFindFlags flags(bReplace);
 	QString str1, str2;
 	int line1, col1, line2, col2;
@@ -2498,7 +2506,7 @@ void MainWindow::findImpl(bool bReplace, bool useParams, QString strFindString, 
 	}
 	else
 	{
-		if ( DocManager->getFindParams(activeMdiChild(),str1, str2, flags) ) {
+		if ( DocManager->getFindParams(tmpMdiChildPointer,str1, str2, flags) ) {
 			if ( flags.replace ) {
 				tmpSci->replace(str1, str2, flags, bReplaceAll);
 			}

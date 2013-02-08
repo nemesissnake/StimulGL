@@ -6,6 +6,8 @@ var currentScriptLocation = StimulGL.getSelectedScriptFileLocation();		//Here we
 var tmpText;											//Just a global variabele we can (re)use inside this script
 var currentEMState;										//Just a global variabele that stores the latest Experiment Manager State
 var TriggerTime = 4000;
+//var CurrentQMLFile = "C:\\Qt\\5.0.0\\win32\\examples\\multimedia\\video\\qmlvideo\\qml\\qmlvideo\\main.qml";
+var CurrentQMLFile = ".//experiments//qml2Example_1.qml";
 
 function CleanupScript() //Cleanup the script
 {

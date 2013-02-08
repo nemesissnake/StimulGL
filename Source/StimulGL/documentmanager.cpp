@@ -124,8 +124,9 @@ QString DocumentManager::getFileName(QMdiSubWindow *subWindow, bool bFileNameOnl
 
 int DocumentManager::getDocIndex(QMdiSubWindow *subWindow)
 {
-	int i;
-	for (i=0;i<DocCount;i++)
+	if(subWindow == NULL)
+		return -1;
+	for (int i=0;i<DocCount;i++)
 	{
 		if (SubWindowChildren.at(i) == subWindow)
 		{

@@ -250,6 +250,9 @@ bool ExperimentManager_Dialog::executeDocument()
 			QFile file(fileSource);
 			if (!file.exists())
 				return false;
+
+
+
 			QFileInfo fi(file);
 			QDir::setCurrent(fi.canonicalPath());
 		}
@@ -292,25 +295,62 @@ bool ExperimentManager_Dialog::executeDocument()
 			//QString dd = MainAppInfo::appDirPath();
 			QDir::setCurrent(docContentStructToRun.strDocHomeDir);
 		}
-		tmpContainerDlg = new ContainerDlg(this);
-		tmpContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-		tmpContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
-		tmpLayout = new QVBoxLayout;
-		tmpLayout->setAlignment(Qt::AlignHCenter);
-		tmpLayout->setMargin(0);
-		//tmpLayout->setStretch(0,1680);
-		tmpContainerDlg->setLayout(tmpLayout);
-		tmpContainerDlg->setWindowModality(Qt::WindowModality::WindowModal);
 
-		QmlWidgetObject = new qmlWidget(this);
-		//tmpLayout->setStretch(0,)
-		tmpLayout->addWidget(QmlWidgetObject);
-
-		if(QmlWidgetObject->executeQMLDocument(fileSource,tmpContainerDlg,docContentStructToRun.bIsFile))
+		if (fileSource.isEmpty() == false)
 		{
-			connectSignalSlots(false);
-			tmpContainerDlg->showFullScreen();
-			return true;
+			QRegExp tmpRegExp;
+			tmpRegExp.setPatternSyntax(QRegExp::Wildcard);
+			tmpRegExp.setCaseSensitivity(Qt::CaseInsensitive);
+			tmpRegExp.setPattern("import*QtQuick*1.");
+			if(fileSource.contains(tmpRegExp))
+			{
+				tmpContainerDlg = new ContainerDlg(this);
+				tmpContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
+				tmpContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
+				tmpLayout = new QVBoxLayout;
+				tmpLayout->setAlignment(Qt::AlignHCenter);
+				tmpLayout->setMargin(0);
+				//tmpLayout->setStretch(0,1680);
+				tmpContainerDlg->setLayout(tmpLayout);
+				tmpContainerDlg->setWindowModality(Qt::WindowModality::WindowModal);
+
+				QmlWidgetObject = new qmlWidget(this);
+				//tmpLayout->setStretch(0,)
+				tmpLayout->addWidget(QmlWidgetObject);
+
+				if(QmlWidgetObject->executeQMLDocument(fileSource,tmpContainerDlg,docContentStructToRun.bIsFile))
+				{
+					connectSignalSlots(false);
+					tmpContainerDlg->showFullScreen();
+					return true;
+				}
+			}
+			else
+			{
+				tmpRegExp.setPattern("import*QtQuick*2.");
+				if(fileSource.contains(tmpRegExp))
+				{
+					if(Qml2ViewerObject)
+					{
+						Qml2ViewerObject->stopObject();
+						delete Qml2ViewerObject;
+						Qml2ViewerObject = NULL;
+					}
+					Qml2ViewerObject = new QML2Viewer(this);
+					connectSignalSlots(false);
+					if(Qml2ViewerObject->executeQML2Document(fileSource,docContentStructToRun.bIsFile))
+					{
+						Qml2ViewerObject->startObject();
+						return true;
+					}
+					return false;
+				}
+				else
+				{
+					qWarning() << __FUNCTION__ << "::Could not determine QtQuick version, no \"import QtQuick\" statement found!";
+					return false;
+				}
+			}
 		}
 	}
 	return false;

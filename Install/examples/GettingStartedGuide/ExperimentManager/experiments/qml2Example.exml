@@ -70,7 +70,7 @@ Attributes only apply to readonly non user data, like the ID
 					<parameters>
 						<parameter ID="0">
 							<name>QmlMainFilePath</name>
-							<value>./experiments/qml2Example_1.qml</value>
+							<value>{CurrentQMLFile}</value>
 						</parameter>
 						<parameter ID="1">
 							<name>StimulusWidthSpan</name>
