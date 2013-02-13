@@ -120,6 +120,7 @@ public:
 			bRetVal = pExperimentManager->insertExperimentObjectVariabelePointer(nObjectID,sKeyName,tVariabele);
 		return bRetVal;
 	}
+	QString templateVariabeleToString(const QStringList &Var) {return Var.join(",");}
 	QString templateVariabeleToString(const QString &Var) {return QString(Var);}
 	QString templateVariabeleToString(const QColor &Var) {return Var.name();}
 	QString templateVariabeleToString(const int &Var) {return QString::number(Var);}

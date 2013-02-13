@@ -49,6 +49,7 @@
 #define RETINOMAP_WIDGET_DISCRETETRIGGERSTEPS				"discretetriggersteps"			/*!< "discretetriggersteps" */
 #define RETINOMAP_WIDGET_RANDOMIZETRIGGERSTEPS				"randomizetriggersteps"			/*!< "randomizetriggersteps" */
 #define RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS					"emptytriggersteps"				/*!< "emptytriggersteps" */
+#define RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS_ARRAY			"emptytriggerstepsarray"		/*!< "emptytriggerstepsarray" */
 #define RETINOMAP_WIDGET_OUTPUTTRIGGERFRAME					"outputtriggerframe"			/*!< "outputtriggerframe" */
 #define RETINOMAP_WIDGET_OUTPUTFRAMETYPE					"outputframetype"				/*!< "outputframetype" */
 #define RETINOMAP_WIDGET_OUTPUTTYPE_FRAME					"frame"							/*!< "frame" */
@@ -173,6 +174,7 @@ private:
 	bool antiAliasing;							//Defines whether the anti-aliasing filter should be used for painting to the screen
 	int lastTriggerNumber;						//To keep track of the last trigger number
 	int emptyTriggerSteps;						//Defines the number of Trigger steps in which no stimuli should be presented
+	QStringList emptyTriggerStepsArray;
 	bool bNoChangesSinceLastFrame;
 	ExperimentManager *experimentManager;
 

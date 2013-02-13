@@ -1620,7 +1620,27 @@ bool ExperimentManager::expandExperimentBlockParameterValue(QString &sValue)
 				QVariant varResult = "";
 				if(getScriptContextValue(sValue.mid(nFirstIndex+1,nLastIndex-nFirstIndex-1),varResult))
 				{
-					sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,varResult.toString());
+					if(varResult.type() == QVariant::List)
+					{
+						//Let's assume a QStringList here...
+						//QStringList stringList;
+						QString sCombinedStringList;
+						QListIterator<QVariant> it(varResult.toList());
+						if (it.hasNext())
+						{
+							sCombinedStringList = it.next().toString();
+							while (it.hasNext()) 
+							{
+								sCombinedStringList = sCombinedStringList + "," + it.next().toString();
+									//stringList << it.next().toString();
+							}
+						}
+						sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,sCombinedStringList);//varResult.toString());
+					}
+					else
+					{
+						sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,varResult.toString());
+					}					
 					return true;
 				}
 			}	

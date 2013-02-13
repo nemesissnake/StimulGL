@@ -200,6 +200,12 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		insertExpObjectParameter(nRetinoID,RETINOMAP_WIDGET_TRIGGERDURATION_MSEC,triggerDurationMsec);
 		emptyTriggerSteps = 0;
 		insertExpObjectParameter(nRetinoID,RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS,emptyTriggerSteps);
+
+		emptyTriggerStepsArray.clear();
+		insertExpObjectParameter(nRetinoID,RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS_ARRAY,emptyTriggerStepsArray);
+		
+
+
 		gapDiameter = 20.0;//aperture in the middle left blank
 		insertExpObjectParameter(nRetinoID,RETINOMAP_WIDGET_GAP_DIAMETER,gapDiameter);
 		outputTriggerFrame = false;
@@ -287,6 +293,7 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 		cortMagFactor = getExpObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_CORTMAG_FACTOR,QString::number(cortMagFactor)).sValue.toFloat();
 		triggerDurationMsec = getExpObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_TRIGGERDURATION_MSEC,QString::number(triggerDurationMsec)).sValue.toInt();
 		emptyTriggerSteps = getExpObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS,QString::number(emptyTriggerSteps)).sValue.toInt();		
+		emptyTriggerStepsArray = getExpObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_EMPTYTRIGGERSTEPS_ARRAY,emptyTriggerStepsArray.join(",")).sValue.split(",",QString::SkipEmptyParts);
 		gapDiameter = getExpObjectBlockParameter(nRetinoID,RETINOMAP_WIDGET_GAP_DIAMETER,QString::number(gapDiameter)).sValue.toInt();
 		colorBackground = QColor(getExpObjectBlockParameter(nRetinoID,GLWIDGET_BACKGROUNDCOLOR,colorBackground.name()).sValue.toLower());
 		brushBackground = QBrush(colorBackground);
@@ -607,24 +614,34 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 			int i,j;
 			if ((emptyTriggerSteps > 0) && (cycleTriggerAmount>=emptyTriggerSteps))//We have to make sure that the Empty item occur in a block next to each other
 			{
-				RandomGenerator tmpGenerator;
-				for (j=0;j<(cycleTriggerAmount/emptyTriggerSteps);j++)
+				if(emptyTriggerStepsArray.isEmpty() == false)
 				{
-					tmpGenerator.append(QString::number(j));
-				}
-				tmpGenerator.randomizeList();
-				for (j=0;j<tmpGenerator.count();j++)//Create random Empty trigger steps within the Cycle
-				{
-					for (i=0;i<emptyTriggerSteps;i++)
+					for (j=0;j<(emptyTriggerStepsArray.count());j++)
 					{
-						randEmptyStimGenerator->append(QString::number((tmpGenerator.at(j).toInt()*emptyTriggerSteps)+i));
-					}				
+						randEmptyStimGenerator->append(emptyTriggerStepsArray.at(j));
+					}
 				}
-				if (cycleTriggerAmount%emptyTriggerSteps>0)//Do we need some additional steps?
+				else
 				{
-					for (i=0;i<(cycleTriggerAmount%emptyTriggerSteps);i++)
+					RandomGenerator tmpGenerator;
+					for (j=0;j<(cycleTriggerAmount/emptyTriggerSteps);j++)
 					{
-						randEmptyStimGenerator->append(QString::number((emptyTriggerSteps*((int)cycleTriggerAmount/emptyTriggerSteps))+i));
+						tmpGenerator.append(QString::number(j));
+					}
+					tmpGenerator.randomizeList();
+					for (j=0;j<tmpGenerator.count();j++)//Create random Empty trigger steps within the Cycle
+					{
+						for (i=0;i<emptyTriggerSteps;i++)
+						{
+							randEmptyStimGenerator->append(QString::number((tmpGenerator.at(j).toInt()*emptyTriggerSteps)+i));
+						}				
+					}
+					if (cycleTriggerAmount%emptyTriggerSteps>0)//Do we need some additional steps?
+					{
+						for (i=0;i<(cycleTriggerAmount%emptyTriggerSteps);i++)
+						{
+							randEmptyStimGenerator->append(QString::number((emptyTriggerSteps*((int)cycleTriggerAmount/emptyTriggerSteps))+i));
+						}
 					}
 				}
 			}

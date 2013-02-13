@@ -35,6 +35,7 @@ public:
 		hFloatContainer.clear();
 		hBoolContainer.clear();
 		hQStringContainer.clear();
+		hQStringListContainer.clear();
 		hQColorContainer.clear();
 	};
 
@@ -65,6 +66,11 @@ public:
 		else if (typeid(T1) == typeid(QString))
 		{
 			hQStringContainer.insert(strKeyName.toLower(),(QString *)pExpParam);
+			return true;
+		}
+		else if (typeid(T1) == typeid(QStringList))
+		{
+			hQStringListContainer.insert(strKeyName.toLower(),(QStringList *)pExpParam);
 			return true;
 		}
 		else if (typeid(T1) == typeid(QColor))
@@ -111,6 +117,10 @@ public:
 		{
 			return (T2*)hQStringContainer.value(strKeyName.toLower());
 		}
+		else if (typeid(T2) == typeid(QStringList))
+		{
+			return (T2*)hQStringListContainer.value(strKeyName.toLower());
+		}
 		else if (typeid(T2) == typeid(QColor))
 		{
 			return (T2*)hQColorContainer.value(strKeyName.toLower());
@@ -148,6 +158,17 @@ public:
 		else if (hQStringContainer.contains(strKeyNameLow))
 		{
 			scriptVal = QScriptValue(*hQStringContainer.value(strKeyNameLow));
+			return true;
+		}
+		else if (hQStringListContainer.contains(strKeyNameLow))
+		{
+			//QStringList *tmpStringList = hQStringListContainer.value(strKeyNameLow);
+			//int sListLength = scriptVal.property("length").toInteger();
+			//tmpStringList->clear();
+			//for(int i = 0; i < sListLength; i++)
+			//	tmpStringList->append(scriptVal.property(i).toString());
+			////*tmpStringList = scriptVal.toQObject();
+			//scriptVal = QScriptValue(*hQStringListContainer.value(strKeyNameLow));
 			return true;
 		}
 		else if (hQColorContainer.contains(strKeyNameLow))
@@ -195,6 +216,16 @@ public:
 			*tmpString = scriptVal.toString();
 			return true;
 		}
+		else if (hQStringListContainer.contains(strKeyNameLow))
+		{
+			QStringList *tmpStringList = hQStringListContainer.value(strKeyNameLow);
+			int sListLength = scriptVal.property("length").toInteger();
+			tmpStringList->clear();
+			for(int i = 0; i < sListLength; i++)
+				tmpStringList->append(scriptVal.property(i).toString());
+			//*tmpStringList = scriptVal.toQObject();
+			return true;
+		}
 		else if (hQColorContainer.contains(strKeyNameLow))
 		{
 			QColor tmpColor;
@@ -224,6 +255,7 @@ private:
 	QHash<QString, bool*> hBoolContainer;
 	QHash<QString, QColor*> hQColorContainer;
 	QHash<QString, QString*> hQStringContainer;
+	QHash<QString, QStringList*> hQStringListContainer;
 };
 
 #endif // EXPERIMENTPARAMETER_H
