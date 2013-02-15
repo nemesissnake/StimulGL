@@ -117,6 +117,11 @@ bool ExperimentEngine::setExperimentMetaObject()
 	return true;
 }
 
+const QMetaObject *ExperimentEngine::getExperimentMetaObject()
+{
+	return thisMetaObject;
+}
+
 bool ExperimentEngine::setExperimentObjectID(int nObjID)
 {
 	if(nObjID >= 0)

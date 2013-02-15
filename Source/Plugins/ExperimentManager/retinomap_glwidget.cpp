@@ -787,6 +787,10 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 								}
 								break;
 							}
+							//else
+							//{
+							//	bRenderStimuli = bRenderStimuli;
+							//}
 						}
 					}
 				}

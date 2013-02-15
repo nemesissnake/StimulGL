@@ -206,7 +206,7 @@ bool qmlWidget::initObject()
 {
 	if (parentWidget == NULL)
 	{
-		GLWidgetWrapper::setupLayout(this);
+		//1234 GLWidgetWrapper::setupLayout(this);
 	} 
 	//if (currExpConfStruct)
 	//{

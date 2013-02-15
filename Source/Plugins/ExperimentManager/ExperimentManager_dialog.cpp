@@ -137,36 +137,36 @@ void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 	{
 		if(QmlWidgetObject)
 		{
-			disconnect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
-			disconnect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+			disconnect(QmlWidgetObject, &qmlWidget::UserWantsToClose, QmlWidgetObject, &qmlWidget::abortExperimentObject);
+			disconnect(QmlWidgetObject, &qmlWidget::ObjectStateHasChanged, this, &ExperimentManager_Dialog::changeExperimentSubObjectState);
 		}
 		if(Qml2ViewerObject)
 		{
-			disconnect(Qml2ViewerObject, SIGNAL(UserWantsToClose(void)), Qml2ViewerObject, SLOT(abortExperimentObject(void)));
-			disconnect(Qml2ViewerObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+			disconnect(Qml2ViewerObject, &QML2Viewer::UserWantsToClose, Qml2ViewerObject, &QML2Viewer::abortExperimentObject);
+			disconnect(Qml2ViewerObject, &QML2Viewer::ObjectStateHasChanged, this, &ExperimentManager_Dialog::changeExperimentSubObjectState);
 		}
 		if(ExperimentManagerObj)
 		{
-			disconnect(ExperimentManagerObj, SIGNAL(ExperimentStateHasChanged(int, QString)), this, SLOT(ExperimentStateHasChanged(int, QString)));
-			disconnect(ExperimentManagerObj, SIGNAL(WriteToLogOutput(QString)), this, SLOT(LogMessage(QString)));
+			disconnect(ExperimentManagerObj, &ExperimentManager::ExperimentStateHasChanged, this, &ExperimentManager_Dialog::ExperimentStateHasChanged);
+			disconnect(ExperimentManagerObj, &ExperimentManager::WriteToLogOutput, this, &ExperimentManager_Dialog::LogMessage);
 		}
 	}
 	else
 	{
 		if(QmlWidgetObject)
 		{
-			connect(QmlWidgetObject, SIGNAL(UserWantsToClose(void)), QmlWidgetObject, SLOT(abortExperimentObject(void)));
-			connect(QmlWidgetObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
-		}		
+			connect(QmlWidgetObject, &qmlWidget::UserWantsToClose, QmlWidgetObject, &qmlWidget::abortExperimentObject);
+			connect(QmlWidgetObject, &qmlWidget::ObjectStateHasChanged, this, &ExperimentManager_Dialog::changeExperimentSubObjectState);
+		}
 		if(Qml2ViewerObject)
 		{
-			connect(Qml2ViewerObject, SIGNAL(UserWantsToClose(void)), Qml2ViewerObject, SLOT(abortExperimentObject(void)));
-			connect(Qml2ViewerObject, SIGNAL(ObjectStateHasChanged(ExperimentSubObjectState)), this, SLOT(changeExperimentSubObjectState(ExperimentSubObjectState)));
+			connect(Qml2ViewerObject, &QML2Viewer::UserWantsToClose, Qml2ViewerObject, &QML2Viewer::abortExperimentObject);
+			connect(Qml2ViewerObject, &QML2Viewer::ObjectStateHasChanged, this, &ExperimentManager_Dialog::changeExperimentSubObjectState);
 		}
 		if(ExperimentManagerObj)
 		{
-			connect(ExperimentManagerObj, SIGNAL(ExperimentStateHasChanged(int, QString)), this, SLOT(ExperimentStateHasChanged(int, QString)));
-			connect(ExperimentManagerObj, SIGNAL(WriteToLogOutput(QString)), this, SLOT(LogMessage(QString)));
+			connect(ExperimentManagerObj, &ExperimentManager::ExperimentStateHasChanged, this, &ExperimentManager_Dialog::ExperimentStateHasChanged);
+			connect(ExperimentManagerObj, &ExperimentManager::WriteToLogOutput, this, &ExperimentManager_Dialog::LogMessage);
 		}
 	}	
 }

@@ -120,6 +120,7 @@ public slots:
 	void ExperimentShouldFinish();					//Slot for a signal to connect to
 	bool setExperimentObjectID(int nObjID);			//Necessary to set the ID!
 	bool setExperimentMetaObject();					//Necessary to set the MetaObject!
+	const QMetaObject *getExperimentMetaObject();
 	virtual bool setExperimentManager(ExperimentManager *expManager);
 	
 	int getObjectID();
@@ -131,11 +132,17 @@ public slots:
 protected:
 	int checkForNextBlockTrial();
 	bool isDebugMode();
+	bool isLocked() {return bCurrentSubObjectIsLocked;};
+	bool isReadyToUnlock() {return bCurrentSubObjectReadyToUnlock;};
+	bool experimentShouldStop() {return bExperimentShouldStop;};
 	double getElapsedTrialTime() {return dElapsedTrialTime;};
 	int getCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame;};
+	int incrementCurrentBlockTrialFrame() {nCurrExpBlockTrialFrame++;};
+	int getFrameTimerIndex() {return nFrameTimerIndex;};
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
 	void customEvent(QEvent *event);
 	void initBlockTrial();
+	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
 
 protected slots:
 	void incrementExternalTrigger();
@@ -146,8 +153,7 @@ private:
 	bool unlockExperimentObject();
 	bool setExperimentObjectReadyToUnlock();
 	void init();
-	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
-	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
+	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);	
 	void fetchCurrentExperimentStructures();
 
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
