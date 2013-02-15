@@ -215,7 +215,7 @@ bool qmlWidget::initObject()
 	//		experimentManager->logExperimentObjectData(nQMLWidgetID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
 	//	}
 	//}
-	qmlViewer = new QDeclarativeView(this);
+	//1234 qmlViewer = new QDeclarativeView(this);
 	qmlViewer->setAttribute(Qt::WA_OpaquePaintEvent);// Qt::WA_OpaquePaintEvent basically implies that you'll re-paint everything as necessary yourself (which QML is well behaved with).
 	qmlViewer->setAttribute(Qt::WA_NoSystemBackground);//Qt::WA_NoSystemBackground tells Qt to nicely not paint the background.)
 	qmlViewer->viewport()->setAttribute(Qt::WA_OpaquePaintEvent);
@@ -241,7 +241,7 @@ bool qmlWidget::initObject()
 	//c = format.sampleBuffers();
 	//qDebug() << a << b << c;
 
-	glWidget = new QGLWidget(format,this,this);
+	//1234 glWidget = new QGLWidget(format,this,this);
 	glWidget->setAutoFillBackground(true);	//here we must use this functionality
 	//if (parentWidget == NULL)
 		qmlViewer->setViewport(glWidget);//uncomment this
@@ -518,11 +518,11 @@ bool qmlWidget::paintObject(int paintFlags, QObject *paintEventObject)//Only get
 
 	if (stimuliPainter == NULL)
 	{
-		stimuliPainter = new QPainter(this);//Constructor automatically calls begin()
+		//1234 stimuliPainter = new QPainter(this);//Constructor automatically calls begin()
 	}
-	else
+	//1234 else
 	{
-		stimuliPainter->begin(this);
+		//1234 stimuliPainter->begin(this);
 	}
 	//if (expSnapshot.currExpBlockTrialFrame == 0)
 	//{

@@ -316,7 +316,7 @@ bool ExperimentManager_Dialog::executeDocument()
 
 				QmlWidgetObject = new qmlWidget(this);
 				//tmpLayout->setStretch(0,)
-				tmpLayout->addWidget(QmlWidgetObject);
+				//1234 tmpLayout->addWidget(QmlWidgetObject);
 
 				if(QmlWidgetObject->executeQMLDocument(fileSource,tmpContainerDlg,docContentStructToRun.bIsFile))
 				{

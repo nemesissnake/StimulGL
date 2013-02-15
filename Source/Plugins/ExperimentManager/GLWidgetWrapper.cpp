@@ -506,9 +506,9 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 		//if(isDebugMode() && pExperimentManager)
 		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","pre Step 1");
 		if (lockedPainter == NULL)
-			lockedPainter = new QPainter(this);//Constructor automatically calls begin()
-		else
-			lockedPainter->begin(this);
+			//1234 lockedPainter = new QPainter(this);//Constructor automatically calls begin()
+		//1234 else
+			//1234 lockedPainter->begin(this);
 		//if(isDebugMode() && pExperimentManager)
 		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 1");
 		QFont textFont("arial", 22, QFont::Bold, false);
@@ -523,7 +523,7 @@ void GLWidgetWrapper::paintEvent(QPaintEvent *event)
 		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 2");
 		const int nBorder = 25;
 		QPainterPath textPath;
-		textPath.addText(0,0,textFont,strText);
+		//1234 textPath.addText(0,0,textFont,strText);
 		const QRectF textPathRect = textPath.boundingRect();
 		lockedPainter->setRenderHint(QPainter::Antialiasing);
 		lockedPainter->fillRect(windowRect,QColor(87,87,87));

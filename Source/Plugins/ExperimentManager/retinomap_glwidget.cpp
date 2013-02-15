@@ -35,7 +35,7 @@ RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent
 {
 	customScriptHandlerFunction = NULL;
 	initialize();
-	GLWidgetWrapper::setupLayout(this);
+	//1234 GLWidgetWrapper::setupLayout(this);
 	GLWidgetWrapper::setDoubleBufferCheck(true);
 }
 
@@ -433,7 +433,7 @@ void RetinoMap_glwidget::parseExperimentObjectBlockParameters(bool bInit)
 
 bool RetinoMap_glwidget::initObject()
 {
-	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
+	//1234 experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","swapInterval() = ", QString::number(this->format().swapInterval()));
 	parseExperimentObjectBlockParameters(true);
 	return true;
 }
@@ -1509,7 +1509,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 	}
 	//if(isDebugMode())
 	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString::number(4));
-	stimuliPainter.begin(this);
+	//1234 stimuliPainter.begin(this);
 	stimuliPainter.fillRect(event->rect(), brushBackground);
 	stimuliPainter.setPen(textPen);
 	stimuliPainter.setFont(textFont);

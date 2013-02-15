@@ -176,7 +176,7 @@ protected:
 	//123 void customEvent(QEvent *event);
 	void initBlockTrial();
 	void setAlternativeContainerDialog(QDialog *ContainerDlg = NULL);
-	bool eventFilter(QObject *target, QEvent *event);
+	//1234 bool eventFilter(QObject *target, QEvent *event);
 
 protected slots:
 	//123 void incrementExternalTrigger();
@@ -189,7 +189,7 @@ private:
 	//123 bool setExperimentObjectReadyToUnlock();
 	void setVerticalSyncSwap();
 	void init();
-	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
+	//1234 bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
 	//123 ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
 	void fetchCurrentExperimentStructures();
 

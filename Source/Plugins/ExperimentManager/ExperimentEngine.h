@@ -93,7 +93,8 @@ public:
 			bRetVal = pExperimentManager->insertExperimentObjectVariabelePointer(nObjectID,sKeyName,tVariabele);
 		return bRetVal;
 	}
-	QString templateVariabeleToString(const QString &Var) {return QString(Var);}
+	QString templateVariabeleToString(const QString &Var) {return Var;}
+	QString templateVariabeleToString(const QStringList &Var) {return Var.join(",");}
 	QString templateVariabeleToString(const QColor &Var) {return Var.name();}
 	QString templateVariabeleToString(const int &Var) {return QString::number(Var);}
 	QString templateVariabeleToString(const float &Var) {return QString::number(Var);}
@@ -137,12 +138,13 @@ protected:
 	bool experimentShouldStop() {return bExperimentShouldStop;};
 	double getElapsedTrialTime() {return dElapsedTrialTime;};
 	int getCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame;};
-	int incrementCurrentBlockTrialFrame() {nCurrExpBlockTrialFrame++;};
+	int incrementCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame++;};
 	int getFrameTimerIndex() {return nFrameTimerIndex;};
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
 	void customEvent(QEvent *event);
 	void initBlockTrial();
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
+	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
 
 protected slots:
 	void incrementExternalTrigger();
@@ -153,7 +155,6 @@ private:
 	bool unlockExperimentObject();
 	bool setExperimentObjectReadyToUnlock();
 	void init();
-	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);	
 	void fetchCurrentExperimentStructures();
 
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
