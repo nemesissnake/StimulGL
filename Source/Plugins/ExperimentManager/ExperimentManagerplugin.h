@@ -34,6 +34,7 @@
 #include "prtformatmanager.h"
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"
+#include "RetinotopyMapper.h"
 #include "defines.h"
 
 class ExperimentManagerPlugin : public QObject, ExtensionInterface
@@ -61,6 +62,7 @@ private:
 	cLoopStructure *cLoopStructureObject;
 	ImageProcessor *ImageProcessorObject;
 	PrtFormatManager *PrtFormatManagerObject;
+	RetinotopyMapper *RetinotopyMapperObject;
 	qmlWidget *QmlWidgetObject;
 	QML2Viewer *Qml2ViewerObject;
 

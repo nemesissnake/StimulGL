@@ -27,10 +27,12 @@
 #include "TriggerTimer.h"
 
 #include "retinomap_glwidget.h"
+#include "RetinotopyMapper.h"
 #include "qmlWidget.h"
 #include "QML2Viewer.h"
 //#include "ExperimentGraphBlock.h"
 //#include "ExperimentGraphPort.h"
+
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
@@ -94,43 +96,26 @@ ExperimentManager::~ExperimentManager()
 	cleanupExperiment();
 }
 
-//void ExperimentManager::Test()
-//{
-//	QString a = "";
-//	if (rndGen == NULL)
-//	{
-//		rndGen = new RandomGenerator();
-//		rndCounter++;
-//	}
-//	else
-//	{
-//		//rndGen->clear();
-//	}
-//
-//	for (int j=0;j<100;j++)//Create random Empty trigger steps within the Cycle
-//	{
-//		a = a + "," + QString::number(rndGen->randomizeInt(0,5));
-//	}
-//	emit WriteToLogOutput(a);
-//
-//	QStringList lst;
-//	QStringList preserveIndexlst;
-//	for (int k=0;k<5;k++)
-//	{	
-//		preserveIndexlst.append(QString::number(k));
-//	}
-//	//lst.clear()
-//	for (int i=0;i<25;i++)
-//	{
-//		rndGen->randomizeList(RandomGenerator_RandomizePreservedIndexes,&preserveIndexlst);
-//		lst = *rndGen;
-//		emit WriteToLogOutput(lst.join(","));
-//	}
-//}
+#ifndef QT_NO_DEBUG
+QString ExperimentManager::Test(const QString &sInput)
+{
+	//retinoMapper = new RetinotopyMapper(this);
+	//testwindow = new RetinotopyMapper(this);//RetinotopyMapperWindow();
+	//testwindow->setFormat(format);
+	//testwindow->resize(640, 480);
+	//testwindow->show();
+	//testwindow->renderNow();
+	//testwindow->renderLater();	
+	//testwindow->setAnimating(true);
+	//retinoMapper->startObject();
+	return sInput;
+}
+#endif
 
 void ExperimentManager::RegisterMetaTypes()
 {//To register the Objects to the Meta, so they can be accessed trough an *.exml file
 	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
+	qRegisterMetaType<RetinotopyMapper>(RETINOTOPYMAPPER_NAME);
 	qRegisterMetaType<qmlWidget>(QML_WIDGET_NAME);
 	qRegisterMetaType<QML2Viewer>(QML2VIEWER_NAME);
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);

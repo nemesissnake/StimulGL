@@ -199,6 +199,11 @@ public slots:
 	cExperimentStructure *getExperimentStructure();
 	bool showExperimentGraphEditor(cExperimentStructure *ExpStruct = NULL);
 
+#ifndef QT_NO_DEBUG
+	QString Test(const QString &sInput = "");
+#endif
+
+
 private:
 	void DefaultConstruct();
 	bool WriteAndCloseExperimentOutputData();

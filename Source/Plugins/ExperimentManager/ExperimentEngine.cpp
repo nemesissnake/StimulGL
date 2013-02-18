@@ -39,7 +39,6 @@ ExperimentEngine::ExperimentEngine(QObject *parent)	: QObject(parent)
 	nTrialTimerIndex = -1;
 	bCurrentSubObjectIsLocked = true;
 	bCurrentSubObjectReadyToUnlock = false;
-	dElapsedTrialTime = 0.0f;
 }
 
 /*! \brief The ExperimentEngine destructor.
@@ -432,7 +431,9 @@ int ExperimentEngine::checkForNextBlockTrial()
 	{
 		if(tmpExpStr.getBlockCount() > 0)//Are there blocks defined? QML Viewers trough UI (without ExperimentManager) don't have any defined blocks here!
 			if(bHasCurrentBlock)
-				goToNextBlockTrial = (tmpExpStrState.CurrentBlock_ExternalTrigger == 0);//Go to next Block Trial?
+			{
+				goToNextBlockTrial = (tmpExpStrState.CurrentBlock_ExternalTrigger == 0) && (tmpExpStrState.CurrentBlock_InternalTrigger == 0);//Go to next Block Trial?
+			}
 	}
 	if(goToNextBlockTrial)//When we init/start or switch from a Block Trial 
 	{

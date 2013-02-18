@@ -154,6 +154,7 @@ namespace ExperimentManagerNameSpace
 	#define CBLOCKSTRUCTURE_NAME					"cBlockStructure"
 	#define CLOOPSTRUCTURE_NAME						"cLoopStructure"
 	#define EXPERIMENTSTRUCTURE_NAME				"ExperimentStructure"
+	#define RETINOTOPYMAPPER_NAME					"RetinotopyMapper"
 	#define EXPERIMENTMANAGER_NAME					"ExperimentManager"
 	#define MODULE_NAME								"Experiment Parser"
 	#define MAX_INVOKE_ARG_COUNT					10

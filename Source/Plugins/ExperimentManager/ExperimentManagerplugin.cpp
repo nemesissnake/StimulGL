@@ -33,6 +33,7 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	RandomGeneratorObject = NULL;
 	ImageProcessorObject = NULL;
 	PrtFormatManagerObject = NULL;
+	RetinotopyMapperObject = NULL;
 	cExperimentStructureObject = NULL;
 	cBlockStructureObject = NULL;
 	cLoopStructureObject = NULL;
@@ -90,6 +91,11 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 	{
 		delete PrtFormatManagerObject;
 		PrtFormatManagerObject = NULL;
+	}
+	if(RetinotopyMapperObject)
+	{
+		delete RetinotopyMapperObject;
+		RetinotopyMapperObject = NULL;
 	}
 	if(QmlWidgetObject)
 	{
@@ -166,6 +172,13 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue ctorExperimentStructureState = engine.newFunction(cExperimentStructure::createExperimentStructureStateFromScript);
 	engine.globalObject().setProperty(CEXPERIMENTSTRUCTURESTATE_NAME, ctorExperimentStructureState);
 
+	if(RetinotopyMapperObject == NULL)
+		RetinotopyMapperObject = new RetinotopyMapper();
+	QScriptValue RetinotopyMapperProto = engine.newQObject(RetinotopyMapperObject);
+	engine.setDefaultPrototype(qMetaTypeId<RetinotopyMapper*>(), RetinotopyMapperProto);
+	QScriptValue RetinotopyMapperCtor = engine.newFunction(RetinotopyMapper::ctor__RetinotopyMapper, RetinotopyMapperProto);
+	engine.globalObject().setProperty(RETINOTOPYMAPPER_NAME, RetinotopyMapperCtor);
+
 	return true;
 }
 
@@ -229,6 +242,10 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 		if(cLoopStructureObject == NULL)
 			cLoopStructureObject = new cLoopStructure();
 		return (QObject *)cLoopStructureObject->metaObject();
+	case 8:
+		if(RetinotopyMapperObject == NULL)
+			RetinotopyMapperObject = new RetinotopyMapper();
+		return (QObject *)RetinotopyMapperObject->metaObject();
 	default:
 		return NULL;
 	}

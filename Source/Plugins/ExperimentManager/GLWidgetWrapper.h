@@ -170,7 +170,7 @@ protected:
 	//123 int getCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame;};
 	int getCurrentStimuliRefreshRate() {return nRefreshRate;};
 	//123 QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
-	void setDoubleBufferCheck(bool bShouldCheck) {bCheckForDoubleBuffering = bShouldCheck;};
+	//123 void setDoubleBufferCheck(bool bShouldCheck) {bCheckForDoubleBuffering = bShouldCheck;};
 	void paintEvent(QPaintEvent *event);
 	void closeEvent(QCloseEvent *evt);
 	//123 void customEvent(QEvent *event);

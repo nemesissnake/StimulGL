@@ -136,7 +136,7 @@ protected:
 	bool isLocked() {return bCurrentSubObjectIsLocked;};
 	bool isReadyToUnlock() {return bCurrentSubObjectReadyToUnlock;};
 	bool experimentShouldStop() {return bExperimentShouldStop;};
-	double getElapsedTrialTime() {return dElapsedTrialTime;};
+	double getElapsedTrialTime() {return expTrialTimer.getElapsedTimeInMilliSec();};
 	int getCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame;};
 	int incrementCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame++;};
 	int getFrameTimerIndex() {return nFrameTimerIndex;};
@@ -145,6 +145,7 @@ protected:
 	void initBlockTrial();
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
 	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
+	bool setExperimentObjectReadyToUnlock();
 
 protected slots:
 	void incrementExternalTrigger();
@@ -153,18 +154,16 @@ protected slots:
 private:
 	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool unlockExperimentObject();
-	bool setExperimentObjectReadyToUnlock();
 	void init();
 	void fetchCurrentExperimentStructures();
 
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bFirstTriggerAfterUnlock;						//To detect the exact start of the experiment detected by the checkForNextBlockTrial() function.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
-	double dWaitTime;
 	QMutex mutProcEvents;								//Another implementation, due to qApp->processEvents() RecursiveRepaint can occur...
 	int nLastProcessedExternalTriggers;
 	int nCurrExpBlockTrialFrame;
-	double dElapsedTrialTime;
+	//double dElapsedTrialTime;
 	bool bExperimentShouldStop;
 	int nObjectID;
 	QTimer tStimTimer;

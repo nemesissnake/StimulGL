@@ -89,7 +89,6 @@
 #define RETINOMAP_WIDGET_MOVINGBAR_COVERAGE					"movingbarcoverage"				/*!< "movingbarcoverage" */
 #define RETINOMAP_WIDGET_MOVINGBAR_HEIGHT					"movingbarheight"				/*!< "movingbarheight" */
 #define RETINOMAP_WIDGET_MOVINGBAR_DIRECTION				"movingbardirection"			/*!< "movingbardirection" */
-//#define RETINOMAP_WIDGET_MOVINGBAR_INCOPPDIR				"movingbarincludeoppositedirection"
 #define RETINOMAP_WIDGET_MOVINGBAR_HEIGTH_CHECK_AMOUNT		"movingbarheightcheckamount"	/*!< "movingbarheightcheckamount" */
 //MovingDots specific defines
 #define	RETINOMAP_WIDGET_MOVINGDOTS_COLOR					"movingdotscolor"				/*!< "movingdotscolor" */
@@ -102,19 +101,18 @@
 #define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELD				"movingdotshemifield"			/*!< "movingdotshemifield" */
 #define RETINOMAP_WIDGET_MOVINGDOTS_PIXELFROMCENTER			"movingdotspixelfromcenter"		/*!< "movingdotspixelfromcenter" */
 #define RETINOMAP_WIDGET_MOVINGDOTS_STATIONAIRY				"movingdotsstationairy"			/*!< "movingdotsstationairy" */
-//#define RETINOMAP_WIDGET_MOVINGDOTS_RETINALPOSITION		"movingdotsretinalposition"
 #define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDWIDTH			"movingdotshemifieldwidth"		/*!< "movingdotshemifieldwidth" */
 #define RETINOMAP_WIDGET_MOVINGDOTS_HEMIFIELDHEIGHT			"movingdotshemifieldheight"		/*!< "movingdotshemifieldheight" */
 /**@}*/
 
 #define RETINOMAP_WIDGET_OUTPUT_SUBFOLDER					"/RetinoWidget/"
 
-typedef struct strcMovingDotsStructure
-{
-	QPolygonF Pos; //A QPolygonF is a QVector<QPointF>. The easiest way to add points to a QPolygonF is to use its streaming operator: polygon << QPointF(10.4, 20.5) << QPointF(20.2, 30.2);
-	QPolygonF OldPos;
-	QList<QLineF> Mov;
-} MovingDotsStructure;
+//typedef struct strcMovingDotsStructure
+//{
+//	QPolygonF Pos; //A QPolygonF is a QVector<QPointF>. The easiest way to add points to a QPolygonF is to use its streaming operator: polygon << QPointF(10.4, 20.5) << QPointF(20.2, 30.2);
+//	QPolygonF OldPos;
+//	QList<QLineF> Mov;
+//} MovingDotsStructure;
 
 //!  The RetinoMap_glwidget class. 
 /*!
@@ -241,7 +239,7 @@ private:
 	int movingDotsPixelFromCenter;
 	int movingDotsHemiFieldWidth;
 	int movingDotsHemiFieldHeight;
-	MovingDotsStructure movingDots;
+	//1234 MovingDotsStructure movingDots;
 	//RetinoMapOutputType retinoOutputType;
 	QString retinoOutputType;
 	//RetinoMapOutputFormat retinoOutputFormat;

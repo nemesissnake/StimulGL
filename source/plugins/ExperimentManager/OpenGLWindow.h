@@ -37,25 +37,22 @@ public:
 
 	virtual void render(QPainter *painter);
 	virtual void render();
-
 	virtual void initialize();
-
+	virtual void postSwapBuffers() {};
 	void setAnimating(bool animating);
 
-	public slots:
-		void renderLater();
-		void renderNow();
+public slots:
+	void renderLater();
+	void renderNow();
 
 protected:
 	bool event(QEvent *event);
-
 	void exposeEvent(QExposeEvent *event);
 	void resizeEvent(QResizeEvent *event);
 
 private:
 	bool m_update_pending;
 	bool m_animating;
-
 	QOpenGLContext *m_context;
 	QOpenGLPaintDevice *m_device;
 };

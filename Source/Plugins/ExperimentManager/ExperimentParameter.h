@@ -24,6 +24,16 @@
 #include <QHash>
 #include <QColor>
 
+template <typename T>
+QVariantList toVariantList( const QList<T> &list )
+{
+	QVariantList newList;
+	foreach( const T &item, list )
+		newList << item;
+
+	return newList;
+}
+
 class TypedExperimentParameterContainer
 {
 public:
@@ -162,13 +172,19 @@ public:
 		}
 		else if (hQStringListContainer.contains(strKeyNameLow))
 		{
-			//QStringList *tmpStringList = hQStringListContainer.value(strKeyNameLow);
+			QStringList *tmpStringList = hQStringListContainer.value(strKeyNameLow);
 			//int sListLength = scriptVal.property("length").toInteger();
 			//tmpStringList->clear();
 			//for(int i = 0; i < sListLength; i++)
 			//	tmpStringList->append(scriptVal.property(i).toString());
 			////*tmpStringList = scriptVal.toQObject();
-			//scriptVal = QScriptValue(*hQStringListContainer.value(strKeyNameLow));
+
+			QVariantList list = toVariantList(*tmpStringList);
+			scriptVal = scriptVal.engine()->newArray(tmpStringList->length());
+			for(int i=0; i<tmpStringList->count(); i++)
+			{
+				scriptVal.setProperty(i, QScriptValue(tmpStringList->at(i)));  
+			}
 			return true;
 		}
 		else if (hQColorContainer.contains(strKeyNameLow))

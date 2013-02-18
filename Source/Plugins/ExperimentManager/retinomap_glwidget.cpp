@@ -36,7 +36,7 @@ RetinoMap_glwidget::RetinoMap_glwidget(QWidget *parent) : GLWidgetWrapper(parent
 	customScriptHandlerFunction = NULL;
 	initialize();
 	//1234 GLWidgetWrapper::setupLayout(this);
-	GLWidgetWrapper::setDoubleBufferCheck(true);
+	//123GLWidgetWrapper::setDoubleBufferCheck(true);
 }
 
 /*! \brief The RetinoMap_glwidget destructor.
@@ -537,21 +537,21 @@ void RetinoMap_glwidget::initializeMovingDotsStructures()
 	}
 	QPointF tmpPoint;
 	QLineF tmpLine;
-	movingDots.Pos.clear();
-	movingDots.Mov.clear();
+	//1234 movingDots.Pos.clear();
+	//1234 movingDots.Mov.clear();
 	//movingDots.MirrorXPos.clear();
-	movingDots.OldPos.clear();
+	//1234 movingDots.OldPos.clear();
 	for (int i=0; i<movingDotsNrOfDots; i++)
 	{
 		tmpPoint.setX(randStimStateGenerator->randomizeInt(movingDotsFirstHemiVisibleArea.p1().x(),movingDotsFirstHemiVisibleArea.p2().x()));
 		tmpPoint.setY(randStimStateGenerator->randomizeInt(movingDotsFirstHemiVisibleArea.p1().y(),movingDotsFirstHemiVisibleArea.p2().y()));
-		movingDots.OldPos.append(tmpPoint);//The initial position will be copied from here
-		movingDots.Pos.append(QPointF(0,0));
+		//1234 movingDots.OldPos.append(tmpPoint);//The initial position will be copied from here
+		//1234 movingDots.Pos.append(QPointF(0,0));
 		tmpLine.setP1(QPointF(0,0));//Point1 of Movement Vector
 		tmpLine.setP2(QPointF(1,0));//The base speed
 		tmpLine.setAngle(randStimStateGenerator->randomizeInt(movingDotsMinMoveAngle,movingDotsMaxMoveAngle));//The randomized movement direction
 		tmpLine.setLength(randStimStateGenerator->randomizeDouble(movingDotsMinMoveSpeed,movingDotsMaxMoveSpeed));//The randomized speed of the movement  
-		movingDots.Mov.append(tmpLine);
+		//1234 movingDots.Mov.append(tmpLine);
 		//movingDots.MirrorXPos.append(0.0f);//The Mirrored X Position
 	}
 }
@@ -1210,7 +1210,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 				
 				if(movingDotsIsStationary)
 				{
-					movingDots.Pos[i] = movingDots.OldPos[i];
+					//1234 movingDots.Pos[i] = movingDots.OldPos[i];
 				}
 				else
 				{
@@ -1218,28 +1218,28 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					//#pragma omp atomic
 					{
 						//#pragma omp critical
-						movingDots.Pos[i] = movingDots.OldPos.at(i) + (movingDots.Mov[i].p2());// * fMovCorrFactor);
+						//1234 movingDots.Pos[i] = movingDots.OldPos.at(i) + (movingDots.Mov[i].p2());// * fMovCorrFactor);
 						// check whether dot moves out of display field - x direction					
-						if(movingDots.Pos[i].x() >= movingDotsFirstHemiVisibleArea.p2().x())
+						//1234 if(movingDots.Pos[i].x() >= movingDotsFirstHemiVisibleArea.p2().x())
 						{
 							//#pragma omp atomic
-							movingDots.Pos[i].setX(movingDots.Pos[i].x() - movingDotsFirstHemiVisibleArea.dx());
+							//1234 movingDots.Pos[i].setX(movingDots.Pos[i].x() - movingDotsFirstHemiVisibleArea.dx());
 						}
-						if(movingDots.Pos[i].x() <= movingDotsFirstHemiVisibleArea.p1().x())//
+						//1234 if(movingDots.Pos[i].x() <= movingDotsFirstHemiVisibleArea.p1().x())//
 						{
 							//#pragma omp atomic
-							movingDots.Pos[i].setX(movingDots.Pos[i].x() + movingDotsFirstHemiVisibleArea.dx());
+							//1234 movingDots.Pos[i].setX(movingDots.Pos[i].x() + movingDotsFirstHemiVisibleArea.dx());
 						}
 						// check whether dot moves out of display field - y direction
-						if(movingDots.Pos[i].y() >= movingDotsFirstHemiVisibleArea.p2().y())
+						//1234 if(movingDots.Pos[i].y() >= movingDotsFirstHemiVisibleArea.p2().y())
 						{
 							//#pragma omp atomic
-							movingDots.Pos[i].setY(movingDots.Pos[i].y() - movingDotsFirstHemiVisibleArea.dy());
+							//1234 movingDots.Pos[i].setY(movingDots.Pos[i].y() - movingDotsFirstHemiVisibleArea.dy());
 						}
-						if(movingDots.Pos[i].y() <= movingDotsFirstHemiVisibleArea.p1().y())//movingDotsYStartRel)
+						//1234 if(movingDots.Pos[i].y() <= movingDotsFirstHemiVisibleArea.p1().y())//movingDotsYStartRel)
 						{
 							//#pragma omp atomic
-							movingDots.Pos[i].setY(movingDots.Pos[i].y() + movingDotsFirstHemiVisibleArea.dy());
+							//1234 movingDots.Pos[i].setY(movingDots.Pos[i].y() + movingDotsFirstHemiVisibleArea.dy());
 						}
 					}
 				}
@@ -1254,30 +1254,30 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 					{
 						imgPainter.save();
 						imgPainter.setPen(QPen(QColor(255,0,0), movingDotsDotSize, style, roundCap));
-						imgPainter.drawPoint(movingDots.Pos.at(i));
+						//1234 imgPainter.drawPoint(movingDots.Pos.at(i));
 						imgPainter.restore();
 					} 
 					else
 					{
-						imgPainter.drawPoint(movingDots.Pos.at(i));
+						//1234 imgPainter.drawPoint(movingDots.Pos.at(i));
 					}
 
 				}
 				else
 				{
-					imgPainter.drawPoint(movingDots.Pos.at(i));
+					//1234 imgPainter.drawPoint(movingDots.Pos.at(i));
 				}
 
 								
 				//Draw the remaining parts of a dot (mirrored!)
-				if (movingDots.Pos.at(i).x()>=movingDotsFirstHemiVisibleArea.p2().x()-movingDotsDotSize)
-					imgPainter.drawPoint(movingDots.Pos.at(i).x() - movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
-				if (movingDots.Pos.at(i).x()<=movingDotsFirstHemiVisibleArea.p1().x()+movingDotsDotSize)
-					imgPainter.drawPoint(movingDots.Pos.at(i).x() + movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
-				if (movingDots.Pos.at(i).y()>=movingDotsFirstHemiVisibleArea.p2().y()-movingDotsDotSize)
-					imgPainter.drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() - movingDotsFirstHemiVisibleArea.dy());
-				if (movingDots.Pos.at(i).y()<=movingDotsFirstHemiVisibleArea.p1().y()+movingDotsDotSize)
-					imgPainter.drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() + movingDotsFirstHemiVisibleArea.dy());
+				//1234 if (movingDots.Pos.at(i).x()>=movingDotsFirstHemiVisibleArea.p2().x()-movingDotsDotSize)
+					//1234 imgPainter.drawPoint(movingDots.Pos.at(i).x() - movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
+				//1234 if (movingDots.Pos.at(i).x()<=movingDotsFirstHemiVisibleArea.p1().x()+movingDotsDotSize)
+					//1234 imgPainter.drawPoint(movingDots.Pos.at(i).x() + movingDotsFirstHemiVisibleArea.dx(),movingDots.Pos.at(i).y());
+				//1234 if (movingDots.Pos.at(i).y()>=movingDotsFirstHemiVisibleArea.p2().y()-movingDotsDotSize)
+					//1234 imgPainter.drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() - movingDotsFirstHemiVisibleArea.dy());
+				//1234 if (movingDots.Pos.at(i).y()<=movingDotsFirstHemiVisibleArea.p1().y()+movingDotsDotSize)
+					//1234 imgPainter.drawPoint(movingDots.Pos.at(i).x(),movingDots.Pos.at(i).y() + movingDotsFirstHemiVisibleArea.dy());
 				if (i==movingDotsNrOfDots-1)
 				{
 					//Remove the dot-parts that are outside the first hemisphere
@@ -1312,7 +1312,7 @@ bool RetinoMap_glwidget::paintObject(int paintFlags, QObject *paintEventObject)
 						//nCurrCompMode = imgPainter.compositionMode();	
 					}
 				}
-				movingDots.OldPos[i] = movingDots.Pos.at(i);
+				//1234 movingDots.OldPos[i] = movingDots.Pos.at(i);
 			}
 			//static bool firstUpdate = true;
 			//if (firstUpdate)
