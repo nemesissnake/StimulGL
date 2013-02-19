@@ -203,7 +203,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	if(parentRetinotopyMapper->isLocked())
 	{
 		parentRetinotopyMapper->bCreateActivationMap = false;
-		parentRetinotopyMapper->currentExpType = RETINOMAPPER_PATTERN_FIXATION;
+		//parentRetinotopyMapper->currentExpType = RETINOMAPPER_PATTERN_FIXATION;
 	}
 	else
 	{
