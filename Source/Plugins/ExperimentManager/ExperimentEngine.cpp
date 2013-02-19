@@ -470,10 +470,13 @@ int ExperimentEngine::checkForNextBlockTrial()
 		bFirstTriggerAfterUnlock = false;
 		emit ExperimentStructureChanged(tmpExpBlockStr.getBlockNumber(),tmpExpStrState.CurrentBlock_TrialNumber,tmpExpStrState.CurrentBlock_InternalTrigger);
 	}
-	if ((bExperimentStructureChanged) && (bFirstCheckAfterExperimentStarted == false))
+	else
 	{
-		if(getSubObjectState() == Experiment_SubObject_Started)
-			emit ExperimentStructureChanged(tmpExpBlockStr.getBlockNumber(),tmpExpStrState.CurrentBlock_TrialNumber,tmpExpStrState.CurrentBlock_InternalTrigger);
+		if ((bExperimentStructureChanged) && (bFirstCheckAfterExperimentStarted == false))
+		{
+			if(getSubObjectState() == Experiment_SubObject_Started)
+				emit ExperimentStructureChanged(tmpExpBlockStr.getBlockNumber(),tmpExpStrState.CurrentBlock_TrialNumber,tmpExpStrState.CurrentBlock_InternalTrigger);
+		}
 	}
 	return nRetval;
 }
