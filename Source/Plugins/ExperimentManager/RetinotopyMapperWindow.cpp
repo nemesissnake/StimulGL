@@ -186,6 +186,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	bool bHasABlock = false;
 	cExperimentStructure tmpExpStr = cExperimentStructure(*parentRetinotopyMapper->experimentManager->getExperimentStructure());
 	int elapsedTrialTime = (int)parentRetinotopyMapper->getElapsedTrialTime();
+	int elapsedTrialTimeCopy = elapsedTrialTime;
 	int nExpBlockTrialFrame = parentRetinotopyMapper->getCurrentBlockTrialFrame();
 	strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
 	cBlockStructure tmpBlockStrc = tmpExpStr.getCurrentBlock(bHasABlock);
@@ -418,18 +419,18 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 		imgPainter.setRenderHint(QPainter::Antialiasing);
 	imgPainter.setPen(parentRetinotopyMapper->textPen);
 	imgPainter.setFont(parentRetinotopyMapper->textFont);
-	if(elapsedTrialTime >= parentRetinotopyMapper->flickrThreshold)//Can we already switch the flickr state?
+
+	if(elapsedTrialTimeCopy >= parentRetinotopyMapper->flickrThreshold)//Can we already switch the flickr state?
 	{
 		if(parentRetinotopyMapper->flickrSwitch == 0)
 			parentRetinotopyMapper->flickrSwitch = 1;    
 		else
-			parentRetinotopyMapper->flickrSwitch = 0;
-		
+			parentRetinotopyMapper->flickrSwitch = 0;		
 		parentRetinotopyMapper->flickrThreshold += (1000 / parentRetinotopyMapper->flickrSpeedFreq);//Calculate the next flickr threshold moment in time
 	}
+
 	nStimFrameHeight = parentRetinotopyMapper->StimulusResultImageFrame.height();
 	nStimFrameWidth = parentRetinotopyMapper->StimulusResultImageFrame.width();
-	
 	if (parentRetinotopyMapper->isLocked())
 	{
 		QFont textFont("arial", 22, QFont::Bold, false);
