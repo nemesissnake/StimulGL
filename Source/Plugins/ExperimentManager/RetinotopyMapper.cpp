@@ -117,7 +117,7 @@ void RetinotopyMapper::initialize()
 	//getObjectID() = -1;
 	rectScreenRes = QApplication::desktop()->screenGeometry();
 	firstBlockTrialPaintFrame = false;	
-	lastTriggerNumber = -1;
+	//lastTriggerNumber = -1;
 	flickrSwitch = 0;
 	textContent = "";
 	textContent = "";
@@ -133,7 +133,7 @@ void RetinotopyMapper::initialize()
 	roundCap = Qt::RoundCap;
 	nextNewBlockEntered = false;
 	nextNewCycleEntered = false;
-	fCalculatedCortMagFacTimingConst = 1.0f;	
+	fCalculatedCortMagFacTimingConst = 1.0f;
 }
 
 void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
@@ -431,7 +431,7 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 
 bool RetinotopyMapper::startObject()
 {
-	lastTriggerNumber = -1;
+	//lastTriggerNumber = -1;
 	//emit LogToOutputWindow("Started");
 	
 	if(retinoMapperWindow == NULL)

@@ -186,7 +186,7 @@ private:
 	bool discreteTriggerSteps;					//Defines whether the stimuli should run smooth or in discrete steps according to each trigger received
 	bool randomizeTriggerSteps;					//Defines whether the stimuli should randomize after each trigger received
 	bool antiAliasing;							//Defines whether the anti-aliasing filter should be used for painting to the screen
-	int lastTriggerNumber;						//To keep track of the last trigger number
+	//int lastTriggerNumber;						//To keep track of the last trigger number
 	int emptyTriggerSteps;						//Defines the number of Trigger steps in which no stimuli should be presented
 	QStringList emptyTriggerStepsArray;
 	bool bNoChangesSinceLastFrame;
@@ -220,6 +220,7 @@ private:
 	bool enableCortMagTiming;
 	int emptyTriggerLastIndex;
 	int emptyTriggerStepCount;
+	//bool allEmptyBlockTrialsProcessed;
 
 	//Polar
 	float polarWedgeSpan;

@@ -23,6 +23,7 @@
 //#include "Quick2ContainerWidget.h"
 #include "qtquick2applicationviewer.h"
 #include "ExperimentEngine.h"
+#include "ImageListModel.h"
 
 #define QML2VIEWER_MAINFILEPATH							"qmlmainfilepath"
 #define QML2VIEWER_MAX_EVENT_TIME						"qmlmineventtime"
@@ -35,6 +36,14 @@
 class QML2Viewer : public ExperimentEngine
 {
 	Q_OBJECT
+
+signals:
+	//! The UserWantsToClose Signal.
+	/*!
+		You can use this Signal to detect whenever the user tries to abort the experiment.
+		No Parameter.
+	*/
+	void NewSourceLoaded(QString);
 
 public:
 	QML2Viewer(QObject *parent = NULL);
@@ -53,10 +62,10 @@ public slots:
 	bool setObjectID(int nObjID);
 	bool initObjectBlockTrial();
 	QVariant invokeQml2Method(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());	
-	//QString addPixmapToImageBuffer(const QPixmap &pixmap);
-	//bool getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
-	//bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
-	//bool removePixmapFromImageBuffer(const QString &ID);
+	QString addPixmapToImageBuffer(const QPixmap &pixmap);
+	bool getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
+	bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
+	bool removePixmapFromImageBuffer(const QString &ID);
 	bool setExperimentManager(ExperimentManager *expManager);
 
 protected:
@@ -77,7 +86,7 @@ private:
 	cExperimentStructure *currentExperimentStructure;
 	QFile tmpFile;
 	//QmlErrorHandler *qmlErrorHandler;
-	//ImageListModel *imgLstModel;
+	ImageListModel *imgLstModel;
 	QtQuick2ApplicationViewer *quick2ViewerWindow;
 
 	QString qmlMainFilePath;

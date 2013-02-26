@@ -681,13 +681,12 @@ bool ExperimentManager::runExperiment()
 	}
 
 	changeCurrentExperimentState(ExperimentManager_Initialized);
-	QString sExpFileName = 	getExperimentFileName();
 	changeCurrentExperimentState(ExperimentManager_IsStarting);
 
 	if (expDataLogger)
 		expDataLogger->startTimer(nExperimentTimerIndex);
 
-	logExperimentObjectData(0,nExperimentTimerIndex,__FUNCTION__,"","FileName = ", sExpFileName);
+	logExperimentObjectData(0,nExperimentTimerIndex,__FUNCTION__,"","FileName = ", getExperimentFileName());
 	
 	if(!startExperimentObjects(m_RunFullScreen))
 	{

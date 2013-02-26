@@ -421,6 +421,9 @@ int ExperimentEngine::checkForNextBlockTrial()
 		goToNextBlockTrial = true;
 		bFirstCheckAfterExperimentStarted = true;		
 		bExperimentStructureChanged = true;
+		//if(pExperimentManager)
+		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","First Check of experiment.", tmpExpStr.getExperimentName());
+		qDebug() << __FUNCTION__ << "::First Check of experiment: " << tmpExpStr.getExperimentName() << "!";
 	}
 	if ((tmpExpStrState.Experiment_ExternalTrigger >= 0) && (tmpExpStrState.Experiment_ExternalTrigger > nLastProcessedExternalTriggers))
 	{

@@ -57,6 +57,7 @@ private:
 	bool bFistRenderCall;
 	int nStimFrameHeight;
 	int nStimFrameWidth;
+	int nLastOutputTriggerFrameNumber;
 };
 
 #endif // RETINOTOPYMAPPERWINDOW_H

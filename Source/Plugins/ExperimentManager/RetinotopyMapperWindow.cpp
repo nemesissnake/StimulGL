@@ -23,6 +23,7 @@
 RetinotopyMapperWindow::RetinotopyMapperWindow(RetinotopyMapper *parent) : parentRetinotopyMapper(parent)
 {
 	bFistRenderCall = true;
+	nLastOutputTriggerFrameNumber = RA_REINITIALIZE;
 }
 
 RetinotopyMapperWindow::~RetinotopyMapperWindow()
@@ -66,75 +67,8 @@ void RetinotopyMapperWindow::postSwapBuffers()
 	if (parentRetinotopyMapper->nRefreshRate > 0)
 	{
 		dFramePeriodTime = 1000.0f/parentRetinotopyMapper->nRefreshRate; //DisplayRefreshRate
-		//parentRetinotopyMapper->dAdditionalRefreshDelayTime = dFramePeriodTime/10.0f;
-		//parentRetinotopyMapper->dWaitTime = 0.0f;
-		//dCurrentTime = pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);	
-		//while((dCurrentTime)<dFramePeriodTime)//Don't go too fast...//((dCurrentTime+dAdditionalRefreshDelayTime)<dFramePeriodTime)//Don't go too fast...
-		//{
-		//	dWaitTime = dFramePeriodTime - dCurrentTime;// + dAdditionalRefreshDelayTime;
-		//	if(isDebugMode() && pExperimentManager)// && (bObjectIsLocked==false))
-		//		pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Too fast --> Sleeping(" + QString::number(dWaitTime) + ")...") + QString::number(bObjectIsLocked);			
-		//	ExperimentTimer::SleepMSecAccurate(dWaitTime);
-		//	//Sleep(nSTime);
-		//	dCurrentTime = pExperimentManager->elapsedExperimentTimerTime(nFrameTimerIndex);
-		//}
-		//if (parentRetinotopyMapper->isLocked() == false)
-		//{
-			//if(parentRetinotopyMapper->experimentManager)
-			//{
-				//double currentPreSwapTime = parentRetinotopyMapper->experimentManager->elapsedExperimentTimerTime(0);
-				//if((tmpExpStrState.Experiment_ExternalTrigger == 0) && (parentRetinotopyMapper->getCurrentBlockTrialFrame() == 0))
-				//{
-					//parentRetinotopyMapper->dLastPreSwapTime = currentPreSwapTime;//Just set this initial value and proceed
-				//}
-				//else
-				//{
-				//	dWaitTime = (dLastPreSwapTime + dFramePeriodTime) - currentPreSwapTime;
-				//	if(dWaitTime > dAdditionalRefreshDelayTime)//Do we need to wait?
-				//	{
-				//		if(isDebugMode() && pExperimentManager)
-				//			pExperimentManager->logExperimentObjectData(getObjectID(),0,__FUNCTION__,"","Too fast --> Sleeping(" + QString::number(dWaitTime-dAdditionalRefreshDelayTime) + ")... Locked="),QString::number(bObjectIsLocked);
-				//		ExperimentTimer::SleepMSecAccurate(dWaitTime-dAdditionalRefreshDelayTime);
-				//	}
-				//	else if(dWaitTime < 0.0f)//This means that a frame is going to be skipped!
-				//	{					
-				//		while(dWaitTime < 0.0f)//Search the first next available frame threshold time
-				//		{
-				//			pExperimentManager->logExperimentObjectData(getObjectID(),-1,__FUNCTION__,"","Frame skipped!, missed=", QString::number(dWaitTime));
-				//			dLastPreSwapTime = dLastPreSwapTime + dFramePeriodTime;
-				//			dWaitTime = (dLastPreSwapTime + dFramePeriodTime) - currentPreSwapTime;
-				//		}
-				//		if(isDebugMode() && pExperimentManager)
-				//			pExperimentManager->logExperimentObjectData(getObjectID(),0,__FUNCTION__,"","Sleeping for next frame(" + QString::number(dWaitTime-dAdditionalRefreshDelayTime) + ")...") + QString::number(bObjectIsLocked);
-				//		ExperimentTimer::SleepMSecAccurate(dWaitTime-dAdditionalRefreshDelayTime);
-				//	}
-				//	dLastPreSwapTime = dLastPreSwapTime + dFramePeriodTime;
-				//}
-			//}
-		//}
 		dCurrentTime = parentRetinotopyMapper->experimentManager->restartExperimentTimer(parentRetinotopyMapper->getFrameTimerIndex());
 	}
-	//if(isDebugMode() && pExperimentManager)
-	//	pExperimentManager->logExperimentObjectData(getObjectID(),0,__FUNCTION__,"","Going to Swap, locked=", QString::number(bObjectIsLocked));
-	//1234 swapBuffers();
-	//if(parentRetinotopyMapper->isDebugMode() && parentRetinotopyMapper->experimentManager)
-	//	parentRetinotopyMapper->experimentManager->logExperimentObjectData(parentRetinotopyMapper->getObjectID(),0,__FUNCTION__,"","BlockTrial Buffer Swapped, locked=",QString::number(parentRetinotopyMapper->isLocked()));
-	//if (experimentShouldStop())
-	//{
-	//	changeSubObjectState(Experiment_SubObject_Stop);
-	//	return;
-	//}
-	//qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,1); //!Important: To receive Trigger Signals and process them before the below checkForNextBlockTrial();
-	//if (experimentShouldStop())
-	//{
-	//	changeSubObjectState(Experiment_SubObject_Stop);
-	//	return;
-	//}
-	//if (bExperimentShouldStop)
-	//{
-	//	changeSubObjectState(Experiment_SubObject_Stop);
-	//	return;
-	//}
 	if (parentRetinotopyMapper->isLocked()==false)
 	{
 		parentRetinotopyMapper->incrementCurrentBlockTrialFrame();// = CF_UNINITIALIZED;
@@ -149,31 +83,6 @@ void RetinotopyMapperWindow::postSwapBuffers()
 			}
 		}
 	}
-	//int nResult = checkForNextBlockTrial();//Check whether we need to prepare for an new block Trial
-	//if(nResult == 0) //No Block Trials to check
-	//{
-	//	if (experimentShouldStop())
-	//	{
-	//		changeSubObjectState(Experiment_SubObject_Stop);
-	//		//QCoreApplication::postEvent(this,new QEvent(tEventObjectStopped),Qt::HighEventPriority);
-	//		return;
-	//	}
-	//	else
-	//	{
-	//		QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
-	//	}
-	//}
-	//else if(nResult == -1)//No Experiment Manager set (QML), just invoke animate()
-	//{
-	//	if (bObjectIsLocked==false)
-	//	{
-	//		if(getSubObjectState() == Experiment_SubObject_Initialized)
-	//		{
-	//			changeSubObjectState(Experiment_SubObject_Started);
-	//			QMetaObject::invokeMethod( this, "animate",Qt::QueuedConnection,Q_ARG(bool, false));// a QEvent will be sent and the member is invoked as soon as the application enters the main event loop.
-	//		}
-	//	}
-	//}
 }
 
 void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
@@ -228,7 +137,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	}
 	if (parentRetinotopyMapper->currentExpType != RETINOMAPPER_PATTERN_FIXATION)
 	{
-		if (parentRetinotopyMapper->randEmptyStimGenerator->isEmpty() && (parentRetinotopyMapper->currExpBlockTrialCycle == 0))//Initialize the "Empty" random list
+		if (parentRetinotopyMapper->randEmptyStimGenerator->isEmpty() && (parentRetinotopyMapper->currExpBlockTrialCycle == 0) )//&& (parentRetinotopyMapper->emptyTriggerStepCount parentRetinotopyMapper->allEmptyBlockTrialsProcessed == false))//Initialize the "Empty" random list
 		{
 			int i,j;
 			if ((parentRetinotopyMapper->emptyTriggerSteps > 0) && (parentRetinotopyMapper->cycleTriggerAmount>=parentRetinotopyMapper->emptyTriggerSteps))//We have to make sure that the Empty item occur in a block next to each other
@@ -407,7 +316,11 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 		}
 	}
 	if (bFistRenderCall)
+	{
+		if(parentRetinotopyMapper->experimentManager)
+			parentRetinotopyMapper->experimentManager->logExperimentObjectData(parentRetinotopyMapper->getObjectID(),0,__FUNCTION__,"","First rendering of experiment: ",tmpExpStr.getExperimentName());
 		stimuliPainter->fillRect(parentRetinotopyMapper->rectScreenRes,QColor(Qt::black));
+	}
 	parentRetinotopyMapper->StimulusResultImageFrame.fill(parentRetinotopyMapper->colorBackground);
 	imgPainter.begin(&parentRetinotopyMapper->StimulusResultImageFrame);
 	if (parentRetinotopyMapper->bCreateActivationMap)
@@ -488,7 +401,11 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 		imgPainter.end();
 	if (parentRetinotopyMapper->outputTriggerFrame)
 	{
-		if (tmpExpStrState.CurrentBlock_InternalTrigger > parentRetinotopyMapper->lastTriggerNumber)
+		if (tmpExpStrState.CurrentBlock_InternalTrigger < nLastOutputTriggerFrameNumber)
+		{
+			nLastOutputTriggerFrameNumber = tmpExpStrState.CurrentBlock_InternalTrigger;
+		}
+		else if (tmpExpStrState.CurrentBlock_InternalTrigger > nLastOutputTriggerFrameNumber)
 		{
 			QFile file;
 			QString outputDir = MainAppInfo::outputsDirPath();
@@ -580,7 +497,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 					}
 				}
 			}
-			parentRetinotopyMapper->lastTriggerNumber++;
+			nLastOutputTriggerFrameNumber = tmpExpStrState.CurrentBlock_InternalTrigger;
 		}
 	}
 	stimuliPainter->fillRect(parentRetinotopyMapper->rStimuliScreenArea, parentRetinotopyMapper->brushBackground);
