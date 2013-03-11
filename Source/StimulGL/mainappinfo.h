@@ -35,6 +35,25 @@ private:
 	static QWidget *mainWindow;
 
 public:
+
+	struct QPairFirstComparer
+	{
+		template<typename T1, typename T2>
+		bool operator()(const QPair<T1,T2> & a, const QPair<T1,T2> & b) const
+		{
+			return a.first < b.first;
+		}
+	};
+
+	struct QPairSecondComparer
+	{
+		template<typename T1, typename T2>
+		bool operator()(const QPair<T1,T2> & a, const QPair<T1,T2> & b) const
+		{
+			return a.second < b.second;
+		}
+	};
+
 	static bool SetMainWindow(QWidget *mainWin);
 	static QString appDirPath()						{return QDir(QCoreApplication::applicationDirPath()).absolutePath();}
 	static QString appDocDirPath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}

@@ -107,6 +107,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 
 	bRenderStimuli = true;
 	QString tmpStr = "";
+	int i,j;
 	parentRetinotopyMapper->tmpParamValue = "";
 	parentRetinotopyMapper->fStimulusDiameter = 0.0f;
 	parentRetinotopyMapper->fTrialTimeProgress = 0.0f;
@@ -137,9 +138,8 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	}
 	if (parentRetinotopyMapper->currentExpType != RETINOMAPPER_PATTERN_FIXATION)
 	{
-		if (parentRetinotopyMapper->randEmptyStimGenerator->isEmpty() && (parentRetinotopyMapper->currExpBlockTrialCycle == 0) )//&& (parentRetinotopyMapper->emptyTriggerStepCount parentRetinotopyMapper->allEmptyBlockTrialsProcessed == false))//Initialize the "Empty" random list
+		if (parentRetinotopyMapper->randEmptyStimGenerator->isEmpty() && (parentRetinotopyMapper->currExpBlockTrialCycle == 0) && (parentRetinotopyMapper->bAllTrialEmptyProcessed == false))//Initialize the "Empty" random list
 		{
-			int i,j;
 			if ((parentRetinotopyMapper->emptyTriggerSteps > 0) && (parentRetinotopyMapper->cycleTriggerAmount>=parentRetinotopyMapper->emptyTriggerSteps))//We have to make sure that the Empty item occur in a block next to each other
 			{
 				if(parentRetinotopyMapper->emptyTriggerStepsArray.isEmpty() == false)
@@ -202,16 +202,31 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 
 		if (parentRetinotopyMapper->randomizeTriggerSteps && parentRetinotopyMapper->nextNewCycleEntered)
 		{
-			int j;
-			if(parentRetinotopyMapper->randStimStateGenerator->count() != parentRetinotopyMapper->cycleTriggerAmount)
+			if(parentRetinotopyMapper->randomizeTriggerStepsArray.count() == parentRetinotopyMapper->cycleTriggerAmount)
 			{
-				parentRetinotopyMapper->randStimStateGenerator->clear();
-				for (j=0;j<parentRetinotopyMapper->cycleTriggerAmount;j++)//Create random Stimuli trigger steps within a cycle
-				{
-					parentRetinotopyMapper->randStimStateGenerator->append(QString::number(j));
-				}
+				//if(parentRetinotopyMapper->randStimStateGenerator->count() != parentRetinotopyMapper->cycleTriggerAmount)
+				//{
+					parentRetinotopyMapper->randStimStateGenerator->clear();
+					for (j=0;j<parentRetinotopyMapper->cycleTriggerAmount;j++)//Create random Stimuli trigger steps within a cycle
+					{
+						parentRetinotopyMapper->randStimStateGenerator->append(parentRetinotopyMapper->randomizeTriggerStepsArray.at(j));
+					}
+				//}
+				//User now needs to take care of randomization and balancing etc.. --> parentRetinotopyMapper->randStimStateGenerator->randomizeList(RandomGenerator_NoRandomizePreservedIndexes,parentRetinotopyMapper->previousRandEmptyStimGenerator);
 			}
-			parentRetinotopyMapper->randStimStateGenerator->randomizeList(RandomGenerator_RandomizePreservedIndexes,parentRetinotopyMapper->previousRandEmptyStimGenerator);
+			else
+			{
+				if(parentRetinotopyMapper->randStimStateGenerator->count() != parentRetinotopyMapper->cycleTriggerAmount)
+				{
+					parentRetinotopyMapper->randStimStateGenerator->clear();
+					for (j=0;j<parentRetinotopyMapper->cycleTriggerAmount;j++)//Create random Stimuli trigger steps within a cycle
+					{
+						parentRetinotopyMapper->randStimStateGenerator->append(QString::number(j));
+					}
+				}
+				parentRetinotopyMapper->randStimStateGenerator->randomizeList(RandomGenerator_RandomizePreservedIndexes,parentRetinotopyMapper->previousRandEmptyStimGenerator);
+			}
+
 
 			//experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"","StimRandomList Filled(Block:" + QString::number(expSnapshot.currExpBlock) + ", Trial:" + QString::number(expSnapshot.currExpTrial) + ")");
 			tmpStr = "";
@@ -293,12 +308,15 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 								bRenderStimuli = false;
 								parentRetinotopyMapper->emptyTriggerLastIndex = tmpExpStrState.CurrentBlock_InternalTrigger;
 								parentRetinotopyMapper->emptyTriggerStepCount--;
-								parentRetinotopyMapper->previousRandEmptyStimGenerator->append(parentRetinotopyMapper->randEmptyStimGenerator->takeAt(k));
+								tmpStr = parentRetinotopyMapper->randEmptyStimGenerator->takeAt(k);
+								parentRetinotopyMapper->previousRandEmptyStimGenerator->append(tmpStr);
 								parentRetinotopyMapper->experimentManager->logExperimentObjectData(parentRetinotopyMapper->getObjectID(),0,__FUNCTION__,"",QString("Removed a empty at (step=")+QString::number(nSelectedBlockTrialStep)+QString(", size=")+QString::number(parentRetinotopyMapper->randEmptyStimGenerator->count())+QString(")"),parentRetinotopyMapper->previousRandEmptyStimGenerator->last());
 								if (parentRetinotopyMapper->previousRandEmptyStimGenerator->count() == parentRetinotopyMapper->cycleTriggerAmount)
 								{
 									parentRetinotopyMapper->previousRandEmptyStimGenerator->clear();
 								}
+								if(parentRetinotopyMapper->randEmptyStimGenerator->isEmpty())
+									parentRetinotopyMapper->bAllTrialEmptyProcessed = true;
 								break;
 							}
 						}
@@ -381,6 +399,11 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	}
 	else if (parentRetinotopyMapper->currentExpType == RETINOMAPPER_PATTERN_MOVINGBAR)
 	{
+		if (parentRetinotopyMapper->nextNewCycleEntered)
+		{
+			if(parentRetinotopyMapper->experimentManager)
+				parentRetinotopyMapper->experimentManager->logExperimentObjectData(parentRetinotopyMapper->getObjectID(),0,__FUNCTION__,"","New Bar cycle entered, drawing Bar Angle:",QString::number(parentRetinotopyMapper->movingBarAngle));
+		}
 		drawMovingBar();
 	}
 	else if (parentRetinotopyMapper->currentExpType == RETINOMAPPER_PATTERN_MOVINGDOTS)
@@ -1025,22 +1048,8 @@ bool RetinotopyMapperWindow::drawMovingDots()
 
 bool RetinotopyMapperWindow::drawMovingBar()
 {
-	//if(showFixationPoint) // show fix cross
-	//{
-	//	imgPainter.setPen(QPen(fixationColor, fixationSize, style, roundCap));
-	//	imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
-	//	if(bCreateActivationMap)
-	//	{				
-	//		activationPainter.setPen(QPen(whiteColor, fixationSize, style, roundCap));
-	//		activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
-	//	}
-	//}
-	//if(isDebugMode() && (debugUsedTestSamples==debugTestSamples))
-	//{
-	//	imgPainter.setPen(QPen(QColor(255,0,0), 0, style, cap));
-	//	imgPainter.drawRect((nStimFrameWidth/2)-(nStimFrameWidth/2),(nStimFrameHeight/2)-(nStimFrameHeight/2),nStimFrameWidth,nStimFrameHeight);
-	//}
-	float fYOffset = 0.0f;
+	//qreal qrYOffset = 0.0;
+	QPointF qOffset(0.0,0.0);
 	if (bRenderStimuli)
 	{
 		parentRetinotopyMapper->fStimulusDiameter = qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));//qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));
@@ -1062,7 +1071,8 @@ bool RetinotopyMapperWindow::drawMovingBar()
 			//		fYOffset = (((-0.5 * movingBarCoverage * fStimulusDiameter) + (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) + (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * ((fTrialTimeProgress-0.5f)*2)));
 			//} 
 			//else
-			fYOffset = (((0.5 * parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (0.5 * parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->currentSize)) - (((parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress));
+			//qrYOffset
+			qOffset.setY((((0.5 * parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (0.5 * parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->currentSize)) - (((parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress)));
 		}
 		else//Up->Down (When 0 <= movingBarAngle >= 180 degrees)
 		{
@@ -1074,16 +1084,17 @@ bool RetinotopyMapperWindow::drawMovingBar()
 			//		fYOffset = (((0.5 * movingBarCoverage * fStimulusDiameter) - (0.5 * currentSize * movingBarHeightCheckAmount) + (0.5 * currentSize)) - (((movingBarCoverage * fStimulusDiameter) - (currentSize * movingBarHeightCheckAmount) ) * ((fTrialTimeProgress-0.5f)*2)));
 			//} 
 			//else
-			fYOffset = (((-0.5 * parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) + (0.5 * parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->currentSize)) + (((parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress));
+			//qrYOffset
+			qOffset.setY((((-0.5 * parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) + (0.5 * parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->currentSize)) + (((parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress)));
 		}
 
 		//if(isDebugMode())
 		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3a"));
-		imgPainter.translate(0,fYOffset);
+		imgPainter.translate(qOffset);//qrYOffset);
 		//if(isDebugMode())
 		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3b"));
 		if(parentRetinotopyMapper->bCreateActivationMap)
-			activationPainter.translate(0,fYOffset);
+			activationPainter.translate(qOffset);//0,qrYOffset);
 		parentRetinotopyMapper->currentYPoint = (-1 * parentRetinotopyMapper->movingBarHeightCheckAmount * parentRetinotopyMapper->currentSize) / 2.0f;
 		parentRetinotopyMapper->movingBarWidthCheckAmount = ((int)(parentRetinotopyMapper->fStimulusDiameter/parentRetinotopyMapper->currentSize)+1);
 		if(parentRetinotopyMapper->bCreateActivationMap)
@@ -1101,14 +1112,14 @@ bool RetinotopyMapperWindow::drawMovingBar()
 	{
 		imgPainter.setPen(QPen(parentRetinotopyMapper->fixationColor, parentRetinotopyMapper->fixationSize, parentRetinotopyMapper->style, parentRetinotopyMapper->roundCap));
 		if (bRenderStimuli)
-			imgPainter.drawPoint(0.0f,-fYOffset);
+			imgPainter.drawPoint(-qOffset);//0.0f,-qrYOffset);
 		else
 			imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 		if(parentRetinotopyMapper->bCreateActivationMap)
 		{				
 			activationPainter.setPen(QPen(parentRetinotopyMapper->whiteColor, parentRetinotopyMapper->fixationSize, parentRetinotopyMapper->style, parentRetinotopyMapper->roundCap));
 			if (bRenderStimuli)
-				activationPainter.drawPoint(0.0f,-fYOffset);
+				activationPainter.drawPoint(-qOffset);//0.0f,-qrYOffset);
 			else
 				activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 		}

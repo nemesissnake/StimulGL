@@ -240,6 +240,7 @@ public:
 			for(int i = 0; i < sListLength; i++)
 				tmpStringList->append(scriptVal.property(i).toString());
 			//*tmpStringList = scriptVal.toQObject();
+			//QString sTemp = hQStringListContainer.value(strKeyNameLow)->join(",");
 			return true;
 		}
 		else if (hQColorContainer.contains(strKeyNameLow))

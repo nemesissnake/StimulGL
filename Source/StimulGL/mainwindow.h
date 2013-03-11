@@ -54,6 +54,24 @@ class QGraphicsRectItem;
 class QSplashScreen;
 QT_END_NAMESPACE
 
+struct QPairFirstComparer
+{
+	template<typename T1, typename T2>
+	bool operator()(const QPair<T1,T2> & a, const QPair<T1,T2> & b) const
+	{
+		return a.first < b.first;
+	}
+};
+
+struct QPairSecondComparer
+{
+	template<typename T1, typename T2>
+	bool operator()(const QPair<T1,T2> & a, const QPair<T1,T2> & b) const
+	{
+		return a.second < b.second;
+	}
+};
+
 //!  The StimulGL Main Application. 
 /*!
   The StimulGL Main Application can be directly accessed within the script by using the default 'StimulGL' object.
@@ -105,6 +123,7 @@ private slots:
 	void setupContextMenus();
 	void DebugcontextMenuEvent(const QPoint &pos);
 	void clearDebugger();
+	void copyDebugger();
 	void setupScriptEngine();
 	void setScriptRunningStatus(GlobalApplicationInformation::ActiveScriptMode state);
 	void showPluginGUI();
@@ -177,6 +196,7 @@ private:
 	QAction *cutAction;
 	QAction *copyAction;
 	QAction *clearDebuggerAction;
+	QAction *copyDebuggerAction;
 	QAction *pasteAction;
 	QAction *goToLineAction;
 	QAction *findAction;

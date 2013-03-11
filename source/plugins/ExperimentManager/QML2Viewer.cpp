@@ -172,15 +172,18 @@ bool QML2Viewer::eventFilter(QObject *target, QEvent *event)
 
 			switch (keyEvent->key())
 			{
-			case Qt::Key_A://Key_Escape:	//To abort the experiment
+			case Qt::Key_A:	//To abort the experiment
 				if((keyEvent->modifiers() & Qt::ControlModifier))// && (keyEvent->modifiers() & Qt::AltModifier))
 				{
 					emit ExperimentEngine::UserWantsToClose();
-				}
+				}	
 				break;
-				//case Qt::Key_Tab:
-				//	setExperimentObjectReadyToUnlock();
-				//	break;
+			case Qt::Key_T:
+				if((keyEvent->modifiers() & Qt::ControlModifier))// && (keyEvent->modifiers() & Qt::AltModifier))
+				{
+					ExperimentEngine::incrementExternalTrigger();
+				}	
+				break;
 			case Qt::Key_Alt:	//To start the experiment
 				ExperimentEngine::setExperimentObjectReadyToUnlock();
 				qml2EventRoutine();

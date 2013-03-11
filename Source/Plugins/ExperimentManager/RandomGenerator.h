@@ -88,7 +88,8 @@ enum RandomGenerator_RandomizeMethod
 {
 	RandomGenerator_RandomizeStandard = 0,
 	RandomGenerator_RandomizePreservedIndexes = 1,
-	RandomGenerator_RandomizePreservedValues = 2
+	RandomGenerator_RandomizePreservedValues = 2,
+	RandomGenerator_RandomizePreservedNonRandomizedIndexes = 3
 };
 
 //!  The Random Generator class. 
@@ -117,7 +118,7 @@ public slots:
 	double randomizeDouble(double dMin, double dMax);						//just for <double> randomization
 
 	QStringList toStringList();
-	QStringList randomize(int rMethod  = (int)RandomGenerator_RandomizeStandard);
+	QStringList randomize(int rMethod  = (int)RandomGenerator_RandomizeStandard, QStringList sList = QStringList());
 	const QString at(int i) const;
 	int count() const;
 	int count(const QString &sValue) const;

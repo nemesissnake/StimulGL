@@ -52,6 +52,7 @@
 #define RETINOMAPPER_TRIGGERDURATION_MSEC				"internaltriggerduration"		/*!< "internaltriggerduration" */
 #define RETINOMAPPER_DISCRETETRIGGERSTEPS				"discretetriggersteps"			/*!< "discretetriggersteps" */
 #define RETINOMAPPER_RANDOMIZETRIGGERSTEPS				"randomizetriggersteps"			/*!< "randomizetriggersteps" */
+#define RETINOMAPPER_RANDOMIZETRIGGERSTEPS_ARRAY		"randomizetriggerstepsarray"	/*!< "randomizetriggerstepsarray" */
 #define RETINOMAPPER_EMPTYTRIGGERSTEPS					"emptytriggersteps"				/*!< "emptytriggersteps" */
 #define RETINOMAPPER_EMPTYTRIGGERSTEPS_ARRAY			"emptytriggerstepsarray"		/*!< "emptytriggerstepsarray" */
 #define RETINOMAPPER_OUTPUTTRIGGERFRAME					"outputtriggerframe"			/*!< "outputtriggerframe" */
@@ -189,6 +190,7 @@ private:
 	//int lastTriggerNumber;						//To keep track of the last trigger number
 	int emptyTriggerSteps;						//Defines the number of Trigger steps in which no stimuli should be presented
 	QStringList emptyTriggerStepsArray;
+	QStringList randomizeTriggerStepsArray;
 	bool bNoChangesSinceLastFrame;
 	ExperimentManager *experimentManager;
 
@@ -220,6 +222,7 @@ private:
 	bool enableCortMagTiming;
 	int emptyTriggerLastIndex;
 	int emptyTriggerStepCount;
+	bool bAllTrialEmptyProcessed;
 	//bool allEmptyBlockTrialsProcessed;
 
 	//Polar
@@ -257,10 +260,6 @@ private:
 	MovingDotsStructure movingDots;
 	QString retinoOutputType;
 	QString retinoOutputFormat;
-	//QImage mirrorImage;
-	//QPainter activationPainter;
-	//1234 QPainter stimuliPainter;
-	//QPainter imgPainter;
 	QPixmap StimulusResultImageFrame;
 	QPixmap StimulusActivationMap;
 	RandomGenerator *randStimStateGenerator;		 //To hold the Stimuli Trigger Step

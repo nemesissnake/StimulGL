@@ -24,8 +24,6 @@ RetinotopyMapper::RetinotopyMapper(QObject *parent)	: ExperimentEngine(parent)
 	retinoMapperWindow = NULL;
 	customScriptHandlerFunction = NULL;
 	initialize();	
-	//1234 GLWidgetWrapper::setupLayout(this);
-	//123 GLWidgetWrapper::setDoubleBufferCheck(true);
 }
 
 bool RetinotopyMapper::eventFilter(QObject *target, QEvent *event)
@@ -43,6 +41,12 @@ bool RetinotopyMapper::eventFilter(QObject *target, QEvent *event)
 				if((keyEvent->modifiers() & Qt::ControlModifier))// && (keyEvent->modifiers() & Qt::AltModifier))
 					if(experimentManager)
 						experimentManager->abortExperiment();
+				break;
+			case Qt::Key_T:
+				if((keyEvent->modifiers() & Qt::ControlModifier))// && (keyEvent->modifiers() & Qt::AltModifier))
+				{
+					ExperimentEngine::incrementExternalTrigger();
+				}	
 				break;
 			case Qt::Key_Alt:	//To start the experiment
 				//if(experimentManager)
@@ -228,10 +232,10 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_TRIGGERDURATION_MSEC,triggerDurationMsec);
 		emptyTriggerSteps = 0;
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_EMPTYTRIGGERSTEPS,emptyTriggerSteps);
-
 		emptyTriggerStepsArray.clear();
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_EMPTYTRIGGERSTEPS_ARRAY,emptyTriggerStepsArray);
-		
+		randomizeTriggerStepsArray.clear();
+		insertExpObjectParameter(getObjectID(),RETINOMAPPER_RANDOMIZETRIGGERSTEPS_ARRAY,randomizeTriggerStepsArray);
 		gapDiameter = 20.0;//aperture in the middle left blank
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_GAP_DIAMETER,gapDiameter);
 		outputTriggerFrame = false;
@@ -317,6 +321,7 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 		triggerDurationMsec = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_TRIGGERDURATION_MSEC,QString::number(triggerDurationMsec)).sValue.toInt();
 		emptyTriggerSteps = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_EMPTYTRIGGERSTEPS,QString::number(emptyTriggerSteps)).sValue.toInt();		
 		emptyTriggerStepsArray = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_EMPTYTRIGGERSTEPS_ARRAY,emptyTriggerStepsArray.join(",")).sValue.split(",",QString::SkipEmptyParts);
+		randomizeTriggerStepsArray = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_RANDOMIZETRIGGERSTEPS_ARRAY,randomizeTriggerStepsArray.join(",")).sValue.split(",",QString::SkipEmptyParts);
 		gapDiameter = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_GAP_DIAMETER,QString::number(gapDiameter)).sValue.toInt();
 		colorBackground = QColor(getExpObjectBlockParameter(getObjectID(),GLWIDGET_BACKGROUNDCOLOR,colorBackground.name()).sValue.toLower());
 		brushBackground = QBrush(colorBackground);
@@ -476,8 +481,7 @@ bool RetinotopyMapper::initObjectBlockTrial()
 	currExpBlockTrialCycle = 0;
 	emptyTriggerStepCount = 0;
 	emptyTriggerLastIndex = -1;
-	previousRandEmptyStimGenerator->clear();
-	//randStimStateGenerator->clear();
+	bAllTrialEmptyProcessed = false;
 	return true;
 }
 

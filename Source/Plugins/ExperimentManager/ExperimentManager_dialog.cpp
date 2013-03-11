@@ -23,11 +23,8 @@
 ExperimentManager_Dialog::ExperimentManager_Dialog(QWidget *parent)	: QDialog(parent)
 {
 	currentExperimentSubObjectState = Experiment_SubObject_Constructing;
-	QmlWidgetObject = NULL;
 	Qml2ViewerObject = NULL;
 	ExperimentManagerObj = NULL;
-	tmpContainerDlg = NULL;
-	tmpLayout = NULL;
 	
 	ui.setupUi(this);
 	connect(ui.btnExampleButton, SIGNAL(clicked()), this, SLOT(exampleButton_Pressed()));
@@ -93,27 +90,11 @@ void ExperimentManager_Dialog::cleanUp()
 		delete ExperimentManagerObj;
 		ExperimentManagerObj = NULL;
 	}
-	if (QmlWidgetObject)
-	{
-		QmlWidgetObject->stopObject();
-		delete QmlWidgetObject;
-		QmlWidgetObject = NULL;
-	}
 	if(Qml2ViewerObject)
 	{
 		Qml2ViewerObject->stopObject();
 		delete Qml2ViewerObject;
 		Qml2ViewerObject = NULL;
-	}
-	if (tmpContainerDlg)
-	{
-		delete tmpContainerDlg;
-		tmpContainerDlg = NULL;
-	}
-	if (tmpLayout)
-	{
-		delete tmpLayout;
-		tmpLayout = NULL;
 	}
 	return;
 }
@@ -135,11 +116,6 @@ void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 
 	if (bDisconnect)
 	{
-		if(QmlWidgetObject)
-		{
-			disconnect(QmlWidgetObject, &qmlWidget::UserWantsToClose, QmlWidgetObject, &qmlWidget::abortExperimentObject);
-			disconnect(QmlWidgetObject, &qmlWidget::ObjectStateHasChanged, this, &ExperimentManager_Dialog::changeExperimentSubObjectState);
-		}
 		if(Qml2ViewerObject)
 		{
 			disconnect(Qml2ViewerObject, &QML2Viewer::UserWantsToClose, Qml2ViewerObject, &QML2Viewer::abortExperimentObject);
@@ -153,11 +129,6 @@ void ExperimentManager_Dialog::connectSignalSlots(bool bDisconnect)
 	}
 	else
 	{
-		if(QmlWidgetObject)
-		{
-			connect(QmlWidgetObject, &qmlWidget::UserWantsToClose, QmlWidgetObject, &qmlWidget::abortExperimentObject);
-			connect(QmlWidgetObject, &qmlWidget::ObjectStateHasChanged, this, &ExperimentManager_Dialog::changeExperimentSubObjectState);
-		}
 		if(Qml2ViewerObject)
 		{
 			connect(Qml2ViewerObject, &QML2Viewer::UserWantsToClose, Qml2ViewerObject, &QML2Viewer::abortExperimentObject);
@@ -195,8 +166,6 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 	{
 		if (currentExperimentSubObjectState != Experiment_SubObject_IsAborting)//Multiple Abort events could occur, catch only first one
 		{
-			if (QmlWidgetObject)
-				QmlWidgetObject->deleteLater();
 			if (Qml2ViewerObject)
 				Qml2ViewerObject->deleteLater();
 			currentExperimentSubObjectState = Experiment_SubObject_IsAborting;
@@ -206,23 +175,15 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 	{
 		if (currentExperimentSubObjectState != Experiment_SubObject_IsStopping)//Multiple Stop events could occur, catch only first one
 		{
-			if (QmlWidgetObject)
-				QmlWidgetObject->deleteLater();
 			if (Qml2ViewerObject)
 				Qml2ViewerObject->deleteLater();
-			if (tmpContainerDlg)
-				tmpContainerDlg->deleteLater();
 			currentExperimentSubObjectState = Experiment_SubObject_IsStopping;
 		}
 	}
 	else if(nState == Experiment_SubObject_Destructing)
 	{
 		currentExperimentSubObjectState = Experiment_SubObject_Destructing;
-		QmlWidgetObject = NULL;
 		Qml2ViewerObject = NULL;
-		tmpContainerDlg = NULL;
-		delete tmpLayout;
-		tmpLayout = NULL;
 		currentExperimentSubObjectState = Experiment_SubObject_Stopped;		
 	}
 	else//All other cases
@@ -304,26 +265,8 @@ bool ExperimentManager_Dialog::executeDocument()
 			tmpRegExp.setPattern("import*QtQuick*1.");
 			if(fileSource.contains(tmpRegExp))
 			{
-				tmpContainerDlg = new ContainerDlg(this);
-				tmpContainerDlg->setAttribute(Qt::WA_DeleteOnClose);
-				tmpContainerDlg->setAttribute(Qt::WA_PaintOnScreen);
-				tmpLayout = new QVBoxLayout;
-				tmpLayout->setAlignment(Qt::AlignHCenter);
-				tmpLayout->setMargin(0);
-				//tmpLayout->setStretch(0,1680);
-				tmpContainerDlg->setLayout(tmpLayout);
-				tmpContainerDlg->setWindowModality(Qt::WindowModality::WindowModal);
-
-				QmlWidgetObject = new qmlWidget(this);
-				//tmpLayout->setStretch(0,)
-				//1234 tmpLayout->addWidget(QmlWidgetObject);
-
-				if(QmlWidgetObject->executeQMLDocument(fileSource,tmpContainerDlg,docContentStructToRun.bIsFile))
-				{
-					connectSignalSlots(false);
-					tmpContainerDlg->showFullScreen();
-					return true;
-				}
+				qWarning() << __FUNCTION__ << "::QtQuick version 1.* is not supported anymore, please update the *.qml document to QtQuick version 2.* or later!";
+				return false;
 			}
 			else
 			{

@@ -37,7 +37,6 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	cExperimentStructureObject = NULL;
 	cBlockStructureObject = NULL;
 	cLoopStructureObject = NULL;
-	QmlWidgetObject = NULL;
 	Qml2ViewerObject = NULL;
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
 	ExperimentManagerObject = new ExperimentManager(ExperimentManagerDiagObject,NULL);
@@ -96,11 +95,6 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 	{
 		delete RetinotopyMapperObject;
 		RetinotopyMapperObject = NULL;
-	}
-	if(QmlWidgetObject)
-	{
-		delete QmlWidgetObject;
-		QmlWidgetObject = NULL;
 	}
 	if(Qml2ViewerObject)
 	{

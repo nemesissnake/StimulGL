@@ -263,7 +263,7 @@ void RandomGenerator::insert(int i, const QString &sValue)
 	QStringList::insert(i,sValue);
 }
 
-QStringList RandomGenerator::randomize(int rMethod)
+QStringList RandomGenerator::randomize(int rMethod, QStringList sList)
 {
 /*! \brief Randomizes and return the String List.
  * 
@@ -273,14 +273,21 @@ QStringList RandomGenerator::randomize(int rMethod)
  */
 	RandomGenerator_RandomizeMethod rndMethod = (RandomGenerator_RandomizeMethod) rMethod;
 
-	if(randomizeList(rndMethod))
+	if(sList.isEmpty())
 	{
-		return (QStringList)*this;
+		if(randomizeList(rndMethod))
+		{
+			return (QStringList)*this;
+		}
 	}
 	else
 	{
-		return QStringList();
+		if(randomizeList(rndMethod,&sList))
+		{
+			return (QStringList)*this;
+		}
 	}
+	return QStringList();
 }
 
 QStringList RandomGenerator::toStringList()
@@ -412,6 +419,57 @@ bool RandomGenerator::randomizeList(RandomGenerator_RandomizeMethod rMethod, QSt
 					{
 						QList::swap(sList->at(i).toInt(),sList->at(tCombinedRandGen->IRandom(0,nRecoverCount-1)).toInt());
 					}
+				}
+			}
+			bRetVal = true;
+			break;
+		}
+	case RandomGenerator_RandomizePreservedNonRandomizedIndexes:
+		//sList[] contains the indexes that should be preserved(should not be randomized)!
+		if (sList == NULL)
+		{//just randomize
+			for(i=(nListCount-1);i>0;--i)
+			{
+				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
+				QList::swap(i,nRandom);
+			}
+			bRetVal = true;
+			break;
+		}
+		else if (sList->count() < 1)
+		{//just randomize
+			for(i=(nListCount-1);i>0;--i)
+			{
+				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
+				QList::swap(i,nRandom);
+			}
+			bRetVal = true;
+			break;
+		}
+		else if(sList->count() >= (QList::count()-1))
+		{//nothing to do
+			bRetVal = true;
+			break;
+		}
+		else
+		{
+			QStringList tmpCopyLst;
+			tmpCopyLst = QStringList::mid(0);//copy the current list
+			//first start with an randomize
+			for(i=(nListCount-1);i>0;--i)
+			{
+				nRandom = tCombinedRandGen->IRandom(0,nListCount-1);
+				QList::swap(i,nRandom);
+			}
+			int nRecoverCount = sList->count();
+			if (nRecoverCount > 0)
+			{
+				//recover the preserved items
+				for(j=0;j<nRecoverCount;j++)
+				{
+					nIndexFound = QList::indexOf(tmpCopyLst.at(sList->at(j).toInt()));
+					if(nIndexFound >= 0)//is the preserved item still in the current list?
+						QList::swap(sList->at(j).toInt(),nIndexFound);				
 				}
 			}
 			bRetVal = true;

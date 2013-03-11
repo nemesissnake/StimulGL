@@ -114,6 +114,7 @@ void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
 {
 	QMenu menu(this);
 	menu.addAction(clearDebuggerAction);
+	menu.addAction(copyDebuggerAction);
 	menu.exec(outputWindowList->viewport()->mapToGlobal(pos));
 }
 
@@ -516,6 +517,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	remAllMarkerAction->setEnabled(hasMdiChild);
 
 	clearDebuggerAction->setEnabled(true);
+	copyDebuggerAction->setEnabled(true);
 
 	goToLineAction->setEnabled(hasMdiChild);
 	goToMatchingBraceAction->setEnabled(hasMdiChild);
@@ -770,7 +772,13 @@ void MainWindow::createDefaultMenus()
 
 	editMenu->addSeparator();
 
-	clearDebuggerAction = new QAction(QObject::tr("Clear Output"), 0);
+	copyDebuggerAction = new QAction(QObject::tr("Copy Selected Output Item(s)"), 0);
+	//copyDebuggerAction->setShortcut(QKeySequence(""));
+	copyDebuggerAction->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
+	connect(copyDebuggerAction, SIGNAL(triggered()), this, SLOT(copyDebugger()));
+	editMenu->addAction(copyDebuggerAction);
+
+	clearDebuggerAction = new QAction(QObject::tr("Clear All Output Item(s)"), 0);
 	//clearDebuggerAction->setShortcut(QKeySequence(""));
 	clearDebuggerAction->setStatusTip(tr("Clear the Debugger Output window."));
 	connect(clearDebuggerAction, SIGNAL(triggered()), this, SLOT(clearDebugger()));
@@ -1008,11 +1016,36 @@ void MainWindow::clearDebugger()
 	outputWindowList->clear();
 }
 
+void MainWindow::copyDebugger()
+{
+	QList<QPair<QString,int>> lListTextAndRows;
+	QList <QListWidgetItem *> listItems;
+	QString sResult = "";
+	int nRow,i;
+	listItems = outputWindowList->selectedItems();
+	if(listItems.isEmpty())
+		return;
+	for(i=0;i<listItems.size();i++) 
+	{
+		nRow = outputWindowList->row(listItems[i]);//0 means false
+		lListTextAndRows.append(qMakePair(listItems[i]->text(),nRow));
+	}
+	qSort(lListTextAndRows.begin(), lListTextAndRows.end(), QPairSecondComparer());	
+	for(i=0;i<lListTextAndRows.size();i++) 
+	{
+		sResult.append(lListTextAndRows.at(i).first);
+		if(i<lListTextAndRows.size()-1)
+			sResult.append("\n");
+	}
+	QApplication::clipboard()->setText(sResult);
+}
+
 void MainWindow::createDockWindows()
 {
 	debugLogDock = new QDockWidget(tr("Output"), this);
 	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);	
 	outputWindowList = new QListWidget(debugLogDock);
+	outputWindowList->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	//QString tmpColor = QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	//outputWindowList->setStyleSheet("* { background-color:rgb(" + tmpColor + "); padding: 10px ; color:rgb(136,0,21)}");
 	debugLogDock->setWidget(outputWindowList);

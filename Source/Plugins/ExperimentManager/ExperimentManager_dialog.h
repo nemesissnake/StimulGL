@@ -27,9 +27,8 @@
 #include <QtWidgets>
 #include <QThread>
 
-#include "qmlWidget.h"
 #include "QML2Viewer.h"
-#include "ContainerDlg.h"
+//#include "ContainerDlg.h"
 #include "GlobalApplicationInformation.h"
 
 class ExperimentManager_Dialog : public QDialog, private Ui::ExperimentManager_DialogClass
@@ -66,11 +65,10 @@ private slots:
 	void LogMessage(QString sMessage);
 
 private:
-	qmlWidget *QmlWidgetObject;
 	QML2Viewer *Qml2ViewerObject;
 	ExperimentManager *ExperimentManagerObj;
-	ContainerDlg *tmpContainerDlg;
-	QVBoxLayout *tmpLayout;
+	//ContainerDlg *tmpContainerDlg;
+	//QVBoxLayout *tmpLayout;
 	ExperimentSubObjectState currentExperimentSubObjectState;
 	ExperimentManager::ExperimentState currentExperimentState;
 	DocContentInfoStructure docContentStructToRun;

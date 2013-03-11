@@ -73,38 +73,14 @@
     <ClCompile Include="ExperimentTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GLWidgetWrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImageProcessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RandomGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="retinomap_glwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StdAfx.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_retinomap_glwidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_retinomap_glwidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_retinomap_glwidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_retinomap_glwidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_retinomap_glwidget.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_retinomap_glwidget.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_RandomGenerator.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
@@ -269,48 +245,6 @@
       <Filter>Generated Files\Template_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_prtformatmanager.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="ContainerDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ContainerDlg.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_ContainerDlg.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_ContainerDlg.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ContainerDlg.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_ContainerDlg.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ContainerDlg.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="qmlWidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_qmlWidget.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_qmlWidget.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_qmlWidget.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_qmlWidget.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_qmlWidget.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_qmlWidget.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
     <ClCompile Include="ModelIndexProvider.cpp">
@@ -508,24 +442,6 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\qrc_ExperimentManager.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_GLWidgetWrapper.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_GLWidgetWrapper.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_GLWidgetWrapper.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_GLWidgetWrapper.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_GLWidgetWrapper.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_GLWidgetWrapper.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
     <ClCompile Include="OpenGLWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -647,28 +563,16 @@
     <CustomBuild Include="ExperimentTree.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="GLWidgetWrapper.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="ImageProcessor.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="RandomGenerator.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="retinomap_glwidget.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="ExperimentManager_dialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="prtformatmanager.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ContainerDlg.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="qmlWidget.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ModelIndexProvider.h">

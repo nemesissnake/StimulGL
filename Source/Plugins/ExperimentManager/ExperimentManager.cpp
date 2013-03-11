@@ -25,13 +25,8 @@
 #include "ImageProcessor.h"
 #include "prtformatmanager.h"
 #include "TriggerTimer.h"
-
-#include "retinomap_glwidget.h"
 #include "RetinotopyMapper.h"
-#include "qmlWidget.h"
 #include "QML2Viewer.h"
-//#include "ExperimentGraphBlock.h"
-//#include "ExperimentGraphPort.h"
 
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
@@ -114,9 +109,9 @@ QString ExperimentManager::Test(const QString &sInput)
 
 void ExperimentManager::RegisterMetaTypes()
 {//To register the Objects to the Meta, so they can be accessed trough an *.exml file
-	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
+	//qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
+	//qRegisterMetaType<qmlWidget>(QML_WIDGET_NAME);
 	qRegisterMetaType<RetinotopyMapper>(RETINOTOPYMAPPER_NAME);
-	qRegisterMetaType<qmlWidget>(QML_WIDGET_NAME);
 	qRegisterMetaType<QML2Viewer>(QML2VIEWER_NAME);
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
@@ -1872,7 +1867,7 @@ bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBl
 			{
 				if (lExperimentObjectList[i].nObjectID == nObjectID)
 				{
-					if(createExperimentBlockParamsFromDomNodeList(nBlockNumber,nObjectID,&ExperimentBlockTrialsDomNodeList,lExperimentObjectList[i].ExpBlockParams) == false)
+					if(createExperimentBlockParamsFromDomNodeList(nBlockNumber,nObjectID,&ExperimentBlockTrialsDomNodeList,lExperimentObjectList[i].ExpBlockParams) < 0)
 					{
 						qDebug() << __FUNCTION__ << "::Could not create a Block Parameter List!";
 						return false;
@@ -1886,20 +1881,20 @@ bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBl
 	return false;
 }
 
-bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst, tParsedParameterList *hParams)
+int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst, tParsedParameterList *hParams)
 {
 	if (hParams == NULL)
-		return false;
+		return -1;
 	if(pExpBlockTrialsDomNodeLst == NULL)
-		return false;
+		return -1;
 	if(hParams->count() == 0)
-		return false;
+		return -1;
 	if(nObjectID < 0)
-		return false;
+		return -1;
 	if(nBlockNumber < 0)
-		return false;
+		return -1;
 	if (pExpBlockTrialsDomNodeLst->isEmpty())
-		return false;
+		return -1;
 
 	//Set all the parameter bHasChanged attributes too false again
 	QList<ParsedParameterDefinition> tmpStrValueList = hParams->values();//The order is guaranteed to be the same as that used by keys()!
@@ -1926,13 +1921,13 @@ bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nB
 	//}
 	
 	//if(cExperimentBlockTrialStructure == NULL)
-	//	return false;
+	//	return -1;
 	//int nBlockCount = cExperimentBlockTrialStructure->getBlockCount();
 	int nBlockCount = pExpBlockTrialsDomNodeLst->count();
 	if (nBlockCount <= nBlockNumber)
-		return false;
+		return -1;
 	//if (nBlockCount != pExpBlockTrialsDomNodeLst->count())
-	//	return false;
+	//	return -1;
 	
 	QDomElement tmpElement;
 	QDomNode tmpNode;
@@ -1966,7 +1961,7 @@ bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nB
 										int nParameterListCount = tmpParameterNodeList.count();
 										if (nParameterListCount>0)
 										{
-											bool bResult = false;
+											int nResult = 0;
 											for (int k=0;k<nParameterListCount;k++)//For each parameter
 											{
 												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
@@ -1983,29 +1978,29 @@ bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nB
 															tmpParDef.sValue = tmpValue;
 															tmpParDef.bHasChanged = true;
 															hParams->insert(tmpString,tmpParDef);
-															bResult = true;//To define that at least one parameter was parsed successfully
+															nResult++;
 														}
 													}
 												}
 												if(k==(nParameterListCount-1))
-													return bResult;											
+													return nResult;											
 											}
 										}
 										else
-											return false;
+											return 0;
 									}
 									else
-										return false;
+										return -1;
 								}
 								else
-									return false;
+									return -1;
 							}
 							else
-								return false;
+								return -1;
 						}
 					}
 					else
-						return false;//Nothing defined		
+						return -1;//Nothing defined		
 				}
 				else
 					continue;//Search next block
@@ -2014,7 +2009,7 @@ bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nB
 				continue;//Search next block
 		}
 	}
-	return false;
+	return -1;
 }
 
 bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst)

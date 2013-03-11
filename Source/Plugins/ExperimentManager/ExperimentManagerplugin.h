@@ -63,7 +63,6 @@ private:
 	ImageProcessor *ImageProcessorObject;
 	PrtFormatManager *PrtFormatManagerObject;
 	RetinotopyMapper *RetinotopyMapperObject;
-	qmlWidget *QmlWidgetObject;
 	QML2Viewer *Qml2ViewerObject;
 
 public slots:

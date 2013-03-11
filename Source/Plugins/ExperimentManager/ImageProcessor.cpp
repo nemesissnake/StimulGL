@@ -301,6 +301,66 @@ bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestinatio
 	return bSaveResult;
 }
 
+bool ImageProcessor::CreateMeanImageFromPngFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite)
+{
+	if(sourceImagePaths.isEmpty())
+		return false;
+	QFile fileSource;
+	for (int i=0;i<sourceImagePaths.count();i++)
+	{		
+		fileSource.setFileName(sourceImagePaths.at(i));
+		if (!fileSource.exists())
+			return false;
+	}
+	QFile fileDest(destinationPath);
+	QFileInfo fileDestInfo(destinationPath);
+	if (fileDest.exists() && (bOverwrite == false))
+		return false;
+	if (!fileDestInfo.absoluteDir().exists())
+	{
+		if (!QDir().mkdir(fileDestInfo.absolutePath()))
+			return false;
+	}
+	QPixmap tmpPixmap;
+	QList<QImage> lstSourceImages;
+	for (int i=0;i<sourceImagePaths.count();i++)
+	{	
+		if(!tmpPixmap.load(sourceImagePaths.at(i),"PNG"))
+			return false;
+		lstSourceImages.append(tmpPixmap.toImage());
+	}
+	//QImage tmpImage = tmpPixmap.toImage();//.convertToFormat(QImage::Format_Mono, Qt::MonoOnly|Qt::ThresholdDither|Qt::AvoidDither);
+	QImage resultImage = lstSourceImages.at(0);
+	resultImage.fill(0);
+	QColor tmpColor;
+	qreal tmpRed = 0.0f;
+	qreal tmpGreen = 0.0f;
+	qreal tmpBlue = 0.0f;
+	int nWidth = lstSourceImages.at(0).width();
+	int nHeight = lstSourceImages.at(0).height();
+	int nCount = lstSourceImages.count();
+	for(int x=0;x<nWidth;x++)
+	{
+		for(int y=0;y<nHeight;y++)
+		{
+			for(int z=0;z<nCount;z++)
+			{
+				tmpColor = QColor(lstSourceImages.at(z).pixel(x,y));
+				tmpRed = tmpRed + tmpColor.redF();
+				tmpGreen = tmpGreen + tmpColor.greenF();
+				tmpBlue = tmpBlue + tmpColor.blueF();
+			}
+			tmpColor.setRgbF(tmpRed/nCount,tmpGreen/nCount,tmpBlue/nCount);
+			resultImage.setPixel(x, y, tmpColor.rgb());
+			tmpRed = 0.0f;
+			tmpGreen = 0.0f;
+			tmpBlue = 0.0f;
+		}
+	}
+	tmpPixmap = tmpPixmap.fromImage(resultImage);
+	return tmpPixmap.save(destinationPath,"PNG");
+}
+
 //QPixmap ImageProcessor::ChangeHue(QPixmap &p)
 //{
 	//m_colorMatrix *= QMatrix4x4(

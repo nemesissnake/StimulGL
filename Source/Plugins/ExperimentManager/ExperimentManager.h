@@ -45,8 +45,6 @@
 #define EXPERIMENTMANAGER_SCRIPTCONTEXT_NAME	"EM"
 
 class cExperimentStructure;
-//class RetinoMap_glwidget;
-//class qmlWidget;
 class ExperimentTree;
 
 //!  The Experiment Manager class. 
@@ -215,7 +213,7 @@ private:
 	bool configureExperiment();
 	bool createExperimentObjects();
 	bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst);
-	bool createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
+	int createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
 	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);
 	bool initializeExperiment(bool bFinalize = false);
 	bool finalizeExperimentObjects();
