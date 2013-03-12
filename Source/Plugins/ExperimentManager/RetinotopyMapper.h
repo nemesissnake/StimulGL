@@ -201,7 +201,8 @@ private:
 	Qt::PenCapStyle flatCap;
 	Qt::PenCapStyle roundCap;
 	QString tmpParamValue;
-	float fStimulusDiameter;
+	//float fStimulusDiameter;
+	double dStimulusDiameter;
 	float fTrialTimeProgress;
 	float fCortMagTrialTimeProgress;
 	bool bCreateActivationMap;
@@ -213,7 +214,8 @@ private:
 	float wedgeSpanAngle;
 	float currentWedgeDiameter;
 	float currentCompleteWedgeDiameter;
-	float currentSize;
+	//float currentSize;
+	double dCurrentSize;
 	float currentOuterCompleteRingDiameter;
 	float currentXPoint;
 	float currentYPoint;

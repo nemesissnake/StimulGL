@@ -109,7 +109,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	QString tmpStr = "";
 	int i,j;
 	parentRetinotopyMapper->tmpParamValue = "";
-	parentRetinotopyMapper->fStimulusDiameter = 0.0f;
+	parentRetinotopyMapper->dStimulusDiameter = 0.0;
 	parentRetinotopyMapper->fTrialTimeProgress = 0.0f;
 	if(parentRetinotopyMapper->isLocked())
 	{
@@ -426,9 +426,9 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	{
 		if (tmpExpStrState.CurrentBlock_InternalTrigger < nLastOutputTriggerFrameNumber)
 		{
-			nLastOutputTriggerFrameNumber = tmpExpStrState.CurrentBlock_InternalTrigger;
+			nLastOutputTriggerFrameNumber = RA_REINITIALIZE;//tmpExpStrState.CurrentBlock_InternalTrigger;
 		}
-		else if (tmpExpStrState.CurrentBlock_InternalTrigger > nLastOutputTriggerFrameNumber)
+		if (tmpExpStrState.CurrentBlock_InternalTrigger > nLastOutputTriggerFrameNumber)
 		{
 			QFile file;
 			QString outputDir = MainAppInfo::outputsDirPath();
@@ -437,7 +437,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 			{
 				QDir().mkdir(outputDir);
 			}
-			outputDir = outputDir + parentRetinotopyMapper->getLastLoggedObjectStateTime(Experiment_SubObject_Started) + "/";
+			outputDir = outputDir + parentRetinotopyMapper->getLastLoggedObjectStateTime(Experiment_SubObject_Started) + "_" + tmpExpStr.getExperimentName() + "/";
 			if(QDir(outputDir).exists()==false)
 			{
 				QDir().mkdir(outputDir);
@@ -607,9 +607,9 @@ bool RetinotopyMapperWindow::drawPolar()
 			parentRetinotopyMapper->currentWedgeDiameter = ((nStimFrameHeight - parentRetinotopyMapper->gapDiameter)) / 2.0f * parentRetinotopyMapper->cortMagFactor;
 		else
 			parentRetinotopyMapper->currentWedgeDiameter = ((nStimFrameHeight - parentRetinotopyMapper->gapDiameter)) / 2.0f / parentRetinotopyMapper->polarWedgeNrRings;		
-		parentRetinotopyMapper->currentSize = nStimFrameHeight - parentRetinotopyMapper->currentWedgeDiameter;
-		parentRetinotopyMapper->currentXPoint = (nStimFrameWidth - parentRetinotopyMapper->currentSize) / 2.0f;
-		parentRetinotopyMapper->currentYPoint = (nStimFrameHeight - parentRetinotopyMapper->currentSize) / 2.0f;
+		parentRetinotopyMapper->dCurrentSize = nStimFrameHeight - parentRetinotopyMapper->currentWedgeDiameter;
+		parentRetinotopyMapper->currentXPoint = (nStimFrameWidth - parentRetinotopyMapper->dCurrentSize) / 2.0f;
+		parentRetinotopyMapper->currentYPoint = (nStimFrameHeight - parentRetinotopyMapper->dCurrentSize) / 2.0f;
 		if(parentRetinotopyMapper->polarRotationDirection == 1)//Clockwise
 		{
 			startAngle = (-360.0f * parentRetinotopyMapper->fTrialTimeProgress) - (parentRetinotopyMapper->polarWedgeSpan);
@@ -653,25 +653,25 @@ bool RetinotopyMapperWindow::drawPolar()
 				}	
 				if(k==0)//draw a full wide wedge
 				{
-					imgPainter.drawArc(parentRetinotopyMapper->currentXPoint, parentRetinotopyMapper->currentYPoint, parentRetinotopyMapper->currentSize, parentRetinotopyMapper->currentSize, parentRetinotopyMapper->currentStartAngle, parentRetinotopyMapper->wedgeSpanAngle*parentRetinotopyMapper->polarWedgeNrChecks);//Same as drawing an partial ellipse
+					imgPainter.drawArc(parentRetinotopyMapper->currentXPoint, parentRetinotopyMapper->currentYPoint, parentRetinotopyMapper->dCurrentSize, parentRetinotopyMapper->dCurrentSize, parentRetinotopyMapper->currentStartAngle, parentRetinotopyMapper->wedgeSpanAngle*parentRetinotopyMapper->polarWedgeNrChecks);//Same as drawing an partial ellipse
 				}					
 				else if (k%2!=0)
 				{
-					imgPainter.drawArc(parentRetinotopyMapper->currentXPoint, parentRetinotopyMapper->currentYPoint, parentRetinotopyMapper->currentSize, parentRetinotopyMapper->currentSize, parentRetinotopyMapper->currentStartAngle, parentRetinotopyMapper->wedgeSpanAngle);//Same as drawing an partial ellipse
+					imgPainter.drawArc(parentRetinotopyMapper->currentXPoint, parentRetinotopyMapper->currentYPoint, parentRetinotopyMapper->dCurrentSize, parentRetinotopyMapper->dCurrentSize, parentRetinotopyMapper->currentStartAngle, parentRetinotopyMapper->wedgeSpanAngle);//Same as drawing an partial ellipse
 				}
 				parentRetinotopyMapper->currentStartAngle = parentRetinotopyMapper->currentStartAngle + parentRetinotopyMapper->wedgeSpanAngle;
 			}
-			parentRetinotopyMapper->currentSize = parentRetinotopyMapper->currentSize - parentRetinotopyMapper->currentWedgeDiameter;//First subtract the first wedge diameter
+			parentRetinotopyMapper->dCurrentSize = parentRetinotopyMapper->dCurrentSize - parentRetinotopyMapper->currentWedgeDiameter;//First subtract the first wedge diameter
 			if((parentRetinotopyMapper->disableCortMagFac==false) && (parentRetinotopyMapper->cortMagFactor > 0))
 			{
 				if(i==(parentRetinotopyMapper->polarWedgeNrRings-1))//Pre-last loop to prepare last wedge?
-					parentRetinotopyMapper->currentWedgeDiameter = (parentRetinotopyMapper->currentSize-parentRetinotopyMapper->gapDiameter) / 2;
+					parentRetinotopyMapper->currentWedgeDiameter = (parentRetinotopyMapper->dCurrentSize-parentRetinotopyMapper->gapDiameter) / 2;
 				else
-					parentRetinotopyMapper->currentWedgeDiameter = ((parentRetinotopyMapper->currentSize - parentRetinotopyMapper->currentWedgeDiameter) - parentRetinotopyMapper->gapDiameter) / 2 * parentRetinotopyMapper->cortMagFactor;
+					parentRetinotopyMapper->currentWedgeDiameter = ((parentRetinotopyMapper->dCurrentSize - parentRetinotopyMapper->currentWedgeDiameter) - parentRetinotopyMapper->gapDiameter) / 2 * parentRetinotopyMapper->cortMagFactor;
 			}
-			parentRetinotopyMapper->currentSize = parentRetinotopyMapper->currentSize - parentRetinotopyMapper->currentWedgeDiameter;//First subtract the second wedge diameter
-			parentRetinotopyMapper->currentXPoint = (nStimFrameWidth - parentRetinotopyMapper->currentSize) / 2.0f;
-			parentRetinotopyMapper->currentYPoint = (nStimFrameHeight - parentRetinotopyMapper->currentSize) / 2.0f;
+			parentRetinotopyMapper->dCurrentSize = parentRetinotopyMapper->dCurrentSize - parentRetinotopyMapper->currentWedgeDiameter;//First subtract the second wedge diameter
+			parentRetinotopyMapper->currentXPoint = (nStimFrameWidth - parentRetinotopyMapper->dCurrentSize) / 2.0f;
+			parentRetinotopyMapper->currentYPoint = (nStimFrameHeight - parentRetinotopyMapper->dCurrentSize) / 2.0f;
 		}
 	}
 	if(parentRetinotopyMapper->showFixationPoint) // show fix cross
@@ -1048,11 +1048,15 @@ bool RetinotopyMapperWindow::drawMovingDots()
 
 bool RetinotopyMapperWindow::drawMovingBar()
 {
-	//qreal qrYOffset = 0.0;
-	QPointF qOffset(0.0,0.0);
+	qreal qrYOffset = 0.0;
+	//QPointF qOffset(0.0,0.0);
+
+
+
 	if (bRenderStimuli)
 	{
-		parentRetinotopyMapper->fStimulusDiameter = qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));//qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));
+		//parentRetinotopyMapper->fStimulusDiameter = qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));//qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));
+		parentRetinotopyMapper->dStimulusDiameter = qSqrt(qPow(nStimFrameWidth,2) + qPow(nStimFrameHeight,2));
 		imgPainter.translate(nStimFrameWidth/2, nStimFrameHeight/2);
 		imgPainter.rotate(parentRetinotopyMapper->movingBarAngle);
 		if(parentRetinotopyMapper->bCreateActivationMap)
@@ -1060,7 +1064,9 @@ bool RetinotopyMapperWindow::drawMovingBar()
 			activationPainter.translate(nStimFrameWidth/2, nStimFrameHeight/2);
 			activationPainter.rotate(parentRetinotopyMapper->movingBarAngle);
 		}
-		parentRetinotopyMapper->currentSize = (parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter)/(parentRetinotopyMapper->movingBarHeight*parentRetinotopyMapper->movingBarHeightCheckAmount);
+		double movingBarAreaLength = parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->dStimulusDiameter;
+		//parentRetinotopyMapper->dCurrentSize = (movingBarAreaLength)/(parentRetinotopyMapper->movingBarHeight*parentRetinotopyMapper->movingBarHeightCheckAmount);
+		parentRetinotopyMapper->dCurrentSize = (movingBarAreaLength)/(parentRetinotopyMapper->movingBarHeight*parentRetinotopyMapper->movingBarHeightCheckAmount);
 		if(parentRetinotopyMapper->movingBarDirection == -1)//Down->Up (When 0 <= movingBarAngle >= 180 degrees)
 		{				
 			//if (movingBarIncludeOppositeDirection)
@@ -1072,7 +1078,8 @@ bool RetinotopyMapperWindow::drawMovingBar()
 			//} 
 			//else
 			//qrYOffset
-			qOffset.setY((((0.5 * parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (0.5 * parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->currentSize)) - (((parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress)));
+			//qOffset.setY((((0.5 * movingBarAreaLength) - (0.5 * parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->dCurrentSize)) - (((movingBarAreaLength) - (parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress)));
+			qrYOffset = (((0.5 * movingBarAreaLength) - (0.5 * parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->dCurrentSize)) - (((movingBarAreaLength) - (parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress));
 		}
 		else//Up->Down (When 0 <= movingBarAngle >= 180 degrees)
 		{
@@ -1085,26 +1092,30 @@ bool RetinotopyMapperWindow::drawMovingBar()
 			//} 
 			//else
 			//qrYOffset
-			qOffset.setY((((-0.5 * parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) + (0.5 * parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->currentSize)) + (((parentRetinotopyMapper->movingBarCoverage * parentRetinotopyMapper->fStimulusDiameter) - (parentRetinotopyMapper->currentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress)));
+			//double temp = (((-0.5 * movingBarAreaLength) + (0.5 * parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->dCurrentSize)) + (((movingBarAreaLength) - (parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) )));
+			//qOffset.setY((((-0.5 * movingBarAreaLength) + (0.5 * parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->dCurrentSize)) + (((movingBarAreaLength) - (parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress)));
+			qrYOffset = (((-0.5 * movingBarAreaLength) + (0.5 * parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) + (0.5 * parentRetinotopyMapper->dCurrentSize)) + (((movingBarAreaLength) - (parentRetinotopyMapper->dCurrentSize * parentRetinotopyMapper->movingBarHeightCheckAmount) ) * parentRetinotopyMapper->fTrialTimeProgress));
 		}
 
 		//if(isDebugMode())
 		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3a"));
-		imgPainter.translate(qOffset);//qrYOffset);
+		//qreal a
+		//qrYOffset = (int)(qrYOffset - 0.5);//DBL_MIN;    //-467.0;//ok: -469.0;//ok: -470.0;//no: -465.0;//no: -468.0;//no:-466.65;
+		imgPainter.translate(0.0,qrYOffset);//qOffset);//qrYOffset);
 		//if(isDebugMode())
 		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3b"));
 		if(parentRetinotopyMapper->bCreateActivationMap)
-			activationPainter.translate(qOffset);//0,qrYOffset);
-		parentRetinotopyMapper->currentYPoint = (-1 * parentRetinotopyMapper->movingBarHeightCheckAmount * parentRetinotopyMapper->currentSize) / 2.0f;
-		parentRetinotopyMapper->movingBarWidthCheckAmount = ((int)(parentRetinotopyMapper->fStimulusDiameter/parentRetinotopyMapper->currentSize)+1);
+			activationPainter.translate(0.0,qrYOffset);//qOffset);//0,qrYOffset);
+		parentRetinotopyMapper->currentYPoint = (-1 * parentRetinotopyMapper->movingBarHeightCheckAmount * parentRetinotopyMapper->dCurrentSize) / 2.0;
+		parentRetinotopyMapper->movingBarWidthCheckAmount = ((int)(parentRetinotopyMapper->dStimulusDiameter/parentRetinotopyMapper->dCurrentSize)+1);
 		if(parentRetinotopyMapper->bCreateActivationMap)
 		{
-			activationPainter.setPen(QPen(parentRetinotopyMapper->whiteColor, parentRetinotopyMapper->currentSize*parentRetinotopyMapper->movingBarHeightCheckAmount, parentRetinotopyMapper->style, parentRetinotopyMapper->flatCap));
-			activationPainter.drawLine(-parentRetinotopyMapper->fStimulusDiameter/2, -0.5 * parentRetinotopyMapper->currentSize, -parentRetinotopyMapper->fStimulusDiameter/2+(parentRetinotopyMapper->currentSize*parentRetinotopyMapper->movingBarWidthCheckAmount), -0.5 * parentRetinotopyMapper->currentSize);
+			activationPainter.setPen(QPen(parentRetinotopyMapper->whiteColor, parentRetinotopyMapper->dCurrentSize*parentRetinotopyMapper->movingBarHeightCheckAmount, parentRetinotopyMapper->style, parentRetinotopyMapper->flatCap));
+			activationPainter.drawLine(-parentRetinotopyMapper->dStimulusDiameter/2, -0.5 * parentRetinotopyMapper->dCurrentSize, -parentRetinotopyMapper->dStimulusDiameter/2+(parentRetinotopyMapper->dCurrentSize*parentRetinotopyMapper->movingBarWidthCheckAmount), -0.5 * parentRetinotopyMapper->dCurrentSize);
 		}
 		//if(isDebugMode())
 		//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3c"));
-		imgPainter.drawImage(-parentRetinotopyMapper->fStimulusDiameter/2,parentRetinotopyMapper->currentYPoint-(0.5 * parentRetinotopyMapper->currentSize),fractalFillCheckeredImage(parentRetinotopyMapper->currentSize*parentRetinotopyMapper->movingBarWidthCheckAmount,parentRetinotopyMapper->movingBarHeightCheckAmount * parentRetinotopyMapper->currentSize,parentRetinotopyMapper->currentSize,parentRetinotopyMapper->flickrSwitch));
+		imgPainter.drawImage(-parentRetinotopyMapper->dStimulusDiameter/2,parentRetinotopyMapper->currentYPoint-(0.5 * parentRetinotopyMapper->dCurrentSize),fractalFillCheckeredImage(parentRetinotopyMapper->dCurrentSize*parentRetinotopyMapper->movingBarWidthCheckAmount,parentRetinotopyMapper->movingBarHeightCheckAmount * parentRetinotopyMapper->dCurrentSize,parentRetinotopyMapper->dCurrentSize,parentRetinotopyMapper->flickrSwitch));
 	}
 	//if(isDebugMode())
 	//	experimentManager->logExperimentObjectData(nRetinoID,0,__FUNCTION__,"",QString("SubPainting the object"),QString("3d"));
@@ -1112,14 +1123,14 @@ bool RetinotopyMapperWindow::drawMovingBar()
 	{
 		imgPainter.setPen(QPen(parentRetinotopyMapper->fixationColor, parentRetinotopyMapper->fixationSize, parentRetinotopyMapper->style, parentRetinotopyMapper->roundCap));
 		if (bRenderStimuli)
-			imgPainter.drawPoint(-qOffset);//0.0f,-qrYOffset);
+			imgPainter.drawPoint(0.0,-qrYOffset);//-qOffset);//0.0f,-qrYOffset);
 		else
 			imgPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 		if(parentRetinotopyMapper->bCreateActivationMap)
 		{				
 			activationPainter.setPen(QPen(parentRetinotopyMapper->whiteColor, parentRetinotopyMapper->fixationSize, parentRetinotopyMapper->style, parentRetinotopyMapper->roundCap));
 			if (bRenderStimuli)
-				activationPainter.drawPoint(-qOffset);//0.0f,-qrYOffset);
+				activationPainter.drawPoint(0.0,-qrYOffset);//(-qOffset);//0.0f,-qrYOffset);
 			else
 				activationPainter.drawPoint(nStimFrameWidth/2, nStimFrameHeight/2);
 		}
