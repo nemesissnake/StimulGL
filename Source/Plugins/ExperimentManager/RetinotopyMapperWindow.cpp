@@ -756,9 +756,33 @@ bool RetinotopyMapperWindow::drawEccentricity()
 		parentRetinotopyMapper->currentYPoint = (nStimFrameHeight - parentRetinotopyMapper->currentOuterCompleteRingDiameter + parentRetinotopyMapper->currentWedgeDiameter) / 2.0f;
 		if(parentRetinotopyMapper->bCreateActivationMap)
 		{
-			activationPainter.setPen(QPen(parentRetinotopyMapper->whiteColor, parentRetinotopyMapper->currentCompleteWedgeDiameter, parentRetinotopyMapper->style, parentRetinotopyMapper->flatCap));
 			float fTemp = parentRetinotopyMapper->currentOuterCompleteRingDiameter - (parentRetinotopyMapper->currentWedgeDiameter*parentRetinotopyMapper->eccentricityNrRings);
-			activationPainter.drawEllipse((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp);			
+			float fTemp2 = fTemp + (2*parentRetinotopyMapper->currentCompleteWedgeDiameter);
+			
+			//First activate everything
+			activationPainter.fillRect(QRect(0,0,nStimFrameWidth,nStimFrameHeight),parentRetinotopyMapper->whiteColor);
+			//Change the pen to inactive(black)
+			activationPainter.setPen(QPen(QColor(Qt::black), parentRetinotopyMapper->currentCompleteWedgeDiameter, parentRetinotopyMapper->style, parentRetinotopyMapper->flatCap));
+			//The outer path rectangle
+			QPainterPath OuterRectPath;
+			OuterRectPath.addRect(0,0,nStimFrameWidth,nStimFrameHeight);
+			//The outer path ellipse
+			QPainterPath OuterEllipsePath;
+			float fTemp2Adjusted = fTemp2 - parentRetinotopyMapper->currentCompleteWedgeDiameter;
+			OuterEllipsePath.addEllipse((nStimFrameWidth - fTemp2Adjusted) / 2.0f, (nStimFrameHeight - fTemp2Adjusted) / 2.0f, fTemp2Adjusted, fTemp2Adjusted);
+			//The inner path ellipse
+			QPainterPath InnerEllipsePath;
+			float fTempAdjusted = fTemp - parentRetinotopyMapper->currentCompleteWedgeDiameter;
+			InnerEllipsePath.addEllipse((nStimFrameWidth - fTempAdjusted) / 2.0f, (nStimFrameHeight - fTempAdjusted) / 2.0f, fTempAdjusted, fTempAdjusted);
+			//Bring it all together
+			OuterEllipsePath = OuterEllipsePath.subtracted(InnerEllipsePath);
+			QPainterPath FillInActivePath = OuterRectPath.subtracted(OuterEllipsePath);
+			//Paint the result
+			activationPainter.fillPath(FillInActivePath, Qt::black);
+
+			//what should be filled originally?
+			//activationPainter.setPen(QPen(QColor(Qt::red), parentRetinotopyMapper->currentCompleteWedgeDiameter, parentRetinotopyMapper->style, parentRetinotopyMapper->flatCap));
+			//activationPainter.drawEllipse((nStimFrameWidth - fTemp) / 2.0f, (nStimFrameHeight - fTemp) / 2.0f, fTemp, fTemp);
 		}
 		for(int i=1;i<parentRetinotopyMapper->eccentricityNrRings+1;i++)
 		{
