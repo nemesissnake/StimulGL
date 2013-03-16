@@ -71,6 +71,7 @@ void ExperimentManager::DefaultConstruct()
 	MainAppInfo::CreateHashTableFromEnumeration(typeid(ExperimentState).name(),experimentStateHash,this->staticMetaObject);
 	m_RunFullScreen = true;
 	m_ExpFileName = "";
+	sExperimentOutputDataPostString = "";
 	currentExperimentTree = NULL;
 	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
@@ -549,7 +550,7 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 	}
 	if(expCurrState == ExperimentManager_Stopped)
 	{
-		WriteAndCloseExperimentOutputData();
+		WriteAndCloseExperimentOutputData(sExperimentOutputDataPostString);
 		cleanupExperiment();
 	}
 }
@@ -736,11 +737,15 @@ void ExperimentManager::stopExperiment()
 	}
 }
 
-bool ExperimentManager::WriteAndCloseExperimentOutputData()
+bool ExperimentManager::WriteAndCloseExperimentOutputData(const QString &postFileName)
 {
 	if (expDataLogger)
 	{
-		QString strTemp = MainAppInfo::outputsDirPath() + "/" + QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()) + QString("_") + DEFAULT_OUTPUTFILE;
+		QString strTemp; 
+		if(postFileName == "")			
+			strTemp = MainAppInfo::outputsDirPath() + "/" + QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()) + QString("_") + DEFAULT_OUTPUTFILE;
+		else
+			strTemp = MainAppInfo::outputsDirPath() + "/" + QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()) + QString("_") + postFileName + ".txt";
 		expDataLogger->WriteToOutput(strTemp);
 		delete expDataLogger;
 		expDataLogger = NULL;
@@ -1155,6 +1160,15 @@ QString ExperimentManager::getExperimentName()
  *  Returns the configured experiment name for the current experiment.
  */
 	return cExperimentBlockTrialStructure->getExperimentName();
+}
+
+void ExperimentManager::setExperimentOutputFilePostString(const QString &sPostString) 
+{
+/*! \brief Configures Experiment Output filename
+ *
+ *  Configures Experiment Output filename, the configurable part of the filename is a string that is then integrated in the filename (format = YearMonthDayHourMinuteSecond_<sPostString>.txt ).
+ */
+	sExperimentOutputDataPostString = sPostString;
 }
 
 /*! \brief Shows the Experiment Graph Editor

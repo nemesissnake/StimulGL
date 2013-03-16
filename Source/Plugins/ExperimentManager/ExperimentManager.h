@@ -193,6 +193,7 @@ public slots:
 	bool getDebugMode();
 	void setExperimentName(QString name);
 	QString getExperimentName();
+	void setExperimentOutputFilePostString(const QString &sPostString);
 	//QObject* getExperimentStructure();
 	cExperimentStructure *getExperimentStructure();
 	bool showExperimentGraphEditor(cExperimentStructure *ExpStruct = NULL);
@@ -204,7 +205,7 @@ public slots:
 
 private:
 	void DefaultConstruct();
-	bool WriteAndCloseExperimentOutputData();
+	bool WriteAndCloseExperimentOutputData(const QString &postFileName = "");
 	void initializeDataLogger();
 	void RegisterMetaTypes();
 	bool invokeExperimentObjectsSlots(const QString &sSlotName);
@@ -226,7 +227,7 @@ private:
 	void changeCurrentExperimentState(ExperimentState expCurrState);
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
-
+	
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	cExperimentStructure *cExperimentBlockTrialStructure;
@@ -246,6 +247,7 @@ private:
 	QString m_ExpFolder;
 	ExperimentLogger *expDataLogger;
 	int nExperimentTimerIndex;
+	QString sExperimentOutputDataPostString;
 };
 
 #endif // ExperimentManager_H

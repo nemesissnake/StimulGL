@@ -1738,7 +1738,10 @@ void MainWindow::executeScript()
 
 QScriptValue MainWindow::executeScriptContent(const QString &sContent)
 {
-	return AppScriptEngine->eng->evaluate(sContent);
+	if(AppScriptEngine)
+		if(AppScriptEngine->eng)
+			return AppScriptEngine->eng->evaluate(sContent);
+	return NULL;
 }
 
 /*! \brief Forces the script engine to perform a garbage collection.
@@ -1748,6 +1751,7 @@ QScriptValue MainWindow::executeScriptContent(const QString &sContent)
 void MainWindow::cleanupScript()
 {
 	QTimer::singleShot(10, this, SLOT(abortScript()));
+	emit CleanUpScriptExecuted();
 }
 
 /*! \brief Forces the StimulGL User Interface to become activated.

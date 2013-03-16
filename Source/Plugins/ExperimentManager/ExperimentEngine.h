@@ -123,7 +123,8 @@ public slots:
 	bool setExperimentMetaObject();					//Necessary to set the MetaObject!
 	const QMetaObject *getExperimentMetaObject();
 	virtual bool setExperimentManager(ExperimentManager *expManager);
-	
+	virtual bool setExperimentObjectReadyToUnlock();
+
 	int getObjectID();
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
@@ -145,7 +146,6 @@ protected:
 	void initBlockTrial();
 	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
 	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
-	bool setExperimentObjectReadyToUnlock();
 
 protected slots:
 	void incrementExternalTrigger();

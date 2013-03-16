@@ -148,6 +148,7 @@ public slots:
 	//bool paintObject(int paintFlags = 0, QObject *paintEventObject = NULL);
 	bool installCustomScriptHandlerFunction(QString FuncName);
 	bool setExperimentManager(ExperimentManager *expManager);
+	bool setExperimentObjectReadyToUnlock();
 
 protected:
 	bool eventFilter(QObject *target, QEvent *event);

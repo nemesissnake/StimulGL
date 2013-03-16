@@ -185,8 +185,7 @@ bool QML2Viewer::eventFilter(QObject *target, QEvent *event)
 				}	
 				break;
 			case Qt::Key_Alt:	//To start the experiment
-				ExperimentEngine::setExperimentObjectReadyToUnlock();
-				qml2EventRoutine();
+				setExperimentObjectReadyToUnlock();				
 				break;
 			}
 		}
@@ -196,6 +195,13 @@ bool QML2Viewer::eventFilter(QObject *target, QEvent *event)
 		}
 	}
 	return false;
+}
+
+bool QML2Viewer::setExperimentObjectReadyToUnlock()
+{
+	bool bResult = ExperimentEngine::setExperimentObjectReadyToUnlock();
+	qml2EventRoutine();
+	return bResult;
 }
 
 bool QML2Viewer::startObject()

@@ -67,6 +67,7 @@ public slots:
 	bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
 	bool removePixmapFromImageBuffer(const QString &ID);
 	bool setExperimentManager(ExperimentManager *expManager);
+	bool setExperimentObjectReadyToUnlock();
 
 protected:
 	bool eventFilter(QObject *target, QEvent *event);

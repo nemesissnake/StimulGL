@@ -49,10 +49,7 @@ bool RetinotopyMapper::eventFilter(QObject *target, QEvent *event)
 				}	
 				break;
 			case Qt::Key_Alt:	//To start the experiment
-				//if(experimentManager)
-				//	experimentManager->abortExperiment();
 				setExperimentObjectReadyToUnlock();
-				//ExperimentEngine::setExperimentObjectReadyToUnlock();
 				break;
 			}
 		}
@@ -63,6 +60,12 @@ bool RetinotopyMapper::eventFilter(QObject *target, QEvent *event)
 		}
 	}
 	return false;
+}
+
+bool RetinotopyMapper::setExperimentObjectReadyToUnlock()
+{
+	bool bResult = ExperimentEngine::setExperimentObjectReadyToUnlock();
+	return bResult;
 }
 
 QScriptValue RetinotopyMapper::ctor__RetinotopyMapper(QScriptContext* context, QScriptEngine* engine)
@@ -288,7 +291,6 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 
 		pParDef = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_STIMULI_REFRESHRATE,QString::number(nRefreshRate));
 		nRefreshRate = pParDef.sValue.toInt();
-
 		pParDef = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_PATTERN,currentExpType);
 		currentExpType = pParDef.sValue.toLower();		
 		pParDef = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_SHOWFIXPOINT,booleanToParamString(showFixationPoint));
