@@ -62,7 +62,7 @@ void RetinotopyMapperWindow::postSwapBuffers()
 
 		cExperimentStructure tmpExpStr = cExperimentStructure(*parentRetinotopyMapper->experimentManager->getExperimentStructure());
 		cBlockStructure tmpExpBlockStr = tmpExpStr.getCurrentBlock(bHasCurrentBlock);
-		strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
+		tmpExpStrState = tmpExpStr.getCurrentExperimentState();
 	}
 	if (parentRetinotopyMapper->nRefreshRate > 0)
 	{

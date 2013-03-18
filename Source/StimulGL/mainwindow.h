@@ -54,6 +54,13 @@ class QGraphicsRectItem;
 class QSplashScreen;
 QT_END_NAMESPACE
 
+typedef struct QScriptContextStructure
+{
+	QScriptValue activationObject;
+	QScriptValue thisObject;
+	QString sContextName;
+} QScriptContextStrc;
+
 struct QPairFirstComparer
 {
 	template<typename T1, typename T2>
@@ -108,6 +115,7 @@ public slots:
 	void cleanupScript();
 	void activateMainWindow();
 	QScriptValue executeScriptContent(const QString &sContent);
+	bool restartScriptEngine();
 	
 	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
@@ -116,10 +124,11 @@ public slots:
 #ifdef DEBUG
 	QString testFunction(QString inp = "");
 #endif
+	bool saveContextState(const QString &sContextName);
+	bool deleteContextState(const QString &sContextName);
 
 private slots:
 	void returnToOldMaxMinSizes();
-	bool restartScriptEngine();
 	void abortScript();
 	void setupContextMenus();
 	void DebugcontextMenuEvent(const QPoint &pos);
@@ -168,6 +177,7 @@ private slots:
 private:
 	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
 
+	QList<QScriptContextStrc> currentScriptEngineContexes;
 	QSize oldDockMaxSize, oldDockMinSize;
 	QString strAdditionalFileExtensions;
 	GlobalApplicationInformation::MainProgramModeFlags StimulGLFlags;

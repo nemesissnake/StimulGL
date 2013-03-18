@@ -60,9 +60,79 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 //{
 //}
 
+bool MainWindow::deleteContextState(const QString &sContextName)
+{
+	if(sContextName == "")
+		return false;
+	if(currentScriptEngineContexes.isEmpty() == false)
+	{		
+		for(int i=0;i<currentScriptEngineContexes.count();i++)
+		{
+			if(currentScriptEngineContexes.at(i).sContextName == sContextName)//Does it exist?
+			{
+				currentScriptEngineContexes.removeAt(i);
+				return true;
+			}
+		}
+}		
+	return false;
+}
+
+bool MainWindow::saveContextState(const QString &sContextName)
+{
+	if(AppScriptEngine)
+	{
+		if(AppScriptEngine->eng)
+		{
+			if(sContextName == "")
+				return false;
+			QScriptValue act_Object = AppScriptEngine->eng->currentContext()->parentContext()->activationObject();
+			QScriptValue this_Object = AppScriptEngine->eng->currentContext()->parentContext()->thisObject();
+			if(currentScriptEngineContexes.isEmpty() == false)
+			{		
+				for(int i=0;i<currentScriptEngineContexes.count();i++)
+				{
+					if(currentScriptEngineContexes.at(i).sContextName == sContextName)//Should we overwrite?
+					{
+						currentScriptEngineContexes[i].activationObject = act_Object;
+						currentScriptEngineContexes[i].thisObject = this_Object;
+						return true;
+					}
+				}
+			}
+			QScriptContextStructure tmpStruct;
+			tmpStruct.sContextName = sContextName;
+			tmpStruct.activationObject = act_Object;
+			tmpStruct.thisObject = this_Object;
+			currentScriptEngineContexes.append(tmpStruct);
+			return true;
+		}
+	}
+	return false;
+}
+
 #ifdef DEBUG
 QString MainWindow::testFunction(QString inp)
 {
+	if(AppScriptEngine)
+	{
+		QScriptValue act_Object = AppScriptEngine->eng->currentContext()->parentContext()->activationObject();
+		QScriptValue this_Object = AppScriptEngine->eng->currentContext()->parentContext()->thisObject();
+		if(currentScriptEngineContexes.isEmpty())
+		{
+			QScriptContextStructure tmpStruct;
+			tmpStruct.sContextName = "name";
+			tmpStruct.activationObject = act_Object;
+			tmpStruct.thisObject = this_Object;
+			currentScriptEngineContexes.append(tmpStruct);
+		}
+		else
+		{
+			AppScriptEngine->eng->currentContext()->setActivationObject(currentScriptEngineContexes.at(0).activationObject);
+			AppScriptEngine->eng->currentContext()->setThisObject(currentScriptEngineContexes.at(0).thisObject);
+			return AppScriptEngine->eng->evaluate(inp).toString();//this->executeScriptContent(inp).toString();
+		}
+	}
 	return inp;
 }
 #endif
@@ -330,6 +400,22 @@ QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine
 #ifdef DEBUG
 QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine)
 {
+	context->setActivationObject(context->parentContext()->activationObject());
+	context->setThisObject(context->parentContext()->thisObject());
+	QString sTmpParam = context->argument(0).toString();
+	return engine->evaluate(sTmpParam);
+
+	engine->pushContext();
+	QString result;
+	for (int i = 0; i < context->argumentCount(); ++i)
+	{
+		if (i > 0)
+			result.append(" ");
+		result.append(context->argument(i).toString());
+	}
+	engine->evaluate(result);
+	engine->popContext();
+
 	//context->setActivationObject(context->parentContext()->activationObject());
 	//context->setThisObject(context->parentContext()->thisObject());
 
@@ -1739,8 +1825,13 @@ void MainWindow::executeScript()
 QScriptValue MainWindow::executeScriptContent(const QString &sContent)
 {
 	if(AppScriptEngine)
+	{
 		if(AppScriptEngine->eng)
+		{
+			QScriptContext *tmpContext = AppScriptEngine->eng->currentContext();
 			return AppScriptEngine->eng->evaluate(sContent);
+		}
+	}
 	return NULL;
 }
 
