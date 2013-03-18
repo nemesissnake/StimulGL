@@ -38,14 +38,6 @@ TBVExchanger::TBVExchanger(QObject *parent) : QObject(parent)
 {
 	currentScriptEngine = NULL;
 	tbvNetwIntFace = NULL;
-	tbvNetwIntFace = new TBVNetworkInterface();
-	//bool bResult = connect(tbvNetwIntFace,SIGNAL(executePreStep()),this,SLOT(executePreStep()));
-	connect(tbvNetwIntFace,&TBVNetworkInterface::executePreStep,this,&TBVExchanger::executePreStep);
-	connect(tbvNetwIntFace,&TBVNetworkInterface::executePostStep,this,&TBVExchanger::executePostStep);
-	connect(tbvNetwIntFace,&TBVNetworkInterface::executePostRun,this,&TBVExchanger::executePostRun);
-	connect(tbvNetwIntFace,&TBVNetworkInterface::disconnected,this,&TBVExchanger::disconnected);
-	connect(tbvNetwIntFace,&TBVNetworkInterface::connected,this,&TBVExchanger::connected);
-	connect(tbvNetwIntFace,&TBVNetworkInterface::connectionError,this,&TBVExchanger::connectionError);
 }
 
 TBVExchanger::~TBVExchanger()
@@ -76,3 +68,34 @@ bool TBVExchanger::makeThisAvailableInScript(QString strObjectScriptName, QObjec
 	return false;
 }
 
+bool TBVExchanger::activateAutoConnection()
+{
+	if(tbvNetwIntFace == NULL)
+	{
+		tbvNetwIntFace = new TBVNetworkInterface();
+		//bool bResult = connect(tbvNetwIntFace,SIGNAL(executePreStep()),this,SLOT(executePreStep()));
+		connect(tbvNetwIntFace,&TBVNetworkInterface::executePreStep,this,&TBVExchanger::executePreStep);
+		connect(tbvNetwIntFace,&TBVNetworkInterface::executePostStep,this,&TBVExchanger::executePostStep);
+		connect(tbvNetwIntFace,&TBVNetworkInterface::executePostRun,this,&TBVExchanger::executePostRun);
+		connect(tbvNetwIntFace,&TBVNetworkInterface::disconnected,this,&TBVExchanger::disconnected);
+		connect(tbvNetwIntFace,&TBVNetworkInterface::connected,this,&TBVExchanger::connected);
+		connect(tbvNetwIntFace,&TBVNetworkInterface::connectionError,this,&TBVExchanger::connectionError);
+	}
+	return true;
+}
+
+bool TBVExchanger::deactivateAutoConnection()
+{
+	if(tbvNetwIntFace != NULL)
+	{
+		disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePreStep,this,&TBVExchanger::executePreStep);
+		disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePostStep,this,&TBVExchanger::executePostStep);
+		disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePostRun,this,&TBVExchanger::executePostRun);
+		disconnect(tbvNetwIntFace,&TBVNetworkInterface::disconnected,this,&TBVExchanger::disconnected);
+		disconnect(tbvNetwIntFace,&TBVNetworkInterface::connected,this,&TBVExchanger::connected);
+		disconnect(tbvNetwIntFace,&TBVNetworkInterface::connectionError,this,&TBVExchanger::connectionError);
+		delete tbvNetwIntFace;
+		tbvNetwIntFace = NULL;
+	}
+	return true;
+}

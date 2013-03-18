@@ -88,6 +88,9 @@ public slots:
 	bool connectToServer(QString sIPAddress,int port) {return tbvNetwIntFace->connectToServer(sIPAddress.toLatin1().data(),port);};
 	bool disconnectFromServer() {return tbvNetwIntFace->disconnectFromServer();};
 
+	bool activateAutoConnection();
+	bool deactivateAutoConnection();
+
 private:
 	QScriptEngine* currentScriptEngine;
 	short m_ExampleProperty;

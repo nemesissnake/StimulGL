@@ -23,7 +23,26 @@ TBVNetworkInterface::TBVNetworkInterface()
 
 TBVNetworkInterface::~TBVNetworkInterface()
 {
-	
+	if(tcpSocket)
+	{
+		delete tcpSocket;
+		tcpSocket = NULL;
+	}
+	if(rTcpSocket)
+	{
+		delete rTcpSocket;
+		rTcpSocket = NULL;
+	}
+	if(querryQueue)
+	{
+		delete querryQueue;
+		querryQueue = NULL;
+	}
+	if(udpSocket)
+	{
+		delete udpSocket;
+		udpSocket = NULL;
+	}
 }
 
 void TBVNetworkInterface::processPendingDatagrams()

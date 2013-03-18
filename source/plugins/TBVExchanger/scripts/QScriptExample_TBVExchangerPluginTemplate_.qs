@@ -14,6 +14,7 @@ function KeyCaptureDetectFunction(keyCode)
 	//}
 	if(keyCode == 27)
 	{
+		Log(TBVExchangerobject.deactivateAutoConnection());
 		CleanupScript();//escape key
 	}	
 }
@@ -122,36 +123,37 @@ KeyBoardCaptureObj.StartCaptureThread(0, false);
 //method == 2 --> KeyPressedReleased
 
 //	Basic Project Functions
-Log(TBVExchangerobject.tGetCurrentTimePoint());
-Log(TBVExchangerobject.tGetExpectedNrOfTimePoints());
-Log(TBVExchangerobject.tGetDimsOfFunctionalData());
-Log(TBVExchangerobject.tGetProjectName());
-Log(TBVExchangerobject.tGetWatchFolder());
-Log(TBVExchangerobject.tGetTargetFolder());
-Log(TBVExchangerobject.tGetFeedbackFolder());
+//Log(TBVExchangerobject.tGetCurrentTimePoint());
+//Log(TBVExchangerobject.tGetExpectedNrOfTimePoints());
+//Log(TBVExchangerobject.tGetDimsOfFunctionalData());
+//Log(TBVExchangerobject.tGetProjectName());
+//Log(TBVExchangerobject.tGetWatchFolder());
+//Log(TBVExchangerobject.tGetTargetFolder());
+//Log(TBVExchangerobject.tGetFeedbackFolder());
 //	Protocol, DM, GLM Functions:
-Log(TBVExchangerobject.tGetCurrentProtocolCondition());
-Log(TBVExchangerobject.tGetFullNrOfPredictors());
-Log(TBVExchangerobject.tGetCurrentNrOfPredictors());
-Log(TBVExchangerobject.tGetNrOfConfoundPredictors());
-Log(TBVExchangerobject.tGetValueOfDesignMatrix(1, 2));
-Log(TBVExchangerobject.tGetNrOfContrasts());
+//Log(TBVExchangerobject.tGetCurrentProtocolCondition());
+//Log(TBVExchangerobject.tGetFullNrOfPredictors());
+//Log(TBVExchangerobject.tGetCurrentNrOfPredictors());
+//Log(TBVExchangerobject.tGetNrOfConfoundPredictors());
+//Log(TBVExchangerobject.tGetValueOfDesignMatrix(1, 2));
+//Log(TBVExchangerobject.tGetNrOfContrasts());
 //	ROI Functions
-Log(TBVExchangerobject.tGetNrOfROIs());
-Log(TBVExchangerobject.tGetMeanOfROI(2));
-Log(TBVExchangerobject.tGetNrOfVoxelsOfROI(2));
-Log(TBVExchangerobject.tGetBetaOfROI(1,2));
-Log(TBVExchangerobject.tGetCoordsOfVoxelOfROI(1, 2));
-Log(TBVExchangerobject.tGetAllCoordsOfVoxelsOfROI(1));
+//Log(TBVExchangerobject.tGetNrOfROIs());
+//Log(TBVExchangerobject.tGetMeanOfROI(2));
+//Log(TBVExchangerobject.tGetNrOfVoxelsOfROI(2));
+//Log(TBVExchangerobject.tGetBetaOfROI(1,2));
+//Log(TBVExchangerobject.tGetCoordsOfVoxelOfROI(1, 2));
+//Log(TBVExchangerobject.tGetAllCoordsOfVoxelsOfROI(1));
 //	Volume Data Access Functions
-Log(TBVExchangerobject.tGetValueOfVoxelAtTime(1,2,3,4));
-Log(TBVExchangerobject.tGetTimeCourseData(1));
-Log(TBVExchangerobject.tGetRawTimeCourseData(1));
-Log(TBVExchangerobject.tGetBetaOfVoxel(1,2,3,4));
-Log(TBVExchangerobject.tGetBetaMaps());
-Log(TBVExchangerobject.tGetMapValueOfVoxel(1,2,3,4));// {return tbvNetwIntFace->tGetMapValueOfVoxel(map, x, y, z);};
-Log(TBVExchangerobject.tGetContrastMaps());
-Log(TBVExchangerobject.connectToServer("127.0.0.1",80));
-Log(TBVExchangerobject.disconnectFromServer());
+//Log(TBVExchangerobject.tGetValueOfVoxelAtTime(1,2,3,4));
+//Log(TBVExchangerobject.tGetTimeCourseData(1));
+//Log(TBVExchangerobject.tGetRawTimeCourseData(1));
+//Log(TBVExchangerobject.tGetBetaOfVoxel(1,2,3,4));
+//Log(TBVExchangerobject.tGetBetaMaps());
+//Log(TBVExchangerobject.tGetMapValueOfVoxel(1,2,3,4));// {return tbvNetwIntFace->tGetMapValueOfVoxel(map, x, y, z);};
+//Log(TBVExchangerobject.tGetContrastMaps());
+Log(TBVExchangerobject.activateAutoConnection());
+//Log(TBVExchangerobject.connectToServer("127.0.0.1",80));
+//Log(TBVExchangerobject.disconnectFromServer());
 
 //CleanupScript();
