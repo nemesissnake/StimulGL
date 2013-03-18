@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/StartQmlFile.qml</file>
+        <file>resources/UnlockedQmlFile.qml</file>
+    </qresource>
+</RCC>

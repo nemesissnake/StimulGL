@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -103,6 +103,10 @@ namespace ExperimentManagerNameSpace
 	#define GLWIDGET_WIDTH_PIXEL_AMOUNT				"stimuluswidthspan"
 	#define GLWIDGET_HEIGHT_PIXEL_AMOUNT			"stimulusheightspan"
 
+	#define QML2VIEWER_BACKGROUNDCOLOR				"backgroundcolor"
+	#define QML2VIEWER_WIDTH_PIXEL_AMOUNT			"stimuluswidthspan"
+	#define QML2VIEWER_HEIGHT_PIXEL_AMOUNT			"stimulusheightspan"
+
 	#define FUNC_PAINTOBJECT						"paintObject"
 	#define FUNC_PAINTOBJECT_FULL					FUNC_PAINTOBJECT "(int,QObject *)"
 	#define FUNC_SETOBJECTID						"setObjectID"
@@ -138,8 +142,9 @@ namespace ExperimentManagerNameSpace
 	#define FUNC_OBJECT_START						"startExperimentObject"
 	#define FUNC_OBJECT_STOP						"stopExperimentObject"
 	#define FUNC_OBJECT_ABORT						"abortExperimentObject"
-	#define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
-	#define QML_WIDGET_NAME							"qmlWidget"   
+	//#define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
+	//#define QML_WIDGET_NAME							"qmlWidget"
+	#define QML2VIEWER_NAME							"QML2Viewer"
 	#define TRIGGERTIMER_NAME						"TriggerTimer"
 	#define RANDOMGENERATOR_NAME					"RandomGenerator"
 	#define IMAGEPROCESSOR_NAME						"ImageProcessor"
@@ -148,8 +153,8 @@ namespace ExperimentManagerNameSpace
 	#define CEXPERIMENTSTRUCTURESTATE_NAME			"cExperimentStructureState"
 	#define CBLOCKSTRUCTURE_NAME					"cBlockStructure"
 	#define CLOOPSTRUCTURE_NAME						"cLoopStructure"
-	#define QMLWIDGET_NAME							"qmlWidget"
 	#define EXPERIMENTSTRUCTURE_NAME				"ExperimentStructure"
+	#define RETINOTOPYMAPPER_NAME					"RetinotopyMapper"
 	#define EXPERIMENTMANAGER_NAME					"ExperimentManager"
 	#define MODULE_NAME								"Experiment Parser"
 	#define MAX_INVOKE_ARG_COUNT					10

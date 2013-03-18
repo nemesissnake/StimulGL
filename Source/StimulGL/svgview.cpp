@@ -1,5 +1,5 @@
 //StimulGL
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify

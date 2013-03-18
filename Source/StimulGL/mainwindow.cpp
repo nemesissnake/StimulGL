@@ -1,5 +1,5 @@
 //StimulGL
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -46,6 +46,7 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 	ExtensionPluginsFound = false;
 	helpAssistant = new Assistant;
 	bMainWindowIsInitialized = false;
+	sCurrentSetContextState = "";
 
 #ifndef QT_NO_DEBUG_OUTPUT	
 	qInstallMessageHandler((QtMessageHandler)MainAppInfo::MyOutputHandler);
@@ -60,9 +61,102 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 //{
 //}
 
+bool MainWindow::setContextState(const QString &sContextName)
+{
+	if(sContextName == "")
+		return false;
+	if(currentScriptEngineContexes.isEmpty())
+		return true;
+	for(int i=0;i<currentScriptEngineContexes.count();i++)
+	{
+		if(currentScriptEngineContexes.at(i).sContextName == sContextName)//Does it exist?
+		{
+			sCurrentSetContextState = sContextName;
+			return true;
+		}
+	}	
+	return false;
+}
+
+bool MainWindow::resetContextState()
+{
+	sCurrentSetContextState = "";
+	return true;
+}
+
+bool MainWindow::deleteContextState(const QString &sContextName)
+{
+	if(sContextName == "")
+		return false;
+	if(currentScriptEngineContexes.isEmpty() == false)
+	{		
+		for(int i=0;i<currentScriptEngineContexes.count();i++)
+		{
+			if(currentScriptEngineContexes.at(i).sContextName == sContextName)//Does it exist?
+			{
+				currentScriptEngineContexes.removeAt(i);
+				return true;
+			}
+		}
+	}		
+	return false;
+}
+
+bool MainWindow::saveContextState(const QString &sContextName)
+{
+	if(AppScriptEngine)
+	{
+		if(AppScriptEngine->eng)
+		{
+			if(sContextName == "")
+				return false;
+			QScriptValue act_Object = AppScriptEngine->eng->currentContext()->parentContext()->activationObject();
+			QScriptValue this_Object = AppScriptEngine->eng->currentContext()->parentContext()->thisObject();
+			if(currentScriptEngineContexes.isEmpty() == false)
+			{		
+				for(int i=0;i<currentScriptEngineContexes.count();i++)
+				{
+					if(currentScriptEngineContexes.at(i).sContextName == sContextName)//Should we overwrite?
+					{
+						currentScriptEngineContexes[i].activationObject = act_Object;
+						currentScriptEngineContexes[i].thisObject = this_Object;
+						return true;
+					}
+				}
+			}
+			QScriptContextStructure tmpStruct;
+			tmpStruct.sContextName = sContextName;
+			tmpStruct.activationObject = act_Object;
+			tmpStruct.thisObject = this_Object;
+			currentScriptEngineContexes.append(tmpStruct);
+			return true;
+		}
+	}
+	return false;
+}
+
 #ifdef DEBUG
 QString MainWindow::testFunction(QString inp)
 {
+	if(AppScriptEngine)
+	{
+		QScriptValue act_Object = AppScriptEngine->eng->currentContext()->parentContext()->activationObject();
+		QScriptValue this_Object = AppScriptEngine->eng->currentContext()->parentContext()->thisObject();
+		if(currentScriptEngineContexes.isEmpty())
+		{
+			QScriptContextStructure tmpStruct;
+			tmpStruct.sContextName = "name";
+			tmpStruct.activationObject = act_Object;
+			tmpStruct.thisObject = this_Object;
+			currentScriptEngineContexes.append(tmpStruct);
+		}
+		else
+		{
+			AppScriptEngine->eng->currentContext()->setActivationObject(currentScriptEngineContexes.at(0).activationObject);
+			AppScriptEngine->eng->currentContext()->setThisObject(currentScriptEngineContexes.at(0).thisObject);
+			return AppScriptEngine->eng->evaluate(inp).toString();//this->executeScriptContent(inp).toString();
+		}
+	}
 	return inp;
 }
 #endif
@@ -114,6 +208,7 @@ void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
 {
 	QMenu menu(this);
 	menu.addAction(clearDebuggerAction);
+	menu.addAction(copyDebuggerAction);
 	menu.exec(outputWindowList->viewport()->mapToGlobal(pos));
 }
 
@@ -329,6 +424,22 @@ QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine
 #ifdef DEBUG
 QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine)
 {
+	context->setActivationObject(context->parentContext()->activationObject());
+	context->setThisObject(context->parentContext()->thisObject());
+	QString sTmpParam = context->argument(0).toString();
+	return engine->evaluate(sTmpParam);
+
+	engine->pushContext();
+	QString result;
+	for (int i = 0; i < context->argumentCount(); ++i)
+	{
+		if (i > 0)
+			result.append(" ");
+		result.append(context->argument(i).toString());
+	}
+	engine->evaluate(result);
+	engine->popContext();
+
 	//context->setActivationObject(context->parentContext()->activationObject());
 	//context->setThisObject(context->parentContext()->thisObject());
 
@@ -520,6 +631,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	remAllMarkerAction->setEnabled(hasMdiChild);
 
 	clearDebuggerAction->setEnabled(true);
+	copyDebuggerAction->setEnabled(true);
 
 	goToLineAction->setEnabled(hasMdiChild);
 	goToMatchingBraceAction->setEnabled(hasMdiChild);
@@ -774,7 +886,13 @@ void MainWindow::createDefaultMenus()
 
 	editMenu->addSeparator();
 
-	clearDebuggerAction = new QAction(QObject::tr("Clear Output"), 0);
+	copyDebuggerAction = new QAction(QObject::tr("Copy Selected Output Item(s)"), 0);
+	//copyDebuggerAction->setShortcut(QKeySequence(""));
+	copyDebuggerAction->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
+	connect(copyDebuggerAction, SIGNAL(triggered()), this, SLOT(copyDebugger()));
+	editMenu->addAction(copyDebuggerAction);
+
+	clearDebuggerAction = new QAction(QObject::tr("Clear All Output Item(s)"), 0);
 	//clearDebuggerAction->setShortcut(QKeySequence(""));
 	clearDebuggerAction->setStatusTip(tr("Clear the Debugger Output window."));
 	connect(clearDebuggerAction, SIGNAL(triggered()), this, SLOT(clearDebugger()));
@@ -1012,11 +1130,36 @@ void MainWindow::clearDebugger()
 	outputWindowList->clear();
 }
 
+void MainWindow::copyDebugger()
+{
+	QList<QPair<QString,int>> lListTextAndRows;
+	QList <QListWidgetItem *> listItems;
+	QString sResult = "";
+	int nRow,i;
+	listItems = outputWindowList->selectedItems();
+	if(listItems.isEmpty())
+		return;
+	for(i=0;i<listItems.size();i++) 
+	{
+		nRow = outputWindowList->row(listItems[i]);//0 means false
+		lListTextAndRows.append(qMakePair(listItems[i]->text(),nRow));
+	}
+	qSort(lListTextAndRows.begin(), lListTextAndRows.end(), QPairSecondComparer());	
+	for(i=0;i<lListTextAndRows.size();i++) 
+	{
+		sResult.append(lListTextAndRows.at(i).first);
+		if(i<lListTextAndRows.size()-1)
+			sResult.append("\n");
+	}
+	QApplication::clipboard()->setText(sResult);
+}
+
 void MainWindow::createDockWindows()
 {
 	debugLogDock = new QDockWidget(tr("Output"), this);
 	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);	
 	outputWindowList = new QListWidget(debugLogDock);
+	outputWindowList->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	//QString tmpColor = QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	//outputWindowList->setStyleSheet("* { background-color:rgb(" + tmpColor + "); padding: 10px ; color:rgb(136,0,21)}");
 	debugLogDock->setWidget(outputWindowList);
@@ -1709,7 +1852,29 @@ void MainWindow::executeScript()
 
 QScriptValue MainWindow::executeScriptContent(const QString &sContent)
 {
-	return AppScriptEngine->eng->evaluate(sContent);
+	if(AppScriptEngine)
+	{
+		if(AppScriptEngine->eng)
+		{
+			if(sCurrentSetContextState != "")
+			{
+				if(currentScriptEngineContexes.isEmpty() == false)
+				{		
+					for(int i=0;i<currentScriptEngineContexes.count();i++)
+					{
+						if(currentScriptEngineContexes.at(i).sContextName == sCurrentSetContextState)//Should we overwrite?
+						{
+							QScriptContext *tmpContext = AppScriptEngine->eng->currentContext();
+							tmpContext->setActivationObject(currentScriptEngineContexes[i].activationObject);
+							tmpContext->setThisObject(currentScriptEngineContexes[i].thisObject);
+						}
+					}
+				}
+			}
+			return AppScriptEngine->eng->evaluate(sContent);
+		}
+	}
+	return NULL;
 }
 
 /*! \brief Forces the script engine to perform a garbage collection.
@@ -1719,6 +1884,7 @@ QScriptValue MainWindow::executeScriptContent(const QString &sContent)
 void MainWindow::cleanupScript()
 {
 	QTimer::singleShot(10, this, SLOT(abortScript()));
+	emit CleanUpScriptExecuted();
 }
 
 /*! \brief Forces the StimulGL User Interface to become activated.
@@ -2022,8 +2188,9 @@ void MainWindow::NumberOfLinesChanged(int nrOfLines)
 
 void MainWindow::save()
 {
-	QString tmpFileName = DocManager->getFileName(activeMdiChild());
-	if (activeMdiChild())
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	QString tmpFileName = DocManager->getFileName(tmpMdiChildPointer);
+	if (tmpMdiChildPointer)
 	{
 		if (tmpFileName == "")
 		{
@@ -2031,7 +2198,7 @@ void MainWindow::save()
 		}
 		else
 		{
-			if (DocManager->saveFile(activeMdiChild(),tmpFileName))
+			if (DocManager->saveFile(tmpMdiChildPointer,tmpFileName))
 			{
 				statusBar()->showMessage(tr("File saved"), 2000);
 				return;
@@ -2043,17 +2210,18 @@ void MainWindow::save()
 
 void MainWindow::saveAs()
 {
-	if (activeMdiChild())
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (tmpMdiChildPointer)
 	{
 		//QString selExt = "SVG files (*.svg *.svgz *.svg.gz)";
-		QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),DocManager->getFileName(activeMdiChild()));//,DocManager->getKnownFileExtensionList(),&selExt);
+		QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),DocManager->getFileName(tmpMdiChildPointer));//,DocManager->getKnownFileExtensionList(),&selExt);
 		if (fileName.isEmpty())
 		{
 			return;
 		}
 		else
 		{
-			if (DocManager->saveFile(activeMdiChild(),fileName))
+			if (DocManager->saveFile(tmpMdiChildPointer,fileName))
 			{
 				setCurrentFile(fileName);
 				statusBar()->showMessage(tr("File saved"), 2000);
@@ -2066,20 +2234,23 @@ void MainWindow::saveAs()
 
 void MainWindow::cut()
 {
-	if (DocManager->getDocHandler(activeMdiChild()))
-		DocManager->getDocHandler(activeMdiChild())->cut();
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (DocManager->getDocHandler(tmpMdiChildPointer))
+		DocManager->getDocHandler(tmpMdiChildPointer)->cut();
 }
 
 void MainWindow::copy()
 {
-	if (DocManager->getDocHandler(activeMdiChild()))
-		DocManager->getDocHandler(activeMdiChild())->copy();
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (DocManager->getDocHandler(tmpMdiChildPointer))
+		DocManager->getDocHandler(tmpMdiChildPointer)->copy();
 }
 
 void MainWindow::paste()
 {
-	if (DocManager->getDocHandler(activeMdiChild()))
-		DocManager->getDocHandler(activeMdiChild())->paste();
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (DocManager->getDocHandler(tmpMdiChildPointer))
+		DocManager->getDocHandler(tmpMdiChildPointer)->paste();
 }
 
 void MainWindow::lineComment()
@@ -2269,11 +2440,12 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 	}
 	if (action->data().toString() == "Close")//From menu(Close)
 	{
-		if (!DocManager->maybeSave(activeMdiChild(),bAutoSaveChanges)) 
+		QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+		if (!DocManager->maybeSave(tmpMdiChildPointer,bAutoSaveChanges)) 
 		{
 			return false;
 		}
-		DocManager->remove(activeMdiChild());
+		DocManager->remove(tmpMdiChildPointer);
 		mdiArea->closeActiveSubWindow();
 		return true;
 	}
@@ -2293,11 +2465,12 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 	}
 	else //This must be called from the script?
 	{
-		if (!DocManager->maybeSave(activeMdiChild(),bAutoSaveChanges)) 
+		QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+		if (!DocManager->maybeSave(tmpMdiChildPointer,bAutoSaveChanges)) 
 		{
 			return false;
 		}
-		DocManager->remove(activeMdiChild());
+		DocManager->remove(tmpMdiChildPointer);
 		mdiArea->closeActiveSubWindow();
 		return true;
 	}
@@ -2327,6 +2500,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 #ifdef Q_WS_WIN
 	timeEndPeriod(1);
 #endif
+	MainAppInfo::SetMainWindow(NULL);
 	if(DocManager)
 	{
 		disconnect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
@@ -2476,8 +2650,9 @@ void MainWindow::goToLine()
 
 void MainWindow::findImpl(bool bReplace, bool useParams, QString strFindString, QString strReplaceString, DocFindFlags findFlags, bool bReplaceAll) 
 {
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
 	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
+	tmpSci = DocManager->getDocHandler(tmpMdiChildPointer);
 	DocFindFlags flags(bReplace);
 	QString str1, str2;
 	int line1, col1, line2, col2;
@@ -2501,7 +2676,7 @@ void MainWindow::findImpl(bool bReplace, bool useParams, QString strFindString, 
 	}
 	else
 	{
-		if ( DocManager->getFindParams(activeMdiChild(),str1, str2, flags) ) {
+		if ( DocManager->getFindParams(tmpMdiChildPointer,str1, str2, flags) ) {
 			if ( flags.replace ) {
 				tmpSci->replace(str1, str2, flags, bReplaceAll);
 			}

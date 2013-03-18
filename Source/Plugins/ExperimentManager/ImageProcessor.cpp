@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -165,7 +165,7 @@ bool ImageProcessor::ConvertDatToPngFile(QString strSource, QString strDestinati
 	return false;
 }
 
-bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int nRatio, int nMethod, int nColorThreshold, bool bOverwrite)
+bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int nRatio, int nMethod, int nColorThreshold, bool bOverwrite, bool bSmoothFiltering)
 {
 /*! \brief Scales a a Png (*.png) file by a specified Ratio.
  *
@@ -175,7 +175,8 @@ bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int
  * @param nRatio an integer value containing Ratio to which the image should be scaled.
  * @param nMethod an integer value containing the Scaling Method, see ImageProcessor::ScalingMethod.
  * @param nColorThreshold an integer value containing the Threshold value in case the defined Scaling Method is #ScalingMethod_SmoothMonoColoredCustomThreshold.
- * @param bOverWrite a Boolean value determing whether the destination file should be automatically overwritten when it already exists.
+ * @param bOverWrite a Boolean value determining whether the destination file should be automatically overwritten when it already exists.
+ * @param bSmoothFiltering a Boolean value determining whether a the resulting image is transformed using bilinear filtering.
  * @return a Boolean value representing whether the target file could be saved.
  */
 	if (nRatio <= 0)
@@ -187,10 +188,10 @@ bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int
 	if(!tmpPixmap.load(strSource,"PNG"))
 		return false;
 	QSize newSize = tmpPixmap.size()/nRatio;
-	return ScalePngFileBySize(strSource,strDestination,newSize.width(),newSize.height(),nMethod,nColorThreshold,bOverwrite);
+	return ScalePngFileBySize(strSource,strDestination,newSize.width(),newSize.height(),nMethod,nColorThreshold,bOverwrite,bSmoothFiltering);
 }
 
-bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod, int nColorThreshold, bool bOverwrite)
+bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod, int nColorThreshold, bool bOverwrite, bool bSmoothFiltering)
 {
 /*! \brief Scales a a Png (*.png) file by a specified Size.
  *
@@ -201,7 +202,8 @@ bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestinatio
  * @param nYPixels an integer value containing the number of pixels (height) to which the image should be scaled.
  * @param nMethod an integer value containing the Scaling Method, see ImageProcessor::ScalingMethod.
  * @param nColorThreshold an integer value containing the Threshold value in case the defined Scaling Method is #ScalingMethod_SmoothMonoColoredCustomThreshold.
- * @param bOverWrite a Boolean value determing whether the destination file should be automatically overwritten when it already exists.
+ * @param bOverWrite a Boolean value determining whether the destination file should be automatically overwritten when it already exists.
+ * @param bSmoothFiltering a Boolean value determining whether a the resulting image is transformed using bilinear filtering.
  * @return a Boolean value representing whether the target file could be saved.
  */
 	if ((nXPixels <= 0)||(nYPixels <= 0))
@@ -223,28 +225,33 @@ bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestinatio
 	if(!tmpPixmap.load(strSource,"PNG"))
 		return false;
 	QSize newSize(nXPixels,nYPixels);
+	Qt::TransformationMode filterMode;
+	if(bSmoothFiltering)
+		filterMode = Qt::SmoothTransformation;//The resulting image is transformed using bilinear filtering.
+	else
+		filterMode = Qt::FastTransformation;//The transformation is performed quickly, with no smoothing.
 	switch ((ScalingMethod)nMethod)
 	{
 	case ScalingMethod_MonoColored://default (Mono colored)
 		{
-			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,Qt::FastTransformation);
+			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,filterMode);
 			break;
 		}
 	case ScalingMethod_SmoothGreyColored://Smooth (Grey colored)
 		{
-			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,filterMode);
 			break;
 		}
 	case ScalingMethod_SmoothMonoColored://Smooth + Convert to Mono colored (threshold = 255)
 		{
-			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,filterMode);
 			QImage tmpImage = tmpPixmap.toImage().convertToFormat(QImage::Format_Mono, Qt::MonoOnly|Qt::ThresholdDither|Qt::AvoidDither);
 			tmpPixmap = tmpPixmap.fromImage(tmpImage);
 			break;	
 		}
 	case ScalingMethod_SmoothMonoColoredCustomThreshold://Smooth + Convert to Mono colored (threshold = nColorThreshold)
 		{
-			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+			tmpPixmap = tmpPixmap.scaled(newSize,Qt::KeepAspectRatio,filterMode);
 			QImage tmpImage = tmpPixmap.toImage();//.convertToFormat(QImage::Format_Mono, Qt::MonoOnly|Qt::ThresholdDither|Qt::AvoidDither);
 			QImage resultImage = tmpImage;
 			resultImage.fill(255);
@@ -299,6 +306,66 @@ bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestinatio
 	}
 	bSaveResult = tmpPixmap.save(strDestination,"PNG");
 	return bSaveResult;
+}
+
+bool ImageProcessor::CreateMeanImageFromPngFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite)
+{
+	if(sourceImagePaths.isEmpty())
+		return false;
+	QFile fileSource;
+	for (int i=0;i<sourceImagePaths.count();i++)
+	{		
+		fileSource.setFileName(sourceImagePaths.at(i));
+		if (!fileSource.exists())
+			return false;
+	}
+	QFile fileDest(destinationPath);
+	QFileInfo fileDestInfo(destinationPath);
+	if (fileDest.exists() && (bOverwrite == false))
+		return false;
+	if (!fileDestInfo.absoluteDir().exists())
+	{
+		if (!QDir().mkdir(fileDestInfo.absolutePath()))
+			return false;
+	}
+	QPixmap tmpPixmap;
+	QList<QImage> lstSourceImages;
+	for (int i=0;i<sourceImagePaths.count();i++)
+	{	
+		if(!tmpPixmap.load(sourceImagePaths.at(i),"PNG"))
+			return false;
+		lstSourceImages.append(tmpPixmap.toImage());
+	}
+	//QImage tmpImage = tmpPixmap.toImage();//.convertToFormat(QImage::Format_Mono, Qt::MonoOnly|Qt::ThresholdDither|Qt::AvoidDither);
+	QImage resultImage = lstSourceImages.at(0);
+	resultImage.fill(0);
+	QColor tmpColor;
+	qreal tmpRed = 0.0f;
+	qreal tmpGreen = 0.0f;
+	qreal tmpBlue = 0.0f;
+	int nWidth = lstSourceImages.at(0).width();
+	int nHeight = lstSourceImages.at(0).height();
+	int nCount = lstSourceImages.count();
+	for(int x=0;x<nWidth;x++)
+	{
+		for(int y=0;y<nHeight;y++)
+		{
+			for(int z=0;z<nCount;z++)
+			{
+				tmpColor = QColor(lstSourceImages.at(z).pixel(x,y));
+				tmpRed = tmpRed + tmpColor.redF();
+				tmpGreen = tmpGreen + tmpColor.greenF();
+				tmpBlue = tmpBlue + tmpColor.blueF();
+			}
+			tmpColor.setRgbF(tmpRed/nCount,tmpGreen/nCount,tmpBlue/nCount);
+			resultImage.setPixel(x, y, tmpColor.rgb());
+			tmpRed = 0.0f;
+			tmpGreen = 0.0f;
+			tmpBlue = 0.0f;
+		}
+	}
+	tmpPixmap = tmpPixmap.fromImage(resultImage);
+	return tmpPixmap.save(destinationPath,"PNG");
 }
 
 //QPixmap ImageProcessor::ChangeHue(QPixmap &p)

@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@
 #include "prtformatmanager.h"
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"
+#include "RetinotopyMapper.h"
 #include "defines.h"
 
 class ExperimentManagerPlugin : public QObject, ExtensionInterface
@@ -61,7 +62,8 @@ private:
 	cLoopStructure *cLoopStructureObject;
 	ImageProcessor *ImageProcessorObject;
 	PrtFormatManager *PrtFormatManagerObject;
-	qmlWidget *QmlWidgetObject;
+	RetinotopyMapper *RetinotopyMapperObject;
+	QML2Viewer *Qml2ViewerObject;
 
 public slots:
     bool ShowGUI();

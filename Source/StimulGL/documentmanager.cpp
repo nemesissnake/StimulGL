@@ -1,5 +1,5 @@
 //StimulGL
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -124,8 +124,9 @@ QString DocumentManager::getFileName(QMdiSubWindow *subWindow, bool bFileNameOnl
 
 int DocumentManager::getDocIndex(QMdiSubWindow *subWindow)
 {
-	int i;
-	for (i=0;i<DocCount;i++)
+	if(subWindow == NULL)
+		return -1;
+	for (int i=0;i<DocCount;i++)
 	{
 		if (SubWindowChildren.at(i) == subWindow)
 		{

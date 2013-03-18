@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -24,6 +24,16 @@
 #include <QHash>
 #include <QColor>
 
+template <typename T>
+QVariantList toVariantList( const QList<T> &list )
+{
+	QVariantList newList;
+	foreach( const T &item, list )
+		newList << item;
+
+	return newList;
+}
+
 class TypedExperimentParameterContainer
 {
 public:
@@ -35,6 +45,7 @@ public:
 		hFloatContainer.clear();
 		hBoolContainer.clear();
 		hQStringContainer.clear();
+		hQStringListContainer.clear();
 		hQColorContainer.clear();
 	};
 
@@ -65,6 +76,11 @@ public:
 		else if (typeid(T1) == typeid(QString))
 		{
 			hQStringContainer.insert(strKeyName.toLower(),(QString *)pExpParam);
+			return true;
+		}
+		else if (typeid(T1) == typeid(QStringList))
+		{
+			hQStringListContainer.insert(strKeyName.toLower(),(QStringList *)pExpParam);
 			return true;
 		}
 		else if (typeid(T1) == typeid(QColor))
@@ -111,6 +127,10 @@ public:
 		{
 			return (T2*)hQStringContainer.value(strKeyName.toLower());
 		}
+		else if (typeid(T2) == typeid(QStringList))
+		{
+			return (T2*)hQStringListContainer.value(strKeyName.toLower());
+		}
 		else if (typeid(T2) == typeid(QColor))
 		{
 			return (T2*)hQColorContainer.value(strKeyName.toLower());
@@ -148,6 +168,23 @@ public:
 		else if (hQStringContainer.contains(strKeyNameLow))
 		{
 			scriptVal = QScriptValue(*hQStringContainer.value(strKeyNameLow));
+			return true;
+		}
+		else if (hQStringListContainer.contains(strKeyNameLow))
+		{
+			QStringList *tmpStringList = hQStringListContainer.value(strKeyNameLow);
+			//int sListLength = scriptVal.property("length").toInteger();
+			//tmpStringList->clear();
+			//for(int i = 0; i < sListLength; i++)
+			//	tmpStringList->append(scriptVal.property(i).toString());
+			////*tmpStringList = scriptVal.toQObject();
+
+			QVariantList list = toVariantList(*tmpStringList);
+			scriptVal = scriptVal.engine()->newArray(tmpStringList->length());
+			for(int i=0; i<tmpStringList->count(); i++)
+			{
+				scriptVal.setProperty(i, QScriptValue(tmpStringList->at(i)));  
+			}
 			return true;
 		}
 		else if (hQColorContainer.contains(strKeyNameLow))
@@ -195,6 +232,17 @@ public:
 			*tmpString = scriptVal.toString();
 			return true;
 		}
+		else if (hQStringListContainer.contains(strKeyNameLow))
+		{
+			QStringList *tmpStringList = hQStringListContainer.value(strKeyNameLow);
+			int sListLength = scriptVal.property("length").toInteger();
+			tmpStringList->clear();
+			for(int i = 0; i < sListLength; i++)
+				tmpStringList->append(scriptVal.property(i).toString());
+			//*tmpStringList = scriptVal.toQObject();
+			//QString sTemp = hQStringListContainer.value(strKeyNameLow)->join(",");
+			return true;
+		}
 		else if (hQColorContainer.contains(strKeyNameLow))
 		{
 			QColor tmpColor;
@@ -224,6 +272,7 @@ private:
 	QHash<QString, bool*> hBoolContainer;
 	QHash<QString, QColor*> hQColorContainer;
 	QHash<QString, QString*> hQStringContainer;
+	QHash<QString, QStringList*> hQStringListContainer;
 };
 
 #endif // EXPERIMENTPARAMETER_H

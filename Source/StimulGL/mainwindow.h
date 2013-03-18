@@ -1,5 +1,5 @@
 //StimulGL
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -54,6 +54,31 @@ class QGraphicsRectItem;
 class QSplashScreen;
 QT_END_NAMESPACE
 
+typedef struct QScriptContextStructure
+{
+	QScriptValue activationObject;
+	QScriptValue thisObject;
+	QString sContextName;
+} QScriptContextStrc;
+
+struct QPairFirstComparer
+{
+	template<typename T1, typename T2>
+	bool operator()(const QPair<T1,T2> & a, const QPair<T1,T2> & b) const
+	{
+		return a.first < b.first;
+	}
+};
+
+struct QPairSecondComparer
+{
+	template<typename T1, typename T2>
+	bool operator()(const QPair<T1,T2> & a, const QPair<T1,T2> & b) const
+	{
+		return a.second < b.second;
+	}
+};
+
 //!  The StimulGL Main Application. 
 /*!
   The StimulGL Main Application can be directly accessed within the script by using the default 'StimulGL' object.
@@ -68,7 +93,7 @@ public:
 	//~MainWindow();//see void MainWindow::closeEvent(QCloseEvent *event)!
 
 signals:
-	//void AbortScript();
+	void CleanUpScriptExecuted();
 		
 public slots:
 	bool receiveExchangeMessage(const QString &sMessage);
@@ -89,6 +114,8 @@ public slots:
 	void processEvents() {qApp->processEvents();};
 	void cleanupScript();
 	void activateMainWindow();
+	QScriptValue executeScriptContent(const QString &sContent);
+	bool restartScriptEngine();
 	
 	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
@@ -97,14 +124,18 @@ public slots:
 #ifdef DEBUG
 	QString testFunction(QString inp = "");
 #endif
+	bool saveContextState(const QString &sContextName);
+	bool setContextState(const QString &sContextName);
+	bool resetContextState();
+	bool deleteContextState(const QString &sContextName);
 
 private slots:
 	void returnToOldMaxMinSizes();
-	bool restartScriptEngine();
 	void abortScript();
 	void setupContextMenus();
 	void DebugcontextMenuEvent(const QPoint &pos);
 	void clearDebugger();
+	void copyDebugger();
 	void setupScriptEngine();
 	void setScriptRunningStatus(GlobalApplicationInformation::ActiveScriptMode state);
 	void showPluginGUI();
@@ -147,7 +178,8 @@ private slots:
 
 private:
 	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
-
+	QString sCurrentSetContextState;
+	QList<QScriptContextStrc> currentScriptEngineContexes;
 	QSize oldDockMaxSize, oldDockMinSize;
 	QString strAdditionalFileExtensions;
 	GlobalApplicationInformation::MainProgramModeFlags StimulGLFlags;
@@ -177,6 +209,7 @@ private:
 	QAction *cutAction;
 	QAction *copyAction;
 	QAction *clearDebuggerAction;
+	QAction *copyDebuggerAction;
 	QAction *pasteAction;
 	QAction *goToLineAction;
 	QAction *findAction;
@@ -299,7 +332,6 @@ private:
 	QMdiSubWindow *findMdiChild(const QString &fileName);
 	void updateRecentFileList(const QString &fileName);
 	void setDockSize(QDockWidget *dock, int setWidth, int setHeight);
-	QScriptValue executeScriptContent(const QString &sContent);
 
 public:
 	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);

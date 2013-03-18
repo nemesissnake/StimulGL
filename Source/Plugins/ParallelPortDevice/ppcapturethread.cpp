@@ -1,5 +1,5 @@
 //parallelportplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -50,10 +50,11 @@ void ppCaptureThread::stop()
 	{
 		//this->terminate();
 		abortRunning = true;
-		int nRetries = 25;
+		int nRetries = 50;
 		while (isRunning && (nRetries > 0))
 		{
 			QThread::msleep(1);
+			qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,5);
 			nRetries--;
 		}
 		QThread::msleep(0);//Just to let the other thread completely finish

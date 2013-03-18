@@ -1,5 +1,5 @@
 //StimulGL
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -35,7 +35,26 @@ private:
 	static QWidget *mainWindow;
 
 public:
-	static bool Initialize(QWidget *mainWin);
+
+	struct QPairFirstComparer
+	{
+		template<typename T1, typename T2>
+		bool operator()(const QPair<T1,T2> & a, const QPair<T1,T2> & b) const
+		{
+			return a.first < b.first;
+		}
+	};
+
+	struct QPairSecondComparer
+	{
+		template<typename T1, typename T2>
+		bool operator()(const QPair<T1,T2> & a, const QPair<T1,T2> & b) const
+		{
+			return a.second < b.second;
+		}
+	};
+
+	static bool SetMainWindow(QWidget *mainWin);
 	static QString appDirPath()						{return QDir(QCoreApplication::applicationDirPath()).absolutePath();}
 	static QString appDocDirPath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}
 	static QString appExampleDirPath()				{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}

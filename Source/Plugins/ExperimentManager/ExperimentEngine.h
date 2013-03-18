@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -16,52 +16,27 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#ifndef EXPERIMENTENGINE_H
+#define EXPERIMENTENGINE_H
 
-#ifndef GLWIDGET_H
-#define GLWIDGET_H
-
-#include <QDialog>
-#include <QGLWidget>
-#include <QTimer>
-#include <QDesktopWidget>
-#include <QPaintEvent>
+#include <QObject>
 #include <QKeyEvent>
-#include <QBoxLayout>
-#include <QEvent>
-#include <QMutex>
-#include <QScriptValue>
-#include <omp.h>
 #include "ExperimentManager.h"
-#include "Global.h"
-#include "ContainerDlg.h"
 #include "ExperimentTimer.h"
 
 using namespace ExperimentManagerNameSpace;
 
-#define GLWWRAP_WIDGET_STIMULI_REFRESHRATE	"stimulirefreshrate"
-
-enum GLWidgetPaintFlags //An optional paint flag that can be forwarded to the FUNC_PAINTOBJECT_FULL routine 
-{
-	GLWidgetPaintFlags_NoFlag		= 0,
-	GLWidgetPaintFlags_LockedState	= 1,
-	GLWidgetPaintFlags_Reserved1	= 2, //This one is reserved for future implementation
-	GLWidgetPaintFlags_Reserved2	= 4, //This one is reserved for future implementation
-	GLWidgetPaintFlags_Reserved3	= 8, //This one is reserved for future implementation
-	GLWidgetPaintFlags_Reserved4	= 16 //This one is reserved for future implementation
-};
-
-class QPaintEvent;
-class QWidget;
-class ContainerDlg;
 class QDomNodeList;
 
-//!  The GLWidgetWrapper class. 
+//!  The ExperimentEngine class. 
 /*!
-  The GLWidgetWrapper class can be derived from to create custom classes that can again be used in combination with the ExperimentManager for presenting visual or other kind of stimuli.
+  The ExperimentEngine class can be derived from to create custom classes that can again be used in combination with the ExperimentManager for presenting visual or other kind of stimuli.
   This class is optimized for various painting operations supported by OpenGL.
 */
-class GLWidgetWrapper : public QGLWidget
+class ExperimentEngine : public QObject
 {
+	friend class QML2Viewer;
+
 	Q_OBJECT
 
 signals:
@@ -91,7 +66,7 @@ signals:
 	void NewInitBlockTrial(void);
 	//! The ExternalTriggerIncremented Signal.
 	/*!
-		You can use this Signal to keep track of whenever the External Trigger gets incremented, see GLWidgetWrapper::incrementExternalTrigger
+		You can use this Signal to keep track of whenever the External Trigger gets incremented, see ExperimentEngine::incrementExternalTrigger
 		Please bear in mind that this is already emitted before a new BlockTrial is initialized.
 		Parameter nTrigger holds the number of received external triggers after the start of the experiment.
 	*/
@@ -106,11 +81,9 @@ signals:
 	void ExperimentStructureChanged(int nBlock,int nTrial,int nInternalTrigger);
 
 public:
-	GLWidgetWrapper(QWidget *parent = NULL);
-	~GLWidgetWrapper();
-	
-	void setBlockTrials();
-	
+	ExperimentEngine(QObject *parent = NULL);
+	~ExperimentEngine();
+
 	template< typename T1 > bool insertExpObjectParameter(const int &nObjectID,const QString &sKeyName,const T1 &tVariabele,bool bIsInitializing = true)
 	{
 		bool bRetVal = false;
@@ -120,7 +93,8 @@ public:
 			bRetVal = pExperimentManager->insertExperimentObjectVariabelePointer(nObjectID,sKeyName,tVariabele);
 		return bRetVal;
 	}
-	QString templateVariabeleToString(const QString &Var) {return QString(Var);}
+	QString templateVariabeleToString(const QString &Var) {return Var;}
+	QString templateVariabeleToString(const QStringList &Var) {return Var.join(",");}
 	QString templateVariabeleToString(const QColor &Var) {return Var.name();}
 	QString templateVariabeleToString(const int &Var) {return QString::number(Var);}
 	QString templateVariabeleToString(const float &Var) {return QString::number(Var);}
@@ -140,7 +114,6 @@ public:
 	QScriptEngine *getScriptEngine() {return currentScriptEngine;};
 
 public slots:
-	//Can be overridden, virtual 
 	bool initExperimentObject();
 	bool startExperimentObject();
 	bool stopExperimentObject();
@@ -148,12 +121,11 @@ public slots:
 	void ExperimentShouldFinish();					//Slot for a signal to connect to
 	bool setExperimentObjectID(int nObjID);			//Necessary to set the ID!
 	bool setExperimentMetaObject();					//Necessary to set the MetaObject!
+	const QMetaObject *getExperimentMetaObject();
 	virtual bool setExperimentManager(ExperimentManager *expManager);
-	void setStimuliResolution(int w, int h);
-	QRectF getScreenResolution();
-	
+	virtual bool setExperimentObjectReadyToUnlock();
+
 	int getObjectID();
-	//strcScriptExperimentStructure getExperimentStructure();
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
 	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);
@@ -161,53 +133,38 @@ public slots:
 	
 protected:
 	int checkForNextBlockTrial();
-	void setupLayout(QWidget* layoutWidget);
 	bool isDebugMode();
-	double getElapsedTrialTime() {return dElapsedTrialTime;};
+	bool isLocked() {return bCurrentSubObjectIsLocked;};
+	bool isReadyToUnlock() {return bCurrentSubObjectReadyToUnlock;};
+	bool experimentShouldStop() {return bExperimentShouldStop;};
+	double getElapsedTrialTime() {return expTrialTimer.getElapsedTimeInMilliSec();};
 	int getCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame;};
-	int getCurrentStimuliRefreshRate() {return nRefreshRate;};
+	int incrementCurrentBlockTrialFrame() {return nCurrExpBlockTrialFrame++;};
+	int getFrameTimerIndex() {return nFrameTimerIndex;};
 	QString getLastLoggedObjectStateTime(ExperimentSubObjectState state);
-	void setDoubleBufferCheck(bool bShouldCheck) {bCheckForDoubleBuffering = bShouldCheck;};
-	void paintEvent(QPaintEvent *event);
-	void closeEvent(QCloseEvent *evt);
 	void customEvent(QEvent *event);
 	void initBlockTrial();
-	void setAlternativeContainerDialog(QDialog *ContainerDlg = NULL);
-	bool eventFilter(QObject *target, QEvent *event);
+	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
+	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
 
 protected slots:
 	void incrementExternalTrigger();
 	void animate(bool bOnlyCheckBlockTrials = false);
-	void finalizePaintEvent();
 
 private:
 	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool unlockExperimentObject();
-	bool setExperimentObjectReadyToUnlock();
-	void setVerticalSyncSwap();
 	void init();
-	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
-	ExperimentSubObjectState getSubObjectState() {return currentSubObjectState;};
 	void fetchCurrentExperimentStructures();
 
 	bool bCurrentSubObjectReadyToUnlock;				//The user first has to press the 'Alt' key before the experiment can be unlocked by the next trigger.
 	bool bFirstTriggerAfterUnlock;						//To detect the exact start of the experiment detected by the checkForNextBlockTrial() function.
 	bool bCurrentSubObjectIsLocked;						//After the above key is pressed this variable is set to false at the first trigger and the experiment starts.
-	bool bCheckForDoubleBuffering;
-	double dWaitTime;
-	QMutex mutRecursivePaint;
 	QMutex mutProcEvents;								//Another implementation, due to qApp->processEvents() RecursiveRepaint can occur...
 	int nLastProcessedExternalTriggers;
 	int nCurrExpBlockTrialFrame;
-	double dElapsedTrialTime;
-	int nRefreshRate;									//The refresh rate of the screen
-	double dLastPreSwapTime;
-	double dAdditionalRefreshDelayTime;
-	ContainerDlg *stimContainerDlg;
-	QObject *alternativeContainerDlg;
+	//double dElapsedTrialTime;
 	bool bExperimentShouldStop;
-	QRectF rScreenResolution;
-	QVBoxLayout *mainLayout;
 	int nObjectID;
 	QTimer tStimTimer;
 	QEvent::Type tEventObjectStopped;
@@ -219,8 +176,7 @@ private:
 	ExperimentManager *pExperimentManager; 
 	ExperimentTimer expTrialTimer;
 	const QMetaObject* thisMetaObject;
-	QPainter *lockedPainter;
 	QScriptEngine* currentScriptEngine;
 };
 
-#endif // GLWIDGET_H
+#endif // EXPERIMENTENGINE_H

@@ -1,5 +1,5 @@
 //StimulGL
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 #include <QString>
 #include <QMetaEnum>
 #include <QDebug>
+#include <QMessageBox>
 
 QFile *MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
 QWidget *MainAppInfo::mainWindow = NULL;//Needed to initialize the static variable!
@@ -137,7 +138,26 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &cont
 	}
 	if(!MainAppInfo::mainLogFile->isOpen())
 	{
-		MainAppInfo::mainLogFile->open(QIODevice::WriteOnly | QIODevice::Append);
+
+		qint64 nSize = MainAppInfo::mainLogFile->size();
+		if(nSize > 41943040)//40 MegaByte
+		{
+			QMessageBox::StandardButton ret = QMessageBox::warning(NULL, "LogFile exceeds file size!",
+				"The StimulGL LogFile(" + MainAppInfo::appLogFilePath() + ") exceeds the 40Mb file size.\n"
+					"Do you want StimulGL to clear this LogFile for you?", QMessageBox::Yes | QMessageBox::No);
+				if (ret == QMessageBox::Yes)
+				{
+					MainAppInfo::mainLogFile->open(QIODevice::WriteOnly);
+				}
+				else
+				{
+					MainAppInfo::mainLogFile->open(QIODevice::WriteOnly | QIODevice::Append);
+				}
+		}
+		else
+		{
+			MainAppInfo::mainLogFile->open(QIODevice::WriteOnly | QIODevice::Append);
+		}
 		if(!MainAppInfo::mainLogFile->isOpen())
 		{
             MainAppInfo::mainLogFile = NULL;
@@ -146,14 +166,24 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &cont
 	}
 	QString strMessage;
 	bool bSkipErrorForLogWindow = false;
-	bSkipErrorForLogWindow = ( (QString(msg) == QString("Unknown error")) || (QString(msg) == QString("QGLShader::link: \"No errors.\" ")) );
+	bSkipErrorForLogWindow = ( (msg == QString("Unknown error")) || (msg == QString("QGLShader::link: \"No errors.\" ")) );
+	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("Remove me: fixing toplevel window flags"));
+	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("warning X3206: implicit truncation of vector type"));
 	switch (type) 
 	{
 	case QtDebugMsg:
+#ifdef QT_NO_DEBUG
 		strMessage = QString("Debug: %1").arg(msg);
+#else
+		strMessage = QString("Debug: %1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
+#endif
 		break;
 	case QtWarningMsg:
+#ifdef QT_NO_DEBUG
 		strMessage = QString("Warning: %1").arg(msg);
+#else
+		strMessage = QString("Warning: %1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
+#endif
 		break;
 	case QtCriticalMsg:
 		strMessage = QString("Critical: %1 (%2:%3, %4)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
@@ -187,7 +217,7 @@ void MainAppInfo::CloseMainLogFile()
 	}	
 }
 
-bool MainAppInfo::Initialize(QWidget *mainWin)
+bool MainAppInfo::SetMainWindow(QWidget *mainWin)
 {
 	mainWindow = mainWin;
 	return true;

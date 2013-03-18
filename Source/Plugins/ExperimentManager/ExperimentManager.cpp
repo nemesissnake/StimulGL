@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -25,11 +25,9 @@
 #include "ImageProcessor.h"
 #include "prtformatmanager.h"
 #include "TriggerTimer.h"
+#include "RetinotopyMapper.h"
+#include "QML2Viewer.h"
 
-#include "retinomap_glwidget.h"
-#include "qmlWidget.h"
-//#include "ExperimentGraphBlock.h"
-//#include "ExperimentGraphPort.h"
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
@@ -73,6 +71,7 @@ void ExperimentManager::DefaultConstruct()
 	MainAppInfo::CreateHashTableFromEnumeration(typeid(ExperimentState).name(),experimentStateHash,this->staticMetaObject);
 	m_RunFullScreen = true;
 	m_ExpFileName = "";
+	sExperimentOutputDataPostString = "";
 	currentExperimentTree = NULL;
 	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
@@ -93,44 +92,42 @@ ExperimentManager::~ExperimentManager()
 	cleanupExperiment();
 }
 
-//void ExperimentManager::Test()
-//{
-//	QString a = "";
-//	if (rndGen == NULL)
-//	{
-//		rndGen = new RandomGenerator();
-//		rndCounter++;
-//	}
-//	else
-//	{
-//		//rndGen->clear();
-//	}
-//
-//	for (int j=0;j<100;j++)//Create random Empty trigger steps within the Cycle
-//	{
-//		a = a + "," + QString::number(rndGen->randomizeInt(0,5));
-//	}
-//	emit WriteToLogOutput(a);
-//
-//	QStringList lst;
-//	QStringList preserveIndexlst;
-//	for (int k=0;k<5;k++)
-//	{	
-//		preserveIndexlst.append(QString::number(k));
-//	}
-//	//lst.clear()
-//	for (int i=0;i<25;i++)
-//	{
-//		rndGen->randomizeList(RandomGenerator_RandomizePreservedIndexes,&preserveIndexlst);
-//		lst = *rndGen;
-//		emit WriteToLogOutput(lst.join(","));
-//	}
-//}
+#ifndef QT_NO_DEBUG
+QString ExperimentManager::Test(const QString &sInput)
+{
+	//if(currentScriptEngine)
+	//{
+	//	QScriptValue act_Object = currentScriptEngine->currentContext()->parentContext()->activationObject();
+	//	QScriptValue this_Object = currentScriptEngine->currentContext()->parentContext()->thisObject();
+	//	if(currentScriptEngineContexes.isEmpty())
+	//	{
+	//		QScriptContextStructure1 tmpStruct;
+	//		tmpStruct.sContextName = "name";
+	//		tmpStruct.activationObject = act_Object;
+	//		tmpStruct.thisObject = this_Object;
+	//		currentScriptEngineContexes.append(tmpStruct);
+	//	}
+	//}
+	//return sInput;
+	//retinoMapper = new RetinotopyMapper(this);
+	//testwindow = new RetinotopyMapper(this);//RetinotopyMapperWindow();
+	//testwindow->setFormat(format);
+	//testwindow->resize(640, 480);
+	//testwindow->show();
+	//testwindow->renderNow();
+	//testwindow->renderLater();	
+	//testwindow->setAnimating(true);
+	//retinoMapper->startObject();
+	return sInput;
+}
+#endif
 
 void ExperimentManager::RegisterMetaTypes()
 {//To register the Objects to the Meta, so they can be accessed trough an *.exml file
-	qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
-	qRegisterMetaType<qmlWidget>(QML_WIDGET_NAME);
+	//qRegisterMetaType<RetinoMap_glwidget>(RETINOMAP_WIDGET_NAME);
+	//qRegisterMetaType<qmlWidget>(QML_WIDGET_NAME);
+	qRegisterMetaType<RetinotopyMapper>(RETINOTOPYMAPPER_NAME);
+	qRegisterMetaType<QML2Viewer>(QML2VIEWER_NAME);
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
@@ -567,7 +564,7 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 	}
 	if(expCurrState == ExperimentManager_Stopped)
 	{
-		WriteAndCloseExperimentOutputData();
+		WriteAndCloseExperimentOutputData(sExperimentOutputDataPostString);
 		cleanupExperiment();
 	}
 }
@@ -694,13 +691,12 @@ bool ExperimentManager::runExperiment()
 	}
 
 	changeCurrentExperimentState(ExperimentManager_Initialized);
-	QString sExpFileName = 	getExperimentFileName();
 	changeCurrentExperimentState(ExperimentManager_IsStarting);
 
 	if (expDataLogger)
 		expDataLogger->startTimer(nExperimentTimerIndex);
 
-	logExperimentObjectData(0,nExperimentTimerIndex,__FUNCTION__,"","FileName = ", sExpFileName);
+	logExperimentObjectData(0,nExperimentTimerIndex,__FUNCTION__,"","FileName = ", getExperimentFileName());
 	
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
@@ -731,7 +727,7 @@ void ExperimentManager::abortExperiment()
  *
  *  Tries to abort the current Experiment that is running, see #runExperiment.
  */
-	if(getCurrExperimentState()==ExperimentManager_Started)
+	if((getCurrExperimentState()==ExperimentManager_Started) || (getCurrExperimentState()==ExperimentManager_IsStarting))
 	{
 		changeCurrentExperimentState(ExperimentManager_IsStopping);
 		if(!abortExperimentObjects())
@@ -755,11 +751,15 @@ void ExperimentManager::stopExperiment()
 	}
 }
 
-bool ExperimentManager::WriteAndCloseExperimentOutputData()
+bool ExperimentManager::WriteAndCloseExperimentOutputData(const QString &postFileName)
 {
 	if (expDataLogger)
 	{
-		QString strTemp = MainAppInfo::outputsDirPath() + "/" + QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()) + QString("_") + DEFAULT_OUTPUTFILE;
+		QString strTemp; 
+		if(postFileName == "")			
+			strTemp = MainAppInfo::outputsDirPath() + "/" + QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()) + QString("_") + DEFAULT_OUTPUTFILE;
+		else
+			strTemp = MainAppInfo::outputsDirPath() + "/" + QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()) + QString("_") + postFileName + ".txt";
 		expDataLogger->WriteToOutput(strTemp);
 		delete expDataLogger;
 		expDataLogger = NULL;
@@ -899,6 +899,7 @@ void ExperimentManager::changeExperimentSubObjectState(ExperimentSubObjectState 
 	{
 		for (int i=0;i<nCount;i++)
 		{
+			//QString sName = lExperimentObjectList.at(i).sObjectName;
 			if (QObject::sender() == lExperimentObjectList.at(i).pObject)
 			{
 				//We automatically close and delete the object after a "Abort" command...
@@ -1173,6 +1174,15 @@ QString ExperimentManager::getExperimentName()
  *  Returns the configured experiment name for the current experiment.
  */
 	return cExperimentBlockTrialStructure->getExperimentName();
+}
+
+void ExperimentManager::setExperimentOutputFilePostString(const QString &sPostString) 
+{
+/*! \brief Configures Experiment Output filename
+ *
+ *  Configures Experiment Output filename, the configurable part of the filename is a string that is then integrated in the filename (format = YearMonthDayHourMinuteSecond_<sPostString>.txt ).
+ */
+	sExperimentOutputDataPostString = sPostString;
 }
 
 /*! \brief Shows the Experiment Graph Editor
@@ -1617,7 +1627,27 @@ bool ExperimentManager::expandExperimentBlockParameterValue(QString &sValue)
 				QVariant varResult = "";
 				if(getScriptContextValue(sValue.mid(nFirstIndex+1,nLastIndex-nFirstIndex-1),varResult))
 				{
-					sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,varResult.toString());
+					if(varResult.type() == QVariant::List)
+					{
+						//Let's assume a QStringList here...
+						//QStringList stringList;
+						QString sCombinedStringList;
+						QListIterator<QVariant> it(varResult.toList());
+						if (it.hasNext())
+						{
+							sCombinedStringList = it.next().toString();
+							while (it.hasNext()) 
+							{
+								sCombinedStringList = sCombinedStringList + "," + it.next().toString();
+									//stringList << it.next().toString();
+							}
+						}
+						sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,sCombinedStringList);//varResult.toString());
+					}
+					else
+					{
+						sValue.replace(nFirstIndex,nLastIndex-nFirstIndex+1,varResult.toString());
+					}					
 					return true;
 				}
 			}	
@@ -1865,7 +1895,7 @@ bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBl
 			{
 				if (lExperimentObjectList[i].nObjectID == nObjectID)
 				{
-					if(createExperimentBlockParamsFromDomNodeList(nBlockNumber,nObjectID,&ExperimentBlockTrialsDomNodeList,lExperimentObjectList[i].ExpBlockParams) == false)
+					if(createExperimentBlockParamsFromDomNodeList(nBlockNumber,nObjectID,&ExperimentBlockTrialsDomNodeList,lExperimentObjectList[i].ExpBlockParams) < 0)
 					{
 						qDebug() << __FUNCTION__ << "::Could not create a Block Parameter List!";
 						return false;
@@ -1879,20 +1909,20 @@ bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBl
 	return false;
 }
 
-bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst, tParsedParameterList *hParams)
+int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst, tParsedParameterList *hParams)
 {
 	if (hParams == NULL)
-		return false;
+		return -1;
 	if(pExpBlockTrialsDomNodeLst == NULL)
-		return false;
+		return -1;
 	if(hParams->count() == 0)
-		return false;
+		return -1;
 	if(nObjectID < 0)
-		return false;
+		return -1;
 	if(nBlockNumber < 0)
-		return false;
+		return -1;
 	if (pExpBlockTrialsDomNodeLst->isEmpty())
-		return false;
+		return -1;
 
 	//Set all the parameter bHasChanged attributes too false again
 	QList<ParsedParameterDefinition> tmpStrValueList = hParams->values();//The order is guaranteed to be the same as that used by keys()!
@@ -1919,13 +1949,13 @@ bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nB
 	//}
 	
 	//if(cExperimentBlockTrialStructure == NULL)
-	//	return false;
+	//	return -1;
 	//int nBlockCount = cExperimentBlockTrialStructure->getBlockCount();
 	int nBlockCount = pExpBlockTrialsDomNodeLst->count();
 	if (nBlockCount <= nBlockNumber)
-		return false;
+		return -1;
 	//if (nBlockCount != pExpBlockTrialsDomNodeLst->count())
-	//	return false;
+	//	return -1;
 	
 	QDomElement tmpElement;
 	QDomNode tmpNode;
@@ -1959,7 +1989,7 @@ bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nB
 										int nParameterListCount = tmpParameterNodeList.count();
 										if (nParameterListCount>0)
 										{
-											bool bResult = false;
+											int nResult = 0;
 											for (int k=0;k<nParameterListCount;k++)//For each parameter
 											{
 												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
@@ -1976,29 +2006,29 @@ bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nB
 															tmpParDef.sValue = tmpValue;
 															tmpParDef.bHasChanged = true;
 															hParams->insert(tmpString,tmpParDef);
-															bResult = true;//To define that at least one parameter was parsed successfully
+															nResult++;
 														}
 													}
 												}
 												if(k==(nParameterListCount-1))
-													return bResult;											
+													return nResult;											
 											}
 										}
 										else
-											return false;
+											return 0;
 									}
 									else
-										return false;
+										return -1;
 								}
 								else
-									return false;
+									return -1;
 							}
 							else
-								return false;
+								return -1;
 						}
 					}
 					else
-						return false;//Nothing defined		
+						return -1;//Nothing defined		
 				}
 				else
 					continue;//Search next block
@@ -2007,7 +2037,7 @@ bool ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nB
 				continue;//Search next block
 		}
 	}
-	return false;
+	return -1;
 }
 
 bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst)
@@ -2316,18 +2346,29 @@ bool ExperimentManager::getScriptContextValue(const QString &sScriptContextState
 		QString tmpString = "... Could not expand the script object (" + sScriptContextStatement + "), the script engine is not ready!";
 		emit WriteToLogOutput(tmpString);
 		qDebug() << tmpString;
-	}
-	if (!currentScriptEngine->canEvaluate(sScriptContextStatement))
-	{
-		QString tmpString = "... Could not evaluate the script object (" + sScriptContextStatement + ")!";
-		emit WriteToLogOutput(tmpString);
-		qDebug() << tmpString;
+		return false;
 	}
 	else
 	{
-		QScriptValue tmpScriptValue = currentScriptEngine->evaluate(sScriptContextStatement);
-		sScriptContextReturnValue = tmpScriptValue.toVariant();
-		return true;
+		if (!currentScriptEngine->canEvaluate(sScriptContextStatement))
+		{
+			QString tmpString = "... Could not evaluate the script object (" + sScriptContextStatement + ")!";
+			emit WriteToLogOutput(tmpString);
+			qDebug() << tmpString;
+			return false;
+		}
+		else
+		{
+			QScriptContext *tmpContext = currentScriptEngine->currentContext();
+
+			QScriptValue tmpScriptValue = currentScriptEngine->evaluate(sScriptContextStatement);
+			if(currentScriptEngine->hasUncaughtException())
+			{
+				int c = 0;
+			}
+			sScriptContextReturnValue = tmpScriptValue.toVariant();
+			return true;
+		}
 	}
 	return false;
 }

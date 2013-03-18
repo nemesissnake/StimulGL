@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -33,13 +33,15 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	RandomGeneratorObject = NULL;
 	ImageProcessorObject = NULL;
 	PrtFormatManagerObject = NULL;
+	RetinotopyMapperObject = NULL;
 	cExperimentStructureObject = NULL;
 	cBlockStructureObject = NULL;
 	cLoopStructureObject = NULL;
-	QmlWidgetObject = NULL;
+	Qml2ViewerObject = NULL;
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
 	ExperimentManagerObject = new ExperimentManager(ExperimentManagerDiagObject,NULL);
 	strPluginInformation = PLUGIN_INFORMATION;
+	Q_INIT_RESOURCE(ExperimentManager);
 }
 
 ExperimentManagerPlugin::~ExperimentManagerPlugin()
@@ -89,10 +91,15 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 		delete PrtFormatManagerObject;
 		PrtFormatManagerObject = NULL;
 	}
-	if(QmlWidgetObject)
+	if(RetinotopyMapperObject)
 	{
-		delete QmlWidgetObject;
-		QmlWidgetObject = NULL;
+		delete RetinotopyMapperObject;
+		RetinotopyMapperObject = NULL;
+	}
+	if(Qml2ViewerObject)
+	{
+		delete Qml2ViewerObject;
+		Qml2ViewerObject = NULL;
 	}
 }
 
@@ -159,20 +166,12 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue ctorExperimentStructureState = engine.newFunction(cExperimentStructure::createExperimentStructureStateFromScript);
 	engine.globalObject().setProperty(CEXPERIMENTSTRUCTURESTATE_NAME, ctorExperimentStructureState);
 
-	//if(QmlWidgetObject == NULL)
-	//	QmlWidgetObject = new qmlWidget();
-	//QScriptValue QmlWidgetProto = engine.newQObject(QmlWidgetObject);
-	//engine.setDefaultPrototype(qMetaTypeId<qmlWidget*>(), QmlWidgetProto);
-	//QScriptValue QmlWidgetCtor = engine.newFunction(qmlWidget::ctor_QmlWidget, QmlWidgetProto);
-	//engine.globalObject().setProperty(QMLWIDGET_NAME, QmlWidgetCtor);
-
-	//if(retinoWidgetObject == NULL)
-	//	retinoWidgetObject = new RetinoMap_glwidget();
-	//RetinoMap_glwidget retinoWidgetObject;//or use new(), but make sure to use delete afterwards!
-	//QScriptValue RetinoWidgetProto = engine.newQObject(&retinoWidgetObject);
-	//engine.setDefaultPrototype(qMetaTypeId<RetinoMap_glwidget*>(), RetinoWidgetProto);
-	//QScriptValue RetinoWidgetCtor = engine.newFunction(RetinoMap_glwidget::ctor_RetinoWidget, RetinoWidgetProto);
-	//engine.globalObject().setProperty(RETINOMAP_WIDGET_NAME, RetinoWidgetCtor);
+	if(RetinotopyMapperObject == NULL)
+		RetinotopyMapperObject = new RetinotopyMapper();
+	QScriptValue RetinotopyMapperProto = engine.newQObject(RetinotopyMapperObject);
+	engine.setDefaultPrototype(qMetaTypeId<RetinotopyMapper*>(), RetinotopyMapperProto);
+	QScriptValue RetinotopyMapperCtor = engine.newFunction(RetinotopyMapper::ctor__RetinotopyMapper, RetinotopyMapperProto);
+	engine.globalObject().setProperty(RETINOTOPYMAPPER_NAME, RetinotopyMapperCtor);
 
 	return true;
 }
@@ -237,6 +236,10 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 		if(cLoopStructureObject == NULL)
 			cLoopStructureObject = new cLoopStructure();
 		return (QObject *)cLoopStructureObject->metaObject();
+	case 8:
+		if(RetinotopyMapperObject == NULL)
+			RetinotopyMapperObject = new RetinotopyMapper();
+		return (QObject *)RetinotopyMapperObject->metaObject();
 	default:
 		return NULL;
 	}

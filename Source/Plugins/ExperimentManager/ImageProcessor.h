@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QtScript>
 #include <QScriptable>
+#include <QColor>
 
 //!  The ImageProcessor class. 
 /*!
@@ -54,9 +55,9 @@ public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool ConvertPngToDatFile(QString strSource, QString strDestination, bool bOverwrite = false);
 	bool ConvertDatToPngFile(QString strSource, QString strDestination, bool bOverwrite = false);
-	bool ScalePngFile(QString strSource, QString strDestination, int nRatio = 1, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false);
-	bool ScalePngFileBySize(QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false);
-
+	bool ScalePngFile(QString strSource, QString strDestination, int nRatio = 1, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false, bool bSmoothFiltering = false);
+	bool ScalePngFileBySize(QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false, bool bSmoothFiltering = false);
+	bool CreateMeanImageFromPngFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite = false);
 	//QPixmap ChangeHue(QPixmap &p);
 
 private:

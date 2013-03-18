@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -45,8 +45,6 @@
 #define EXPERIMENTMANAGER_SCRIPTCONTEXT_NAME	"EM"
 
 class cExperimentStructure;
-//class RetinoMap_glwidget;
-//class qmlWidget;
 class ExperimentTree;
 
 //!  The Experiment Manager class. 
@@ -195,13 +193,19 @@ public slots:
 	bool getDebugMode();
 	void setExperimentName(QString name);
 	QString getExperimentName();
+	void setExperimentOutputFilePostString(const QString &sPostString);
 	//QObject* getExperimentStructure();
 	cExperimentStructure *getExperimentStructure();
 	bool showExperimentGraphEditor(cExperimentStructure *ExpStruct = NULL);
 
+#ifndef QT_NO_DEBUG
+	QString Test(const QString &sInput = "");
+#endif
+
+
 private:
 	void DefaultConstruct();
-	bool WriteAndCloseExperimentOutputData();
+	bool WriteAndCloseExperimentOutputData(const QString &postFileName = "");
 	void initializeDataLogger();
 	void RegisterMetaTypes();
 	bool invokeExperimentObjectsSlots(const QString &sSlotName);
@@ -210,7 +214,7 @@ private:
 	bool configureExperiment();
 	bool createExperimentObjects();
 	bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst);
-	bool createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
+	int createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
 	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);
 	bool initializeExperiment(bool bFinalize = false);
 	bool finalizeExperimentObjects();
@@ -223,7 +227,7 @@ private:
 	void changeCurrentExperimentState(ExperimentState expCurrState);
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
-
+	
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	cExperimentStructure *cExperimentBlockTrialStructure;
@@ -243,6 +247,7 @@ private:
 	QString m_ExpFolder;
 	ExperimentLogger *expDataLogger;
 	int nExperimentTimerIndex;
+	QString sExperimentOutputDataPostString;
 };
 
 #endif // ExperimentManager_H

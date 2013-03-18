@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -572,10 +572,12 @@ cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(con
 		return NULL;
 	//First try the expected location
 	if(pSharedData->lBlocks.size()>startBlockNumber)
+	{
 		if (pSharedData->lBlocks.at(startBlockNumber).getBlockID() == startBlockNumber)
 		{
 			return &pSharedData->lBlocks[startBlockNumber];
 		}
+	}
 	//Now try the other items
 	int closestIndex = -1;
 	int closestBlockNumber = startBlockNumber;//This shouldn't matter
@@ -779,7 +781,7 @@ void cExperimentStructure::incrementExternalTrigger()
 					if(nextLoopBlock == NULL)//No Loop Block available
 					{
 						pSharedData->currentBlockPointer->resetAllLoopCounters();
-						int nFoundIndex = -1;
+						//int nFoundIndex = -1;
 						pSharedData->currentBlockPointer = getNextClosestBlockNumberByFromNumber(pSharedData->currentBlockPointer->getBlockNumber()+1);
 						if(pSharedData->currentBlockPointer == NULL)
 						{

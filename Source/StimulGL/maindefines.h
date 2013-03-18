@@ -1,5 +1,5 @@
 //StimulGL
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 //Also search and change "Q_CLASSINFO("ScriptAPIClassName"..!!!
 
 #define MAIN_PROGRAM_COMPANY_NAME	"MBIC, Maastricht Brain Imaging Center"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_LEGAL_COPYRIGHT	"Copyright (C) 2012"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_LEGAL_COPYRIGHT	"Copyright (C) 2013"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 #define MAIN_PROGRAM_FILE_VERSION_STRING_MAJOR	2   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 #define MAIN_PROGRAM_FILE_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 #define MAIN_PROGRAM_FILE_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).

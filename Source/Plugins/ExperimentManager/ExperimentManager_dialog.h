@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2012  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -27,8 +27,8 @@
 #include <QtWidgets>
 #include <QThread>
 
-#include "qmlWidget.h"
-#include "ContainerDlg.h"
+#include "QML2Viewer.h"
+//#include "ContainerDlg.h"
 #include "GlobalApplicationInformation.h"
 
 class ExperimentManager_Dialog : public QDialog, private Ui::ExperimentManager_DialogClass
@@ -65,10 +65,10 @@ private slots:
 	void LogMessage(QString sMessage);
 
 private:
-	qmlWidget *QmlWidgetObject;
+	QML2Viewer *Qml2ViewerObject;
 	ExperimentManager *ExperimentManagerObj;
-	ContainerDlg *tmpContainerDlg;
-	QVBoxLayout *tmpLayout;
+	//ContainerDlg *tmpContainerDlg;
+	//QVBoxLayout *tmpLayout;
 	ExperimentSubObjectState currentExperimentSubObjectState;
 	ExperimentManager::ExperimentState currentExperimentState;
 	DocContentInfoStructure docContentStructToRun;
