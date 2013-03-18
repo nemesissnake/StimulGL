@@ -95,20 +95,20 @@ ExperimentManager::~ExperimentManager()
 #ifndef QT_NO_DEBUG
 QString ExperimentManager::Test(const QString &sInput)
 {
-	if(currentScriptEngine)
-	{
-		QScriptValue act_Object = currentScriptEngine->currentContext()->parentContext()->activationObject();
-		QScriptValue this_Object = currentScriptEngine->currentContext()->parentContext()->thisObject();
-		if(currentScriptEngineContexes.isEmpty())
-		{
-			QScriptContextStructure1 tmpStruct;
-			tmpStruct.sContextName = "name";
-			tmpStruct.activationObject = act_Object;
-			tmpStruct.thisObject = this_Object;
-			currentScriptEngineContexes.append(tmpStruct);
-		}
-	}
-	return sInput;
+	//if(currentScriptEngine)
+	//{
+	//	QScriptValue act_Object = currentScriptEngine->currentContext()->parentContext()->activationObject();
+	//	QScriptValue this_Object = currentScriptEngine->currentContext()->parentContext()->thisObject();
+	//	if(currentScriptEngineContexes.isEmpty())
+	//	{
+	//		QScriptContextStructure1 tmpStruct;
+	//		tmpStruct.sContextName = "name";
+	//		tmpStruct.activationObject = act_Object;
+	//		tmpStruct.thisObject = this_Object;
+	//		currentScriptEngineContexes.append(tmpStruct);
+	//	}
+	//}
+	//return sInput;
 	//retinoMapper = new RetinotopyMapper(this);
 	//testwindow = new RetinotopyMapper(this);//RetinotopyMapperWindow();
 	//testwindow->setFormat(format);

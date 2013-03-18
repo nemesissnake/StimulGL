@@ -125,6 +125,8 @@ public slots:
 	QString testFunction(QString inp = "");
 #endif
 	bool saveContextState(const QString &sContextName);
+	bool setContextState(const QString &sContextName);
+	bool resetContextState();
 	bool deleteContextState(const QString &sContextName);
 
 private slots:
@@ -176,7 +178,7 @@ private slots:
 
 private:
 	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
-
+	QString sCurrentSetContextState;
 	QList<QScriptContextStrc> currentScriptEngineContexes;
 	QSize oldDockMaxSize, oldDockMinSize;
 	QString strAdditionalFileExtensions;

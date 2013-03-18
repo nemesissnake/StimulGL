@@ -46,6 +46,7 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 	ExtensionPluginsFound = false;
 	helpAssistant = new Assistant;
 	bMainWindowIsInitialized = false;
+	sCurrentSetContextState = "";
 
 #ifndef QT_NO_DEBUG_OUTPUT	
 	qInstallMessageHandler((QtMessageHandler)MainAppInfo::MyOutputHandler);
@@ -59,6 +60,29 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 //MainWindow::~MainWindow()//see void MainWindow::closeEvent(QCloseEvent *event)!
 //{
 //}
+
+bool MainWindow::setContextState(const QString &sContextName)
+{
+	if(sContextName == "")
+		return false;
+	if(currentScriptEngineContexes.isEmpty())
+		return true;
+	for(int i=0;i<currentScriptEngineContexes.count();i++)
+	{
+		if(currentScriptEngineContexes.at(i).sContextName == sContextName)//Does it exist?
+		{
+			sCurrentSetContextState = sContextName;
+			return true;
+		}
+	}	
+	return false;
+}
+
+bool MainWindow::resetContextState()
+{
+	sCurrentSetContextState = "";
+	return true;
+}
 
 bool MainWindow::deleteContextState(const QString &sContextName)
 {
@@ -74,7 +98,7 @@ bool MainWindow::deleteContextState(const QString &sContextName)
 				return true;
 			}
 		}
-}		
+	}		
 	return false;
 }
 
@@ -1828,7 +1852,21 @@ QScriptValue MainWindow::executeScriptContent(const QString &sContent)
 	{
 		if(AppScriptEngine->eng)
 		{
-			QScriptContext *tmpContext = AppScriptEngine->eng->currentContext();
+			if(sCurrentSetContextState != "")
+			{
+				if(currentScriptEngineContexes.isEmpty() == false)
+				{		
+					for(int i=0;i<currentScriptEngineContexes.count();i++)
+					{
+						if(currentScriptEngineContexes.at(i).sContextName == sCurrentSetContextState)//Should we overwrite?
+						{
+							QScriptContext *tmpContext = AppScriptEngine->eng->currentContext();
+							tmpContext->setActivationObject(currentScriptEngineContexes[i].activationObject);
+							tmpContext->setThisObject(currentScriptEngineContexes[i].thisObject);
+						}
+					}
+				}
+			}
 			return AppScriptEngine->eng->evaluate(sContent);
 		}
 	}

@@ -47,13 +47,6 @@
 class cExperimentStructure;
 class ExperimentTree;
 
-typedef struct QScriptContextStructure1
-{
-	QScriptValue activationObject;
-	QScriptValue thisObject;
-	QString sContextName;
-} QScriptContextStrc1;
-
 //!  The Experiment Manager class. 
 /*!
   The Experiment Manager can be used configure, open and execute experiment (*.exml) files.
@@ -235,7 +228,6 @@ private:
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
 	
-	QList<QScriptContextStrc1> currentScriptEngineContexes;
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	cExperimentStructure *cExperimentBlockTrialStructure;
