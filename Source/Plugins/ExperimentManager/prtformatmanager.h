@@ -112,12 +112,12 @@ public slots:
 	int appendCondition(const QString sConditionName = PRT_UNDEF_NAME_STRING, const QString sConditionColor = PRT_UNDEF_COLOR_STRING);
 	int appendInterval(const int nConditionIndex = 0, const int nBegin = 0, const int nEnd = 1);
 	QString getRGBPaletteColorString(const int nSteps, const int nIndex);
+	bool setConditionColor(const int nConditionIndex, const QString sColor);
 	bool SortandMergeAllConditionIntervals();
 
 private:
 	bool setDefaultParameters(const int nVersion = PRT_DEFAULT_VERSION);
 	PRTDefinitionParameters getParameter(const QString sParamName);
-	bool setConditionColor(const int nConditionIndex, const QString sColor);
 
 	QScriptEngine* currentScriptEngine;
 
