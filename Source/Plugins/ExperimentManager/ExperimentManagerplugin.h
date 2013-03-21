@@ -73,7 +73,6 @@ public slots:
 	bool ExperimentManagerEXMLDocumentHandler(const QString &docContent, const QString &strHomePath);
 	bool ExperimentManagerQMLDocumentHandler(const QString &docContent, const QString &strHomePath);
 	QObject *GetScriptMetaObject(int nIndex);
-	int GetScriptMetaObjectCount();
 	int GetAdditionalFileTypeStyle(QString strExtension);
 	QString GetAdditionalFileTypeApiName(QString strExtension);
 };

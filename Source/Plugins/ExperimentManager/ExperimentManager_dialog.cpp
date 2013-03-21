@@ -262,7 +262,7 @@ bool ExperimentManager_Dialog::executeDocument()
 			QRegExp tmpRegExp;
 			tmpRegExp.setPatternSyntax(QRegExp::Wildcard);
 			tmpRegExp.setCaseSensitivity(Qt::CaseInsensitive);
-			tmpRegExp.setPattern("import*QtQuick*1.");
+			tmpRegExp.setPattern("import QtQuick 1.");
 			if(fileSource.contains(tmpRegExp))
 			{
 				qWarning() << __FUNCTION__ << "::QtQuick version 1.* is not supported anymore, please update the *.qml document to QtQuick version 2.* or later!";
@@ -270,7 +270,7 @@ bool ExperimentManager_Dialog::executeDocument()
 			}
 			else
 			{
-				tmpRegExp.setPattern("import*QtQuick*2.");
+				tmpRegExp.setPattern("import QtQuick 2.");
 				if(fileSource.contains(tmpRegExp))
 				{
 					if(Qml2ViewerObject)

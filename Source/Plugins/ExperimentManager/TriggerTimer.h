@@ -94,8 +94,7 @@ public slots:
 	static double currentTime();
 	bool setTimerType(const QString &sNewTimerType);
 	QString getTimerType() const;
-	//QObject *GetScriptMetaObject(int nIndex) {return (QObject *)this->metaObject();};
-	//int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
+	//QObject *GetScriptMetaObject(int nIndex) {if(nIndex == 0) return (QObject *)this->metaObject(); else return NULL;};
 
 private:
 	void resetIntervalTestResults();

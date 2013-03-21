@@ -245,11 +245,6 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 	}
 }
 
-int ExperimentManagerPlugin::GetScriptMetaObjectCount() 
-{
-	return 4;
-}
-
 bool ExperimentManagerPlugin::ExperimentManagerEXMLDocumentHandler(const QString &docContent, const QString &strHomePath)
 {
 	DocContentInfoStructure docStruct;

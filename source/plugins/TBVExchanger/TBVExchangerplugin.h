@@ -56,8 +56,7 @@ public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};// ExtensionInterface PluginInterface::IsCompatible();};
 	//QStringList GetAdditionalFileExtensions() {return (QStringList() << "TBVExchanger files (*.TBVExchanger);;");};
-	QObject *GetScriptMetaObject(int nIndex) {return (QObject *)TBVExchangerObject->metaObject();};
-	int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
+	QObject *GetScriptMetaObject(int nIndex) {if(nIndex == 0) return (QObject *)TBVExchangerObject->metaObject(); else return NULL;};
 
 signals:
 	void DoSignal();

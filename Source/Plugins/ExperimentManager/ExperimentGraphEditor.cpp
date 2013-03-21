@@ -29,7 +29,7 @@
 ExperimentGraphEditor::ExperimentGraphEditor(QObject *parent) : QObject(parent)
 {
 	conn = NULL;
-	scene = NULL;
+	gScene = NULL;
 	gView = NULL;
 	bAllowSelfRecurrentConnection = true;
 }
@@ -37,13 +37,13 @@ ExperimentGraphEditor::ExperimentGraphEditor(QObject *parent) : QObject(parent)
 void ExperimentGraphEditor::install(QGraphicsScene *s, QGraphicsView *v)
 {
 	s->installEventFilter(this);
-	scene = s;
+	gScene = s;
 	gView = v;	
 }
 
 bool ExperimentGraphEditor::parseExperimentStructure(cExperimentStructure *ExpStruct)
 {//Make sure to first call the above install()!
-	if(scene == NULL)
+	if(gScene == NULL)
 		return false;
 	int nExpBlockCount = ExpStruct->getBlockCount();
 	double dLeftCanvasMargin = 50.0;
@@ -64,7 +64,8 @@ bool ExperimentGraphEditor::parseExperimentStructure(cExperimentStructure *ExpSt
 				if(tmpBlock) 
 				{
 					nNextSearchBlockNumber = tmpBlock->getBlockNumber() + 1;
-					ExperimentGraphBlock *gBlock = new ExperimentGraphBlock(NULL, this->scene);
+					ExperimentGraphBlock *gBlock = new ExperimentGraphBlock(NULL, gScene);
+					gScene->addItem(gBlock);
 					gBlock->setName(tmpBlock->getBlockName());
 					gBlock->setID(tmpBlock->getBlockID());
 					gBlock->addPort(tmpBlock->getBlockName(), false, ExperimentGraphPort::NamePort);
@@ -135,7 +136,8 @@ bool ExperimentGraphEditor::createConnection(QGraphicsItem *from, QGraphicsItem 
 	{
 		if (to && to->type() == ExperimentGraphPort::Type)
 		{
-			conn = new ExperimentGraphConnection(NULL, scene);
+			conn = new ExperimentGraphConnection(NULL, gScene);
+			gScene->addItem(conn);
 			conn->setPort1((ExperimentGraphPort*) from);
 			conn->setPos1(from->scenePos());
 			conn->setPos2(to->scenePos());
@@ -166,7 +168,7 @@ bool ExperimentGraphEditor::createConnection(QGraphicsItem *from, QGraphicsItem 
 
 QGraphicsItem* ExperimentGraphEditor::itemAt(const QPointF &pos)
 {
-	QList<QGraphicsItem*> items = scene->items(QRectF(pos - QPointF(1,1), QSize(3,3)));
+	QList<QGraphicsItem*> items = gScene->items(QRectF(pos - QPointF(1,1), QSize(3,3)));
 
 	foreach(QGraphicsItem *item, items)
 		if (item->type() > QGraphicsItem::UserType)
@@ -190,7 +192,8 @@ bool ExperimentGraphEditor::eventFilter(QObject *o, QEvent *e)
 			QGraphicsItem *item = itemAt(me->scenePos());
 			if (item && item->type() == ExperimentGraphPort::Type)
 			{
-				conn = new ExperimentGraphConnection(0, scene);
+				conn = new ExperimentGraphConnection(0, gScene);
+				gScene->addItem(conn);
 				conn->setPort1((ExperimentGraphPort*) item);
 				conn->setPos1(item->scenePos());
 				conn->setPos2(me->scenePos());
@@ -276,14 +279,14 @@ bool ExperimentGraphEditor::eventFilter(QObject *o, QEvent *e)
 
 void ExperimentGraphEditor::save(QDataStream &ds)
 {
-	foreach(QGraphicsItem *item, scene->items())
+	foreach(QGraphicsItem *item, gScene->items())
 		if (item->type() == ExperimentGraphBlock::Type)
 		{
 			ds << item->type();
 			((ExperimentGraphBlock*) item)->save(ds);
 		}
 
-	foreach(QGraphicsItem *item, scene->items())
+	foreach(QGraphicsItem *item, gScene->items())
 		if (item->type() == ExperimentGraphConnection::Type)
 		{
 			ds << item->type();
@@ -293,21 +296,21 @@ void ExperimentGraphEditor::save(QDataStream &ds)
 
 void ExperimentGraphEditor::load(QDataStream &ds)
 {
-	scene->clear();
-
+	gScene->clear();
 	QMap<quint64, ExperimentGraphPort*> portMap;
-
 	while (!ds.atEnd())
 	{
 		int type;
 		ds >> type;
 		if (type == ExperimentGraphBlock::Type)
 		{
-			ExperimentGraphBlock *block = new ExperimentGraphBlock(0, scene);
+			ExperimentGraphBlock *block = new ExperimentGraphBlock(0, gScene);
+			gScene->addItem(block);
 			block->load(ds, portMap);
 		} else if (type == ExperimentGraphConnection::Type)
 		{
-			ExperimentGraphConnection *conn = new ExperimentGraphConnection(0, scene);
+			ExperimentGraphConnection *conn = new ExperimentGraphConnection(0, gScene);
+			gScene->addItem(conn);
 			conn->load(ds, portMap);
 		}
 	}

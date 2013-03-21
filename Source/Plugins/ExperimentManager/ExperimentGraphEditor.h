@@ -46,7 +46,7 @@ private:
 
 private:
 	QGraphicsView *gView;
-	QGraphicsScene *scene;
+	QGraphicsScene *gScene;
 	ExperimentGraphConnection *conn;
 	bool bAllowSelfRecurrentConnection;
 	// ExperimentGraphBlock *selBlock;

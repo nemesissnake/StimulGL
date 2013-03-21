@@ -2350,25 +2350,27 @@ bool ExperimentManager::getScriptContextValue(const QString &sScriptContextState
 	}
 	else
 	{
-		if (!currentScriptEngine->canEvaluate(sScriptContextStatement))
-		{
-			QString tmpString = "... Could not evaluate the script object (" + sScriptContextStatement + ")!";
-			emit WriteToLogOutput(tmpString);
-			qDebug() << tmpString;
-			return false;
-		}
-		else
-		{
-			QScriptContext *tmpContext = currentScriptEngine->currentContext();
-
-			QScriptValue tmpScriptValue = currentScriptEngine->evaluate(sScriptContextStatement);
-			if(currentScriptEngine->hasUncaughtException())
-			{
-				int c = 0;
-			}
+		QString adjScriptContextStatement = "StimulGL.executeScriptContent(\"" + sScriptContextStatement + "\");";
+		//if (!currentScriptEngine->canEvaluate(adjScriptContextStatement))
+		//{
+		//	QString tmpString = "... Could not evaluate the script object (" + sScriptContextStatement + ")!";
+		//	emit WriteToLogOutput(tmpString);
+		//	qDebug() << tmpString;
+		//	return false;
+		//}
+		//else
+		//{
+		//	//QScriptContext *tmpContext = currentScriptEngine->currentContext();
+			QScriptValue tmpScriptValue = currentScriptEngine->evaluate(adjScriptContextStatement);
+			//if(currentScriptEngine->hasUncaughtException())
+			//{
+			//	QString tmpString = "... Evaluate script::UncaughtException() (" + sScriptContextStatement + ")!";
+			//	emit WriteToLogOutput(tmpString);
+			//	qDebug() << tmpString;
+			//}
 			sScriptContextReturnValue = tmpScriptValue.toVariant();
 			return true;
-		}
+		//}
 	}
 	return false;
 }

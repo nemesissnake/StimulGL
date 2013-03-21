@@ -66,11 +66,11 @@ void QTScriptWorker::run()
 {
 	if (!(currentScript == ""))
 	{
-		eng->evaluate(currentScript);
-		while (true)
-		{
-			
-		}
+		//eng->evaluate(currentScript);
+		//while (true)
+		//{
+		//	
+		//}
 	}
 	// this method is called by the newly created thread...
 	//while ( TRUE ) {

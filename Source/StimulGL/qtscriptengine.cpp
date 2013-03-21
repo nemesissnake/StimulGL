@@ -169,11 +169,6 @@ void QTScriptEngine::ConfigureDebugger(bool state)
 	}	
 }
 
-//QScriptValue QTScriptEngine::evaluate(const QString &program, const QString &fileName, int lineNumber)
-//{
-//	return eng->evaluate(program,fileName,lineNumber);
-//}
-
 void QTScriptEngine::interactive(QScriptEngine *eng)
 {
 	QScriptValue global = eng->globalObject();

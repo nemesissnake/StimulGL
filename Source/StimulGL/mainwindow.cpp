@@ -46,7 +46,7 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 	ExtensionPluginsFound = false;
 	helpAssistant = new Assistant;
 	bMainWindowIsInitialized = false;
-	sCurrentSetContextState = "";
+	resetContextState();
 
 #ifndef QT_NO_DEBUG_OUTPUT	
 	qInstallMessageHandler((QtMessageHandler)MainAppInfo::MyOutputHandler);
@@ -71,17 +71,29 @@ bool MainWindow::setContextState(const QString &sContextName)
 	{
 		if(currentScriptEngineContexes.at(i).sContextName == sContextName)//Does it exist?
 		{
-			sCurrentSetContextState = sContextName;
+			pCurrentSetContextState.first = sContextName;
+			pCurrentSetContextState.second = lCurrentRunningScriptIDList.last();
 			return true;
 		}
 	}	
 	return false;
 }
 
-bool MainWindow::resetContextState()
+bool MainWindow::resetContextState(const quint64 &nScriptId)
 {
-	sCurrentSetContextState = "";
-	return true;
+	if(nScriptId == 0)
+	{
+		pCurrentSetContextState.first = "";
+		pCurrentSetContextState.second = 0;
+		return true;
+	}
+	else if(pCurrentSetContextState.second == nScriptId)
+	{
+		pCurrentSetContextState.first = "";
+		pCurrentSetContextState.second = 0;
+		return true;
+	}
+	return false;
 }
 
 bool MainWindow::deleteContextState(const QString &sContextName)
@@ -112,6 +124,7 @@ bool MainWindow::saveContextState(const QString &sContextName)
 				return false;
 			QScriptValue act_Object = AppScriptEngine->eng->currentContext()->parentContext()->activationObject();
 			QScriptValue this_Object = AppScriptEngine->eng->currentContext()->parentContext()->thisObject();
+
 			if(currentScriptEngineContexes.isEmpty() == false)
 			{		
 				for(int i=0;i<currentScriptEngineContexes.count();i++)
@@ -138,25 +151,9 @@ bool MainWindow::saveContextState(const QString &sContextName)
 #ifdef DEBUG
 QString MainWindow::testFunction(QString inp)
 {
-	if(AppScriptEngine)
-	{
-		QScriptValue act_Object = AppScriptEngine->eng->currentContext()->parentContext()->activationObject();
-		QScriptValue this_Object = AppScriptEngine->eng->currentContext()->parentContext()->thisObject();
-		if(currentScriptEngineContexes.isEmpty())
-		{
-			QScriptContextStructure tmpStruct;
-			tmpStruct.sContextName = "name";
-			tmpStruct.activationObject = act_Object;
-			tmpStruct.thisObject = this_Object;
-			currentScriptEngineContexes.append(tmpStruct);
-		}
-		else
-		{
-			AppScriptEngine->eng->currentContext()->setActivationObject(currentScriptEngineContexes.at(0).activationObject);
-			AppScriptEngine->eng->currentContext()->setThisObject(currentScriptEngineContexes.at(0).thisObject);
-			return AppScriptEngine->eng->evaluate(inp).toString();//this->executeScriptContent(inp).toString();
-		}
-	}
+	//if(AppScriptEngine)
+	//{
+	//}
 	return inp;
 }
 #endif
@@ -384,7 +381,6 @@ QScriptValue myIncludeFunction(QScriptContext *ctx, QScriptEngine *eng)
 			file.close();
 		}
 	}
-
 	ctx->setActivationObject(ctx->parentContext()->activationObject());
 	ctx->setThisObject(ctx->parentContext()->thisObject());
 	return eng->evaluate(fileText, fileName);
@@ -424,79 +420,6 @@ QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine
 #ifdef DEBUG
 QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine)
 {
-	context->setActivationObject(context->parentContext()->activationObject());
-	context->setThisObject(context->parentContext()->thisObject());
-	QString sTmpParam = context->argument(0).toString();
-	return engine->evaluate(sTmpParam);
-
-	engine->pushContext();
-	QString result;
-	for (int i = 0; i < context->argumentCount(); ++i)
-	{
-		if (i > 0)
-			result.append(" ");
-		result.append(context->argument(i).toString());
-	}
-	engine->evaluate(result);
-	engine->popContext();
-
-	//context->setActivationObject(context->parentContext()->activationObject());
-	//context->setThisObject(context->parentContext()->thisObject());
-
-	//QScriptValue allArgumentsArray = context->argumentsObject();//containing all parameters as array
-
-	//QString result1;
-	//for (int i = 0; i < context->argumentCount(); ++i)
-	//{
-	//	if (i > 0)
-	//		result1.append(" ");
-	//	result1.append(context->argument(i).toString());		
-	//}
-
-	//QString result2;
-	//QScriptValue self = context->thisObject();
-	//result2 += self.property("firstName").toString();
-	//result2 += QLatin1String(" ");
-	//result2 += self.property("lastName").toString();
-
-	//QStringList result3 = context->backtrace();//<function-name>(<arguments>)@<file-name>:<line-number>
-	//QString result4 = context->toString();
-
-	//QScriptContextInfo result5 = QScriptContextInfo(context);
-
-	//QStringList result6;
-	//QScriptValue obj = context->parentContext()->thisObject();
-	//while (obj.isObject()) 
-	//{
-	//	QScriptValueIterator it(obj);
-	//	while (it.hasNext()) 
-	//	{
-	//		result6 << it.name();
-	//		result6 << it.scriptName();
-	//		result6 << it.value().toString();
-
-	//		it.next();
-	//		if (it.flags() & QScriptValue::SkipInEnumeration)//Note that QScriptValueIterator will not automatically skip over properties that have the QScriptValue::SkipInEnumeration flag set; that flag only affects iteration in script code. If you want, you can skip over such properties with code like the following:
-	//			continue;
-	//		result6 << "found enumerated property:" << it.name();			
-	//	}
-	//	obj = obj.prototype();
-	//}
-	//
-
-
-	////QScriptValue calleeData = context->callee().data();
-	////QListWidget *outputObject = qobject_cast<QListWidget*>(calleeData.toQObject());
-	////outputObject->addItem(result);
-	////return engine->undefinedValue();
-
-	////outputObject->setItemDelegate(new OutputListDelegate(outputObject));
-	////QListWidgetItem *item = new QListWidgetItem();
-	////item->setData(Qt::DisplayRole, "Title");
-	////item->setData(Qt::UserRole + 1, "Description");
-	////outputObject->addItem(item);
-
-	//return result1;//engine->undefinedValue();
 	return NULL;
 }
 #endif
@@ -521,7 +444,8 @@ void MainWindow::setupScriptEngine()
 			}
 		}
 	}
-	currentRunningScriptID = 0;
+	lCurrentRunningScriptIDList.clear();
+	//currentRunningScriptID = 0;
 	connect(AppScriptEngine, SIGNAL(ScriptLoaded(qint64)), this, SLOT(scriptLoaded(qint64)));
 	connect(AppScriptEngine, SIGNAL(ScriptUnloaded(qint64)), this, SLOT(scriptUnloaded(qint64)));
 
@@ -592,19 +516,28 @@ bool MainWindow::restartScriptEngine()
 		configurePluginScriptEngine(i);
 	}
 	configureDebugger();
-	updateMenuControls(tmpSubWindow);	
+	updateMenuControls(tmpSubWindow);
+	resetContextState();
 	return true;
 }
 
 void MainWindow::scriptLoaded(qint64 id)
 {
-	currentRunningScriptID = id;
+	lCurrentRunningScriptIDList.append(id);
     setScriptRunningStatus(GlobalApplicationInformation::Executing);
 }
 
 void MainWindow::scriptUnloaded(qint64 id)
 {
-	currentRunningScriptID = 0;
+	int nIndex = lCurrentRunningScriptIDList.indexOf(id);
+	if(nIndex >= 0)
+	{
+		lCurrentRunningScriptIDList.removeAt(nIndex);
+	}
+	if(lCurrentRunningScriptIDList.isEmpty())
+		resetContextState();
+	else
+		resetContextState(id);
     setScriptRunningStatus(GlobalApplicationInformation::Pending);
 }
 
@@ -674,7 +607,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
 			{
 				//statusBar()->showMessage("DOCTYPE_QSCRIPT");
-				if (currentRunningScriptID == 0)
+				//if (currentRunningScriptID == 0)
+				if(lCurrentRunningScriptIDList.isEmpty())
 				{
                     setScriptRunningStatus(GlobalApplicationInformation::Pending);
 				}
@@ -684,7 +618,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
 			{
 				//statusBar()->showMessage("DOCTYPE_JAVASCRIPT");
-				if (currentRunningScriptID == 0)
+				//if (currentRunningScriptID == 0)
+				if(lCurrentRunningScriptIDList.isEmpty())
 				{
 					setScriptRunningStatus(GlobalApplicationInformation::Pending);
 				}
@@ -695,7 +630,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 			{
 				//statusBar()->showMessage("DOCTYPE_SVG");
 				//setScriptRunningStatus(AppScriptStatus);
-				if (currentRunningScriptID == 0)
+				//if (currentRunningScriptID == 0)
+				if(lCurrentRunningScriptIDList.isEmpty())
 				{
                     setScriptRunningStatus(GlobalApplicationInformation::Pending);
 				}
@@ -704,7 +640,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 			}
 		case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
 			{
-				if (currentRunningScriptID == 0)
+				//if (currentRunningScriptID == 0)
+				if(lCurrentRunningScriptIDList.isEmpty())
 				{
 					setScriptRunningStatus(GlobalApplicationInformation::Pending);
 				}
@@ -725,7 +662,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	else
 	{
 		setWindowTitle(tr("%1").arg(globAppInfo->getTitle()));//MainAppInfo::MainProgramTitle()));
-		if (currentRunningScriptID == 0)
+		//if (currentRunningScriptID == 0)
+		if(lCurrentRunningScriptIDList.isEmpty())
 		{
             setScriptRunningStatus(GlobalApplicationInformation::NoScript);
 		}
@@ -1234,69 +1172,61 @@ void MainWindow::setupDynamicPlugins()
 			//	DocManager->addAdditionalApiEntry(QString::fromLatin1(metaObject->method(i).signature()));
 			//}
 			if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_ISCOMPATIBLE_FULL).toLatin1())) == -1))//Is the slot present?
-			{
-				//Invoke the slot
-				metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
-				if (bRetVal)
+			{				
+				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
 				{
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECTCOUNT_FULL).toLatin1())) == -1))//Is the slot present?
+					QObject *pointerQObject = NULL;
+					const QMetaObject* metaScriptObject;
+					int i = 0;
+					bool bResult;
+					while(true)
 					{
 						//Invoke the slot
-						int nScriptObjectCount = 0;
-						bool bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECTCOUNT,Qt::DirectConnection, Q_RETURN_ARG(int,(int)nScriptObjectCount));				
-						if(bResult && (nScriptObjectCount > 0))
+						pointerQObject = NULL;
+						bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject), Q_ARG(int,(int)i));				
+						if(bResult)
 						{
-							if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
+							if(pointerQObject == NULL)
+								break;
+							if(i > 99)
 							{
-								QObject *pointerQObject = NULL;
-								const QMetaObject* metaScriptObject;
-								for (int i=0;i<nScriptObjectCount;i++)
-								{
-									//Invoke the slot
-									pointerQObject = NULL;
-									bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject), Q_ARG(int,(int)i));				
-									if(bResult)
-									{
-										metaScriptObject = (const QMetaObject*) pointerQObject;
-										if (metaScriptObject && bResult)
-											extendAPICallTips(metaScriptObject);
-									}
-									else
-									{
-										break;
-									}
-								}
+								qDebug() << __FUNCTION__ << "::Wrong Plugin(" << metaObject->className() << ") implementation, no limit or too many meta-objects(" << FUNC_PLUGIN_GETSCRIPTMETAOBJECT << ")!";
+								break;
 							}
+							metaScriptObject = (const QMetaObject*) pointerQObject;
+							if (metaScriptObject && bResult)
+								extendAPICallTips(metaScriptObject);
 						}
-					}
-
-					popPluginIntoMenu(plugin);
-					//Additional File Extensions defined?
-					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILEEXT_FULL).toLatin1())) == -1))//Is the slot present?
-					{
-						//Invoke the slot
-						QStringList strRetValList;
-						metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILEEXT,Qt::DirectConnection, Q_RETURN_ARG(QStringList, strRetValList));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
-						for (int i=0;i<strRetValList.count();i++)
+						else
 						{
-							DocManager->appendKnownFileExtensionList(strRetValList[i]);
+							break;
 						}
-
-						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILE_SLOT_HANDLERS_FULL).toLatin1())) == -1))//Is the slot present?
-						{
-							//Invoke the slot
-							metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILE_SLOT_HANDLERS,Qt::DirectConnection, Q_RETURN_ARG(QStringList, strRetValList));			
-							for (int i=0;i<strRetValList.count();i++)
-							{
-								DocManager->appendKnownDocumentFileHandlerList(strRetValList[i],plugin);
-								//QString a = strRetValList[i];
-							}
-						}
+						i++;
 					}
 				}
-				else
+
+				popPluginIntoMenu(plugin);
+				//Additional File Extensions defined?
+				if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILEEXT_FULL).toLatin1())) == -1))//Is the slot present?
 				{
-					qDebug() << __FUNCTION__ << ", The Static Plugin is incompatible(" << metaObject->className() << ")!";
+					//Invoke the slot
+					QStringList strRetValList;
+					metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILEEXT,Qt::DirectConnection, Q_RETURN_ARG(QStringList, strRetValList));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
+					for (int i=0;i<strRetValList.count();i++)
+					{
+						DocManager->appendKnownFileExtensionList(strRetValList[i]);
+					}
+
+					if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETADDFILE_SLOT_HANDLERS_FULL).toLatin1())) == -1))//Is the slot present?
+					{
+						//Invoke the slot
+						metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETADDFILE_SLOT_HANDLERS,Qt::DirectConnection, Q_RETURN_ARG(QStringList, strRetValList));			
+						for (int i=0;i<strRetValList.count();i++)
+						{
+							DocManager->appendKnownDocumentFileHandlerList(strRetValList[i],plugin);
+							//QString a = strRetValList[i];
+						}
+					}
 				}
 			}
 			else
@@ -1337,37 +1267,35 @@ void MainWindow::setupDynamicPlugins()
 					metaObject->invokeMethod(plugin, FUNC_PLUGIN_ISCOMPATIBLE,Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal));//if(!metaObject->invokeMethod(plugin, Qt::DirectConnection, Q_RETURN_ARG(bool, bRetVal)))				
 					if (bRetVal)
 					{
-						if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECTCOUNT_FULL).toLatin1())) == -1))//Is the slot present?
+						bool bResult;
+						QObject *pointerQObject = NULL;
+						const QMetaObject* metaScriptObject;
+						int i=0;
+						while(true)
 						{
 							//Invoke the slot
-							int nScriptObjectCount = 0;
-							bool bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECTCOUNT,Qt::DirectConnection, Q_RETURN_ARG(int,(int)nScriptObjectCount));				
-							if(bResult && (nScriptObjectCount > 0))
+							pointerQObject = NULL;
+							bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject), Q_ARG(int,(int)i));				
+							if(bResult)
 							{
-								if (!(metaObject->indexOfMethod(QMetaObject::normalizedSignature(QString(FUNC_PLUGIN_GETSCRIPTMETAOBJECT_FULL).toLatin1())) == -1))//Is the slot present?
+								if(metaScriptObject == NULL)
+									break;
+								if(i > 99)
 								{
-									QObject *pointerQObject = NULL;
-									const QMetaObject* metaScriptObject;
-									for (int i=0;i<nScriptObjectCount;i++)
-									{
-										//Invoke the slot
-										pointerQObject = NULL;
-										bResult = metaObject->invokeMethod(plugin, FUNC_PLUGIN_GETSCRIPTMETAOBJECT,Qt::DirectConnection, Q_RETURN_ARG(QObject*,(QObject*)pointerQObject), Q_ARG(int,(int)i));				
-										if(bResult)
-										{
-											metaScriptObject = (const QMetaObject*) pointerQObject;
-											if (metaScriptObject && bResult)
-												extendAPICallTips(metaScriptObject);
-										}
-										else
-										{
-											break;
-										}
-									}
+									qDebug() << __FUNCTION__ << "::Wrong Plugin(" << metaObject->className() << ") implementation, no limit or too many meta-objects(" << FUNC_PLUGIN_GETSCRIPTMETAOBJECT << ")!";
+									break;
 								}
+								metaScriptObject = (const QMetaObject*) pointerQObject;
+								if (metaScriptObject && bResult)
+									extendAPICallTips(metaScriptObject);
 							}
+							else
+							{
+								break;
+							}
+							i++;
 						}
-
+						
 						//qWarning() << __FUNCTION__ << ", Plugin is compatibility(" << fileName << ")";
 						if (popPluginIntoMenu(plugin))
 						{
@@ -1856,22 +1784,42 @@ QScriptValue MainWindow::executeScriptContent(const QString &sContent)
 	{
 		if(AppScriptEngine->eng)
 		{
-			if(sCurrentSetContextState != "")
+			if(pCurrentSetContextState.first != "")
 			{
 				if(currentScriptEngineContexes.isEmpty() == false)
 				{		
 					for(int i=0;i<currentScriptEngineContexes.count();i++)
 					{
-						if(currentScriptEngineContexes.at(i).sContextName == sCurrentSetContextState)//Should we overwrite?
+						if(currentScriptEngineContexes.at(i).sContextName == pCurrentSetContextState.first)//Should we overwrite?
 						{
 							QScriptContext *tmpContext = AppScriptEngine->eng->currentContext();
 							tmpContext->setActivationObject(currentScriptEngineContexes[i].activationObject);
 							tmpContext->setThisObject(currentScriptEngineContexes[i].thisObject);
+							break;
 						}
 					}
 				}
 			}
-			return AppScriptEngine->eng->evaluate(sContent);
+			if (!AppScriptEngine->eng->canEvaluate(sContent))
+			{
+				QString tmpString = "... Could not evaluate the script object (" + sContent + ")!";
+				write2OutputWindow(tmpString);
+				qDebug() << __FUNCTION__ << tmpString;
+				return NULL;
+			}
+			else
+			{
+				QScriptValue tmpScriptValue = AppScriptEngine->eng->evaluate(sContent);
+				//QScriptValue tmpScriptValue = currentScriptEngine->evaluate(adjScriptContextStatement);
+				if(AppScriptEngine->eng->hasUncaughtException())
+				{
+					QString tmpString = "... Evaluate script::UncaughtException() (" + sContent + ")!";
+					write2OutputWindow(tmpString);
+					qDebug() << __FUNCTION__ << tmpString;
+				}
+				//sScriptContextReturnValue = tmpScriptValue.toVariant();
+				return tmpScriptValue;
+			}
 		}
 	}
 	return NULL;

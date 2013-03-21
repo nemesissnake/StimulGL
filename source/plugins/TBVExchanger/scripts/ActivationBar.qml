@@ -17,6 +17,17 @@ Rectangle
 		color: "white"
 	}
 
+    Text
+    {
+        id: numText
+        //anchors.centerIn: parent
+        text: "0"
+        font.bold: true
+        font.family: "Helvetica"
+        font.pointSize: 26
+        color: "red"
+    }
+
 	Item
 	{
 		id: functionsID
@@ -43,7 +54,13 @@ Rectangle
 				someText.text = "Right Hand";
 			}				
 			return true
-		}		
+		}
+		function setActivationLevel(numString)
+		{
+		    //var tmpString = new String(numString)
+		    numText.text = numString;//tmpString;
+		    return true;
+		}
 	}
 
 	Column

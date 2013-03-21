@@ -56,8 +56,7 @@ public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};// ExtensionInterface PluginInterface::IsCompatible();};
 	//QStringList GetAdditionalFileExtensions() {return (QStringList() << "PiezoStimDevice files (*.PiezoStimDevice);;");};
-	QObject *GetScriptMetaObject(int nIndex) {return (QObject *)PiezoStimDeviceObject->metaObject();};
-	int GetScriptMetaObjectCount() {return 1;};//This plugin only defines 1 script/meta object
+	QObject *GetScriptMetaObject(int nIndex) {if(nIndex==0) return (QObject *)PiezoStimDeviceObject->metaObject(); else return NULL;};
 
 signals:
 	void DoSignal();

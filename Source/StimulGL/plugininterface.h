@@ -63,8 +63,7 @@ public slots:
 	};
 	virtual QStringList GetAdditionalFileExtensions() {return QStringList();};
 	virtual QStringList GetAdditionalFileSlotHandlers() {return QStringList();};
-	virtual QObject *GetScriptMetaObject(int nIndex = 0) {nIndex = nIndex; return NULL;};
-	virtual int GetScriptMetaObjectCount() {return 0;};
+	virtual QObject *GetScriptMetaObject(int nIndex = 0) {return NULL;};
 	virtual int GetAdditionalFileTypeStyle(QString strExtension) {return GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;};//should return a DocTypeStyle
 	virtual QString GetAdditionalFileTypeApiName(QString strExtension) {return "";};
 	

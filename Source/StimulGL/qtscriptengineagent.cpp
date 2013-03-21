@@ -32,29 +32,29 @@ QTScriptEngineAgent::~QTScriptEngineAgent()
 
 void QTScriptEngineAgent::scriptLoad(qint64 id, const QString &program, const QString &fileName, int baseLineNumber)
 {
-	int a;
-	a=1;
+	//int a;
+	//a=1;
 	emit ScriptLoaded(id);
 }
 
 void QTScriptEngineAgent::scriptUnload(qint64 id)
 {
-	int a;
-	a=1;
+	//int a;
+	//a=1;
 	emit ScriptUnloaded(id);
 }
 
 void QTScriptEngineAgent::contextPush()
 {
-	int a;
-	a=1;
+	//int a;
+	//a=1;
 
 }
 
 void QTScriptEngineAgent::contextPop()
 {
-	int a;
-	a=1;
+	//int a;
+	//a=1;
 
 }
 

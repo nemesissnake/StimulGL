@@ -1,5 +1,6 @@
 var scriptRootPath = StimulGL.getSelectedScriptFileLocation();
 var exmlFilePath = scriptRootPath + "/" + "FingerTapping.exml";
+var qmlFilePath = scriptRootPath + "/" + "ActivationBar.qml";
 var StimulusHeightSpan = 1050;
 var StimulusWidthSpan = 1050;
 var cExperimentStructure_Object = new cExperimentStructure();
@@ -26,6 +27,7 @@ var cLoopStructure_Object0;
 var cBlockStructure_Object0;
 //Construct a new Plugin object
 var TBVExchangerobject = new TBVExchanger();
+var fMeanROI;
 
 function executePreStep()
 {
@@ -35,6 +37,13 @@ function executePreStep()
 function executePostStep()
 {
 	Log("executePostStep");	
+	MainItem = "functions";
+	functionName = "setActivationLevel";		
+	fMeanROI = TBVExchangerobject.tGetMeanOfROI(0);
+	Log("tGetMeanOfROI() returned: " + fMeanROI);
+	Param1 = fMeanROI;
+	retVal = QML2Viewer_Object_1.invokeQml2Method(MainItem,functionName,Param1);
+	Log("<<< " + functionName + "(" + Param1 + ") returned: " + retVal + " >>>");	
 }
 
 function executePostRun()
@@ -159,7 +168,7 @@ function NewInitBlockTrial()
 	}
 	if(currentExperimentState.CurrentBlock_BlockID%2==0)
 	{
-		changeStimuli("fixation");
+		changeStimuli("fixation");		
 	}
 	else if(currentExperimentState.CurrentBlock_BlockID==1)
 	{
@@ -192,7 +201,14 @@ function changeStimuli(strText)
 	MainItem = "functions";
 	Param1 = strText;
 	retVal = QML2Viewer_Object_1.invokeQml2Method(MainItem,functionName,Param1);
-	Log("<<< " + functionName + "(" + Param1 + ") returned: " + retVal + " >>>");	
+	Log("<<< " + functionName + "(" + Param1 + ") returned: " + retVal + " >>>");
+	
+	//var fMeanROI = TBVExchangerobject.tGetMeanOfROI(0);
+	//Log("tGetMeanOfROI() returned: " + fMeanROI);
+	//functionName = "setActivationLevel";
+	//Param1 = fMeanROI;
+	//retVal = QML2Viewer_Object_1.invokeQml2Method(MainItem,functionName,Param1);
+	//Log("<<< " + functionName + "(" + Param1 + ") returned: " + retVal + " >>>");
 }
 
 function ExperimentStateChanged(currentState)

@@ -126,7 +126,7 @@ public slots:
 #endif
 	bool saveContextState(const QString &sContextName);
 	bool setContextState(const QString &sContextName);
-	bool resetContextState();
+	bool resetContextState(const quint64 &nScriptId = 0);
 	bool deleteContextState(const QString &sContextName);
 
 private slots:
@@ -178,7 +178,7 @@ private slots:
 
 private:
 	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
-	QString sCurrentSetContextState;
+	QPair<QString,quint64> pCurrentSetContextState;
 	QList<QScriptContextStrc> currentScriptEngineContexes;
 	QSize oldDockMaxSize, oldDockMinSize;
 	QString strAdditionalFileExtensions;
@@ -256,7 +256,8 @@ private:
 
 	QTScriptEngine *AppScriptEngine;
 	GlobalApplicationInformation::ActiveScriptMode AppScriptStatus;
-	qint64 currentRunningScriptID;	
+	//qint64 currentRunningScriptID;	
+	QList<qint64> lCurrentRunningScriptIDList;
 
 	QPushButton button;
     QMenu *pluginsMenu;
