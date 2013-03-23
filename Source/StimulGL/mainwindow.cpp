@@ -552,122 +552,155 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 {
 	//write2Debugger("updateMenuControls entered..."); this doesn't happen that often....
 	QMdiSubWindow *currentSub = activeMdiChild();
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
 	bool hasMdiChild = ((DocManager->count() > 0) && (currentSub != 0));
+	if((tmpCustomQsciScintilla) || (hasMdiChild == false))
+	{
+		StatusLinesLabel->setHidden(!hasMdiChild);
+		StatusPositionLabel->setHidden(!hasMdiChild);
+		StatusNameLabel->setHidden(!hasMdiChild);
 
-	StatusLinesLabel->setHidden(!hasMdiChild);
-	StatusPositionLabel->setHidden(!hasMdiChild);
-	StatusNameLabel->setHidden(!hasMdiChild);
+		addRemMarkerAction->setEnabled(hasMdiChild);
+		nextMarkerAction->setEnabled(hasMdiChild);
+		prevMarkerAction->setEnabled(hasMdiChild);
+		remAllMarkerAction->setEnabled(hasMdiChild);
 
-	addRemMarkerAction->setEnabled(hasMdiChild);
-	nextMarkerAction->setEnabled(hasMdiChild);
-	prevMarkerAction->setEnabled(hasMdiChild);
-	remAllMarkerAction->setEnabled(hasMdiChild);
+		clearDebuggerAction->setEnabled(true);
+		copyDebuggerAction->setEnabled(true);
 
-	clearDebuggerAction->setEnabled(true);
-	copyDebuggerAction->setEnabled(true);
+		goToLineAction->setEnabled(hasMdiChild);
+		goToMatchingBraceAction->setEnabled(hasMdiChild);
+		selToMatchingBraceAction->setEnabled(hasMdiChild);
+		lineCommentAction->setEnabled(hasMdiChild);
+		blockCommentAction->setEnabled(hasMdiChild);
+		duplicateLineAction->setEnabled(hasMdiChild);
+		moveLineUpAction->setEnabled(hasMdiChild);
+		deleteCurrentLineAction->setEnabled(hasMdiChild);
+		toUpperCaseAction->setEnabled(hasMdiChild);
+		toLowerCaseAction->setEnabled(hasMdiChild);
 
-	goToLineAction->setEnabled(hasMdiChild);
-	goToMatchingBraceAction->setEnabled(hasMdiChild);
-	selToMatchingBraceAction->setEnabled(hasMdiChild);
-	lineCommentAction->setEnabled(hasMdiChild);
-	blockCommentAction->setEnabled(hasMdiChild);
-	duplicateLineAction->setEnabled(hasMdiChild);
-	moveLineUpAction->setEnabled(hasMdiChild);
-	deleteCurrentLineAction->setEnabled(hasMdiChild);
-	toUpperCaseAction->setEnabled(hasMdiChild);
-	toLowerCaseAction->setEnabled(hasMdiChild);
+		//searchAction->setEnabled(hasMdiChild);
+		saveAction->setEnabled(hasMdiChild);
+		saveAsAction->setEnabled(hasMdiChild);
+		pasteAction->setEnabled(hasMdiChild);
+		closeAction->setEnabled(hasMdiChild);
+		closeAllAction->setEnabled(hasMdiChild);
+		tileAction->setEnabled(hasMdiChild);
+		cascadeAction->setEnabled(hasMdiChild);
+		nextAction->setEnabled(hasMdiChild);
+		previousAction->setEnabled(hasMdiChild);
+		separatorAct->setVisible(hasMdiChild);
 
-	//searchAction->setEnabled(hasMdiChild);
-	saveAction->setEnabled(hasMdiChild);
-	saveAsAction->setEnabled(hasMdiChild);
-	pasteAction->setEnabled(hasMdiChild);
-	closeAction->setEnabled(hasMdiChild);
-	closeAllAction->setEnabled(hasMdiChild);
-	tileAction->setEnabled(hasMdiChild);
-	cascadeAction->setEnabled(hasMdiChild);
-	nextAction->setEnabled(hasMdiChild);
-	previousAction->setEnabled(hasMdiChild);
-	separatorAct->setVisible(hasMdiChild);
+		bool hasSelection = false;
+		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
+		if(tmpCustomQsciScintilla)
+			hasSelection = (hasMdiChild && (tmpCustomQsciScintilla->hasSelectedText()));
 
-	bool hasSelection = (hasMdiChild && (DocManager->getDocHandler(currentSub)->hasSelectedText()));
-	cutAction->setEnabled(hasSelection);
-	copyAction->setEnabled(hasSelection);
+		cutAction->setEnabled(hasSelection);
+		copyAction->setEnabled(hasSelection);
+	}
+	else
+	{
+		StatusLinesLabel->setHidden(true);
+		StatusPositionLabel->setHidden(true);
+		StatusNameLabel->setHidden(true);
+		addRemMarkerAction->setEnabled(false);
+		nextMarkerAction->setEnabled(false);
+		prevMarkerAction->setEnabled(false);
+		remAllMarkerAction->setEnabled(false);
+		clearDebuggerAction->setEnabled(true);
+		copyDebuggerAction->setEnabled(true);
+		goToLineAction->setEnabled(false);
+		goToMatchingBraceAction->setEnabled(false);
+		selToMatchingBraceAction->setEnabled(false);
+		lineCommentAction->setEnabled(false);
+		blockCommentAction->setEnabled(false);
+		duplicateLineAction->setEnabled(false);
+		moveLineUpAction->setEnabled(false);
+		deleteCurrentLineAction->setEnabled(false);
+		toUpperCaseAction->setEnabled(false);
+		toLowerCaseAction->setEnabled(false);
+		//searchAction->setEnabled(hasMdiChild);
+		saveAction->setEnabled(hasMdiChild);
+		saveAsAction->setEnabled(hasMdiChild);
+		pasteAction->setEnabled(false);
+		closeAction->setEnabled(hasMdiChild);
+		closeAllAction->setEnabled(hasMdiChild);
+		tileAction->setEnabled(hasMdiChild);
+		cascadeAction->setEnabled(hasMdiChild);
+		nextAction->setEnabled(hasMdiChild);
+		previousAction->setEnabled(hasMdiChild);
+		separatorAct->setVisible(hasMdiChild);
+
+		cutAction->setEnabled(false);
+		copyAction->setEnabled(false);	
+
+		findAction->setEnabled(false);
+		findNextAction->setEnabled(false);
+		findPrevAction->setEnabled(false);
+		replaceAction->setEnabled(false);
+	}
 	if (hasMdiChild)
 	{
 		QString docTitle = strippedName(DocManager->getFileName(currentSub));
 		if (docTitle == "")
-		{
 			docTitle = MainAppInfo::UntitledDocName();
-		}		
-		setWindowTitle(tr("%1 - %2").arg(globAppInfo->getTitle()).arg(docTitle));//MainAppInfo::MainProgramTitle()).arg(docTitle));
+		setWindowTitle(tr("%1 - %2").arg(globAppInfo->getTitle()).arg(docTitle));
 		GlobalApplicationInformation::DocType d;
 		d = DocManager->getDocType(currentSub);
+		printAction->setEnabled(false);
 		switch (d)
 		{
 		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
 			{
-				//statusBar()->showMessage("DOCTYPE_QSCRIPT");
-				//if (currentRunningScriptID == 0)
 				if(lCurrentRunningScriptIDList.isEmpty())
-				{
-                    setScriptRunningStatus(GlobalApplicationInformation::Pending);
-				}
-				printAction->setEnabled(true);
+					setScriptRunningStatus(GlobalApplicationInformation::Pending);
+				if(tmpCustomQsciScintilla)
+					printAction->setEnabled(true);
 				break;
 			}
 		case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
 			{
-				//statusBar()->showMessage("DOCTYPE_JAVASCRIPT");
-				//if (currentRunningScriptID == 0)
 				if(lCurrentRunningScriptIDList.isEmpty())
-				{
 					setScriptRunningStatus(GlobalApplicationInformation::Pending);
-				}
-				printAction->setEnabled(true);
+				if(tmpCustomQsciScintilla)
+					printAction->setEnabled(true);
 				break;
 			}			
 		case GlobalApplicationInformation::DOCTYPE_SVG:
 			{
-				//statusBar()->showMessage("DOCTYPE_SVG");
-				//setScriptRunningStatus(AppScriptStatus);
-				//if (currentRunningScriptID == 0)
 				if(lCurrentRunningScriptIDList.isEmpty())
-				{
-                    setScriptRunningStatus(GlobalApplicationInformation::Pending);
-				}
-				printAction->setEnabled(true);
+					setScriptRunningStatus(GlobalApplicationInformation::Pending);
+				if(tmpCustomQsciScintilla)
+					printAction->setEnabled(true);
 				break;
 			}
 		case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
 			{
-				//if (currentRunningScriptID == 0)
 				if(lCurrentRunningScriptIDList.isEmpty())
-				{
 					setScriptRunningStatus(GlobalApplicationInformation::Pending);
-				}
-				printAction->setEnabled(true);
+				if(tmpCustomQsciScintilla)
+					printAction->setEnabled(true);
 				break;
 			}
 		case GlobalApplicationInformation::DOCTYPE_UNDEFINED:
 			{
-				//statusBar()->showMessage("DOCTYPE_UNDEFINED");
-				//setScriptRunningStatus(AppScriptStatus);
-				printAction->setEnabled(false);
+				if(tmpCustomQsciScintilla)
+					printAction->setEnabled(false);
 				break;
 			}
 		}
-		NumberOfLinesChanged(DocManager->getDocHandler(currentSub)->lines());
+
+		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
+		if(tmpCustomQsciScintilla)
+			NumberOfLinesChanged(tmpCustomQsciScintilla->lines());
 		StatusNameLabel->setText(QString("%1").arg(docTitle));
 	}
 	else
 	{
-		setWindowTitle(tr("%1").arg(globAppInfo->getTitle()));//MainAppInfo::MainProgramTitle()));
-		//if (currentRunningScriptID == 0)
+		setWindowTitle(tr("%1").arg(globAppInfo->getTitle()));
 		if(lCurrentRunningScriptIDList.isEmpty())
-		{
-            setScriptRunningStatus(GlobalApplicationInformation::NoScript);
-		}
-		printAction->setEnabled(false);
+			setScriptRunningStatus(GlobalApplicationInformation::NoScript);
 	}
 }
 
@@ -1652,7 +1685,8 @@ void MainWindow::executeScript()
 		}		
 		case GlobalApplicationInformation::DOCTYPE_SVG: 
 		{
-			if (DocManager->getDocHandler(currentActiveWindow)->isModified())
+			CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentActiveWindow));
+			if ((tmpCustomQsciScintilla) && (tmpCustomQsciScintilla->isModified()))
 			{
 				QMessageBox::StandardButton ret;
 				ret = QMessageBox::warning(this, tr("Save Changes?"),
@@ -1688,7 +1722,11 @@ void MainWindow::executeScript()
 			clearDebugger();
 			//QTime t;
 			QDir::setCurrent(getSelectedScriptFileLocation());
-			QString strDocumentContent = DocManager->getDocHandler(currentActiveWindow)->text();
+
+			QString strDocumentContent = "";
+			CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentActiveWindow));
+			if (tmpCustomQsciScintilla)
+				strDocumentContent = tmpCustomQsciScintilla->text();
 			QString strExtension = QFileInfo(DocManager->getFileName(currentActiveWindow)).completeSuffix();
 			QString strDocHandlerSlotName = "";
 			QObject* pluginObject = DocManager->getKnownDocumentFileHandlerInformation(DocManager->getKnownDocumentFileHandlerIndex(strExtension),strDocHandlerSlotName);
@@ -1725,7 +1763,11 @@ void MainWindow::executeScript()
 	clearDebugger();
 	QTime t;
 	QDir::setCurrent(getSelectedScriptFileLocation());
-	QString strScriptProgram = DocManager->getDocHandler(currentActiveWindow)->text();
+
+	QString strScriptProgram = "";
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentActiveWindow));
+	if (tmpCustomQsciScintilla)
+		strScriptProgram = tmpCustomQsciScintilla->text();
 	if (StimulGLScriptRunMode == GlobalApplicationInformation::Debug)
 	{
 		if (!AppScriptEngine->eng->canEvaluate(strScriptProgram))
@@ -1751,7 +1793,9 @@ void MainWindow::executeScript()
 	if(!bSyntaxValidated)
 	{
 		write2OutputWindow("... Script Syntax error at(line " + QString::number(syntaxChkResult.errorLineNumber()) + ", col " + QString::number(syntaxChkResult.errorColumnNumber()) + "): " + syntaxChkResult.errorMessage() + " ...");
-		DocManager->getDocHandler(currentActiveWindow)->setCursorPosition(syntaxChkResult.errorLineNumber()-1,syntaxChkResult.errorColumnNumber());
+		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentActiveWindow));
+		if (tmpCustomQsciScintilla)
+			tmpCustomQsciScintilla->setCursorPosition(syntaxChkResult.errorLineNumber()-1,syntaxChkResult.errorColumnNumber());
 	}
 	else
 	{
@@ -1759,13 +1803,17 @@ void MainWindow::executeScript()
 		t.start();
 
 		QScriptValue result;
-		result = executeScriptContent(DocManager->getDocHandler(currentActiveWindow)->text());
+
+		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentActiveWindow));
+		if (tmpCustomQsciScintilla)
+			result = executeScriptContent(tmpCustomQsciScintilla->text());
 		QString strResult;
 		strResult = result.toString();
 		if (result.isError()) 
 		{
 			write2OutputWindow("... Script stopped Evaluating due to error on line " + result.property("lineNumber").toString() + ": --> " + result.toString() + "...");
-			DocManager->getDocHandler(currentActiveWindow)->setCursorPosition(result.property("lineNumber").toInteger()-1,0);
+			if (tmpCustomQsciScintilla)
+				tmpCustomQsciScintilla->setCursorPosition(result.property("lineNumber").toInteger()-1,0);
 		}
 		else
 		{
@@ -2106,7 +2154,8 @@ void MainWindow::newFile()
 void MainWindow::newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension)
 {
 	DocIndex = 0;
-	QsciScintilla *newChild = DocManager->add(docType,DocIndex,strExtension);
+	//QsciScintilla *newChild = qobject_cast<QsciScintilla *>(DocManager->add(docType,DocIndex,strExtension));
+	QWidget *newChild = DocManager->add(docType,DocIndex,strExtension);
 	QMdiSubWindow *subWindow = mdiArea->addSubWindow(newChild);
 	subWindow->setAttribute(Qt::WA_DeleteOnClose);
 	DocManager->setSubWindow(DocIndex,subWindow);
@@ -2183,31 +2232,38 @@ void MainWindow::saveAs()
 void MainWindow::cut()
 {
 	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
-	if (DocManager->getDocHandler(tmpMdiChildPointer))
-		DocManager->getDocHandler(tmpMdiChildPointer)->cut();
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(tmpMdiChildPointer));
+	if (tmpCustomQsciScintilla)
+		tmpCustomQsciScintilla->cut();
 }
 
 void MainWindow::copy()
 {
 	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
-	if (DocManager->getDocHandler(tmpMdiChildPointer))
-		DocManager->getDocHandler(tmpMdiChildPointer)->copy();
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(tmpMdiChildPointer));
+	if (tmpCustomQsciScintilla)
+		tmpCustomQsciScintilla->copy();
 }
 
 void MainWindow::paste()
 {
 	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
-	if (DocManager->getDocHandler(tmpMdiChildPointer))
-		DocManager->getDocHandler(tmpMdiChildPointer)->paste();
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(tmpMdiChildPointer));
+	if (tmpCustomQsciScintilla)
+		tmpCustomQsciScintilla->paste();
 }
 
 void MainWindow::lineComment()
 {
-	DocManager->getDocHandler(activeMdiChild())->toggleLineComment();
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpCustomQsciScintilla)
+		tmpCustomQsciScintilla->toggleLineComment();
 }
 void MainWindow::blockComment()
 {
-	DocManager->getDocHandler(activeMdiChild())->toggleBlockComment();
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpCustomQsciScintilla)
+		tmpCustomQsciScintilla->toggleBlockComment();
 }
 void MainWindow::updateWindowMenu()
 {
@@ -2252,9 +2308,7 @@ void MainWindow::updateMarkersMenu()
 	{
 		markersMenu->clear();
 
-		CustomQsciScintilla *tmpSci;
-		tmpSci = DocManager->getDocHandler(activeMdiChild());
-
+		CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
 		markersMenu->addAction(addRemMarkerAction);
 		markersMenu->addAction(nextMarkerAction);
 		markersMenu->addAction(prevMarkerAction);
@@ -2279,8 +2333,7 @@ void MainWindow::updateMarkersMenu()
 void MainWindow::gotoMarker() 
 {
 	QAction* a = qobject_cast<QAction*>(sender());
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
 	if ( tmpSci && !tmpSci == 0 && a ) {
 		int line = a->text().section(':', 0, 0).toInt();
 		tmpSci->gotoLine(line - 1);
@@ -2490,60 +2543,71 @@ QMdiSubWindow *MainWindow::findMdiChild(const QString &fileName)
 
 void MainWindow::jumpToMatchingBrace()
 {
-	DocManager->getDocHandler(activeMdiChild())->moveToMatchingBrace();
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->moveToMatchingBrace();
 }
 
 void MainWindow::selectToMatchingBrace()
 {
-	DocManager->getDocHandler(activeMdiChild())->selectToMatchingBrace();
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->selectToMatchingBrace();
 }
 
 void MainWindow::duplicateLine()
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	if (tmpSci->hasSelectedText())
-	{tmpSci->SendScintilla(QsciScintilla::SCI_SELECTIONDUPLICATE);}
-	else
-		{tmpSci->SendScintilla(QsciScintilla::SCI_LINEDUPLICATE);}
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+	{
+		if(tmpSci->hasSelectedText())
+			tmpSci->SendScintilla(QsciScintilla::SCI_SELECTIONDUPLICATE);
+		else
+			tmpSci->SendScintilla(QsciScintilla::SCI_LINEDUPLICATE);
+	}
 }
 
 void MainWindow::moveLineUp()
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	tmpSci->SendScintilla(QsciScintilla::SCI_LINETRANSPOSE);
-	tmpSci->SendScintilla(QsciScintilla::SCI_LINEUP);
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+	{
+		tmpSci->SendScintilla(QsciScintilla::SCI_LINETRANSPOSE);
+		tmpSci->SendScintilla(QsciScintilla::SCI_LINEUP);
+	}
 }
 
 void MainWindow::deleteCurrentLine()
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	tmpSci->SendScintilla(QsciScintilla::SCI_LINEDELETE);
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->SendScintilla(QsciScintilla::SCI_LINEDELETE);
 }
 
 void MainWindow::toUpperCase()
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	tmpSci->SendScintilla(QsciScintilla::SCI_UPPERCASE);
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->SendScintilla(QsciScintilla::SCI_UPPERCASE);
 }
 
 void MainWindow::toLowerCase()
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	tmpSci->SendScintilla(QsciScintilla::SCI_LOWERCASE);
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->SendScintilla(QsciScintilla::SCI_LOWERCASE);
 }
 
 void MainWindow::print()
 {
 #ifndef QT_NO_PRINTDIALOG
-	if (DocManager->getDocHandler(activeMdiChild())->print())
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
 	{
-		statusBar()->showMessage(tr("Printing..."), 2000);
-	}
+		if (tmpSci->print())
+		{
+			statusBar()->showMessage(tr("Printing..."), 2000);
+		}
 //	QTextDocument *document = activeMdiChild()->sciObject->document();
 //	QPrinter printer;
 //
@@ -2552,86 +2616,91 @@ void MainWindow::print()
 //		return;
 //	document->print(&printer);
 //	
+	}
 #endif
 }
 
 void MainWindow::toggleMarker() 
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	tmpSci->toggleMarker();
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->toggleMarker();
 	//initMarkersMenu();
 }
 
 void MainWindow::nextMarker() 
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	tmpSci->nextMarker();
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->nextMarker();
 }
 
 void MainWindow::prevMarker() 
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	tmpSci->prevMarker();
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->prevMarker();
 }
 
 void MainWindow::removeAllMarkers() 
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	tmpSci->removeAllMarkers();
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+		tmpSci->removeAllMarkers();
 }
 
 void MainWindow::goToLine() 
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-	bool ok = false;
-	int line = QInputDialog::getInt(mdiArea, tr("Go to line"), 
-		tr("Go to line") + QString(" (1 - %1):").arg(tmpSci->lineCount()), 
-		1, 1, tmpSci->lineCount(), 1, &ok);
-	if ( ok )
-		tmpSci->gotoLine(line - 1);
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+	{
+		bool ok = false;
+		int line = QInputDialog::getInt(mdiArea, tr("Go to line"), 
+			tr("Go to line") + QString(" (1 - %1):").arg(tmpSci->lineCount()), 
+			1, 1, tmpSci->lineCount(), 1, &ok);
+		if ( ok )
+			tmpSci->gotoLine(line - 1);
+	}
 }
 
 void MainWindow::findImpl(bool bReplace, bool useParams, QString strFindString, QString strReplaceString, DocFindFlags findFlags, bool bReplaceAll) 
 {
 	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(tmpMdiChildPointer);
-	DocFindFlags flags(bReplace);
-	QString str1, str2;
-	int line1, col1, line2, col2;
-	tmpSci->getSelection(&line1, &col1, &line2, &col2);
-	if ( line1 == line2 ) {
-		if ( col1 != col2 ) {
-			str1 = tmpSci->selectedText();
-		}
-		else {
-			str1 = tmpSci->wordUnderCursor();
-		}
-	}
-	if(useParams)
-	{
-		if ( bReplace ){//findFlags.replace ) {
-			tmpSci->replace(strFindString,strReplaceString, findFlags, bReplaceAll);
-		}
-		else {
-			tmpSci->find(strFindString, findFlags);
-		}
-	}
-	else
-	{
-		if ( DocManager->getFindParams(tmpMdiChildPointer,str1, str2, flags) ) {
-			if ( flags.replace ) {
-				tmpSci->replace(str1, str2, flags, bReplaceAll);
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(tmpMdiChildPointer));
+	if (tmpSci)
+	{	
+		DocFindFlags flags(bReplace);
+		QString str1, str2;
+		int line1, col1, line2, col2;
+		tmpSci->getSelection(&line1, &col1, &line2, &col2);
+		if ( line1 == line2 ) {
+			if ( col1 != col2 ) {
+				str1 = tmpSci->selectedText();
 			}
 			else {
-				tmpSci->find(str1, flags);
+				str1 = tmpSci->wordUnderCursor();
 			}
-		}	
+		}
+		if(useParams)
+		{
+			if ( bReplace ){//findFlags.replace ) {
+				tmpSci->replace(strFindString,strReplaceString, findFlags, bReplaceAll);
+			}
+			else {
+				tmpSci->find(strFindString, findFlags);
+			}
+		}
+		else
+		{
+			if ( DocManager->getFindParams(tmpMdiChildPointer,str1, str2, flags) ) {
+				if ( flags.replace ) {
+					tmpSci->replace(str1, str2, flags, bReplaceAll);
+				}
+				else {
+					tmpSci->find(str1, flags);
+				}
+			}	
+		}
 	}
 }
 
@@ -2683,18 +2752,19 @@ void MainWindow::replace(bool bReplaceAll, bool useParams, QString strFindString
  */
 void MainWindow::findNext() 
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-
-	QString lastText = DocManager->lastFindText();
-	if ( lastText.isEmpty() ) {
-		find();
-	}
-	else {
-		DocFindFlags flags = DocManager->lastFlags();
-		flags.replace = false;
-		flags.backwards = false;
-		tmpSci->find(lastText, flags);
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+	if (tmpSci)
+	{	
+		QString lastText = DocManager->lastFindText();
+		if ( lastText.isEmpty() ) {
+			find();
+		}
+		else {
+			DocFindFlags flags = DocManager->lastFlags();
+			flags.replace = false;
+			flags.backwards = false;
+			tmpSci->find(lastText, flags);
+		}
 	}
 }
 
@@ -2704,17 +2774,18 @@ void MainWindow::findNext()
  */
 void MainWindow::findPrev() 
 {
-	CustomQsciScintilla *tmpSci;
-	tmpSci = DocManager->getDocHandler(activeMdiChild());
-
-	QString lastText = DocManager->lastFindText();
-	if ( lastText.isEmpty() ) {
-		find();
-	}
-	else {
-		DocFindFlags flags = DocManager->lastFlags();
-		flags.replace = false;
-		flags.backwards = true;
-		tmpSci->find(lastText, flags);
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(activeMdiChild());
+	if (tmpSci)
+	{
+		QString lastText = DocManager->lastFindText();
+		if ( lastText.isEmpty() ) {
+			find();
+		}
+		else {
+			DocFindFlags flags = DocManager->lastFlags();
+			flags.replace = false;
+			flags.backwards = true;
+			tmpSci->find(lastText, flags);
+		}
 	}
 }

@@ -2,5 +2,20 @@
     <qresource prefix="/">
         <file>resources/StartQmlFile.qml</file>
         <file>resources/UnlockedQmlFile.qml</file>
+        <file>visualexperimenteditor/images/background1.png</file>
+        <file>visualexperimenteditor/images/background2.png</file>
+        <file>visualexperimenteditor/images/background3.png</file>
+        <file>visualexperimenteditor/images/background4.png</file>
+        <file>visualexperimenteditor/images/bold.png</file>
+        <file>visualexperimenteditor/images/bringtofront.png</file>
+        <file>visualexperimenteditor/images/delete.png</file>
+        <file>visualexperimenteditor/images/floodfill.png</file>
+        <file>visualexperimenteditor/images/italic.png</file>
+        <file>visualexperimenteditor/images/linecolor.png</file>
+        <file>visualexperimenteditor/images/linepointer.png</file>
+        <file>visualexperimenteditor/images/pointer.png</file>
+        <file>visualexperimenteditor/images/sendtoback.png</file>
+        <file>visualexperimenteditor/images/textpointer.png</file>
+        <file>visualexperimenteditor/images/underline.png</file>
     </qresource>
 </RCC>

@@ -299,3 +299,22 @@ QString ExperimentManagerPlugin::GetAdditionalFileTypeApiName(QString strExtensi
 	}
 }
 
+QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtension)
+{
+	if(strExtension.toLower() == "exml")
+	{
+		//QGraphicsScene *gScene = new QGraphicsScene();
+		//gScene->addText("Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!");
+		//QGraphicsView *gView = new QGraphicsView(gScene);
+		//return qobject_cast<QWidget *>(gView);
+		VisualExperimentEditor *visExpEditor = new VisualExperimentEditor();
+		//QWidget *res = qobject_cast<QWidget *>(visExpEditor);
+		return visExpEditor;
+	} 
+	else if(strExtension.toLower() == "qml")
+	{
+		return NULL;//not jet implemented
+	}
+	return NULL;
+}
+

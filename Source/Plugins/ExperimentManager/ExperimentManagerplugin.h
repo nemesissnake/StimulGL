@@ -35,6 +35,7 @@
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"
 #include "RetinotopyMapper.h"
+#include "visualexperimenteditor/VisualExperimentEditor.h"
 #include "defines.h"
 
 class ExperimentManagerPlugin : public QObject, ExtensionInterface
@@ -75,6 +76,7 @@ public slots:
 	QObject *GetScriptMetaObject(int nIndex);
 	int GetAdditionalFileTypeStyle(QString strExtension);
 	QString GetAdditionalFileTypeApiName(QString strExtension);
+	QWidget *GetAdditionalFileTypeEditor(QString strExtension);
 };
 
 #endif//ExperimentManagerPLUGIN_H

@@ -66,6 +66,7 @@ public slots:
 	virtual QObject *GetScriptMetaObject(int nIndex = 0) {return NULL;};
 	virtual int GetAdditionalFileTypeStyle(QString strExtension) {return GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;};//should return a DocTypeStyle
 	virtual QString GetAdditionalFileTypeApiName(QString strExtension) {return "";};
+	virtual QWidget *GetAdditionalFileTypeEditor(QString strExtension) {return NULL;};
 	
 protected:
 	QString strPluginInformation;

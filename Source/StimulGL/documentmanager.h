@@ -51,10 +51,11 @@ public:
 		QList<QObject *> pluginObject;
 	};  
 
-	CustomQsciScintilla *getDocHandler(const int &DocIndex);
-	CustomQsciScintilla *getDocHandler(QMdiSubWindow *subWindow);
+	QWidget *getDocHandler(const int &DocIndex);
+	QWidget *getDocHandler(QMdiSubWindow *subWindow);
 	int count(void);
-	CustomQsciScintilla *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension);
+	//CustomQsciScintilla *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension);
+	QWidget *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension);
 	bool remove(QMdiSubWindow *subWindow);
 	bool setSubWindow(int DocIndex, QMdiSubWindow *subWindow);
 	bool loadFile(int DocIndex, const QString &fileName);
@@ -92,7 +93,8 @@ private:
 	QString strFileExtensionList;
 	strcPluginDocHandlerInfo pluginDocHandlerStore;	
 	QList<GlobalApplicationInformation::DocType> ChildrenDocTypes;
-	QList<CustomQsciScintilla *> QScintillaChildren;
+	//QList<CustomQsciScintilla *> QScintillaChildren;
+	QList<QWidget *> QWidgetChildren;
 	QList<QMdiSubWindow *> SubWindowChildren;
 	QList<bool> ChildrenModification;
 	QStringList additionalApiEntries;

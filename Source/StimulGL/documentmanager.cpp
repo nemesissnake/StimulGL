@@ -40,11 +40,11 @@ DocumentManager::~DocumentManager()
 		delete NrOfLinesChangedMapper;
 }
 
-CustomQsciScintilla *DocumentManager::getDocHandler(const int &DocIndex)
+QWidget *DocumentManager::getDocHandler(const int &DocIndex)
 {
 	if (DocCount > 0)
 	{
-		return QScintillaChildren.at(DocIndex);
+		return QWidgetChildren.at(DocIndex);
 	}
 	else
 	{
@@ -52,14 +52,14 @@ CustomQsciScintilla *DocumentManager::getDocHandler(const int &DocIndex)
 	}
 }
 
-CustomQsciScintilla *DocumentManager::getDocHandler(QMdiSubWindow *subWindow)
+QWidget *DocumentManager::getDocHandler(QMdiSubWindow *subWindow)
 {
 	int i;
 	for (i=0;i<DocCount;i++)
 	{
 		if (SubWindowChildren.at(i) == subWindow)
 		{
-			return QScintillaChildren.at(i);
+			return QWidgetChildren.at(i);
 		}
 	}
 	return 0;
@@ -347,109 +347,130 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Glob
 	return false;
 }
 
-CustomQsciScintilla *DocumentManager::add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension)
+QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension)
 {
-	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
-	CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
-	custQsci->setPaper(QColor(255,255,255));
-	custQsci->setAutoIndent(true);
-	custQsci->setAutoCompletionThreshold(2);
-	custQsci->setCaretLineVisible(true);//selected line
-	custQsci->setCaretLineBackgroundColor(QColor(240,240,255));
-	custQsci->setMarginLineNumbers(1, true);
-	custQsci->setMarginSensitivity(1, true);
-	custQsci->setMarginWidth(2, 12);//	Show the first two margins (number 1 and 2) --> (binary mask 00000110 == 6)	
-	custQsci->setMarginMarkerMask(1, 6);//	Set the 1st margin to accept markers	
-	custQsci->markerDefine(QsciScintilla::RightTriangle, 1);
-	custQsci->markerDefine(QsciScintilla::Background, 2);
-	custQsci->setMarkerForegroundColor(QColor(100, 100, 100));
-	custQsci->setMarkerBackgroundColor(QColor(160,180,200));
-	custQsci->setSelectionBackgroundColor(QColor(150,150,155));//selected text
-	custQsci->setSelectionForegroundColor(QColor(100,100,100));
-	custQsci->setPaper(cPaper);//Here we make the paper background color light Grey instead of White (Better for the subject watching...)
-	NrOfLinesChangedMapper = new QSignalMapper(this);
-	NrOfLinesChangedMapper->setMapping(custQsci, custQsci);//QScintillaChildren.at(DocCount)
-	connect(custQsci, SIGNAL(linesChanged()),NrOfLinesChangedMapper, SLOT (map()));
-	connect(NrOfLinesChangedMapper, SIGNAL(mapped(QWidget *)), this, SLOT(updateLineNumbers(QWidget *)));
-	connect(custQsci, SIGNAL(marginClicked(int, int, Qt::KeyboardModifiers)), SLOT(onMarginClicked(int, int, Qt::KeyboardModifiers)));
+	GlobalApplicationInformation::DocTypeStyle sDocStyle = GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;
+	QObject* pluginObject = NULL;
+	QWidget* editorObject = NULL;
+	QString sAPIFileName = "";
+	bool bResult = false;
 
-	switch (docType)
+	if(docType == GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED)
 	{
-	case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
+		if(pluginDocHandlerStore.strDocHandlerInfoList.isEmpty() == false)
 		{
-			bool bResult = customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"qscript.api");
-			break;
-		}
-	case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
-		{
-			bool bResult = customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"javascript.api");
-			break;
-		}		
-	case GlobalApplicationInformation::DOCTYPE_SVG:
-		{
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
-			break;
-		}
-	case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
-		{
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
-			if(pluginDocHandlerStore.strDocHandlerInfoList.isEmpty() == false)
+			for (int i=0;i<pluginDocHandlerStore.strDocHandlerInfoList.count();i++)
 			{
-				if(pluginDocHandlerStore.strDocHandlerInfoList.count() >= 1);
-				for (int i=0;i<pluginDocHandlerStore.strDocHandlerInfoList.count();i++)
+				if(pluginDocHandlerStore.strDocHandlerInfoList.at(i).split("|",QString::SkipEmptyParts).at(0).toLower() == strExtension.toLower())
 				{
-					if(pluginDocHandlerStore.strDocHandlerInfoList.at(i).split("|",QString::SkipEmptyParts).at(0).toLower() == strExtension.toLower())
+					if(pluginDocHandlerStore.pluginObject.at(i))
 					{
-						if(pluginDocHandlerStore.pluginObject.at(i))
-						{
-							QObject* pluginObject = pluginDocHandlerStore.pluginObject.at(i);
-							if(pluginObject)
+						pluginObject = pluginDocHandlerStore.pluginObject.at(i);
+						if(pluginObject)
+						{							
+							if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE_FULL)) == -1))//Is the slot present?
 							{
-								bool bResult = false;
-								GlobalApplicationInformation::DocTypeStyle sDocStyle = GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;
-								if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE_FULL)) == -1))//Is the slot present?
-								{
-									
-									int nTmpRetVal = 0;
-									bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nTmpRetVal), Q_ARG(QString,strExtension.toLower()));				
-									if(bResult)
-										sDocStyle = (GlobalApplicationInformation::DocTypeStyle)nTmpRetVal;						
-								}
 
-								QString sAPIFileName = "";
-								if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME_FULL)) == -1))//Is the slot present?
-								{
-									bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME),Qt::DirectConnection, Q_RETURN_ARG(QString,sAPIFileName), Q_ARG(QString,strExtension.toLower()));		
-								}
-								bResult = customizeDocumentStyle(custQsci,sDocStyle,sAPIFileName);
-								break;
+								int nTmpRetVal = 0;
+								bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nTmpRetVal), Q_ARG(QString,strExtension.toLower()));				
+								if(bResult)
+									sDocStyle = (GlobalApplicationInformation::DocTypeStyle)nTmpRetVal;						
 							}
+							if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME_FULL)) == -1))//Is the slot present?
+							{
+								bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME),Qt::DirectConnection, Q_RETURN_ARG(QString,sAPIFileName), Q_ARG(QString,strExtension.toLower()));		
+							}
+							if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR_FULL)) == -1))//Is the slot present?
+							{
+								bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR),Qt::DirectConnection, Q_RETURN_ARG(QWidget *,editorObject), Q_ARG(QString,strExtension.toLower()));
+							}	
 							break;
 						}
 						break;
 					}
+					break;
 				}
 			}
-			break;
-		}
-	case GlobalApplicationInformation::DOCTYPE_UNDEFINED:
-		{
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
-			break;
-		}
-	default://if none of the above match...
-		{
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
-			break;
 		}
 	}
-	QScintillaChildren.append(custQsci);
+
+	if(editorObject == NULL)
+	{
+		QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
+		CustomQsciScintilla *custQsci = new CustomQsciScintilla(docType);
+		custQsci->setPaper(QColor(255,255,255));
+		custQsci->setAutoIndent(true);
+		custQsci->setAutoCompletionThreshold(2);
+		custQsci->setCaretLineVisible(true);//selected line
+		custQsci->setCaretLineBackgroundColor(QColor(240,240,255));
+		custQsci->setMarginLineNumbers(1, true);
+		custQsci->setMarginSensitivity(1, true);
+		custQsci->setMarginWidth(2, 12);//	Show the first two margins (number 1 and 2) --> (binary mask 00000110 == 6)	
+		custQsci->setMarginMarkerMask(1, 6);//	Set the 1st margin to accept markers	
+		custQsci->markerDefine(QsciScintilla::RightTriangle, 1);
+		custQsci->markerDefine(QsciScintilla::Background, 2);
+		custQsci->setMarkerForegroundColor(QColor(100, 100, 100));
+		custQsci->setMarkerBackgroundColor(QColor(160,180,200));
+		custQsci->setSelectionBackgroundColor(QColor(150,150,155));//selected text
+		custQsci->setSelectionForegroundColor(QColor(100,100,100));
+		custQsci->setPaper(cPaper);//Here we make the paper background color light Grey instead of White (Better for the subject watching...)
+		NrOfLinesChangedMapper = new QSignalMapper(this);
+		NrOfLinesChangedMapper->setMapping(custQsci, custQsci);//QWidgetChildren.at(DocCount)
+		connect(custQsci, SIGNAL(linesChanged()),NrOfLinesChangedMapper, SLOT (map()));
+		connect(NrOfLinesChangedMapper, SIGNAL(mapped(QWidget *)), this, SLOT(updateLineNumbers(QWidget *)));
+		connect(custQsci, SIGNAL(marginClicked(int, int, Qt::KeyboardModifiers)), SLOT(onMarginClicked(int, int, Qt::KeyboardModifiers)));
+
+		switch (docType)
+		{
+		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
+			{
+				bool bResult = customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"qscript.api");
+				break;
+			}
+		case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
+			{
+				bool bResult = customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"javascript.api");
+				break;
+			}		
+		case GlobalApplicationInformation::DOCTYPE_SVG:
+			{
+				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+				break;
+			}
+		case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
+			{
+				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+				if(pluginObject)
+					bResult = customizeDocumentStyle(custQsci,sDocStyle,sAPIFileName);
+				break;
+			}
+		case GlobalApplicationInformation::DOCTYPE_UNDEFINED:
+			{
+				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+				break;
+			}
+		default://if none of the above match...
+			{
+				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+				break;
+			}
+		}
+		QWidgetChildren.append(custQsci);
+		editorObject = qobject_cast<QWidget*>(custQsci);
+		//DocIndex = DocCount;
+		//DocCount++;
+		//return custQsci;
+	}
+	else
+	{
+		QWidgetChildren.append(NULL);
+	}
 	ChildrenDocTypes.append(docType);
 	ChildrenFileNames.append("");
 	ChildrenModification.append(false);
 	DocIndex = DocCount;
 	DocCount++;
-	return custQsci;
+	return editorObject;
 }
 
 int DocumentManager::addAdditionalApiEntry(const QString &entry)
@@ -474,11 +495,14 @@ void DocumentManager::onMarginClicked (int margin, int line, Qt::KeyboardModifie
 
 void DocumentManager::updateLineNumbers(QWidget *tmpSci) 
 {
-	CustomQsciScintilla *tmpScintilla = dynamic_cast<CustomQsciScintilla *>(tmpSci);
-	int nrOfLines = tmpScintilla->lines();
-	QString str = QString("00%1").arg(nrOfLines);
-	tmpScintilla->setMarginWidth(1, str);
-	emit NrOfLinesChanged(nrOfLines);
+	CustomQsciScintilla *tmpScintilla = qobject_cast<CustomQsciScintilla *>(tmpSci);
+	if(tmpSci)
+	{
+		int nrOfLines = tmpScintilla->lines();
+		QString str = QString("00%1").arg(nrOfLines);
+		tmpScintilla->setMarginWidth(1, str);
+		emit NrOfLinesChanged(nrOfLines);
+	}
 }
 
 bool DocumentManager::setSubWindow(int DocIndex, QMdiSubWindow *subWindow)
@@ -495,12 +519,14 @@ bool DocumentManager::setSubWindow(int DocIndex, QMdiSubWindow *subWindow)
 	{
 		return false;
 	}
-	DocModifiedMapper->setMapping(QScintillaChildren.at(DocIndex), SubWindowChildren.at(DocIndex));
+	DocModifiedMapper->setMapping(QWidgetChildren.at(DocIndex), SubWindowChildren.at(DocIndex));
 	bool bResult = false;
-	bResult = connect(QScintillaChildren.at(DocIndex), SIGNAL(textChanged()),	DocModifiedMapper, SLOT(map()));
+	bResult = connect(QWidgetChildren.at(DocIndex), SIGNAL(textChanged()),	DocModifiedMapper, SLOT(map()));
 	bResult = connect(DocModifiedMapper, SIGNAL(mapped(QWidget *)), this, SLOT(documentWasModified(QWidget *)));
 
-	QScintillaChildren.at(DocIndex)->setManagerObject(this,subWindow);
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
+	if(tmpCustomQsciScintilla)
+		tmpCustomQsciScintilla->setManagerObject(this,subWindow);
 	return true;
 }
 
@@ -513,7 +539,11 @@ bool DocumentManager::loadFile(int DocIndex, const QString &fileName)
 	}
 	QTextStream in(&file);
 	QApplication::setOverrideCursor(Qt::WaitCursor);
-	QScintillaChildren.at(DocIndex)->setText(in.readAll());
+
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
+	if(tmpCustomQsciScintilla)
+		tmpCustomQsciScintilla->setText(in.readAll());
+
 	setModFlagAndTitle(DocIndex,false);
 	setFileName(DocIndex,fileName);
 	QApplication::restoreOverrideCursor();
@@ -551,19 +581,23 @@ int DocumentManager::getDocIndex(const QString &DocName)
 void DocumentManager::setModFlagAndTitle(const int &DocIndex,bool hasChanges)
 {
 	ChildrenModification.replace(DocIndex,hasChanges);
-	QScintillaChildren.at(DocIndex)->setModified(hasChanges);
+
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
+	if(tmpCustomQsciScintilla)
+		tmpCustomQsciScintilla->setModified(hasChanges);
+
 	QString tmpTitle = ChildrenFileNames.at(DocIndex);
 	if (tmpTitle != "")
 	{
 		if (hasChanges)
 		{
-			QScintillaChildren.at(DocIndex)->setWindowTitle(tmpTitle + "*");
+			QWidgetChildren.at(DocIndex)->setWindowTitle(tmpTitle + "*");
 		}
 		else
 		{
-			QScintillaChildren.at(DocIndex)->setWindowTitle(tmpTitle);
-		}
-		
+			if(tmpCustomQsciScintilla)
+				QWidgetChildren.at(DocIndex)->setWindowTitle(tmpTitle);
+		}		
 	}
 }
 
@@ -572,7 +606,7 @@ void DocumentManager::setFileName(int DocIndex, QString fileName)
 	fileName = 	QFileInfo(fileName).canonicalFilePath();
 	ChildrenFileNames.replace(DocIndex,fileName);
 	setModFlagAndTitle(DocIndex,false);
-	//QScintillaChildren.at(DocIndex)->setWindowTitle(fileName);	
+	//QWidgetChildren.at(DocIndex)->setWindowTitle(fileName);	
 }
 
 bool DocumentManager::appendKnownFileExtensionList(QString strFileExtLst)
@@ -655,8 +689,13 @@ bool DocumentManager::saveFile(int DocIndex, QString fileName)
 
 	QTextStream out(&file);
 	QApplication::setOverrideCursor(Qt::WaitCursor);
-	out << QScintillaChildren.at(DocIndex)->text();
-	QScintillaChildren.at(DocIndex)->setModified(false);
+
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
+	if(tmpCustomQsciScintilla)
+	{
+		out << tmpCustomQsciScintilla->text();
+		tmpCustomQsciScintilla->setModified(false);
+	}
 	QApplication::restoreOverrideCursor();
 
 	setFileName(DocIndex,fileName);
@@ -681,26 +720,30 @@ bool DocumentManager::maybeSave(QMdiSubWindow *subWindow, bool bAutoSaveChanges)
 		{
 			if (SubWindowChildren.at(i) == subWindow)
 			{
-				if (QScintillaChildren.at(i)->isModified()) {
-					if(!bAutoSaveChanges)
-					{
-						int ret = QMessageBox::warning(0, ChildrenFileNames.at(i),
-							tr("The document has been modified.\n"
-							"Do you want to save your changes?"),
-							QMessageBox::Yes | QMessageBox::Default,
-							QMessageBox::No,
-							QMessageBox::Cancel | QMessageBox::Escape);
-						if (ret == QMessageBox::Yes)
+				CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(i));
+				if (tmpCustomQsciScintilla)
+				{
+					if (tmpCustomQsciScintilla->isModified()) {
+						if(!bAutoSaveChanges)
+						{
+							int ret = QMessageBox::warning(0, ChildrenFileNames.at(i),
+								tr("The document has been modified.\n"
+								"Do you want to save your changes?"),
+								QMessageBox::Yes | QMessageBox::Default,
+								QMessageBox::No,
+								QMessageBox::Cancel | QMessageBox::Escape);
+							if (ret == QMessageBox::Yes)
+								return saveFile(i);
+							else if (ret == QMessageBox::Cancel)
+								return false;
+						}
+						else
+						{
 							return saveFile(i);
-						else if (ret == QMessageBox::Cancel)
-							return false;
+						}
 					}
-					else
-					{
-						return saveFile(i);
-					}
+					return true;
 				}
-				return true;
 			}
 		}
 		return true;
@@ -716,7 +759,7 @@ bool DocumentManager::remove(QMdiSubWindow *subWindow)
 		{
 			ChildrenFileNames.removeAt(i);
 			ChildrenDocTypes.removeAt(i);
-			QScintillaChildren.removeAt(i);
+			QWidgetChildren.removeAt(i);
 			SubWindowChildren.removeAt(i);
 			ChildrenModification.removeAt(i);
 			DocCount --;
@@ -728,9 +771,12 @@ bool DocumentManager::remove(QMdiSubWindow *subWindow)
 
 void DocumentManager::setAllUnmodified()
 {
+	CustomQsciScintilla *tmpCustomQsciScintilla;
 	for (int i=0;i<DocCount;i++)
 	{
-		QScintillaChildren.at(i)->setModified(false);
+		tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(i));
+		if (tmpCustomQsciScintilla)
+			tmpCustomQsciScintilla->setModified(false);
 	}
 }
 

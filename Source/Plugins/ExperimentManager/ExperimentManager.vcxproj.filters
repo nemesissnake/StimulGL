@@ -53,6 +53,10 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{499de04b-8cab-4b1f-8403-734cd2f068f4}</UniqueIdentifier>
+      <Extensions>png</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="experimentlogger.cpp">
@@ -508,6 +512,75 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_QML2ModelIndexProvider.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_DiagramScene.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_DiagramScene.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_DiagramScene.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_DiagramScene.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_DiagramScene.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_DiagramScene.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_DiagramTextItem.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_DiagramTextItem.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_DiagramTextItem.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_DiagramTextItem.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_DiagramTextItem.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_DiagramTextItem.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_VisualExperimentEditor.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_VisualExperimentEditor.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_VisualExperimentEditor.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_VisualExperimentEditor.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_VisualExperimentEditor.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_VisualExperimentEditor.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="visualexperimenteditor\DiagramArrow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="visualexperimenteditor\DiagramItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="visualexperimenteditor\DiagramScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="visualexperimenteditor\DiagramTextItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="visualexperimenteditor\VisualExperimentEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -541,6 +614,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RetinotopyMapperWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="visualexperimenteditor\DiagramArrow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="visualexperimenteditor\DiagramItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -623,6 +702,15 @@
     <CustomBuild Include="QML2ModelIndexProvider.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="visualexperimenteditor\DiagramScene.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="visualexperimenteditor\DiagramTextItem.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="visualexperimenteditor\VisualExperimentEditor.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ExperimentManagerplugin.rc" />
@@ -631,5 +719,50 @@
     <None Include="licenseHeader.licenseheader" />
     <None Include="ClassDiagram1.cd" />
     <None Include="ExperimentManager.json" />
+    <None Include="visualexperimenteditor\images\background1.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\background2.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\background3.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\background4.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\bold.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\bringtofront.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\delete.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\floodfill.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\italic.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\linecolor.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\linepointer.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\pointer.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\sendtoback.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\textpointer.png">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="visualexperimenteditor\images\underline.png">
+      <Filter>Images</Filter>
+    </None>
   </ItemGroup>
 </Project>
