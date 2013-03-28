@@ -27,9 +27,9 @@ cBlockStructure_SharedData::cBlockStructure_SharedData()
 	nBlockID = 0;
 	nBlockNumber = 0;
 	sBlockName = "Block(ID=" + QString::number(nBlockID) + ",Number=" + QString::number(nBlockNumber) + ")";
-	nNrOfTrials = RepeatAmount::RA_ZERO;
-	nNrOfInternalTriggers = RepeatAmount::RA_ZERO;
-	nNrOfExternalTriggers = RepeatAmount::RA_ZERO;
+	nNrOfTrials = RA_ZERO;
+	nNrOfInternalTriggers = RA_ZERO;
+	nNrOfExternalTriggers = RA_ZERO;
 }
 
 cBlockStructure_SharedData::cBlockStructure_SharedData(const cBlockStructure_SharedData &other) : QSharedData(other)
@@ -77,9 +77,9 @@ bool cBlockStructure::Initialize()
 	pSharedData->nBlockID = 0;
 	pSharedData->nBlockNumber = 0;
 	pSharedData->sBlockName = "Block(ID=" + QString::number(pSharedData->nBlockID) + ",Number=" + QString::number(pSharedData->nBlockNumber) + ")";
-	pSharedData->nNrOfTrials = RepeatAmount::RA_ZERO;
-	pSharedData->nNrOfInternalTriggers = RepeatAmount::RA_ZERO;
-	pSharedData->nNrOfExternalTriggers = RepeatAmount::RA_ZERO;
+	pSharedData->nNrOfTrials = RA_ZERO;
+	pSharedData->nNrOfInternalTriggers = RA_ZERO;
+	pSharedData->nNrOfExternalTriggers = RA_ZERO;
 	return true;
 }
 
@@ -107,6 +107,7 @@ cBlockStructure::~cBlockStructure()
 
 QScriptValue cBlockStructure::ctor__cBlockStructure(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	return engine->newQObject(new cBlockStructure(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 }
 
@@ -284,8 +285,8 @@ bool cLoopStructure::Initialize()
 	nLoopID = 0;
 	nLoopNumber = 0;
 	nLoopCounter = LCE_UNUSED;
-	nNrOfLoops = RepeatAmount::RA_ZERO;
-	nTargetBlockID = RepeatAmount::RA_UNDEFINED;
+	nNrOfLoops = RA_ZERO;
+	nTargetBlockID = RA_UNDEFINED;
 	return true;
 }
 
@@ -308,6 +309,7 @@ cLoopStructure::~cLoopStructure()
 
 QScriptValue cLoopStructure::ctor__cLoopStructure(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	return engine->newQObject(new cLoopStructure(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 }
 
@@ -463,6 +465,7 @@ bool cExperimentStructure::Initialize()
 
 QScriptValue cExperimentStructure::ctor__cExperimentStructure(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	return engine->newQObject(new cExperimentStructure(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 }
 

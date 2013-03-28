@@ -35,7 +35,6 @@
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"
 #include "RetinotopyMapper.h"
-#include "visualexperimenteditor/VisualExperimentEditor.h"
 #include "defines.h"
 
 class ExperimentManagerPlugin : public QObject, ExtensionInterface
@@ -43,6 +42,9 @@ class ExperimentManagerPlugin : public QObject, ExtensionInterface
     Q_OBJECT
 	Q_PLUGIN_METADATA(IID "StimulGL.Plugins.Extensions" "ExperimentManager.json")
     Q_INTERFACES(ExtensionInterface)
+
+signals:
+	void FileHasBeenChanged(bool bHasChanged);
 
 public:
 	ExperimentManagerPlugin(QObject *parent = 0);
@@ -77,6 +79,8 @@ public slots:
 	int GetAdditionalFileTypeStyle(QString strExtension);
 	QString GetAdditionalFileTypeApiName(QString strExtension);
 	QWidget *GetAdditionalFileTypeEditor(QString strExtension);
+	bool LoadAdditionalFile(QString strFilePath);
+	bool SaveAdditionalFile(QString strFilePath);
 };
 
 #endif//ExperimentManagerPLUGIN_H

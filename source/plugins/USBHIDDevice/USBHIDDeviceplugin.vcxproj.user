@@ -9,21 +9,21 @@
     <LocalDebuggerEnvironment Condition="'$(Configuration)|$(Platform)'=='Template|x64'">PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <QTDIR>C:\Qt\5.0.0\win32</QTDIR>
+    <QTDIR>C:\Qt\5.0.2\win32</QTDIR>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <QTDIR>C:\Qt\5.0.0\win32</QTDIR>
+    <QTDIR>C:\Qt\5.0.2\win32</QTDIR>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
-    <QTDIR>C:\Qt\5.0.0\win32</QTDIR>
+    <QTDIR>C:\Qt\5.0.2\win32</QTDIR>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QTDIR>C:\Qt\5.0.0\x64</QTDIR>
+    <QTDIR>C:\Qt\5.0.2\x64</QTDIR>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QTDIR>C:\Qt\5.0.0\x64</QTDIR>
+    <QTDIR>C:\Qt\5.0.2\x64</QTDIR>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|x64'">
-    <QTDIR>C:\Qt\5.0.0\x64</QTDIR>
+    <QTDIR>C:\Qt\5.0.2\x64</QTDIR>
   </PropertyGroup>
 </Project>

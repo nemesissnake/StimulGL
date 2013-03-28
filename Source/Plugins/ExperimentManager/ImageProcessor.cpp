@@ -26,6 +26,7 @@
 
 QScriptValue ImageProcessor::ctor__imageProcessor(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	return engine->newQObject(new ImageProcessor(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 

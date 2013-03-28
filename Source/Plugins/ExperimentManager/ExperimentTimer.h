@@ -34,7 +34,7 @@ class ExperimentTimer : public QObject
 
 public:
 	ExperimentTimer(QObject *parent = NULL);
-	ExperimentTimer(const ExperimentTimer& other ){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
+	ExperimentTimer(const ExperimentTimer& other ){Q_UNUSED(other);};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 	~ExperimentTimer();
 
 	void	start();								// start timer

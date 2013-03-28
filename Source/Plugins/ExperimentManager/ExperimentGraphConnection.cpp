@@ -22,7 +22,7 @@
 #include "ExperimentGraphConnection.h"
 #include "ExperimentGraphPort.h"
 
-ExperimentGraphConnection::ExperimentGraphConnection(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsPathItem(parent)//, scene)
+ExperimentGraphConnection::ExperimentGraphConnection(QGraphicsItem *parent) : QGraphicsPathItem(parent)//, scene)
 {
 	setPen(QPen(Qt::black, 2));
 	setBrush(Qt::NoBrush);
@@ -85,7 +85,7 @@ void ExperimentGraphConnection::updatePath()
 
 	double diffX = pos2.x() - pos1.x();
 	double diffY = pos2.y() - pos1.y();
-	double half_diffy = diffY/2;
+	//double half_diffy = diffY/2;
 	QPointF ctr1;
 	QPointF ctr2;
 	QPointF ctr3;
@@ -103,7 +103,7 @@ void ExperimentGraphConnection::updatePath()
 	}
 	else//Left
 	{
-		double minY = qMin(pos1.y(),pos2.y());
+		//double minY = qMin(pos1.y(),pos2.y());
 		ctr1 = pos1 + QPointF(40.0,0);
 		ctr2 = ctr1 + QPointF(0,20.0);
 		QPointF intermediatePos = QPointF(pos2.x() - (diffX / 2),ctr2.y());

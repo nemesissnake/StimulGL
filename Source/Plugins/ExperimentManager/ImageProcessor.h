@@ -46,7 +46,7 @@ public:
 	};
 
 	ImageProcessor(QObject *parent = NULL);
-	ImageProcessor(const ImageProcessor& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	ImageProcessor(const ImageProcessor& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	~ImageProcessor();
 
 	static QScriptValue ctor__imageProcessor(QScriptContext* context, QScriptEngine* engine);

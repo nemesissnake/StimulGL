@@ -20,30 +20,30 @@
 #include "QmlErrorHandler.h"
 #include <QDebug>
 
-QmlErrorHandler::QmlErrorHandler(QDeclarativeView &view, QObject *parent) : QObject(parent), mView(view), mErrorOccured(false)
+QmlErrorHandler::QmlErrorHandler(QQuickView &view, QObject *parent) : QObject(parent), mView(view), mErrorOccured(false)
 {
-	connect(&view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(handleQmlStatusChange(QDeclarativeView::Status)));
-	connect((QObject*)view.engine(), SIGNAL(warnings(QList<QDeclarativeError>)), this, SLOT(handleQmlErrors(QList<QDeclarativeError>)));
+	connect(&view, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(handleQmlStatusChange(QQuickView::Status)));
+	connect((QObject*)view.engine(), SIGNAL(warnings(QList<QQmlError>)), this, SLOT(handleQmlErrors(QList<QQmlError>)));
 }
 
 QmlErrorHandler::~QmlErrorHandler()
 {
-	disconnect(this, SLOT(handleQmlStatusChange(QDeclarativeView::Status)));
+	disconnect(this, SLOT(handleQmlStatusChange(QQuickView::Status)));
 	disconnect(this, SLOT(handleQmlErrors(QList<QDeclarativeError>)));
 }
 
-void QmlErrorHandler::handleQmlStatusChange(QDeclarativeView::Status status)
+void QmlErrorHandler::handleQmlStatusChange(QQuickView::Status status)
 {
-	if (status == QDeclarativeView::Error) 
+	if (status == QQuickView::Error) 
 	{
 		handleQmlErrors(mView.errors());
 	}
 }
 
-void QmlErrorHandler::handleQmlErrors(const QList<QDeclarativeError>& qmlErrors)
+void QmlErrorHandler::handleQmlErrors(const QList<QQmlError>& qmlErrors)
 {
 	QStringList errors;
-	foreach (const QDeclarativeError& error, qmlErrors) 
+	foreach (const QQmlError& error, qmlErrors) 
 	{
 		// Special case for bug in QtComponents 1.1
 		// https://bugreports.qt-project.org/browse/QTCOMPONENTS-1217

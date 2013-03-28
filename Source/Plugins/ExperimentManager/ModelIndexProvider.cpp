@@ -18,7 +18,7 @@
 
 #include "ModelIndexProvider.h"
 
-ModelIndexProvider::ModelIndexProvider(QAbstractItemModel& model, QObject* parent) : QObject(parent), QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap), mModel(model)
+ModelIndexProvider::ModelIndexProvider(QAbstractItemModel& model, QObject* parent) : QObject(parent), QQuickImageProvider(QQuickImageProvider::Pixmap), mModel(model)
 {
 	// For each pixmap already in the model, get a mapping between the name and the index
 	for(int row = 0; row < mModel.rowCount(); row++)

@@ -23,7 +23,7 @@
 #include "ExperimentGraphBlock.h"
 #include "ExperimentGraphPort.h"
 
-ExperimentGraphBlock::ExperimentGraphBlock(QGraphicsItem *parent, QGraphicsScene *scene) : QGraphicsPathItem(parent)
+ExperimentGraphBlock::ExperimentGraphBlock(QGraphicsItem *parent) : QGraphicsPathItem(parent)
 {
 	QPainterPath p;
 	p.addRoundedRect(-50, -15, 100, 30, 5, 5);
@@ -170,7 +170,7 @@ void ExperimentGraphBlock::paint(QPainter *painter, const QStyleOptionGraphicsIt
 
 ExperimentGraphBlock* ExperimentGraphBlock::clone()
 {
-	ExperimentGraphBlock *b = new ExperimentGraphBlock(0, scene());
+	ExperimentGraphBlock *b = new ExperimentGraphBlock(0);
 	scene()->addItem(b);
 
 	foreach(QGraphicsItem *port_, childItems())
@@ -198,6 +198,7 @@ QVector<ExperimentGraphPort*> ExperimentGraphBlock::ports()
 
 QVariant ExperimentGraphBlock::itemChange(GraphicsItemChange change, const QVariant &value)
 {
+	Q_UNUSED(change);
 	return value;
 }
 

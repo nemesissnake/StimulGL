@@ -2,7 +2,7 @@
 
 OutputListDelegate::OutputListDelegate(QObject *parent)	: QAbstractItemDelegate()
 {
-
+	Q_UNUSED(parent);
 }
 
 OutputListDelegate::~OutputListDelegate()
@@ -74,6 +74,8 @@ void OutputListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 
 QSize OutputListDelegate::sizeHint ( const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
+	Q_UNUSED(option);
+	Q_UNUSED(index);
 	return QSize(200, 60); // very dumb value
 }
 

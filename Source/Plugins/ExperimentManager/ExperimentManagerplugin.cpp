@@ -18,6 +18,7 @@
 
 
 #include "ExperimentManagerplugin.h"
+#include "visualexperimenteditor/VisualExperimentEditor.h"
 #include "ImageProcessor.h"
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"
@@ -27,6 +28,7 @@ Q_DECLARE_METATYPE(ExperimentManager*)
 
 ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 {
+	Q_UNUSED(parent);
 	ExperimentManagerDiagObject = NULL;
 	ExperimentManagerObject = NULL;
 	TriggerTimerObject = NULL;
@@ -303,13 +305,9 @@ QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtensi
 {
 	if(strExtension.toLower() == "exml")
 	{
-		//QGraphicsScene *gScene = new QGraphicsScene();
-		//gScene->addText("Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!Hello, world!");
-		//QGraphicsView *gView = new QGraphicsView(gScene);
-		//return qobject_cast<QWidget *>(gView);
-		VisualExperimentEditor *visExpEditor = new VisualExperimentEditor();
-		//QWidget *res = qobject_cast<QWidget *>(visExpEditor);
-		return visExpEditor;
+		if(ExperimentManagerObject == NULL)
+			ExperimentManagerObject = new ExperimentManager(this);
+		return ExperimentManagerObject->getVisualExperimentEditor();
 	} 
 	else if(strExtension.toLower() == "qml")
 	{
@@ -318,3 +316,22 @@ QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtensi
 	return NULL;
 }
 
+bool ExperimentManagerPlugin::LoadAdditionalFile(QString strFilePath)
+{
+	if(ExperimentManagerObject == NULL)
+		ExperimentManagerObject = new ExperimentManager(this);
+	if(ExperimentManagerObject->loadExperiment(strFilePath,false,true))
+	{
+		return ExperimentManagerObject->showVisualExperimentEditor();
+	}
+	else
+	{
+		qDebug() << __FUNCTION__ << "::Error: Could not load the document (" << strFilePath << ")!";
+	}
+	return false;
+}
+
+bool ExperimentManagerPlugin::SaveAdditionalFile(QString strFilePath)
+{
+	return true;
+}

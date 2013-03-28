@@ -20,8 +20,8 @@
 #define QMLERRORHANDLER_H
 
 #include <QObject>
-#include <QDeclarativeView>
-#include <QDeclarativeError>
+#include <QtQml/QQmlError>
+#include <QtQuick/QQuickView>
 #include <QMessageBox>
 
 class QmlErrorHandler : public QObject
@@ -29,17 +29,17 @@ class QmlErrorHandler : public QObject
 	Q_OBJECT
 
 public:
-	explicit QmlErrorHandler(QDeclarativeView &view, QObject *parent = NULL);//QmlErrorHandler(QObject *parent = NULL);
+	explicit QmlErrorHandler(QQuickView &view, QObject *parent = NULL);//QmlErrorHandler(QObject *parent = NULL);
 	~QmlErrorHandler();
 
 	bool errorOccured() const;
 
 private slots:
-	void handleQmlStatusChange(QDeclarativeView::Status status);
-	void handleQmlErrors(const QList<QDeclarativeError>& qmlErrors);
+	void handleQmlStatusChange(QQuickView::Status status);
+	void handleQmlErrors(const QList<QQmlError>& qmlErrors);
 
 private:
-	QDeclarativeView &mView;
+	QQuickView &mView;
 	bool mErrorOccured;
 };
 

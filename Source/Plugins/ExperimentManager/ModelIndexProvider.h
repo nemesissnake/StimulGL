@@ -21,10 +21,10 @@
 
 #include <QObject>
 #include <QAbstractItemModel>
-#include <qdeclarativeimageprovider.h>
+#include <QQuickImageProvider>// <qQm qdeclarativeimageprovider.h>
 #include "ModelRoles.h"
 
-class ModelIndexProvider : public QObject, public QDeclarativeImageProvider
+class ModelIndexProvider : public QObject, public QQuickImageProvider
 {
 	Q_OBJECT
 

@@ -93,6 +93,21 @@
     <ClCompile Include="svgview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="assistant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputListDelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalApplicationInformation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="documentwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mainappexchange.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_svgview.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
@@ -201,6 +216,24 @@
     <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_plugincollection.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_OutputListDelegate.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_OutputListDelegate.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_OutputListDelegate.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_OutputListDelegate.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_OutputListDelegate.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_OutputListDelegate.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_optionpage.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
@@ -237,6 +270,60 @@
     <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_mainwindow.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_mainappexchange.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_mainappexchange.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_mainappexchange.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_mainappexchange.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_mainappexchange.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_mainappexchange.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_GlobalApplicationInformation.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_GlobalApplicationInformation.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_GlobalApplicationInformation.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_GlobalApplicationInformation.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_GlobalApplicationInformation.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_GlobalApplicationInformation.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_documentwindow.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_documentmanager.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
@@ -253,6 +340,24 @@
       <Filter>Generated Files\Template_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_documentmanager.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_customqsciscintilla.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_customqsciscintilla.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_customqsciscintilla.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_customqsciscintilla.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_customqsciscintilla.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_customqsciscintilla.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_aboutqtdialog.cpp">
@@ -276,121 +381,10 @@
     <ClCompile Include="..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\qrc_StimulGL.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="assistant.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OutputListDelegate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_OutputListDelegate.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_OutputListDelegate.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_OutputListDelegate.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_OutputListDelegate.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_OutputListDelegate.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_OutputListDelegate.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_customqsciscintilla.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_customqsciscintilla.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_customqsciscintilla.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_customqsciscintilla.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_customqsciscintilla.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_customqsciscintilla.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="GlobalApplicationInformation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_GlobalApplicationInformation.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_GlobalApplicationInformation.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_GlobalApplicationInformation.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_GlobalApplicationInformation.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_GlobalApplicationInformation.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_GlobalApplicationInformation.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="documentwindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_documentwindow.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_documentwindow.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_documentwindow.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_documentwindow.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_documentwindow.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_documentwindow.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="mainappexchange.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_mainappexchange.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_mainappexchange.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_mainappexchange.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Release\Moc\moc_mainappexchange.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_mainappexchange.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Build_MSVC\Qt\x64\Template\Moc\moc_mainappexchange.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StimulGL.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_optionpage.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_scifinddialog.h">
-      <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
@@ -400,6 +394,12 @@
     </ClInclude>
     <ClInclude Include="assistant.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_optionpage.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_scifinddialog.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -521,6 +521,9 @@
     </None>
     <None Include="..\..\..\StimulGL_Documentation\Tutorials\GettingStarted\GettingStartedGuide.html">
       <Filter>Generated Files</Filter>
+    </None>
+    <None Include="resources\versioning.html">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>

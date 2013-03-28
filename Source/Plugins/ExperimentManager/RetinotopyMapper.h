@@ -135,7 +135,7 @@ public:
 
 	RetinotopyMapper(QObject *parent = NULL);
 	~RetinotopyMapper();
-	RetinotopyMapper(const RetinotopyMapper& other ){};
+	RetinotopyMapper(const RetinotopyMapper& other ){Q_UNUSED(other);};
 
 	static QScriptValue ctor__RetinotopyMapper(QScriptContext* context, QScriptEngine* engine);
 

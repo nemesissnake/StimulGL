@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QToolBar>
 #include <QMenuBar>
+#include "ExperimentStructures.h"
 #include "DiagramItem.h"
 
 class DiagramScene;
@@ -39,16 +40,21 @@ class QGraphicsTextItem;
 class QFont;
 class QToolButton;
 class QAbstractButton;
-class QGraphicsView;
+class ExperimentGraphConnection;
 QT_END_NAMESPACE
 
-class VisualExperimentEditor : public QWidget//QWindow
+class VisualExperimentEditor : public QWidget
 {
     Q_OBJECT
 
 public:
    VisualExperimentEditor();
    ~VisualExperimentEditor();
+   
+   bool parseExperimentStructure(cExperimentStructure *ExpStruct);
+   bool eventFilter(QObject *, QEvent *);
+   void load(QDataStream &ds);
+   void save(QDataStream &ds);
 
 private slots:
     void backgroundButtonGroupClicked(QAbstractButton *button);
@@ -77,16 +83,20 @@ private:
     void createActions();
     void createMenus();
     void createToolbars();
-    QWidget *createBackgroundCellWidget(const QString &text,
-                                        const QString &image);
-    QWidget *createCellWidget(const QString &text,
-                              DiagramItem::DiagramType type);
+    QWidget *createBackgroundCellWidget(const QString &text, const QString &image);
+    QWidget *createCellWidget(const QString &text, DiagramItem::DiagramType type);
     QMenu *createColorMenu(const char *slot, QColor defaultColor);
     QIcon createColorToolButtonIcon(const QString &image, QColor color);
     QIcon createColorIcon(QColor color);
 
-    DiagramScene *scene;
-    QGraphicsView *view;
+	QGraphicsItem *itemAt(const QPointF &pos);
+	bool createConnection(QGraphicsItem *from, QGraphicsItem *to);
+
+	ExperimentGraphConnection *conn;
+	bool bAllowSelfRecurrentConnection;
+
+    DiagramScene *gScene;
+    QGraphicsView *gView;
 
     QAction *exitAction;
     QAction *addAction;

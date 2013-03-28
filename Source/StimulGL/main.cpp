@@ -42,7 +42,8 @@ int main(int argc, char **argv)
 	QString sResult = QDir::toNativeSeparators(QDir(QCoreApplication::applicationDirPath()).absolutePath());
 	if(QProcessEnvironment::systemEnvironment().value(QString("QT_QPA_PLATFORM_PLUGIN_PATH"),sResult) == false)
 	{
-		bool bResult = qputenv("QT_QPA_PLATFORM_PLUGIN_PATH",sResult.toLatin1());
+		//bool bResult = 
+			qputenv("QT_QPA_PLATFORM_PLUGIN_PATH",sResult.toLatin1());
 		//sResult = "";
 		//sResult = QProcessEnvironment::systemEnvironment().value(QString("QT_QPA_PLATFORM_PLUGIN_PATH"),sResult);
 	}

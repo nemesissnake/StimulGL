@@ -27,6 +27,7 @@
 
 GlobalApplicationInformation::GlobalApplicationInformation(QObject *parent)
 {
+	Q_UNUSED(parent);
 	webView = NULL;
 	Initialize();
 	composeJavaScriptConfigurationFile();

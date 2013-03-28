@@ -23,8 +23,8 @@
 #include <QObject>
 #include <QString>
 #include <QStringList>
-#include <QtScript>
-#include <QScriptEngine>
+#include <QtScript/QtScript>
+#include <QtScript/QScriptEngine>
 #include "randomc.h"
 
 #ifdef Q_WS_WIN
@@ -103,7 +103,7 @@ class RandomGenerator : public QObject, public QStringList
 
 public:
 	RandomGenerator(QObject *parent = NULL);
-	RandomGenerator(const RandomGenerator& other ){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
+	RandomGenerator(const RandomGenerator& other ){Q_UNUSED(other);};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 	~RandomGenerator();
 
 	static QScriptValue ctor__randomGenerator(QScriptContext* context, QScriptEngine* engine);

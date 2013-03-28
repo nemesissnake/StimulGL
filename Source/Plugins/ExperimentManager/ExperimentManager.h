@@ -22,8 +22,8 @@
 #define ExperimentManager_H
 #include <QObject>
 #include <QString>
-#include <QtScript>
-#include <QScriptable>
+#include <QtScript/QtScript>
+#include <QtScript/QScriptable>
 #include <QGraphicsView>
 #include <QGLWidget>
 #include <QDesktopWidget>
@@ -37,6 +37,7 @@
 #include "ExperimentParameter.h"
 #include "ExperimentStructures.h"
 #include "ExperimentGraphEditor.h"
+#include "visualexperimenteditor/VisualExperimentEditor.h"
 
 #ifdef Q_WS_WIN
 #include <windows.h>
@@ -110,6 +111,7 @@ public:
 	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool getExperimentObjectScriptValue(const int &nObjectID,const QString &sKeyName,QScriptValue &sScriptValue);
 	bool setExperimentObjectFromScriptValue(const int &nObjectID,const QString &sKeyName,const QScriptValue &sScriptValue);
+	VisualExperimentEditor *getVisualExperimentEditor();
 
 	template< typename T > T* getExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
 	{
@@ -196,7 +198,7 @@ public slots:
 	void setExperimentOutputFilePostString(const QString &sPostString);
 	//QObject* getExperimentStructure();
 	cExperimentStructure *getExperimentStructure();
-	bool showExperimentGraphEditor(cExperimentStructure *ExpStruct = NULL);
+	bool showVisualExperimentEditor(cExperimentStructure *ExpStruct = NULL);
 
 #ifndef QT_NO_DEBUG
 	QString Test(const QString &sInput = "");
@@ -236,6 +238,7 @@ private:
 	//ExperimentConfiguration strcExperimentConfiguration;
 	ExperimentState experimentCurrentState;
 	QHash<QString, int> experimentStateHash;
+	VisualExperimentEditor *visExpEditor;
 
 	QByteArray currentExperimentFile;
 	QByteArray currentValidationFile;

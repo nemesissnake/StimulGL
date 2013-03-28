@@ -125,7 +125,7 @@ static double lowResUTCTime()
 //    return timet * msPerSecond + systemTime.wMilliseconds;
 //#else
     struct _timeb timebuffer;
-    _ftime(&timebuffer);
+    _ftime64_s(&timebuffer);
     return timebuffer.time * msPerSecond + timebuffer.millitm;
 //#endif
 }

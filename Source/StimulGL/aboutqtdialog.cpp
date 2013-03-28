@@ -43,6 +43,7 @@ aboutQTDialog::aboutQTDialog(const QString &title,const QStringList &pluginFileN
 	treeWidget(new QTreeWidget),
 	okButton(new QPushButton(tr("OK")))
 {
+	Q_UNUSED(fileNames);
 	labWebsite = new QLabel;
 	treeWidget->setAlternatingRowColors(false);
 	treeWidget->setSelectionMode(QAbstractItemView::NoSelection);
@@ -131,6 +132,7 @@ aboutQTDialog::aboutQTDialog(const QString &title,const QStringList &pluginFileN
 //! [0]
 void aboutQTDialog::findPlugins(const QString &title,const QString &path, const QStringList &fileNames)
 {
+	Q_UNUSED(title);
 	const QDir dir(path);
 
 	foreach (QObject *plugin, QPluginLoader::staticInstances())

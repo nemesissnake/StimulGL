@@ -99,7 +99,29 @@ void DiagramScene::editorLostFocus(DiagramTextItem *item)
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if (mouseEvent->button() != Qt::LeftButton)
-        return;
+		return;
+	//{
+	//	QGraphicsItem *item = itemAt(this->scenePos());
+	//	if (item && (item->type() == ExperimentGraphConnection::Type || item->type() == ExperimentGraphBlock::Type))
+	//	{
+	//		QMenu myMenu;
+	//		if(item->type() == ExperimentGraphConnection::Type)
+	//			myMenu.addAction("Delete Connection");
+	//		else if(item->type() == ExperimentGraphBlock::Type)
+	//			myMenu.addAction("Delete Block");
+	//		QAction* selectedItem = myMenu.exec(me->screenPos());
+	//		if (selectedItem)
+	//		{
+	//			delete item;
+	//			// something was chosen, do stuff
+	//		}
+	//		else
+	//		{
+	//			//bool b = true;
+	//			// nothing was chosen
+	//		}
+	//	}		
+	//}
 
     DiagramItem *item;
     switch (myMode) {
@@ -111,8 +133,44 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             emit itemInserted(item);
             break;
         case InsertLine:
-            line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
-                                        mouseEvent->scenePos()));
+
+
+
+	//			QGraphicsSceneMouseEvent *me = (QGraphicsSceneMouseEvent*) e;
+
+	//switch ((int) e->type())
+	//{
+	//case QEvent::GraphicsSceneMousePress:
+	//{
+	//	switch ((int) me->button())
+	//	{
+	//	case Qt::LeftButton:
+	//	{
+	//		QGraphicsItem *item = itemAt(me->scenePos());
+	//		if (item && item->type() == ExperimentGraphPort::Type)
+	//		{
+	//			conn = new ExperimentGraphConnection(0, gScene);
+	//			gScene->addItem(conn);
+	//			conn->setPort1((ExperimentGraphPort*) item);
+	//			conn->setPos1(item->scenePos());
+	//			conn->setPos2(me->scenePos());
+	//			conn->updatePath();
+
+	//			return true;
+	//		} 
+	//		else if (item && item->type() == ExperimentGraphBlock::Type)
+	//		{
+	//			/* if (selBlock)
+	//				selBlock->setSelected(); */
+	//			// selBlock = (ExperimentGraphBlock*) item;
+	//		}
+	//		break;
+	//	}
+
+
+
+
+            line = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
             line->setPen(QPen(myLineColor, 2));
             addItem(line);
             break;
@@ -121,10 +179,8 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             textItem->setFont(myFont);
             textItem->setTextInteractionFlags(Qt::TextEditorInteraction);
             textItem->setZValue(1000.0);
-            connect(textItem, SIGNAL(lostFocus(DiagramTextItem*)),
-                    this, SLOT(editorLostFocus(DiagramTextItem*)));
-            connect(textItem, SIGNAL(selectedChange(QGraphicsItem*)),
-                    this, SIGNAL(itemSelected(QGraphicsItem*)));
+            connect(textItem, SIGNAL(lostFocus(DiagramTextItem*)), this, SLOT(editorLostFocus(DiagramTextItem*)));
+            connect(textItem, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
             addItem(textItem);
             textItem->setDefaultTextColor(myTextColor);
             textItem->setPos(mouseEvent->scenePos());
@@ -137,10 +193,13 @@ void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    if (myMode == InsertLine && line != 0) {
+    if (myMode == InsertLine && line != 0) 
+	{
         QLineF newLine(line->line().p1(), mouseEvent->scenePos());
         line->setLine(newLine);
-    } else if (myMode == MoveItem) {
+    } 
+	else if (myMode == MoveItem)
+	{
         QGraphicsScene::mouseMoveEvent(mouseEvent);
     }
 }

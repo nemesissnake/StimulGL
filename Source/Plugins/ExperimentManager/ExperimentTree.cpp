@@ -284,6 +284,7 @@ void ExperimentTree::parseElement(const QDomElement &element, EXML_TAG_SECTIONS 
 
 void ExperimentTree::parseProperties(const QDomElement &element, EXML_TAG_SECTIONS tSection, QTreeWidgetItem *parentItem)
 {
+	Q_UNUSED(tSection);
 	if(!element.hasAttribute(ID_TAG))
 		return;
 	tmpString1 =element.attribute(ID_TAG,"");//Correct ObjectID?

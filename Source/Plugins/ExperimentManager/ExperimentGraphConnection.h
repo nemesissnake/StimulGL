@@ -28,7 +28,7 @@ class ExperimentGraphConnection : public QGraphicsPathItem
 public:
 	enum { Type = QGraphicsItem::UserType + 2 };
 
-	ExperimentGraphConnection(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+	ExperimentGraphConnection(QGraphicsItem *parent = 0);
 	~ExperimentGraphConnection();
 
 	void setPos1(const QPointF &p);

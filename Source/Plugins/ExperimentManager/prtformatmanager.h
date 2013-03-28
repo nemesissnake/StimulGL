@@ -94,7 +94,7 @@ class PrtFormatManager : public QObject, protected QScriptable
 
 public:
 	PrtFormatManager(QObject *parent = NULL);
-	PrtFormatManager(const PrtFormatManager& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	PrtFormatManager(const PrtFormatManager& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	~PrtFormatManager();
 
 	static QScriptValue ctor__PrtFormatManager(QScriptContext* context, QScriptEngine* engine);

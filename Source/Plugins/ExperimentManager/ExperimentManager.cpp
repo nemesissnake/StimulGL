@@ -31,6 +31,7 @@
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	//this function gets called first whenever a new object is constructed trough the script
 	//	if (context->isCalledAsConstructor()) {
 	//		// initialize the new object
@@ -75,6 +76,7 @@ void ExperimentManager::DefaultConstruct()
 	currentExperimentTree = NULL;
 	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
+	visExpEditor = NULL;
 	RegisterMetaTypes();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
 	//rndGen = NULL;
@@ -623,7 +625,7 @@ bool ExperimentManager::validateExperiment()
 		errorOccurred = errorOccurred;
 		QString strMessage = messageHandler.statusMessage();
 		int nColumn = messageHandler.column();
-		int nLine = messageHandler.line();
+		//int nLine = messageHandler.line();
 
 		nColumn = nColumn;
 
@@ -773,6 +775,12 @@ bool ExperimentManager::cleanupExperiment()
 	cleanupExperimentObjects();
 	currentExperimentFile.clear();
 	currentValidationFile.clear();
+	if(visExpEditor)
+	{
+		visExpEditor->close();
+		delete visExpEditor;
+		visExpEditor = NULL;
+	}
 	if (currentExperimentTree)
 	{
 		delete currentExperimentTree;
@@ -1016,6 +1024,7 @@ bool ExperimentManager::initExperimentObjects()
 
 bool ExperimentManager::startExperimentObjects(bool bRunFullScreen)
 {
+	Q_UNUSED(bRunFullScreen);
 	changeExperimentObjectsSignalSlots(false);
 	bool bRetVal = invokeExperimentObjectsSlots(QString(FUNC_OBJECT_START));
 	return bRetVal;
@@ -1185,12 +1194,19 @@ void ExperimentManager::setExperimentOutputFilePostString(const QString &sPostSt
 	sExperimentOutputDataPostString = sPostString;
 }
 
+VisualExperimentEditor *ExperimentManager::getVisualExperimentEditor()
+{
+	if(visExpEditor == NULL)
+		visExpEditor = new VisualExperimentEditor();
+	return visExpEditor;
+}
+
 /*! \brief Shows the Experiment Graph Editor
  *
  *  Shows a dialog containing the Experiment Graph Editor.
  * @param ExpStruct a cExperimentStructure to be edited by the Experiment Graph Editor, if this parameter is NULL than the current Experiment Structure in memory is used.
  */
-bool ExperimentManager::showExperimentGraphEditor(cExperimentStructure *ExpStruct)
+bool ExperimentManager::showVisualExperimentEditor(cExperimentStructure *ExpStruct)
 {
 	if(ExpStruct == NULL)
 	{
@@ -1198,55 +1214,57 @@ bool ExperimentManager::showExperimentGraphEditor(cExperimentStructure *ExpStruc
 		{
 			//if(loadExperiment("",false,true) == false)
 			//	return false;
-
 			if (!prePassiveParseExperiment())
 				return false;
 		}
 		ExpStruct = cExperimentBlockTrialStructure;
+		if(visExpEditor == NULL)
+			visExpEditor = new VisualExperimentEditor();
+		return visExpEditor->parseExperimentStructure(ExpStruct);
 	}
 
-	QGraphicsScene *gScene = new QGraphicsScene();
-	QGraphicsView *gView = new QGraphicsView();//(gScene);
-	QGridLayout *layout = new QGridLayout();
+	//QGraphicsScene *gScene = new QGraphicsScene();
+	//QGraphicsView *gView = new QGraphicsView();//(gScene);
+	//QGridLayout *layout = new QGridLayout();
 
-	//gScene->addText("Hello, world!");	
-	gView->setScene(gScene);
-	gView->setRenderHint(QPainter::Antialiasing);
-	//    gView.backgroundBrush = new QBrush(new QPixmap("images/cheese.png"));
-	//    gView.cacheMode = new QGraphicsView.CacheMode(QGraphicsView.CacheBackground);
-	//	  gView->dragMode = QGraphicsView.ScrollHandDrag;
-	//    gView.viewportUpdateMode = QGraphicsView.FullViewportUpdate;	
-	//layout->addWidget(gView, 0, 0);
-	//gView->setLayout(layout);
-	gView->setContextMenuPolicy(Qt::CustomContextMenu);
-	gView->setWindowTitle("Experiment Graph Editor");
-	gView->resize(400, 300);
-	// ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+	////gScene->addText("Hello, world!");	
+	//gView->setScene(gScene);
+	//gView->setRenderHint(QPainter::Antialiasing);
+	////    gView.backgroundBrush = new QBrush(new QPixmap("images/cheese.png"));
+	////    gView.cacheMode = new QGraphicsView.CacheMode(QGraphicsView.CacheBackground);
+	////	  gView->dragMode = QGraphicsView.ScrollHandDrag;
+	////    gView.viewportUpdateMode = QGraphicsView.FullViewportUpdate;	
+	////layout->addWidget(gView, 0, 0);
+	////gView->setLayout(layout);
+	//gView->setContextMenuPolicy(Qt::CustomContextMenu);
+	//gView->setWindowTitle("Experiment Graph Editor");
+	//gView->resize(400, 300);
+	//// ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
 
-	//ExperimentGraphBlock *b = new ExperimentGraphBlock(NULL, gScene);
-	//b->addPort("Block Action DoSomething", false, ExperimentGraphPort::NamePort);
-	//b->addPort("0: Block 1", false, ExperimentGraphPort::TypePort);
-	//b->addInputPort("input");
-	//b->addOutputPort("output");
-	//b = b->clone();
-	//b->setPos(150, 0);
-	//b = b->clone();
-	//b->setPos(150, 150);
+	////ExperimentGraphBlock *b = new ExperimentGraphBlock(NULL, gScene);
+	////b->addPort("Block Action DoSomething", false, ExperimentGraphPort::NamePort);
+	////b->addPort("0: Block 1", false, ExperimentGraphPort::TypePort);
+	////b->addInputPort("input");
+	////b->addOutputPort("output");
+	////b = b->clone();
+	////b->setPos(150, 0);
+	////b = b->clone();
+	////b->setPos(150, 150);
 
-	ExperimentGraphEditor *expGraphEditor = new ExperimentGraphEditor(this);
-	expGraphEditor->install(gScene,gView);
-	if(expGraphEditor->parseExperimentStructure(ExpStruct))
-	{
-		//connect(ui->action_Save, SIGNAL(triggered()), this, SLOT(saveFile()));
-		//connect(ui->action_Load, SIGNAL(triggered()), this, SLOT(loadFile()));
-		//connect(ui->action_Quit, SIGNAL(triggered()), qApp, SLOT(quit()));
-		//ui->toolBar->addAction("Add block", this, SLOT(addBlock()));
-		gView->showMaximized();
-		//delete gScene;
-		//delete gView;
-		//delete layout;
-	}
-	return true;
+	//ExperimentGraphEditor *expGraphEditor = new ExperimentGraphEditor(this);
+	//expGraphEditor->install(gScene,gView);
+	//if(expGraphEditor->parseExperimentStructure(ExpStruct))
+	//{
+	//	//connect(ui->action_Save, SIGNAL(triggered()), this, SLOT(saveFile()));
+	//	//connect(ui->action_Load, SIGNAL(triggered()), this, SLOT(loadFile()));
+	//	//connect(ui->action_Quit, SIGNAL(triggered()), qApp, SLOT(quit()));
+	//	//ui->toolBar->addAction("Add block", this, SLOT(addBlock()));
+	//	gView->showMaximized();
+	//	//delete gScene;
+	//	//delete gView;
+	//	//delete layout;
+	//}
+	//return true;
 }
 
 /*! \brief Returns the in-memory Experiment Structure
@@ -1885,7 +1903,7 @@ tParsedParameterList *ExperimentManager::getObjectBlockParamListById(int nID)
 
 bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID)
 {
-	bool bHasCurrentBlock = false;
+	//bool bHasCurrentBlock = false;
 	if (nObjectID >= 0)
 	{
 		if (!lExperimentObjectList.isEmpty())

@@ -30,7 +30,7 @@ public:
 	enum { Type = QGraphicsItem::UserType + 1 };
 	enum { NamePort = 1, TypePort = 2 };
 
-	ExperimentGraphPort(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+	ExperimentGraphPort(QGraphicsItem *parent = 0);
 	~ExperimentGraphPort();
 
 	void setNEBlock(ExperimentGraphBlock*);

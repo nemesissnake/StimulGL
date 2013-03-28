@@ -23,7 +23,7 @@
 
 CustomQsciScintilla::CustomQsciScintilla(GlobalApplicationInformation::DocType docType)
 {	
-
+	Q_UNUSED(docType);
 }
 
 CustomQsciScintilla::~CustomQsciScintilla()
@@ -53,22 +53,23 @@ QString CustomQsciScintilla::testFunction(QString inp)
 	//aa << "Arial" << "Helvetica" << "Times" << "Courier";
 	//this->showUserList(0, aa);
 
-	bool b3 = connect(this, SIGNAL(SCN_CHARADDED(int)), this, SLOT(handleCharAdded(int)));
+	connect(this, SIGNAL(SCN_CHARADDED(int)), this, SLOT(handleCharAdded(int)));
 	connect(this,SIGNAL(SCN_CALLTIPCLICK(int)),SLOT(handleCallTipClick(int)));
 	connect(this,SIGNAL(SCN_AUTOCSELECTION(const char *,int)),SLOT(handleAutoCompletionSelection()));
 	connect(this,SIGNAL(SCN_USERLISTSELECTION(const char *,int)),SLOT(handleUserListSelection(const char *,int)));
 
 	return QString("done");
 
-	CallTipsStyle a = callTipsStyle();// != CallTipsNone);
-	bool b = isCallTipActive();
-	int pos = SendScintilla(SCI_GETCURRENTPOS);
+	//CallTipsStyle a = callTipsStyle();// != CallTipsNone);
+	//bool b = isCallTipActive();
+	//int pos = 
+	SendScintilla(SCI_GETCURRENTPOS);
 
 	QString ct("sometext\nnextline");
 	QByteArray ct_ba = ct.toLatin1();
 	const char *cts = ct_ba.data();
 	SendScintilla(SCI_CALLTIPSHOW, 50.0, cts);
-	int listType = 0;
+	//int listType = 0;
 	//SendScintilla(SCI_USERLISTSHOW,listType,cts);//int listType, const char *list)
 	
 	QStringList c;

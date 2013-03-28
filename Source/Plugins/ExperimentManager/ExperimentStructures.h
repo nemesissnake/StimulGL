@@ -20,7 +20,7 @@
 #ifndef EXPERIMENTSTRUCTURES_H
 #define EXPERIMENTSTRUCTURES_H
 
-#include <QtScript>
+#include <QtScript/QtScript>
 #include <QList>
 #include <QSharedData>
 #include "maindefines.h"
@@ -81,7 +81,7 @@ class cLoopStructure : public QObject
 
 public:
 	cLoopStructure();
-	cLoopStructure(const int &LoopID,const int &LoopNumber,const int &LoopTargetBlockID,const QString &LoopName = "",const int &NumberOfLoops = RepeatAmount::RA_ZERO);
+	cLoopStructure(const int &LoopID,const int &LoopNumber,const int &LoopTargetBlockID,const QString &LoopName = "",const int &NumberOfLoops = RA_ZERO);
 	cLoopStructure(const cLoopStructure& other);
 	~cLoopStructure();
 
@@ -148,7 +148,7 @@ class cBlockStructure : public QObject
 
 public:
 	cBlockStructure();
-	cBlockStructure(const int &BlockID,const int &BlockNumber,const QString &BlockName = "",const int &NumberOfTrials = RepeatAmount::RA_ZERO);
+	cBlockStructure(const int &BlockID,const int &BlockNumber,const QString &BlockName = "",const int &NumberOfTrials = RA_ZERO);
 	cBlockStructure(const cBlockStructure& other);
 	~cBlockStructure();
 

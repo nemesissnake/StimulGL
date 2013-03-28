@@ -64,7 +64,7 @@ bool ExperimentGraphEditor::parseExperimentStructure(cExperimentStructure *ExpSt
 				if(tmpBlock) 
 				{
 					nNextSearchBlockNumber = tmpBlock->getBlockNumber() + 1;
-					ExperimentGraphBlock *gBlock = new ExperimentGraphBlock(NULL, gScene);
+					ExperimentGraphBlock *gBlock = new ExperimentGraphBlock(NULL);
 					gScene->addItem(gBlock);
 					gBlock->setName(tmpBlock->getBlockName());
 					gBlock->setID(tmpBlock->getBlockID());
@@ -136,7 +136,7 @@ bool ExperimentGraphEditor::createConnection(QGraphicsItem *from, QGraphicsItem 
 	{
 		if (to && to->type() == ExperimentGraphPort::Type)
 		{
-			conn = new ExperimentGraphConnection(NULL, gScene);
+			conn = new ExperimentGraphConnection(NULL);
 			gScene->addItem(conn);
 			conn->setPort1((ExperimentGraphPort*) from);
 			conn->setPos1(from->scenePos());
@@ -192,7 +192,7 @@ bool ExperimentGraphEditor::eventFilter(QObject *o, QEvent *e)
 			QGraphicsItem *item = itemAt(me->scenePos());
 			if (item && item->type() == ExperimentGraphPort::Type)
 			{
-				conn = new ExperimentGraphConnection(0, gScene);
+				conn = new ExperimentGraphConnection(0);
 				gScene->addItem(conn);
 				conn->setPort1((ExperimentGraphPort*) item);
 				conn->setPos1(item->scenePos());
@@ -200,7 +200,8 @@ bool ExperimentGraphEditor::eventFilter(QObject *o, QEvent *e)
 				conn->updatePath();
 
 				return true;
-			} else if (item && item->type() == ExperimentGraphBlock::Type)
+			} 
+			else if (item && item->type() == ExperimentGraphBlock::Type)
 			{
 				/* if (selBlock)
 					selBlock->setSelected(); */
@@ -304,12 +305,12 @@ void ExperimentGraphEditor::load(QDataStream &ds)
 		ds >> type;
 		if (type == ExperimentGraphBlock::Type)
 		{
-			ExperimentGraphBlock *block = new ExperimentGraphBlock(0, gScene);
+			ExperimentGraphBlock *block = new ExperimentGraphBlock(0);
 			gScene->addItem(block);
 			block->load(ds, portMap);
 		} else if (type == ExperimentGraphConnection::Type)
 		{
-			ExperimentGraphConnection *conn = new ExperimentGraphConnection(0, gScene);
+			ExperimentGraphConnection *conn = new ExperimentGraphConnection(0);
 			gScene->addItem(conn);
 			conn->load(ds, portMap);
 		}

@@ -80,7 +80,7 @@ signals:
 
 public:
 	TriggerTimer();
-	TriggerTimer(const TriggerTimer& other ){};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
+	TriggerTimer(const TriggerTimer& other ){Q_UNUSED(other);};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 	~TriggerTimer();
 
 	static QScriptValue ctor__triggerTimer(QScriptContext* context, QScriptEngine* engine);

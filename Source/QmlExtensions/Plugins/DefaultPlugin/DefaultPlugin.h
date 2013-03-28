@@ -16,10 +16,9 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include <QtDeclarative/QDeclarativeExtensionPlugin>
-#include <QtDeclarative/qdeclarative.h>
+#include <QtQml/QtQml>
 
-class QDefaultQmlPlugin : public QDeclarativeExtensionPlugin
+class QDefaultQmlPlugin : public QQmlExtensionPlugin
 {
 	Q_OBJECT
 	Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" "DefaultQMLPlugin")

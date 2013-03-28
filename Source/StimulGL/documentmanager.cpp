@@ -255,7 +255,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Glob
 					QsciAPIs* apis = new QsciAPIs(Qjslexer);
 					if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
 					{
-						custQsci->setCallTipsStyle(QsciScintilla::CallTipsStyle::CallTipsNoAutoCompletionContext);
+						custQsci->setCallTipsStyle(QsciScintilla::CallTipsNoAutoCompletionContext);
 						QStringList apiEntries = getAdditionalApiEntries();
 						if (apiEntries.isEmpty() == false)
 						{
@@ -320,7 +320,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Glob
 						QsciAPIs* apis = new QsciAPIs(Qjslexer);
 						if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
 						{
-							custQsci->setCallTipsStyle(QsciScintilla::CallTipsStyle::CallTipsNoAutoCompletionContext);
+							custQsci->setCallTipsStyle(QsciScintilla::CallTipsNoAutoCompletionContext);
 							QStringList apiEntries = getAdditionalApiEntries();
 							if (apiEntries.isEmpty() == false)
 							{
@@ -424,12 +424,12 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 		{
 		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
 			{
-				bool bResult = customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"qscript.api");
+				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"qscript.api");
 				break;
 			}
 		case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
 			{
-				bool bResult = customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"javascript.api");
+				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"javascript.api");
 				break;
 			}		
 		case GlobalApplicationInformation::DOCTYPE_SVG:
@@ -486,6 +486,7 @@ int DocumentManager::addAdditionalApiEntry(const QString &entry)
 
 void DocumentManager::onMarginClicked (int margin, int line, Qt::KeyboardModifiers state) 
 {
+	Q_UNUSED(state);
 	CustomQsciScintilla *tmpScintilla = dynamic_cast<CustomQsciScintilla *>(sender());
 	if ( margin == 1 )//	margin that contains line numbers 
 	{
@@ -533,21 +534,44 @@ bool DocumentManager::setSubWindow(int DocIndex, QMdiSubWindow *subWindow)
 bool DocumentManager::loadFile(int DocIndex, const QString &fileName)
 {
 	QFile file(fileName);
-	if (!file.open(QFile::ReadOnly | QFile::Text)) {
-		QMessageBox::warning(0, tr("Read Error"), tr("Cannot read file %1:\n%2.").arg(fileName).arg(file.errorString()));
+	if(file.exists() == false)
 		return false;
-	}
-	QTextStream in(&file);
-	QApplication::setOverrideCursor(Qt::WaitCursor);
-
+	
 	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
+	bool bRetval = false;
+	QApplication::setOverrideCursor(Qt::WaitCursor);
 	if(tmpCustomQsciScintilla)
+	{
+		if (!file.open(QFile::ReadOnly | QFile::Text)) 
+		{
+			QMessageBox::warning(0, tr("Read Error"), tr("Cannot read file %1:\n%2.").arg(fileName).arg(file.errorString()));
+			QApplication::restoreOverrideCursor();
+			return false;
+		}
+		QTextStream in(&file);
 		tmpCustomQsciScintilla->setText(in.readAll());
-
+		bRetval = true;
+	}
+	else
+	{
+		if(pluginDocHandlerStore.pluginObject.at(DocIndex))
+		{
+			QObject *pluginObject = pluginDocHandlerStore.pluginObject.at(DocIndex);
+			if(pluginObject)
+			{							
+				if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_LOADADDFILE_FULL)) == -1))//Is the slot present?
+				{
+					bool bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_LOADADDFILE),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetval), Q_ARG(QString,fileName));
+					if(bResult==false)
+						bRetval = false;
+				}
+			}
+		}
+	}
 	setModFlagAndTitle(DocIndex,false);
 	setFileName(DocIndex,fileName);
 	QApplication::restoreOverrideCursor();
-	return true;	
+	return true;
 }
 
 void DocumentManager::documentWasModified(QWidget *subWindow)

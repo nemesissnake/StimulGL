@@ -21,8 +21,8 @@
 #define KEYBOARDCAPTURE_H
 #include <QObject>
 #include <QString>
-#include <QtScript>
-#include <QScriptable>
+#include <QtScript/QtScript>
+#include <QtScript/QScriptable>
 #include <QMap>
 #include "keyboardCaptureThread.h"
 #include "./../../StimulGL/mainappinfo.h"
@@ -69,7 +69,7 @@ signals:
 
 public:
 	KeyBoardCapture(QObject *parent = NULL);
-	KeyBoardCapture(const KeyBoardCapture& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	KeyBoardCapture(const KeyBoardCapture& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	void setScriptEngine(QScriptEngine *scriptEngine) {parentScriptEngine = scriptEngine;};
 	~KeyBoardCapture();
 

@@ -28,7 +28,7 @@ class ExperimentGraphBlock : public QGraphicsPathItem
 public:
 	enum { Type = QGraphicsItem::UserType + 3 };
 
-	ExperimentGraphBlock(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+	ExperimentGraphBlock(QGraphicsItem *parent = 0);
 
 	ExperimentGraphPort* addPort(const QString &name, bool isOutput, int flags = 0, int ptr = 0);
 	void addInputPort(const QString &name);

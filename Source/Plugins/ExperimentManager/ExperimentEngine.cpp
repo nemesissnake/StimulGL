@@ -256,7 +256,8 @@ bool ExperimentEngine::initExperimentObject()
 	int iCPU = omp_get_num_procs(); // Get the number of processors in this system
     qDebug() << __FUNCTION__ << "::" << iCPU << "processors available.";//The omp_get_num_threads() call returns 1 in the serial section of the code!!
 	omp_set_num_threads(iCPU); // Set the number of threads
-	bool bResult = connect(pExperimentManager->getExperimentStructure(),SIGNAL(experimentStopped()),this,SLOT(ExperimentShouldFinish()));
+	//bool bResult = 
+		connect(pExperimentManager->getExperimentStructure(),SIGNAL(experimentStopped()),this,SLOT(ExperimentShouldFinish()));
 	return true;
 }
 
@@ -358,7 +359,8 @@ void ExperimentEngine::incrementExternalTrigger()
 		{
 			if (bExperimentShouldStop==false)
 			{
-				int nResult = checkForNextBlockTrial();
+				//int nResult = 
+					checkForNextBlockTrial();
 			}
 		}
 	}
@@ -486,6 +488,7 @@ int ExperimentEngine::checkForNextBlockTrial()
 
 void ExperimentEngine::animate(bool bOnlyCheckBlockTrials)
 {
+	Q_UNUSED(bOnlyCheckBlockTrials);
 //	//QObject *a = sender();	
 	if(getSubObjectState() == Experiment_SubObject_Started)
 	{
@@ -501,8 +504,8 @@ bool ExperimentEngine::changeSubObjectState(ExperimentSubObjectState newSubObjec
 {
 	if(newSubObjectState != currentSubObjectState)
 	{
-		if((((int)newSubObjectState > (int)ExperimentSubObjectState::Experiment_SubObject_MaxState) || ((int)newSubObjectState < 0)) ||
-		  (((int)currentSubObjectState > (int)ExperimentSubObjectState::Experiment_SubObject_MaxState) || ((int)currentSubObjectState < 0)) ||
+		if((((int)newSubObjectState > (int)Experiment_SubObject_MaxState) || ((int)newSubObjectState < 0)) ||
+		  (((int)currentSubObjectState > (int)Experiment_SubObject_MaxState) || ((int)currentSubObjectState < 0)) ||
 		  ((int)currentSubObjectState == Experiment_SubObject_Destructing))
 		{
 			return false;

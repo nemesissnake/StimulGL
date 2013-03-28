@@ -27,7 +27,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QGraphicsRectItem>
-#include <QGraphicsSvgItem>
+#include <QtSvg/QGraphicsSvgItem>
 #include <QPaintEvent>
 #include <qmath.h>
 

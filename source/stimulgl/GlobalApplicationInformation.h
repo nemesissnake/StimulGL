@@ -63,7 +63,7 @@ public:
 	void setFileVersionString(const QString &sVersion);
 	QString getFileVersionString();
 	void setInternalName(const QString &sIntName);
-	QString getInternalName();
+	QString getInternalName(); 
 	QString getTitle();
 	bool shouldLoadScriptBindings();
 

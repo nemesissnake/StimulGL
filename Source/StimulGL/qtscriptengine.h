@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QtScript>
 #if QT_VERSION >= 0x040500
-#include <QtScriptTools>
+#include <QtScriptTools/QtScriptTools>
 #endif
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>

@@ -4,10 +4,14 @@
 
 # This is a reminder that you are using a generated .pro file.
 # Remove it when you are finished editing this file.
-# message("You are running qmake on a generated .pro file. This may not work!")
+message("You are running qmake on a generated .pro file. This may not work!")
 
 
-HEADERS += ./aboutqtdialog.h \
+HEADERS += ./assistant.h \
+    ./maindefines.h \
+    ./resource.h \
+    ./StimulGL.h \
+    ./aboutqtdialog.h \
     ./customqsciscintilla.h \
     ./documentmanager.h \
     ./mainappinfo.h \
@@ -20,14 +24,23 @@ HEADERS += ./aboutqtdialog.h \
     ./qtscriptworker.h \
     ./scifinddialog.h \
     ./sleepthread.h \
+    ./GlobalApplicationInformation.h \
+    ./documentwindow.h \
+    ./mainappexchange.h \
+    ./OutputListDelegate.h \
     ./svgview.h
 SOURCES += ./aboutqtdialog.cpp \
+    ./assistant.cpp \
     ./customqsciscintilla.cpp \
     ./documentmanager.cpp \
+    ./documentwindow.cpp \
+    ./GlobalApplicationInformation.cpp \
     ./main.cpp \
+    ./mainappexchange.cpp \
     ./mainappinfo.cpp \
     ./mainwindow.cpp \
     ./optionpage.cpp \
+    ./OutputListDelegate.cpp \
     ./plugincollection.cpp \
     ./qtscriptengine.cpp \
     ./qtscriptengineagent.cpp \
@@ -37,6 +50,3 @@ SOURCES += ./aboutqtdialog.cpp \
 FORMS += ./optionpage.ui \
     ./scifinddialog.ui
 RESOURCES += StimulGL.qrc
-
-OTHER_FILES += \
-    StimulGL.rc

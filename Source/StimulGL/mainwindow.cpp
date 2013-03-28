@@ -320,6 +320,7 @@ void MainWindow::setupDocumentManager()
 
 QScriptValue myPauseFunction(QScriptContext *ctx, QScriptEngine *eng)
 {
+	Q_UNUSED(eng);
 	int nWaitTime = ctx->argument(0).toInteger();
 
 	QMutex mutTmp;
@@ -331,6 +332,7 @@ QScriptValue myPauseFunction(QScriptContext *ctx, QScriptEngine *eng)
 
 QScriptValue myThrowScriptErrorFunction(QScriptContext *ctx, QScriptEngine *eng)
 {
+	Q_UNUSED(eng);
 	QString result;
 	for (int i = 0; i < ctx->argumentCount(); ++i) {
 		if (i > 0)
@@ -343,6 +345,8 @@ QScriptValue myThrowScriptErrorFunction(QScriptContext *ctx, QScriptEngine *eng)
 
 QScriptValue myBeepFunction(QScriptContext *ctx, QScriptEngine *eng)
 {
+	Q_UNUSED(eng);
+	Q_UNUSED(ctx);
 	//DWORD Tone(2);//frequency, duration
 	//Tone[0] = 100;
 	//Tone[1] = 100;
@@ -420,6 +424,8 @@ QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine
 #ifdef DEBUG
 QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine)
 {
+	Q_UNUSED(engine);
+	Q_UNUSED(context);
 	return NULL;
 }
 #endif
@@ -502,9 +508,12 @@ void MainWindow::setupScriptEngine()
 	QScriptValue ctor = AppScriptEngine->eng->newFunction(sciFindDialog::DocFindFlagsConstructor);
 	AppScriptEngine->eng->globalObject().setProperty("DocFindFlags", ctor);
 
-	int nShortListId = qScriptRegisterSequenceMetaType<QList<short>>(AppScriptEngine->eng);
-	int nFloatListId = qScriptRegisterSequenceMetaType<QList<float>>(AppScriptEngine->eng);
-	int nDoubleListId = qScriptRegisterSequenceMetaType<QList<double>>(AppScriptEngine->eng);
+	//int nShortListId = 
+		qScriptRegisterSequenceMetaType<QList<short>>(AppScriptEngine->eng);
+	//int nFloatListId = 
+		qScriptRegisterSequenceMetaType<QList<float>>(AppScriptEngine->eng);
+	//int nDoubleListId = 
+		qScriptRegisterSequenceMetaType<QList<double>>(AppScriptEngine->eng);
 }
 
 bool MainWindow::restartScriptEngine()
@@ -550,6 +559,7 @@ void MainWindow::setActiveSubWindow(QWidget *window)
 
 void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 {
+	Q_UNUSED(subWindow);
 	//write2Debugger("updateMenuControls entered..."); this doesn't happen that often....
 	QMdiSubWindow *currentSub = activeMdiChild();
 	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
@@ -1178,6 +1188,10 @@ void MainWindow::setupDynamicPlugins()
         Q_IMPORT_PLUGIN(ExperimentManagerPlugin)// see below
 		Q_IMPORT_PLUGIN(KeyBoardPlugin)// see below
 
+		//Q_UNUSED(qt_static_plugin_ExperimentManagerPlugin);
+		//Q_UNUSED(qt_static_plugin_KeyBoardPlugin);
+		//Q_UNUSED(qt_static_plugin_ParallelPortPlugin);
+
 		bool bRetVal = false;
 		QString strRetVal = "";
 		const QMetaObject* metaObject = NULL;
@@ -1302,7 +1316,7 @@ void MainWindow::setupDynamicPlugins()
 					{
 						bool bResult;
 						QObject *pointerQObject = NULL;
-						const QMetaObject* metaScriptObject;
+						const QMetaObject* metaScriptObject = NULL;
 						int i=0;
 						while(true)
 						{
@@ -1401,7 +1415,8 @@ bool MainWindow::extendAPICallTips(const QMetaObject* metaScriptObject)
 		sScriptClassName = metaScriptObject->className();
 		sSuperClassName = metaScriptObject->superClass()->className();
 
-		int amount = metaScriptObject->classInfoCount();
+		//int amount = 
+			metaScriptObject->classInfoCount();
 		for(i = metaScriptObject->classInfoOffset(); i < metaScriptObject->classInfoCount(); ++i)
 		{
 			if (QString::fromLatin1(metaScriptObject->classInfo(i).name()) == QString(SCRIPT_API_CLASS_NAME_TAG))
@@ -2009,16 +2024,12 @@ bool MainWindow::parseFile(const QFile &file)
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	if (DocManager->loadFile(DocIndex,file.fileName()))
 	{	
-		//newChild->showMaximized();
 		setCurrentFile(file.fileName());
-	//	setupSyntaxHighlighting(child,tempFileType);
 		statusBar()->showMessage(tr("File loaded"), 2000);
 	} 
 	else 
 	{
 		mdiArea->removeSubWindow(findMdiChild(file.fileName()));
-		//newChild->close();
-		//delete newChild;
 		statusBar()->showMessage(tr("Could not load File"), 2000);
 		QApplication::restoreOverrideCursor();
 		return false;
