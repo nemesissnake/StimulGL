@@ -50,6 +50,7 @@ QtQuick2ApplicationViewer::QtQuick2ApplicationViewer(QObject *parent) : QQuickVi
     //bool bResult = connect(engine(), &QQmlEngine::quit, this, &QWindow::close);
 	bool bResult = connect(engine(), &QQmlEngine::quit, this, &QtQuick2ApplicationViewer::qtQuick2EngineQuit);
     setResizeMode(QQuickView::SizeRootObjectToView);
+	this->setFlags(Qt::FramelessWindowHint);
 }
 
 void QtQuick2ApplicationViewer::qtQuick2EngineQuit()

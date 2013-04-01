@@ -303,6 +303,7 @@ QString ExperimentManagerPlugin::GetAdditionalFileTypeApiName(QString strExtensi
 
 QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtension)
 {
+	return NULL;
 	if(strExtension.toLower() == "exml")
 	{
 		if(ExperimentManagerObject == NULL)

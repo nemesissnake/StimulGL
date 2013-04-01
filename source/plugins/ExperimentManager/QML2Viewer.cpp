@@ -63,10 +63,14 @@ QML2Viewer::~QML2Viewer()
 
 void QML2Viewer::deleteQML2ViewerWindow()
 {
+	last_qmlMainFilePath = "";
 	if(quick2ViewerWindow)
 	{
 		bool bResult = disconnect(quick2ViewerWindow, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onStatusChanged(QQuickView::Status)));
 		bResult = disconnect(quick2ViewerWindow, &QtQuick2ApplicationViewer::QtQuickEngineQuit, this, &QML2Viewer::onQuick2ViewWindowClosed);
+		//parentWindow->close();
+		//delete parentWindow;
+		//parentWindow = NULL;
 		quick2ViewerWindow->close();
 		delete quick2ViewerWindow;
 		quick2ViewerWindow = NULL;
@@ -124,13 +128,16 @@ void QML2Viewer::initialize()
 	quick2ViewerWindow = NULL;
 	rootObject = NULL;
 	imgLstModel = NULL;
+	last_qmlMainFilePath = "";
 }
 
 bool QML2Viewer::initObject()
 {
 	bFirstQuickWindowAvtivation = true;
 	bExperimentUnlocked = false;
-	quick2ViewerWindow = new QtQuick2ApplicationViewer();
+	//parentWindow = new QWindow();
+	//parentWindow->setFlags(Qt::FramelessWindowHint);
+	quick2ViewerWindow = new QtQuick2ApplicationViewer();//parentWindow);
 	quick2ViewerWindow->installEventFilter(this);
 	bool bResult = connect(quick2ViewerWindow, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onStatusChanged(QQuickView::Status)));
 	bResult = connect(quick2ViewerWindow, &QtQuick2ApplicationViewer::QtQuickEngineQuit, this, &QML2Viewer::onQuick2ViewWindowClosed);
@@ -413,32 +420,59 @@ void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyT
 
 void QML2Viewer::qml2EventRoutine(QString strContent)
 {
-	QFileInfo fi;
-	QUrl fileUrl;
 	QString fileString;
 	bool bEmitSourceChange = false;
+	QUrl fileUrl;
 
-	if(bFirstQuickWindowAvtivation)
+	if(strContent.isEmpty())
 	{
-		bFirstQuickWindowAvtivation = false;
-		bExperimentUnlocked = false;
-		fileString = "qrc:/resources/StartQmlFile.qml";
-		fileUrl = QUrl(fileString);		
+		if(bFirstQuickWindowAvtivation)
+		{
+			bFirstQuickWindowAvtivation = false;
+			bExperimentUnlocked = false;
+			fileString = "qrc:/resources/StartQmlFile.qml";
+			fileUrl = QUrl(fileString);
+		}
+		else if(bExperimentUnlocked == false)
+		{
+			fileString = "qrc:/resources/UnlockedQmlFile.qml";
+			fileUrl = QUrl(fileString);
+		}
+		else
+		{
+			if(last_qmlMainFilePath == qmlMainFilePath)
+				return;
+			else
+				last_qmlMainFilePath = qmlMainFilePath;
+			bEmitSourceChange = true;
+			//fileString = qmlMainFilePath;
+			fileString = QFileInfo(qmlMainFilePath).canonicalFilePath();
+			fileUrl = QUrl::fromLocalFile(fileString);//fileString);
+
+
+			//int nRetries = 1;
+			////QString filename("tmp");
+			////QDir::setCurrent("D:\\Projects\\Experiments\\StimulGL\\Joel\\3DFace");
+			//QFile tmp2File(fileString);
+			////tmp2File.setFileName(fileString);
+			//if (!tmp2File.open(QIODevice::ReadOnly | QIODevice::Text))
+			//{
+
+			//}
+			//QTextStream in(&tmp2File);
+			//strContent = in.readAll();//write(strContent.toLatin1());
+			//tmp2File.close();
+
+			//if (!tmp2File.exists())
+			//	return;
+			//QFileInfo fi(tmp2File);
+			//QDir::setCurrent(fi.canonicalPath());
+
+			//fileString = QFileInfo(tmp2File.fileName()).canonicalFilePath();
+			//fileUrl = QUrl::fromLocalFile(fileString);
+		}
 	}
-	else if(bExperimentUnlocked == false)
-	{
-		fileString = "qrc:/resources/UnlockedQmlFile.qml";
-		fileUrl = QUrl(fileString);		
-	}
-	else
-	{
-		bEmitSourceChange = true;
-		fi.setFile(qmlMainFilePath);
-		fileString = fi.canonicalFilePath();
-		fileUrl = QUrl::fromLocalFile(fileString);
-	}
-	
-	if(strContent.isEmpty() == false)
+	else   //if(strContent.isEmpty()==false)	
 	{
 		int nRetries = 1;
 		QString filename("tmp");
@@ -457,15 +491,23 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 		}
 		tmpFile.write(strContent.toLatin1());
 		tmpFile.close();
-		fi.setFile(tmpFile.fileName());
-		qmlMainFilePath = fi.canonicalFilePath();
-		fileUrl = QUrl::fromLocalFile(fi.canonicalFilePath());
+		fileString = QFileInfo(tmpFile.fileName()).canonicalFilePath();
+
+		//return;
+		fileUrl = QUrl::fromLocalFile(fileString);
+		//fileString = qmlMainFilePath;
 	}
 	if(quick2ViewerWindow)
 	{
-		if (quick2ViewerWindow->source() != fileUrl)
-		{
-			quick2ViewerWindow->setSource(fileUrl);//setMainQmlFile(fileString);	
+		//if (quick2ViewerWindow->source() != fileUrl)
+		//{
+			//if(fileUrl == QUrl(""))
+			//	quick2ViewerWindow->setMainQmlFile(fileString);
+			//else
+			quick2ViewerWindow->hide();
+			//quick2ViewerWindow->setVisible(false);
+			quick2ViewerWindow->setSource(fileUrl);
+
 			if (quick2ViewerWindow->status() == QQuickView::Error)
 			{
 				this->abortExperimentObject();
@@ -475,7 +517,16 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 			}
 			if(bEmitSourceChange)
 				emit NewSourceLoaded(fileUrl.toString());
-		}
+
+			//qApp->processEvents();
+			quick2ViewerWindow->setVisible(true);
+			//quick2ViewerWindow->resize(600,600);
+
+			//quick2ViewerWindow->focusObject();
+			//quick2ViewerWindow->setWindowState(Qt::WindowActive);
+			//quick2ViewerWindow->raise();
+			quick2ViewerWindow->showFullScreen();
+		//}
 	}
 }
 

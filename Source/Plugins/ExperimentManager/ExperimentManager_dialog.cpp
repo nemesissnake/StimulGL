@@ -211,9 +211,6 @@ bool ExperimentManager_Dialog::executeDocument()
 			QFile file(fileSource);
 			if (!file.exists())
 				return false;
-
-
-
 			QFileInfo fi(file);
 			QDir::setCurrent(fi.canonicalPath());
 		}

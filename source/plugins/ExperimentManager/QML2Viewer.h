@@ -89,8 +89,10 @@ private:
 	//QmlErrorHandler *qmlErrorHandler;
 	ImageListModel *imgLstModel;
 	QtQuick2ApplicationViewer *quick2ViewerWindow;
+	//QWindow *parentWindow;
 
 	QString qmlMainFilePath;
+	QString last_qmlMainFilePath;
 	QObject *rootObject;
 	int nQML2ViewerID;							//The ObjectID used to identify the object
 	QRectF rectScreenRes;						//The screen resolution
