@@ -504,7 +504,7 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 			//if(fileUrl == QUrl(""))
 			//	quick2ViewerWindow->setMainQmlFile(fileString);
 			//else
-			quick2ViewerWindow->hide();
+			//quick2ViewerWindow->hide();
 			//quick2ViewerWindow->setVisible(false);
 			quick2ViewerWindow->setSource(fileUrl);
 
@@ -519,7 +519,7 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 				emit NewSourceLoaded(fileUrl.toString());
 
 			//qApp->processEvents();
-			quick2ViewerWindow->setVisible(true);
+			//quick2ViewerWindow->setVisible(true);
 			//quick2ViewerWindow->resize(600,600);
 
 			//quick2ViewerWindow->focusObject();

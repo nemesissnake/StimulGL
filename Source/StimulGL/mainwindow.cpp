@@ -327,6 +327,7 @@ QScriptValue myPauseFunction(QScriptContext *ctx, QScriptEngine *eng)
 	mutTmp.lock();
 	QWaitCondition waitCondition;
 	waitCondition.wait(&mutTmp, nWaitTime);
+	mutTmp.unlock();
 	return 0;
 }
 

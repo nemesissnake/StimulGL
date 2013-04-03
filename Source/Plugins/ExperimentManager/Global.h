@@ -163,6 +163,7 @@ namespace ExperimentManagerNameSpace
 
 	#define DEFAULT_OUTPUTFILE				"Out.txt"
 	#define ARGB_FORMAT_HEADER				0xCAFE1234
+	#define ARGB_FORMAT_HEADER_CONC			0xCAFE5678
 	#define DOUBLE_PI_VALUE					3.141592653589793238462643383279502884197
 	#define ROOT_TAG						"EXML"
 	#define VERSION_TAG						"version"

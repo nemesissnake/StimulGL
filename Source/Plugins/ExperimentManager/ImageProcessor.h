@@ -58,6 +58,8 @@ public slots:
 	bool ScalePngFile(QString strSource, QString strDestination, int nRatio = 1, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false, bool bSmoothFiltering = false);
 	bool ScalePngFileBySize(QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false, bool bSmoothFiltering = false);
 	bool CreateMeanImageFromPngFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite = false);
+	bool ConcatenateDatFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite = false);
+	int SplitCDatFile(const QString &sourceImagePath,const QString &destinationPath, const QString &destPreFileName, const bool bOverwrite = false);
 	//QPixmap ChangeHue(QPixmap &p);
 
 private:

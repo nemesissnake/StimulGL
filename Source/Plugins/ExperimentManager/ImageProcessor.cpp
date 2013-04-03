@@ -309,6 +309,154 @@ bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestinatio
 	return bSaveResult;
 }
 
+bool ImageProcessor::ConcatenateDatFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite)
+{
+	if(sourceImagePaths.isEmpty())
+		return false;
+	QFile fileSource;
+	//Do all sources exist?
+	for (int i=0;i<sourceImagePaths.count();i++)
+	{		
+		fileSource.setFileName(sourceImagePaths.at(i));
+		if (!fileSource.exists())
+			return false;
+	}
+	QFile fileDest(destinationPath);
+	//Check if we can write to the destination
+	QFileInfo fileDestInfo(destinationPath);
+	if (fileDest.exists() && (bOverwrite == false))
+		return false;
+	if (!fileDestInfo.absoluteDir().exists())
+	{
+		if (!QDir().mkdir(fileDestInfo.absolutePath()))
+			return false;
+	}
+	//Let's write the data to the *.cdat file
+	if (fileDest.open(QIODevice::WriteOnly))
+	{
+		QDataStream output(&fileDest);
+		quint32 magic = ARGB_FORMAT_HEADER_CONC;
+		quint32 nNumberOfFrames = sourceImagePaths.count();
+		output << magic << nNumberOfFrames;
+		bool bBreakWriteOperation = false;
+		for (int i=0;i<sourceImagePaths.count();i++)
+		{		
+			fileSource.setFileName(sourceImagePaths.at(i));
+			if(fileSource.open(QIODevice::ReadOnly))
+			{
+				quint32 magic;
+				quint32 width;
+				quint32 height;
+				char *readData;
+				QDataStream input(&fileSource);
+				input >> magic >> width >> height;
+				if(magic == ARGB_FORMAT_HEADER)
+				{
+					int nDataSize = width*height*sizeof(QRgb);
+					readData = new char[nDataSize];
+					int nBytesRead = input.readRawData(readData,nDataSize);
+					if(i==0)
+						output << width << height;
+					int nBytesWritten = output.writeRawData(readData,nDataSize);
+					delete[] readData;
+				}
+				fileSource.close();
+			}
+			else
+			{
+				bBreakWriteOperation = true;
+				break;
+			}
+		}
+		if(bBreakWriteOperation)
+		{
+			fileDest.close();
+			return false;
+		}
+		fileDest.close();
+		return true;
+	}
+	return false;
+}
+
+int ImageProcessor::SplitCDatFile(const QString &sourceImagePath,const QString &destinationPath, const QString &destPreFileName, const bool bOverwrite)
+{
+	if(sourceImagePath.isEmpty())
+		return -1;
+	QFile fileSource;
+	fileSource.setFileName(sourceImagePath);
+	if (!fileSource.exists())
+		return -1;
+	//Create the destination directory
+	QFileInfo fileDestInfo(destinationPath);
+	if (!fileDestInfo.absoluteDir().exists())
+	{
+		if (!QDir().mkdir(fileDestInfo.absolutePath()))
+			return -1;
+	}
+	if (fileSource.open(QIODevice::ReadOnly))
+	{
+		bool bBreakWriteOperation = false;
+		quint32 magic_conc;
+		quint32 magic = ARGB_FORMAT_HEADER;
+		quint32 width;
+		quint32 height;
+		quint32 nNumberOfFrames = 0;
+		QDataStream input(&fileSource);
+		input >> magic_conc >> nNumberOfFrames >> width >> height;
+		if(magic_conc == ARGB_FORMAT_HEADER_CONC)
+		{
+			int nDestFileCount = nNumberOfFrames;
+			QFile fileDest;
+			if(nDestFileCount > 0)
+			{
+				//Check if we can write to the destination
+				if(bOverwrite == false)
+				{
+					for (int i=0;i<nDestFileCount;i++)
+					{		
+						fileDest.setFileName(destinationPath + destPreFileName + "_" + i + ".dat");
+						if (fileDest.exists())
+							return -1;
+					}
+				}
+				int nDataSize = width*height*sizeof(QRgb);
+				char *readData;				
+				QString tmpFileStr = "";
+				for (int i=0;i<nNumberOfFrames;i++)
+				{
+					tmpFileStr = destinationPath + destPreFileName + "_" + QString::number(i) + ".dat";
+					fileDest.setFileName(tmpFileStr);
+					if(fileDest.open(QIODevice::WriteOnly))
+					{
+						QDataStream output(&fileDest);
+						readData = new char[nDataSize];
+						output << magic << width << height;
+						int nBytesRead = input.readRawData(readData,nDataSize);
+						int nBytesWritten = output.writeRawData(readData,nDataSize);
+						fileDest.close();
+						delete[] readData;
+					}
+					else
+					{
+						bBreakWriteOperation = true;
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			bBreakWriteOperation = true;
+		}
+		fileSource.close();
+		if(bBreakWriteOperation)
+			return -1;
+		return nNumberOfFrames;
+	}
+	return -1;
+}
+
 bool ImageProcessor::CreateMeanImageFromPngFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite)
 {
 	if(sourceImagePaths.isEmpty())
