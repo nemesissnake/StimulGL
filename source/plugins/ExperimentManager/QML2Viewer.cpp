@@ -525,7 +525,7 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 			//quick2ViewerWindow->focusObject();
 			//quick2ViewerWindow->setWindowState(Qt::WindowActive);
 			//quick2ViewerWindow->raise();
-			quick2ViewerWindow->showFullScreen();
+			//quick2ViewerWindow->showFullScreen();
 		//}
 	}
 }
