@@ -133,7 +133,7 @@ public:
 	int nNrOfTrials;
 	int nNrOfInternalTriggers;
 	int nNrOfExternalTriggers;
-	QList<cLoopStructure> lLoops;
+	QList<cLoopStructure*> lLoops;
 };
 
 class cBlockStructure : public QObject
@@ -200,7 +200,7 @@ public:
 	int nExperimentID;
 	QString sExperimentName;
 	bool bDebugMode;
-	QList<cBlockStructure> lBlocks;
+	QList<cBlockStructure*> lBlocks;
 	cBlockStructure *currentBlockPointer;					//Only for internal usage
 	cLoopStructure *currentLoopPointer;						//Only for internal usage
 	cBlockStructure *firstBlockPointer;						//Only for internal usage

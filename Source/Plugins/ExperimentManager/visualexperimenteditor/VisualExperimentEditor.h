@@ -90,7 +90,7 @@ private:
     QIcon createColorIcon(QColor color);
 
 	QGraphicsItem *itemAt(const QPointF &pos);
-	bool createConnection(QGraphicsItem *from, QGraphicsItem *to);
+	bool createConnection(QGraphicsItem *from, QGraphicsItem *to, int nRepeats = 1);
 
 	ExperimentGraphConnection *conn;
 	bool bAllowSelfRecurrentConnection;

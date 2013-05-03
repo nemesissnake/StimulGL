@@ -53,7 +53,15 @@ cBlockStructure_SharedData::cBlockStructure_SharedData(const cBlockStructure_Sha
 
 cBlockStructure_SharedData::~cBlockStructure_SharedData()
 {	
-	lLoops.clear();
+	//if(lLoops.isEmpty() == false)
+	//{
+	//	for (int i=0;i<lLoops.count();i++)
+	//	{
+	//		delete lLoops[i];//->deleteLater();
+	//		//lLoops[i] = NULL;
+	//	}
+		lLoops.clear();
+	//}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,7 +148,7 @@ bool cBlockStructure::isUnusedLoopID(const int &nLoopID) const
 		return true;
 	for (int i = 0; i < pSharedData->lLoops.size(); i++) 
 	{
-		if (pSharedData->lLoops.at(i).getLoopID() == nLoopID)
+		if (pSharedData->lLoops.at(i)->getLoopID() == nLoopID)
 			return false;
 	}
 	return true;
@@ -150,7 +158,7 @@ bool cBlockStructure::insertLoop(cLoopStructure *cLoop)
 {
 	if(isUnusedLoopID(cLoop->getLoopID()))
 	{
-		pSharedData->lLoops.append(cLoopStructure(*cLoop));
+		pSharedData->lLoops.append(cLoop);
 		return true;
 	}
 	return false;
@@ -163,9 +171,9 @@ cLoopStructure *cBlockStructure::resetToFirstFreeLoopPointer()
 		int nCount;
 		for(int i=0;i<pSharedData->lLoops.count();i++)
 		{
-			nCount = pSharedData->lLoops.at(i).getLoopCounter();
+			nCount = pSharedData->lLoops.at(i)->getLoopCounter();
 			if((nCount >= 0) || (nCount==LCE_UNUSED))
-				return &pSharedData->lLoops[i];
+				return pSharedData->lLoops[i];
 		}
 	}
 	return NULL;
@@ -186,10 +194,10 @@ cLoopStructure *cBlockStructure::incrementToNextLoopPointer(cLoopStructure *pCur
 		{
 			if(bReturnNextPointer)
 			{
-				if(pSharedData->lLoops[i].initializeCurrentLoopCounter())//Initialization of the new loop?
-					return &pSharedData->lLoops[i];
+				if(pSharedData->lLoops[i]->initializeCurrentLoopCounter())//Initialization of the new loop?
+					return pSharedData->lLoops[i];
 			}
-			if(&pSharedData->lLoops.at(i) == pCurrentLoop)
+			if(pSharedData->lLoops[i] == pCurrentLoop)
 				bReturnNextPointer = true;
 		}
 	}
@@ -202,7 +210,7 @@ void cBlockStructure::resetAllLoopCounters()
 	{
 		for(int i=0;i<pSharedData->lLoops.count();i++)
 		{
-			pSharedData->lLoops[i].resetCurrentLoopCounter();
+			pSharedData->lLoops[i]->resetCurrentLoopCounter();
 		}
 	}
 }
@@ -213,8 +221,8 @@ cLoopStructure* cBlockStructure::getLoopPointerByID(const int &nLoopID)
 		return NULL;
 	for (int i=0;i<pSharedData->lLoops.size();i++) 
 	{
-		if(pSharedData->lLoops[i].getLoopID() == nLoopID)
-			return &pSharedData->lLoops[i];
+		if(pSharedData->lLoops[i]->getLoopID() == nLoopID)
+			return pSharedData->lLoops[i];
 	}
 	return NULL;
 }
@@ -226,8 +234,8 @@ cLoopStructure* cBlockStructure::getNextClosestLoopIDByFromID(const int &startLo
 		return NULL;
 	//First try the expected location
 	if(pSharedData->lLoops.size()>startLoopID)
-		if (pSharedData->lLoops.at(startLoopID).getLoopID() == startLoopID)
-			return &pSharedData->lLoops[startLoopID];
+		if (pSharedData->lLoops.at(startLoopID)->getLoopID() == startLoopID)
+			return pSharedData->lLoops[startLoopID];
 	//Now try the other items
 	int closestIndex = -1;
 	int closestLoopID = startLoopID;//This shouldn't matter
@@ -235,10 +243,10 @@ cLoopStructure* cBlockStructure::getNextClosestLoopIDByFromID(const int &startLo
 	bool bAcceptAny = true;//Makes sure to accept any valid value from the start of the search
 	for (int i=0;i<pSharedData->lLoops.size();i++) 
 	{
-		tmpLoopID = pSharedData->lLoops.at(i).getLoopID();
+		tmpLoopID = pSharedData->lLoops.at(i)->getLoopID();
 		if(tmpLoopID == startLoopID)
 		{//We found it although it was not at its expected location
-			return &pSharedData->lLoops[i];
+			return pSharedData->lLoops[i];
 		}
 		else if(tmpLoopID > startLoopID)
 		{//We found a larger block number...
@@ -251,7 +259,7 @@ cLoopStructure* cBlockStructure::getNextClosestLoopIDByFromID(const int &startLo
 		}
 	}
 	if(closestIndex>=0)//Do we have an closest result?
-		return &pSharedData->lLoops[closestIndex];
+		return pSharedData->lLoops[closestIndex];
 	else
 		return NULL;
 }
@@ -412,12 +420,12 @@ cExperimentStructure_SharedData::cExperimentStructure_SharedData(const cExperime
 		for (int i=0;i<other.lBlocks.count();i++)
 		{
 			lBlocks.append(other.lBlocks[i]);
-			if(&other.lBlocks[i] == other.currentBlockPointer)
+			if(other.lBlocks[i] == other.currentBlockPointer)
 			{
-				currentBlockPointer = &lBlocks[i];
+				currentBlockPointer = lBlocks[i];
 			}
-			if(&other.lBlocks[i] == other.firstBlockPointer)
-				firstBlockPointer = &lBlocks[i];
+			if(other.lBlocks[i] == other.firstBlockPointer)
+				firstBlockPointer = lBlocks[i];
 
 		}
 	}
@@ -425,7 +433,15 @@ cExperimentStructure_SharedData::cExperimentStructure_SharedData(const cExperime
 
 cExperimentStructure_SharedData::~cExperimentStructure_SharedData()
 {	
-	lBlocks.clear();
+	if(lBlocks.isEmpty() == false)
+	{
+		for (int i=0;i<lBlocks.count();i++)
+		{
+			delete lBlocks[i];
+			lBlocks[i] = NULL;
+		}
+		lBlocks.clear();
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -450,7 +466,7 @@ cExperimentStructure::cExperimentStructure(const cExperimentStructure& other) : 
 *	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
 */
 cExperimentStructure::~cExperimentStructure()
-{	
+{
 }
 
 bool cExperimentStructure::Initialize()
@@ -562,7 +578,7 @@ bool cExperimentStructure::isUnusedBlockID(const int &nBlockID) const
 		return true;
 	for (int i = 0; i < pSharedData->lBlocks.size(); i++) 
 	{
-		if (pSharedData->lBlocks.at(i).getBlockID() == nBlockID)
+		if (pSharedData->lBlocks.at(i)->getBlockID() == nBlockID)
 			return false;
 	}
 	return true;
@@ -576,9 +592,9 @@ cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(con
 	//First try the expected location
 	if(pSharedData->lBlocks.size()>startBlockNumber)
 	{
-		if (pSharedData->lBlocks.at(startBlockNumber).getBlockID() == startBlockNumber)
+		if (pSharedData->lBlocks.at(startBlockNumber)->getBlockID() == startBlockNumber)
 		{
-			return &pSharedData->lBlocks[startBlockNumber];
+			return pSharedData->lBlocks[startBlockNumber];
 		}
 	}
 	//Now try the other items
@@ -588,10 +604,10 @@ cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(con
 	bool bAcceptAny = true;//Makes sure to accept any valid value from the start of the search
 	for (int i=0;i<pSharedData->lBlocks.size();i++) 
 	{
-		tmpBlockNumber = pSharedData->lBlocks.at(i).getBlockNumber();
+		tmpBlockNumber = pSharedData->lBlocks.at(i)->getBlockNumber();
 		if(tmpBlockNumber == startBlockNumber)
 		{//We found it although it was not at its expected location
-			return &pSharedData->lBlocks[i];
+			return pSharedData->lBlocks[i];
 		}
 		else if(tmpBlockNumber > startBlockNumber)
 		{//We found a larger block number...
@@ -605,7 +621,7 @@ cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(con
 	}
 	if(closestIndex>=0)//Do we have an closest result?
 	{
-		return &pSharedData->lBlocks[closestIndex];
+		return pSharedData->lBlocks[closestIndex];
 	}
 	return NULL;
 }
@@ -618,7 +634,7 @@ int cExperimentStructure::getCurrentBlockIndex() const
 		return OI_UNDEFINED;
 	for (int i=0;i<pSharedData->lBlocks.count();i++)
 	{
-		if(&pSharedData->lBlocks[i] == pSharedData->currentBlockPointer)
+		if(pSharedData->lBlocks[i] == pSharedData->currentBlockPointer)
 		{
 			return i;
 		}
@@ -634,7 +650,7 @@ cBlockStructure cExperimentStructure::getCurrentBlock(bool &bHasCurrBlock) const
 		if(nFoundIndex >= 0)
 		{
 			bHasCurrBlock = true;
-			return pSharedData->lBlocks[nFoundIndex];
+			return *pSharedData->lBlocks[nFoundIndex];
 		}
 	}
 	bHasCurrBlock = false;
@@ -670,7 +686,7 @@ bool cExperimentStructure::isValidBlockPointer(cBlockStructure *cBlock) const
 		return false;
 	for (int i=0;i<pSharedData->lBlocks.size();i++) 
 	{
-		if(&pSharedData->lBlocks[i] == cBlock)
+		if(pSharedData->lBlocks[i] == cBlock)
 			return true;
 	}
 	return false;
@@ -680,9 +696,9 @@ bool cExperimentStructure::insertBlock(cBlockStructure *cBlock)
 {
 	if(isUnusedBlockID(cBlock->getBlockID()))
 	{
-		pSharedData->lBlocks.append(*cBlock);
+		pSharedData->lBlocks.append(cBlock);
 		if(pSharedData->lBlocks.count()==1)//First block to append?
-			pSharedData->firstBlockPointer = &pSharedData->lBlocks[0];
+			pSharedData->firstBlockPointer = pSharedData->lBlocks[0];
 		return true;
 	}
 	return false;
@@ -694,7 +710,7 @@ int cExperimentStructure::getBlockIndexByID(const int &nBlockID) const
 		return -1;
 	for (int i=0;i<pSharedData->lBlocks.size();i++) 
 	{
-		if(pSharedData->lBlocks.at(i).getBlockID() == nBlockID)
+		if(pSharedData->lBlocks.at(i)->getBlockID() == nBlockID)
 			return i;
 	}
 	return -1;
@@ -704,7 +720,7 @@ cBlockStructure* cExperimentStructure::getBlockPointerByID(const int &nBlockID)
 {
 	int nIndex = getBlockIndexByID(nBlockID);
 	if(nIndex >= 0)
-		return &pSharedData->lBlocks[nIndex];
+		return pSharedData->lBlocks[nIndex];
 	return NULL;
 }
 

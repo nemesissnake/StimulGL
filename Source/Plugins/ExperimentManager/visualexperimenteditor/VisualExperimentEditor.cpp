@@ -647,6 +647,8 @@ bool VisualExperimentEditor::parseExperimentStructure(cExperimentStructure *ExpS
 {//Make sure to first call the above install()!
 	if(gScene == NULL)
 		return false;
+	gScene->clear();
+	
 	int nExpBlockCount = ExpStruct->getBlockCount();
 	double dLeftCanvasMargin = 50.0;
 	double dTopCanvasMargin = 50.0;
@@ -746,7 +748,7 @@ bool VisualExperimentEditor::parseExperimentStructure(cExperimentStructure *ExpS
 	return true;
 }
 
-bool VisualExperimentEditor::createConnection(QGraphicsItem *from, QGraphicsItem *to)
+bool VisualExperimentEditor::createConnection(QGraphicsItem *from, QGraphicsItem *to, int nRepeats)
 {
 	if (from && from->type() == ExperimentGraphPort::Type)
 	{

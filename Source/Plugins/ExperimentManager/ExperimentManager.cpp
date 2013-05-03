@@ -1218,10 +1218,13 @@ bool ExperimentManager::showVisualExperimentEditor(cExperimentStructure *ExpStru
 				return false;
 		}
 		ExpStruct = cExperimentBlockTrialStructure;
-		if(visExpEditor == NULL)
-			visExpEditor = new VisualExperimentEditor();
-		return visExpEditor->parseExperimentStructure(ExpStruct);
 	}
+	if(visExpEditor == NULL)
+		visExpEditor = new VisualExperimentEditor();
+	bool bParseResult = visExpEditor->parseExperimentStructure(ExpStruct);
+	if(bParseResult)
+		visExpEditor->show();
+	return bParseResult;
 
 	//QGraphicsScene *gScene = new QGraphicsScene();
 	//QGraphicsView *gView = new QGraphicsView();//(gScene);
@@ -1356,7 +1359,8 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 						break;
 					sSignature = tmpString;
 
-					const QMetaObject* sourceMetaObject = pSourceObject->metaObject();
+					const QMetaObject* sourceMetaObject = NULL;
+					sourceMetaObject = pSourceObject->metaObject();
 
 					tmpElement = tmpNode.firstChildElement(PARAMETERS_TAG);
 					if(tmpElement.isElement())
@@ -2162,7 +2166,7 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 								}
 							}
 						}
-						cExperimentBlockTrialStructure->insertBlock(tmpBlock);
+						cExperimentBlockTrialStructure->insertBlock(tmpBlock);//Here we should make a copy to reserve and keep the memory space
 						bUpdateSucceeded = true;
 					}
 				}
@@ -2171,15 +2175,15 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 		if(!bUpdateSucceeded)
 		{
 			cExperimentBlockTrialStructure->resetExperiment();
-			if(tmpBlock)
-				delete tmpBlock;
+			//if(tmpBlock)
+			//	delete tmpBlock;
 			//if(tmpLoop)
 			//	delete tmpLoop;
 			return false;
 		}
 	}
-	if(tmpBlock)
-		delete tmpBlock;
+	//if(tmpBlock)
+	//	delete tmpBlock;
 	//if(tmpLoop)
 		//delete tmpLoop;
 	return true;
