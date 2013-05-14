@@ -78,3 +78,4 @@ Install/plugins/x64/script/*.res
 Source/Plugins/ExperimentManager/Template/*
 Source/Plugins/ExperimentManager/x64/Template/*
 Install/examples/GettingStartedGuide/ExperimentManager/experiments/tmp1.txt
+source/plugins/TCPNetworkServer/TCPNetworkServerplugin.vcxproj.user

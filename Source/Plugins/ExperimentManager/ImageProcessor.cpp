@@ -379,6 +379,105 @@ bool ImageProcessor::ConcatenateDatFiles(const QStringList &sourceImagePaths,con
 	return false;
 }
 
+int ImageProcessor::getCDATFileNrOfSubFrames(const QString &sourcePath)
+{
+	if(sourcePath.isEmpty())
+		return -1;
+	QFile fileSource;
+	fileSource.setFileName(sourcePath);
+	if (!fileSource.exists())
+		return -1;
+	QFileInfo fileSourceInfo(sourcePath);
+	if ((fileSourceInfo.suffix() == "cdat") || (fileSourceInfo.suffix() == "dat"))
+	{
+		if(fileSource.open(QIODevice::ReadOnly))
+		{
+			quint32 img_magic;
+			quint32 img_width;
+			quint32 img_height;
+			quint32 nNumberOfFrames = 0;
+			QDataStream input(&fileSource);
+			if(fileSourceInfo.suffix() == "cdat")
+			{
+				input >> img_magic >> nNumberOfFrames >> img_width >> img_height;
+				fileSource.close();
+				return nNumberOfFrames;
+			}
+			fileSource.close();
+			return 1;
+		}
+	}
+	return -1;
+}
+
+QImage ImageProcessor::getImageFromCDATFile(const QString &sourcePath, const int &nIndex)
+{
+	if(sourcePath.isEmpty())
+		return QImage(0,0,QImage::Format_ARGB32);
+	QFile fileSource;
+	fileSource.setFileName(sourcePath);
+	if (!fileSource.exists())
+		return QImage(0,0,QImage::Format_ARGB32);
+	QFileInfo fileSourceInfo(sourcePath);
+	if (fileSourceInfo.suffix() == "dat")
+	{
+		if(fileSource.open(QIODevice::ReadOnly))
+		{
+			quint32 img_magic;
+			quint32 img_width;
+			quint32 img_height;
+			char *readData;
+			QDataStream input(&fileSource);
+			input >> img_magic >> img_width >> img_height;
+			if(img_magic == ARGB_FORMAT_HEADER)
+			{
+				int nDataSize = img_width*img_height*sizeof(QRgb);
+				readData = new char[nDataSize];
+				int nBytesRead = input.readRawData(readData,nDataSize);				
+				if(nBytesRead>0)
+				{
+					QImage tmpImage((uchar*)readData,(int)img_width, (int)img_height,QImage::Format_ARGB32);
+					fileSource.close();
+					return tmpImage;
+				}	
+			}
+			fileSource.close();
+		}
+	}
+	else if (fileSourceInfo.suffix() == "cdat")
+	{
+		if(fileSource.open(QIODevice::ReadOnly))
+		{
+			quint32 img_magic;
+			quint32 img_width;
+			quint32 img_height;
+			quint32 nNumberOfFrames = 0;
+			char *readData;
+			QDataStream input(&fileSource);
+			input >> img_magic >> nNumberOfFrames >> img_width >> img_height;
+			if(nIndex < (int)nNumberOfFrames)
+			{
+				if(img_magic == ARGB_FORMAT_HEADER_CONC)
+				{
+					int nDataSize = img_width*img_height*sizeof(QRgb);
+					readData = new char[nDataSize];
+					input.skipRawData(nIndex * nDataSize);
+					int nBytesRead = input.readRawData(readData,nDataSize);				
+					if(nBytesRead>0)
+					{
+						QImage tmpImage((uchar*)readData,(int)img_width, (int)img_height,QImage::Format_ARGB32);
+						fileSource.close();
+						return tmpImage;
+					}	
+				}
+			}
+			fileSource.close();
+		}
+
+	}
+	return QImage(0,0,QImage::Format_ARGB32);
+}
+
 int ImageProcessor::SplitCDatFile(const QString &sourceImagePath,const QString &destinationPath, const QString &destPreFileName, const bool bOverwrite)
 {
 	if(sourceImagePath.isEmpty())

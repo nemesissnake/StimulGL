@@ -35,6 +35,7 @@
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"
 #include "RetinotopyMapper.h"
+#include "QML2Viewer.h"
 #include "defines.h"
 
 class ExperimentManagerPlugin : public QObject, ExtensionInterface

@@ -52,6 +52,13 @@ private:
 	QImage mirrorImage;
 	QPainter activationPainter;
 	QPainter imgPainter;
+	
+	bool bCDATFileReadyToWrite;
+	QFile *outputFile;
+	QDataStream *CDatOutputStream;
+	quint32 OutputImageItemCount;
+	quint32 OutputImageWidth;
+	quint32 OutputImageHeight;
 
 	bool bRenderStimuli;
 	bool bFistRenderCall;

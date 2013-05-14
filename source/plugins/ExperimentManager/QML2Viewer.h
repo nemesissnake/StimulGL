@@ -52,9 +52,11 @@ public:
 	static QScriptValue ctor_QML2Viewer(QScriptContext* context, QScriptEngine* engine);
 	
 public:	
-	bool executeQML2Document(const QString &strSource, bool bIsFile = true);
+	//bool executeQML2Document(const QString &strSource, bool bIsFile = true);
 
 public slots:
+	bool executeQML2Document(const QString &strSource, bool bIsFile = true);
+
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 	bool initObject();
 	bool startObject();

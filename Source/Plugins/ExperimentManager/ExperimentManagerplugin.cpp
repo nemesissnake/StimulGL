@@ -175,6 +175,13 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	QScriptValue RetinotopyMapperCtor = engine.newFunction(RetinotopyMapper::ctor__RetinotopyMapper, RetinotopyMapperProto);
 	engine.globalObject().setProperty(RETINOTOPYMAPPER_NAME, RetinotopyMapperCtor);
 
+	if(Qml2ViewerObject == NULL)
+		Qml2ViewerObject = new QML2Viewer();
+	QScriptValue Qml2ViewerProto = engine.newQObject(Qml2ViewerObject);
+	engine.setDefaultPrototype(qMetaTypeId<QML2Viewer*>(), Qml2ViewerProto);
+	QScriptValue Qml2ViewerCtor = engine.newFunction(QML2Viewer::ctor_QML2Viewer, Qml2ViewerProto);
+	engine.globalObject().setProperty(QML2VIEWER_NAME, Qml2ViewerCtor);
+
 	return true;
 }
 
@@ -242,6 +249,10 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 		if(RetinotopyMapperObject == NULL)
 			RetinotopyMapperObject = new RetinotopyMapper();
 		return (QObject *)RetinotopyMapperObject->metaObject();
+	case 9:
+		if(Qml2ViewerObject == NULL)
+			Qml2ViewerObject = new QML2Viewer();
+		return (QObject *)Qml2ViewerObject->metaObject();
 	default:
 		return NULL;
 	}

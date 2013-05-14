@@ -77,7 +77,6 @@ void QML2Viewer::deleteQML2ViewerWindow()
 	}
 }
 
-
 bool QML2Viewer::executeQML2Document(const QString &strSource, bool bIsFile)//QVBoxLayout *layout) 
 {
 	if(bIsFile)

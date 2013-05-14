@@ -60,8 +60,9 @@
 #define RETINOMAPPER_OUTPUTTYPE_FRAME					"frame"							/*!< "frame" */
 #define RETINOMAPPER_OUTPUTTYPE_MASK					"mask"							/*!< "mask" */
 #define RETINOMAPPER_OUTPUTFRAMEFORMAT					"outputframeformat"				/*!< "outputframeformat" */
-#define RETINOMAPPER_OUTPUTFORMAT_DAT					"dat"							/*!< "dat" */
 #define RETINOMAPPER_OUTPUTFORMAT_PNG					"png"							/*!< "png" */
+#define RETINOMAPPER_OUTPUTFORMAT_DAT					"dat"							/*!< "dat" */
+#define RETINOMAPPER_OUTPUTFORMAT_CDAT					"cdat"							/*!< "cdat" */
 #define RETINOMAPPER_ANTIALIASING						"antialiasing"					/*!< "antialiasing" */
 #define RETINOMAPPER_DISABLECORTMAGFAC					"disablecortmagfac"				/*!< "disablecortmagfac" */
 #define RETINOMAPPER_CHECKERCOLOR1						"checkercolor1"					/*!< "checkercolor1" */

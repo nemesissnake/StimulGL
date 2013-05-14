@@ -24,6 +24,7 @@
 #include <QtScript>
 #include <QScriptable>
 #include <QColor>
+#include <QPixmap>
 
 //!  The ImageProcessor class. 
 /*!
@@ -61,6 +62,8 @@ public slots:
 	bool ConcatenateDatFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite = false);
 	int SplitCDatFile(const QString &sourceImagePath,const QString &destinationPath, const QString &destPreFileName, const bool bOverwrite = false);
 	//QPixmap ChangeHue(QPixmap &p);
+	QImage getImageFromCDATFile(const QString &sourcePath, const int &nIndex = 0);
+	int getCDATFileNrOfSubFrames(const QString &sourcePath);
 
 private:
 	QScriptEngine* currentScriptEngine;
