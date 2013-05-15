@@ -55,7 +55,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>40</y>
        <width>301</width>
        <height>19</height>
       </rect>
@@ -79,7 +79,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>20</y>
        <width>241</width>
        <height>19</height>
       </rect>
@@ -100,7 +100,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>20</y>
        <width>71</width>
        <height>16</height>
       </rect>
@@ -113,7 +113,7 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>10</y>
+       <y>20</y>
        <width>82</width>
        <height>19</height>
       </rect>
@@ -129,7 +129,7 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>30</y>
+       <y>40</y>
        <width>82</width>
        <height>19</height>
       </rect>
@@ -142,7 +142,7 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>50</y>
+       <y>60</y>
        <width>81</width>
        <height>20</height>
       </rect>
@@ -158,13 +158,50 @@
      <property name="geometry">
       <rect>
        <x>200</x>
-       <y>30</y>
+       <y>40</y>
        <width>151</width>
        <height>19</height>
       </rect>
      </property>
      <property name="text">
       <string>High Quality Antialiasing</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab4">
+    <attribute name="title">
+     <string>Network</string>
+    </attribute>
+    <widget class="QCheckBox" name="chkEnableNetworkServer">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>331</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Enable the internal network server at startup.</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>261</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Changes made here require a reboot!</string>
      </property>
     </widget>
    </widget>

@@ -196,49 +196,69 @@ void GlobalApplicationInformation::initAndParseRegistrySettings()
 	AppRegistrySettings->sync();
 }
 
-bool GlobalApplicationInformation::setRegistryInformation(const QString &sName, const QVariant &vValue)
+bool GlobalApplicationInformation::setRegistryInformation(const QString &sName, const QVariant &vValue, const QString &sType)
 {
-	if (sName == REGISTRY_DONOTLOADSCRIPTEXTENSION)
+	if(sType!="")
 	{
-		AppRegistrySettings->setValue(REGISTRY_DONOTLOADSCRIPTEXTENSION, vValue.toBool());
+		if(sType.toLower()=="bool")
+			AppRegistrySettings->setValue(sName, vValue.toBool());
+		else if(sType.toLower()=="int")
+			AppRegistrySettings->setValue(sName, vValue.toInt());
+		else if(sType.toLower()=="stringlist")
+			AppRegistrySettings->setValue(sName, vValue.toStringList());
+		else if(sType.toLower()=="point")
+			AppRegistrySettings->setValue(sName, vValue.toPoint());
+		else if(sType.toLower()=="size")
+			AppRegistrySettings->setValue(sName, vValue.toSize());
+		else
+			return false;
+		return true;
 	}
-	else if (sName == REGISTRY_OPENINEXTERNALDEBUGGER)
-	{
-		AppRegistrySettings->setValue(REGISTRY_OPENINEXTERNALDEBUGGER, vValue.toBool());
-	}
-	else if (sName == REGISTRY_RENDERTYPE)
-	{
-		AppRegistrySettings->setValue(REGISTRY_RENDERTYPE,vValue.toInt());//SvgView::Native, SvgView::OpenGL, SvgView::Image
-	}
-	else if (sName == REGISTRY_HQANTIALIAS)
-	{
-		AppRegistrySettings->setValue(REGISTRY_HQANTIALIAS, vValue.toBool());
-	}
-	else if (sName == REGISTRY_ALLOWMULTIPLEINHERITANCE)
-	{
-		AppRegistrySettings->setValue(REGISTRY_ALLOWMULTIPLEINHERITANCE, vValue.toBool());
-	}
-	else if (sName == REGISTRY_RECENTFILELIST)
-	{
-		AppRegistrySettings->setValue(REGISTRY_RECENTFILELIST, vValue.toStringList());
-	}
-	else if (sName == REGISTRY_MAINWINDOWPOS)
-	{
-		AppRegistrySettings->setValue(REGISTRY_MAINWINDOWPOS, vValue.toPoint());
-	}
-	else if (sName == REGISTRY_MAINWINDOWSIZE)
-	{
-		AppRegistrySettings->setValue(REGISTRY_MAINWINDOWSIZE, vValue.toSize());
-	}
-	else if (sName == REGISTRY_DEBUGWINDOWWIDTH)
-	{
-		AppRegistrySettings->setValue(REGISTRY_DEBUGWINDOWWIDTH, vValue.toInt());
-	}
-	else
-	{
-		return false;
-	}
-	return true;
+	return false;
+	//else
+	//{
+	//	if (sName == REGISTRY_DONOTLOADSCRIPTEXTENSION)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_DONOTLOADSCRIPTEXTENSION, vValue.toBool());
+	//	}
+	//	else if (sName == REGISTRY_OPENINEXTERNALDEBUGGER)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_OPENINEXTERNALDEBUGGER, vValue.toBool());
+	//	}
+	//	else if (sName == REGISTRY_RENDERTYPE)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_RENDERTYPE,vValue.toInt());//SvgView::Native, SvgView::OpenGL, SvgView::Image
+	//	}
+	//	else if (sName == REGISTRY_HQANTIALIAS)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_HQANTIALIAS, vValue.toBool());
+	//	}
+	//	else if (sName == REGISTRY_ALLOWMULTIPLEINHERITANCE)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_ALLOWMULTIPLEINHERITANCE, vValue.toBool());
+	//	}
+	//	else if (sName == REGISTRY_RECENTFILELIST)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_RECENTFILELIST, vValue.toStringList());
+	//	}
+	//	else if (sName == REGISTRY_MAINWINDOWPOS)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_MAINWINDOWPOS, vValue.toPoint());
+	//	}
+	//	else if (sName == REGISTRY_MAINWINDOWSIZE)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_MAINWINDOWSIZE, vValue.toSize());
+	//	}
+	//	else if (sName == REGISTRY_DEBUGWINDOWWIDTH)
+	//	{
+	//		AppRegistrySettings->setValue(REGISTRY_DEBUGWINDOWWIDTH, vValue.toInt());
+	//	}
+	//	else
+	//	{
+	//		return false;
+	//	}
+	//}
+	//return true;
 }
 
 bool GlobalApplicationInformation::checkRegistryInformation(const QString &sName)

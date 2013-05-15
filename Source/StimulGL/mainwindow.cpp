@@ -2106,7 +2106,7 @@ void MainWindow::updateRecentFileList(const QString &fileName)
 	while (files.size() > MaxRecentFiles)
 		files.removeLast();
 
-	globAppInfo->setRegistryInformation(REGISTRY_RECENTFILELIST,files);
+	globAppInfo->setRegistryInformation(REGISTRY_RECENTFILELIST,files,"stringlist");
 
 	foreach (QWidget *widget, QApplication::topLevelWidgets()) {
 		MainWindow *mainWin = qobject_cast<MainWindow *>(widget);

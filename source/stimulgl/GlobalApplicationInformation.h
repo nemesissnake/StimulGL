@@ -71,7 +71,7 @@ public:
 
 	bool checkRegistryInformation(const QString &sName);
 	QVariant getRegistryInformation(const QString &sName);
-	bool setRegistryInformation(const QString &sName, const QVariant &vValue);
+	bool setRegistryInformation(const QString &sName, const QVariant &vValue, const QString &sType);
 
 	QVariant invokeJavaScriptConfigurationFile(const QString &sCode);
 	void showJavaScriptConfigurationFile();

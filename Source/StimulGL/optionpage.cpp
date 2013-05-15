@@ -34,10 +34,11 @@ OptionPage::~OptionPage()
 
 void OptionPage::applySettings()
 {
-	glob_AppInfo->setRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION,(bool)(ui.chkDoNotLoadQTBindings->checkState() && Qt::Checked));
-	glob_AppInfo->setRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER,(bool)(ui.chk_OpenDebOnError->checkState() && Qt::Checked));
-	glob_AppInfo->setRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE,(bool)(ui.chkAllowMultipleInstances->checkState() && Qt::Checked));
-
+	glob_AppInfo->setRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION,(bool)(ui.chkDoNotLoadQTBindings->checkState() && Qt::Checked),"bool");
+	glob_AppInfo->setRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER,(bool)(ui.chk_OpenDebOnError->checkState() && Qt::Checked),"bool");
+	glob_AppInfo->setRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE,(bool)(ui.chkAllowMultipleInstances->checkState() && Qt::Checked),"bool");
+	glob_AppInfo->setRegistryInformation(REGISTRY_ENABLENETWORKSERVER,(bool)(ui.chkEnableNetworkServer->checkState() && Qt::Checked),"bool");
+	
 	if (ui.rdb_3DRenderer->isChecked())	
 	{		
 		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Native);//SvgView::Native);	
@@ -67,6 +68,11 @@ void OptionPage::readSettings()
 	{
 		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER).toBool();
 		ui.chk_OpenDebOnError->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
+	}
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_ENABLENETWORKSERVER))
+	{
+		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_ENABLENETWORKSERVER).toBool();
+		ui.chkEnableNetworkServer->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
 	}
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_RENDERTYPE))
 	{

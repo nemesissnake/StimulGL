@@ -71,6 +71,7 @@
 #define REGISTRY_OPENINEXTERNALDEBUGGER					"Debugging/OpenExtDebug"
 #define REGISTRY_RENDERTYPE								"Rendering/RenderType"
 #define REGISTRY_HQANTIALIAS							"Rendering/HQAntiAlias"
+#define REGISTRY_ENABLENETWORKSERVER					"Network/EnableInternalNetworkServer"
 
 //Only edit until here!
 #define SCRIPT_API_CLASS_NAME_TAG						"ScriptAPIClassName"
