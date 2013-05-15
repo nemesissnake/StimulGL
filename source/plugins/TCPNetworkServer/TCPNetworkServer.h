@@ -27,41 +27,40 @@
 #include <QScriptable>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QList>
 #include "./../../StimulGL/mainappinfo.h"
 
 class TCPNetworkServer : public QTcpServer, protected QScriptable//QObject
 {
 	Q_OBJECT
 	//Q_CLASSINFO("ScriptAPIClassName", "TCPNetworkServer");//Can't use defines here!, moc doesn't handle defines, not needed here
-	//Q_PROPERTY( short ExampleProperty WRITE setExampleProperty READ getExampleProperty )
 
 signals:
-	//void ExampleSignalTriggered(short);
+	void ServerDataAvailable(QString);
+	void ClientDataAvailable(QString);
 
 public:
+	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 	TCPNetworkServer(QObject *parent = 0);
 	~TCPNetworkServer();
 	TCPNetworkServer(const TCPNetworkServer& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
-
-	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
-
+	
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
-	//void setExampleProperty( short sExampleProperty );
-	//short getExampleProperty() const;
-	QString startListening(QString a, QString b);
-	void newIncomingServerConnection();
-
+	QString startServer(QString a, QString b);
+	void newIncomingConnectionFromClient();
 	bool connectToServer(QString a, QString b);
-	void serverDataAvailable();
+	void dataFromServerAvailable();
+	void dataFromClientAvailable();
 
-
+	int sendClientData(QString sData);
+	int sendServerData(QString sData);
+	
 private:
 	QScriptEngine* currentScriptEngine;
-	QTcpSocket* tcpSocket;
+	QTcpSocket* clientConnectionSocket;
+	QList<QTcpSocket*> serverClientConnectionSockets;
 	quint16 blockSize;
-	//short m_ExampleProperty;
-
 };
 
 #endif // TCPNetworkServer_H

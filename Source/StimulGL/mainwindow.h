@@ -31,6 +31,9 @@
 #include <QtWidgets>
 #include <QTime>
 #include <QDateTime> //QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat())!!!!!
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QNetworkInterface>
 
 #include "documentwindow.h"
 #include "documentmanager.h"
@@ -94,6 +97,7 @@ public:
 
 signals:
 	void CleanUpScriptExecuted();
+	void NetworkDataAvailable(QString);
 		
 public slots:
 	bool receiveExchangeMessage(const QString &sMessage);
@@ -137,6 +141,8 @@ private slots:
 	void clearDebugger();
 	void copyDebugger();
 	void setupScriptEngine();
+	void setupNetworkServer();
+	void shutdownNetworkServer();
 	void setScriptRunningStatus(GlobalApplicationInformation::ActiveScriptMode state);
 	void showPluginGUI();
 	void openOptionsDialog();
@@ -175,6 +181,9 @@ private slots:
 	void CursorPositionChanged(int line, int col);
 	void scriptLoaded(qint64 id);
 	void scriptUnloaded(qint64 id);
+	void newIncomingServerConnection();
+	void receivedNetworkData();
+	void errorNetworkData(QAbstractSocket::SocketError socketError);
 
 private:
 	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
@@ -184,6 +193,9 @@ private:
 	QString strAdditionalFileExtensions;
 	GlobalApplicationInformation::MainProgramModeFlags StimulGLFlags;
 	GlobalApplicationInformation::ScriptRunMode StimulGLScriptRunMode;
+	QTcpServer *tcpServer;
+	QTcpSocket *clientConnection;
+	quint16 networkDataBlockSize;
 	QSplashScreen *MainSplashScreen;
 	Assistant *helpAssistant;
 	QStringList startUpFiles;

@@ -138,7 +138,6 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &cont
 	}
 	if(!MainAppInfo::mainLogFile->isOpen())
 	{
-
 		qint64 nSize = MainAppInfo::mainLogFile->size();
 		if(nSize > 41943040)//40 MegaByte
 		{

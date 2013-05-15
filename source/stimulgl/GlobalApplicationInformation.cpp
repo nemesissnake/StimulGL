@@ -63,6 +63,7 @@ void GlobalApplicationInformation::Initialize()
 	mainAppInformation.rRendererType = SvgView::OpenGL;
 	mainAppInformation.bHQAntiAlias = false;
 	mainAppInformation.bAllowMultipleInheritance = false;
+	mainAppInformation.bEnableNetworkServer = false;
 }
 
 QDataStream &operator<<(QDataStream &out, const MainAppInformationStructure &mainAppInformationStructure)
@@ -75,6 +76,7 @@ QDataStream &operator<<(QDataStream &out, const MainAppInformationStructure &mai
 	out << (int)mainAppInformationStructure.rRendererType;
 	out << mainAppInformationStructure.bHQAntiAlias; 
 	out << mainAppInformationStructure.bAllowMultipleInheritance;
+	out << mainAppInformationStructure.bEnableNetworkServer;
 	return out;
 }
 
@@ -91,6 +93,7 @@ QDataStream &operator>>(QDataStream &in, MainAppInformationStructure &mainAppInf
 	mainAppInformationStructure.rRendererType = (SvgView::RendererType)nTemp;
 	in >> mainAppInformationStructure.bHQAntiAlias; 
 	in >> mainAppInformationStructure.bAllowMultipleInheritance;
+	in >> mainAppInformationStructure.bEnableNetworkServer;
 	return in;
 }
 
@@ -140,6 +143,12 @@ bool GlobalApplicationInformation::shouldLoadScriptBindings()
 	return !(mainAppInformation.bDoNotLoadScriptBindings);
 }
 
+bool GlobalApplicationInformation::shouldEnableNetworkServer()
+{
+	return mainAppInformation.bEnableNetworkServer;
+}
+
+
 ////////////////////////////////////////////////////////////////
 
 void GlobalApplicationInformation::initAndParseRegistrySettings()
@@ -153,6 +162,17 @@ void GlobalApplicationInformation::initAndParseRegistrySettings()
 		mainAppInformation.bDoNotLoadScriptBindings = false;
 		AppRegistrySettings->setValue(REGISTRY_DONOTLOADSCRIPTEXTENSION, mainAppInformation.bDoNotLoadScriptBindings);
 	}
+
+	if (AppRegistrySettings->contains(REGISTRY_ENABLENETWORKSERVER)) 
+	{
+		mainAppInformation.bEnableNetworkServer = AppRegistrySettings->value(REGISTRY_ENABLENETWORKSERVER).toBool();
+	}
+	else //key doesn't exist, default value here!
+	{
+		mainAppInformation.bEnableNetworkServer = false;
+		AppRegistrySettings->setValue(REGISTRY_ENABLENETWORKSERVER, mainAppInformation.bEnableNetworkServer);
+	}
+	
 
 	if (AppRegistrySettings->contains(REGISTRY_OPENINEXTERNALDEBUGGER)) 
 	{
@@ -215,50 +235,6 @@ bool GlobalApplicationInformation::setRegistryInformation(const QString &sName, 
 		return true;
 	}
 	return false;
-	//else
-	//{
-	//	if (sName == REGISTRY_DONOTLOADSCRIPTEXTENSION)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_DONOTLOADSCRIPTEXTENSION, vValue.toBool());
-	//	}
-	//	else if (sName == REGISTRY_OPENINEXTERNALDEBUGGER)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_OPENINEXTERNALDEBUGGER, vValue.toBool());
-	//	}
-	//	else if (sName == REGISTRY_RENDERTYPE)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_RENDERTYPE,vValue.toInt());//SvgView::Native, SvgView::OpenGL, SvgView::Image
-	//	}
-	//	else if (sName == REGISTRY_HQANTIALIAS)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_HQANTIALIAS, vValue.toBool());
-	//	}
-	//	else if (sName == REGISTRY_ALLOWMULTIPLEINHERITANCE)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_ALLOWMULTIPLEINHERITANCE, vValue.toBool());
-	//	}
-	//	else if (sName == REGISTRY_RECENTFILELIST)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_RECENTFILELIST, vValue.toStringList());
-	//	}
-	//	else if (sName == REGISTRY_MAINWINDOWPOS)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_MAINWINDOWPOS, vValue.toPoint());
-	//	}
-	//	else if (sName == REGISTRY_MAINWINDOWSIZE)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_MAINWINDOWSIZE, vValue.toSize());
-	//	}
-	//	else if (sName == REGISTRY_DEBUGWINDOWWIDTH)
-	//	{
-	//		AppRegistrySettings->setValue(REGISTRY_DEBUGWINDOWWIDTH, vValue.toInt());
-	//	}
-	//	else
-	//	{
-	//		return false;
-	//	}
-	//}
-	//return true;
 }
 
 bool GlobalApplicationInformation::checkRegistryInformation(const QString &sName)

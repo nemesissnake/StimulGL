@@ -43,6 +43,7 @@ typedef struct strMainAppInformation
 	SvgView::RendererType rRendererType;
 	bool bHQAntiAlias;
 	bool bAllowMultipleInheritance;
+	bool bEnableNetworkServer;
 	//See also serialization!!!
 } MainAppInformationStructure;
 
@@ -66,6 +67,7 @@ public:
 	QString getInternalName(); 
 	QString getTitle();
 	bool shouldLoadScriptBindings();
+	bool shouldEnableNetworkServer();
 
 	void initAndParseRegistrySettings();
 

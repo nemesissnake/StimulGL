@@ -38,17 +38,27 @@ QScriptValue TCPNetworkServer::ctor__extensionname(QScriptContext* context, QScr
 TCPNetworkServer::TCPNetworkServer(QObject *parent) : QTcpServer(parent)//QObject(parent)
 {
 	currentScriptEngine = NULL;
-	tcpSocket = NULL;
+	clientConnectionSocket = NULL;
 	blockSize = 0;
 }
 
 TCPNetworkServer::~TCPNetworkServer()
 {
-	if(tcpSocket)
+	if(clientConnectionSocket)
 	{
-		tcpSocket->close();
-		delete tcpSocket;
-		tcpSocket = NULL;
+		clientConnectionSocket->close();
+		delete clientConnectionSocket;
+		clientConnectionSocket = NULL;
+	}
+	if(serverClientConnectionSockets.isEmpty() == false)
+	{
+		int nCount = serverClientConnectionSockets.count();
+		for(int i=0;i<nCount-1;i++)
+		{
+			serverClientConnectionSockets.first()->disconnectFromHost();
+			delete serverClientConnectionSockets.first();
+			serverClientConnectionSockets.removeFirst();
+		}
 	}
 }
 
@@ -57,7 +67,6 @@ bool TCPNetworkServer::makeThisAvailableInScript(QString strObjectScriptName, QO
 	if (engine)
 	{
 		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
-		//QObject *someObject = this;//new MyObject;
 		QScriptValue objectValue = currentScriptEngine->newQObject(this);
 		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
 		return true;
@@ -65,7 +74,7 @@ bool TCPNetworkServer::makeThisAvailableInScript(QString strObjectScriptName, QO
 	return false;
 }
 
-QString TCPNetworkServer::startListening(QString a, QString b)
+QString TCPNetworkServer::startServer(QString a, QString b)
 {
 	//tcpServer = new QTcpServer(this);
 	if (!this->listen()) 
@@ -86,82 +95,114 @@ QString TCPNetworkServer::startListening(QString a, QString b)
 	if (ipAddress.isEmpty())
 		ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 
-	connect(this, SIGNAL(newConnection()), this, SLOT(newIncomingServerConnection()));
+	connect(this, SIGNAL(newConnection()), this, SLOT(newIncomingConnectionFromClient()));
 	return QString("%1:%2").arg(ipAddress).arg(this->serverPort());
 	//return QString("The server is running on\n\tIP: %1\n\tport: %2\nRun the Client now.").arg(ipAddress).arg(this->serverPort());
 }
 
-void TCPNetworkServer::newIncomingServerConnection()
+void TCPNetworkServer::newIncomingConnectionFromClient()
 {
 	QByteArray block;
 	QDataStream out(&block, QIODevice::WriteOnly);
 	out.setVersion(QDataStream::Qt_5_0);
 	out << (quint16)0;
-	out << QString("You've been leading a dog's life. Stay off the furniture.");//fortunes.at(qrand() % fortunes.size());
+	out << QString("newIncomingConnectionFromClient() reaction data packet");//fortunes.at(qrand() % fortunes.size());
 	out.device()->seek(0);
 	out << (quint16)(block.size() - sizeof(quint16));
+	//QTcpSocket *clientConnection 
+	serverClientConnectionSockets.append(this->nextPendingConnection());
+	connect(serverClientConnectionSockets.last(), SIGNAL(disconnected()), serverClientConnectionSockets.last(), SLOT(deleteLater()));
+	connect(serverClientConnectionSockets.last(), SIGNAL(readyRead()), this, SLOT(dataFromClientAvailable()));
+	serverClientConnectionSockets.last()->write(block);	
+	//connect(clientConnectionSocket, SIGNAL(readyRead()), this, SLOT(dataFromServerAvailable()));
+	//clientConnectionSocket->disconnectFromHost();
+}
 
-	QTcpSocket *clientConnection = this->nextPendingConnection();
-	connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
+int TCPNetworkServer::sendServerData(QString sData)
+{
+	QByteArray block;
+	QDataStream out(&block, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_5_0);
+	out << (quint16)0;
+	out << sData;
+	out.device()->seek(0);
+	out << (quint16)(block.size() - sizeof(quint16));
+	qint64 bytesSend = serverClientConnectionSockets.last()->write(block);		
+	return (int)bytesSend;
+}
 
-	clientConnection->write(block);
-	clientConnection->disconnectFromHost();
+int TCPNetworkServer::sendClientData(QString sData)
+{
+	QByteArray block;
+	QDataStream out(&block, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_5_0);
+	out << (quint16)0;
+	out << sData;
+	out.device()->seek(0);
+	out << (quint16)(block.size() - sizeof(quint16));
+	qint64 bytesSend = clientConnectionSocket->write(block);		
+	return (int)bytesSend;
 }
 
 bool TCPNetworkServer::connectToServer(QString a, QString b)
 {
-	tcpSocket = new QTcpSocket(this);
-	tcpSocket->abort();
-	tcpSocket->connectToHost(a,b.toInt());
+//	if(tcpSocket == NULL)
+//	{
+		clientConnectionSocket = new QTcpSocket(this);
+		clientConnectionSocket->abort();
+		clientConnectionSocket->connectToHost(a,b.toInt());
+//	}
 
 	//connect(hostCombo, SIGNAL(editTextChanged(QString)), this, SLOT(enableGetFortuneButton()));
 	//connect(portLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableGetFortuneButton()));
 	//connect(getFortuneButton, SIGNAL(clicked()),this, SLOT(requestNewFortune()));
 	//connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
-	return connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(serverDataAvailable()));
+	return connect(clientConnectionSocket, SIGNAL(readyRead()), this, SLOT(dataFromServerAvailable()));
 
 	//connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
 }
 
-void TCPNetworkServer::serverDataAvailable()
+void TCPNetworkServer::dataFromClientAvailable()
 {
-	QDataStream in(tcpSocket);
+	//return connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(dataFromServerAvailable()));
+	QDataStream in(serverClientConnectionSockets.last());
 	in.setVersion(QDataStream::Qt_5_0);
-
-	
-
 	if (blockSize == 0) 
 	{
-		if (tcpSocket->bytesAvailable() < (int)sizeof(quint16))
+		if (serverClientConnectionSockets.last()->bytesAvailable() < (int)sizeof(quint16))
 			return;
 		in >> blockSize;
 	}
-
-	if (tcpSocket->bytesAvailable() < blockSize)
+	if (serverClientConnectionSockets.last()->bytesAvailable() < blockSize)
 		return;
-
-	QString nextFortune;
-	in >> nextFortune;
-
+	QString receivedData;
+	in >> receivedData;
+	emit ClientDataAvailable(receivedData);
 	blockSize = 0;
 	//if (nextFortune == currentFortune) 
 	//{
 	//	QTimer::singleShot(0, this, SLOT(requestNewFortune()));
 	//	return;
 	//}
-
 	//currentFortune = nextFortune;
 	//statusLabel->setText(currentFortune);
 	//getFortuneButton->setEnabled(true);
 }
 
-//void TCPNetworkServer::setExampleProperty( short sExampleProperty )
-//{
-//	m_ExampleProperty = sExampleProperty;
-//	emit ExampleSignalTriggered(m_ExampleProperty);//Signal that the value has been changed
-//}
-
-//short TCPNetworkServer::getExampleProperty() const
-//{
-//	return m_ExampleProperty;
-//}
+void TCPNetworkServer::dataFromServerAvailable()
+{
+	QDataStream in(clientConnectionSocket);
+	in.setVersion(QDataStream::Qt_5_0);
+	if (blockSize == 0) 
+	{
+		if (clientConnectionSocket->bytesAvailable() < (int)sizeof(quint16))
+			return;
+		in >> blockSize;
+	}
+	if (clientConnectionSocket->bytesAvailable() < blockSize)
+		return;
+	QString sAvailableData;
+	in >> sAvailableData;
+	emit ServerDataAvailable(sAvailableData);
+	blockSize = 0;
+}

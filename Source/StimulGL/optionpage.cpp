@@ -41,18 +41,18 @@ void OptionPage::applySettings()
 	
 	if (ui.rdb_3DRenderer->isChecked())	
 	{		
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Native);//SvgView::Native);	
-		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false);
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Native, "int");//SvgView::Native);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false, "bool");
 	}
 	else if (ui.rdb_3DRenderer_2->isChecked()) 
 	{
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::OpenGL);//SvgView::OpenGL);	
-		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (bool)(ui.chk_HighAntiAFilter->checkState() && Qt::Checked));
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::OpenGL, "int");//SvgView::OpenGL);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (bool)(ui.chk_HighAntiAFilter->checkState() && Qt::Checked), "bool");
 	}
 	else if (ui.rdb_3DRenderer_3->isChecked()) 
 	{
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Image);//SvgView::Image);	
-		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false);
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Image, "int");//SvgView::Image);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false, "bool");
 	}
 }
 

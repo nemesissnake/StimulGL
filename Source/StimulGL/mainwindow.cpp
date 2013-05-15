@@ -37,6 +37,9 @@
 
 MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 {
+	tcpServer = NULL;
+	clientConnection = NULL;
+	networkDataBlockSize = 0;
 	DocManager = NULL;
 	AppScriptEngine = NULL;
 	globAppInfo = NULL;
@@ -266,6 +269,7 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 	//	label->showMaximized();
 	//}
 	bMainWindowIsInitialized = true;
+	setupNetworkServer();
 	return true;
 }
 
@@ -430,6 +434,134 @@ QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine
 	return NULL;
 }
 #endif
+
+void MainWindow::setupNetworkServer()
+{
+	if (globAppInfo->shouldEnableNetworkServer())
+	{
+		tcpServer = new QTcpServer(this);
+		if (!tcpServer->listen()) 
+		{
+			QString sInfo = QString("Unable to start the network server: %1.").arg(tcpServer->errorString());
+			qDebug() << __FUNCTION__ << sInfo;
+			//write2OutputWindow(QString("Unable to start the network server: %1.").arg(tcpServer->errorString()));
+			QMessageBox msgBox(QMessageBox::Warning,"Network Server",sInfo, QMessageBox::Ok);
+			msgBox.exec();
+			return;
+		}
+		QString ipAddress;
+		QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+		// use the first non-localhost IPv4 address
+		for (int i = 0; i < ipAddressesList.size(); ++i) {
+			if (ipAddressesList.at(i) != QHostAddress::LocalHost &&	ipAddressesList.at(i).toIPv4Address()) 
+			{
+					ipAddress = ipAddressesList.at(i).toString();
+					break;
+			}
+		}
+		// if we did not find one, use IPv4 localhost
+		if (ipAddress.isEmpty())
+			ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
+
+		connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newIncomingServerConnection()));
+		QString sInfo = QString("Network Server started @ %1:%2").arg(ipAddress).arg(tcpServer->serverPort());
+		qDebug() << sInfo;
+		//write2OutputWindow(sInfo);
+		//QMessageBox msgBox(QMessageBox::Information,"Network Server",QString("Network Server started @ : %1:%2").arg(ipAddress).arg(tcpServer->serverPort()), QMessageBox::Ok);
+		//msgBox.exec();
+		return;
+	}
+}
+
+void MainWindow::shutdownNetworkServer()
+{
+	if(tcpServer)
+	{
+		tcpServer->close();
+		delete tcpServer;
+		tcpServer = NULL;
+	}
+	//if(clientConnection) // is automatically performed!
+	//{
+	//	//if(clientConnection->isc)
+	//	//clientConnection->disconnectFromHost();
+	//	//clientConnection->close();
+	//	delete clientConnection;
+	//	clientConnection = NULL;
+	//}
+}
+
+void MainWindow::newIncomingServerConnection()
+{
+	QByteArray block;
+	QDataStream out(&block, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_5_0);
+	out << (quint16)0;
+	QString sInfo = QString("Welcome you're connected to StimulGL @ %1:%2").arg(tcpServer->serverAddress().toString()).arg(tcpServer->serverPort());
+	out << sInfo; 
+	out.device()->seek(0);
+	out << (quint16)(block.size() - sizeof(quint16));
+
+	clientConnection = tcpServer->nextPendingConnection();
+	connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
+	connect(clientConnection, SIGNAL(readyRead()), this, SLOT(receivedNetworkData()));
+	connect(clientConnection, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorNetworkData(QAbstractSocket::SocketError)));
+	
+	sInfo = QString("The Network Server accepted an incoming connection");
+	qDebug() << sInfo;
+	
+	clientConnection->write(block);
+}
+
+void MainWindow::receivedNetworkData()
+{
+	QDataStream in(clientConnection);
+	in.setVersion(QDataStream::Qt_5_0);
+	if (networkDataBlockSize == 0) 
+	{
+		if (clientConnection->bytesAvailable() < (int)sizeof(quint16))
+			return;
+		in >> networkDataBlockSize;
+	}
+	if (clientConnection->bytesAvailable() < networkDataBlockSize)
+		return;
+	QString sAvailableData;
+	in >> sAvailableData;
+	emit NetworkDataAvailable(sAvailableData);
+	networkDataBlockSize = 0;
+
+	QScriptValue scriptVal = executeScriptContent(sAvailableData);
+	QString strResult = scriptVal.toString();
+	if (scriptVal.isError()) 
+	{
+		write2OutputWindow("... Script stopped Evaluating due to an error: --> " + strResult + "...");
+	}
+	else
+	{
+		write2OutputWindow("-> SocketData Successfully executed by the Script Engine.");
+	}
+}
+
+void MainWindow::errorNetworkData(QAbstractSocket::SocketError socketError)
+{
+     switch (socketError) 
+	 {
+     case QAbstractSocket::RemoteHostClosedError:
+		 qDebug() << __FUNCTION__ << "The client disconnected the network connection.";
+         break;
+     case QAbstractSocket::HostNotFoundError:
+		 qDebug() << __FUNCTION__ << "The host was not found. Please check the host name and port settings.";
+         break;
+     case QAbstractSocket::ConnectionRefusedError:
+         qDebug() << __FUNCTION__ << "The connection was refused by the peer. "
+                                     "Make sure the network server is running, "
+                                     "and check that the host name and port "
+                                     "settings are correct.";
+         break;
+     default:
+         qDebug() << __FUNCTION__ << QString("The following Network error occurred: %1.").arg(clientConnection->errorString());
+     }
+}
 
 void MainWindow::setupScriptEngine()
 {
@@ -2430,9 +2562,9 @@ bool MainWindow::configureDebugger()
 
 void MainWindow::writeMainWindowSettings()
 {
-	globAppInfo->setRegistryInformation(REGISTRY_MAINWINDOWPOS, pos());
-	globAppInfo->setRegistryInformation(REGISTRY_MAINWINDOWSIZE, size());
-	globAppInfo->setRegistryInformation(REGISTRY_DEBUGWINDOWWIDTH, debugLogDock->width());
+	globAppInfo->setRegistryInformation(REGISTRY_MAINWINDOWPOS, pos(), "point");
+	globAppInfo->setRegistryInformation(REGISTRY_MAINWINDOWSIZE, size(), "size");
+	globAppInfo->setRegistryInformation(REGISTRY_DEBUGWINDOWWIDTH, debugLogDock->width(), "int");
 }
 
 bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
@@ -2530,6 +2662,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		delete mainAppInfoStruct;
 		mainAppInfoStruct = NULL;
 	}
+	shutdownNetworkServer();
 }
 
 QString MainWindow::activeMdiChildFilePath()
