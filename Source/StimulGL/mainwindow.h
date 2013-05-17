@@ -141,7 +141,7 @@ private slots:
 	void clearDebugger();
 	void copyDebugger();
 	void setupScriptEngine();
-	void setupNetworkServer();
+	void setupNetworkServer(const QString &sAddress = "" /*=QHostAddress::Any*/, quint16 port = 0);
 	void shutdownNetworkServer();
 	void setScriptRunningStatus(GlobalApplicationInformation::ActiveScriptMode state);
 	void showPluginGUI();

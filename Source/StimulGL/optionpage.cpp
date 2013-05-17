@@ -22,14 +22,63 @@
 OptionPage::OptionPage(QWidget *parent, GlobalApplicationInformation *g_AppInfo) : QDialog(parent), glob_AppInfo(g_AppInfo)
 {
 	ui.setupUi(this);
-	connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(applySettings()));	
-	connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+	connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(validateAndApplySettings()));	
 	connect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 	readSettings();	
 }
 OptionPage::~OptionPage()
 {
+	disconnect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(validateAndApplySettings()));	
+	disconnect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+}
 
+void OptionPage::validateAndApplySettings()
+{
+	if(checkSettings())
+	{
+		applySettings();
+		accept();
+	}
+}
+
+bool OptionPage::checkSettings()
+{
+	if(validateIPAddressString(ui.edtNetworkServerAddress->text()) == false)
+	{
+		QMessageBox msgBox(QMessageBox::Warning,"Input Validation Failed","Could not validate the Network Server's IP Address, please fix before apply!",QMessageBox::Ok,this);
+		msgBox.exec();
+		return false;
+	}
+
+
+	return true;
+}
+
+bool OptionPage::validateIPAddressString(QString &input) const 
+{
+	if(input.isEmpty()) 
+		return true;
+	QStringList slist = input.split(".",QString::SkipEmptyParts);
+	int s = slist.size();
+	if(s!=4)
+		return false;
+	//bool emptyGroup = false;
+	bool bCanConvert;
+	int nVal;
+	for(int i=0;i<s;i++)
+	{
+		//if(slist[i].isEmpty())
+		//{
+		//	emptyGroup = true;
+		//	continue;
+		//}
+		int nVal = slist[i].toInt(&bCanConvert);
+		if(!bCanConvert || nVal<0 || nVal>255) 
+			return false;
+	}
+	//if(s<4 || emptyGroup) 
+	//	return Intermediate;
+	return true;
 }
 
 void OptionPage::applySettings()
@@ -38,6 +87,8 @@ void OptionPage::applySettings()
 	glob_AppInfo->setRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER,(bool)(ui.chk_OpenDebOnError->checkState() && Qt::Checked),"bool");
 	glob_AppInfo->setRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE,(bool)(ui.chkAllowMultipleInstances->checkState() && Qt::Checked),"bool");
 	glob_AppInfo->setRegistryInformation(REGISTRY_ENABLENETWORKSERVER,(bool)(ui.chkEnableNetworkServer->checkState() && Qt::Checked),"bool");
+	glob_AppInfo->setRegistryInformation(REGISTRY_SERVERHOSTADDRESS,(QString)(ui.edtNetworkServerAddress->text()),"string");
+	glob_AppInfo->setRegistryInformation(REGISTRY_SERVERHOSTPORT,ui.edtNetworkServerPort->text().toInt(),"int");
 	
 	if (ui.rdb_3DRenderer->isChecked())	
 	{		
@@ -59,6 +110,9 @@ void OptionPage::applySettings()
 void OptionPage::readSettings()
 {
 	bool bTemp;
+	QString sTemp;
+	int nTemp;
+
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION))
 	{
 		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION).toBool();
@@ -73,6 +127,16 @@ void OptionPage::readSettings()
 	{
 		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_ENABLENETWORKSERVER).toBool();
 		ui.chkEnableNetworkServer->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
+	}
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_SERVERHOSTADDRESS))
+	{
+		sTemp = glob_AppInfo->getRegistryInformation(REGISTRY_SERVERHOSTADDRESS).toString();
+		ui.edtNetworkServerAddress->setText(sTemp);
+	}
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_SERVERHOSTPORT))
+	{
+		nTemp = glob_AppInfo->getRegistryInformation(REGISTRY_SERVERHOSTPORT).toInt();
+		ui.edtNetworkServerPort->setValue(nTemp);
 	}
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_RENDERTYPE))
 	{
@@ -112,6 +176,11 @@ void OptionPage::readSettings()
 		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE).toBool();
 		ui.chkAllowMultipleInstances->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
 	}
+}
+
+void OptionPage::on_chkEnableNetworkServer_toggled(bool)
+{
+	ui.gbNetworkServerSettings->setEnabled(ui.chkEnableNetworkServer->isChecked());
 }
 
 void OptionPage::on_rdb_3DRenderer_toggled(bool)//native

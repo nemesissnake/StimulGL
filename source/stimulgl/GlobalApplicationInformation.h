@@ -44,6 +44,8 @@ typedef struct strMainAppInformation
 	bool bHQAntiAlias;
 	bool bAllowMultipleInheritance;
 	bool bEnableNetworkServer;
+	QString sHostAddress;
+	quint16 nHostPort;
 	//See also serialization!!!
 } MainAppInformationStructure;
 
@@ -67,7 +69,10 @@ public:
 	QString getInternalName(); 
 	QString getTitle();
 	bool shouldLoadScriptBindings();
+	
 	bool shouldEnableNetworkServer();
+	QString getHostAddress();
+	quint16 getHostPort();
 
 	void initAndParseRegistrySettings();
 

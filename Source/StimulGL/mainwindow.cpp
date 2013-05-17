@@ -269,7 +269,8 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 	//	label->showMaximized();
 	//}
 	bMainWindowIsInitialized = true;
-	setupNetworkServer();
+	if (globAppInfo->shouldEnableNetworkServer())
+		setupNetworkServer(globAppInfo->getHostAddress(),globAppInfo->getHostPort());
 	return true;
 }
 
@@ -435,12 +436,16 @@ QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine
 }
 #endif
 
-void MainWindow::setupNetworkServer()
+void MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 {
 	if (globAppInfo->shouldEnableNetworkServer())
 	{
 		tcpServer = new QTcpServer(this);
-		if (!tcpServer->listen()) 
+
+		QHostAddress address = QHostAddress::Any;
+		if(sAddress != "")
+			address.setAddress(sAddress); 
+		if (!tcpServer->listen(address,port)) 
 		{
 			QString sInfo = QString("Unable to start the network server: %1.").arg(tcpServer->errorString());
 			qDebug() << __FUNCTION__ << sInfo;
@@ -464,7 +469,10 @@ void MainWindow::setupNetworkServer()
 			ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 
 		connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newIncomingServerConnection()));
-		QString sInfo = QString("Network Server started @ %1:%2").arg(ipAddress).arg(tcpServer->serverPort());
+		QString usedAddress = sAddress;
+		if(usedAddress == "")
+			usedAddress = QString("%1").arg(ipAddress);
+		QString sInfo = QString("Network Server started @ %1:%2").arg(usedAddress).arg(tcpServer->serverPort());
 		qDebug() << sInfo;
 		//write2OutputWindow(sInfo);
 		//QMessageBox msgBox(QMessageBox::Information,"Network Server",QString("Network Server started @ : %1:%2").arg(ipAddress).arg(tcpServer->serverPort()), QMessageBox::Ok);
@@ -503,6 +511,8 @@ void MainWindow::newIncomingServerConnection()
 	out << (quint16)(block.size() - sizeof(quint16));
 
 	clientConnection = tcpServer->nextPendingConnection();
+	clientConnection->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+	clientConnection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 	connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
 	connect(clientConnection, SIGNAL(readyRead()), this, SLOT(receivedNetworkData()));
 	connect(clientConnection, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorNetworkData(QAbstractSocket::SocketError)));

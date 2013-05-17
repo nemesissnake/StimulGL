@@ -72,6 +72,8 @@
 #define REGISTRY_RENDERTYPE								"Rendering/RenderType"
 #define REGISTRY_HQANTIALIAS							"Rendering/HQAntiAlias"
 #define REGISTRY_ENABLENETWORKSERVER					"Network/EnableInternalNetworkServer"
+#define REGISTRY_SERVERHOSTADDRESS						"Network/ServerHostAddress"
+#define REGISTRY_SERVERHOSTPORT							"Network/ServerHostPort"
 
 //Only edit until here!
 #define SCRIPT_API_CLASS_NAME_TAG						"ScriptAPIClassName"

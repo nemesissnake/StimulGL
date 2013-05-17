@@ -168,6 +168,7 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &cont
 	bSkipErrorForLogWindow = ( (msg == QString("Unknown error")) || (msg == QString("QGLShader::link: \"No errors.\" ")) );
 	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("Remove me: fixing toplevel window flags"));
 	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("warning X3206: implicit truncation of vector type"));
+	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("BitBlt failed (The handle is invalid.)"));
 	switch (type) 
 	{
 	case QtDebugMsg:

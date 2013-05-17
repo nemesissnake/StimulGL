@@ -22,6 +22,7 @@
 
 #include <QDialog>
 #include <QSettings>
+#include <QMessageBox>
 #include "ui_optionpage.h"
 #include "GlobalApplicationInformation.h"
 
@@ -41,9 +42,15 @@ private slots:
 	void on_rdb_3DRenderer_3_toggled(bool);
 	void on_rdb_3DRenderer_2_toggled(bool);
 	void on_rdb_3DRenderer_toggled(bool);
+	void on_chkEnableNetworkServer_toggled(bool);
 	void setUI3DRendererControls(int type);
-	void applySettings();
+	void validateAndApplySettings();
 	void readSettings();
+
+private:
+	void applySettings();
+	bool checkSettings();
+	bool validateIPAddressString(QString &input) const;
 };
 
 #endif // OPTIONPAGE_H

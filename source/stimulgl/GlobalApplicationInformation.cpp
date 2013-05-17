@@ -64,6 +64,8 @@ void GlobalApplicationInformation::Initialize()
 	mainAppInformation.bHQAntiAlias = false;
 	mainAppInformation.bAllowMultipleInheritance = false;
 	mainAppInformation.bEnableNetworkServer = false;
+	mainAppInformation.sHostAddress = "";
+	mainAppInformation.nHostPort = 0;
 }
 
 QDataStream &operator<<(QDataStream &out, const MainAppInformationStructure &mainAppInformationStructure)
@@ -77,6 +79,8 @@ QDataStream &operator<<(QDataStream &out, const MainAppInformationStructure &mai
 	out << mainAppInformationStructure.bHQAntiAlias; 
 	out << mainAppInformationStructure.bAllowMultipleInheritance;
 	out << mainAppInformationStructure.bEnableNetworkServer;
+	out << mainAppInformationStructure.sHostAddress;
+	out << mainAppInformationStructure.nHostPort;
 	return out;
 }
 
@@ -94,6 +98,8 @@ QDataStream &operator>>(QDataStream &in, MainAppInformationStructure &mainAppInf
 	in >> mainAppInformationStructure.bHQAntiAlias; 
 	in >> mainAppInformationStructure.bAllowMultipleInheritance;
 	in >> mainAppInformationStructure.bEnableNetworkServer;
+	in >> mainAppInformationStructure.sHostAddress;
+	in >> mainAppInformationStructure.nHostPort;
 	return in;
 }
 
@@ -148,6 +154,16 @@ bool GlobalApplicationInformation::shouldEnableNetworkServer()
 	return mainAppInformation.bEnableNetworkServer;
 }
 
+QString GlobalApplicationInformation::getHostAddress()
+{
+	return mainAppInformation.sHostAddress;//"";//"127.0.0.1";//"137.120.137.130";//QHostAddress::Any;
+}
+
+quint16 GlobalApplicationInformation::getHostPort()
+{
+	return mainAppInformation.nHostPort;//200;//0=default
+}
+
 
 ////////////////////////////////////////////////////////////////
 
@@ -172,7 +188,27 @@ void GlobalApplicationInformation::initAndParseRegistrySettings()
 		mainAppInformation.bEnableNetworkServer = false;
 		AppRegistrySettings->setValue(REGISTRY_ENABLENETWORKSERVER, mainAppInformation.bEnableNetworkServer);
 	}
-	
+//REGISTRY_SERVERHOSTADDRESS
+//REGISTRY_SERVERHOSTPORT	
+	if (AppRegistrySettings->contains(REGISTRY_SERVERHOSTADDRESS)) 
+	{
+		mainAppInformation.sHostAddress = AppRegistrySettings->value(REGISTRY_SERVERHOSTADDRESS).toString();
+	}
+	else //key doesn't exist, default value here!
+	{
+		mainAppInformation.sHostAddress = "";
+		AppRegistrySettings->setValue(REGISTRY_SERVERHOSTADDRESS, mainAppInformation.sHostAddress);
+	}
+
+	if (AppRegistrySettings->contains(REGISTRY_SERVERHOSTPORT)) 
+	{
+		mainAppInformation.nHostPort = (quint16)AppRegistrySettings->value(REGISTRY_SERVERHOSTPORT).toInt();
+	}
+	else //key doesn't exist, default value here!
+	{
+		mainAppInformation.nHostPort = 0;
+		AppRegistrySettings->setValue(REGISTRY_SERVERHOSTPORT, (int)mainAppInformation.nHostPort);
+	}
 
 	if (AppRegistrySettings->contains(REGISTRY_OPENINEXTERNALDEBUGGER)) 
 	{
@@ -224,6 +260,8 @@ bool GlobalApplicationInformation::setRegistryInformation(const QString &sName, 
 			AppRegistrySettings->setValue(sName, vValue.toBool());
 		else if(sType.toLower()=="int")
 			AppRegistrySettings->setValue(sName, vValue.toInt());
+		else if(sType.toLower()=="string")
+			AppRegistrySettings->setValue(sName, vValue.toString());
 		else if(sType.toLower()=="stringlist")
 			AppRegistrySettings->setValue(sName, vValue.toStringList());
 		else if(sType.toLower()=="point")

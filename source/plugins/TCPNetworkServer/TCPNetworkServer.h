@@ -47,14 +47,19 @@ public:
 	
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
-	QString startServer(QString a, QString b);
+	QString startServer(const QString &sAddress = "", int port = 0);
 	void newIncomingConnectionFromClient();
-	bool connectToServer(QString a, QString b);
+	bool connectToServer(const QString &sAddress, int port);
 	void dataFromServerAvailable();
 	void dataFromClientAvailable();
-
 	int sendClientData(QString sData);
 	int sendServerData(QString sData);
+
+private slots:
+	void clientDisconnected();
+	void clientErrorNetworkData(QAbstractSocket::SocketError socketError);
+	void serverDisconnected();
+	void serverErrorNetworkData(QAbstractSocket::SocketError socketError);
 	
 private:
 	QScriptEngine* currentScriptEngine;

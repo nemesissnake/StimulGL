@@ -74,10 +74,25 @@ bool TCPNetworkServer::makeThisAvailableInScript(QString strObjectScriptName, QO
 	return false;
 }
 
-QString TCPNetworkServer::startServer(QString a, QString b)
+
+//(const QString &sAddress = "", int port = 0);
+//
+//const QString &sAddress, quint16 port)
+//{
+//	if (globAppInfo->shouldEnableNetworkServer())
+//	{
+//		tcpServer = new QTcpServer(this);
+//
+//		QHostAddress address = QHostAddress::Any;
+//		if(sAddress != "")
+//			address.setAddress(sAddress);
+
+QString TCPNetworkServer::startServer(const QString &sAddress, int port)
 {
-	//tcpServer = new QTcpServer(this);
-	if (!this->listen()) 
+	QHostAddress address = QHostAddress::Any;
+	if(sAddress != "")
+		address.setAddress(sAddress);
+	if (!this->listen(address,port)) 
 	{
 		return QString("Unable to start the server: %1.").arg(this->errorString());
 	}
@@ -94,10 +109,12 @@ QString TCPNetworkServer::startServer(QString a, QString b)
 	// if we did not find one, use IPv4 localhost
 	if (ipAddress.isEmpty())
 		ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
-
 	connect(this, SIGNAL(newConnection()), this, SLOT(newIncomingConnectionFromClient()));
-	return QString("%1:%2").arg(ipAddress).arg(this->serverPort());
-	//return QString("The server is running on\n\tIP: %1\n\tport: %2\nRun the Client now.").arg(ipAddress).arg(this->serverPort());
+	QString usedAddress = sAddress;
+	if(usedAddress == "")
+		usedAddress = QString("%1").arg(ipAddress);
+	QString sInfo = QString("%1:%2").arg(usedAddress).arg(this->serverPort());
+	return sInfo;
 }
 
 void TCPNetworkServer::newIncomingConnectionFromClient()
@@ -109,13 +126,39 @@ void TCPNetworkServer::newIncomingConnectionFromClient()
 	out << QString("newIncomingConnectionFromClient() reaction data packet");//fortunes.at(qrand() % fortunes.size());
 	out.device()->seek(0);
 	out << (quint16)(block.size() - sizeof(quint16));
-	//QTcpSocket *clientConnection 
 	serverClientConnectionSockets.append(this->nextPendingConnection());
-	connect(serverClientConnectionSockets.last(), SIGNAL(disconnected()), serverClientConnectionSockets.last(), SLOT(deleteLater()));
+	serverClientConnectionSockets.last()->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+	serverClientConnectionSockets.last()->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+	connect(serverClientConnectionSockets.last(), SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
 	connect(serverClientConnectionSockets.last(), SIGNAL(readyRead()), this, SLOT(dataFromClientAvailable()));
+	connect(serverClientConnectionSockets.last(), SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(clientErrorNetworkData(QAbstractSocket::SocketError)));
 	serverClientConnectionSockets.last()->write(block);	
-	//connect(clientConnectionSocket, SIGNAL(readyRead()), this, SLOT(dataFromServerAvailable()));
-	//clientConnectionSocket->disconnectFromHost();
+}
+
+void TCPNetworkServer::clientDisconnected()
+{
+	serverClientConnectionSockets.last()->deleteLater();
+}
+
+void TCPNetworkServer::clientErrorNetworkData(QAbstractSocket::SocketError socketError)
+{
+	switch (socketError) 
+	{
+	case QAbstractSocket::RemoteHostClosedError:
+		qDebug() << __FUNCTION__ << "The client disconnected the network connection.";
+		break;
+	case QAbstractSocket::HostNotFoundError:
+		qDebug() << __FUNCTION__ << "The host was not found. Please check the host name and port settings.";
+		break;
+	case QAbstractSocket::ConnectionRefusedError:
+		qDebug() << __FUNCTION__ << "The connection was refused by the peer. "
+			"Make sure the network server is running, "
+			"and check that the host name and port "
+			"settings are correct.";
+		break;
+	default:
+		qDebug() << __FUNCTION__ << QString("The following Network error occurred: %1.").arg(serverClientConnectionSockets.last()->errorString());
+	}
 }
 
 int TCPNetworkServer::sendServerData(QString sData)
@@ -144,27 +187,47 @@ int TCPNetworkServer::sendClientData(QString sData)
 	return (int)bytesSend;
 }
 
-bool TCPNetworkServer::connectToServer(QString a, QString b)
+bool TCPNetworkServer::connectToServer(const QString &sAddress, int port)
 {
-//	if(tcpSocket == NULL)
-//	{
-		clientConnectionSocket = new QTcpSocket(this);
-		clientConnectionSocket->abort();
-		clientConnectionSocket->connectToHost(a,b.toInt());
-//	}
+	clientConnectionSocket = new QTcpSocket(this);
+	clientConnectionSocket->abort();
+	clientConnectionSocket->connectToHost(sAddress, (quint16)port);
+	clientConnectionSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+	clientConnectionSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
-	//connect(hostCombo, SIGNAL(editTextChanged(QString)), this, SLOT(enableGetFortuneButton()));
-	//connect(portLineEdit, SIGNAL(textChanged(QString)), this, SLOT(enableGetFortuneButton()));
-	//connect(getFortuneButton, SIGNAL(clicked()),this, SLOT(requestNewFortune()));
-	//connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
+	connect(clientConnectionSocket, SIGNAL(disconnected()), this, SLOT(serverDisconnected()));
+	connect(clientConnectionSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(serverErrorNetworkData(QAbstractSocket::SocketError)));
 	return connect(clientConnectionSocket, SIGNAL(readyRead()), this, SLOT(dataFromServerAvailable()));
+}
 
-	//connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(displayError(QAbstractSocket::SocketError)));
+void TCPNetworkServer::serverDisconnected()
+{
+	clientConnectionSocket->deleteLater();
+}
+
+void TCPNetworkServer::serverErrorNetworkData(QAbstractSocket::SocketError socketError)
+{
+	switch (socketError) 
+	{
+	case QAbstractSocket::RemoteHostClosedError:
+		qDebug() << __FUNCTION__ << "The client disconnected the network connection.";
+		break;
+	case QAbstractSocket::HostNotFoundError:
+		qDebug() << __FUNCTION__ << "The host was not found. Please check the host name and port settings.";
+		break;
+	case QAbstractSocket::ConnectionRefusedError:
+		qDebug() << __FUNCTION__ << "The connection was refused by the peer. "
+			"Make sure the network server is running, "
+			"and check that the host name and port "
+			"settings are correct.";
+		break;
+	default:
+		qDebug() << __FUNCTION__ << QString("The following Network error occurred: %1.").arg(clientConnectionSocket->errorString());
+	}
 }
 
 void TCPNetworkServer::dataFromClientAvailable()
 {
-	//return connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(dataFromServerAvailable()));
 	QDataStream in(serverClientConnectionSockets.last());
 	in.setVersion(QDataStream::Qt_5_0);
 	if (blockSize == 0) 
@@ -172,21 +235,15 @@ void TCPNetworkServer::dataFromClientAvailable()
 		if (serverClientConnectionSockets.last()->bytesAvailable() < (int)sizeof(quint16))
 			return;
 		in >> blockSize;
+		//in.skipRawData(sizeof(blockSize));
 	}
 	if (serverClientConnectionSockets.last()->bytesAvailable() < blockSize)
 		return;
-	QString receivedData;
-	in >> receivedData;
-	emit ClientDataAvailable(receivedData);
+	QString sAvailableData;
+	in >> sAvailableData;
+	//in.skipRawData(sizeof(sAvailableData));
+	emit ClientDataAvailable(sAvailableData);
 	blockSize = 0;
-	//if (nextFortune == currentFortune) 
-	//{
-	//	QTimer::singleShot(0, this, SLOT(requestNewFortune()));
-	//	return;
-	//}
-	//currentFortune = nextFortune;
-	//statusLabel->setText(currentFortune);
-	//getFortuneButton->setEnabled(true);
 }
 
 void TCPNetworkServer::dataFromServerAvailable()
@@ -198,11 +255,13 @@ void TCPNetworkServer::dataFromServerAvailable()
 		if (clientConnectionSocket->bytesAvailable() < (int)sizeof(quint16))
 			return;
 		in >> blockSize;
+		//in.skipRawData(sizeof(blockSize));
 	}
 	if (clientConnectionSocket->bytesAvailable() < blockSize)
 		return;
 	QString sAvailableData;
 	in >> sAvailableData;
+	//in.skipRawData(sizeof(sAvailableData));
 	emit ServerDataAvailable(sAvailableData);
 	blockSize = 0;
 }

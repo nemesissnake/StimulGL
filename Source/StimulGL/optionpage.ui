@@ -185,7 +185,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Enable the internal network server at startup.</string>
+      <string>Enable the internal Network Server at startup.</string>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -195,14 +195,120 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
-       <width>261</width>
+       <y>150</y>
+       <width>291</width>
        <height>21</height>
       </rect>
      </property>
      <property name="text">
-      <string>Changes made here require a reboot!</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic; color:#ff0000;&quot;&gt;Changes made here require a reboot of StimulGL!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
+    </widget>
+    <widget class="QGroupBox" name="gbNetworkServerSettings">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>50</y>
+       <width>361</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Network Server Settings</string>
+     </property>
+     <widget class="QLineEdit" name="edtNetworkServerAddress">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>20</y>
+        <width>91</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string extracomment="Enter the IP Address here (*.*.*.*), leave this field empty to enable the auto discovery."/>
+      </property>
+      <property name="inputMask">
+       <string/>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>50</y>
+        <width>41</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Port:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>61</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;IP-Address:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>50</y>
+        <width>161</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Enter '0' for auto assignment.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>20</y>
+        <width>161</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Leave empty for auto discovery.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="edtNetworkServerPort">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>50</y>
+        <width>91</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string extracomment="Enter the IP Port here, enter '0' for auto assignment."/>
+      </property>
+      <property name="maximum">
+       <number>9999</number>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -219,7 +325,16 @@
     <property name="spacing">
      <number>6</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
