@@ -93,7 +93,7 @@ class MainWindow : public DocumentWindow//QMainWindow
 
 public:
 	MainWindow();
-	//~MainWindow();//see void MainWindow::closeEvent(QCloseEvent *event)!
+	~MainWindow();//see void MainWindow::closeEvent(QCloseEvent *event)!
 
 signals:
 	void CleanUpScriptExecuted();
@@ -313,7 +313,7 @@ private:
 	MainAppInformationStructure *mainAppInfoStruct;
 
 	enum { MaxRecentFiles = 8 };
-	QAction *recentFileActs[MaxRecentFiles];
+	QList<QAction *> recentFileActs;
 
 	void showSplashMessage(const QString message);
 	void setupMDI();

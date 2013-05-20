@@ -152,7 +152,6 @@ int main(int argc, char **argv)
 		QObject::connect(&appExchange, SIGNAL(messageAvailable(QString)), appWindow, SLOT(receiveExchangeMessage(QString)));
 		appWindow->showMaximized();
 		appWindow->RecoverLastScreenWindowSettings();
-		//return app.exec();
 		int nRetVal = appExchange.exec();
 		delete appWindow;
 		appWindow = NULL;

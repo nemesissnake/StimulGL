@@ -37,6 +37,7 @@
 
 MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 {
+	Plugins = NULL;
 	tcpServer = NULL;
 	clientConnection = NULL;
 	networkDataBlockSize = 0;
@@ -60,9 +61,55 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 //Alternately, you can keep NO_DEBUG_OUTPUT out of the makefile if you still want the logfile.
 }
 
-//MainWindow::~MainWindow()//see void MainWindow::closeEvent(QCloseEvent *event)!
-//{
-//}
+MainWindow::~MainWindow()//see void MainWindow::closeEvent(QCloseEvent *event)!
+{
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+	if(!closeSubWindow())
+	{
+		event->ignore();
+		return;
+	}
+	mdiArea->closeAllSubWindows();
+	if (activeMdiChild()) 
+	{
+		event->ignore();
+	} 
+	else 
+	{
+		writeMainWindowSettings();
+		event->accept();
+	}
+	delete helpAssistant;
+#ifndef QT_NO_DEBUG_OUTPUT
+	MainAppInfo::CloseMainLogFile();	
+#endif
+	if(Plugins)
+		delete Plugins;
+#ifdef Q_WS_WIN
+	timeEndPeriod(1);
+#endif
+	MainAppInfo::SetMainWindow(NULL);
+	if(DocManager)
+	{
+		disconnect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
+		disconnect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));	
+		delete DocManager;
+	}
+	if(globAppInfo)
+	{
+		delete globAppInfo;
+		globAppInfo = NULL;
+	}
+	if(mainAppInfoStruct)
+	{
+		delete mainAppInfoStruct;
+		mainAppInfoStruct = NULL;
+	}
+	shutdownNetworkServer();
+}
 
 bool MainWindow::setContextState(const QString &sContextName)
 {
@@ -925,15 +972,18 @@ void MainWindow::createDefaultMenus()
 	connect(printAction, SIGNAL(triggered()), this, SLOT(print()));
 	fileMenu->addAction(printAction);
 
-	for (int i = 0; i < MaxRecentFiles; ++i) {
-		recentFileActs[i] = new QAction(this);
-		recentFileActs[i]->setVisible(false);
-		connect(recentFileActs[i], SIGNAL(triggered()), this, SLOT(openRecentFile()));
+	for (int i = 0; i < MaxRecentFiles; ++i) 
+	{
+		recentFileActs.append(new QAction(this));
+		recentFileActs.last()->setVisible(false);
+		connect(recentFileActs.last(), SIGNAL(triggered()), this, SLOT(openRecentFile()));
 	}
 
 	separatorAct = fileMenu->addSeparator();
 	for (int i = 0; i < MaxRecentFiles; ++i)
+	{
 		fileMenu->addAction(recentFileActs[i]);
+	}
 	fileMenu->addSeparator();
 	updateRecentFileActions();
 
@@ -1000,8 +1050,7 @@ void MainWindow::createDefaultMenus()
 	replaceAction->setStatusTip(tr("Replace"));
 	connect(replaceAction, SIGNAL(triggered()), this, SLOT(replace()));
 	editMenu->addAction(replaceAction);
-
-
+	
 	//searchAction = new QAction(tr("Search"), this);//QIcon(":/resources/comment.png")
 	//searchAction->setShortcut(tr("Ctrl+F"));
 	//searchAction->setStatusTip(tr("Search through the current document."));
@@ -2430,12 +2479,12 @@ void MainWindow::updateWindowMenu()
 	windowMenu->addSeparator();
 	windowMenu->addAction(nextAction);
 	windowMenu->addAction(previousAction);
-	//windowMenu->addAction(separatorAction);
 
 	QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
 	separatorAct->setVisible(!windows.isEmpty());
 
-	for (int i = 0; i < windows.size(); ++i) {
+	for (int i = 0; i < windows.size(); ++i) 
+	{
 		QMdiSubWindow *child = qobject_cast<QMdiSubWindow *>(windows.at(i));
 		QString text = QFileInfo(DocManager->getFileName(child)).fileName();
 		if (text == "")
@@ -2630,49 +2679,6 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 		return true;
 	}
 	return false;
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
-	if(!closeSubWindow())
-	{
-		event->ignore();
-		return;
-	}
-	mdiArea->closeAllSubWindows();
-	if (activeMdiChild()) {
-		event->ignore();
-	} else {
-		writeMainWindowSettings();
-		event->accept();
-	}
-	delete helpAssistant;
-#ifndef QT_NO_DEBUG_OUTPUT
-	MainAppInfo::CloseMainLogFile();	
-#endif
-	if(Plugins)
-		delete Plugins;
-#ifdef Q_WS_WIN
-	timeEndPeriod(1);
-#endif
-	MainAppInfo::SetMainWindow(NULL);
-	if(DocManager)
-	{
-		disconnect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
-		disconnect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));	
-		delete DocManager;
-	}
-	if(globAppInfo)
-	{
-		delete globAppInfo;
-		globAppInfo = NULL;
-	}
-	if(mainAppInfoStruct)
-	{
-		delete mainAppInfoStruct;
-		mainAppInfoStruct = NULL;
-	}
-	shutdownNetworkServer();
 }
 
 QString MainWindow::activeMdiChildFilePath()

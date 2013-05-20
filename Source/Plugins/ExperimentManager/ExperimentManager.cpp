@@ -2067,7 +2067,7 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 	int nNrOfBlockTrials = ExpBlockTrialsDomNodeLst.count();
 	cExperimentBlockTrialStructure->resetExperiment();
 	cBlockStructure *tmpBlock = NULL;
-	//cLoopStructure *tmpLoop = NULL;
+	cLoopStructure *tmpLoop = NULL;
 	QDomElement tmpElement;
 	bool bUpdateSucceeded = false;
 	for (int i=0;i<nNrOfBlockTrials;i++)
@@ -2152,8 +2152,8 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 														if(!tmpLoopElementParams.isNull())//Is it defined?
 														{
 															nTempLoopTargetBlockID = tmpLoopElementParams.text().toInt();//Copy the LoopNumber
-															//tmpLoop = new cLoopStructure(nTempLoopID,nTempLoopNumber,nTempLoopTargetBlockID,sTempLoopName,nTempLoopCount);
-															bLoopParseResult = tmpBlock->insertLoop(&cLoopStructure(nTempLoopID,nTempLoopNumber,nTempLoopTargetBlockID,sTempLoopName,nTempLoopCount));//tmpLoop);
+															tmpLoop = new cLoopStructure(nTempLoopID,nTempLoopNumber,nTempLoopTargetBlockID,sTempLoopName,nTempLoopCount);
+															bLoopParseResult = tmpBlock->insertLoop(tmpLoop);////&cLoopStructure(nTempLoopID,nTempLoopNumber,nTempLoopTargetBlockID,sTempLoopName,nTempLoopCount));//tmpLoop);
 														}
 													}
 												}

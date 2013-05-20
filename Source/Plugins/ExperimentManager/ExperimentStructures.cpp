@@ -53,15 +53,15 @@ cBlockStructure_SharedData::cBlockStructure_SharedData(const cBlockStructure_Sha
 
 cBlockStructure_SharedData::~cBlockStructure_SharedData()
 {	
-	//if(lLoops.isEmpty() == false)
-	//{
-	//	for (int i=0;i<lLoops.count();i++)
-	//	{
-	//		delete lLoops[i];//->deleteLater();
-	//		//lLoops[i] = NULL;
-	//	}
+	if(lLoops.isEmpty() == false)
+	{
+		for (int i=0;i<lLoops.count();i++)
+		{
+			delete lLoops[i];//->deleteLater();
+			lLoops[i] = NULL;
+		}
 		lLoops.clear();
-	//}
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +146,7 @@ bool cBlockStructure::isUnusedLoopID(const int &nLoopID) const
 {
 	if(pSharedData->lLoops.isEmpty())
 		return true;
-	for (int i = 0; i < pSharedData->lLoops.size(); i++) 
+	for (int i=0;i<pSharedData->lLoops.size();i++) 
 	{
 		if (pSharedData->lLoops.at(i)->getLoopID() == nLoopID)
 			return false;

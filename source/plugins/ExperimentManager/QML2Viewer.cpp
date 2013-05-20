@@ -78,7 +78,8 @@ void QML2Viewer::deleteQML2ViewerWindow()
 }
 
 bool QML2Viewer::executeQML2Document(const QString &strSource, bool bIsFile)//QVBoxLayout *layout) 
-{
+{	
+	bool bRetVal = false;
 	if(bIsFile)
 		qmlMainFilePath = strSource;
 	else
@@ -87,7 +88,11 @@ bool QML2Viewer::executeQML2Document(const QString &strSource, bool bIsFile)//QV
 	{
 		if(bIsFile)
 		{
-			return startObject();
+			bRetVal = startObject();
+			if((experimentManager == NULL) && (currentExperimentStructure == NULL))//Here we should just run the QML file
+			{
+				qml2EventRoutine();
+			}
 		}
 		else
 		{
@@ -95,7 +100,7 @@ bool QML2Viewer::executeQML2Document(const QString &strSource, bool bIsFile)//QV
 			return true;
 		}
 	}
-	return false;
+	return bRetVal;
 }
 
 bool QML2Viewer::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
@@ -425,7 +430,19 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 
 	if(strContent.isEmpty())
 	{
-		if(bFirstQuickWindowAvtivation)
+		if((experimentManager == NULL) && (currentExperimentStructure == NULL))//Here we should just run the QML file
+		{
+			bExperimentUnlocked = true;
+			if(last_qmlMainFilePath == qmlMainFilePath)
+				return;
+			else
+				last_qmlMainFilePath = qmlMainFilePath;
+			bEmitSourceChange = true;
+			fileString = QFileInfo(qmlMainFilePath).canonicalFilePath();
+			fileUrl = QUrl::fromLocalFile(fileString);//fileString);
+			QDir::setCurrent(QFileInfo(fileString).canonicalPath());
+		}
+		else if(bFirstQuickWindowAvtivation)
 		{
 			bFirstQuickWindowAvtivation = false;
 			bExperimentUnlocked = false;
@@ -444,31 +461,8 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 			else
 				last_qmlMainFilePath = qmlMainFilePath;
 			bEmitSourceChange = true;
-			//fileString = qmlMainFilePath;
 			fileString = QFileInfo(qmlMainFilePath).canonicalFilePath();
 			fileUrl = QUrl::fromLocalFile(fileString);//fileString);
-
-
-			//int nRetries = 1;
-			////QString filename("tmp");
-			////QDir::setCurrent("D:\\Projects\\Experiments\\StimulGL\\Joel\\3DFace");
-			//QFile tmp2File(fileString);
-			////tmp2File.setFileName(fileString);
-			//if (!tmp2File.open(QIODevice::ReadOnly | QIODevice::Text))
-			//{
-
-			//}
-			//QTextStream in(&tmp2File);
-			//strContent = in.readAll();//write(strContent.toLatin1());
-			//tmp2File.close();
-
-			//if (!tmp2File.exists())
-			//	return;
-			//QFileInfo fi(tmp2File);
-			//QDir::setCurrent(fi.canonicalPath());
-
-			//fileString = QFileInfo(tmp2File.fileName()).canonicalFilePath();
-			//fileUrl = QUrl::fromLocalFile(fileString);
 		}
 	}
 	else   //if(strContent.isEmpty()==false)	
