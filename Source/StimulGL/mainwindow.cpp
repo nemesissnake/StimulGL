@@ -67,6 +67,8 @@ MainWindow::~MainWindow()//see void MainWindow::closeEvent(QCloseEvent *event)!
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if(!closeSubWindow())
 	{
 		event->ignore();
@@ -210,22 +212,30 @@ QString MainWindow::testFunction(QString inp)
 
 bool MainWindow::openDroppedFiles(const QStringList &pathList)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	this->openFiles(NULL,pathList);
 	return true;
 }
 
 QVariant MainWindow::invokeJavaScriptConfigurationFile(const QString &sCode)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	return globAppInfo->invokeJavaScriptConfigurationFile(sCode);
 }
 
 void MainWindow::showJavaScriptConfigurationFile()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	globAppInfo->showJavaScriptConfigurationFile();
 }
 
 bool MainWindow::receiveExchangeMessage(const QString &sMessage)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	bool bWasNotJetInitialized = false;
 	while(bMainWindowIsInitialized == false)
 	{
@@ -253,6 +263,8 @@ bool MainWindow::receiveExchangeMessage(const QString &sMessage)
 
 void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	QMenu menu(this);
 	menu.addAction(clearDebuggerAction);
 	menu.addAction(copyDebuggerAction);
@@ -261,12 +273,17 @@ void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
 
 void MainWindow::setupContextMenus()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	outputWindowList->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(outputWindowList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(DebugcontextMenuEvent(QPoint)));
 }
 
 bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags)
 {
+	StimulGLFlags = mainFlags;
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	//Default					= 0x00000,
 	//DisablePlugins			= 0x00001,
 	//DisableSplash				= 0x00002
@@ -275,8 +292,8 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 	//registerFileTypeByDefinition("StimulGL.QtScript","StimulGL Qt Script File",".qs");
 	//MainAppInfo::Initialize(this);
 	//QApplication::setGraphicsSystem("opengl");//"raster");
-	StimulGLFlags = mainFlags;
     AppScriptStatus = GlobalApplicationInformation::NoScript;
+
 	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash) == false)
 	{
 		QPixmap pixmap(":/resources/splash.png");
@@ -338,6 +355,8 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 
 void MainWindow::showSplashMessage(const QString message)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash) == false)
 	{
 		MainSplashScreen->showMessage(message,Qt::AlignBottom ,Qt::white);
@@ -346,12 +365,16 @@ void MainWindow::showSplashMessage(const QString message)
 
 void MainWindow::setGlobalApplicationInformationObject(GlobalApplicationInformation *globAppInformation)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	globAppInfo = globAppInformation;
 	mainAppInfoStruct = new MainAppInformationStructure(globAppInformation->getMainAppInformationStructure());
 }
 
 void MainWindow::setupMDI()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	mdiArea = new QMdiArea;
 	mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -364,6 +387,8 @@ void MainWindow::setupMDI()
 
 void MainWindow::setupDocumentManager()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	DocManager = new DocumentManager (this);
 	connect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
 	DocManager->appendKnownFileExtensionList(MainAppInfo::getDefaultFileExtList());
@@ -485,6 +510,8 @@ QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine
 
 void MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if (globAppInfo->shouldEnableNetworkServer())
 	{
 		tcpServer = new QTcpServer(this);
@@ -530,6 +557,8 @@ void MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 
 void MainWindow::shutdownNetworkServer()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if(tcpServer)
 	{
 		tcpServer->close();
@@ -622,6 +651,8 @@ void MainWindow::errorNetworkData(QAbstractSocket::SocketError socketError)
 
 void MainWindow::setupScriptEngine()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	//qDebug() << "setupScriptEngine() - start";
 	if(AppScriptEngine)
 	{
@@ -708,6 +739,8 @@ void MainWindow::setupScriptEngine()
 
 bool MainWindow::restartScriptEngine()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	QMdiSubWindow *tmpSubWindow = activeMdiChild();
 	setupScriptEngine();
 	for (int i=0;i<Plugins->Count()-1;i++)
@@ -911,6 +944,8 @@ void MainWindow::CursorPositionChanged(int line, int col)
 
 bool MainWindow::setDefaultGLFormat()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	QGLFormat StimulGLQGLFormat;
 	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
 	StimulGLQGLFormat.setSampleBuffers(true);
@@ -920,6 +955,8 @@ bool MainWindow::setDefaultGLFormat()
 
 void MainWindow::createDefaultMenus()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	fileMenu = new QMenu(tr("&File"), this);
 	editMenu = new QMenu(tr("&Edit"), this);
 	markersMenu = new QMenu(tr("&Markers"), this);
@@ -1246,6 +1283,8 @@ void MainWindow::createDefaultMenus()
 
 void MainWindow::setupHelpMenu()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	helpMenu = menuBar()->addMenu(tr("Help"));
 	
 	assistantAct = new QAction(tr("Help Contents"), this);
@@ -1275,6 +1314,8 @@ void MainWindow::setupHelpMenu()
 
 void MainWindow::showDocumentation()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	helpAssistant->showDocumentation("index.html", globAppInfo);
 }
 
@@ -1300,11 +1341,15 @@ void MainWindow::clearOutputWindow()
 
 void MainWindow::clearDebugger()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	outputWindowList->clear();
 }
 
 void MainWindow::copyDebugger()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	QList<QPair<QString,int>> lListTextAndRows;
 	QList <QListWidgetItem *> listItems;
 	QString sResult = "";
@@ -1329,6 +1374,8 @@ void MainWindow::copyDebugger()
 
 void MainWindow::createDockWindows()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	debugLogDock = new QDockWidget(tr("Output"), this);
 	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);	
 	outputWindowList = new QListWidget(debugLogDock);
@@ -1372,6 +1419,8 @@ void MainWindow::createDockWindows()
 
 void MainWindow::setupDynamicPlugins()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableAllPlugins) == false)
 	{
 		extendAPICallTips(this->metaObject());
@@ -1593,6 +1642,8 @@ void MainWindow::setupDynamicPlugins()
 
 bool MainWindow::extendAPICallTips(const QMetaObject* metaScriptObject)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if (metaScriptObject)
 	{
 		// <item signature> ::SuperClassName||ScriptClassName::Type::ReturnType::Description
@@ -1756,6 +1807,8 @@ bool MainWindow::configurePluginScriptEngine(const int nIndex)
 
 void MainWindow::setAppDirectories()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	QStringList paths = qApp->libraryPaths();
 	paths <<  MainAppInfo::pluginsDirPath();// pluginsDir.absolutePath();
 #ifndef QT_NO_DEBUG_OUTPUT	
@@ -2112,6 +2165,8 @@ void MainWindow::abortScript()
 
 void MainWindow::openOptionsDialog()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	int returnVal;
 	OptionPage MainOptionPage(this, globAppInfo);
 	returnVal = MainOptionPage.exec();
@@ -2139,6 +2194,8 @@ void MainWindow::aboutStimulGL()
 
 void MainWindow::setStartupFiles(const QString &path)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	startUpFiles = path.split(";");
 }
 
@@ -2370,6 +2427,8 @@ void MainWindow::newDocument(const GlobalApplicationInformation::DocType &docTyp
 
 void MainWindow::setupStatusBar()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	StatusPositionLabel = new QLabel("");
 	StatusNameLabel = new QLabel("");
 	StatusLinesLabel = new QLabel("");
@@ -2545,6 +2604,8 @@ void MainWindow::gotoMarker()
 
 void MainWindow::setupToolBars()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	fileToolBar = addToolBar(tr("File"));
 	fileToolBar->addAction(newScriptAction);
 	fileToolBar->addAction(openAction);
@@ -2564,12 +2625,16 @@ void MainWindow::setupToolBars()
 
 void MainWindow::parseRemainingGlobalSettings()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	setRenderer();
 	configureDebugger();
 }
 
 void MainWindow::RecoverLastScreenWindowSettings()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if(globAppInfo->checkRegistryInformation(REGISTRY_MAINWINDOWPOS))
 	{
 		QPoint tmpPoint = globAppInfo->getRegistryInformation(REGISTRY_MAINWINDOWPOS).toPoint();
@@ -2595,6 +2660,8 @@ void MainWindow::returnToOldMaxMinSizes()
 
 void MainWindow::setDockSize(QDockWidget *dock, int setWidth, int setHeight)
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	oldDockMaxSize=dock->maximumSize();
 	oldDockMinSize=dock->minimumSize();
 
@@ -2612,6 +2679,8 @@ void MainWindow::setDockSize(QDockWidget *dock, int setWidth, int setHeight)
 
 bool MainWindow::configureDebugger()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if(globAppInfo->checkRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER))
 		AppScriptEngine->ConfigureDebugger((bool)globAppInfo->getRegistryInformation(REGISTRY_OPENINEXTERNALDEBUGGER).toInt());
 	else//default
@@ -2621,6 +2690,8 @@ bool MainWindow::configureDebugger()
 
 void MainWindow::writeMainWindowSettings()
 {
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	globAppInfo->setRegistryInformation(REGISTRY_MAINWINDOWPOS, pos(), "point");
 	globAppInfo->setRegistryInformation(REGISTRY_MAINWINDOWSIZE, size(), "size");
 	globAppInfo->setRegistryInformation(REGISTRY_DEBUGWINDOWWIDTH, debugLogDock->width(), "int");

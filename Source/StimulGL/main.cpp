@@ -118,9 +118,9 @@ int main(int argc, char **argv)
 		appWindow->setGlobalApplicationInformationObject(globAppInformation);
 		MainAppInfo::SetMainWindow(appWindow);
 		GlobalApplicationInformation::MainProgramModeFlags flags = GlobalApplicationInformation::Default;
+		QString tempStr = "";
 		if (argc > 2)
 		{
-			QString tempStr = "";
 			for (int i = 1; i<argc;i++)
 			{
 				tempStr = argv[i];
@@ -138,14 +138,26 @@ int main(int argc, char **argv)
 					{
 						i = i + 1;
 						tempStr = argv[i];					
-						flags = (GlobalApplicationInformation::Default | GlobalApplicationInformation::MainProgramModeFlag(tempStr.toInt()));
+						flags = (flags | GlobalApplicationInformation::MainProgramModeFlag(tempStr.toInt()));
 					}				
+				}
+				else if (tempStr == "-v" | tempStr == "-V")//verbose mode?
+				{
+					flags = (flags | GlobalApplicationInformation::VerboseMode);
 				}
 			}
 		}
 		else if (argc == 2)//only path declared!
 		{
-			appWindow->setStartupFiles(argv[1]);
+			tempStr = argv[1];
+			if (tempStr == "-v" | tempStr == "-V")//verbose mode?
+			{
+				flags = (flags | GlobalApplicationInformation::VerboseMode);
+			}
+			else
+			{
+				appWindow->setStartupFiles(argv[1]);
+			}			
 		}
 		appWindow->initialize(flags);
 		// connect message queue to the main window.

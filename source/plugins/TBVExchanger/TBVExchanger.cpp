@@ -42,12 +42,13 @@ TBVExchanger::TBVExchanger(QObject *parent) : QObject(parent)
 
 TBVExchanger::~TBVExchanger()
 {
-	disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePreStep,this,&TBVExchanger::executePreStep);
-	disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePostStep,this,&TBVExchanger::executePostStep);
-	disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePostRun,this,&TBVExchanger::executePostRun);
-	disconnect(tbvNetwIntFace,&TBVNetworkInterface::disconnected,this,&TBVExchanger::disconnected);
-	disconnect(tbvNetwIntFace,&TBVNetworkInterface::connected,this,&TBVExchanger::connected);
-	disconnect(tbvNetwIntFace,&TBVNetworkInterface::connectionError,this,&TBVExchanger::connectionError);
+	//You don't have to manually disconnect signals and slots, the QObject destruction cleans them up automatically
+	//disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePreStep,this,&TBVExchanger::executePreStep);
+	//disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePostStep,this,&TBVExchanger::executePostStep);
+	//disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePostRun,this,&TBVExchanger::executePostRun);
+	//disconnect(tbvNetwIntFace,&TBVNetworkInterface::disconnected,this,&TBVExchanger::disconnected);
+	//disconnect(tbvNetwIntFace,&TBVNetworkInterface::connected,this,&TBVExchanger::connected);
+	//disconnect(tbvNetwIntFace,&TBVNetworkInterface::connectionError,this,&TBVExchanger::connectionError);
 	if(tbvNetwIntFace)
 	{
 		delete tbvNetwIntFace;

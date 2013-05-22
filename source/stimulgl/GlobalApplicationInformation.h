@@ -120,7 +120,8 @@ public:
 		Default						= 0,
 		DisableAllScriptBindings	= 1,
 		DisableAllPlugins			= 2,
-		DisableSplash				= 4
+		DisableSplash				= 4,
+		VerboseMode					= 8
 	};
 	Q_DECLARE_FLAGS(MainProgramModeFlags, MainProgramModeFlag)
 

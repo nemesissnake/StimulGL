@@ -16,14 +16,19 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+#ifndef QDEFAULTQMLPLUGIN_H
+#define QDEFAULTQMLPLUGIN_H
+
 #include <QtQml/QtQml>
 
 class QDefaultQmlPlugin : public QQmlExtensionPlugin
 {
 	Q_OBJECT
-	Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" "DefaultQMLPlugin")
+	//Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" "DefaultQMLPlugin")
+	Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" FILE DefaultQMLPlugin.json)
 
 public:
 	void registerTypes(const char *uri);
 };
+#endif QDEFAULTQMLPLUGIN_H
 
