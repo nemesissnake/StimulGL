@@ -215,6 +215,11 @@ bool QML2Viewer::setExperimentObjectReadyToUnlock()
 	return bResult;
 }
 
+QWidget * QML2Viewer::getWidget()
+{
+	return qobject_cast<QWidget*>(quick2ViewerWindow); //(QWidget*)quick2ViewerWindow;
+}
+
 bool QML2Viewer::startObject()
 {	
 	quick2ViewerWindow->showFullScreen();//Fastest uncomment this

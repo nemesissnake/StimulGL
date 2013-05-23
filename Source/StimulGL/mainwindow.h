@@ -25,6 +25,10 @@
 #define MAINWINDOW_H
 //#define QT_NO_PLUGIN_CHECK
 
+#ifndef QT_WIDGETS_LIB
+#define QT_WIDGETS_LIB
+#endif
+
 #include <QString>
 #include <QStringList>
 #include <QDir>
@@ -34,6 +38,8 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QNetworkInterface>
+#include <QTest>
+#include <QTestEventList>
 
 #include "documentwindow.h"
 #include "documentmanager.h"
@@ -120,6 +126,7 @@ public slots:
 	void activateMainWindow();
 	QScriptValue executeScriptContent(const QString &sContent);
 	bool restartScriptEngine();
+	bool emulateKeyPress(QWidget *pWidget = NULL, const QString &sKeys = "", const int &nDelay = 0);
 	
 	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());

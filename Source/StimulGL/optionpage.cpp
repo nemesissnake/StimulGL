@@ -72,7 +72,7 @@ bool OptionPage::validateIPAddressString(QString &input) const
 		//	emptyGroup = true;
 		//	continue;
 		//}
-		int nVal = slist[i].toInt(&bCanConvert);
+		nVal = slist[i].toInt(&bCanConvert);
 		if(!bCanConvert || nVal<0 || nVal>255) 
 			return false;
 	}

@@ -70,6 +70,7 @@ public slots:
 	bool removePixmapFromImageBuffer(const QString &ID);
 	bool setExperimentManager(ExperimentManager *expManager);
 	bool setExperimentObjectReadyToUnlock();
+	QWidget *getWidget();
 
 protected:
 	bool eventFilter(QObject *target, QEvent *event);
@@ -107,5 +108,6 @@ private:
 };
 Q_DECLARE_METATYPE(QML2Viewer)
 Q_DECLARE_METATYPE(QML2Viewer*)
+Q_DECLARE_METATYPE(QWidget*)
 
 #endif // QML2VIEWER_H

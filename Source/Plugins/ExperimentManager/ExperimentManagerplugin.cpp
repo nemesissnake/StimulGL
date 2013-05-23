@@ -298,6 +298,7 @@ int ExperimentManagerPlugin::GetAdditionalFileTypeStyle(QString strExtension)
 	{
 		return GlobalApplicationInformation::DOCTYPE_STYLE_QML;
 	}	
+	return GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;
 }
 
 QString ExperimentManagerPlugin::GetAdditionalFileTypeApiName(QString strExtension) 
@@ -310,6 +311,7 @@ QString ExperimentManagerPlugin::GetAdditionalFileTypeApiName(QString strExtensi
 	{
 		return "";//not jet implemented
 	}
+	return "";
 }
 
 QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtension)

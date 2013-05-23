@@ -626,6 +626,7 @@ void MainWindow::receivedNetworkData()
 	{
 		write2OutputWindow("-> SocketData Successfully executed by the Script Engine.");
 	}
+	receivedNetworkData();
 }
 
 void MainWindow::errorNetworkData(QAbstractSocket::SocketError socketError)
@@ -679,6 +680,9 @@ void MainWindow::setupScriptEngine()
 	QScriptValue logVal = AppScriptEngine->eng->newFunction(myPrintFunction);//wrap function to QScriptValue
 	logVal.setData(AppScriptEngine->eng->newQObject(outputWindowList));//this data is not script-accessible, but the newQObject can be retrieved using QScriptContext::callee() 
 	AppScriptEngine->eng->globalObject().setProperty("Log", logVal);
+
+	//QScriptValue keypressVal = AppScriptEngine->eng->newFunction(myKeyPressFunction);//wrap function to QScriptValue
+	//AppScriptEngine->eng->globalObject().setProperty("KeyPress", keypressVal);
 
 	QScriptValue beepVal = AppScriptEngine->eng->newFunction(myBeepFunction);
 	AppScriptEngine->eng->globalObject().setProperty("Beep", beepVal);
@@ -750,6 +754,31 @@ bool MainWindow::restartScriptEngine()
 	configureDebugger();
 	updateMenuControls(tmpSubWindow);
 	resetContextState();
+	return true;
+}
+
+bool MainWindow::emulateKeyPress(QWidget *pWidget, const QString &sKeys, const int &nDelay)
+{
+	//char cKey = 'a';
+	//QWidget *pWin = QApplication::activeWindow();
+	//QTest::keyClick(pWin, Qt::Key_1);//, Qt::NoModifier, 200);
+	//QTest::keyClick(this, cKey);
+	//QKeyEvent event(QEvent::KeyPress, Qt::Key_A, Qt::NoModifier,"as",true,10);
+	//QApplication::sendEvent(this, &event);
+
+	QTestEventList events;
+	events.addKeyClicks(sKeys);
+	events.addDelay(500);
+	if(pWidget)
+	{
+		events.simulate(pWidget);
+	}
+	else
+	{
+		QMdiSubWindow *currentSub = activeMdiChild();
+		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
+		events.simulate(tmpCustomQsciScintilla);//pWin);//tmpCustomQsciScintilla);//currentSub);//qApp->activeWindow());//this);
+	}
 	return true;
 }
 
