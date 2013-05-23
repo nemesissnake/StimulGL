@@ -757,27 +757,20 @@ bool MainWindow::restartScriptEngine()
 	return true;
 }
 
-bool MainWindow::emulateKeyPress(QWidget *pWidget, const QString &sKeys, const int &nDelay)
+bool MainWindow::emulateKeyPress(QWindow *pWindow, const int keyCode, const QString &sKeys, const Qt::KeyboardModifiers modifier, const int nDelay)
 {
-	//char cKey = 'a';
-	//QWidget *pWin = QApplication::activeWindow();
-	//QTest::keyClick(pWin, Qt::Key_1);//, Qt::NoModifier, 200);
-	//QTest::keyClick(this, cKey);
-	//QKeyEvent event(QEvent::KeyPress, Qt::Key_A, Qt::NoModifier,"as",true,10);
-	//QApplication::sendEvent(this, &event);
-
 	QTestEventList events;
 	events.addKeyClicks(sKeys);
 	events.addDelay(500);
-	if(pWidget)
+	if(pWindow)
 	{
-		events.simulate(pWidget);
+		QTest::sendKeyEvent(QTest::Click,pWindow,(Qt::Key)keyCode,sKeys,modifier,nDelay);
 	}
 	else
 	{
 		QMdiSubWindow *currentSub = activeMdiChild();
 		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
-		events.simulate(tmpCustomQsciScintilla);//pWin);//tmpCustomQsciScintilla);//currentSub);//qApp->activeWindow());//this);
+		events.simulate(tmpCustomQsciScintilla);
 	}
 	return true;
 }

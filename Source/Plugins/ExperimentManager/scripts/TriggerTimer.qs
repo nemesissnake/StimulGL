@@ -1,4 +1,4 @@
-var sTimerType = "TriggerTimer"; //Choose: QTimer | TriggerTimer
+var sTimerType = "QTimer";//"TriggerTimer"; //Choose: QTimer | TriggerTimer
 
 var sTimer; 
 var sTimeObject;

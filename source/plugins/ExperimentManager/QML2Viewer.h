@@ -21,6 +21,7 @@
 #define QML2VIEWER_H
 
 //#include "Quick2ContainerWidget.h"
+#include <QQmlContext>
 #include "qtquick2applicationviewer.h"
 #include "ExperimentEngine.h"
 #include "ImageListModel.h"
@@ -64,13 +65,15 @@ public slots:
 	bool setObjectID(int nObjID);
 	bool initObjectBlockTrial();
 	QVariant invokeQml2Method(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());	
+	//QVariant invokeQml2JavaScriptCode(const QString &sCode);
+
 	QString addPixmapToImageBuffer(const QPixmap &pixmap);
 	bool getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
 	bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
 	bool removePixmapFromImageBuffer(const QString &ID);
 	bool setExperimentManager(ExperimentManager *expManager);
 	bool setExperimentObjectReadyToUnlock();
-	QWidget *getWidget();
+	QScriptValue getWindow();
 
 protected:
 	bool eventFilter(QObject *target, QEvent *event);
@@ -87,6 +90,7 @@ private:
 	void deleteQML2ViewerWindow();
 
 	ExperimentManager *experimentManager;
+	//QScriptEngine *currentScriptEngine;
 	cExperimentStructure *currentExperimentStructure;
 	QFile tmpFile;
 	//QmlErrorHandler *qmlErrorHandler;
@@ -108,6 +112,6 @@ private:
 };
 Q_DECLARE_METATYPE(QML2Viewer)
 Q_DECLARE_METATYPE(QML2Viewer*)
-Q_DECLARE_METATYPE(QWidget*)
+Q_DECLARE_METATYPE(QWindow*)
 
 #endif // QML2VIEWER_H

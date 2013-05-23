@@ -119,8 +119,16 @@ bool QML2Viewer::makeThisAvailableInScript(QString strObjectScriptName, QObject 
 
 QScriptValue QML2Viewer::ctor_QML2Viewer(QScriptContext* context, QScriptEngine* engine)
 {
-	return engine->newQObject(new QML2Viewer(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
+	QML2Viewer *tmpObject = new QML2Viewer();
+	tmpObject->setScriptEngine(engine);
+	return engine->newQObject(tmpObject, QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
+
+//bool QML2Viewer::setScriptEngine(QScriptEngine *pScriptEngine) 
+//{
+//	currentScriptEngine = pScriptEngine;
+//	return true;
+//}
 
 void QML2Viewer::initialize()
 {
@@ -215,9 +223,13 @@ bool QML2Viewer::setExperimentObjectReadyToUnlock()
 	return bResult;
 }
 
-QWidget * QML2Viewer::getWidget()
+QScriptValue QML2Viewer::getWindow()
 {
-	return qobject_cast<QWidget*>(quick2ViewerWindow); //(QWidget*)quick2ViewerWindow;
+	QWindow *tmpWindow = qobject_cast<QWindow*>(quick2ViewerWindow);
+	QScriptEngine *currScriptEngine = getScriptEngine();
+	if(currScriptEngine)
+		return currScriptEngine->newQObject(tmpWindow);
+	return NULL;
 }
 
 bool QML2Viewer::startObject()
@@ -252,6 +264,35 @@ bool QML2Viewer::initObjectBlockTrial()
 	parseExperimentObjectBlockParameters(false);
 	return true;
 }
+
+/*
+QVariant QML2Viewer::invokeQml2JavaScriptCode(const QString &sCode)//"functionsID.set3DMeshAnimation('',10,-10,3800);");
+{
+	QQmlEngine *tmpEngine = quick2ViewerWindow->engine();
+	QQmlContext *tmpRootContext = tmpEngine->rootContext();
+	////QQmlContext *tmpRootContext = new QQmlContext(tmpEngine->rootContext());
+	//QObject *tmpQObject = tmpRootContext.contextObject();
+	tmpEngine = tmpRootContext->engine();
+	//QVariant tmpVar = tmpRootContext->contextProperty("id");//"width");
+	////void QQmlContext::setContextProperty(const QString & name, const QVariant & value)
+	QJSValue jsValue = tmpEngine->globalObject();
+	QString sError = jsValue.toString();
+	jsValue = jsValue.property("width");//width);
+	sError = jsValue.toString();
+	if(tmpEngine)
+	{
+		QJSValue jsValue = tmpEngine->evaluate(sCode);//"functionsID.set3DMeshAnimation('',10,-10,3800);");
+		if(jsValue.isError())
+		{
+			QString sError = jsValue.toString();
+			qDebug() << __FUNCTION__ << sError;
+				return NULL;
+		}
+		return jsValue.toVariant();
+	}
+	return NULL;
+}
+*/
 
 QVariant QML2Viewer::invokeQml2Method(QString strRootObjectName, QString strMethodName, QVariant inputValue1, QVariant inputValue2, QVariant inputValue3, QVariant inputValue4, QVariant inputValue5, QVariant inputValue6, QVariant inputValue7, QVariant inputValue8, QVariant inputValue9)
 {

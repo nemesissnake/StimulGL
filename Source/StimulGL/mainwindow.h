@@ -126,8 +126,8 @@ public slots:
 	void activateMainWindow();
 	QScriptValue executeScriptContent(const QString &sContent);
 	bool restartScriptEngine();
-	bool emulateKeyPress(QWidget *pWidget = NULL, const QString &sKeys = "", const int &nDelay = 0);
-	
+	bool emulateKeyPress(QWindow *pWindow = NULL, const int keyCode = 0, const QString &sKeys = "", const Qt::KeyboardModifiers modifier = Qt::NoModifier, const int nDelay = -1);
+
 	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
 	void findNext();
