@@ -43,7 +43,7 @@ public:
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 	TCPNetworkServer(QObject *parent = 0);
 	~TCPNetworkServer();
-	TCPNetworkServer(const TCPNetworkServer& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	TCPNetworkServer(const TCPNetworkServer& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script

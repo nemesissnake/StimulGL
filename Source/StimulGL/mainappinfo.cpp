@@ -26,47 +26,6 @@
 QFile *MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
 QWidget *MainAppInfo::mainWindow = NULL;//Needed to initialize the static variable!
 
-QDir MainAppInfo::appDebugDirPath()
-{
-	QDir appDebugDir = QDir(appDirPath());
-#if defined(Q_OS_WIN)
-	if (appDebugDir.dirName().toLower() == "debug" || appDebugDir.dirName().toLower() == "release")
-	{
-		appDebugDir.cdUp();
-		if (appDebugDir.dirName().toLower() == "win32" || appDebugDir.dirName().toLower() == "x64")//This is now unnecessary in VS2010! It is solved by changing the debugpath to the install dir.
-		{
-			appDebugDir.cdUp();
-			appDebugDir.cdUp();
-			appDebugDir.cdUp();
-			appDebugDir.cd("Install");			
-		}
-	}
-#elif defined(Q_OS_MAC)
-	if (appDebugDir.dirName() == "MacOS") {
-		appDebugDir.cdUp();
-		appDebugDir.cdUp();
-		appDebugDir.cdUp();
-	}
-#endif
-	return appDebugDir.absolutePath();
-}
-
-QString MainAppInfo::pluginsDirPath()
-{
-	QDir pluginsDir = appDebugDirPath();
-	pluginsDir.cd("plugins");
-	if(!pluginsDir.exists())
-		return appDebugDirPath().absolutePath();
-	#ifdef WIN64
-		pluginsDir.cd("x64");
-	#else
-		pluginsDir.cd("Win32");
-	#endif
-	//if(!pluginsDir.exists())
-	//	return appDebugDirPath().absolutePath();
-	return pluginsDir.absolutePath();
-}
-
 QString MainAppInfo::outputsDirPath()
 {
 	QDir pluginsDir = appDirPath();

@@ -136,6 +136,7 @@ void SerialPortDevice_Dialog::on_cancelButton_clicked()
 
 void SerialPortDevice_Dialog::closeEvent(QCloseEvent * e)
 {
+	Q_UNUSED(e);
 	on_cancelButton_clicked();
 }
 
@@ -168,6 +169,7 @@ void SerialPortDevice_Dialog::pushButton_btnAvailablePorts_Pressed()
 
 void SerialPortDevice_Dialog::onPortNameChanged(const QString &sName)//name
 {
+	Q_UNUSED(sName);
 	if (serialPort->isOpen()) 
 	{
 		serialPort->close();

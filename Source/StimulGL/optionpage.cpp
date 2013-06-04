@@ -92,17 +92,17 @@ void OptionPage::applySettings()
 	
 	if (ui.rdb_3DRenderer->isChecked())	
 	{		
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Native, "int");//SvgView::Native);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 0, "int");//SvgView::Native);	
 		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false, "bool");
 	}
 	else if (ui.rdb_3DRenderer_2->isChecked()) 
 	{
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::OpenGL, "int");//SvgView::OpenGL);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 1, "int");//SvgView::OpenGL);	
 		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, (bool)(ui.chk_HighAntiAFilter->checkState() && Qt::Checked), "bool");
 	}
 	else if (ui.rdb_3DRenderer_3->isChecked()) 
 	{
-		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, SvgView::Image, "int");//SvgView::Image);	
+		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 2, "int");//SvgView::Image);	
 		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false, "bool");
 	}
 }
@@ -140,16 +140,16 @@ void OptionPage::readSettings()
 	}
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_RENDERTYPE))
 	{
-		SvgView::RendererType rValue = (SvgView::RendererType)glob_AppInfo->getRegistryInformation(REGISTRY_RENDERTYPE).toInt();
-		switch (rValue)
+		int nValue = glob_AppInfo->getRegistryInformation(REGISTRY_RENDERTYPE).toInt();//(SvgView::RendererType)
+		switch (nValue)
 		{
-		case SvgView::Native://Native
+		case 0://SvgView::Native://Native
 			{
 				ui.chk_HighAntiAFilter->setChecked(false);
 				ui.rdb_3DRenderer->setChecked(true);
 				break;
 			}
-		case SvgView::OpenGL://OpenGL
+		case 1://SvgView::OpenGL://OpenGL
 			{
 				if(glob_AppInfo->checkRegistryInformation(REGISTRY_HQANTIALIAS))
 				{
@@ -163,7 +163,7 @@ void OptionPage::readSettings()
 				ui.rdb_3DRenderer_2->setChecked(true);
 				break;
 			}
-		case SvgView::Image://Image
+		case 2://SvgView::Image://Image
 			{
 				ui.chk_HighAntiAFilter->setChecked(false);
 				ui.rdb_3DRenderer_3->setChecked(true);

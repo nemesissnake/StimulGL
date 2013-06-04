@@ -29,7 +29,8 @@ TriggerTimer::TriggerTimer() : QObject(NULL)
 {
 	currentScriptEngine = NULL;
 	nThreadIdealCount = QThread::idealThreadCount();
-	bool bResult = connect(this,SIGNAL(stopTimerSignal()),&ThreadActivationTrigger,SLOT(stop()));
+	//bool bResult = 
+		connect(this,SIGNAL(stopTimerSignal()),&ThreadActivationTrigger,SLOT(stop()));
 	moveToThread(&_thread);
 	_thread.start();
 	ThreadActivationTrigger.setInterval(THREADACTIVATIONTRIGGERTIME);
@@ -76,6 +77,7 @@ TriggerTimer::~TriggerTimer()
 
 QScriptValue TriggerTimer::ctor__triggerTimer(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	return engine->newQObject(new TriggerTimer(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 }
 
@@ -95,9 +97,9 @@ bool TriggerTimer::makeThisAvailableInScript(QString strObjectScriptName, QObjec
 void TriggerTimer::createTimerTypeHashTable()
 {
 	timerTypeHash.clear();
-	timerTypeHash.insert("QPC_TriggerTimerType", (int)TriggerTimerType::QPC_TriggerTimerType);
-	timerTypeHash.insert("QTimer_TriggerTimerType", (int)TriggerTimerType::QTimer_TriggerTimerType);
-	timerTypeHash.insert("QPCNew_TriggerTimerType", (int)TriggerTimerType::QPCNew_TriggerTimerType);
+	timerTypeHash.insert("QPC_TriggerTimerType", (int)QPC_TriggerTimerType);
+	timerTypeHash.insert("QTimer_TriggerTimerType", (int)QTimer_TriggerTimerType);
+	timerTypeHash.insert("QPCNew_TriggerTimerType", (int)QPCNew_TriggerTimerType);
 }
 
 bool TriggerTimer::setTimerType(const QString &sNewTimerType)

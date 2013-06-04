@@ -60,7 +60,7 @@ void GlobalApplicationInformation::Initialize()
 
 	mainAppInformation.bDoNotLoadScriptBindings = false;
 	mainAppInformation.bOpenExtDebug = false;
-	mainAppInformation.rRendererType = SvgView::OpenGL;
+	mainAppInformation.rRendererType = 1;//SvgView::OpenGL;
 	mainAppInformation.bHQAntiAlias = false;
 	mainAppInformation.bAllowMultipleInheritance = false;
 	mainAppInformation.bEnableNetworkServer = false;
@@ -94,7 +94,7 @@ QDataStream &operator>>(QDataStream &in, MainAppInformationStructure &mainAppInf
 	in >> mainAppInformationStructure.bDoNotLoadScriptBindings;
 	in >> mainAppInformationStructure.bOpenExtDebug; 
 	in >> nTemp;
-	mainAppInformationStructure.rRendererType = (SvgView::RendererType)nTemp;
+	mainAppInformationStructure.rRendererType = nTemp;//(SvgView::RendererType)nTemp;
 	in >> mainAppInformationStructure.bHQAntiAlias; 
 	in >> mainAppInformationStructure.bAllowMultipleInheritance;
 	in >> mainAppInformationStructure.bEnableNetworkServer;
@@ -222,11 +222,11 @@ void GlobalApplicationInformation::initAndParseRegistrySettings()
 
 	if (AppRegistrySettings->contains(REGISTRY_RENDERTYPE)) 
 	{
-		mainAppInformation.rRendererType = (SvgView::RendererType)AppRegistrySettings->value(REGISTRY_RENDERTYPE).toInt();
+		mainAppInformation.rRendererType = AppRegistrySettings->value(REGISTRY_RENDERTYPE).toInt();//(SvgView::RendererType)
 	}
 	else //key doesn't exist, default value here!
 	{
-		mainAppInformation.rRendererType = SvgView::OpenGL;
+		mainAppInformation.rRendererType = 1;//SvgView::OpenGL;
 		AppRegistrySettings->setValue(REGISTRY_RENDERTYPE, (int)mainAppInformation.rRendererType);
 	}
 

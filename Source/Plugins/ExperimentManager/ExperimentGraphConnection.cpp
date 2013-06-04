@@ -84,7 +84,8 @@ void ExperimentGraphConnection::updatePath()
 	//QPointF ctr2(pos1.x() + dx * bezX2, pos1.y() + dy * bezY2);
 
 	double diffX = pos2.x() - pos1.x();
-	double diffY = pos2.y() - pos1.y();
+	//double diffY = pos2.y() - pos1.y();
+	
 	//double half_diffy = diffY/2;
 	QPointF ctr1;
 	QPointF ctr2;

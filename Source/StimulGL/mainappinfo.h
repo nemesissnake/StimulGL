@@ -57,10 +57,24 @@ public:
 	static bool SetMainWindow(QWidget *mainWin);
 	static QString appDirPath()						{return QDir(QCoreApplication::applicationDirPath()).absolutePath();}
 	static QString appDocDirPath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}
-	static QString appExampleDirPath()				{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}
+	static QString appExampleDirPath()				{return (QDir::homePath() + QDir::separator() + "Documents" + QDir::separator() + MAIN_PROGRAM_INTERNAL_NAME "_" MAIN_PROGRAM_FILE_VERSION_STRING + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}//appDirPath() + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}
 	static QString appLogFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_LOGFILE_NAME);}
 	static QString appXsdFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_XSD_DIRNAME + QDir::separator());}
-	static QString pluginsDirPath();
+	static QString pluginsDirPath()
+	{
+		QDir pluginsDir = appDebugDirPath();
+		pluginsDir.cd("plugins");
+		if(!pluginsDir.exists())
+			return appDebugDirPath().absolutePath();
+#ifdef WIN64
+		pluginsDir.cd("x64");
+#else
+		pluginsDir.cd("Win32");
+#endif
+		//if(!pluginsDir.exists())
+		//	return appDebugDirPath().absolutePath();
+		return pluginsDir.absolutePath();
+	};
 	static QString outputsDirPath();
 	static QString qmlExtensionsPluginDirPath();
 	static QWidget* getMainWindow()					{return mainWindow;};
@@ -80,7 +94,30 @@ public:
 	static bool CreateHashTableFromEnumeration(const QString &sTypeName, QHash<QString, int> &hTable, const QMetaObject metaObject);
 
 private:	
-	static QDir appDebugDirPath();
+	static QDir appDebugDirPath()
+	{
+		QDir appDebugDir = QDir(appDirPath());
+#if defined(Q_OS_WIN)
+		if (appDebugDir.dirName().toLower() == "debug" || appDebugDir.dirName().toLower() == "release")
+		{
+			appDebugDir.cdUp();
+			if (appDebugDir.dirName().toLower() == "win32" || appDebugDir.dirName().toLower() == "x64")//This is now unnecessary in VS2010! It is solved by changing the debugpath to the install dir.
+			{
+				appDebugDir.cdUp();
+				appDebugDir.cdUp();
+				appDebugDir.cdUp();
+				appDebugDir.cd("Install");			
+			}
+		}
+#elif defined(Q_OS_MAC)
+		if (appDebugDir.dirName() == "MacOS") {
+			appDebugDir.cdUp();
+			appDebugDir.cdUp();
+			appDebugDir.cdUp();
+		}
+#endif
+		return appDebugDir.absolutePath();
+	};
 };
 
 #endif // MAINAPPINFO_H

@@ -71,6 +71,7 @@ void HIDCalibrateDialog::ResetCurrentCalibration()
 
 void HIDCalibrateDialog::HIDButtonPressed(unsigned char cButtonValue,unsigned char cChangedByteValue)
 {
+	Q_UNUSED(cButtonValue);
 	if (cChangedByteValue & 1)//Left HID Button pressed;
 	{
 		StartCalibration();

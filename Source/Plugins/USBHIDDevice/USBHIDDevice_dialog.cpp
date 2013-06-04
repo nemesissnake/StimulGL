@@ -104,6 +104,7 @@ void USBHIDDevice_Dialog::on_cancelButton_clicked()
 
 void USBHIDDevice_Dialog::closeEvent(QCloseEvent * e)
 {
+	Q_UNUSED(e);
 	on_cancelButton_clicked();
 }
 
@@ -316,6 +317,7 @@ void USBHIDDevice_Dialog::CaptureHasStopped(QString sMessage)
 
 void USBHIDDevice_Dialog::HIDButtonPressed(unsigned char cButtonValue,unsigned char cChangedByteValue)
 {
+	Q_UNUSED(cChangedByteValue);
 	QString tmpString;
 	ui.lineEdit_Buttons->setText(tmpString.setNum(cButtonValue,10));
 }

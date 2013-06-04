@@ -43,7 +43,8 @@ bool SerialPortDevicePlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<SerialPortDevice*>(), SerialPortDeviceProto);
 	QScriptValue SerialPortDeviceCtor = engine.newFunction(SerialPortDevice::ctor__extensionname, SerialPortDeviceProto);
 	engine.globalObject().setProperty(PLUGIN_SCRIPTOBJECT_NAME, SerialPortDeviceCtor);
-	int nRes = qRegisterMetaType<SerialPortDevice>(PLUGIN_SCRIPTOBJECT_NAME);
+	//int nRes = 
+		qRegisterMetaType<SerialPortDevice>(PLUGIN_SCRIPTOBJECT_NAME);
 	//FinalizeScriptObjectScriptContext(engine, SerialPortDeviceObject);
 	return true;
 }

@@ -39,14 +39,11 @@ class MainWindow;
 int main(int argc, char **argv)
 {
 	bool bProceed = true;
-	QString sResult = QDir::toNativeSeparators(QDir(QCoreApplication::applicationDirPath()).absolutePath());
-	if(QProcessEnvironment::systemEnvironment().value(QString("QT_QPA_PLATFORM_PLUGIN_PATH"),sResult) == false)
-	{
-		//bool bResult = 
-			qputenv("QT_QPA_PLATFORM_PLUGIN_PATH",sResult.toLatin1());
-		//sResult = "";
-		//sResult = QProcessEnvironment::systemEnvironment().value(QString("QT_QPA_PLATFORM_PLUGIN_PATH"),sResult);
-	}
+	//QString sResult = QDir::toNativeSeparators(QDir(QCoreApplication::applicationDirPath()).absolutePath());
+	//if(QProcessEnvironment::systemEnvironment().value(QString("QT_QPA_PLATFORM_PLUGIN_PATH"),sResult) == false)
+	//{
+	//	qputenv("QT_QPA_PLATFORM_PLUGIN_PATH",sResult.toLatin1());
+	//}
 	MainAppExchange appExchange(argc, argv, MAIN_PROGRAM_SHARED_MEM_KEY);
 	GlobalApplicationInformation *globAppInformation = appExchange.getGlobalAppInformationObjectPointer();
 	if (appExchange.isRunning())
@@ -159,6 +156,9 @@ int main(int argc, char **argv)
 				appWindow->setStartupFiles(argv[1]);
 			}			
 		}
+		if (appExchange.isRunning())
+			flags = flags | GlobalApplicationInformation::DisableNetworkServer;
+
 		appWindow->initialize(flags);
 		// connect message queue to the main window.
 		QObject::connect(&appExchange, SIGNAL(messageAvailable(QString)), appWindow, SLOT(receiveExchangeMessage(QString)));

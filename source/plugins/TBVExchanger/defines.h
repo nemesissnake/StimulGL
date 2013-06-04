@@ -32,15 +32,15 @@
 #define PLUGIN_PRODUCT_VERSION_STRING_BUILD			1
 #define PLUGIN_LEGAL_COPYRIGHT						"Copyright (C) 2013"
 #define PLUGIN_AUTHOR_NAME							"Sven Gijsen"
-#define PLUGIN_AUTHOR_EMAIL							"authoremail goes here"
-#define PLUGIN_COMPANY_NAME							"companyname goes here"
+#define PLUGIN_AUTHOR_EMAIL							"sven.gijsen@maastrichtuniversity.nl"
+#define PLUGIN_COMPANY_NAME							"MBIC, Maastricht Brain Imaging Center"
 #define PLUGIN_INTERNAL_NAME						"TBVExchanger"
 #define PLUGIN_SCRIPTOBJECT_NAME					"TBVExchanger"
 #define PLUGIN_PRODUCT_NAME							PLUGIN_INTERNAL_NAME
 #define PLUGIN_INTERNAL_EXTENSION					"dll"
 #define PLUGIN_ORIGINAL_FILENAME					PLUGIN_INTERNAL_NAME "." PLUGIN_INTERNAL_EXTENSION
 #define PLUGIN_FULL_NAME							PLUGIN_INTERNAL_NAME "(v" PLUGIN_FILE_VERSION_STRING ")"
-#define PLUGIN_FILE_DESCRIPTION						"<TBVExchanger description goes here>"
+#define PLUGIN_FILE_DESCRIPTION						"StimulGL Plugin that makes communication to Turbo Brain Voyager possible"
 #define PLUGIN_INFORMATION							PLUGIN_INTERNAL_NAME " Plugin(v" PLUGIN_FILE_VERSION_STRING ") by " PLUGIN_AUTHOR_NAME
 #define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION			MAIN_PROGRAM_FILE_VERSION_STRING//Make sure to override the GetMinimalMainProgramVersion() function with this defined value when needed!
 //Only edit until here!

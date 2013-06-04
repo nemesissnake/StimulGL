@@ -38,6 +38,7 @@ KeyBoardPlugin::~KeyBoardPlugin()
 
 QScriptValue ctor_KeyBoard(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	//	if (context->isCalledAsConstructor()) {
 	//		// initialize the new object
 	//		//context->thisObject().setProperty("bar", ...);

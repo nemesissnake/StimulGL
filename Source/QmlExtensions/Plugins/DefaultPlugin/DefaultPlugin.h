@@ -24,8 +24,8 @@
 class QDefaultQmlPlugin : public QQmlExtensionPlugin
 {
 	Q_OBJECT
-	//Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" "DefaultQMLPlugin")
-	Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" FILE DefaultQMLPlugin.json)
+	Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" "DefaultQMLPlugin")
+	//Q_PLUGIN_METADATA(IID "StimulGL.QML.Plugins.Default" FILE DefaultQMLPlugin.json)
 
 public:
 	void registerTypes(const char *uri);

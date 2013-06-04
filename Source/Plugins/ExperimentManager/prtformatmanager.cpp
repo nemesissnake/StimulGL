@@ -21,6 +21,7 @@
 
 QScriptValue PrtFormatManager::ctor__PrtFormatManager(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	return engine->newQObject(new PrtFormatManager(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 

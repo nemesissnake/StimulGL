@@ -62,6 +62,8 @@ QPixmap ModelIndexProvider::requestPixmap(const QString& id, QSize* size, const 
 
 void ModelIndexProvider::dataUpdated(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
+	Q_UNUSED(bottomRight);
+	Q_UNUSED(topLeft);
 	// For each pixmap already in the model, get a mapping between the name and the index
 	for(int row = 0; row < mModel.rowCount(); row++) {
 		QModelIndex index = mModel.index(row, 0);
@@ -72,6 +74,8 @@ void ModelIndexProvider::dataUpdated(const QModelIndex& topLeft, const QModelInd
 
 void ModelIndexProvider::dataDeleted(const QModelIndex&, int start, int end)
 {
+	Q_UNUSED(start);
+	Q_UNUSED(end);
 	mPixmapNames.clear();
 	// For each pixmap already in the model, get a mapping between the name and the index
 	for(int row = 0; row < mModel.rowCount(); row++) {

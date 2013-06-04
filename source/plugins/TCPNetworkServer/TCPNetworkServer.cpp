@@ -31,7 +31,7 @@ QScriptValue TCPNetworkServer::ctor__extensionname(QScriptContext* context, QScr
 	//		// return a non-object value to indicate that the
 	//		// thisObject() should be the result of the "new Foo()" expression
 	//		//return engine->undefinedValue();
-
+	Q_UNUSED(context);
 	return engine->newQObject(new TCPNetworkServer(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 

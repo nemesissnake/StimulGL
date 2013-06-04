@@ -119,6 +119,7 @@ bool QML2Viewer::makeThisAvailableInScript(QString strObjectScriptName, QObject 
 
 QScriptValue QML2Viewer::ctor_QML2Viewer(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	QML2Viewer *tmpObject = new QML2Viewer();
 	tmpObject->setScriptEngine(engine);
 	return engine->newQObject(tmpObject, QScriptEngine::ScriptOwnership);//Now call the below real Object constructor

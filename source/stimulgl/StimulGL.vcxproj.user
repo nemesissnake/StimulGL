@@ -3,6 +3,7 @@
   <PropertyGroup>
     <LocalDebuggerEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(PATH)
 PATH=
+
 QT_QPA_PLATFORM_PLUGIN_PATH=$(QTDIR)\plugins\platforms</LocalDebuggerEnvironment>
     <LocalDebuggerEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(PATH)
 PATH=

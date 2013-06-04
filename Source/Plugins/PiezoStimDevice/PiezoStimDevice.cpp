@@ -21,6 +21,7 @@
 
 QScriptValue PiezoStimDevice::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	return engine->newQObject(new PiezoStimDevice(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 

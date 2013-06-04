@@ -354,10 +354,12 @@ bool ImageProcessor::ConcatenateDatFiles(const QStringList &sourceImagePaths,con
 				{
 					int nDataSize = width*height*sizeof(QRgb);
 					readData = new char[nDataSize];
-					int nBytesRead = input.readRawData(readData,nDataSize);
+					//int nBytesRead = 
+						input.readRawData(readData,nDataSize);
 					if(i==0)
 						output << width << height;
-					int nBytesWritten = output.writeRawData(readData,nDataSize);
+					//int nBytesWritten = 
+						output.writeRawData(readData,nDataSize);
 					delete[] readData;
 				}
 				fileSource.close();
@@ -522,7 +524,7 @@ int ImageProcessor::SplitCDatFile(const QString &sourceImagePath,const QString &
 				int nDataSize = width*height*sizeof(QRgb);
 				char *readData;				
 				QString tmpFileStr = "";
-				for (int i=0;i<nNumberOfFrames;i++)
+				for (int i=0;i<(int)nNumberOfFrames;i++)
 				{
 					tmpFileStr = destinationPath + destPreFileName + "_" + QString::number(i) + ".dat";
 					fileDest.setFileName(tmpFileStr);
@@ -531,8 +533,10 @@ int ImageProcessor::SplitCDatFile(const QString &sourceImagePath,const QString &
 						QDataStream output(&fileDest);
 						readData = new char[nDataSize];
 						output << magic << width << height;
-						int nBytesRead = input.readRawData(readData,nDataSize);
-						int nBytesWritten = output.writeRawData(readData,nDataSize);
+						//int nBytesRead = 
+							input.readRawData(readData,nDataSize);
+						//int nBytesWritten = 
+							output.writeRawData(readData,nDataSize);
 						fileDest.close();
 						delete[] readData;
 					}

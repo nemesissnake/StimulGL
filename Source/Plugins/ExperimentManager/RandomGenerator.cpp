@@ -32,7 +32,7 @@ Q_DECLARE_METATYPE(QStringList)
 RandomGenerator::RandomGenerator(QObject *parent):QObject(parent)
 {
 	currentScriptEngine = NULL;
-	tCombinedRandGen == NULL;
+	tCombinedRandGen = NULL;
 	nSeed = QDateTime::currentDateTime().toString(RANDOMIZE_DATETIME_FORMAT).toInt();
 	tCombinedRandGen = new TRandomCombined<CRandomMersenne,CRandomMother>(nSeed);
 }

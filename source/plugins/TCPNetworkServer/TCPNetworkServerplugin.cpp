@@ -43,7 +43,8 @@ bool TCPNetworkServerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<TCPNetworkServer*>(), TCPNetworkServerProto);
 	QScriptValue TCPNetworkServerCtor = engine.newFunction(TCPNetworkServer::ctor__extensionname, TCPNetworkServerProto);
 	engine.globalObject().setProperty(PLUGIN_SCRIPTOBJECT_NAME, TCPNetworkServerCtor);
-    int nRes = qRegisterMetaType<TCPNetworkServer>(PLUGIN_SCRIPTOBJECT_NAME);
+    //int nRes = 
+		qRegisterMetaType<TCPNetworkServer>(PLUGIN_SCRIPTOBJECT_NAME);
 	//FinalizeScriptObjectScriptContext(engine, TCPNetworkServerObject);
 	return true;
 }

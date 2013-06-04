@@ -22,7 +22,7 @@
 
 #include <QCoreApplication>
 #include <QSettings>
-#include "svgview.h"
+//#include "svgview.h"
 #include "maindefines.h"
 
 typedef struct strcDocContentInfoStructure
@@ -40,7 +40,7 @@ typedef struct strMainAppInformation
 	QString sFileVersion;
 	bool bDoNotLoadScriptBindings;
 	bool bOpenExtDebug;
-	SvgView::RendererType rRendererType;
+	int rRendererType;//SvgView::RendererType
 	bool bHQAntiAlias;
 	bool bAllowMultipleInheritance;
 	bool bEnableNetworkServer;
@@ -121,7 +121,8 @@ public:
 		DisableAllScriptBindings	= 1,
 		DisableAllPlugins			= 2,
 		DisableSplash				= 4,
-		VerboseMode					= 8
+		DisableNetworkServer		= 8,
+		VerboseMode					= 16
 	};
 	Q_DECLARE_FLAGS(MainProgramModeFlags, MainProgramModeFlag)
 

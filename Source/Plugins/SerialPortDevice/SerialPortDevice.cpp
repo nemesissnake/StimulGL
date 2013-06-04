@@ -22,6 +22,7 @@
 
 QScriptValue SerialPortDevice::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	//this function gets called first whenever a new object is constructed trough the script
 
 	//	if (context->isCalledAsConstructor()) {
@@ -58,6 +59,9 @@ SerialPortDevice::SerialPortDevice(QObject *parent) : QObject(parent)
 {
 	currentScriptEngine = NULL;
 
+	#pragma warning(push)
+	#pragma warning(disable : 4482)
+
 	//Windows settings
 	serialPort = NULL;
 	serialPort = new QextSerialPort();
@@ -77,6 +81,8 @@ SerialPortDevice::SerialPortDevice(QObject *parent) : QObject(parent)
 	CreateHashTableFromEnum(QString(STOPBITS_ENUM_SHORT_TYPE_NAME),stopBitsHash);
 	CreateHashTableFromEnum(QString(QUERYMODE_ENUM_SHORT_TYPE_NAME),queryModeHash);
 	CreateHashTableFromEnum(QString(OPENMODE_ENUM_SHORT_TYPE_NAME),openModeHash);
+
+	#pragma warning(pop)
 
 	connect(serialPort, SIGNAL(readyRead()), this, SIGNAL(CaptureThreadReadyRead()));
 	connect(serialPort, SIGNAL(readyRead()), this, SLOT(ProcessSerialData()));
@@ -320,7 +326,7 @@ bool SerialPortDevice::open(QIODevice::OpenMode mode)
 bool SerialPortDevice::open(QString mode)
 {
 /*! Opens the Serial Port for further usage in the mode string parameter(mode), see SerialPortDevice::OpenMode_. */
-	QStringList tmpStrLst = mode.split("|",QString::SplitBehavior::SkipEmptyParts);
+	QStringList tmpStrLst = mode.split("|",QString::SkipEmptyParts);
 	int nFlags = 0;
 	bool bValueFound = false;
 	if (tmpStrLst.isEmpty() == false)

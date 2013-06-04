@@ -750,6 +750,7 @@ bool VisualExperimentEditor::parseExperimentStructure(cExperimentStructure *ExpS
 
 bool VisualExperimentEditor::createConnection(QGraphicsItem *from, QGraphicsItem *to, int nRepeats)
 {
+	Q_UNUSED(nRepeats);
 	if (from && from->type() == ExperimentGraphPort::Type)
 	{
 		if (to && to->type() == ExperimentGraphPort::Type)

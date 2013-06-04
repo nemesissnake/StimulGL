@@ -46,9 +46,11 @@ QString QtQuick2ApplicationViewerPrivate::adjustPath(const QString &path)
 
 QtQuick2ApplicationViewer::QtQuick2ApplicationViewer(QObject *parent) : QQuickView(), d(new QtQuick2ApplicationViewerPrivate())
 {
+	Q_UNUSED(parent);
 	//configureEventFilter(parent);
     //bool bResult = connect(engine(), &QQmlEngine::quit, this, &QWindow::close);
-	bool bResult = connect(engine(), &QQmlEngine::quit, this, &QtQuick2ApplicationViewer::qtQuick2EngineQuit);
+	//bool bResult = 
+		connect(engine(), &QQmlEngine::quit, this, &QtQuick2ApplicationViewer::qtQuick2EngineQuit);
     setResizeMode(QQuickView::SizeRootObjectToView);
 	this->setFlags(Qt::FramelessWindowHint);
 }

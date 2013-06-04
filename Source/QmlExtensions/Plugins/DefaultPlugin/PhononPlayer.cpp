@@ -112,6 +112,7 @@ bool PhononPlayer::setOutputDevice(const int nIndex)
  *  Sets the output device index to the integer parameter(nIndex).
  *  See also PhononPlayer::getOutputDevices.
  */
+	Q_UNUSED(nIndex);
 	//QT5PhononQList<Phonon::AudioOutputDevice> audioOutputDevices = Phonon::BackendCapabilities::availableAudioOutputDevices();
 	//QT5Phononif(audioOutputDevices.count() > nIndex)
 	{

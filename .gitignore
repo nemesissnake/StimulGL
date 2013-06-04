@@ -78,3 +78,6 @@ Source/Plugins/ExperimentManager/Template/*
 Source/Plugins/ExperimentManager/x64/Template/*
 Install/examples/GettingStartedGuide/ExperimentManager/experiments/tmp1.txt
 source/plugins/TCPNetworkServer/TCPNetworkServerplugin.vcxproj.user
+Source/Plugins/FirebirdClient/scripts/TEST.FDB
+Source/Plugins/FirebirdClient/scripts/Test.xls
+Install/firebird.msg

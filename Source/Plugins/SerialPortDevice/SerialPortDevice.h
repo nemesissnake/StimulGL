@@ -185,7 +185,7 @@ public:
 	};
 
 	SerialPortDevice(QObject *parent = 0);//unsigned short vendor_id = 0x181b, unsigned short product_id = 0x4002, QObject *parent = 0);
-	SerialPortDevice(const SerialPortDevice& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	SerialPortDevice(const SerialPortDevice& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	~SerialPortDevice();
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);

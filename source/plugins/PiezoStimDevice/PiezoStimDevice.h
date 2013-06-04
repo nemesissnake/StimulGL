@@ -75,7 +75,7 @@ signals:
 public:
 	PiezoStimDevice(QObject *parent = 0);
 	~PiezoStimDevice();
-	PiezoStimDevice(const PiezoStimDevice& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	PiezoStimDevice(const PiezoStimDevice& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 

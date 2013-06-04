@@ -70,6 +70,7 @@ bool RetinotopyMapper::setExperimentObjectReadyToUnlock()
 
 QScriptValue RetinotopyMapper::ctor__RetinotopyMapper(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	return engine->newQObject(new RetinotopyMapper(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 }
 

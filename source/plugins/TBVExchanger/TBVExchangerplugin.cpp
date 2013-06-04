@@ -43,7 +43,8 @@ bool TBVExchangerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<TBVExchanger*>(), TBVExchangerProto);
 	QScriptValue TBVExchangerCtor = engine.newFunction(TBVExchanger::ctor__extensionname, TBVExchangerProto);
 	engine.globalObject().setProperty(PLUGIN_SCRIPTOBJECT_NAME, TBVExchangerCtor);
-    int nRes = qRegisterMetaType<TBVExchanger>(PLUGIN_SCRIPTOBJECT_NAME);
+    //int nRes = 
+		qRegisterMetaType<TBVExchanger>(PLUGIN_SCRIPTOBJECT_NAME);
 	//FinalizeScriptObjectScriptContext(engine, TBVExchangerObject);
 	return true;
 }

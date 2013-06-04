@@ -47,7 +47,7 @@ signals:
 public:
 	TBVExchanger(QObject *parent = 0);
 	~TBVExchanger();
-	TBVExchanger(const TBVExchanger& other ){}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
+	TBVExchanger(const TBVExchanger& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 

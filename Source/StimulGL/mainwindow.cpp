@@ -39,8 +39,6 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 {
 	Plugins = NULL;
 	tcpServer = NULL;
-	clientConnection = NULL;
-	networkDataBlockSize = 0;
 	DocManager = NULL;
 	AppScriptEngine = NULL;
 	globAppInfo = NULL;
@@ -63,6 +61,71 @@ MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 
 MainWindow::~MainWindow()//see void MainWindow::closeEvent(QCloseEvent *event)!
 {
+}
+
+bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags)
+{
+	StimulGLFlags = mainFlags;
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
+	//Default					= 0x00000,
+	//DisablePlugins			= 0x00001,
+	//DisableSplash				= 0x00002
+	//QWaitCondition sleep;
+	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
+	//registerFileTypeByDefinition("StimulGL.QtScript","StimulGL Qt Script File",".qs");
+	//MainAppInfo::Initialize(this);
+	//QApplication::setGraphicsSystem("opengl");//"raster");
+	AppScriptStatus = GlobalApplicationInformation::NoScript;
+
+	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash) == false)
+	{
+		QPixmap pixmap(":/resources/splash.png");
+		MainSplashScreen = new QSplashScreen(pixmap);
+		MainSplashScreen->show();
+		showSplashMessage("Initializing Program...");
+	}
+	showSplashMessage("Setup User Interface...");
+	setupMDI();
+	setWindowTitle(globAppInfo->getTitle());//  MainAppInfo::MainProgramTitle());
+	setUnifiedTitleAndToolBarOnMac(true);
+	createDockWindows();
+	setAppDirectories();
+	setupScriptEngine();
+	setupStatusBar();
+	createDefaultMenus();
+	setupDynamicPlugins();
+	setupHelpMenu();
+	setupToolBars();
+	updateMenuControls(0);
+	parseRemainingGlobalSettings();
+	setupContextMenus();
+	if (startUpFiles.count()> 0) { openFiles(NULL,startUpFiles);}
+	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash)==false)
+	{
+		MainSplashScreen->finish(this);
+	}
+#ifdef Q_WS_WIN
+	if (timeBeginPeriod(1) == TIMERR_NOCANDO)
+		qWarning() << "Could not start the time period!";
+#endif
+	setDefaultGLFormat();
+	statusBar()->showMessage(tr("Ready..."), 2000);
+	//if (QApplication::desktop()->numScreens() > 1) {
+	//	QLabel *label = new QLabel("Hello");
+	//	label->setGeometry(QApplication::desktop()->availableGeometry(1));
+	//	label->showMaximized();
+	//}
+	bMainWindowIsInitialized = true;
+
+	if (globAppInfo->shouldEnableNetworkServer())
+	{
+		if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableNetworkServer) == false)
+			setupNetworkServer(globAppInfo->getHostAddress(),globAppInfo->getHostPort());
+		else
+			qDebug() << "Configured Network Server disabled.";
+	}
+	return true;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -279,65 +342,6 @@ void MainWindow::setupContextMenus()
 	connect(outputWindowList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(DebugcontextMenuEvent(QPoint)));
 }
 
-bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags)
-{
-	StimulGLFlags = mainFlags;
-	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
-		qDebug() << "Verbose Mode: " << __FUNCTION__;
-	//Default					= 0x00000,
-	//DisablePlugins			= 0x00001,
-	//DisableSplash				= 0x00002
-	//QWaitCondition sleep;
-	qDebug() << "Starting and initializing" << MAIN_PROGRAM_FULL_NAME;
-	//registerFileTypeByDefinition("StimulGL.QtScript","StimulGL Qt Script File",".qs");
-	//MainAppInfo::Initialize(this);
-	//QApplication::setGraphicsSystem("opengl");//"raster");
-    AppScriptStatus = GlobalApplicationInformation::NoScript;
-
-	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash) == false)
-	{
-		QPixmap pixmap(":/resources/splash.png");
-		MainSplashScreen = new QSplashScreen(pixmap);
-		MainSplashScreen->show();
-		showSplashMessage("Initializing Program...");
-	}
-	showSplashMessage("Setup User Interface...");
-	setupMDI();
-	setWindowTitle(globAppInfo->getTitle());//  MainAppInfo::MainProgramTitle());
-	setUnifiedTitleAndToolBarOnMac(true);
-	createDockWindows();
-	setAppDirectories();
-	setupScriptEngine();
-	setupStatusBar();
-	createDefaultMenus();
-	setupDynamicPlugins();
-	setupHelpMenu();
-	setupToolBars();
-	updateMenuControls(0);
-	parseRemainingGlobalSettings();
-	setupContextMenus();
-	if (startUpFiles.count()> 0) { openFiles(NULL,startUpFiles);}
-	if (StimulGLFlags.testFlag(GlobalApplicationInformation::DisableSplash)==false)
-	{
-		MainSplashScreen->finish(this);
-	}
-#ifdef Q_WS_WIN
-	if (timeBeginPeriod(1) == TIMERR_NOCANDO)
-		qWarning() << "Could not start the time period!";
-#endif
-	setDefaultGLFormat();
-	statusBar()->showMessage(tr("Ready..."), 2000);
-	//if (QApplication::desktop()->numScreens() > 1) {
-	//	QLabel *label = new QLabel("Hello");
-	//	label->setGeometry(QApplication::desktop()->availableGeometry(1));
-	//	label->showMaximized();
-	//}
-	bMainWindowIsInitialized = true;
-	if (globAppInfo->shouldEnableNetworkServer())
-		setupNetworkServer(globAppInfo->getHostAddress(),globAppInfo->getHostPort());
-	return true;
-}
-
 //void MainWindow::registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension)
 //{
 //	//registerFileType("GiMdi.Document",          // Document type name
@@ -399,13 +403,18 @@ QScriptValue myPauseFunction(QScriptContext *ctx, QScriptEngine *eng)
 {
 	Q_UNUSED(eng);
 	int nWaitTime = ctx->argument(0).toInteger();
-
-	QMutex mutTmp;
-	mutTmp.lock();
-	QWaitCondition waitCondition;
-	waitCondition.wait(&mutTmp, nWaitTime);
-	mutTmp.unlock();
+	
+	QTime dieTime = QTime::currentTime().addMSecs(nWaitTime);
+	while( QTime::currentTime() < dieTime )
+		QCoreApplication::processEvents(QEventLoop::AllEvents);
 	return 0;
+
+	//QMutex mutTmp;
+	//mutTmp.lock();
+	//QWaitCondition waitCondition;
+	//waitCondition.wait(&mutTmp, nWaitTime);
+	//mutTmp.unlock();
+	//return 0;
 }
 
 QScriptValue myThrowScriptErrorFunction(QScriptContext *ctx, QScriptEngine *eng)
@@ -508,14 +517,13 @@ QScriptValue myScriptTestFunction(QScriptContext *context, QScriptEngine *engine
 }
 #endif
 
-void MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
+bool MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if (globAppInfo->shouldEnableNetworkServer())
 	{
-		tcpServer = new QTcpServer(this);
-
+		tcpServer = new NetworkServer(this);
 		QHostAddress address = QHostAddress::Any;
 		if(sAddress != "")
 			address.setAddress(sAddress); 
@@ -526,12 +534,13 @@ void MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 			//write2OutputWindow(QString("Unable to start the network server: %1.").arg(tcpServer->errorString()));
 			QMessageBox msgBox(QMessageBox::Warning,"Network Server",sInfo, QMessageBox::Ok);
 			msgBox.exec();
-			return;
+			return false;
 		}
 		QString ipAddress;
 		QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
 		// use the first non-localhost IPv4 address
-		for (int i = 0; i < ipAddressesList.size(); ++i) {
+		for (int i = 0; i < ipAddressesList.size(); ++i) 
+		{
 			if (ipAddressesList.at(i) != QHostAddress::LocalHost &&	ipAddressesList.at(i).toIPv4Address()) 
 			{
 					ipAddress = ipAddressesList.at(i).toString();
@@ -542,7 +551,9 @@ void MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 		if (ipAddress.isEmpty())
 			ipAddress = QHostAddress(QHostAddress::LocalHost).toString();
 
-		connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newIncomingServerConnection()));
+		bool bResult;
+		//bResult = connect(tcpServer, SIGNAL(newConnection()), tcpServer, SLOT(newIncomingServerConnection()));
+		bResult = connect(tcpServer, SIGNAL(NetworkDataAvailable(int,QString)), this, SLOT(ExternalNetworkDataRecieved(int,QString)));
 		QString usedAddress = sAddress;
 		if(usedAddress == "")
 			usedAddress = QString("%1").arg(ipAddress);
@@ -551,7 +562,23 @@ void MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 		//write2OutputWindow(sInfo);
 		//QMessageBox msgBox(QMessageBox::Information,"Network Server",QString("Network Server started @ : %1:%2").arg(ipAddress).arg(tcpServer->serverPort()), QMessageBox::Ok);
 		//msgBox.exec();
-		return;
+		return true;
+	}
+	return false;
+}
+
+void MainWindow::ExternalNetworkDataRecieved(int nClientIndex, QString sAvailableData)
+{
+	write2OutputWindow("-> Network Data Recieved(from client: " + QString::number(nClientIndex) +  ") going to execute...");
+	QScriptValue scriptVal = executeScriptContent(sAvailableData);
+	QString strResult = scriptVal.toString();
+	if (scriptVal.isError()) 
+	{
+		write2OutputWindow("... Script stopped Evaluating due to an error: --> " + strResult + "...");
+	}
+	else
+	{
+		write2OutputWindow("-> Network Data Successfully executed by the Script Engine.");
 	}
 }
 
@@ -561,93 +588,9 @@ void MainWindow::shutdownNetworkServer()
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	if(tcpServer)
 	{
-		tcpServer->close();
 		delete tcpServer;
 		tcpServer = NULL;
 	}
-	//if(clientConnection) // is automatically performed!
-	//{
-	//	//if(clientConnection->isc)
-	//	//clientConnection->disconnectFromHost();
-	//	//clientConnection->close();
-	//	delete clientConnection;
-	//	clientConnection = NULL;
-	//}
-}
-
-void MainWindow::newIncomingServerConnection()
-{
-	QByteArray block;
-	QDataStream out(&block, QIODevice::WriteOnly);
-	out.setVersion(QDataStream::Qt_5_0);
-	out << (quint16)0;
-	QString sInfo = QString("Welcome you're connected to StimulGL @ %1:%2").arg(tcpServer->serverAddress().toString()).arg(tcpServer->serverPort());
-	out << sInfo; 
-	out.device()->seek(0);
-	out << (quint16)(block.size() - sizeof(quint16));
-
-	clientConnection = tcpServer->nextPendingConnection();
-	clientConnection->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-	clientConnection->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
-	connect(clientConnection, SIGNAL(disconnected()), clientConnection, SLOT(deleteLater()));
-	connect(clientConnection, SIGNAL(readyRead()), this, SLOT(receivedNetworkData()));
-	connect(clientConnection, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorNetworkData(QAbstractSocket::SocketError)));
-	
-	sInfo = QString("The Network Server accepted an incoming connection");
-	qDebug() << sInfo;
-	
-	clientConnection->write(block);
-}
-
-void MainWindow::receivedNetworkData()
-{
-	QDataStream in(clientConnection);
-	in.setVersion(QDataStream::Qt_5_0);
-	if (networkDataBlockSize == 0) 
-	{
-		if (clientConnection->bytesAvailable() < (int)sizeof(quint16))
-			return;
-		in >> networkDataBlockSize;
-	}
-	if (clientConnection->bytesAvailable() < networkDataBlockSize)
-		return;
-	QString sAvailableData;
-	in >> sAvailableData;
-	emit NetworkDataAvailable(sAvailableData);
-	networkDataBlockSize = 0;
-
-	QScriptValue scriptVal = executeScriptContent(sAvailableData);
-	QString strResult = scriptVal.toString();
-	if (scriptVal.isError()) 
-	{
-		write2OutputWindow("... Script stopped Evaluating due to an error: --> " + strResult + "...");
-	}
-	else
-	{
-		write2OutputWindow("-> SocketData Successfully executed by the Script Engine.");
-	}
-	receivedNetworkData();
-}
-
-void MainWindow::errorNetworkData(QAbstractSocket::SocketError socketError)
-{
-     switch (socketError) 
-	 {
-     case QAbstractSocket::RemoteHostClosedError:
-		 qDebug() << __FUNCTION__ << "The client disconnected the network connection.";
-         break;
-     case QAbstractSocket::HostNotFoundError:
-		 qDebug() << __FUNCTION__ << "The host was not found. Please check the host name and port settings.";
-         break;
-     case QAbstractSocket::ConnectionRefusedError:
-         qDebug() << __FUNCTION__ << "The connection was refused by the peer. "
-                                     "Make sure the network server is running, "
-                                     "and check that the host name and port "
-                                     "settings are correct.";
-         break;
-     default:
-         qDebug() << __FUNCTION__ << QString("The following Network error occurred: %1.").arg(clientConnection->errorString());
-     }
 }
 
 void MainWindow::setupScriptEngine()

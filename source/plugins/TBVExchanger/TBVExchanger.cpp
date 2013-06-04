@@ -21,6 +21,7 @@
 
 QScriptValue TBVExchanger::ctor__extensionname(QScriptContext* context, QScriptEngine* engine)
 {
+	Q_UNUSED(context);
 	//this function gets called first whenever a new object is constructed trough the script
 
 	//	if (context->isCalledAsConstructor()) {

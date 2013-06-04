@@ -76,7 +76,7 @@ public:
 		double iinterval = max - min;// + 1;
 		if (iinterval <= 0)//<= 0) 
 			return 0x80000000; // error
-		double dsmall = DBL_MIN;
+		//double dsmall = DBL_MIN;
 		double r = (iinterval+DBL_MIN) * Random(); // truncate
 		//if (r >= iinterval) 
 		//	return max;//	r = iinterval-1;

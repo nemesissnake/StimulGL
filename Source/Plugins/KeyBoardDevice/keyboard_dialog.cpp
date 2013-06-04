@@ -108,7 +108,6 @@ KeyBoardNameSpace::CaptureKeyMethod KeyBoard_Dialog::getCaptureKeyBoardMethod()
 
 void KeyBoard_Dialog::on_btnStartCaptureThread_clicked()
 {
-	QMessageBox::StandardButton ret;	
 	captureThread = new keyboardCaptureThread(getCaptureKeyBoardMethod(),this);
 	connect(captureThread, SIGNAL(recieveThreadKeyPressed(quint32)), this, SLOT(detectedKeyPress(quint32)));
 	connect(captureThread, SIGNAL(recieveThreadKeyReleased(quint32)), this, SLOT(detectedKeyRelease(quint32)));

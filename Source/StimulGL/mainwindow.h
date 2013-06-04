@@ -35,8 +35,6 @@
 #include <QtWidgets>
 #include <QTime>
 #include <QDateTime> //QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat())!!!!!
-#include <QTcpServer>
-#include <QTcpSocket>
 #include <QNetworkInterface>
 #include <QTest>
 #include <QTestEventList>
@@ -49,6 +47,7 @@
 #include "mainappinfo.h"
 #include "sciFindDialog.h"
 #include "assistant.h"
+#include "NetworkServer.h"
 
 class SvgView;
 class DeviceControl;
@@ -103,7 +102,7 @@ public:
 
 signals:
 	void CleanUpScriptExecuted();
-	void NetworkDataAvailable(QString);
+	//void NetworkDataAvailable(QString);
 		
 public slots:
 	bool receiveExchangeMessage(const QString &sMessage);
@@ -140,6 +139,9 @@ public slots:
 	bool resetContextState(const quint64 &nScriptId = 0);
 	bool deleteContextState(const QString &sContextName);
 
+protected slots:
+	void ExternalNetworkDataRecieved(int nClientIndex, QString sAvailableData);
+
 private slots:
 	void returnToOldMaxMinSizes();
 	void abortScript();
@@ -148,7 +150,7 @@ private slots:
 	void clearDebugger();
 	void copyDebugger();
 	void setupScriptEngine();
-	void setupNetworkServer(const QString &sAddress = "" /*=QHostAddress::Any*/, quint16 port = 0);
+	bool setupNetworkServer(const QString &sAddress = "" /*=QHostAddress::Any*/, quint16 port = 0);
 	void shutdownNetworkServer();
 	void setScriptRunningStatus(GlobalApplicationInformation::ActiveScriptMode state);
 	void showPluginGUI();
@@ -188,9 +190,6 @@ private slots:
 	void CursorPositionChanged(int line, int col);
 	void scriptLoaded(qint64 id);
 	void scriptUnloaded(qint64 id);
-	void newIncomingServerConnection();
-	void receivedNetworkData();
-	void errorNetworkData(QAbstractSocket::SocketError socketError);
 
 private:
 	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
@@ -200,9 +199,7 @@ private:
 	QString strAdditionalFileExtensions;
 	GlobalApplicationInformation::MainProgramModeFlags StimulGLFlags;
 	GlobalApplicationInformation::ScriptRunMode StimulGLScriptRunMode;
-	QTcpServer *tcpServer;
-	QTcpSocket *clientConnection;
-	quint16 networkDataBlockSize;
+	NetworkServer *tcpServer;
 	QSplashScreen *MainSplashScreen;
 	Assistant *helpAssistant;
 	QStringList startUpFiles;
