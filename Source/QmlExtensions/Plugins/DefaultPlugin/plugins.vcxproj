@@ -101,7 +101,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\ActiveQt;$(QTDIR)\include\QtQml;$(SolutionDir)\StimulGL;.\debug;.;$(QTDIR)\mkspecs\default;.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OGRE\RenderSystems\GL;$(OGRE_HOME)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QTDIR)\include;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQml;$(SolutionDir)\StimulGL;.\debug;.;$(QTDIR)\mkspecs\default;.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc;.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include\OGRE\RenderSystems\GL;$(OGRE_HOME)\boost;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -120,7 +120,7 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib</AdditionalDependencies>
+      <AdditionalDependencies>$(QTDIR)\lib\Qt5Quick$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib;$(QTDIR)\lib\\Qt5Gui$(DebugSuffix).lib;gdi32.lib;user32.lib;qtmaind.lib;glu32.lib;opengl32.lib;OgreMain_d.lib;RenderSystem_GL_d.lib;libboost_date_time-vc100-mt-gd-1_49.lib;libboost_thread-vc100-mt-gd-1_49.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OGRE_HOME)/lib/debug;$(OGRE_HOME)/lib/debug/opt;$(OGRE_HOME)/boost/lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -334,7 +334,17 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_cameranodeobject.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_DefaultPlugin.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ogreitem.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -349,7 +359,17 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_cameranodeobject.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_DefaultPlugin.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_ogreitem.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -364,7 +384,17 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_cameranodeobject.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_DefaultPlugin.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_ogreitem.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -379,7 +409,17 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_cameranodeobject.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_DefaultPlugin.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ogreitem.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -394,7 +434,10 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="cameranodeobject.cpp" />
     <ClCompile Include="DefaultPlugin.cpp" />
+    <ClCompile Include="ogreitem.cpp" />
+    <ClCompile Include="ogrenode.cpp" />
     <ClCompile Include="PhononPlayer.cpp" />
     <ClCompile Include="TimeModel.cpp" />
   </ItemGroup>
@@ -403,7 +446,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing DefaultPlugin.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtQml" "-I$(SolutionDir)\StimulGL" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(OGRE_HOME)\include\OGRE" "-I$(OGRE_HOME)\include\OGRE\RenderSystems\GL" "-I$(OGRE_HOME)\boost"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQuick" "-I$(QTDIR)\include\QtQml" "-I$(SolutionDir)\StimulGL" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(OGRE_HOME)\include\OGRE" "-I$(OGRE_HOME)\include\OGRE\RenderSystems\GL" "-I$(OGRE_HOME)\boost"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing DefaultPlugin.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
@@ -419,12 +462,49 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ogrenode.h" />
+    <CustomBuild Include="ogreitem.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing ogreitem.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQuick" "-I$(QTDIR)\include\QtQml" "-I$(SolutionDir)\StimulGL" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(OGRE_HOME)\include\OGRE" "-I$(OGRE_HOME)\include\OGRE\RenderSystems\GL" "-I$(OGRE_HOME)\boost"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing ogreitem.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtQml"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing ogreitem.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DNDEBUG -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I.\release" "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtQml"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing ogreitem.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DNDEBUG -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I.\release" "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtQml"</Command>
+    </CustomBuild>
+    <CustomBuild Include="cameranodeobject.h">
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing cameranodeobject.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQuick" "-I$(QTDIR)\include\QtQml" "-I$(SolutionDir)\StimulGL" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(OGRE_HOME)\include\OGRE" "-I$(OGRE_HOME)\include\OGRE\RenderSystems\GL" "-I$(OGRE_HOME)\boost"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing cameranodeobject.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I.\debug" "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtQml"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing cameranodeobject.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DNDEBUG -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I.\release" "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtQml"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Moc%27ing cameranodeobject.h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DNDEBUG -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtDeclarative" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include" "-I$(QTDIR)\include\ActiveQt" "-I.\release" "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(QTDIR)\include\phonon" "-I." "-I$(QTDIR)\include\QtQml"</Command>
+    </CustomBuild>
     <ClInclude Include="defines.h" />
     <CustomBuild Include="TimeModel.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing TimeModel.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtQml" "-I$(SolutionDir)\StimulGL" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(OGRE_HOME)\include\OGRE" "-I$(OGRE_HOME)\include\OGRE\RenderSystems\GL" "-I$(OGRE_HOME)\boost"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQuick" "-I$(QTDIR)\include\QtQml" "-I$(SolutionDir)\StimulGL" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(OGRE_HOME)\include\OGRE" "-I$(OGRE_HOME)\include\OGRE\RenderSystems\GL" "-I$(OGRE_HOME)\boost"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing TimeModel.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
@@ -442,7 +522,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing PhononPlayer.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\ActiveQt" "-I$(QTDIR)\include\QtQml" "-I$(SolutionDir)\StimulGL" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(OGRE_HOME)\include\OGRE" "-I$(OGRE_HOME)\include\OGRE\RenderSystems\GL" "-I$(OGRE_HOME)\boost"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp"  -DDEBUG -D_WINDOWS -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_PLUGIN -DQT_DECLARATIVE_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -DQT_PHONON_LIB -DQT_QML_LIB -D_WINDLL  "-I$(QTDIR)\include" "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets" "-I$(QTDIR)\include\QtQuick" "-I$(QTDIR)\include\QtQml" "-I$(SolutionDir)\StimulGL" "-I.\debug" "-I." "-I$(QTDIR)\mkspecs\default" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc" "-I.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles" "-I$(OGRE_HOME)\include\OGRE" "-I$(OGRE_HOME)\include\OGRE\RenderSystems\GL" "-I$(OGRE_HOME)\boost"</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing PhononPlayer.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\Moc\moc_%(Filename).cpp</Outputs>

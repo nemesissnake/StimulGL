@@ -1,16 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
-
   <PropertyGroup Label="UserMacros">
-  	<!-- some comments... -->
-  	<!--IsDebug: search for 'Debug' in Configuration-->
+    <!-- some comments... -->
+    <!--IsDebug: search for 'Debug' in Configuration-->
     <IsDebug>$([System.Convert]::ToString( $([System.Text.RegularExpressions.Regex]::IsMatch($(Configuration), '[Dd]ebug'))))</IsDebug>
     <!--ShortPlatform-->
     <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.0.2\win32</QTDIR>
     <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\x64</QTDIR>
+    <OGRE_HOME>C:\Qt\5.0.2\OgreSDK_vc10_v1-8-1</OGRE_HOME>
   </PropertyGroup>
-  
   <Choose>
     <When Condition="$([System.Convert]::ToBoolean($(IsDebug)))">
       <!-- debug macroses -->
@@ -23,15 +22,19 @@
       <!-- other/release macroses -->
       <PropertyGroup Label="UserMacros">
         <MyOutDirBase>release</MyOutDirBase>
-        <DebugSuffix></DebugSuffix>
+        <DebugSuffix>
+        </DebugSuffix>
       </PropertyGroup>
     </Otherwise>
   </Choose>
-  
   <ItemDefinitionGroup />
   <ItemGroup>
     <BuildMacro Include="QTDIR">
       <Value>$(QTDIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OGRE_HOME">
+      <Value>$(OGRE_HOME)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>
 </Project>

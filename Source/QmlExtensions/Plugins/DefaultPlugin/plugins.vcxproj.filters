@@ -89,6 +89,39 @@
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_DefaultPlugin.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_cameranodeobject.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_cameranodeobject.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_cameranodeobject.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_cameranodeobject.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ogreitem.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_ogreitem.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_ogreitem.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ogreitem.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="cameranodeobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ogreitem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ogrenode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DefaultPlugin.h">
@@ -100,9 +133,18 @@
     <CustomBuild Include="TimeModel.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="cameranodeobject.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ogreitem.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ogrenode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

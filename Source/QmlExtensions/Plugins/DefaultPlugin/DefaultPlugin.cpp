@@ -20,7 +20,7 @@
 #include "defines.h"
 #include "TimeModel.h"
 #include "PhononPlayer.h"
-//#include "ogreitem.h"
+#include "ogreitem.h"
 
 void QDefaultQmlPlugin::registerTypes(const char *uri)
 {
@@ -30,7 +30,7 @@ void QDefaultQmlPlugin::registerTypes(const char *uri)
 	int nTypeID=-1;
 	nTypeID = qmlRegisterType<TimeModel,TIMEMODEL_VERSION_STRING_REVISION>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, TIMEMODEL_TYPE_QML_NAME);
 	nTypeID = qmlRegisterType<PhononPlayer,PHONONPLAYER_VERSION_STRING_REVISION>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, PHONONPLAYER_TYPE_QML_NAME);
-	//nTypeID = qmlRegisterType<OgreItem,1>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, "OgreItem"); //"Ogre", 1, 0, "OgreItem");
+	nTypeID = qmlRegisterType<OgreItem,1>(uri, QML_VERSION_STRING_MAJOR, QML_VERSION_STRING_MINOR, "OgreItem"); //"Ogre", 1, 0, "OgreItem");
 }
 
 //glu32.lib

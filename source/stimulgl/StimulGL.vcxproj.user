@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LocalDebuggerEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(PATH)
-PATH=
-
 QT_QPA_PLATFORM_PLUGIN_PATH=$(QTDIR)\plugins\platforms</LocalDebuggerEnvironment>
     <LocalDebuggerEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(PATH)
 PATH=
