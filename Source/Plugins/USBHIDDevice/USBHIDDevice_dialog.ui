@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>USBHIDDevice_Dialog</string>
   </property>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="layoutWidget_3">
    <property name="geometry">
     <rect>
      <x>260</x>
@@ -203,7 +203,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="layoutWidget_4">
     <property name="geometry">
      <rect>
       <x>15</x>
@@ -863,7 +863,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="layoutWidget_1">
     <property name="geometry">
      <rect>
       <x>14</x>

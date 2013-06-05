@@ -138,7 +138,11 @@ static bool qpcAvailable()
     if (checked)
         return available;
 
-    available = QueryPerformanceFrequency(&qpcFrequency);
+	BOOL BResult = QueryPerformanceFrequency(&qpcFrequency);
+    if(BResult==TRUE)
+		available = true;
+	else
+		available = false;
     checked = true;
     return available;
 }

@@ -1394,9 +1394,9 @@ void MainWindow::setupDynamicPlugins()
         Q_IMPORT_PLUGIN(ExperimentManagerPlugin)// see below
 		Q_IMPORT_PLUGIN(KeyBoardPlugin)// see below
 
-		//Q_UNUSED(qt_static_plugin_ExperimentManagerPlugin);
-		//Q_UNUSED(qt_static_plugin_KeyBoardPlugin);
-		//Q_UNUSED(qt_static_plugin_ParallelPortPlugin);
+		Q_UNUSED(qt_static_plugin_ExperimentManagerPlugin());
+		Q_UNUSED(qt_static_plugin_KeyBoardPlugin());
+		Q_UNUSED(qt_static_plugin_ParallelPortPlugin());
 
 		bool bRetVal = false;
 		QString strRetVal = "";

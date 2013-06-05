@@ -52,7 +52,7 @@ class NetworkServerThread : public QThread
 	Q_OBJECT
 
 public:
-	NetworkServerThread(QObject *parent) {};
+	NetworkServerThread(QObject *parent) {Q_UNUSED(parent);};
 };
 
 #endif

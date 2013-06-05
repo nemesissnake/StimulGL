@@ -18,6 +18,7 @@
 
 
 #include "qtscriptengineagent.h"
+#include <QScriptValue>
 
 QTScriptEngineAgent::QTScriptEngineAgent(QScriptEngine *parent) : QScriptEngineAgent(parent) 
 {	
@@ -61,6 +62,7 @@ void QTScriptEngineAgent::functionEntry(qint64 scriptId)
 void QTScriptEngineAgent::functionExit(qint64 scriptId,const QScriptValue &returnValue)
 {
 	Q_UNUSED(scriptId);
+	Q_UNUSED(returnValue);
 }
 
 void QTScriptEngineAgent::positionChange(qint64 scriptId,int lineNumber, int columnNumber)
@@ -74,11 +76,13 @@ void QTScriptEngineAgent::exceptionThrow(qint64 scriptId, const QScriptValue &ex
 {
 	Q_UNUSED(scriptId);
 	Q_UNUSED(hasHandler);
+	Q_UNUSED(exception);
 }
 
 void QTScriptEngineAgent::exceptionCatch(qint64 scriptId, const QScriptValue &exception)
 {
 	Q_UNUSED(scriptId);
+	Q_UNUSED(exception);
 }
 
 bool QTScriptEngineAgent::supportsExtension(Extension extension) const

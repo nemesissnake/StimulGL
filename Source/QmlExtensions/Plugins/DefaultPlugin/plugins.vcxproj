@@ -120,7 +120,7 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glu32.lib;opengl32.lib;$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Quick$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Network$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Gui$(DebugSuffix).lib;OgreMain_d.lib;RenderSystem_GL_d.lib;libboost_date_time-vc100-mt-gd-1_49.lib;libboost_thread-vc100-mt-gd-1_49.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(OGRE_HOME)/lib/debug;$(OGRE_HOME)/lib/debug/opt;$(OGRE_HOME)/boost/lib/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -160,6 +160,10 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
     <PostBuildEvent>
       <Message>Post-build event</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -182,7 +186,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -237,7 +241,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -293,7 +297,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib;Qt5Qmld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(QTDIR)\lib\Qt5Qml$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Widgets$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Core$(DebugSuffix).lib;$(QTDIR)\lib\Qt5Multimedia$(DebugSuffix).lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
