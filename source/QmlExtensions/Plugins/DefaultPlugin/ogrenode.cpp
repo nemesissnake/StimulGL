@@ -63,8 +63,7 @@ static QString appPath()
     return dir.absolutePath();
 }
 
-OgreNode::OgreNode()
-    : QSGGeometryNode()
+OgreNode::OgreNode() : QSGGeometryNode()
     , m_geometry(QSGGeometry::defaultAttributes_TexturedPoint2D(), 4)
     , m_texture(0)
     , m_samples(0)
@@ -77,6 +76,10 @@ OgreNode::OgreNode()
     , m_initialized(false)
     , m_dirtyFBO(false)
 {
+	m_camera = NULL;
+	m_root = NULL;
+	m_ogreContext = NULL;
+
     setMaterial(&m_material);
     setOpaqueMaterial(&m_materialO);
     setGeometry(&m_geometry);
@@ -85,21 +88,34 @@ OgreNode::OgreNode()
 
 OgreNode::~OgreNode()
 {
-    if (m_renderTexture) {
+    if (m_renderTexture) 
+	{
         m_renderTexture->removeAllViewports();
     }
-
-    if (m_root) {
+	m_root = Ogre::Root::getSingleton().getSingletonPtr();
+    if (m_root) 
+	{
         m_root->detachRenderTarget(m_renderTexture);
-
-        if (m_sceneManager) {
-            m_root->destroySceneManager(m_sceneManager);
+        if (m_sceneManager) 
+		{
+			m_sceneManager->destroyAllCameras();
+			m_sceneManager->clearScene();
+			m_root->destroySceneManager(m_sceneManager);
+			if(m_window)
+			{
+				m_root->detachRenderTarget(m_window);
+				m_root->destroyRenderTarget(m_window);
+			
+			}
+			m_root->destroyRenderTarget(m_renderTexture);
+			
         }
     }
-
-    delete m_root;
-
-    delete m_ogreContext;
+	if(m_ogreContext)
+	{
+		delete m_ogreContext;
+		m_ogreContext = NULL;
+	}
 }
 
 void OgreNode::saveOgreState()
@@ -243,10 +259,13 @@ void OgreNode::init()
     m_samples = format.samples();
 
     m_root = new Ogre::Root;
-    QString glPlugin = QLatin1String(OGRE_PLUGIN_DIR);
-    glPlugin.remove("\"");
-#ifdef DEBUG_PLUGIN
-    glPlugin += QLatin1String("/RenderSystem_GL_d");
+    QString glPlugin;
+	//QString glPlugin = QLatin1String(OGRE_PLUGIN_DIR);
+    //glPlugin.remove("\"");
+	glPlugin = "E:/Projects/StimulGL/Install/qml/plugins/Win32";
+//#ifdef DEBUG_PLUGIN
+#ifdef DEBUG
+	glPlugin += QLatin1String("/RenderSystem_GL_d");
 #else
     glPlugin += QLatin1String("/RenderSystem_GL");
 #endif
@@ -267,7 +286,8 @@ void OgreNode::init()
     m_window->update(false);
 
     // Load resources
-    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(QString(appPath() + "/resources/data.zip").toLatin1().data(), "Zip");
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(QString("E:/Projects/Experiments/StimulGL/Sven/QMLOgre3D/data.zip").toLatin1().data(), "Zip");
+		//appPath() + "/resources/data.zip").toLatin1().data(), "Zip");
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
     // Setup scene

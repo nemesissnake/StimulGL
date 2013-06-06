@@ -66,23 +66,15 @@ public:
 
     void setSize(const QSize &size);
     QSize size() const { return m_size; }
-
     void setQuickWindow(QQuickWindow *window);
-
-    void setAAEnabled(bool enable);
-
+	void setAAEnabled(bool enable);
     CameraNodeObject *camera() const { return m_cameraObject; }
-
     void update();
     void updateFBO();
-
     void init();
-
     GLuint getOgreFBO();
-
     void saveOgreState();
     void restoreOgreState();
-
     void preprocess();
 
 private:

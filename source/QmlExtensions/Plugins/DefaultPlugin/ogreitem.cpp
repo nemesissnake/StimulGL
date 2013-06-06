@@ -40,14 +40,16 @@
 
 #include <QtCore/QPropertyAnimation>
 
-OgreItem::OgreItem(QQuickItem *parent)
-    : QQuickItem(parent)
-    , m_timerID(0)
+OgreItem::OgreItem(QQuickItem *parent) : QQuickItem(parent), m_timerID(0)
 {
+	m_camera = NULL;
     setFlag(ItemHasContents);
     setSmooth(false);
-
     startTimer(16);
+}
+
+OgreItem::~OgreItem()
+{
 }
 
 QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
@@ -56,20 +58,16 @@ QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
         delete oldNode;
         return 0;
     }
-
     OgreNode *node = static_cast<OgreNode *>(oldNode);
     if (!node)
     {
         node = new OgreNode();
         node->setQuickWindow(window());
     }
-
     node->setSize(QSize(width(), height()));
     node->setAAEnabled(smooth());
     node->update();
-
     m_camera = static_cast<QObject *>(node->camera());
-
     return node;
 }
 

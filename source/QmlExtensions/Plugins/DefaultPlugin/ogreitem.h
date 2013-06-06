@@ -45,22 +45,20 @@ class CameraNodeObject;
 class OgreItem : public QQuickItem
 {
     Q_OBJECT
-
     Q_PROPERTY(QObject *camera READ camera)
 
 public:
     OgreItem(QQuickItem *parent = 0);
+	~OgreItem();
 
     QObject *camera() const { return m_camera; }
 
 protected:
     virtual QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
-
     void timerEvent(QTimerEvent *);
 
 private:
     int m_timerID;
-
     QObject *m_camera;
 };
 
