@@ -19,7 +19,8 @@
 
 #ifndef DEFAULTQMLPLUGINDEFINES_H
 #define DEFAULTQMLPLUGINDEFINES_H
-//#include "./../../StimulGL/maindefines.h"
+//#include "./../../../StimulGL/maindefines.h"
+#include "./../../../StimulGL/mainappinfo.h"
 
 #define DEFAULT_STIMULGL_PLUGIN_QML_NAME		"StimulGL_QMLExtensions"
 #define QML_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
@@ -28,6 +29,9 @@
 #define TIMEMODEL_VERSION_STRING_REVISION		1
 #define PHONONPLAYER_TYPE_QML_NAME				"MediaPlayer"
 #define PHONONPLAYER_VERSION_STRING_REVISION	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define OGRE3DITEM_TYPE_QML_NAME				"OgreItem"
+#define OGRE3DITEM_VERSION_STRING_REVISION		1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define OGRE3DITEM_PLUGINFOLDER_NAME			"Ogre3D"
 
 #endif // DEFAULTQMLPLUGINDEFINES_H
 

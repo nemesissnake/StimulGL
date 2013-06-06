@@ -911,9 +911,48 @@ bool MainWindow::setDefaultGLFormat()
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
+
+	//Doesn't work..
+	//QString versionString1(QLatin1String(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
+	//qDebug() << "Graphics Driver Version String:" << versionString1;
+	
 	QGLFormat StimulGLQGLFormat;
+	QString sOpenGLVersionString = QString::number(StimulGLQGLFormat.majorVersion()) + "." + QString::number(StimulGLQGLFormat.minorVersion());
+	qDebug() << "Supported OpenGL version: " << sOpenGLVersionString;
 	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
 	StimulGLQGLFormat.setSampleBuffers(true);
+
+	//StimulGLQGLFormat.setVersion(3,1);
+	//int a = StimulGLQGLFormat.majorVersion();
+	//int aa = StimulGLQGLFormat.minorVersion();
+	//QStringList lSupportedOpenGLVersions;
+	//QGLFormat::OpenGLVersionFlags aaa = QGLFormat::openGLVersionFlags();
+
+	//QGLFormat::OpenGL_Version_None	0x00000000	If no OpenGL is present or if no OpenGL context is current.
+	//QGLFormat::OpenGL_Version_1_1	0x00000001	OpenGL version 1.1 or higher is present.
+	//QGLFormat::OpenGL_Version_1_2	0x00000002	OpenGL version 1.2 or higher is present.
+	//QGLFormat::OpenGL_Version_1_3	0x00000004	OpenGL version 1.3 or higher is present.
+	//QGLFormat::OpenGL_Version_1_4	0x00000008	OpenGL version 1.4 or higher is present.
+	//QGLFormat::OpenGL_Version_1_5	0x00000010	OpenGL version 1.5 or higher is present.
+	//QGLFormat::OpenGL_Version_2_0	0x00000020	OpenGL version 2.0 or higher is present. Note that version 2.0 supports all the functionality of version 1.5.
+	//QGLFormat::OpenGL_Version_2_1	0x00000040	OpenGL version 2.1 or higher is present.
+	//QGLFormat::OpenGL_Version_3_0	0x00001000	OpenGL version 3.0 or higher is present.
+	//QGLFormat::OpenGL_Version_3_1	0x00002000	OpenGL version 3.1 or higher is present. Note that OpenGL version 3.1 or higher does not necessarily support all the features of version 3.0 and lower.
+	//QGLFormat::OpenGL_Version_3_2	0x00004000	OpenGL version 3.2 or higher is present.
+	//QGLFormat::OpenGL_Version_3_3	0x00008000	OpenGL version 3.3 or higher is present.
+	//QGLFormat::OpenGL_Version_4_0	0x00010000	OpenGL version 4.0 or higher is present.
+	//QGLFormat::OpenGL_Version_4_1	0x00020000	OpenGL version 4.1 or higher is present.
+	//QGLFormat::OpenGL_Version_4_2	0x00040000	OpenGL version 4.2 or higher is present.
+	//QGLFormat::OpenGL_Version_4_3	0x00080000	OpenGL version 4.3 or higher is present.
+	//QGLFormat::OpenGL_ES_CommonLite_Version_1_0	0x00000100	OpenGL ES version 1.0 Common Lite or higher is present.
+	//QGLFormat::OpenGL_ES_Common_Version_1_0	0x00000080	OpenGL ES version 1.0 Common or higher is present. The Common profile supports all the features of Common Lite.
+	//QGLFormat::OpenGL_ES_CommonLite_Version_1_1	0x00000400	OpenGL ES version 1.1 Common Lite or higher is present.
+	//QGLFormat::OpenGL_ES_Common_Version_1_1	0x00000200	OpenGL ES version 1.1 Common or higher is present. The Common profile supports all the features of Common Lite.
+	//QGLFormat::OpenGL_ES_Version_2_0	0x00000800	OpenGL ES version 2.0 or higher is present. Note that OpenGL ES version 2.0 does not support all the features of OpenGL ES 1.x. So if OpenGL_ES_Version_2_0 is returned, none of the ES 1.x flags are returned.
+
+
+	//int aaaa = 0x00000077;
+	//setVersion()
 	QGLFormat::setDefaultFormat(StimulGLQGLFormat);
 	return true;
 }

@@ -76,7 +76,32 @@ public:
 		return pluginsDir.absolutePath();
 	};
 	static QString outputsDirPath();
-	static QString qmlExtensionsPluginDirPath();
+	static QString qmlExtensionsPluginDirPath()
+	{
+		QString strExtPluginDirPath = appDirPath() + QString("/qml/plugins/");
+#ifdef WIN64
+		strExtPluginDirPath = strExtPluginDirPath + QString("x64");
+#else
+		strExtPluginDirPath = strExtPluginDirPath + QString("Win32");
+#endif
+
+		//#ifdef DEBUG
+		//		QString strConfiguration = "/Debug";
+		//#else
+		//		QString strConfiguration = "/Release";
+		//#endif
+
+		if(QDir(strExtPluginDirPath).exists()==false)
+		{
+			QDir().mkdir(strExtPluginDirPath);
+		}
+		else if(QDir(strExtPluginDirPath).exists()) // + strConfiguration).exists())
+		{
+			strExtPluginDirPath = strExtPluginDirPath;// + strConfiguration;
+		}
+		return QDir(strExtPluginDirPath).absolutePath();
+	};
+
 	static QWidget* getMainWindow()					{return mainWindow;};
 	static QString getMainWindowLogSlotName()		{return MAIN_PROGRAM_LOG_SLOT_NAME;};
 	static QString getScriptApiClassName()			{return SCRIPT_API_CLASS_NAME_TAG;};

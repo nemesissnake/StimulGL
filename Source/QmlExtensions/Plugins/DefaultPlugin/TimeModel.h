@@ -52,8 +52,8 @@ private:
 class TimeModel : public QObject
 {
 	Q_OBJECT
-		Q_PROPERTY(int hour READ hour NOTIFY timeChanged)
-		Q_PROPERTY(int minute READ minute NOTIFY timeChanged)
+	Q_PROPERTY(int hour READ hour NOTIFY timeChanged)
+	Q_PROPERTY(int minute READ minute NOTIFY timeChanged)
 
 public:
 	TimeModel(QObject *parent=0);
