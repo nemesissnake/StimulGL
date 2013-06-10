@@ -33,7 +33,7 @@
 <h2>Introduction</h2>
 <p>The purpose of this document is to show you the basic features of StimulGL in a tutorial way. 
 The most convenient way of working through this document is starting from the beginning and follow all tutorials 
-till the documents ends. You could also only follow a single specific tutorial of your interest but then please bear 
+till the end of the document. You could also only follow a single specific tutorial of your interest but then please bear 
 in mind that some tutorials expect you to gained some knowledge of previous tutorials. This Getting started guide is 
 not perfect and continuously under construction, so I would be happy to receive feedback about bugs, typos, comments, 
 new ideas, etc at sven.gijsen at maastrichtuniversity dot nl.</p>
@@ -79,20 +79,20 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
   <strong>Help</strong> - this menu contains commands for opening the main StimulGL help and for viewing StimulGL build and detected plugin(s) information. </p>
 <h2>Editing and Scripting</h2>
 <p>With StimulGL you can edit various files like features found in standard text editing components and multiple documents can be simultaneously opened. StimulGL can automatically detect pre-registered file types by extension (see for example <a href="#running-an-experiment-file-directly-from-stimulgl">Running an Experiment File directly from StimulGL</a>) and configures the editor (if the file type is compatible) for this. This configurations contains features like styling choices, support for syntax styling, code completion and call tips which makes the editing process more user-friendly.<br />
-  The main default compatible StimulGL filetype is that of a script (<em>*.qs</em>) file. This file may contain <a href="http://en.wikipedia.org/wiki/QtScript" target="_blank">QtScript</a> code and can be executed by the StimulGL internal Script Engine. The QtScript scripting language is based on the <a href="http://en.wikipedia.org/wiki/ECMAScript" target="_blank">ECMAScript</a> standard with a few extensions, such as <a href="http://qt-project.org/doc/qt-4.8/signalsandslots.html" target="_blank">QObject-style signal and slot connections</a>. The library contains the engine, and a C++ API for evaluating QtScript code and exposing custom QObject-derived C++ classes to QtScript.</p>
+  The main default compatible StimulGL filetype is that of a script (<em>*.qs</em>) file. This file may contain <a href="http://en.wikipedia.org/wiki/QtScript" target="_blank">QtScript</a> code and can be executed by the StimulGL internal Script Engine. The QtScript scripting language is based on the <a href="http://en.wikipedia.org/wiki/ECMAScript" target="_blank">ECMAScript</a> standard with a few extensions, such as <a href="http://qt-project.org/doc/qt-5.0/qtcore/signalsandslots.html" target="_blank">QObject-style signal and slot connections</a>. The library contains the engine, and a C++ API for evaluating QtScript code and exposing custom QObject-derived C++ classes to QtScript.</p>
 <h3>Exercises - Scripting</h3>
 <h4>Hello World</h4>
 <ul>
   <li>Start StimulGL if it is not yet started</li>
   <li>Open the file (<em>File -&gt; Open</em>... or use the <em>Ctrl+’o’</em> key combination) <em>HelloWorld.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
 </ul>
-<p>You can see that the text is automatically highlighted/styled according to the syntax it contains. Text/code can be commented using the single line comment <em>‘//’</em> or the multi-line <em>‘/*’</em> and <em>‘*/’</em> combination. Three variables are declared (using the <em>var</em> statement) and value is assigned to them except for one variable which is calculated out of the other two. The value of this variable is then used in a special function called <em>Log()</em> that can write to the StimulGL output log pane. To clear the output log pane right-click on it and select <em>Clear Output</em>.</p>
+<p>You can see that the text is automatically highlighted/styled according to the syntax it contains. Text/code can be commented using the single line comment <em>‘//’</em> or the multi-line <em>‘/*’</em> and <em>‘*/’</em> combination. Three variables are declared (using the <em>var</em> statement) and value is assigned to them except for one variable which is calculated out of the other two. The value of this variable is then used in a special function called <em>Log()</em> that can write to the StimulGL output log pane. To clear the output log pane right-click on it and select <em>Clear All Output Item(s)</em>. Some times you might want to copy one or more lines from the output log pane, you can do this by selecting the lines (optionally with holding down the CTRL and/or SHIFT key) you want to copy to the clipboard and then right-click on it and select <em>Copy Selected Output Item(s)</em>.</p>
 <ul>
   <li>Execute the Qtscript code by the internal StimulGL script engine by using the key<em> ‘F5’</em> or through the <em>Script -&gt; Run Script</em> command.</li>
 </ul>
 <p>The Qtscript code of the current selected document pane is then evaluated and executed. If the script is valid then you can see in the output log pane when the script started/stopped evaluation and how many time it took. For each <em>Log()</em> function call there’s also an additional line appended to the log output pane.</p>
 <h4>Functions and includes</h4>
-<p>Within Qtscript you can define functions and includes that allows you to structure the script in a more modular way and reuse code. </p>
+<p>Within Qtscript you can define functions and includes that allows you to structure the script in a more modular way and take advantages of the use of re-usable code. </p>
 <ul>
   <li>Start StimulGL.</li>
   <li>Open the <em>FunctionsAndIncludes1.qs</em> and the <em>FunctionsAndIncludes2.qs</em> files found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
@@ -129,30 +129,29 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
 <h4>Qt Library Script Bindings</h4>
 <p>To further extend the script engine functionality StimulGL has a feature that automatically detects and integrates (pre generated) Qt bindings for Qt Script to the script environment. With the generated bindings you get access to substantial portions of the Qt API from within Qt Script. These script binding are automatically loaded from the shared libraries inside the <em>StimulGL/plugins/[architecture]/script/ directory</em> during startup. 
 These shared libraries include script binding for the Qt libraries: 
-<a href="http://doc-snapshot.qt-project.org/4.8/qtcore.html" target="_blank">QtCore</a>, 
-<a href="http://doc-snapshot.qt-project.org/4.8/qtgui.html" target="_blank">QtGui</a>, 
-<a href="http://doc-snapshot.qt-project.org/4.8/qtxml.html" target="_blank">QtXml</a>, 
-<a href="http://doc-snapshot.qt-project.org/4.8/qtxmlpatterns.html" target="_blank">QtXmlPatterns</a>, 
-<a href="http://doc-snapshot.qt-project.org/4.8/qtsvg.html" target="_blank">QtSvg</a>, 
-<a href="http://doc-snapshot.qt-project.org/4.8/qtsql.html" target="_blank">QtSql</a>, 
-<a href="http://qt-project.org/doc/qt-4.8/QtOpenGL.html" target="_blank">QtOpenGl</a>, 
-<a href="http://qt-project.org/doc/qt-4.8/qtuitools.html" target="_blank">QtUiTools</a> and 
-<a href="http://qt-project.org/doc/qt-4.8/phonon-module.html" target="_blank">QtPhonon</a>
+QtCore, 
+QtGui, 
+QtXml, 
+QtXmlPatterns, 
+QtSvg, 
+QtSql, 
+QtOpenGl and 
+QtUiTools, see also the <a href="http://qt-project.org/doc/qt-5.0/qtdoc/modules.html" target="_blank">Qt Project Documentation</a>.
 </p>
 <ul>
   <li>Start StimulGL.</li>
   <li>Make sure that the shared library named <em>qtscript_gui.dll</em> exists in directory <em>StimulGL\plugins\[architecture]Win32\script\</em>.</li>
   <li>Open the file <em>QtLibraryScriptBindings.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
 </ul>
-<p>This example makes use of the <a href="http://qt-project.org/doc/qt-4.8/QColor.html" target="_blank">QColor</a> and the <a href="http://doc-snapshot.qt-project.org/4.8/qcolordialog.html" target="_blank">QColorDialog</a> class from the QtGui library which is made available in the scripting environment due to the automatic linkage to the Qt Bindings (<em>qtscript_gui.dll</em>), as explained above. <br />
+<p>This example makes use of the <a href="http://qt-project.org/doc/qt-5.0/qtgui/qcolor.html" target="_blank">QColor</a> and the <a href="http://qt-project.org/doc/qt-5.0/qtwidgets/qcolordialog.html" target="_blank">QColorDialog</a> class from the QtGui library which is made available in the scripting environment due to the automatic linkage to the Qt Bindings (<em>qtscript_gui.dll</em>), as explained above. <br />
   The script first constructs a <em>QColor</em> object. The passed parameter in the <em>QColor</em> constructor is used to preset the color. The <em>QColorDialog</em> class (not object!), is used to present to the user a color picking dialog allowing a selection of a custom color that is then copied to the <em>QColor</em> object.<br />
-  The script makes use of an static <a href="http://qt-project.org/doc/qt-4.8/qcolordialog.html#getColor" target="_blank">getColor()</a> member function which shows the dialog, and allows the user to specify a color. The static member function is called directly from the class <em>QColorDialog</em>. The dialog then prevents further script execution and gives the control back after the user accepted or rejected the color picking dialog. </p>
+  The script makes use of an static <a href="http://qt-project.org/doc/qt-5.0/qtwidgets/qcolordialog.html#getColor" target="_blank">getColor()</a> member function which shows the dialog, and allows the user to specify a color. The static member function is called directly from the class <em>QColorDialog</em>. The dialog then prevents further script execution and gives the control back after the user accepted or rejected the color picking dialog. </p>
 <ul>
   <li>Examine and execute the Qtscript code.</li>
 </ul>
 <p>Notice how the output log pane notes that the script is fully Evaluated after the script engine actually ends (after the <em>ScriptCleanupFunction()</em>). We’ll see in the next chapter that this doesn’t have to be like this.</p>
 <h4>The Signal/Slots mechanism</h4>
-<p>The StimuGL script engine also has support for <a href="http://qt-project.org/doc/qt-4.8/signalsandslots.html" target="_blank">Qt-style signal and slot connections</a> available, which makes the script very flexible. It allows the script to dynamically connect/disconnect various Qt objects to each other by their defined signal/slots. It is currently not possible to define a new signal in the script; i.e., all signals must be defined by C++ classes. </p>
+<p>The StimuGL script engine also has support for <a href="http://qt-project.org/doc/qt-5.0/qtcore/signalsandslots.html" target="_blank">Qt-style signal and slot connections</a> available, which makes the script very flexible. It allows the script to dynamically connect/disconnect various Qt objects to each other by their defined signal/slots. It is currently not possible to define a new signal in the script; i.e., all signals must be defined by C++ classes. </p>
 <ul>
   <li>Start StimulGL.</li>
 </ul>
@@ -192,7 +191,7 @@ StimulGL has totally no knowledge of the plugins implementation and does not def
   <li>Start StimulGL.</li>
   <li>Make sure that the static StimulGL plugin named <em>ExperimentManagerPlugin</em> exists by pressing the <em>‘F2’</em> key or by opening the menu <em>Help -&gt; About StimulGL</em>.</li>
   <li>Open the <em>Experiment Manager plugins User Interface</em> by opening the <em>Plugins -&gt; Extensions Plugins -&gt; Experiment Manager Plugin</em> menu option.</li>
-  <li>Click the<em>Run Experiment File</em> button and browse to open and execute the <em>PolarAngle.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\</em>.</li>
+  <li>Click the<em> Run Experiment File</em> button and browse to open and execute the <em>PolarAngle.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\</em>.</li>
 </ul>
 <p>We should now see a default screen that allows us to start the experiment (by pressing the<em> ‘ALT’ key</em>) or abort (by pressing the <em>CTRL + ‘a’ key</em> combination). After we have started the experiment we should see a <em>Polar angle retinotopic experiment</em> running. We can always abort an experiment by pressing the <em>CTRL + ‘a’</em> key combination or wait until the experiment is finished.</p>
 <ul>

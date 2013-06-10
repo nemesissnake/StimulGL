@@ -72,8 +72,9 @@
   <li>Change the class signature<br />
     class &lt;ExtensionName&gt;Plugin : public QObject, ExtensionInterface to<br />
     class &lt;ExtensionName&gt;Plugin : public QObject, DeviceInterface in the file _extensionname_Plugin.h</li>
-  <li>Change the macro<br />
-    Q_INTERFACES(ExtensionInterface) to Q_INTERFACES(DeviceInterface) in the file _extensionname_Plugin.h</li>
+  <li>Change the macros<br />
+    Q_PLUGIN_METADATA(IID &quot;StimulGL.Plugins.Extensions&quot; PLUGIN_JSON_FILENAME) to Q_PLUGIN_METADATA(IID &quot;StimulGL.Plugins.Devices&quot; &quot;_extensionname_.json&quot;) in the file _extensionname_Plugin.h<br />
+    Q_INTERFACES(ExtensionInterface) to Q_INTERFACES(DeviceInterface) in the file _extensionname_Plugin.h  </li>
 </ol>
 <h2>  Static Plug-in Setup</h2>
 <p>  If you are planning to build a Static plug-in linked inside StimulGL then you need to perform the following additional steps:</p>
