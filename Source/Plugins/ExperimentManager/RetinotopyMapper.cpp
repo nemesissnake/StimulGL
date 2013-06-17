@@ -440,26 +440,26 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 bool RetinotopyMapper::startObject()
 {
 	//lastTriggerNumber = -1;
-	//emit LogToOutputWindow("Started");
-	
+	//emit LogToOutputWindow("Started");	
 	if(retinoMapperWindow == NULL)
 	{
 		retinoMapperWindow = new RetinotopyMapperWindow(this);
 		retinoMapperWindow->installEventFilter(this);//re-route all retinoMapperWindow events to this->bool RetinotopyMapper::eventFilter(QObject *target, QEvent *event)
 	}
-
 	QSurfaceFormat format;
-	format.setSamples(4);
-		
+	//int a = format.samples();
+	//format.setSamples(4);
+	//format.setRenderableType(QSurface::OpenGLSurface);
+	format.setRenderableType(QSurfaceFormat::OpenGL);
+	//format.setAlphaBufferSize(8);
+	//qDebug() << format.hasAlpha();
 	retinoMapperWindow->setFormat(format);
-	//retinoMapperWindow->resize(640, 480);
-	//retinoMapperWindow->show();
-	//testwindow->renderNow();
-	//testwindow->renderLater();	
+	retinoMapperWindow->setSurfaceType(QSurface::OpenGLSurface);	
 	retinoMapperWindow->setAnimating(true);
-	//retinoMapperWindow->show();
-	//retinoMapperWindow->renderLater();
 	retinoMapperWindow->showFullScreen();
+	QRect tmpRect = retinoMapperWindow->geometry();
+	tmpRect.setHeight(tmpRect.height()+1);//To prevent flickering, (bug, on some systems), doesn't make a change since drawing starts upper left corner.
+	retinoMapperWindow->setGeometry(tmpRect);
 	return true;
 }
 
