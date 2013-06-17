@@ -6,7 +6,7 @@ Place you own text here..
 Attributes only apply to readonly non user data, like the ID
 -->
 
-<EXML version="2.0.0.2">
+<EXML version="2.1.0.0">
 
 	<defines>
 		<experiment ID="0">
@@ -24,7 +24,7 @@ Attributes only apply to readonly non user data, like the ID
 			</constructor>
 		</object>
 		<object ID="1">            
-			<class>RetinoMap_glwidget</class>
+			<class>RetinotopyMapper</class>
 			<name>RetinoMap_Object_1</name>
 			<constructor>
 				<param1/>

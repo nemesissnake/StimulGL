@@ -21,6 +21,7 @@
 #include "mainappinfo.h"
 #include "StimulGL.h"
 #include <QColor>
+#include <QFileInfo>
 
 DocumentManager::DocumentManager(QObject *parent)
 	: QObject(parent)
@@ -146,7 +147,7 @@ GlobalApplicationInformation::DocType DocumentManager::getDocType(const QString 
 	QString tmpExt = strExtension.toLower();
 	if (tmpExt == "qs")
 	{
-		return GlobalApplicationInformation::DOCTYPE_QSCRIPT;
+		return GlobalApplicationInformation::DOCTYPE_QTSCRIPT;
 	}
 	else if (tmpExt == "js")
 	{
@@ -422,7 +423,7 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 
 		switch (docType)
 		{
-		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
+		case GlobalApplicationInformation::DOCTYPE_QTSCRIPT:
 			{
 				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_ECMA,"qscript.api");
 				break;
@@ -627,7 +628,8 @@ void DocumentManager::setModFlagAndTitle(const int &DocIndex,bool hasChanges)
 
 void DocumentManager::setFileName(int DocIndex, QString fileName)
 {
-	fileName = 	QFileInfo(fileName).canonicalFilePath();
+	QFileInfo fileInformation(fileName);
+	fileName = 	fileInformation.canonicalFilePath();
 	ChildrenFileNames.replace(DocIndex,fileName);
 	setModFlagAndTitle(DocIndex,false);
 	//QWidgetChildren.at(DocIndex)->setWindowTitle(fileName);	
@@ -688,7 +690,7 @@ int DocumentManager::getKnownDocumentFileHandlerIndex(const QString &strExtensio
 	return -1;
 }
 
-bool DocumentManager::saveFile(int DocIndex, QString fileName)
+bool DocumentManager::saveFile(int DocIndex, QString fileName, bool *bReparseDocumentContentNeeded)
 {
 	if (fileName == "")
 	{
@@ -721,14 +723,30 @@ bool DocumentManager::saveFile(int DocIndex, QString fileName)
 		tmpCustomQsciScintilla->setModified(false);
 	}
 	QApplication::restoreOverrideCursor();
-
 	setFileName(DocIndex,fileName);
+
+	if(bReparseDocumentContentNeeded != NULL)
+	{
+		QFileInfo fileInformation(fileName);
+		QString strNewExtension = fileInformation.completeSuffix();
+		GlobalApplicationInformation::DocType newDocType = getDocType(strNewExtension);
+		if(ChildrenDocTypes.at(DocIndex) != newDocType)
+		{
+			*bReparseDocumentContentNeeded = true;
+		}
+		else
+		{
+			*bReparseDocumentContentNeeded = false;
+		}		
+	}
 	return true;
 }
 
-bool DocumentManager::saveFile(QMdiSubWindow *subWindow, QString fileName )
+bool DocumentManager::saveFile(QMdiSubWindow *subWindow, QString fileName, bool *bReparseDocumentContentNeeded)
 {
-	return saveFile(getDocIndex(subWindow),fileName);
+	int nDocIndex = getDocIndex(subWindow);
+	bool bResult = saveFile(nDocIndex,fileName,bReparseDocumentContentNeeded);
+	return bResult;
 }
 
 bool DocumentManager::maybeSave(QMdiSubWindow *subWindow, bool bAutoSaveChanges)

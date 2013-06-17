@@ -29,9 +29,9 @@ ExperimentManager_Dialog::ExperimentManager_Dialog(QWidget *parent)	: QDialog(pa
 	ui.setupUi(this);
 	connect(ui.btnExampleButton, SIGNAL(clicked()), this, SLOT(exampleButton_Pressed()));
 	connect(ui.btnExampleButton_2, SIGNAL(clicked()), this, SLOT(exampleButton_2_Pressed()));
-	connect(ui.btnExampleButton_3, SIGNAL(clicked()), this, SLOT(exampleButton_3_Pressed()));
-	connect(ui.btnExampleButton_4, SIGNAL(clicked()), this, SLOT(exampleButton_4_Pressed()));
-	connect(ui.btnExampleButton_5, SIGNAL(clicked()), this, SLOT(exampleButton_5_Pressed()));
+	//connect(ui.btnExampleButton_3, SIGNAL(clicked()), this, SLOT(exampleButton_3_Pressed()));
+	//connect(ui.btnExampleButton_4, SIGNAL(clicked()), this, SLOT(exampleButton_4_Pressed()));
+	//connect(ui.btnExampleButton_5, SIGNAL(clicked()), this, SLOT(exampleButton_5_Pressed()));
 	currentExperimentSubObjectState = Experiment_SubObject_Initialized;
 	currentExperimentState = ExperimentManager::ExperimentManager_NoState;
 }
@@ -244,6 +244,17 @@ bool ExperimentManager_Dialog::executeDocument()
 			QFile file(fileSource);
 			if (!file.exists())
 				return false;
+
+			if(file.open(QIODevice::ReadOnly))
+			{
+				docContentStructToRun.strDocContent = file.readAll();
+			}
+			else
+			{
+				return false;
+			}
+			file.close();
+
 			QFileInfo fi(file);
 			QDir::setCurrent(fi.canonicalPath());
 		}
@@ -260,7 +271,14 @@ bool ExperimentManager_Dialog::executeDocument()
 			tmpRegExp.setPatternSyntax(QRegExp::Wildcard);
 			tmpRegExp.setCaseSensitivity(Qt::CaseInsensitive);
 			tmpRegExp.setPattern("import QtQuick 1.");
-			if(fileSource.contains(tmpRegExp))
+
+			QString tmpSourceContent;
+			if(docContentStructToRun.bIsFile)
+				tmpSourceContent = docContentStructToRun.strDocContent;
+			else 
+				tmpSourceContent = fileSource;
+
+			if(tmpSourceContent.contains(tmpRegExp))
 			{
 				qWarning() << __FUNCTION__ << "::QtQuick version 1.* is not supported anymore, please update the *.qml document to QtQuick version 2.* or later!";
 				return false;
@@ -268,7 +286,7 @@ bool ExperimentManager_Dialog::executeDocument()
 			else
 			{
 				tmpRegExp.setPattern("import QtQuick 2.");
-				if(fileSource.contains(tmpRegExp))
+				if(tmpSourceContent.contains(tmpRegExp))
 				{
 					if(Qml2ViewerObject)
 					{

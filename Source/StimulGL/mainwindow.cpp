@@ -849,7 +849,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		printAction->setEnabled(false);
 		switch (d)
 		{
-		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
+		case GlobalApplicationInformation::DOCTYPE_QTSCRIPT:
 			{
 				if(lCurrentRunningScriptIDList.isEmpty())
 					setScriptRunningStatus(GlobalApplicationInformation::Pending);
@@ -965,28 +965,45 @@ void MainWindow::createDefaultMenus()
 	editMenu = new QMenu(tr("&Edit"), this);
 	markersMenu = new QMenu(tr("&Markers"), this);
 	//viewMenu = new QMenu(tr("&View"), this);
-	scriptMenu = new QMenu(tr("&Script"), this);
+	documentMenu = new QMenu(tr("&Document"), this);
 	toolsMenu = new QMenu(tr("&Tools"), this);
 	windowMenu = new QMenu(tr("&Window"), this);
 
-	newScriptAction = new QAction(QIcon(":/resources/new.png"),tr("&New QT Script"), this);
-	newScriptAction->setStatusTip(tr("Create a new QT Script document"));
-	newScriptAction->setData(GlobalApplicationInformation::DOCTYPE_QSCRIPT);
-	connect(newScriptAction, SIGNAL(triggered()), this, SLOT(newFile()));
-	fileMenu->addAction(newScriptAction);
+	fileNewMenu = fileMenu->addMenu(QIcon(":/resources/new.png"),tr("&New"));
+		
 
-	//newAction = new QAction(QIcon(":/resources/new.png"),tr("&New Document"), this);
-	//newAction->setShortcuts(QKeySequence::New);
-	//newAction->setStatusTip(tr("Create a new document"));
-	//newAction->setData(DOCTYPE_UNDEFINED);
-	//connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
-	//fileMenu->addAction(newAction);
+	newDocumentAction = new QAction(tr("Undefined Document"), this);
+	newDocumentAction->setStatusTip(tr("Create an empty document"));
+	tmpNewActionMapping.clear();
+	tmpNewActionMapping.insert("",GlobalApplicationInformation::DOCTYPE_UNDEFINED);
+	newDocumentAction->setData(QVariant(tmpNewActionMapping));
+	connect(newDocumentAction, SIGNAL(triggered()), this, SLOT(newFile()));
+	fileNewMenu->addAction(newDocumentAction);
 
-	//newSVGAction = new QAction(tr("&New SVG Document"), this);
-	//newSVGAction->setStatusTip(tr("Create a new SVG document"));
-	//newSVGAction->setData(DOCTYPE_SVG);
-	//connect(newSVGAction, SIGNAL(triggered()), this, SLOT(newFile()));
-	//fileMenu->addAction(newSVGAction);
+	tmpNewActionMapping.clear();
+	tmpNewActionMapping.insert("",GlobalApplicationInformation::DOCTYPE_QTSCRIPT);
+	newQtScriptAction = new QAction(tr("QtScript Document"), this);
+	newQtScriptAction->setStatusTip(tr("Create an empty QtScript document"));
+	newQtScriptAction->setData(QVariant(tmpNewActionMapping));
+	connect(newQtScriptAction, SIGNAL(triggered()), this, SLOT(newFile()));
+	fileNewMenu->addAction(newQtScriptAction);
+
+	tmpNewActionMapping.clear();
+	tmpNewActionMapping.insert("",GlobalApplicationInformation::DOCTYPE_JAVASCRIPT);
+	newJavaScriptAction = new QAction(tr("JavaScript Document"), this);
+	newJavaScriptAction->setStatusTip(tr("Create an empty JavaScript document"));
+	newJavaScriptAction->setData(QVariant(tmpNewActionMapping));
+	connect(newJavaScriptAction, SIGNAL(triggered()), this, SLOT(newFile()));
+	fileNewMenu->addAction(newJavaScriptAction);
+
+	tmpNewActionMapping.clear();
+	tmpNewActionMapping.insert("",GlobalApplicationInformation::DOCTYPE_SVG);
+	newSVGAction = new QAction(tr("SVG Document"), this);
+	newSVGAction->setStatusTip(tr("Create an empty SVG document"));
+	newSVGAction->setData(QVariant(tmpNewActionMapping));
+	connect(newSVGAction, SIGNAL(triggered()), this, SLOT(newFile()));
+	fileNewMenu->addAction(newSVGAction);
+
 
 	openAction = new QAction(QIcon(":/resources/open.png"),tr("&Open..."), this);
 	openAction->setShortcut(QKeySequence(QKeySequence::Open));
@@ -1227,12 +1244,12 @@ void MainWindow::createDefaultMenus()
 	menuBar()->addMenu(markersMenu);
 	updateMarkersMenu();//the markers menu..........................................................
 
-	runScriptAction = scriptMenu->addAction(QIcon(":/resources/runScript.png"),tr("Run Script"));
-	runScriptAction->setEnabled(false);
-	runScriptAction->setShortcut(QKeySequence(tr("F5")));
-	runScriptAction->setStatusTip(tr("Run the current script"));
-	runScriptAction->setData(GlobalApplicationInformation::Execute);
-	connect(runScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
+	runDocumentAction = documentMenu->addAction(QIcon(":/resources/runScript.png"),tr("Execute"));
+	runDocumentAction->setEnabled(false);
+	runDocumentAction->setShortcut(QKeySequence(tr("F5")));
+	runDocumentAction->setStatusTip(tr("Execute the current document"));
+	runDocumentAction->setData(GlobalApplicationInformation::Execute);
+	connect(runDocumentAction, SIGNAL(triggered()), this, SLOT(executeDocument()));
 
 	//debugScriptAction = scriptMenu->addAction(tr("Debug Script"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
 	//debugScriptAction->setEnabled(false);//(false);
@@ -1241,20 +1258,20 @@ void MainWindow::createDefaultMenus()
 	//debugScriptAction->setData(GlobalApplicationInformation::Debug);
 	//connect(debugScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
 
-	abortScriptAction = scriptMenu->addAction(tr("Abort Script"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
-	abortScriptAction->setEnabled(false);//false);
-	abortScriptAction->setShortcut(QKeySequence(tr("F7")));
-	abortScriptAction->setStatusTip(tr("Stop the current script from running"));
-	connect(abortScriptAction, SIGNAL(triggered()), this, SLOT(abortScript()));
+	abortDocumentAction = documentMenu->addAction(tr("Abort"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
+	abortDocumentAction->setEnabled(false);//false);
+	abortDocumentAction->setShortcut(QKeySequence(tr("F7")));
+	abortDocumentAction->setStatusTip(tr("Abort the current document"));
+	connect(abortDocumentAction, SIGNAL(triggered()), this, SLOT(abortScript()));
 
-	restartScriptEngineAction = scriptMenu->addAction(tr("Restart Script Engine"));
+	restartScriptEngineAction = documentMenu->addAction(tr("Restart Script Engine"));
 	restartScriptEngineAction->setEnabled(false);//false);
 	restartScriptEngineAction->setShortcut(QKeySequence(tr("F9")));
 	restartScriptEngineAction->setStatusTip(tr("Force a restart of the script engine"));
 	connect(restartScriptEngineAction, SIGNAL(triggered()), this, SLOT(restartScriptEngine()));
 
 
-	menuBar()->addMenu(scriptMenu);//the script menu..........................................................
+	menuBar()->addMenu(documentMenu);//the script menu..........................................................
 
 	//m_backgroundAction = viewMenu->addAction(tr("&Background"));
 	//m_backgroundAction->setStatusTip(tr("Toggle Background"));
@@ -1387,7 +1404,7 @@ void MainWindow::createDockWindows()
 	//QString tmpColor = QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	//outputWindowList->setStyleSheet("* { background-color:rgb(" + tmpColor + "); padding: 10px ; color:rgb(136,0,21)}");
 	debugLogDock->setWidget(outputWindowList);
-	addDockWidget(Qt::RightDockWidgetArea, debugLogDock);
+	addDockWidget(Qt::BottomDockWidgetArea, debugLogDock);//(Qt::RightDockWidgetArea, debugLogDock);
 
 	//viewMenu->addAction(debugLogDock->toggleViewAction());
 	//connect(debugList, SIGNAL(currentTextChanged(const QString &)),
@@ -1418,7 +1435,9 @@ void MainWindow::createDockWindows()
 	//debuggerMainWindow->setParent(debuggerDock);
 
 	//debuggerDock->setLayout(layout);
-	addDockWidget(Qt::BottomDockWidgetArea, debuggerDock);
+	
+	//addDockWidget(Qt::BottomDockWidgetArea, debuggerDock);
+	//tabifyDockWidget(
 }
 
 void MainWindow::setupDynamicPlugins()
@@ -1737,6 +1756,38 @@ bool MainWindow::checkPluginCompatibility(QObject *plugin)
 	return bRetval;
 }
 
+bool MainWindow::parsePluginDefinedFileExtensions(QObject *plugin)
+{
+	QStringList lstExtensions;
+	bool bRetval = false;
+
+	DeviceInterface *iDevice = qobject_cast<DeviceInterface *>(plugin);
+	if (iDevice) 
+		lstExtensions = iDevice->GetAdditionalFileSlotHandlers();
+
+	ExtensionInterface *iExtension = qobject_cast<ExtensionInterface *>(plugin);
+	if (iExtension) 
+		lstExtensions = iExtension->GetAdditionalFileSlotHandlers();
+
+	if(lstExtensions.isEmpty() == false)
+	{
+		QStringList tmpList;
+		for (int i=0;i<lstExtensions.count();i++)
+		{
+			tmpList = lstExtensions.at(i).split("|",QString::SkipEmptyParts);
+			tmpNewActionMapping.clear();
+			tmpNewActionMapping.insert(tmpList.at(0),GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED);
+			lNewPluginFileAction.append(new QAction(tmpList.at(0).toUpper() + " Document", this));
+			lNewPluginFileAction.last()->setStatusTip("Create an empty " + tmpList.at(0).toUpper() + " document");
+			lNewPluginFileAction.last()->setData(QVariant(tmpNewActionMapping));
+			connect(lNewPluginFileAction.last(), SIGNAL(triggered()), this, SLOT(newFile()));
+			fileNewMenu->addAction(lNewPluginFileAction.last());
+			bRetval = true;
+		}
+	}
+	return bRetval;
+}
+
 bool MainWindow::popPluginIntoMenu(QObject *plugin)
 {
 	QAction *pluginAction;
@@ -1762,6 +1813,7 @@ bool MainWindow::popPluginIntoMenu(QObject *plugin)
 			pluginAction = integratePlugin(plugin,Plugins);
 			devicePluginMenu->addAction(pluginAction);
 			pluginsMenu->addMenu(devicePluginMenu);//the devices menu..........................................................
+			parsePluginDefinedFileExtensions(plugin);
 			return true;
 		}
 		return false;
@@ -1780,6 +1832,7 @@ bool MainWindow::popPluginIntoMenu(QObject *plugin)
 			pluginAction = integratePlugin(plugin,Plugins);
 			extensionPluginMenu->addAction(pluginAction);
 			pluginsMenu->addMenu(extensionPluginMenu);//the extension menu..........................................................
+			parsePluginDefinedFileExtensions(plugin);
 			return true;
 		}
 		return false;
@@ -1834,41 +1887,41 @@ void MainWindow::setScriptRunningStatus(GlobalApplicationInformation::ActiveScri
 	{
 	case GlobalApplicationInformation::Debugging:
 		{ 
-			runScriptAction->setEnabled(false);
+			runDocumentAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
-			abortScriptAction->setEnabled(true);
+			abortDocumentAction->setEnabled(true);
 			restartScriptEngineAction->setEnabled(true);
 			break; 
 		}	
 	case GlobalApplicationInformation::Executing:
 		{ 
-			runScriptAction->setEnabled(false);
+			runDocumentAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
-			abortScriptAction->setEnabled(true);
+			abortDocumentAction->setEnabled(true);
 			restartScriptEngineAction->setEnabled(true);
 			break; 
 		}	
 	case GlobalApplicationInformation::NoScript:
 		{ 
-			runScriptAction->setEnabled(false);
+			runDocumentAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
-			abortScriptAction->setEnabled(false);
+			abortDocumentAction->setEnabled(false);
 			restartScriptEngineAction->setEnabled(false);
 			break; 
 		}	
 	case GlobalApplicationInformation::Pending:
 		{ 
-			runScriptAction->setEnabled(true);
+			runDocumentAction->setEnabled(true);
 //			debugScriptAction->setEnabled(true);
-			abortScriptAction->setEnabled(false);
+			abortDocumentAction->setEnabled(false);
 			restartScriptEngineAction->setEnabled(false);
 			break; 
 		}	
 	case GlobalApplicationInformation::Stopping:
 		{ 
-			runScriptAction->setEnabled(false);
+			runDocumentAction->setEnabled(false);
 //			debugScriptAction->setEnabled(false);
-			abortScriptAction->setEnabled(true);
+			abortDocumentAction->setEnabled(true);
 			restartScriptEngineAction->setEnabled(true);
 			break; 
 		}	
@@ -1919,7 +1972,7 @@ QString MainWindow::getEnvironmentVariabele(QString strName)
 /*! \brief Closes the current active document.
  *
  * This function closes the document that is currently opened and active.
- * @param bAutoSaveChanges a boolean value determing whether the document should first save unsaved changes or not.
+ * @param bAutoSaveChanges a boolean value determining whether the document should first save unsaved changes or not.
  */
 void MainWindow::closeSelectedScriptFile(bool bAutoSaveChanges)
 {
@@ -1930,7 +1983,7 @@ void MainWindow::closeSelectedScriptFile(bool bAutoSaveChanges)
  *
  * This function executes the current active document (file that is opened and active).
  */
-void MainWindow::executeScript()
+void MainWindow::executeDocument()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
 	StimulGLScriptRunMode = (GlobalApplicationInformation::ScriptRunMode)action->data().toInt();
@@ -1939,7 +1992,7 @@ void MainWindow::executeScript()
 
 	switch (DocManager->getDocType(currentActiveWindow))
 	{
-		case GlobalApplicationInformation::DOCTYPE_QSCRIPT:
+		case GlobalApplicationInformation::DOCTYPE_QTSCRIPT:
 		{ 
 			break; 
 		}
@@ -2403,13 +2456,28 @@ void MainWindow::newFile()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
 	GlobalApplicationInformation::DocType docType;
+	QString sExtension = "";
 	if (action)
-	{docType = (GlobalApplicationInformation::DocType)action->data().toInt();}
+	{
+		//QMap<QString, QVariant> tmpNewActionMapping;
+		tmpNewActionMapping = action->data().toMap();
+		if(tmpNewActionMapping.isEmpty() == false)
+		{
+			docType = (GlobalApplicationInformation::DocType)tmpNewActionMapping.values().at(0).toInt();//action->data().toInt();
+			sExtension = tmpNewActionMapping.keys().at(0);
+		}
+		else
+		{
+			docType = GlobalApplicationInformation::DOCTYPE_UNDEFINED;
+		}
+	}
 	else
-	{docType = GlobalApplicationInformation::DOCTYPE_UNDEFINED;}	
+	{
+		docType = GlobalApplicationInformation::DOCTYPE_UNDEFINED;
+	}
 
 	int DocIndex;
-	newDocument(docType,DocIndex);
+	newDocument(docType,DocIndex,sExtension);
 	setCurrentFile(MainAppInfo::UntitledDocName());
 	//	setupSyntaxHighlighting(child,tempFileType);
 	statusBar()->showMessage(tr("New File created"), 2000);
@@ -2461,9 +2529,12 @@ void MainWindow::save()
 		}
 		else
 		{
-			if (DocManager->saveFile(tmpMdiChildPointer,tmpFileName))
+			bool bShouldReparse = false;
+			if (DocManager->saveFile(tmpMdiChildPointer,tmpFileName,&bShouldReparse))
 			{
 				statusBar()->showMessage(tr("File saved"), 2000);
+				if(bShouldReparse)
+					check4ReParseFile(tmpFileName);
 				return;
 			}
 			return;
@@ -2484,15 +2555,35 @@ void MainWindow::saveAs()
 		}
 		else
 		{
-			if (DocManager->saveFile(tmpMdiChildPointer,fileName))
+			bool bShouldReparse = false;
+			if (DocManager->saveFile(tmpMdiChildPointer,fileName,&bShouldReparse))
 			{
 				setCurrentFile(fileName);
 				statusBar()->showMessage(tr("File saved"), 2000);
+				if(bShouldReparse)
+					check4ReParseFile(fileName);
 				return;
 			}
 			return;
 		}
 	}
+}
+
+bool MainWindow::check4ReParseFile(const QString &sFilename)
+{
+	QMessageBox::StandardButton ret;	
+	ret = QMessageBox::information(this, tr("New known file extension detected."),
+		tr("The extension used for saving the file is recognized as a known extension and therefore the editor can be automatically configured for this document style format.\n"
+		"The current document style set for the editor is different or has not yet been set.\n"
+		"Do you allow StimulGL to re-load the document, which re-configures the editor, after it has been saved ?"),
+		QMessageBox::Yes | QMessageBox::No);
+	if (ret == QMessageBox::Yes)
+	{
+		closeSelectedScriptFile(true);
+		openFiles(sFilename);
+		return true;
+	}
+	return false;
 }
 
 void MainWindow::cut()
@@ -2611,7 +2702,8 @@ void MainWindow::setupToolBars()
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	fileToolBar = addToolBar(tr("File"));
-	fileToolBar->addAction(newScriptAction);
+	//fileToolBar->addAction(newDocumentAction);
+	//fileToolBar->addWidget(fileNewMenu);	
 	fileToolBar->addAction(openAction);
 	fileToolBar->addAction(saveAction);
 
@@ -2621,9 +2713,9 @@ void MainWindow::setupToolBars()
 	editToolBar->addAction(pasteAction);
 
 	toolsToolBar = addToolBar(tr("Tools"));
-	toolsToolBar->addAction(runScriptAction);
+	toolsToolBar->addAction(runDocumentAction);
 	//toolsToolBar->addAction(debugScriptAction);
-	toolsToolBar->addAction(abortScriptAction);
+	toolsToolBar->addAction(abortDocumentAction);
 	toolsToolBar->addAction(restartScriptEngineAction);
 }
 

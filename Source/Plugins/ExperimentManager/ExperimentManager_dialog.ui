@@ -100,55 +100,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Run QtQuick File (*.qml)</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnExampleButton_3">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>130</y>
-       <width>161</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Example Button 3</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnExampleButton_4">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>180</y>
-       <width>161</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Example Button 4</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btnExampleButton_5">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>230</y>
-       <width>161</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Example Button 5</string>
+      <string>Run QtQuick2 File (*.qml)</string>
      </property>
     </widget>
    </widget>

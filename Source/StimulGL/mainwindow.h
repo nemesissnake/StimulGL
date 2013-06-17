@@ -110,7 +110,7 @@ public slots:
 	void showJavaScriptConfigurationFile();//undocumented!
 	void setStartupFiles(const QString &path = QString());
 	void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList());
-	void executeScript();
+	void executeDocument();
 	QString getSelectedScriptFileLocation();
 	QString getApplicationRootDirPath();
 	QString getSelectedScriptFileName();
@@ -215,13 +215,16 @@ private:
 	QAction *optionsAction;
 	QAction *saveAsAction;
 	QAction *printAction;
-	QAction *runScriptAction;
+	QAction *runDocumentAction;
 	//QAction *debugScriptAction;
-	QAction *abortScriptAction;
+	QAction *abortDocumentAction;
 	QAction *restartScriptEngineAction;
 	QAction *newAction;
-	QAction *newScriptAction;
+	QAction *newDocumentAction;
 	QAction *newSVGAction;
+	QAction *newQtScriptAction;
+	QList<QAction *> lNewPluginFileAction;
+	QAction *newJavaScriptAction;
 	QAction *cutAction;
 	QAction *copyAction;
 	QAction *clearDebuggerAction;
@@ -256,6 +259,7 @@ private:
 	QAction *aboutQtAct;
 	QAction *historyQtAct;
 	QAction *separatorAct;
+	QMap<QString, QVariant> tmpNewActionMapping;//Can contain the extension and/or file type.. used for creating a new specific document type
 
 	QLabel *StatusPositionLabel;
 	QLabel *StatusNameLabel;
@@ -282,12 +286,13 @@ private:
     QMenu *helpMenu;
 	QMenu *recentFilesMenu;
 	QMenu *fileMenu;
+	QMenu *fileNewMenu;
 	//QMenu *viewMenu;
 	QMenu *markersMenu;
 	QMenu *editMenu;
 	QMenu *toolsMenu;
 	QMenu *windowMenu;
-	QMenu *scriptMenu;
+	QMenu *documentMenu;
 	//QMenu *debuggerMenu;
 
     //QAction *deviceAct1;
@@ -339,6 +344,7 @@ private:
 	bool configurePluginScriptEngine(const int nIndex);
 	void writeMainWindowSettings();
 	bool checkPluginCompatibility(QObject *plugin);
+	bool parsePluginDefinedFileExtensions(QObject *plugin);
     bool popPluginIntoMenu(QObject *plugin);
 	bool parseFile(const QFile &file);
 	void setCurrentFile(const QString &fileName);
@@ -349,6 +355,7 @@ private:
 	QMdiSubWindow *findMdiChild(const QString &fileName);
 	void updateRecentFileList(const QString &fileName);
 	void setDockSize(QDockWidget *dock, int setWidth, int setHeight);
+	bool check4ReParseFile(const QString &sFilename);
 
 public:
 	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);

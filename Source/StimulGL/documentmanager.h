@@ -66,8 +66,8 @@ public:
 	QString getFilePath(QMdiSubWindow *subWindow);
 	int getDocIndex(QMdiSubWindow *subWindow);
 	int getDocIndex(const QString &DocName);
-	bool saveFile(int DocIndex, QString fileName = "");
-	bool saveFile(QMdiSubWindow *subWindow,  QString fileName = "");
+	bool saveFile(int DocIndex, QString fileName = "", bool *bReparseDocumentContentNeeded = NULL);
+	bool saveFile(QMdiSubWindow *subWindow,  QString fileName = "", bool *bReparseDocumentContentNeeded = NULL);
 	void setModFlagAndTitle(const int &DocIndex,bool hasChanges);
 	bool maybeSave(QMdiSubWindow *subWindow,bool bAutoSaveChanges = false);
 	void setAllUnmodified();

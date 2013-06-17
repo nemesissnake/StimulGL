@@ -1,20 +1,23 @@
-import QtQuick 1.0
+import QtQuick 2.0
 
-Item {
-    id: container
-    property alias cellColor: rectangle.color
-    signal clicked(color cellColor)
+Item 
+{
+	id: container
+	property alias cellColor: rectangle.color
+	signal clicked(color cellColor)
 
-    width: 40; height: 25
+	width: 40; height: 25
 
-    Rectangle {
-        id: rectangle
-        border.color: "white"
-        anchors.fill: parent
-    }
+	Rectangle 
+	{
+		id: rectangle
+		border.color: "white"
+		anchors.fill: parent
+	}
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: container.clicked(container.cellColor)
-    }
+	MouseArea 
+	{
+		anchors.fill: parent
+		onClicked: container.clicked(container.cellColor)
+	}
 }

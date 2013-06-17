@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 //Here's some comment...
 
@@ -16,6 +16,7 @@ Rectangle
 		width: 138
 		height: 24
 		text: qsTr("Text example")
+		renderType: Text.NativeRendering
 		font.bold: true
 		font.pixelSize: 20
 	}

@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 Rectangle
 {
@@ -17,6 +17,7 @@ Rectangle
 		anchors.horizontalCenter: page.horizontalCenter
 		font.pointSize: 24; 
 		font.bold: true
+		renderType: Text.NativeRendering
 		MouseArea { id: mouseArea; anchors.fill: parent }
 		states: State 
 		{
@@ -62,6 +63,7 @@ Rectangle
 		font.family: "Helvetica"
 		font.pointSize: 24
 		color: "red"
+		renderType: Text.NativeRendering
 	}
 
 	Item 
