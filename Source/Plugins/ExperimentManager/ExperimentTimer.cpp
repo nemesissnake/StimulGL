@@ -23,6 +23,7 @@
 
 ExperimentTimer::ExperimentTimer(QObject *parent) : QObject(parent)
 {
+	currentScriptEngine = NULL;
 #ifdef WIN32
 	if (!QueryPerformanceFrequency(&frequency))// Save the performance counter frequency for later use.
 		qDebug() << __FUNCTION__ << "QueryPerformanceFrequency() failed with error " << GetLastError();
@@ -40,6 +41,25 @@ ExperimentTimer::ExperimentTimer(QObject *parent) : QObject(parent)
 ExperimentTimer::~ExperimentTimer()
 {
 
+}
+
+QScriptValue ExperimentTimer::ctor__experimentTimer(QScriptContext* context, QScriptEngine* engine)
+{
+	Q_UNUSED(context);
+	return engine->newQObject(new ExperimentTimer(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
+}
+
+bool ExperimentTimer::makeThisAvailableInScript(QString strObjectScriptName, QObject *engine)
+{
+	if (engine)
+	{
+		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
+		//QObject *someObject = this;//new MyObject;
+		QScriptValue objectValue = currentScriptEngine->newQObject(this);
+		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
+		return true;
+	}
+	return false;
 }
 
 void ExperimentTimer::restart()

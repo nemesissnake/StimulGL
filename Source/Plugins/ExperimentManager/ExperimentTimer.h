@@ -21,6 +21,7 @@
 #define EXPERIMENTTIMER_H
 
 #include <QObject>
+#include <QtScript>
 
 #ifdef WIN32   // Windows system specific
 #include <windows.h>
@@ -37,17 +38,24 @@ public:
 	ExperimentTimer(const ExperimentTimer& other ){Q_UNUSED(other);};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
 	~ExperimentTimer();
 
-	void	start();								// start timer
-	void	stop();									// stop the timer
-	void	restart();								// restart the timer
-	double	getElapsedTime();						// get elapsed time in second
-	double	getElapsedTimeInSec();					// get elapsed time in second (same as getElapsedTime)
-	double	getElapsedTimeInMilliSec();				// get elapsed time in milli seconds
-	double	getElapsedTimeInMicroSec();				// get elapsed time in micro-second
+	static QScriptValue ctor__experimentTimer(QScriptContext* context, QScriptEngine* engine);
+
+public slots:
+	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
+
+	void start();									// start timer
+	void stop();									// stop the timer
+	void restart();									// restart the timer
+	double getElapsedTime();						// get elapsed time in second
+	double getElapsedTimeInSec();					// get elapsed time in second (same as getElapsedTime)
+	double getElapsedTimeInMilliSec();				// get elapsed time in milli seconds
+	double getElapsedTimeInMicroSec();				// get elapsed time in micro-second
 	static bool SleepMSecAccurate(double mSecs);
 	static bool SleepMSecAccurate2(double mSecs);
 
 private:
+	QScriptEngine* currentScriptEngine;
+
 	double startTimeInMicroSec;						// starting time in micro-second
 	double endTimeInMicroSec;						// ending time in micro-second
 	int    stopped;									// stop flag 

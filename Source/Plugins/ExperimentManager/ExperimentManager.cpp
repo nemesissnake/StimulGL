@@ -131,6 +131,7 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<RetinotopyMapper>(RETINOTOPYMAPPER_NAME);
 	qRegisterMetaType<QML2Viewer>(QML2VIEWER_NAME);
 	qRegisterMetaType<TriggerTimer>(TRIGGERTIMER_NAME);
+	qRegisterMetaType<TriggerTimer>(EXPERIMENTTIMER_NAME);
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
 	qRegisterMetaType<PrtFormatManager>(RANDOMGENERATOR_NAME);

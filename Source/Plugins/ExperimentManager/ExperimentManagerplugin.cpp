@@ -32,6 +32,7 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	ExperimentManagerDiagObject = NULL;
 	ExperimentManagerObject = NULL;
 	TriggerTimerObject = NULL;
+	ExperimentTimerObject = NULL;
 	RandomGeneratorObject = NULL;
 	ImageProcessorObject = NULL;
 	PrtFormatManagerObject = NULL;
@@ -62,6 +63,11 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 	{
 		delete TriggerTimerObject;
 		TriggerTimerObject = NULL;
+	}
+	if(ExperimentTimerObject)
+	{
+		delete ExperimentTimerObject;
+		ExperimentTimerObject = NULL;
 	}
 	if(RandomGeneratorObject)
 	{
@@ -111,6 +117,13 @@ bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<ExperimentManager*>(), ExperimentManagerProto);
 	QScriptValue ExperimentManagerCtor = engine.newFunction(ExperimentManager::ctor__experimentManager, ExperimentManagerProto);
 	engine.globalObject().setProperty(EXPERIMENTMANAGER_NAME, ExperimentManagerCtor);
+
+	if(ExperimentTimerObject == NULL)
+		ExperimentTimerObject = new ExperimentTimer();
+	QScriptValue ExperimentTimerProto = engine.newQObject(ExperimentTimerObject);
+	engine.setDefaultPrototype(qMetaTypeId<ExperimentTimer*>(), ExperimentTimerProto);
+	QScriptValue ExperimentTimerCtor = engine.newFunction(ExperimentTimer::ctor__experimentTimer, ExperimentTimerProto);
+	engine.globalObject().setProperty(EXPERIMENTTIMER_NAME, ExperimentTimerCtor);
 
 	if(TriggerTimerObject == NULL)
 		TriggerTimerObject = new TriggerTimer();
@@ -253,6 +266,11 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 		if(Qml2ViewerObject == NULL)
 			Qml2ViewerObject = new QML2Viewer();
 		return (QObject *)Qml2ViewerObject->metaObject();
+	case 10:
+		if(ExperimentTimerObject == NULL)
+			ExperimentTimerObject = new ExperimentTimer();
+		return (QObject *)ExperimentTimerObject->metaObject();		
+
 	default:
 		return NULL;
 	}

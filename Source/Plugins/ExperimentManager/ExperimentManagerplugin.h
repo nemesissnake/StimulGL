@@ -60,6 +60,7 @@ private:
 	ExperimentManager *ExperimentManagerObject; 
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;
 	TriggerTimer *TriggerTimerObject;
+	ExperimentTimer *ExperimentTimerObject;
 	RandomGenerator *RandomGeneratorObject;
 	cExperimentStructure *cExperimentStructureObject;
 	cBlockStructure *cBlockStructureObject;

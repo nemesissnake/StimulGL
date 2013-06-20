@@ -146,6 +146,7 @@ namespace ExperimentManagerNameSpace
 	//#define QML_WIDGET_NAME							"qmlWidget"
 	#define QML2VIEWER_NAME							"QML2Viewer"
 	#define TRIGGERTIMER_NAME						"TriggerTimer"
+	#define EXPERIMENTTIMER_NAME					"ExperimentTimer"
 	#define RANDOMGENERATOR_NAME					"RandomGenerator"
 	#define IMAGEPROCESSOR_NAME						"ImageProcessor"
 	#define PRTFORMATMANAGER_NAME					"PRTFormatManager"
