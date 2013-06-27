@@ -331,6 +331,7 @@ void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
 	QMenu menu(this);
 	menu.addAction(clearDebuggerAction);
 	menu.addAction(copyDebuggerAction);
+	menu.addAction(saveDebuggerAction);
 	menu.exec(outputWindowList->viewport()->mapToGlobal(pos));
 }
 
@@ -765,6 +766,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 
 		clearDebuggerAction->setEnabled(true);
 		copyDebuggerAction->setEnabled(true);
+		saveDebuggerAction->setEnabled(true);
 
 		goToLineAction->setEnabled(hasMdiChild);
 		goToMatchingBraceAction->setEnabled(hasMdiChild);
@@ -808,6 +810,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		remAllMarkerAction->setEnabled(false);
 		clearDebuggerAction->setEnabled(true);
 		copyDebuggerAction->setEnabled(true);
+		saveDebuggerAction->setEnabled(true);
 		goToLineAction->setEnabled(false);
 		goToMatchingBraceAction->setEnabled(false);
 		selToMatchingBraceAction->setEnabled(false);
@@ -1129,6 +1132,13 @@ void MainWindow::createDefaultMenus()
 	connect(clearDebuggerAction, SIGNAL(triggered()), this, SLOT(clearDebugger()));
 	editMenu->addAction(clearDebuggerAction);
 
+	
+	saveDebuggerAction = new QAction(QObject::tr("Save All Output Item(s) to a text file..."), 0);
+	//saveDebuggerAction->setShortcut(QKeySequence(""));
+	saveDebuggerAction->setStatusTip(tr("Save the Debugger Output window."));
+	connect(saveDebuggerAction, SIGNAL(triggered()), this, SLOT(saveOutputWindow()));
+	editMenu->addAction(saveDebuggerAction);
+
 	editMenu->addSeparator();
 
 	//commentAction = new QAction(QIcon(":/resources/comment.png"), tr("Comment"), this);
@@ -1358,6 +1368,57 @@ void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined
 void MainWindow::clearOutputWindow() 
 {
 	clearDebugger();
+}
+
+/*! \brief Saves the Output Log Window.
+ *
+ * This function saves the Output Log Window to a text file.
+ * @param sFilePath a String value holding the path to the destination file.
+ * @param bOverwrite a Boolean value determining whether the destination file may be overwritten in case the file already exists.
+ */
+bool MainWindow::saveOutputWindow(const QString &sFilePath, const bool &bOverwrite)
+{
+	QString fileName;
+	QFile file;
+	if (sFilePath.isEmpty())
+	{
+		fileName = QFileDialog::getSaveFileName(NULL, "Save Output", QDir::currentPath(), "Text Files (*.txt);;Any file (*)");
+		file.setFileName(fileName);
+	}
+	else
+	{
+		fileName = sFilePath;
+		file.setFileName(fileName);
+		if(file.exists() && (bOverwrite == false))
+		{
+			qDebug() << __FUNCTION__ << "Destination file already exists, cannot overwrite. Select another file destination or set the bOverwrite parameter.";	
+			return false;
+		}
+	}
+	if (fileName.isEmpty())
+	{
+		qDebug() << __FUNCTION__ << "No valid file chosen.";
+		return false;
+	}
+	if (file.open(QFile::WriteOnly | QFile::Text)) 
+	{
+		if(outputWindowList->count() > 0)
+		{
+			for(int i=0;i<outputWindowList->count();i++) 
+			{
+				file.write(QString(outputWindowList->item(i)->text() + "\n").toLatin1());
+			}
+		}
+		else
+		{
+			qWarning() << "No data available in Log Output Pane to write.";
+		}		
+		file.close();
+		return true;;
+	}
+	qDebug() << __FUNCTION__ << "Could not write to file: " << fileName;
+	return false;
+
 }
 
 void MainWindow::clearDebugger()

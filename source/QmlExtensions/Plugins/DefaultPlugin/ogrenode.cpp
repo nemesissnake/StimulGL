@@ -273,7 +273,7 @@ void OgreNode::init()
     m_window->update(false);
 
     // Load resources
-    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(QString("E:/Projects/Experiments/StimulGL/Sven/QMLOgre3D/data.zip").toLatin1().data(), "Zip");
+    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(QString("E:/Projects/Experiments/StimulGL/Sven/QMLOgre3D/data").toLatin1().data(), "FileSystem");//.zip").toLatin1().data(), "Zip");
 		//appPath() + "/resources/data.zip").toLatin1().data(), "Zip");
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
@@ -294,7 +294,25 @@ void OgreNode::init()
     m_sceneManager->createLight("myLight")->setPosition(20, 80, 50);
 
     // create an ogre head entity and place it at the origin
-    m_sceneManager->getRootSceneNode()->attachObject(m_sceneManager->createEntity("Head", "ogrehead.mesh"));
+	Ogre::Entity* ogreHead;
+	ogreHead = m_sceneManager->createEntity("Head", "test.mesh");
+    m_sceneManager->getRootSceneNode()->attachObject(ogreHead);
+	
+	//QList<Ogre::Entity*> lOgreEntityList;
+	//QList<Ogre::SceneNode*> lOgreSceneNodeList;
+	//QString tmpString1;
+	//QString tmpString2;
+	//for(int i=1;i<=18;i++)
+	//{
+	//	tmpString2 = "(" + QString::number(i) + ")";//"ogrehead.mesh";
+	//	tmpString1 = "Head" + tmpString2;
+	//	tmpString2 = "n " + tmpString2 + ".mesh";
+	//	//ogreHead = m_sceneManager->createEntity("Head1", "ogrehead.mesh");
+	//	lOgreEntityList.append(m_sceneManager->createEntity((Ogre::String)tmpString1.toLocal8Bit().constData(), (Ogre::String)tmpString2.toLocal8Bit().constData()));//"ogrehead.mesh"));//(Ogre::String)tmpString2.toLocal8Bit().constData()));//(Ogre::String)tmpString1.toLocal8Bit().constData()
+	//	tmpString1 = tmpString1 + "Node";
+	//	lOgreSceneNodeList.append(m_sceneManager->getRootSceneNode()->createChildSceneNode( tmpString1.toLocal8Bit().constData(), Ogre::Vector3( 10 * i, 0, 0 ) ));
+	//	lOgreSceneNodeList.last()->attachObject(lOgreEntityList.last());
+	//}
 
     // Setup the camera
     m_cameraObject = new CameraNodeObject(m_camera);

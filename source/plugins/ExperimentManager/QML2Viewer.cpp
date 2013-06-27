@@ -250,7 +250,8 @@ void QML2Viewer::onStartTriggerRecieved()
 
 bool QML2Viewer::stopObject()
 {
-	disconnect(currentExperimentStructure,&cExperimentStructure::experimentStarted,this, &QML2Viewer::onStartTriggerRecieved);
+	if(currentExperimentStructure)
+		disconnect(currentExperimentStructure,&cExperimentStructure::experimentStarted,this, &QML2Viewer::onStartTriggerRecieved);
 	return true;
 }
 

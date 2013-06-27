@@ -56,13 +56,13 @@ void KeyBoard_Dialog::cleanUp()
 
 void KeyBoard_Dialog::detectedKeyPress(quint32 Value)
 {
-	ui.edtFeedBack->appendPlainText(QString(Value) + "Pressed");
+	ui.edtFeedBack->appendPlainText(QString(Value) + " Pressed");
 	UpdateCaptureThreadUI(Value);
 }
 
 void KeyBoard_Dialog::detectedKeyRelease(quint32 Value)
 {
-	ui.edtFeedBack->appendPlainText(QString(Value) + "Released");
+	ui.edtFeedBack->appendPlainText(QString(Value) + " Released");
 	UpdateCaptureThreadUI(Value);
 }
 

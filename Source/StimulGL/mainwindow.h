@@ -120,6 +120,7 @@ public slots:
 	bool initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags = 0);
 	void write2OutputWindow(const QString &text2Write = "");
 	void clearOutputWindow();
+	bool saveOutputWindow(const QString &sFilePath = "", const bool &bOverwrite = false);
 	void processEvents() {qApp->processEvents();};
 	void cleanupScript();
 	void activateMainWindow();
@@ -229,6 +230,7 @@ private:
 	QAction *copyAction;
 	QAction *clearDebuggerAction;
 	QAction *copyDebuggerAction;
+	QAction *saveDebuggerAction;
 	QAction *pasteAction;
 	QAction *goToLineAction;
 	QAction *findAction;
