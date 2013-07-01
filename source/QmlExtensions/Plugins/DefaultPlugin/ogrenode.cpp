@@ -239,6 +239,75 @@ void OgreNode::setAAEnabled(bool enable)
     markDirty(DirtyMaterial);
 }
 
+bool OgreNode::setResourceLocations(const QList<sTypeOgreResourcesStructure> lResources)
+{
+	lBufferedResources = lResources;
+	return true;
+}
+
+bool OgreNode::setEntities(const QList<sEntityStructure> lEntities)
+{
+	lBufferedEntities = lEntities;
+	return true;
+}
+
+bool OgreNode::setSceneNodes(const QList<sSceneNodeStructure> lSceneNodes)
+{
+	lBufferedSceneNodes = lSceneNodes;
+	return true;
+}
+
+bool OgreNode::configureUserSettings()
+{
+	int i,j;
+	int nFails = 0;
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if(lBufferedResources.isEmpty() == false)
+	{
+		for(i=0;i<lBufferedResources.count();i++)
+		{
+			if((lBufferedResources.at(i).sType == "FileSystem") || (lBufferedResources.at(i).sType == "Zip"))
+			{
+				Ogre::ResourceGroupManager::getSingleton().addResourceLocation(lBufferedResources.at(i).sLocation.toLatin1().data(), lBufferedResources.at(i).sType.toLatin1().data());
+			}
+			else
+			{
+				nFails++;
+			}
+		}
+		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+	}
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if(lBufferedEntities.isEmpty() == false)
+	{
+		for(i=0;i<lBufferedEntities.count();i++)
+		{
+			lBufferedEntities[i].pEntity = m_sceneManager->createEntity((Ogre::String)lBufferedEntities.at(i).sName.toLocal8Bit().constData(), (Ogre::String)lBufferedEntities.at(i).sMesh.toLocal8Bit().constData());
+		}
+
+		for(i=0;i<lBufferedSceneNodes.count();i++)
+		{
+			lBufferedSceneNodes[i].pSceneNode = m_sceneManager->getRootSceneNode()->createChildSceneNode(lBufferedSceneNodes[i].sName.toLocal8Bit().constData(), Ogre::Vector3(lBufferedSceneNodes[i].xPos, lBufferedSceneNodes[i].yPos, lBufferedSceneNodes[i].zPos));
+			if((lBufferedSceneNodes[i].pSceneNode) && (lBufferedSceneNodes[i].sEntityName.isEmpty() == false))
+			{
+				for(j=0;j<lBufferedEntities.count();j++)
+				{
+					if(lBufferedEntities[i].sName == lBufferedSceneNodes[i].sEntityName)
+					{
+						lBufferedSceneNodes[i].pSceneNode->attachObject(lBufferedEntities[i].pEntity);
+						///m_sceneManager->getRootSceneNode()->attachObject(ogreHead);
+						break;
+					}
+				}				
+			}
+		}
+	}
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if(nFails > 0)
+		return false;
+	return true;
+}
+
 void OgreNode::init()
 {
     const QOpenGLContext *ctx = QOpenGLContext::currentContext();
@@ -249,7 +318,8 @@ void OgreNode::init()
     QString glPlugin;
 	//QString glPlugin = QLatin1String(OGRE_PLUGIN_DIR);
     //glPlugin.remove("\"");
-	glPlugin = MainAppInfo::qmlExtensionsPluginDirPath() + "/" + OGRE3DITEM_PLUGINFOLDER_NAME;//"E:/Projects/StimulGL/Install/qml/plugins/Win32";
+	//glPlugin = MainAppInfo::qmlExtensionsPluginDirPath() + "/" + OGRE3DITEM_PLUGINFOLDER_NAME;//"E:/Projects/StimulGL/Install/qml/plugins/Win32";
+	glPlugin = MainAppInfo::appDirPath();//qmlExtensionsPluginDirPath() + "/" + OGRE3DITEM_PLUGINFOLDER_NAME;//"E:/Projects/StimulGL/Install/qml/plugins/Win32";
 //#ifdef DEBUG_PLUGIN
 #ifdef DEBUG
 	glPlugin += QLatin1String("/RenderSystem_GL_d");
@@ -272,11 +342,6 @@ void OgreNode::init()
     m_window->setVisible(false);
     m_window->update(false);
 
-    // Load resources
-    Ogre::ResourceGroupManager::getSingleton().addResourceLocation(QString("E:/Projects/Experiments/StimulGL/Sven/QMLOgre3D/data").toLatin1().data(), "FileSystem");//.zip").toLatin1().data(), "Zip");
-		//appPath() + "/resources/data.zip").toLatin1().data(), "Zip");
-    Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-
     // Setup scene
     m_sceneManager = m_root->createSceneManager(Ogre::ST_GENERIC, "mySceneManager");
     m_camera = m_sceneManager->createCamera("myCamera");
@@ -285,35 +350,14 @@ void OgreNode::init()
     m_camera->setAspectRatio(Ogre::Real(m_size.width()) / Ogre::Real(m_size.height()));
 
     // Setup content...
-
+	bool bResult = configureUserSettings();
     // Set a sky dome
-    m_sceneManager->setSkyBox(true, "SpaceSkyBox", 10000);
+    //m_sceneManager->setSkyBox(true, "SpaceSkyBox", 10000);
 
     // setup some basic lighting for our scene
     m_sceneManager->setAmbientLight(Ogre::ColourValue(0.3, 0.3, 0.3));
     m_sceneManager->createLight("myLight")->setPosition(20, 80, 50);
-
-    // create an ogre head entity and place it at the origin
-	Ogre::Entity* ogreHead;
-	ogreHead = m_sceneManager->createEntity("Head", "test.mesh");
-    m_sceneManager->getRootSceneNode()->attachObject(ogreHead);
 	
-	//QList<Ogre::Entity*> lOgreEntityList;
-	//QList<Ogre::SceneNode*> lOgreSceneNodeList;
-	//QString tmpString1;
-	//QString tmpString2;
-	//for(int i=1;i<=18;i++)
-	//{
-	//	tmpString2 = "(" + QString::number(i) + ")";//"ogrehead.mesh";
-	//	tmpString1 = "Head" + tmpString2;
-	//	tmpString2 = "n " + tmpString2 + ".mesh";
-	//	//ogreHead = m_sceneManager->createEntity("Head1", "ogrehead.mesh");
-	//	lOgreEntityList.append(m_sceneManager->createEntity((Ogre::String)tmpString1.toLocal8Bit().constData(), (Ogre::String)tmpString2.toLocal8Bit().constData()));//"ogrehead.mesh"));//(Ogre::String)tmpString2.toLocal8Bit().constData()));//(Ogre::String)tmpString1.toLocal8Bit().constData()
-	//	tmpString1 = tmpString1 + "Node";
-	//	lOgreSceneNodeList.append(m_sceneManager->getRootSceneNode()->createChildSceneNode( tmpString1.toLocal8Bit().constData(), Ogre::Vector3( 10 * i, 0, 0 ) ));
-	//	lOgreSceneNodeList.last()->attachObject(lOgreEntityList.last());
-	//}
-
     // Setup the camera
     m_cameraObject = new CameraNodeObject(m_camera);
     m_cameraObject->camera()->setAutoTracking(true, m_sceneManager->getRootSceneNode());

@@ -17,21 +17,55 @@
 //
 
 #include "ogreitem.h"
-#include "ogrenode.h"
 #include "cameranodeobject.h"
 
 #include <QtCore/QPropertyAnimation>
 
 OgreItem::OgreItem(QQuickItem *parent) : QQuickItem(parent), m_timerID(0)
 {
+	m_node = NULL;
 	m_camera = NULL;
     setFlag(ItemHasContents);
     setSmooth(false);
     startTimer(16);
+	bFirstUpdatePaintNode = true;
 }
 
 OgreItem::~OgreItem()
 {
+	lResources.clear();
+}
+
+bool OgreItem::addResourceLocation(const QString &sLocation,const QString &sType)
+{
+	sTypeOgreResourcesStructure tmpResource;
+	tmpResource.sLocation = sLocation;
+	tmpResource.sType = sType;
+	lResources.append(tmpResource);
+	return true;
+}
+
+bool OgreItem::createEntity(const QString &sEntityName, const QString &sEntityMesh)
+{
+	sEntityStructure tmpEntity;
+	tmpEntity.pEntity = NULL;
+	tmpEntity.sName = sEntityName;
+	tmpEntity.sMesh = sEntityMesh;
+	lEntities.append(tmpEntity);
+	return true;
+}
+
+bool OgreItem::createSceneNode(const QString &sNodeName, const QString &sEntityName, const float &xPos, const float &yPos, const float &zPos)
+{
+	sSceneNodeStructure tmpSceneNode;
+	tmpSceneNode.pSceneNode = NULL;
+	tmpSceneNode.sName = sNodeName;
+	tmpSceneNode.sEntityName = sEntityName;
+	tmpSceneNode.xPos = xPos;
+	tmpSceneNode.yPos = yPos;
+	tmpSceneNode.zPos = zPos;
+	lSceneNodes.append(tmpSceneNode);
+	return true;
 }
 
 QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
@@ -40,17 +74,30 @@ QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
         delete oldNode;
         return 0;
     }
-    OgreNode *node = static_cast<OgreNode *>(oldNode);
-    if (!node)
+    m_node = static_cast<OgreNode *>(oldNode);
+    if (!m_node)
     {
-        node = new OgreNode();
-        node->setQuickWindow(window());
+        m_node = new OgreNode();
+		if(bFirstUpdatePaintNode)
+		{
+			bFirstUpdatePaintNode = false;
+			if(lResources.isEmpty() == false)
+			{
+				m_node->setResourceLocations(lResources);
+				lResources.clear();
+				m_node->setEntities(lEntities);
+				lEntities.clear();
+				m_node->setSceneNodes(lSceneNodes);
+				lSceneNodes.clear();				
+			}
+		}
+		m_node->setQuickWindow(window());
     }
-    node->setSize(QSize(width(), height()));
-    node->setAAEnabled(smooth());
-    node->update();
-    m_camera = static_cast<QObject *>(node->camera());
-    return node;
+    m_node->setSize(QSize(width(), height()));
+    m_node->setAAEnabled(smooth());
+    m_node->update();
+    m_camera = static_cast<QObject *>(m_node->camera());
+    return m_node;
 }
 
 void OgreItem::timerEvent(QTimerEvent *)

@@ -31,7 +31,6 @@
 #define PHONONPLAYER_VERSION_STRING_REVISION	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 #define OGRE3DITEM_TYPE_QML_NAME				"OgreItem"
 #define OGRE3DITEM_VERSION_STRING_REVISION		1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define OGRE3DITEM_PLUGINFOLDER_NAME			"Ogre3D"
 
 #endif // DEFAULTQMLPLUGINDEFINES_H
 

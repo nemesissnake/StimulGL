@@ -121,6 +121,7 @@ Global
 		{59487439-8950-32A2-87B4-F0F940C28C74}.Release|Win32.ActiveCfg = Release|Win32
 		{59487439-8950-32A2-87B4-F0F940C28C74}.Release|Win32.Build.0 = Release|Win32
 		{59487439-8950-32A2-87B4-F0F940C28C74}.Release|x64.ActiveCfg = Release|x64
+		{59487439-8950-32A2-87B4-F0F940C28C74}.Release|x64.Build.0 = Release|x64
 		{59487439-8950-32A2-87B4-F0F940C28C74}.Template|Win32.ActiveCfg = Release|x64
 		{59487439-8950-32A2-87B4-F0F940C28C74}.Template|x64.ActiveCfg = Release|x64
 		{59487439-8950-32A2-87B4-F0F940C28C74}.Template|x64.Build.0 = Release|x64
@@ -184,8 +185,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		QtVersion = 5.0.2 (64bit)
 		Qt5Version = Qt502_win32
+		QtVersion = 5.0.2 (64bit)
 	EndGlobalSection
 	GlobalSection(Qt) = preSolution
 		Integration = True

@@ -29,6 +29,29 @@
 #define STRINGIFY(x) STRINGIFY_(x)
 #define OGRE_PLUGIN_DIR STRINGIFY(OGRE_PLUGIN_VAR)
 
+typedef struct strcOgreResources
+{
+	QString sType;
+	QString sLocation;
+} sTypeOgreResourcesStructure;
+
+typedef struct strcEntity
+{
+	Ogre::Entity* pEntity;
+	QString sName;
+	QString sMesh;
+} sEntityStructure;
+
+typedef struct strcSceneNode
+{
+	Ogre::SceneNode* pSceneNode;
+	QString sName;
+	QString sEntityName;
+	float xPos;
+	float yPos;
+	float zPos;
+} sSceneNodeStructure;
+
 namespace Ogre {
 class Root;
 class Camera;
@@ -59,7 +82,17 @@ public:
     void restoreOgreState();
     void preprocess();
 
+	bool setResourceLocations(const QList<sTypeOgreResourcesStructure> lResources);
+	bool setEntities(const QList<sEntityStructure> lEntities);
+	bool setSceneNodes(const QList<sSceneNodeStructure> lSceneNodes);
+
 private:
+	bool configureUserSettings();
+
+	QList<sTypeOgreResourcesStructure> lBufferedResources;	
+	QList<sEntityStructure> lBufferedEntities;
+	QList<sSceneNodeStructure> lBufferedSceneNodes;
+
     QSGTextureMaterial m_material;
     QSGOpaqueTextureMaterial m_materialO;
     QSGGeometry m_geometry;

@@ -1931,7 +1931,7 @@ void MainWindow::setAppDirectories()
 	paths <<  MainAppInfo::pluginsDirPath();// pluginsDir.absolutePath();
 #ifndef QT_NO_DEBUG_OUTPUT	
 	qDebug() << "Plugin path defined: " << MainAppInfo::pluginsDirPath();	
-#endif
+#endif		
 	qApp->setLibraryPaths(paths);
 }
 

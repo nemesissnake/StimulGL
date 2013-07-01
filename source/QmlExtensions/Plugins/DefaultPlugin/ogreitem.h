@@ -21,6 +21,7 @@
 
 #include <QtQuick/QQuickItem>
 #include <QtCore/QPropertyAnimation>
+#include "ogrenode.h"
 
 class CameraNodeObject;
 
@@ -32,16 +33,25 @@ class OgreItem : public QQuickItem
 public:
     OgreItem(QQuickItem *parent = 0);
 	~OgreItem();
-
     QObject *camera() const { return m_camera; }
+
+public slots:
+	bool addResourceLocation(const QString &sLocation,const QString &sType);
+	bool createEntity(const QString &sEntityName, const QString &sEntityMesh);
+	bool createSceneNode(const QString &sNodeName, const QString &sEntityName, const float &xPos, const float &yPos, const float &zPos);
 
 protected:
     virtual QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
     void timerEvent(QTimerEvent *);
 
 private:
+	bool bFirstUpdatePaintNode;
     int m_timerID;
     QObject *m_camera;
+	OgreNode *m_node;
+	QList<sTypeOgreResourcesStructure> lResources;
+	QList<sEntityStructure> lEntities;
+	QList<sSceneNodeStructure> lSceneNodes;
 };
 
 #endif // OGREITEM_H
