@@ -139,12 +139,12 @@
     <CustomBuild Include="ogreitem.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="ogrenode.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ogrenode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

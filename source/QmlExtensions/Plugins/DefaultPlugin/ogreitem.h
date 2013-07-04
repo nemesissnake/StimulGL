@@ -30,6 +30,9 @@ class OgreItem : public QQuickItem
     Q_OBJECT
     Q_PROPERTY(QObject *camera READ camera)
 
+signals:
+	void ogreNodeInitialized();
+
 public:
     OgreItem(QQuickItem *parent = 0);
 	~OgreItem();
@@ -39,6 +42,8 @@ public slots:
 	bool addResourceLocation(const QString &sLocation,const QString &sType);
 	bool createEntity(const QString &sEntityName, const QString &sEntityMesh);
 	bool createSceneNode(const QString &sNodeName, const QString &sEntityName, const float &xPos, const float &yPos, const float &zPos);
+	QVector3D getObjectBoundingBoxCenter(const QString &sSceneNodeName, const QString &sObjectName);
+	QVector3D getObjectBoundingBoxSize(const QString &sSceneNodeName, const QString &sObjectName);
 
 protected:
     virtual QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);

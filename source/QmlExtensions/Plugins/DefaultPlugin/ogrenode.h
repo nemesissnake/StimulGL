@@ -65,6 +65,7 @@ class CameraNodeObject;
 
 class OgreNode : public QSGGeometryNode
 {
+
 public:
     OgreNode();
     ~OgreNode();

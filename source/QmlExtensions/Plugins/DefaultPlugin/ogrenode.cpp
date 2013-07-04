@@ -345,7 +345,7 @@ void OgreNode::init()
     // Setup scene
     m_sceneManager = m_root->createSceneManager(Ogre::ST_GENERIC, "mySceneManager");
     m_camera = m_sceneManager->createCamera("myCamera");
-    m_camera->setNearClipDistance(1);
+    m_camera->setNearClipDistance(0.1);
     m_camera->setFarClipDistance(99999);
     m_camera->setAspectRatio(Ogre::Real(m_size.width()) / Ogre::Real(m_size.height()));
 
@@ -360,7 +360,6 @@ void OgreNode::init()
 	
     // Setup the camera
     m_cameraObject = new CameraNodeObject(m_camera);
-    m_cameraObject->camera()->setAutoTracking(true, m_sceneManager->getRootSceneNode());
-
-    m_initialized = true;
+    //m_cameraObject->camera()->setAutoTracking(true, m_sceneManager->getRootSceneNode());
+	m_initialized = true;
 }
