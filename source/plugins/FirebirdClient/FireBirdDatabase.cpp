@@ -165,11 +165,13 @@ bool FireBirdDatabase::Close()
     try
     {
         lastError_ = 0;
-        QSqlDatabase database = QSqlDatabase::database(connectionName_);
-        if (database.isValid() && database.isOpen())
-        {
-            database.close();
-        }        
+		{
+			QSqlDatabase database = QSqlDatabase::database(connectionName_);
+			if (database.isValid() && database.isOpen())
+			{
+				database.close();
+			} 
+		}
         QSqlDatabase::removeDatabase(connectionName_);
         driver_ = NULL;
     }
