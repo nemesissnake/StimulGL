@@ -29,6 +29,7 @@
 #include <QFileInfo>
 #include <QMetaObject>
 #include <QtGlobal>
+#include <QGLFramebufferObject>
 #include "OutputListDelegate.h"
 
 #include "../Plugins/ParallelPortDevice/parallelport.h"
@@ -924,6 +925,15 @@ bool MainWindow::setDefaultGLFormat()
 	qDebug() << "Supported OpenGL version: " << sOpenGLVersionString;
 	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
 	StimulGLQGLFormat.setSampleBuffers(true);
+
+	bool bHasOpenGLFramebufferObjects = QGLFramebufferObject::hasOpenGLFramebufferObjects();
+	StimulGLQGLFormat.setDoubleBuffer(true);
+
+
+	if (!QGLFormat::hasOpenGL() || !QGLFramebufferObject::hasOpenGLFramebufferObjects())
+	{
+		qDebug() << "This system does not support OpenGL/framebuffer objects.";
+	}
 
 	//StimulGLQGLFormat.setVersion(3,1);
 	//int a = StimulGLQGLFormat.majorVersion();

@@ -7,8 +7,11 @@
     <IsDebug>$([System.Convert]::ToString( $([System.Text.RegularExpressions.Regex]::IsMatch($(Configuration), '[Dd]ebug'))))</IsDebug>
     <!--ShortPlatform-->
     <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.0.2\win32</QTDIR>
-    <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\x64</QTDIR>
-    <OGRE_HOME>C:\Qt\5.0.2\OgreSDK_vc10_v1-8-1</OGRE_HOME>
+    <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\x64</QTDIR>    
+    <OGRE_HOME Condition="'$(Platform)' == 'Win32'">C:\Qt\5.0.2\Ogre3D\OGRE-SDK-1.8.2-vc100-x86-28.05.2013</OGRE_HOME>
+    <OGRE_HOME Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\Ogre3D\OGRE-SDK-1.8.2-vc100-amd64-28.05.2013</OGRE_HOME>
+    <BOOST_HOME Condition="'$(Platform)' == 'Win32'">C:\Qt\5.0.2\Boost\boost-1.54-rev84846-vc100-x86-20.06.2013</BOOST_HOME>
+    <BOOST_HOME Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\Boost\boost-1.54-rev84846-vc100-amd64-20.06.2013</BOOST_HOME>      
   </PropertyGroup>
   <Choose>
     <When Condition="$([System.Convert]::ToBoolean($(IsDebug)))">
@@ -34,7 +37,9 @@
     </BuildMacro>
     <BuildMacro Include="OGRE_HOME">
       <Value>$(OGRE_HOME)</Value>
-      <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
+    <BuildMacro Include="BOOST_HOME">
+      <Value>$(BOOST_HOME)</Value>
+    </BuildMacro>    
   </ItemGroup>
 </Project>
