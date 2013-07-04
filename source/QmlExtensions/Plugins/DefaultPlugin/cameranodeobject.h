@@ -20,6 +20,8 @@
 #define CAMERANODEOBJECT_H
 
 #include <QObject>
+#include <QVector3D>
+#include "OgreVector3.h"
 
 namespace Ogre {
 class SceneNode;
@@ -32,6 +34,7 @@ class CameraNodeObject : public QObject
     Q_PROPERTY(qreal yaw READ yaw WRITE setYaw)
     Q_PROPERTY(qreal pitch READ pitch WRITE setPitch)
     Q_PROPERTY(qreal zoom READ zoom WRITE setZoom)
+	Q_PROPERTY(QVector3D position READ position WRITE setPosition)
 public:
     explicit CameraNodeObject(Ogre::Camera *cam, QObject *parent = 0);
 
@@ -51,6 +54,12 @@ public:
     void setPitch(qreal p)
     { m_pitch = p; updateRotation(); }
     void setZoom(qreal z);
+	QVector3D position() const
+	{ return QVector3D(m_position.x,m_position.y,m_position.z); }
+	void setPosition(QVector3D p);
+
+public slots:
+	bool setAutoTracking(const bool &bEnable, const QString &sSceneNodeName = "", const QVector3D &vecOffset = QVector3D(0,0,0));
 
 private:
     void updateRotation();
@@ -61,6 +70,7 @@ private:
     qreal m_yaw;
     qreal m_pitch;
     qreal m_zoom;
+	Ogre::Vector3 m_position;
 };
 
 #endif // CAMERANODEOBJECT_H

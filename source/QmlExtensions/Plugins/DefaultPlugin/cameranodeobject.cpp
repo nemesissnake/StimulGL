@@ -22,7 +22,7 @@
 #include <OgreCamera.h>
 #include <QDebug>
 
-static const Ogre::Vector3 initialPosition(0, 0, 300);
+//static const Ogre::Vector3 initialPosition(0, 0, 300);
 
 CameraNodeObject::CameraNodeObject(Ogre::Camera *cam, QObject *parent) :
     QObject(parent),
@@ -33,7 +33,9 @@ CameraNodeObject::CameraNodeObject(Ogre::Camera *cam, QObject *parent) :
 {
     m_node = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getRootSceneNode()->createChildSceneNode();
     m_node->attachObject(cam);
-    cam->move(initialPosition);
+	//m_position = initialPosition;
+	m_position = Ogre::Vector3(0, 0, 300);
+    cam->move(m_position);
 }
 
 void CameraNodeObject::updateRotation()
@@ -47,6 +49,35 @@ void CameraNodeObject::setZoom(qreal z)
 {
     m_zoom = z;
     m_node->resetOrientation();
-    m_camera->setPosition(initialPosition * (1 / m_zoom));
+    m_camera->setPosition(m_position * (1 / m_zoom));
     updateRotation();
+}
+
+void CameraNodeObject::setPosition(QVector3D p)
+{ 
+	m_position.x = p.x(); 
+	m_position.y = p.y(); 
+	m_position.z = p.z();
+	//m_node->resetOrientation();
+	m_camera->setPosition(m_position * (1 / m_zoom));
+	updateRotation();
+}
+
+bool CameraNodeObject::setAutoTracking(const bool &bEnable, const QString &sSceneNodeName, const QVector3D &vecOffset)
+{
+	if(bEnable == false)
+	{
+		m_camera->setAutoTracking(false);
+		return true;
+	}
+	if(sSceneNodeName.isEmpty() == false)
+	{
+		Ogre::SceneNode *tmpSceneNode = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData());
+		if(tmpSceneNode)
+		{			
+			m_camera->setAutoTracking(true, tmpSceneNode,Ogre::Vector3(vecOffset.x(),vecOffset.y(),vecOffset.z()));
+			return true;
+		}
+	}
+	return false;
 }

@@ -20,6 +20,7 @@
 #include "cameranodeobject.h"
 
 #include <QtCore/QPropertyAnimation>
+#include <QTimer>
 
 OgreItem::OgreItem(QQuickItem *parent) : QQuickItem(parent), m_timerID(0)
 {
@@ -68,6 +69,18 @@ bool OgreItem::createSceneNode(const QString &sNodeName, const QString &sEntityN
 	return true;
 }
 
+QVector3D OgreItem::getObjectBoundingBoxCenter(const QString &sSceneNodeName, const QString &sObjectName)
+{
+	Ogre::Vector3 tmpVec = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->getWorldBoundingBox().getCenter();//getCorner(Ogre::AxisAlignedBox::FAR_LEFT_BOTTOM);//Ogre::CornerEnum::FAR_LEFT_BOTTOM
+	return QVector3D(tmpVec.x,tmpVec.y,tmpVec.z);
+}
+
+QVector3D OgreItem::getObjectBoundingBoxSize(const QString &sSceneNodeName, const QString &sObjectName)
+{
+	Ogre::Vector3 tmpVec = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->getBoundingBox().getSize();
+	return QVector3D(tmpVec.x,tmpVec.y,tmpVec.z);
+}
+
 QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 {
     if (width() <= 0 || height() <= 0) {
@@ -75,6 +88,7 @@ QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
         return 0;
     }
     m_node = static_cast<OgreNode *>(oldNode);
+	bool bDoEmit = false;
     if (!m_node)
     {
         m_node = new OgreNode();
@@ -92,11 +106,14 @@ QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 			}
 		}
 		m_node->setQuickWindow(window());
+		bDoEmit = true;
     }
     m_node->setSize(QSize(width(), height()));
     m_node->setAAEnabled(smooth());
     m_node->update();
     m_camera = static_cast<QObject *>(m_node->camera());
+	if(bDoEmit)
+		QTimer::singleShot(1, this, SIGNAL(ogreNodeInitialized()));//Thread safety
     return m_node;
 }
 

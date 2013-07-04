@@ -81,3 +81,5 @@ source/plugins/TCPNetworkServer/TCPNetworkServerplugin.vcxproj.user
 Source/Plugins/FirebirdClient/scripts/TEST.FDB
 Source/Plugins/FirebirdClient/scripts/Test.xls
 Install/firebird.msg
+Install/OgreMain_d.dll_
+Install/RenderSystem_GL_d.dll_
