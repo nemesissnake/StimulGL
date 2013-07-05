@@ -44,6 +44,8 @@ public slots:
 	bool createSceneNode(const QString &sNodeName, const QString &sEntityName, const float &xPos, const float &yPos, const float &zPos);
 	QVector3D getObjectBoundingBoxCenter(const QString &sSceneNodeName, const QString &sObjectName);
 	QVector3D getObjectBoundingBoxSize(const QString &sSceneNodeName, const QString &sObjectName);
+	void setObjectVisibility(const QString &sSceneNodeName, const QString &sObjectName, const bool &bVisible);
+	//bool setObjectAttachement(const QString &sSceneNodeName, const QString &sObjectName, const bool &bAttachment);
 
 protected:
     virtual QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);

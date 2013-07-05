@@ -81,6 +81,20 @@ QVector3D OgreItem::getObjectBoundingBoxSize(const QString &sSceneNodeName, cons
 	return QVector3D(tmpVec.x,tmpVec.y,tmpVec.z);
 }
 
+void OgreItem::setObjectVisibility(const QString &sSceneNodeName, const QString &sObjectName, const bool &bVisible)
+{
+	Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->setVisible(bVisible);
+}
+
+//bool OgreItem::setObjectAttachement(const QString &sSceneNodeName, const QString &sObjectName, const bool &bAttachment)
+//{
+//	if(bAttachment == false)
+//		Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->detachFromParent(bAttachment);
+//	else
+//		Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->attachObject(sObjectName.toLocal8Bit().constData()));
+//	return false;
+//}
+
 QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 {
     if (width() <= 0 || height() <= 0) {

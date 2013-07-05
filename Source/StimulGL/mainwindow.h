@@ -139,6 +139,7 @@ public slots:
 	bool setContextState(const QString &sContextName);
 	bool resetContextState(const quint64 &nScriptId = 0);
 	bool deleteContextState(const QString &sContextName);
+	void quit(){qApp->closeAllWindows();};
 
 protected slots:
 	void ExternalNetworkDataRecieved(int nClientIndex, QString sAvailableData);

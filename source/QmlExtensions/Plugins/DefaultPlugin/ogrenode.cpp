@@ -336,6 +336,7 @@ void OgreNode::init()
 
     params["externalGLControl"] = "true";
     params["currentGLContext"] = "true";
+	params["border"] = "none";
 
     //Finally create our window.
     m_window = m_root->createRenderWindow("OgreWindow", 1, 1, false, &params);

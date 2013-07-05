@@ -143,11 +143,11 @@ bool FirebirdClient::ExportDatabasetoExcel(const QString& sPath, const QString& 
 		
 		QAxObject* excel = new QAxObject( "Excel.Application");
 		QAxObject* workbooks = excel->querySubObject( "Workbooks" );
-		QAxObject* workbook;
-		QAxObject* sheets;
-		QAxObject* sheet;
-		QAxObject* range;
-		QAxObject* font;
+		QAxObject* workbook = NULL;
+		QAxObject* sheets = NULL;
+		QAxObject* sheet = NULL;
+		QAxObject* range = NULL;
+		QAxObject* font = NULL;
 		QVariantList params;
 		if(bNewFile)
 			workbook = workbooks->querySubObject( "Add()");
@@ -290,13 +290,20 @@ bool FirebirdClient::ExportDatabasetoExcel(const QString& sPath, const QString& 
 		excel->setProperty("DisplayAlerts", true);		
 		workbook->dynamicCall("Close (Boolean)", true);
 		excel->dynamicCall("Quit (void)");
-		delete font;
-		delete range;
-		delete sheet;
-		delete sheets;
-		delete workbook;
-		delete workbooks;
-		delete excel;
+		if(font)
+			delete font;
+		if(range)
+			delete range;
+		if(sheet)
+			delete sheet;
+		if(sheets)
+			delete sheets;
+		if(workbook)
+			delete workbook;
+		if(workbooks)
+			delete workbooks;
+		if(excel)
+			delete excel;
 		//Create Excel API Documentation!
 		//QFile file1("c://sheet2.html");
 		//file1.open(QIODevice::WriteOnly | QIODevice::Text);
