@@ -22,8 +22,6 @@
 #include <OgreCamera.h>
 #include <QDebug>
 
-//static const Ogre::Vector3 initialPosition(0, 0, 300);
-
 CameraNodeObject::CameraNodeObject(Ogre::Camera *cam, QObject *parent) :
     QObject(parent),
     m_camera(cam),
@@ -33,7 +31,6 @@ CameraNodeObject::CameraNodeObject(Ogre::Camera *cam, QObject *parent) :
 {
     m_node = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getRootSceneNode()->createChildSceneNode();
     m_node->attachObject(cam);
-	//m_position = initialPosition;
 	m_position = Ogre::Vector3(0, 0, 300);
     cam->move(m_position);
 }
@@ -72,12 +69,25 @@ bool CameraNodeObject::setAutoTracking(const bool &bEnable, const QString &sScen
 	}
 	if(sSceneNodeName.isEmpty() == false)
 	{
-		Ogre::SceneNode *tmpSceneNode = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData());
-		if(tmpSceneNode)
-		{			
-			m_camera->setAutoTracking(true, tmpSceneNode,Ogre::Vector3(vecOffset.x(),vecOffset.y(),vecOffset.z()));
-			return true;
+		try
+		{
+			Ogre::SceneNode *tmpSceneNode = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData());
+			if(tmpSceneNode)
+			{			
+				m_camera->setAutoTracking(true, tmpSceneNode,Ogre::Vector3(vecOffset.x(),vecOffset.y(),vecOffset.z()));
+				return true;
+			}
 		}
+		catch(std::exception &e) 
+		{
+			qDebug() << __FUNCTION__ << QString("Error %1").arg(e.what());
+			return false;
+		}
+		catch(...)
+		{
+			qDebug() << __FUNCTION__ << ("An Error occurred");
+			return false;
+		}	
 	}
 	return false;
 }

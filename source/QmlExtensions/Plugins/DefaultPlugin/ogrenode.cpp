@@ -57,10 +57,10 @@ OgreNode::OgreNode() : QSGGeometryNode()
     , m_ogreFBO(0)
     , m_initialized(false)
     , m_dirtyFBO(false)
+	, m_root(0)
+	, m_camera(0)
+	, cAmbientSceneColor(NULL)
 {
-	m_camera = NULL;
-	m_root = NULL;
-	m_ogreContext = NULL;
 
     setMaterial(&m_material);
     setOpaqueMaterial(&m_materialO);
@@ -74,30 +74,50 @@ OgreNode::~OgreNode()
 	{
         m_renderTexture->removeAllViewports();
     }
-	m_root = Ogre::Root::getSingleton().getSingletonPtr();
-    if (m_root) 
+	//if(m_cameraObject)
+	//{
+	//	delete m_cameraObject;
+	//	m_cameraObject = NULL;
+	//}
+	//m_root = Ogre::Root::getSingleton().getSingletonPtr();
+    //if (m_root.get()) 
+	if (m_root)
 	{
         m_root->detachRenderTarget(m_renderTexture);
         if (m_sceneManager) 
 		{
 			m_sceneManager->destroyAllCameras();
+			m_sceneManager->destroyAllEntities();
+			m_sceneManager->destroyAllLights();
+			m_sceneManager->destroyAllManualObjects();
+			m_sceneManager->getRootSceneNode()->removeAndDestroyAllChildren();
 			m_sceneManager->clearScene();
+			//Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			m_root->destroySceneManager(m_sceneManager);
 			if(m_window)
 			{
 				m_root->detachRenderTarget(m_window);
-				m_root->destroyRenderTarget(m_window);
-			
+				m_root->destroyRenderTarget(m_window);			
 			}
-			m_root->destroyRenderTarget(m_renderTexture);
-			
+			m_root->destroyRenderTarget(m_renderTexture);	
         }
+		m_root->destroyAllRenderQueueInvocationSequences();
     }
-	if(m_ogreContext)
+	if(cAmbientSceneColor)
 	{
-		delete m_ogreContext;
-		m_ogreContext = NULL;
+		delete cAmbientSceneColor;
+		cAmbientSceneColor = NULL;
 	}
+	//if(m_ogreContext)
+	//{
+	//	delete m_ogreContext;
+	//	m_ogreContext = NULL;
+	//}
+	//if (m_root.get()) 
+	//{
+		//delete m_root;
+	//	m_root.reset();
+	//}
 }
 
 void OgreNode::saveOgreState()
@@ -167,18 +187,18 @@ void OgreNode::setQuickWindow(QQuickWindow *window)
 
 void OgreNode::update()
 {
+	//updateMutex.lock();
     restoreOgreState();
-
     if (!m_initialized)
         init();
-
-    if (m_dirtyFBO) {
+    if (m_dirtyFBO) 
+	{
         updateFBO();
         m_ogreFBO = getOgreFBO();
         m_dirtyFBO = false;
     }
-
     saveOgreState();
+	//updateMutex.unlock();
 }
 
 void OgreNode::updateFBO()
@@ -257,6 +277,18 @@ bool OgreNode::setSceneNodes(const QList<sSceneNodeStructure> lSceneNodes)
 	return true;
 }
 
+bool OgreNode::setAmbientLight(const QColor &cColor)
+{
+	cAmbientSceneColor = new QColor(cColor);
+	return true;
+}
+
+bool OgreNode::setLightSources(const QList<sLightSourceStructure> lLightSources)
+{
+	lBufferedLightSources = lLightSources;
+	return true;
+}
+
 bool OgreNode::configureUserSettings()
 {
 	int i,j;
@@ -268,7 +300,20 @@ bool OgreNode::configureUserSettings()
 		{
 			if((lBufferedResources.at(i).sType == "FileSystem") || (lBufferedResources.at(i).sType == "Zip"))
 			{
-				Ogre::ResourceGroupManager::getSingleton().addResourceLocation(lBufferedResources.at(i).sLocation.toLatin1().data(), lBufferedResources.at(i).sType.toLatin1().data());
+				try
+				{
+					Ogre::ResourceGroupManager::getSingleton().addResourceLocation(lBufferedResources.at(i).sLocation.toLatin1().data(), lBufferedResources.at(i).sType.toLatin1().data());					
+				}
+				catch(std::exception &e) 
+				{
+					qDebug() << __FUNCTION__ << QString("Error while adding a Ogre3D Resource %1").arg(e.what());
+					nFails++;
+				}
+				catch(...)
+				{
+					qDebug() << __FUNCTION__ << ("Error while adding a Ogre3D Resource.");
+					nFails++;
+				}
 			}
 			else
 			{
@@ -282,30 +327,107 @@ bool OgreNode::configureUserSettings()
 	{
 		for(i=0;i<lBufferedEntities.count();i++)
 		{
-			lBufferedEntities[i].pEntity = m_sceneManager->createEntity((Ogre::String)lBufferedEntities.at(i).sName.toLocal8Bit().constData(), (Ogre::String)lBufferedEntities.at(i).sMesh.toLocal8Bit().constData());
+			try
+			{
+				lBufferedEntities[i].pEntity = m_sceneManager->createEntity((Ogre::String)lBufferedEntities.at(i).sName.toLocal8Bit().constData(), (Ogre::String)lBufferedEntities.at(i).sMesh.toLocal8Bit().constData());
+			}
+			catch(std::exception &e) 
+			{
+				qDebug() << __FUNCTION__ << QString("Error while adding a Ogre3D Entity %1").arg(e.what());
+				nFails++;
+			}
+			catch(...)
+			{
+				qDebug() << __FUNCTION__ << ("Error while adding a Ogre3D Entity.");
+				nFails++;
+			}			
 		}
-
 		for(i=0;i<lBufferedSceneNodes.count();i++)
 		{
-			lBufferedSceneNodes[i].pSceneNode = m_sceneManager->getRootSceneNode()->createChildSceneNode(lBufferedSceneNodes[i].sName.toLocal8Bit().constData(), Ogre::Vector3(lBufferedSceneNodes[i].xPos, lBufferedSceneNodes[i].yPos, lBufferedSceneNodes[i].zPos));
-			if((lBufferedSceneNodes[i].pSceneNode) && (lBufferedSceneNodes[i].sEntityName.isEmpty() == false))
+			try
 			{
-				for(j=0;j<lBufferedEntities.count();j++)
+				lBufferedSceneNodes[i].pSceneNode = m_sceneManager->getRootSceneNode()->createChildSceneNode(lBufferedSceneNodes[i].sName.toLocal8Bit().constData(), Ogre::Vector3(lBufferedSceneNodes[i].xPos, lBufferedSceneNodes[i].yPos, lBufferedSceneNodes[i].zPos));
+				if((lBufferedSceneNodes[i].pSceneNode) && (lBufferedSceneNodes[i].sEntityName.isEmpty() == false))
 				{
-					if(lBufferedEntities[i].sName == lBufferedSceneNodes[i].sEntityName)
+					for(j=0;j<lBufferedEntities.count();j++)
 					{
-						lBufferedSceneNodes[i].pSceneNode->attachObject(lBufferedEntities[i].pEntity);
-						///m_sceneManager->getRootSceneNode()->attachObject(ogreHead);
-						break;
-					}
+						if(lBufferedEntities[i].sName == lBufferedSceneNodes[i].sEntityName)
+						{
+							lBufferedSceneNodes[i].pSceneNode->attachObject(lBufferedEntities[i].pEntity);
+							///m_sceneManager->getRootSceneNode()->attachObject(ogreHead);
+							break;
+						}
+					}				
 				}				
 			}
+			catch(std::exception &e) 
+			{
+				qDebug() << __FUNCTION__ << QString("Error while adding a Ogre3D Scene Node %1").arg(e.what());
+				nFails++;
+			}
+			catch(...)
+			{
+				qDebug() << __FUNCTION__ << ("Error while adding a Ogre3D Scene Node.");
+				nFails++;
+			}	
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	for(i=0;i<lBufferedLightSources.count();i++)
+	{
+		try
+		{
+			lBufferedLightSources[i].pLightSource = m_sceneManager->createLight(lBufferedLightSources[i].sName.toLocal8Bit().constData());
+			lBufferedLightSources[i].pLightSource->setType(Ogre::Light::LT_DIRECTIONAL);
+			lBufferedLightSources[i].pLightSource->setPosition(lBufferedLightSources[i].xPos, lBufferedLightSources[i].yPos, lBufferedLightSources[i].zPos);
+		}
+		catch(std::exception &e) 
+		{
+			qDebug() << __FUNCTION__ << QString("Error while adding a Ogre3D Light Source %1").arg(e.what());
+			nFails++;
+		}
+		catch(...)
+		{
+			qDebug() << __FUNCTION__ << ("Error while adding a Ogre3D Light Source.");
+			nFails++;
+		}	
+	}
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if(cAmbientSceneColor)
+	{
+		try
+		{
+			m_sceneManager->setAmbientLight(Ogre::ColourValue(cAmbientSceneColor->redF(), cAmbientSceneColor->greenF(), cAmbientSceneColor->blueF(), cAmbientSceneColor->alphaF()));
+		}
+		catch(std::exception &e) 
+		{
+			qDebug() << __FUNCTION__ << QString("Error while setting the Ambient Scene Light %1").arg(e.what());
+			nFails++;
+		}
+		catch(...)
+		{
+			qDebug() << __FUNCTION__ << ("Error while setting the Ambient Scene Light.");
+			nFails++;
+		}	
+	}
+
 	if(nFails > 0)
 		return false;
 	return true;
+}
+
+void OgreNode::preInit()
+{
+	restoreOgreState();
+	if (!m_initialized)
+		init();
+	if (m_dirtyFBO) 
+	{
+		updateFBO();
+		m_ogreFBO = getOgreFBO();
+		m_dirtyFBO = false;
+	}
+	saveOgreState();
 }
 
 void OgreNode::init()
@@ -314,14 +436,48 @@ void OgreNode::init()
     QSurfaceFormat format = ctx->format();
     m_samples = format.samples();
 
-    m_root = new Ogre::Root;
-    QString glPlugin;
+	// STEP 1/ First, we will need to create the Ogre::Root object.
+	// It is an object that must be created to use ogre correctly, and delete once we are finished using Ogre.
+	// This is the name of an optional textual configuration file for the render system.
+	// I won't use it.
+	Ogre::String lConfigFileName = "";
+	// This is the name of an optional textual configuration file, which lists the available plugins.
+	// I won't use it.
+	Ogre::String lPluginsFileName = "";
+	// This is the name of the log file. A log file is a file in which you can write things during the program execution.
+	// Ogre use it to display general informations about the render system.
+	// You are not obliged to generate one, and ogre can even transmit the log data to you own class if you want.
+	// Here we only ask the root to create the file.
+	Ogre::String lLogFileName = "Ogre.log";
+
+	// I create the root and I wrap it in an auto_ptr so that it will be automatically released.
+	// Now I can even do "throw std::bad_alloc("bad alloc");", the program will release the root smoothly.
+	//std::auto_ptr<Ogre::Root> lRoot(new Ogre::Root);//(lConfigFileName, lPluginsFileName, lLogFileName));
+	//m_root = Ogre::Root::getSingleton().getSingletonPtr();
+
+//#ifdef QT_NO_DEBUG
+// #pragma comment( lib, "CEGUIBase.lib" )
+// #pragma comment( lib, "OgreGUIRenderer.lib" )
+// #pragma comment( lib, "OIS.lib" )
+// #pragma comment( lib, "OgreMain.lib" )
+//#else
+//	OgreMain.lib
+//		RenderSystem_GL.lib
+ //#pragma comment( lib, "C:/Qt/Ogre/OGRE-SDK-1.8.2-vc100-x86-28.05.2013/lib/debug/OgreMain_d.lib" )
+ //#pragma comment( lib, "C:/Qt/Ogre/OGRE-SDK-1.8.2-vc100-x86-28.05.2013/lib/debug/opt/RenderSystem_GL_d.lib" )
+	//$(OGRE_HOME)/lib/RelWithDebInfo;$(OGRE_HOME)/lib/RelWithDebInfo/opt;
+//#endif
+		
+    //m_root.reset(new Ogre::Root());//("plugins.cfg","ogre.cfg","Ogre.log");
+    m_root = new Ogre::Root(lPluginsFileName,lConfigFileName,lLogFileName);
+
+	QString glPlugin;
 	//QString glPlugin = QLatin1String(OGRE_PLUGIN_DIR);
     //glPlugin.remove("\"");
 	//glPlugin = MainAppInfo::qmlExtensionsPluginDirPath() + "/" + OGRE3DITEM_PLUGINFOLDER_NAME;//"E:/Projects/StimulGL/Install/qml/plugins/Win32";
 	glPlugin = MainAppInfo::appDirPath();//qmlExtensionsPluginDirPath() + "/" + OGRE3DITEM_PLUGINFOLDER_NAME;//"E:/Projects/StimulGL/Install/qml/plugins/Win32";
 //#ifdef DEBUG_PLUGIN
-#ifdef DEBUG
+#ifndef QT_NO_DEBUG
 	glPlugin += QLatin1String("/RenderSystem_GL_d");
 #else
     glPlugin += QLatin1String("/RenderSystem_GL");
@@ -356,8 +512,8 @@ void OgreNode::init()
     //m_sceneManager->setSkyBox(true, "SpaceSkyBox", 10000);
 
     // setup some basic lighting for our scene
-    m_sceneManager->setAmbientLight(Ogre::ColourValue(0.3, 0.3, 0.3));
-    m_sceneManager->createLight("myLight")->setPosition(20, 80, 50);
+    //m_sceneManager->setAmbientLight(Ogre::ColourValue(0.3, 0.3, 0.3));
+    //m_sceneManager->createLight("myLight")->setPosition(20, 80, 50);
 	
     // Setup the camera
     m_cameraObject = new CameraNodeObject(m_camera);

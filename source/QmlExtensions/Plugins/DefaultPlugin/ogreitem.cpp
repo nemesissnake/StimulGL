@@ -24,18 +24,37 @@
 
 OgreItem::OgreItem(QQuickItem *parent) : QQuickItem(parent), m_timerID(0)
 {
+	bIsPreInitializing = false;
 	m_node = NULL;
 	m_camera = NULL;
+	cAmbientSceneColor = NULL;
     setFlag(ItemHasContents);
     setSmooth(false);
-    startTimer(16);
-	bFirstUpdatePaintNode = true;
+    bFirstUpdatePaintNode = true;
+	m_timerID = startTimer(16);
 }
 
 OgreItem::~OgreItem()
 {
+	if(m_timerID)
+		killTimer(m_timerID);
 	lResources.clear();
+	lEntities.clear();
+	lSceneNodes.clear();
+	lLightSources.clear();
+	if(cAmbientSceneColor)
+	{
+		delete cAmbientSceneColor;
+		cAmbientSceneColor = NULL;
+	}
+	//Ogre::Root::getSingleton().getSingletonPtr()->shutdownPlugins();
+	//Ogre::Root::getSingleton().getSingletonPtr()->shutdown();
 }
+
+//void OgreItem::startRenderLoop()
+//{
+//	m_timerID = startTimer(16);
+//}
 
 bool OgreItem::addResourceLocation(const QString &sLocation,const QString &sType)
 {
@@ -69,21 +88,76 @@ bool OgreItem::createSceneNode(const QString &sNodeName, const QString &sEntityN
 	return true;
 }
 
+bool OgreItem::createLightSource(const QString &sLightName, const float &xPos, const float &yPos, const float &zPos)
+{
+	sLightSourceStructure tmpLightSource;
+	tmpLightSource.pLightSource = NULL;
+	tmpLightSource.sName = sLightName;
+	tmpLightSource.xPos = xPos;
+	tmpLightSource.yPos = yPos;
+	tmpLightSource.zPos = zPos;
+	lLightSources.append(tmpLightSource);
+	return true;
+}
+
+bool OgreItem::setAmbientColor(const int &nRed, const int &nGreen, const int &nBlue, const int &nAlpha)
+{
+	cAmbientSceneColor = new QColor(nRed, nGreen, nBlue, nAlpha);
+	return true;
+}
+
 QVector3D OgreItem::getObjectBoundingBoxCenter(const QString &sSceneNodeName, const QString &sObjectName)
 {
-	Ogre::Vector3 tmpVec = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->getWorldBoundingBox().getCenter();//getCorner(Ogre::AxisAlignedBox::FAR_LEFT_BOTTOM);//Ogre::CornerEnum::FAR_LEFT_BOTTOM
-	return QVector3D(tmpVec.x,tmpVec.y,tmpVec.z);
+	try
+	{
+		Ogre::Vector3 tmpVec = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->getWorldBoundingBox().getCenter();//getCorner(Ogre::AxisAlignedBox::FAR_LEFT_BOTTOM);//Ogre::CornerEnum::FAR_LEFT_BOTTOM
+		return QVector3D(tmpVec.x,tmpVec.y,tmpVec.z);
+	}
+	catch(std::exception &e) 
+	{
+		qDebug() << __FUNCTION__ << QString("Error %1").arg(e.what());
+		return QVector3D(0.0, 0.0, 0.0);
+	}
+	catch(...)
+	{
+		qDebug() << __FUNCTION__ << ("An Error occurred");
+		return QVector3D(0.0, 0.0, 0.0);
+	}	
 }
 
 QVector3D OgreItem::getObjectBoundingBoxSize(const QString &sSceneNodeName, const QString &sObjectName)
 {
-	Ogre::Vector3 tmpVec = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->getBoundingBox().getSize();
-	return QVector3D(tmpVec.x,tmpVec.y,tmpVec.z);
+	try
+	{
+		Ogre::Vector3 tmpVec = Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->getBoundingBox().getSize();
+		return QVector3D(tmpVec.x,tmpVec.y,tmpVec.z);
+	}
+	catch(std::exception &e) 
+	{
+		qDebug() << __FUNCTION__ << QString("Error %1").arg(e.what());
+		return QVector3D(0.0, 0.0, 0.0);
+	}
+	catch(...)
+	{
+		qDebug() << __FUNCTION__ << ("An Error occurred");
+		return QVector3D(0.0, 0.0, 0.0);
+	}	
 }
 
 void OgreItem::setObjectVisibility(const QString &sSceneNodeName, const QString &sObjectName, const bool &bVisible)
 {
-	Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->setVisible(bVisible);
+	try
+	{
+		Ogre::Root::getSingleton().getSceneManager("mySceneManager")->getSceneNode(sSceneNodeName.toLocal8Bit().constData())->getAttachedObject(sObjectName.toLocal8Bit().constData())->setVisible(bVisible);
+	}
+	catch(std::exception &e) 
+	{
+		qDebug() << __FUNCTION__ << QString("Error %1").arg(e.what());
+	}
+	catch(...)
+	{
+		qDebug() << __FUNCTION__ << ("An Error occurred");
+	}
 }
 
 //bool OgreItem::setObjectAttachement(const QString &sSceneNodeName, const QString &sObjectName, const bool &bAttachment)
@@ -97,18 +171,22 @@ void OgreItem::setObjectVisibility(const QString &sSceneNodeName, const QString 
 
 QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 {
+	if(bIsPreInitializing)
+		return NULL;
     if (width() <= 0 || height() <= 0) {
         delete oldNode;
         return 0;
     }
     m_node = static_cast<OgreNode *>(oldNode);
 	bool bDoEmit = false;
+	bool bWasFirstUpdatePaintNode = false;
     if (!m_node)
     {
         m_node = new OgreNode();
 		if(bFirstUpdatePaintNode)
 		{
 			bFirstUpdatePaintNode = false;
+			bWasFirstUpdatePaintNode = true;
 			if(lResources.isEmpty() == false)
 			{
 				m_node->setResourceLocations(lResources);
@@ -116,7 +194,15 @@ QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 				m_node->setEntities(lEntities);
 				lEntities.clear();
 				m_node->setSceneNodes(lSceneNodes);
-				lSceneNodes.clear();				
+				lSceneNodes.clear();
+				if(cAmbientSceneColor)
+				{
+					m_node->setAmbientLight(*cAmbientSceneColor);
+					delete cAmbientSceneColor;
+					cAmbientSceneColor = NULL;
+				}
+				m_node->setLightSources(lLightSources);
+				lLightSources.clear();
 			}
 		}
 		m_node->setQuickWindow(window());
@@ -124,6 +210,14 @@ QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
     }
     m_node->setSize(QSize(width(), height()));
     m_node->setAAEnabled(smooth());
+	if(bWasFirstUpdatePaintNode)
+	{
+		if(bDoEmit)
+			QTimer::singleShot(1, this, SIGNAL(ogreNodePreInitialize()));//Thread safety
+		bIsPreInitializing = true;
+		m_node->preInit();
+		bIsPreInitializing = false;
+	}
     m_node->update();
     m_camera = static_cast<QObject *>(m_node->camera());
 	if(bDoEmit)

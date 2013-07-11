@@ -32,6 +32,7 @@ class OgreItem : public QQuickItem
 
 signals:
 	void ogreNodeInitialized();
+	void ogreNodePreInitialize();
 
 public:
     OgreItem(QQuickItem *parent = 0);
@@ -42,16 +43,20 @@ public slots:
 	bool addResourceLocation(const QString &sLocation,const QString &sType);
 	bool createEntity(const QString &sEntityName, const QString &sEntityMesh);
 	bool createSceneNode(const QString &sNodeName, const QString &sEntityName, const float &xPos, const float &yPos, const float &zPos);
+	bool createLightSource(const QString &sLightName, const float &xPos, const float &yPos, const float &zPos);
+	bool setAmbientColor(const int &nRed, const int &nGreen, const int &nBlue, const int &nAlpha = 255);
 	QVector3D getObjectBoundingBoxCenter(const QString &sSceneNodeName, const QString &sObjectName);
 	QVector3D getObjectBoundingBoxSize(const QString &sSceneNodeName, const QString &sObjectName);
 	void setObjectVisibility(const QString &sSceneNodeName, const QString &sObjectName, const bool &bVisible);
 	//bool setObjectAttachement(const QString &sSceneNodeName, const QString &sObjectName, const bool &bAttachment);
+	//void startRenderLoop();
 
 protected:
     virtual QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
     void timerEvent(QTimerEvent *);
 
 private:
+	bool bIsPreInitializing;
 	bool bFirstUpdatePaintNode;
     int m_timerID;
     QObject *m_camera;
@@ -59,6 +64,8 @@ private:
 	QList<sTypeOgreResourcesStructure> lResources;
 	QList<sEntityStructure> lEntities;
 	QList<sSceneNodeStructure> lSceneNodes;
+	QList<sLightSourceStructure> lLightSources;
+	QColor *cAmbientSceneColor;		
 };
 
 #endif // OGREITEM_H

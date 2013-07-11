@@ -1122,8 +1122,8 @@ File ::206B6E85-AEE8-4BFA-B1EE-8E247440545F -name qsqlite.dll -parent D8A77711-E
 File ::BCCDFBAB-B318-4F5F-8F20-3B23DE3B022B -name qsqlited.dll -active 0 -parent D8A77711-E9C3-4C1A-9035-B1F8AF5622FA
 File ::A176D2AF-CFF8-41C8-966D-9ABF74471283 -name qsqlited.pdb -active 0 -parent D8A77711-E9C3-4C1A-9035-B1F8AF5622FA
 FileGroup ::B8B5252C-BA02-416E-A353-667E13968192 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {Additional Binaries(win32)} -parent FileGroups
-File ::7AFDECBB-A23E-48F4-BCDD-49FD86B4E33E -name C:/Qt/5.0.2/OgreSDK_vc10_v1-8-1/bin/release/OgreMain.dll -parent B8B5252C-BA02-416E-A353-667E13968192
-File ::F58A7EAF-8179-46EC-B6D1-871B141F0DB5 -name C:/Qt/5.0.2/OgreSDK_vc10_v1-8-1/bin/release/RenderSystem_GL.dll -parent B8B5252C-BA02-416E-A353-667E13968192
+File ::0FF98D7B-1305-4F03-8342-691C55B897C8 -name C:/Qt/Ogre/OGRE-SDK-1.8.2-vc100-x86-28.05.2013/bin/Release/OgreMain.dll -parent B8B5252C-BA02-416E-A353-667E13968192
+File ::C1CDB2B0-F9CB-4E1E-A74E-4B85AE7EE211 -name C:/Qt/Ogre/OGRE-SDK-1.8.2-vc100-x86-28.05.2013/bin/Release/RenderSystem_GL.dll -parent B8B5252C-BA02-416E-A353-667E13968192
 FileGroup ::C6C42CD1-B9D2-4DCB-B599-C7236551A39A -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {Additional Binaries(x64)} -parent FileGroups
 Component ::3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files(x64)} -parent Components
 Component ::C511BCE0-5730-4B6A-B67A-9BFDC29D6A11 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files(win32)} -parent Components
@@ -1955,7 +1955,7 @@ array set Properties {
 {<%InstallDir%>}
 
 891CF076-368A-450C-890A-7E3FDCB8748B,FileSize
-{77054613}
+{77057173}
 
 891CF076-368A-450C-890A-7E3FDCB8748B,Name
 {Program Files(win32)}
@@ -2093,7 +2093,7 @@ A1E87F59-F33A-4028-AA97-952F67EB031A,Destination
 {<%InstallDir%>/qml/plugins/Win32}
 
 A1E87F59-F33A-4028-AA97-952F67EB031A,FileSize
-{4986187}
+{5096269}
 
 A1E87F59-F33A-4028-AA97-952F67EB031A,Name
 {QML Plugins(win32)}
@@ -2284,6 +2284,9 @@ B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,Name
 B8B5252C-BA02-416E-A353-667E13968192,Destination
 {<%InstallDir%>}
 
+B8B5252C-BA02-416E-A353-667E13968192,FileSize
+{0}
+
 B8B5252C-BA02-416E-A353-667E13968192,Name
 {Additional Binaries(win32)}
 
@@ -2404,6 +2407,9 @@ C511BCE0-5730-4B6A-B67A-9BFDC29D6A11,Name
 C6C42CD1-B9D2-4DCB-B599-C7236551A39A,Destination
 {<%InstallDir%>}
 
+C6C42CD1-B9D2-4DCB-B599-C7236551A39A,FileSize
+{0}
+
 C6C42CD1-B9D2-4DCB-B599-C7236551A39A,Name
 {Additional Binaries(x64)}
 
@@ -2504,7 +2510,7 @@ D562F7E3-157E-48ED-91CE-71FBA40B332D,Destination
 {<%InstallDir%>}
 
 D562F7E3-157E-48ED-91CE-71FBA40B332D,FileSize
-{91347450}
+{91351034}
 
 D562F7E3-157E-48ED-91CE-71FBA40B332D,Name
 {Program Files(x64)}

@@ -24,6 +24,7 @@
 #include <QtQuick/QSGTextureMaterial>
 #include <QtQuick/QSGOpaqueTextureMaterial>
 #include <QtQuick/QQuickWindow>
+#include <QMutex>
 
 #define STRINGIFY_(x) #x
 #define STRINGIFY(x) STRINGIFY_(x)
@@ -52,6 +53,15 @@ typedef struct strcSceneNode
 	float zPos;
 } sSceneNodeStructure;
 
+typedef struct strcLightSource
+{
+	Ogre::Light* pLightSource;
+	QString sName;
+	float xPos;
+	float yPos;
+	float zPos;
+} sLightSourceStructure;
+
 namespace Ogre {
 class Root;
 class Camera;
@@ -78,6 +88,7 @@ public:
     void update();
     void updateFBO();
     void init();
+	void preInit();
     GLuint getOgreFBO();
     void saveOgreState();
     void restoreOgreState();
@@ -86,6 +97,8 @@ public:
 	bool setResourceLocations(const QList<sTypeOgreResourcesStructure> lResources);
 	bool setEntities(const QList<sEntityStructure> lEntities);
 	bool setSceneNodes(const QList<sSceneNodeStructure> lSceneNodes);
+	bool setAmbientLight(const QColor &cColor);
+	bool setLightSources(const QList<sLightSourceStructure> lLightSources);
 
 private:
 	bool configureUserSettings();
@@ -93,7 +106,10 @@ private:
 	QList<sTypeOgreResourcesStructure> lBufferedResources;	
 	QList<sEntityStructure> lBufferedEntities;
 	QList<sSceneNodeStructure> lBufferedSceneNodes;
+	QList<sLightSourceStructure> lBufferedLightSources;
+	QColor *cAmbientSceneColor;
 
+	//QMutex updateMutex;
     QSGTextureMaterial m_material;
     QSGOpaqueTextureMaterial m_materialO;
     QSGGeometry m_geometry;
@@ -109,6 +125,7 @@ private:
     QSize m_size;
 
     Ogre::Root *m_root;
+	//std::auto_ptr<Ogre::Root> m_root;
     Ogre::Camera *m_camera;
     Ogre::SceneManager *m_sceneManager;
     Ogre::RenderTexture *m_renderTexture;
