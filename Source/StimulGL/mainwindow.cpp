@@ -750,7 +750,6 @@ void MainWindow::setActiveSubWindow(QWidget *window)
 void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 {
 	Q_UNUSED(subWindow);
-	//write2Debugger("updateMenuControls entered..."); this doesn't happen that often....
 	QMdiSubWindow *currentSub = activeMdiChild();
 	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
 	bool hasMdiChild = ((DocManager->count() > 0) && (currentSub != 0));
@@ -926,7 +925,8 @@ bool MainWindow::setDefaultGLFormat()
 	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
 	StimulGLQGLFormat.setSampleBuffers(true);
 
-	bool bHasOpenGLFramebufferObjects = QGLFramebufferObject::hasOpenGLFramebufferObjects();
+	//bool bHasOpenGLFramebufferObjects = 
+	QGLFramebufferObject::hasOpenGLFramebufferObjects();
 	StimulGLQGLFormat.setDoubleBuffer(true);
 
 
@@ -1371,6 +1371,26 @@ void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined
 		outputWindowList->addItem(text2Write);
 }
 
+/*! \brief Sets the auto scrolling behavior of the Output Log Window.
+ *
+ * This function can enable/disable the auto scrolling behavior of the Output Log Window.
+ * @param bEnable a Boolean value determining whether the auto scrolling should be enabled.
+ */
+void MainWindow::configureOutputWindowAutoScroll(const bool &bEnable)
+{
+	if(outputWindowList == NULL)
+		return;
+	if(bEnable)
+	{
+		connect(outputWindowList->model(), SIGNAL(rowsInserted ( const QModelIndex &, int, int ) ), outputWindowList, SLOT(scrollToBottom ()));
+	}
+	else
+	{
+		disconnect(outputWindowList->model(), SIGNAL(rowsInserted ( const QModelIndex &, int, int ) ),	outputWindowList, SLOT(scrollToBottom ()));
+	}
+
+}
+
 /*! \brief Clears the Output Log Window.
  *
  * This function clears the Output Log Window.
@@ -1477,6 +1497,7 @@ void MainWindow::createDockWindows()
 	debugLogDock->setWidget(outputWindowList);
 	addDockWidget(Qt::BottomDockWidgetArea, debugLogDock);//(Qt::RightDockWidgetArea, debugLogDock);
 
+	configureOutputWindowAutoScroll(true);
 	//viewMenu->addAction(debugLogDock->toggleViewAction());
 	//connect(debugList, SIGNAL(currentTextChanged(const QString &)),
 	//	this, SLOT(insertCustomer(const QString &)));

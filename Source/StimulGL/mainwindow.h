@@ -119,6 +119,7 @@ public slots:
 	//void debugScript();
 	bool initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags = 0);
 	void write2OutputWindow(const QString &text2Write = "");
+	void configureOutputWindowAutoScroll(const bool &bEnable);
 	void clearOutputWindow();
 	bool saveOutputWindow(const QString &sFilePath = "", const bool &bOverwrite = false);
 	void processEvents() {qApp->processEvents();};

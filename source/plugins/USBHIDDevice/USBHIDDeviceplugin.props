@@ -9,6 +9,8 @@
     <!--ShortPlatform-->
     <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.0.2\win32</QTDIR>
     <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\x64</QTDIR>
+    <HIDAPI Condition="'$(Platform)' == 'Win32'">C:\Qt\HIDAPI\win32</HIDAPI>
+    <HIDAPI Condition="'$(Platform)' == 'x64'">C:\Qt\HIDAPI\x64</HIDAPI>    
   </PropertyGroup>
   
   <Choose>
@@ -33,5 +35,8 @@
     <BuildMacro Include="QTDIR">
       <Value>$(QTDIR)</Value>
     </BuildMacro>
+    <BuildMacro Include="HIDAPI">
+      <Value>$(HIDAPI)</Value>
+    </BuildMacro>       
   </ItemGroup>
 </Project>

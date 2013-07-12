@@ -52,10 +52,10 @@ bool FireBirdDatabase::Initialize()
     if(!pluginLoader_.isLoaded())
     {
 		QString tmpString = MainAppInfo::pluginsDirPath() + QDir::separator() + "sqldrivers" + QDir::separator() + qtIBasePluginName_;
-        pluginLoader_.setFileName(tmpString);        
+		pluginLoader_.setFileName(tmpString);        
         if (!pluginLoader_.load())
         {            
-            qDebug() << __FUNCTION__ << "Loading SQL Driver failed.";
+            qDebug() << __FUNCTION__ << "Loading SQL Driver failed, searched in folder: " << tmpString;
             isInitialized_ = false;
             return false;
         }

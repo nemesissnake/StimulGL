@@ -9,6 +9,8 @@
     <!--ShortPlatform-->
     <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.0.2\win32</QTDIR>
     <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\x64</QTDIR>
+    <QEXTSERIALPORT Condition="'$(Platform)' == 'Win32'">C:\Qt\qextserialport-1.2rc\win32</QEXTSERIALPORT>
+    <QEXTSERIALPORT Condition="'$(Platform)' == 'x64'">C:\Qt\qextserialport-1.2rc\x64</QEXTSERIALPORT>
   </PropertyGroup>
   
   <Choose>
@@ -33,5 +35,8 @@
     <BuildMacro Include="QTDIR">
       <Value>$(QTDIR)</Value>
     </BuildMacro>
+    <BuildMacro Include="QEXTSERIALPORT">
+      <Value>$(QEXTSERIALPORT)</Value>
+    </BuildMacro>    
   </ItemGroup>
 </Project>

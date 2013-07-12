@@ -92,6 +92,13 @@ KeyBoardCapture::~KeyBoardCapture()
 //
 //}
 
+//! For starting a new Keyboard Capture thread.
+/*!
+    \param method defines the method use for the capture (see the KeyBoardNameSpace::CaptureKeyMethod).
+	\param keyForwarding a boolean value determining whether the detected key should be forwarded or not.
+	\return Whether the thread could be successfully started.
+    \sa StopCaptureThread()
+*/
 bool KeyBoardCapture::StartCaptureThread(const short method, bool keyForwarding)
 { 
 	KeyBoardNameSpace::CaptureKeyMethod CapDecMethod;

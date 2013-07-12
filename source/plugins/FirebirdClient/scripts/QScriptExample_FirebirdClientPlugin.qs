@@ -52,8 +52,16 @@ var QueryCallProcedure = "EXECUTE PROCEDURE ADD_INTS(53, 4)";
 Log("\n");
 //Test whether we can invoke some default implemented Slots
 
-//bResult = FirebirdClientobject.CreateDatabase(databasePath,userName,userPassword);
-//Log("CreateDatabase() returned: " + bResult);
+var fDatabase = new QFile(databasePath);
+if(fDatabase.exists() == false)
+{
+	bResult = FirebirdClientobject.CreateDatabase(databasePath,userName,userPassword);
+	Log("CreateDatabase() returned: " + bResult);
+}
+else
+{
+	bResult = true;
+}
 if(bResult)
 {
 	bResult = bResult && FirebirdClientobject.OpenDatabase(databasePath,userName,userPassword)
@@ -62,20 +70,20 @@ if(bResult)
 	{
 		bResult = bResult && FirebirdClientobject.InitializeDatabase()
 		Log("InitializeDatabase() returned: " + bResult);	
-		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryCreateTable)
-		//Log("ExecuteDatabaseQuery(QueryCreateTable) returned: " + bResult);
-		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryInsertRecord)
-		//Log("ExecuteDatabaseQuery(QueryInsertRecord) returned: " + bResult);	
+		bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryCreateTable)
+		Log("ExecuteDatabaseQuery(QueryCreateTable) returned: " + bResult);
+		bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryInsertRecord)
+		Log("ExecuteDatabaseQuery(QueryInsertRecord) returned: " + bResult);	
 		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QuerySelectRecords)
 		//Log("ExecuteDatabaseQuery(QuerySelectRecords) returned: " + bResult);	
 		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryCreateProcedure)
 		//Log("ExecuteDatabaseQuery(QueryCreateProcedure) returned: " + bResult);		
 		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryCallProcedure)
 		//Log("ExecuteDatabaseQuery(QueryCallProcedure) returned: " + bResult);
-		//bResult = bResult && FirebirdClientobject.ShowDatabaseQuery(QuerySelectRecords)
-		//Log("ShowDatabaseQuery(QuerySelectRecords) returned: " + bResult);
-		bResult = bResult && FirebirdClientobject.ExportDatabasetoExcel(excelExportPath,QuerySelectRecords);//, "20130604141747883")
-		Log("ExportDatabasetoExcel(QuerySelectRecords) returned: " + bResult);
+		bResult = bResult && FirebirdClientobject.ShowDatabaseQuery(QuerySelectRecords)
+		Log("ShowDatabaseQuery(QuerySelectRecords) returned: " + bResult);
+		//bResult = bResult && FirebirdClientobject.ExportDatabasetoExcel(excelExportPath,QuerySelectRecords);//, "20130604141747883")
+		//Log("ExportDatabasetoExcel(QuerySelectRecords) returned: " + bResult);
 		
 		
 		bResult = bResult && FirebirdClientobject.CloseDatabase()
