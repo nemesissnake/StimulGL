@@ -1,4 +1,4 @@
-#include "glthread.h"
+#include "GLThread.h"
 #include "ThreadedGLWidgetWrapper.h"
 #include <QtOpenGL>
 
