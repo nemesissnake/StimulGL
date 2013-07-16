@@ -6,8 +6,8 @@
     <!--IsDebug: search for 'Debug' in Configuration-->
     <IsDebug>$([System.Convert]::ToString( $([System.Text.RegularExpressions.Regex]::IsMatch($(Configuration), '[Dd]ebug'))))</IsDebug>
     <!--ShortPlatform-->
-    <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.0.2\win32</QTDIR>
-    <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\x64</QTDIR>
+    <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.1.0\win32</QTDIR>
+    <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.1.0\x64</QTDIR>
   </PropertyGroup>
   <Choose>
     <When Condition="$([System.Convert]::ToBoolean($(IsDebug)))">

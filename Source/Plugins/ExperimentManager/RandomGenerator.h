@@ -25,7 +25,7 @@
 #include <QStringList>
 #include <QtScript/QtScript>
 #include <QtScript/QScriptEngine>
-#include "randomc.h"
+#include "randomc/randomc.h"
 
 #ifdef Q_WS_WIN
 	#include "windows.h"

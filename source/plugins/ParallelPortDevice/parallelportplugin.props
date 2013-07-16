@@ -7,8 +7,10 @@
   	<!--IsDebug: search for 'Debug' in Configuration-->
     <IsDebug>$([System.Convert]::ToString( $([System.Text.RegularExpressions.Regex]::IsMatch($(Configuration), '[Dd]ebug'))))</IsDebug>
     <!--ShortPlatform-->
-    <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.0.2\win32</QTDIR>
-    <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.0.2\x64</QTDIR>
+    <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.1.0\win32</QTDIR>
+    <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.1.0\x64</QTDIR>
+    <INPOUT_1500 Condition="'$(Platform)' == 'Win32'">C:\Qt\InpOut_1500\Win32</INPOUT_1500>
+    <INPOUT_1500 Condition="'$(Platform)' == 'x64'">C:\Qt\InpOut_1500\x64</INPOUT_1500>    
   </PropertyGroup>
   
   <Choose>
@@ -33,5 +35,8 @@
     <BuildMacro Include="QTDIR">
       <Value>$(QTDIR)</Value>
     </BuildMacro>
+    <BuildMacro Include="INPOUT_1500">
+      <Value>$(INPOUT_1500)</Value>
+    </BuildMacro>    
   </ItemGroup>
 </Project>
