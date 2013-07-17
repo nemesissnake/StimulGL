@@ -83,3 +83,4 @@ Source/Plugins/FirebirdClient/scripts/Test.xls
 Install/firebird.msg
 Install/OgreMain_d.dll_
 Install/RenderSystem_GL_d.dll_
+Install/tmp/*

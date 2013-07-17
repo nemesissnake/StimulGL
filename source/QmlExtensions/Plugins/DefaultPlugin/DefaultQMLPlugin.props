@@ -11,7 +11,7 @@
     <OGRE_HOME Condition="'$(Platform)' == 'Win32'">C:\Qt\Ogre\OGRE-SDK-1.8.2-vc110-x86-28.05.2013</OGRE_HOME>
     <OGRE_HOME Condition="'$(Platform)' == 'x64'">C:\Qt\Ogre\OGRE-SDK-1.8.2-vc110-x64-28.05.2013</OGRE_HOME>
     <BOOST_HOME Condition="'$(Platform)' == 'Win32'">C:\Qt\Boost\boost-1.54-rev84846-vc110-x86-20.06.2013</BOOST_HOME>
-    <BOOST_HOME Condition="'$(Platform)' == 'x64'">C:\Qt\Boost\boost-1.54-rev84846-vc110-x64-20.06.2013</BOOST_HOME>      
+    <BOOST_HOME Condition="'$(Platform)' == 'x64'">C:\Qt\Boost\boost-1.54-rev84846-vc110-x64-20.06.2013</BOOST_HOME>
   </PropertyGroup>
   <Choose>
     <When Condition="$([System.Convert]::ToBoolean($(IsDebug)))">
@@ -40,6 +40,6 @@
     </BuildMacro>
     <BuildMacro Include="BOOST_HOME">
       <Value>$(BOOST_HOME)</Value>
-    </BuildMacro>    
+    </BuildMacro>  
   </ItemGroup>
 </Project>
