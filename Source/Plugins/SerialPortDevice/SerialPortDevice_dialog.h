@@ -46,7 +46,7 @@ public:
 private:
 	Ui::SerialPortDevice_DialogClass ui;
 	QTimer *serialTimer;
-	QextSerialPort *serialPort;
+	QextSerialPort serialPort;
 	PortSettings serialSettings;
 
 private:

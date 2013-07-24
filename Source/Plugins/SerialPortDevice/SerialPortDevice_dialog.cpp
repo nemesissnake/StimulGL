@@ -24,7 +24,7 @@ SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(pare
 	//Gets constructed only once during the load of the plugin
 	ui.setupUi(this);
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32 //Are we on Windows?
 	ui.portBox->addItems(QStringList()<<"COM1"<<"COM2"<<"COM3"<<"COM4"<<"COM5"<<"COM6"<<"COM7"<<"COM8"<<"COM9");
 #else
 	ui.portBox->addItems(QStringList()<<"/dev/ttyS0"<<"/dev/ttyS1"<<"/dev/ttyUSB0"<<"/dev/ttyUSB1");
@@ -70,7 +70,15 @@ SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(pare
 	serialSettings.StopBits = STOP_1;
 	serialSettings.Timeout_Millisec = 10;
 
-	serialPort = new QextSerialPort(ui.portBox->currentText(), serialSettings, QextSerialPort::Polling);
+	//serialPort = new QextSerialPort());//ui.portBox->currentText(), serialSettings, QextSerialPort::Polling);
+	serialPort.setPortName(ui.portBox->currentText());
+	serialPort.setQueryMode(QextSerialPort::Polling);
+	serialPort.setBaudRate(serialSettings.BaudRate);
+	serialPort.setDataBits(serialSettings.DataBits);
+	serialPort.setParity(serialSettings.Parity);
+	serialPort.setStopBits(serialSettings.StopBits);
+	serialPort.setFlowControl(serialSettings.FlowControl);
+	serialPort.setTimeout(serialSettings.Timeout_Millisec);
 
 	connect(ui.btnAvailablePorts, SIGNAL(clicked()), this, SLOT(pushButton_btnAvailablePorts_Pressed()));
 	connect(ui.baudRateBox, SIGNAL(currentIndexChanged(int)), SLOT(onBaudRateChanged(int)));
@@ -83,7 +91,7 @@ SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(pare
 	connect(ui.openCloseButton, SIGNAL(clicked()), SLOT(onOpenCloseButtonClicked()));
 	connect(ui.sendButton, SIGNAL(clicked()), SLOT(onSendButtonClicked()));
 	connect(serialTimer, SIGNAL(timeout()), SLOT(onReadyRead()));
-	connect(serialPort, SIGNAL(readyRead()), SLOT(onReadyRead()));
+	connect(&serialPort, SIGNAL(readyRead()), SLOT(onReadyRead()));
 }
 
 SerialPortDevice_Dialog::~SerialPortDevice_Dialog()
@@ -111,25 +119,25 @@ void SerialPortDevice_Dialog::CleanupSerialDevice()
 		delete serialTimer;
 		serialTimer = NULL;
 	}
-	if (serialPort)
-	{
-		if (serialPort->isOpen())
+	//if (serialPort)
+	//{
+		if (serialPort.isOpen())
 			onOpenCloseButtonClicked();
-		delete serialPort;
-		serialPort = NULL;
-	}
+		//serialPort.deleteLater();
+		//serialPort = NULL;
+	//}
 }
 
 void SerialPortDevice_Dialog::on_okButton_clicked()
 {
-	if (serialPort->isOpen())
+	if (serialPort.isOpen())
 		onOpenCloseButtonClicked();
 	accept();
 }
 
 void SerialPortDevice_Dialog::on_cancelButton_clicked()
 {
-	if (serialPort->isOpen())
+	if (serialPort.isOpen())
 		onOpenCloseButtonClicked();
 	reject();
 }
@@ -170,71 +178,71 @@ void SerialPortDevice_Dialog::pushButton_btnAvailablePorts_Pressed()
 void SerialPortDevice_Dialog::onPortNameChanged(const QString &sName)//name
 {
 	Q_UNUSED(sName);
-	if (serialPort->isOpen()) 
+	if (serialPort.isOpen()) 
 	{
-		serialPort->close();
+		serialPort.close();
 		ui.rdb_PortIsOpen->setChecked(false);
 	}
 }
 
 void SerialPortDevice_Dialog::onBaudRateChanged(int idx)
 {
-	serialPort->setBaudRate((BaudRateType)ui.baudRateBox->itemData(idx).toInt());
+	serialPort.setBaudRate((BaudRateType)ui.baudRateBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onParityChanged(int idx)
 {
-	serialPort->setParity((ParityType)ui.parityBox->itemData(idx).toInt());
+	serialPort.setParity((ParityType)ui.parityBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onDataBitsChanged(int idx)
 {
-	serialPort->setDataBits((DataBitsType)ui.dataBitsBox->itemData(idx).toInt());
+	serialPort.setDataBits((DataBitsType)ui.dataBitsBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onStopBitsChanged(int idx)
 {
-	serialPort->setStopBits((StopBitsType)ui.stopBitsBox->itemData(idx).toInt());
+	serialPort.setStopBits((StopBitsType)ui.stopBitsBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onQueryModeChanged(int idx)
 {
-	serialPort->setQueryMode((QextSerialPort::QueryMode)ui.queryModeBox->itemData(idx).toInt());
+	serialPort.setQueryMode((QextSerialPort::QueryMode)ui.queryModeBox->itemData(idx).toInt());
 }
 
 void SerialPortDevice_Dialog::onTimeoutChanged(int val)
 {
-	serialPort->setTimeout(val);
+	serialPort.setTimeout(val);
 }
 
 void SerialPortDevice_Dialog::onOpenCloseButtonClicked()
 {
-	if (!serialPort->isOpen()) 
+	if (!serialPort.isOpen()) 
 	{
-		serialPort->setPortName(ui.portBox->currentText());
-		serialPort->open(QIODevice::ReadWrite);
+		serialPort.setPortName(ui.portBox->currentText());
+		serialPort.open(QIODevice::ReadWrite);
 	}
 	else 
 	{
-		serialPort->close();
+		serialPort.close();
 	}
 	//If using polling mode, we need a QTimer
-	if (serialPort->isOpen() && serialPort->queryMode() == QextSerialPort::Polling)
+	if (serialPort.isOpen() && serialPort.queryMode() == QextSerialPort::Polling)
 		serialTimer->start();
 	else
 		serialTimer->stop();
 	//update the status
-	ui.rdb_PortIsOpen->setChecked(serialPort->isOpen());
+	ui.rdb_PortIsOpen->setChecked(serialPort.isOpen());
 }
 
 void SerialPortDevice_Dialog::onSendButtonClicked()
 {
-	if (serialPort->isOpen() && !ui.sendEdit->toPlainText().isEmpty())
+	if (serialPort.isOpen() && !ui.sendEdit->toPlainText().isEmpty())
 	{
 		QString sToSend = ui.sendEdit->toPlainText();
 		if (ui.rdbSendFormat->isChecked())//ASCII?
 		{
-			serialPort->write(sToSend.toLatin1());
+			serialPort.write(sToSend.toLatin1());
 		}
 		else//Decimal
 		{
@@ -246,7 +254,7 @@ void SerialPortDevice_Dialog::onSendButtonClicked()
 				{
 					nDecVal = nDecVal - '0';
 					QString sConverted = QString::number(nDecVal);
-					serialPort->write(sConverted.toLatin1());
+					serialPort.write(sConverted.toLatin1());
 				}
 				else
 				{
@@ -260,9 +268,9 @@ void SerialPortDevice_Dialog::onSendButtonClicked()
 
 void SerialPortDevice_Dialog::onReadyRead()
 {
-	if (serialPort->bytesAvailable()) {
+	if (serialPort.bytesAvailable()) {
 		ui.recvEdit->moveCursor(QTextCursor::End);
-		QString sReceived = QString::fromLatin1(serialPort->readAll());
+		QString sReceived = QString::fromLatin1(serialPort.readAll());
 
 		if (ui.rdbRecFormat->isChecked())//ASCII?
 		{

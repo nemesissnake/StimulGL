@@ -106,7 +106,7 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 	{
 		MainSplashScreen->finish(this);
 	}
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32 //Are we on Windows?
 	if (timeBeginPeriod(1) == TIMERR_NOCANDO)
 		qWarning() << "Could not start the time period!";
 #endif
@@ -154,7 +154,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 #endif
 	if(Plugins)
 		delete Plugins;
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32 //Are we on Windows?
 	timeEndPeriod(1);
 #endif
 	MainAppInfo::SetMainWindow(NULL);
@@ -2299,10 +2299,10 @@ void MainWindow::cleanupScript()
  */
 void MainWindow::activateMainWindow()
 {
-#ifdef Q_WS_WIN
-	::SetWindowPos(effectiveWinId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-	::SetWindowPos(effectiveWinId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-#endif
+//#ifdef Q_OS_WIN32 //Are we on Windows?
+//	::SetWindowPos(effectiveWinId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+//	::SetWindowPos(effectiveWinId(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+//#endif
 	this->raise();
 	this->activateWindow();
 }

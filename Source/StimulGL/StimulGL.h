@@ -44,6 +44,6 @@
 #define FUNC_PLUGIN_SAVEADDFILE_FULL				FUNC_PLUGIN_SAVEADDFILE "(QString)"
 
 #endif // STIMULGL_H
-//#ifdef Q_WS_WIN
+//#ifdef Q_OS_WIN32 //Are we on Windows?
 //#ifdef Q_WS_X11
 //#ifdef Q_WS_MACX

@@ -652,7 +652,7 @@ bool ExperimentManager::runExperiment()
  *
  *  The current Experiment in memory is started if/after it has successfully loaded.
  */
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN32 //Are we on Windows?
 	//bool ret = 
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 #else

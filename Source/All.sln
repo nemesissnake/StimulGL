@@ -70,13 +70,9 @@ Global
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Template|x64.ActiveCfg = Template|x64
 		{DF78AA1A-8166-47A0-AE13-51D55E460FDC}.Template|x64.Build.0 = Template|x64
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|Win32.ActiveCfg = Debug|Win32
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|Win32.Build.0 = Debug|Win32
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|x64.ActiveCfg = Debug|x64
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Debug|x64.Build.0 = Debug|x64
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|Win32.ActiveCfg = Release|Win32
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|Win32.Build.0 = Release|Win32
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|x64.ActiveCfg = Release|x64
-		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Release|x64.Build.0 = Release|x64
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Template|Win32.ActiveCfg = Template|Win32
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Template|Win32.Build.0 = Template|Win32
 		{404F3214-07EA-4DFA-BCB9-9EBC65171B08}.Template|x64.ActiveCfg = Template|x64
@@ -106,13 +102,9 @@ Global
 		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Template|x64.ActiveCfg = Template|x64
 		{44216F98-423E-3FF8-BFF4-8B464627E2EC}.Template|x64.Build.0 = Template|x64
 		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Debug|Win32.Build.0 = Debug|Win32
 		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Debug|x64.ActiveCfg = Debug|x64
-		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Debug|x64.Build.0 = Debug|x64
 		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Release|Win32.ActiveCfg = Release|Win32
-		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Release|Win32.Build.0 = Release|Win32
 		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Release|x64.ActiveCfg = Release|x64
-		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Release|x64.Build.0 = Release|x64
 		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Template|Win32.ActiveCfg = Template|Win32
 		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Template|Win32.Build.0 = Template|Win32
 		{B820C439-C052-4D87-BD6C-62BFB2BA973F}.Template|x64.ActiveCfg = Template|x64
@@ -193,7 +185,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = Qt510_win32
+		Qt5Version = Qt510_x64
 	EndGlobalSection
 	GlobalSection(Qt) = preSolution
 		Integration = True
