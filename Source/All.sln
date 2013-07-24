@@ -185,7 +185,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = Qt510_x64
+		Qt5Version = Qt510_win32
 	EndGlobalSection
 	GlobalSection(Qt) = preSolution
 		Integration = True
