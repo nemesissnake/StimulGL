@@ -13,8 +13,6 @@ var bSkipStep;
 var sBinairyPath;
 var changeSet;
 
-//var sQTDirWin32 = tr("C:/Qt/4.8.0/win32/");
-//var sQTDirx64 = tr("C:/Qt/4.8.0/x64/");
 var sScriptPath = ToWindowsPath(StimulGL.getSelectedScriptFileLocation());
 var sInstallJammerPath = StimulGL.getEnvironmentVariabele("PROGRAMFILES(x86)") + "/InstallJammer/installjammer.exe";
 var strInstallConfigurationFileName = "InstallJammer_(32+64bit)";
@@ -23,9 +21,9 @@ var strInstallConfigurationFileCopy = sScriptPath + "\\" + strInstallConfigurati
 var sInstallerAppName = tr("StimulGL");//StimulGL
 var arrConfigList = new Array("win32","x64");
 var sInstallerConfiguration = tr(arrConfigList[0]);//win32 or x64
-var sInstallerVersion = tr("2.1.0.3");//<Major>.<Minor>.<Build>.<Revision>
+var sInstallerVersion = tr("2.1.0.4");//<Major>.<Minor>.<Build>.<Revision>
 var sInstallerPlatform = tr("Windows");
-var sQtDirectory_default = tr("C:/Qt/5.0.2");
+var sQtDirectory_default = tr("C:/Qt/5.1.0");
 var sStimulGLProjectDirectory_default = tr("E:/Projects/StimulGL");
 var sQtDirectory = sQtDirectory_default;
 var sStimulGLProjectDirectory = sStimulGLProjectDirectory_default;

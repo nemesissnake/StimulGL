@@ -290,7 +290,9 @@ File ::FC1053B6-13C0-4FAA-AEFF-741207A58A6B -name qoffscreend.pdb -active 0 -par
 File ::A8B3B090-EB32-4AF2-9572-41A19BC4089E -name C:/Qt/5.1.0/x64/bin/icudt51.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::E0C7EB60-5D36-4CE6-B080-55D9BE110FCC -name C:/Qt/5.1.0/x64/bin/icuin51.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 File ::D8B9A034-3C09-4670-B7F7-FB829EFBCE45 -name C:/Qt/5.1.0/x64/bin/icuuc51.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
-File ::16D9F678-754C-426F-92D7-9D15F1090B91 -targetfilename vcredist.exe -name C:/Qt/VC_Redist_VS2012/vcredist_x64.exe -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::16D9F678-754C-426F-92D7-9D15F1090B91 -targetfilename vcredist.exe -name C:/Qt/VC_Redist_VS2012/vcredist_x64.exe -active 0 -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::6DBFB491-B6AC-4FEA-98DC-F82E40330545 -name C:/Qt/5.1.0/x64/bin/Qt5Sensors.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
+File ::69FD9E61-DB39-4EB3-BAD9-1CC6E694C836 -name C:/Qt/5.1.0/x64/bin/Qt5Test.dll -parent D562F7E3-157E-48ED-91CE-71FBA40B332D
 FileGroup ::21B9C60D-2802-481D-BF1F-F26B0588B66E -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name {StimulGL Plugins(x64)} -parent FileGroups
 File ::66FCBDDC-C900-40BF-87EE-D17EFF84FA30 -name E:/Projects/StimulGL/Install/plugins/x64/SerialPortDeviceplugin_x64_Release.dll -active 0 -parent 21B9C60D-2802-481D-BF1F-F26B0588B66E
 File ::4FD768CE-15F8-4FAE-B7A5-288F0AD9D469 -name E:/Projects/StimulGL/Install/plugins/x64/USBHIDDeviceplugin_x64_Release.dll -parent 21B9C60D-2802-481D-BF1F-F26B0588B66E
@@ -879,16 +881,17 @@ File ::D5A5D20C-7E36-4D51-B220-FFE0618EDB3B -name Clock.qml -parent 4B274BA1-CC7
 File ::7324AEB3-ABA8-4C4C-AC50-7D4C786CEA40 -name hour.png -parent 4B274BA1-CC75-45EA-87BC-A40ECF4F3FC1
 File ::2765A379-379B-46DB-B55A-D781222C16A1 -name minute.png -parent 4B274BA1-CC75-45EA-87BC-A40ECF4F3FC1
 File ::B36AFBF8-CA87-4301-BD1B-BDC0F6292D70 -name qmldir -parent 4B274BA1-CC75-45EA-87BC-A40ECF4F3FC1
-FileGroup ::D09FFE2D-0C13-4F41-ABE1-1E2763E77575 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {Script Plugins(x64)} -parent FileGroups
-File ::25EBBE13-30D0-4EF2-86EF-A1265CA859AA -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_core.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::EC613CB1-0C95-4C85-8558-33BD72BAA81B -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_gui.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::CC66E2F0-97D2-47DE-A000-AB111B1C7531 -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_opengl.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::828ADD58-D8AC-4B6E-B521-2B55BDCE73AF -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_sql.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::0E3FAD8E-D3D9-467E-B641-EEE3B1507B1E -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_svg.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::68193671-EF8B-47F2-AEB4-A63F1FC2F43D -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_uitools.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::1222F72F-9291-411C-B3E2-080FFC44C2BD -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_xml.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::60BCE2A4-9D3E-479F-B211-E3E16F2B9968 -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_xmlpatterns.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
-File ::D7228137-AAFF-47F8-B196-CC2D595E60D5 -name E:/Projects/StimulGL/Install/plugins/x64/script/qtscript_webkit.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+FileGroup ::D09FFE2D-0C13-4F41-ABE1-1E2763E77575 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {Script Binding Plugins(x64)} -parent FileGroups
+File ::8D0CB5EE-B051-4332-AB64-B4B65276E01D -name C:/Qt/5.1.0/x64/bindings/script/qtscript_core.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::613C3A8A-A485-4885-9868-DB706F5C69D9 -name C:/Qt/5.1.0/x64/bindings/script/qtscript_gui.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::A88F5277-1729-419B-8D82-E44FF33BEE61 -name C:/Qt/5.1.0/x64/bindings/script/qtscript_network.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::57007CE4-F1EA-46CC-AEA2-6854E39550E9 -name C:/Qt/5.1.0/x64/bindings/script/qtscript_opengl.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::BBC1098C-0B06-43FA-B2D4-B7EE5061E7E0 -name C:/Qt/5.1.0/x64/bindings/script/qtscript_sql.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::6E84FD3F-88C8-4CFD-9E83-BEB77891EA53 -name C:/Qt/5.1.0/x64/bindings/script/qtscript_svg.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::181B4A61-3E27-46E0-80D0-95F1202F27D1 -name C:/Qt/5.1.0/x64/bindings/script/qtscript_uitools.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::0E759985-F668-4037-987F-6917D6704C3F -name C:/Qt/5.1.0/x64/bindings/script/qtscript_webkit.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::1C791FD9-505A-4DB2-AA42-91B20AD6F1ED -name C:/Qt/5.1.0/x64/bindings/script/qtscript_xml.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
+File ::85AF9B01-F77C-453F-98AA-73E9437376FF -name C:/Qt/5.1.0/x64/bindings/script/qtscript_xmlpatterns.dll -parent D09FFE2D-0C13-4F41-ABE1-1E2763E77575
 FileGroup ::6F707DE3-E5BF-4944-9F3F-B84552A89AA0 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {Language APIs} -parent FileGroups
 File ::173847FF-4250-4C17-8CAA-8301880107EE -type dir -name E:/Projects/StimulGL/Install/apis -parent 6F707DE3-E5BF-4944-9F3F-B84552A89AA0
 File ::334AEA46-BEA6-427B-804F-E40EE1ADA64C -name cplusplus.api -parent 173847FF-4250-4C17-8CAA-8301880107EE
@@ -946,7 +949,9 @@ File ::88636E4A-C6C5-4915-9A31-7DDDC60B2B37 -name qoffscreend.pdb -active 0 -par
 File ::1D560A30-A6B9-4DAC-ACB6-760413805244 -name C:/Qt/5.1.0/win32/bin/icudt51.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 File ::7DADE5FE-6B97-4922-AD2E-BB3EA695131E -name C:/Qt/5.1.0/win32/bin/icuin51.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 File ::ABABAE6D-8963-464A-BC02-EBC5228E359F -name C:/Qt/5.1.0/win32/bin/icuuc51.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
-File ::434068B2-76CD-414A-804F-94F1F1376812 -targetfilename vcredist.exe -name C:/Qt/VC_Redist_VS2012/vcredist_x86.exe -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::434068B2-76CD-414A-804F-94F1F1376812 -targetfilename vcredist.exe -name C:/Qt/VC_Redist_VS2012/vcredist_x86.exe -active 0 -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::15AB591D-B6ED-4FD4-9379-42397269E8DA -name C:/Qt/5.1.0/win32/bin/Qt5Test.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
+File ::2FFBC540-58C8-4F91-9862-B6E115752D08 -name C:/Qt/5.1.0/win32/bin/Qt5Sensors.dll -parent 891CF076-368A-450C-890A-7E3FDCB8748B
 FileGroup ::2C7E583A-607F-4311-9D36-84C482C13786 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {StimulGL Plugins(win32)} -parent FileGroups
 File ::1766C14E-F605-4218-A893-A16D41E077C0 -name E:/Projects/StimulGL/Install/plugins/Win32/SerialPortDeviceplugin_Win32_Release.dll -active 0 -parent 2C7E583A-607F-4311-9D36-84C482C13786
 File ::D01D06B4-441B-4822-ABA2-4A2CDEABF814 -name E:/Projects/StimulGL/Install/plugins/Win32/USBHIDDeviceplugin_Win32_Release.dll -parent 2C7E583A-607F-4311-9D36-84C482C13786
@@ -1241,16 +1246,17 @@ File ::BE87137D-7354-410D-9701-BF1501874C78 -name Clock.qml -parent 90F08A0E-78B
 File ::03F00BEE-0504-4455-944F-49CF2DF079B6 -name hour.png -parent 90F08A0E-78B8-4CE2-8277-F2FB596919EE
 File ::C03AC2CC-CB23-41F0-B9FC-ADEE855D90D7 -name minute.png -parent 90F08A0E-78B8-4CE2-8277-F2FB596919EE
 File ::FB7B6850-80E6-49D1-83A1-4C062E80EF72 -name qmldir -parent 90F08A0E-78B8-4CE2-8277-F2FB596919EE
-FileGroup ::9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name {Script Plugins(win32)} -parent FileGroups
-File ::5E3A7EED-E70A-401A-B12F-3A6298999BD1 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_core.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::F9C9D128-C4E3-454D-95E9-FA938A36B5F4 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_gui.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::33B52460-DEFB-49B1-BD7C-05F321E27BB3 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_opengl.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::6A613727-5279-441F-9827-D6B88B8921FD -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_sql.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::5F96FCE0-4269-4F24-92D6-C02AFA69FCF5 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_svg.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::E78A9DBB-5F3E-4866-A6B4-F3D952682FF8 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_uitools.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::46C22F21-C894-4551-A9AB-A1A7E41C4C7A -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_xml.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::5AE910D4-0B60-48F9-938E-E0A32406F4B7 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_xmlpatterns.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
-File ::C92EF0C0-3E9A-46BA-8420-FE1D1AADFE77 -name E:/Projects/StimulGL/Install/plugins/Win32/script/qtscript_webkit.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+FileGroup ::9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F -setup Install -active Yes -platforms {TarArchive Windows ZipArchive} -name {Script Binding Plugins(win32)} -parent FileGroups
+File ::0BA76CC0-32AD-4B2D-B1D6-E9EDA7AF4646 -name C:/Qt/5.1.0/win32/bindings/script/qtscript_core.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::A630F382-0452-492F-B916-97A02340FDFA -name C:/Qt/5.1.0/win32/bindings/script/qtscript_gui.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::CA3DEA70-B9AC-4910-A03A-4BC63EC18684 -name C:/Qt/5.1.0/win32/bindings/script/qtscript_network.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::48CE4919-9EB3-4951-B400-D88443BC5796 -name C:/Qt/5.1.0/win32/bindings/script/qtscript_opengl.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::DE5676D7-62D4-4CF9-A88D-840CB6F2DE69 -name C:/Qt/5.1.0/win32/bindings/script/qtscript_sql.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::4E349873-BFC2-4977-B153-D423424331EB -name C:/Qt/5.1.0/win32/bindings/script/qtscript_svg.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::74EA8943-4C05-4B86-ACA2-8BF262C3998A -name C:/Qt/5.1.0/win32/bindings/script/qtscript_uitools.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::F2AF3CB3-6A19-43C1-BD3D-3ADDA1512541 -name C:/Qt/5.1.0/win32/bindings/script/qtscript_webkit.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::7F27616E-D715-45DD-ADB2-1C89BEDBD89B -name C:/Qt/5.1.0/win32/bindings/script/qtscript_xml.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
+File ::34F38EA1-3503-45D9-8A4D-566B09B721AA -name C:/Qt/5.1.0/win32/bindings/script/qtscript_xmlpatterns.dll -parent 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F
 FileGroup ::A2DAA637-8263-44CD-9683-9B4B3EEDCD93 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {XSD and validation} -parent FileGroups
 File ::D77FB78C-4FE1-4D75-AC2A-6D5DB1FF04FD -name E:/Projects/StimulGL/Install/xsd/exml_2001.xsd -parent A2DAA637-8263-44CD-9683-9B4B3EEDCD93
 File ::BB27F968-8F8F-46BB-9364-3F279B1C4967 -name E:/Projects/StimulGL/Install/xsd/exml_2002.xsd -parent A2DAA637-8263-44CD-9683-9B4B3EEDCD93
@@ -1459,6 +1465,14 @@ File ::85B9F3BC-A6DB-41C9-A8E9-6B49BBE117F9 -name C:/Qt/Ogre/OGRE-SDK-1.8.2-vc11
 File ::E9A45831-39E6-4F77-8C3F-9F17BD2FF2D1 -name C:/Qt/Ogre/OGRE-SDK-1.8.2-vc110-x64-28.05.2013/bin/Release/RenderSystem_GL.dll -parent C6C42CD1-B9D2-4DCB-B599-C7236551A39A
 File ::D6C1C85A-C180-46C0-BCE3-59DCE6B60BCB -name C:/Qt/HIDAPI/x64/bin/hidapi_x64.dll -parent C6C42CD1-B9D2-4DCB-B599-C7236551A39A
 File ::B9D0CE93-CAF8-4C3B-919F-238B647E91CD -name C:/Qt/Firebird-2.5.2.26540-0/x64/bin/qsqlibase.dll -parent C6C42CD1-B9D2-4DCB-B599-C7236551A39A
+FileGroup ::4DF71FAD-80BD-4091-929A-2A4F157EA0C5 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {VC2012 Redistributables(win32)} -parent FileGroups
+File ::B3E1AC79-CE0B-41F4-8A6F-49F75D1A905A -name C:/Qt/VC_Redist_VS2012/x86/Microsoft.VC110.CRT/msvcp110.dll -parent 4DF71FAD-80BD-4091-929A-2A4F157EA0C5
+File ::58AD1B13-5EF4-4ED8-8773-D14DD3ED0661 -name C:/Qt/VC_Redist_VS2012/x86/Microsoft.VC110.CRT/msvcr110.dll -parent 4DF71FAD-80BD-4091-929A-2A4F157EA0C5
+File ::8EF5B114-C6BA-4192-98C3-2FD7565B2686 -name C:/Qt/VC_Redist_VS2012/x86/Microsoft.VC110.OPENMP/vcomp110.dll -parent 4DF71FAD-80BD-4091-929A-2A4F157EA0C5
+FileGroup ::C2965824-E1F7-41F1-988B-2789A12B339E -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows TarArchive ZipArchive} -name {VC2012 Redistributables(x64)} -parent FileGroups
+File ::81E275D5-F8BD-4410-8874-6D55560F0A4C -name C:/Qt/VC_Redist_VS2012/x64/Microsoft.VC110.OpenMP/vcomp110.dll -parent C2965824-E1F7-41F1-988B-2789A12B339E
+File ::0D76D394-1F8F-4177-B009-2E9EA0A4BCD3 -name C:/Qt/VC_Redist_VS2012/x64/Microsoft.VC110.CRT/msvcp110.dll -parent C2965824-E1F7-41F1-988B-2789A12B339E
+File ::C661009A-3A7B-4AAD-ABEB-39337EF0ED3D -name C:/Qt/VC_Redist_VS2012/x64/Microsoft.VC110.CRT/msvcr110.dll -parent C2965824-E1F7-41F1-988B-2789A12B339E
 Component ::3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files(x64)} -parent Components
 Component ::C511BCE0-5730-4B6A-B67A-9BFDC29D6A11 -setup Install -active Yes -platforms {AIX-ppc FreeBSD-4-x86 FreeBSD-5-x86 FreeBSD-6-x86 FreeBSD-7-x86 HPUX-hppa Linux-x86 Linux-x86_64 Solaris-sparc Solaris-x86 Windows} -name {Default Files(win32)} -parent Components
 Component ::0C4197C0-9F10-4AD0-86B8-506675EEFCBC -setup Install -active Yes -platforms Windows -name Default -parent Components
@@ -1478,11 +1492,12 @@ InstallComponent C0184BDB-433E-4DF8-99A9-D6765EE6D2A8 -setup Install -type pane 
 Condition DC0E7458-E86E-43D8-A9DB-F53D91901A9B -active Yes -parent C0184BDB-433E-4DF8-99A9-D6765EE6D2A8 -title {String Equal Condition} -component StringEqualCondition -TreeObject::id DC0E7458-E86E-43D8-A9DB-F53D91901A9B
 InstallComponent 706D5DB2-D5D1-47E1-B759-4D3DED92B3B5 -setup Install -type action -title {Populate Components} -component PopulateComponents -active No -parent C0184BDB-433E-4DF8-99A9-D6765EE6D2A8
 InstallComponent 56252ABB-FDB4-4460-8509-9B3F7FD68B91 -setup Install -type pane -title {Start Copying Files} -component StartCopyingFiles -active Yes -parent StandardInstall
-InstallComponent 0256F754-9E25-4E6E-8252-D72AC604554F -setup Install -type pane -title {Copying Files} -component CopyFiles -active Yes -parent StandardInstall
-InstallComponent 79AF07B4-FCF4-48A4-83D3-5F6C772C07C7 -setup Install -type action -title {Disable Buttons} -component ModifyWidget -active Yes -parent 0256F754-9E25-4E6E-8252-D72AC604554F
-InstallComponent 419260C9-AC73-40ED-9CF2-1DFB428C2380 -setup Install -type action -title {Install Everything} -component ExecuteAction -active Yes -parent 0256F754-9E25-4E6E-8252-D72AC604554F
+InstallComponent 44FF14F9-946B-4B72-8191-0FBE22BA5651 -setup Install -type pane -title {Copying Files} -component CopyFiles -active Yes -parent StandardInstall
+InstallComponent 460325A4-F9C8-4C4D-843F-CE4004EBF7F3 -setup Install -type action -title {Disable Buttons} -component ModifyWidget -active Yes -parent 44FF14F9-946B-4B72-8191-0FBE22BA5651
+InstallComponent 04BDA05D-B927-4438-AB52-B02CB20DE849 -setup Install -type action -title {Install Everything} -component ExecuteAction -active Yes -parent 44FF14F9-946B-4B72-8191-0FBE22BA5651
+InstallComponent A00C3163-87BB-4623-A657-71F6C34EE4F4 -setup Install -type action -title {Move Forward} -component MoveForward -active Yes -parent 44FF14F9-946B-4B72-8191-0FBE22BA5651
+InstallComponent 0256F754-9E25-4E6E-8252-D72AC604554F -setup Install -type pane -title {VCRedist2012 Installation} -component CopyFiles -alias {Visual C++ 2012 Redistributable Package Installation} -active No -parent StandardInstall
 InstallComponent 8231C65A-63DD-4B9D-92CA-B9AA28CAAD71 -setup Install -type action -title {Execute External Program} -component ExecuteExternalProgram -active Yes -parent 0256F754-9E25-4E6E-8252-D72AC604554F
-InstallComponent 7D4C6443-1F88-4E0D-884A-0C57E2607E2C -setup Install -type action -title {Move Forward} -component MoveForward -active Yes -parent 0256F754-9E25-4E6E-8252-D72AC604554F
 InstallComponent 9FAD9049-4135-43F0-847C-59893E37C15B -setup Install -type pane -title {Setup Complete} -component SetupComplete -active Yes -parent StandardInstall
 InstallComponent 3612B608-0D37-4FB7-B618-D747E28CE636 -setup Install -type action -conditions {5FB8B64B-B764-4663-B21D-2591E78159B6 C3D35357-7AD4-4761-BAF8-EA815E38F1F4} -title {View Readme Checkbutton} -component AddWidget -active Yes -parent 9FAD9049-4135-43F0-847C-59893E37C15B
 Condition 5FB8B64B-B764-4663-B21D-2591E78159B6 -active Yes -parent 3612B608-0D37-4FB7-B618-D747E28CE636 -title {File Exists Condition} -component FileExistsCondition -TreeObject::id 5FB8B64B-B764-4663-B21D-2591E78159B6
@@ -1589,6 +1604,12 @@ InstallComponent AAE32D43-F791-412E-843E-A8F47648D562 -setup Uninstall -type act
 InstallComponent 6F33D400-6C67-4DB5-92D7-E8183E3D38FE -setup Uninstall -type actiongroup -title {Cancel Actions} -alias {Cancel Actions} -active Yes -parent ActionGroupsUninstall
 
 array set Properties {
+0256F754-9E25-4E6E-8252-D72AC604554F,Active
+{No}
+
+0256F754-9E25-4E6E-8252-D72AC604554F,Alias
+{Visual C++ 2012 Redistributable Package Installation}
+
 0256F754-9E25-4E6E-8252-D72AC604554F,BackButton,subst
 {1}
 
@@ -1638,6 +1659,12 @@ array set Properties {
 {Setup Actions}
 
 03F14297-F67B-48CF-94E0-BAE14BDAE2B2,Conditions
+{0 conditions}
+
+04BDA05D-B927-4438-AB52-B02CB20DE849,Action
+{Install Actions}
+
+04BDA05D-B927-4438-AB52-B02CB20DE849,Conditions
 {0 conditions}
 
 07A72BE2-AA6D-40B6-8082-5DDB6501C8EF,Conditions
@@ -1763,6 +1790,9 @@ array set Properties {
 21B9C60D-2802-481D-BF1F-F26B0588B66E,Name
 {StimulGL Plugins(x64)}
 
+22D8325B-8FE3-4281-B44E-B167B12BE7B3,Conditions
+{1 condition}
+
 23D3C72D-A0C5-4AAA-91DB-84B672E4537B,CheckCondition
 {Before Action is Executed}
 
@@ -1863,7 +1893,7 @@ array set Properties {
 {1}
 
 3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33,FileGroups
-{D562F7E3-157E-48ED-91CE-71FBA40B332D 21B9C60D-2802-481D-BF1F-F26B0588B66E 13ECD65D-69B5-4F91-B2C0-B4F9548060F8 D09FFE2D-0C13-4F41-ABE1-1E2763E77575 213874EE-2BCC-43BB-8B31-176507FEF175 4EDD61CE-1738-42F3-82D2-E035E88FDF4A AC052636-D32C-4BE2-8541-056511841A6C D66CC3C4-3C82-4A89-8A30-8695B7ADEAF2 C6C42CD1-B9D2-4DCB-B599-C7236551A39A}
+{D562F7E3-157E-48ED-91CE-71FBA40B332D 21B9C60D-2802-481D-BF1F-F26B0588B66E 13ECD65D-69B5-4F91-B2C0-B4F9548060F8 D09FFE2D-0C13-4F41-ABE1-1E2763E77575 213874EE-2BCC-43BB-8B31-176507FEF175 4EDD61CE-1738-42F3-82D2-E035E88FDF4A AC052636-D32C-4BE2-8541-056511841A6C D66CC3C4-3C82-4A89-8A30-8695B7ADEAF2 C6C42CD1-B9D2-4DCB-B599-C7236551A39A C2965824-E1F7-41F1-988B-2789A12B339E}
 
 3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33,Name
 {Default Files(x64)}
@@ -1883,17 +1913,50 @@ array set Properties {
 3F6B02E5-8CF8-44A0-A089-F719579AFD59,String
 {<%LaunchApplication%>}
 
-419260C9-AC73-40ED-9CF2-1DFB428C2380,Action
-{Install Actions}
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton,subst
+{1}
 
-419260C9-AC73-40ED-9CF2-1DFB428C2380,Conditions
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton,subst
+{1}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption,subst
+{1}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Conditions
 {0 conditions}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel,subst
+{1}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message,subst
+{1}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton,subst
+{1}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue,subst
+{1}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle,subst
+{1}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title,subst
+{1}
 
 4544F2A4-D1BF-4921-AF6F-8B35880117BF,CheckCondition
 {Before Action is Executed}
 
 4544F2A4-D1BF-4921-AF6F-8B35880117BF,String
 {<%GuiMode%>}
+
+460325A4-F9C8-4C4D-843F-CE4004EBF7F3,ExecuteAction
+{Before Pane is Displayed}
+
+460325A4-F9C8-4C4D-843F-CE4004EBF7F3,State
+{disabled}
+
+460325A4-F9C8-4C4D-843F-CE4004EBF7F3,Widget
+{Back Button;Next Button}
 
 4AB510E2-770D-465C-BBE4-7A5C17F2CB70,Alias
 {Install Actions}
@@ -1906,6 +1969,12 @@ array set Properties {
 
 4D8902FF-2209-48C0-9393-F410CB83E3D4,Filename
 {<%ProgramExecutable%>}
+
+4DF71FAD-80BD-4091-929A-2A4F157EA0C5,Destination
+{<%InstallDir%>}
+
+4DF71FAD-80BD-4091-929A-2A4F157EA0C5,Name
+{VC2012 Redistributables(win32)}
 
 4EDD61CE-1738-42F3-82D2-E035E88FDF4A,Destination
 {<%InstallDir%>/plugins/x64/phonon_backend}
@@ -2189,19 +2258,7 @@ array set Properties {
 7472B7F9-3773-4F20-B461-A182E76C57C1,Filename
 {<%ProgramExecutable%>}
 
-79AF07B4-FCF4-48A4-83D3-5F6C772C07C7,ExecuteAction
-{Before Pane is Displayed}
-
-79AF07B4-FCF4-48A4-83D3-5F6C772C07C7,State
-{disabled}
-
-79AF07B4-FCF4-48A4-83D3-5F6C772C07C7,Widget
-{Back Button;Next Button}
-
 7A091D4B-ADD5-4762-BD8C-C5F8E1FF8228,Conditions
-{0 conditions}
-
-7D4C6443-1F88-4E0D-884A-0C57E2607E2C,Conditions
 {0 conditions}
 
 7E157748-C3A7-40B7-9341-3CE2FE2CFD29,Background
@@ -2264,11 +2321,20 @@ array set Properties {
 8231C65A-63DD-4B9D-92CA-B9AA28CAAD71,Conditions
 {0 conditions}
 
-8231C65A-63DD-4B9D-92CA-B9AA28CAAD71,IgnoreErrors
+8231C65A-63DD-4B9D-92CA-B9AA28CAAD71,ExecuteInConsole
+{Yes}
+
+8231C65A-63DD-4B9D-92CA-B9AA28CAAD71,IncludeStderr
 {Yes}
 
 8231C65A-63DD-4B9D-92CA-B9AA28CAAD71,ProgramCommandLine
-{vcredist.exe /q}
+{vcredist.exe /install /passive /norestart /log vcredist_install.log}
+
+8231C65A-63DD-4B9D-92CA-B9AA28CAAD71,ProgressiveOutputWidget
+{Progress Value}
+
+8231C65A-63DD-4B9D-92CA-B9AA28CAAD71,ShowProgressiveOutput
+{Yes}
 
 8231C65A-63DD-4B9D-92CA-B9AA28CAAD71,WorkingDirectory
 {<%InstallDir%>}
@@ -2394,10 +2460,10 @@ array set Properties {
 {<%InstallDir%>/plugins/Win32/script}
 
 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F,FileSize
-{9598464}
+{0}
 
 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F,Name
-{Script Plugins(win32)}
+{Script Binding Plugins(win32)}
 
 9D11783B-0F22-4957-8B30-372B02FE7A11,CheckCondition
 {Before Action is Executed}
@@ -2423,11 +2489,14 @@ array set Properties {
 9FAD9049-4135-43F0-847C-59893E37C15B,NextButton,subst
 {1}
 
+A00C3163-87BB-4623-A657-71F6C34EE4F4,Conditions
+{0 conditions}
+
 A1E87F59-F33A-4028-AA97-952F67EB031A,Destination
 {<%InstallDir%>/qml/plugins/Win32}
 
 A1E87F59-F33A-4028-AA97-952F67EB031A,FileSize
-{2604437}
+{2604435}
 
 A1E87F59-F33A-4028-AA97-952F67EB031A,Name
 {QML Plugins(win32)}
@@ -2464,6 +2533,9 @@ AB07B58A-9597-4027-97D7-6D8E67D9D604,CheckCondition
 
 AB07B58A-9597-4027-97D7-6D8E67D9D604,String
 {<%ViewReadme%>}
+
+ABC58F85-12AE-4CB0-BF72-B19F39FB5B6E,Conditions
+{0 conditions}
 
 ABC58F85-12AE-4CB0-BF72-B19F39FB5B6E,Message,subst
 {1}
@@ -2696,6 +2768,12 @@ C0184BDB-433E-4DF8-99A9-D6765EE6D2A8,Subtitle,subst
 C0184BDB-433E-4DF8-99A9-D6765EE6D2A8,Title,subst
 {1}
 
+C2965824-E1F7-41F1-988B-2789A12B339E,Destination
+{<%InstallDir%>}
+
+C2965824-E1F7-41F1-988B-2789A12B339E,Name
+{VC2012 Redistributables(x64)}
+
 C2FE8A41-240D-431A-B80F-FF44E9B327FC,CheckCondition
 {Before Action is Executed}
 
@@ -2724,7 +2802,7 @@ C511BCE0-5730-4B6A-B67A-9BFDC29D6A11,DisplayName,subst
 {1}
 
 C511BCE0-5730-4B6A-B67A-9BFDC29D6A11,FileGroups
-{891CF076-368A-450C-890A-7E3FDCB8748B 2C7E583A-607F-4311-9D36-84C482C13786 A1E87F59-F33A-4028-AA97-952F67EB031A 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F 9B6EA236-969D-43FC-A84A-06A74E6C3DBE 339CD47A-83C5-49EE-AC9B-A96C0AF6B26F 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A FD2052F2-F691-4680-9D69-F50CA6E8F047 B8B5252C-BA02-416E-A353-667E13968192}
+{891CF076-368A-450C-890A-7E3FDCB8748B 2C7E583A-607F-4311-9D36-84C482C13786 A1E87F59-F33A-4028-AA97-952F67EB031A 9B786F81-2B09-4F3D-A0CB-7EA6E2674A1F 9B6EA236-969D-43FC-A84A-06A74E6C3DBE 339CD47A-83C5-49EE-AC9B-A96C0AF6B26F 23EA39AB-E0A7-4451-8BBD-01D9ABBC739A FD2052F2-F691-4680-9D69-F50CA6E8F047 B8B5252C-BA02-416E-A353-667E13968192 4DF71FAD-80BD-4091-929A-2A4F157EA0C5}
 
 C511BCE0-5730-4B6A-B67A-9BFDC29D6A11,Name
 {Default Files(win32)}
@@ -2733,7 +2811,7 @@ C6C42CD1-B9D2-4DCB-B599-C7236551A39A,Destination
 {<%InstallDir%>}
 
 C6C42CD1-B9D2-4DCB-B599-C7236551A39A,FileSize
-{21024788}
+{21032468}
 
 C6C42CD1-B9D2-4DCB-B599-C7236551A39A,Name
 {Additional Binaries(x64)}
@@ -2796,10 +2874,10 @@ D09FFE2D-0C13-4F41-ABE1-1E2763E77575,Destination
 {<%InstallDir%>/plugins/x64/script}
 
 D09FFE2D-0C13-4F41-ABE1-1E2763E77575,FileSize
-{10567680}
+{0}
 
 D09FFE2D-0C13-4F41-ABE1-1E2763E77575,Name
-{Script Plugins(x64)}
+{Script Binding Plugins(x64)}
 
 D17AC00E-6526-4251-AB3C-EFA34A9553E5,BackButton,subst
 {1}
@@ -2809,6 +2887,9 @@ D17AC00E-6526-4251-AB3C-EFA34A9553E5,CancelButton,subst
 
 D17AC00E-6526-4251-AB3C-EFA34A9553E5,Caption,subst
 {1}
+
+D17AC00E-6526-4251-AB3C-EFA34A9553E5,Conditions
+{0 conditions}
 
 D17AC00E-6526-4251-AB3C-EFA34A9553E5,Message,subst
 {1}
@@ -3045,7 +3126,7 @@ FD2052F2-F691-4680-9D69-F50CA6E8F047,Destination
 {<%InstallDir%>/plugins/Win32}
 
 FD2052F2-F691-4680-9D69-F50CA6E8F047,FileSize
-{2266112}
+{2201600}
 
 FD2052F2-F691-4680-9D69-F50CA6E8F047,Name
 {Standard QT Plugins(win32)}
@@ -3764,6 +3845,33 @@ ZipArchive,VirtualTextMap
 }
 
 ::msgcat::mcmset ca {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Si us plau, espereu mentre s'instalÂ·la <%AppName%> en el seu equip.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{InstalÂ·lant <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{InstalÂ·lant}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3778,6 +3886,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset cs {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Prosím čekejte, dokud nebude program <%AppName%> nainstalován na váš počítač.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Instalace programu <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Instalace}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3792,6 +3927,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset de {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Bitte warten Sie, während Setup <%AppName%> auf Ihrem Computer installiert.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Installiere <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Installation}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3806,6 +3968,12 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset en {
+0256F754-9E25-4E6E-8252-D72AC604554F,Caption
+{Please wait while Setup installs the Visual C++ 2012 Redistributable Package on your computer, this can take some time...}
+
+0256F754-9E25-4E6E-8252-D72AC604554F,Subtitle
+{Installing Visual C++ 2012 Redistributable Package}
+
 1F21A9AA-78E0-41E2-BEF9-E3E488C86945,Text
 {<%LaunchApplicationText%>}
 
@@ -3814,6 +3982,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 3E0D911D-E0AF-47F2-898C-7CF2EDCE0A33,Description
 {<%ProgramFilesDescription%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Please wait while Setup installs <%AppName%> on your computer.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Installing <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Installing}
 
 5AED5E24-7D5D-442D-89D7-3D15214385B4,Text
 {<%CreateQuickLaunchShortcutText%>}
@@ -3880,6 +4075,33 @@ FE124F32-8FA4-46F1-B258-E80E59625C4F,Description
 
 }
 ::msgcat::mcmset es {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Por favor espere mientras se instala <%AppName%> en su equipo.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Instalando <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Instalando}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3894,6 +4116,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset fr {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Patientez pendant l'installation de <%AppName%> sur votre ordinateur.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Installation de <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Installation}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3908,6 +4157,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset hu {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Kérem várjon, amíg a Telepítő a <%AppName%> programot feltelepíti a gépére.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{<%AppName%> telepítése}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Telepítés}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3922,6 +4198,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset it {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Si prega di attendere mentre il programma installa <%AppName%> sul computer.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Installazione di <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Installazione in corso}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3936,6 +4239,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset lt {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Praðom palaukti kol diegimo programa ádiegs <%AppName%> á jûsø kompiuterá.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Diegiama <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Diegiama}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3950,6 +4280,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset nl {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Een ogenblik geduld terwijl <%AppName%> wordt geïnstalleerd op uw computer.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{<%AppName%> installeren}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Installeren}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3964,6 +4321,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset pl {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Proszę czekać podczas, gdy Instalator instaluje <%AppName%> na twoim komputerze.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Instalowanie <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Instalowanie}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3978,6 +4362,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset pt_br {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Por favor, aguarde enquanto o programa <%AppName%> é instalado em seu computador.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Instalando <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Instalando}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
@@ -3992,6 +4403,33 @@ F919A085-ED34-4092-BC72-5435846DF540,Message
 
 }
 ::msgcat::mcmset ru {
+44FF14F9-946B-4B72-8191-0FBE22BA5651,BackButton
+{< <%Back%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,CancelButton
+{<%Cancel%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Caption
+{Èä¸ò óñòàíîâêà <%AppName%> íà Âàø êîìïüþòåð. Ïîæàëóéñòà, ïîäîæäèòå.}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,FileLabel
+{<%Status%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Message
+{}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,NextButton
+{<%Next%> >}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,ProgressValue
+{<%InstallPercentComplete%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Subtitle
+{Óñòàíîâêà <%AppName%>}
+
+44FF14F9-946B-4B72-8191-0FBE22BA5651,Title
+{Óñòàíîâêà}
+
 66452662-3831-44B5-80F7-9617D59B471C,Message
 {<%UninstallCompleteText%>}
 
