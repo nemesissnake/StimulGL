@@ -58,34 +58,10 @@ QScriptValue SerialPortDevice::ctor__extensionname(QScriptContext* context, QScr
 SerialPortDevice::SerialPortDevice(QObject *parent) : QObject(parent)
 {
 	currentScriptEngine = NULL;
-
-	#pragma warning(push)
-	#pragma warning(disable : 4482)
-
-	//Windows settings
 	serialPort = NULL;
-	serialPort = new QextSerialPort();
-	serialPort->setBaudRate(BaudRateType::BAUD19200);
-	serialPort->setDataBits(DataBitsType::DATA_8);
-	serialPort->setFlowControl(FlowType::FLOW_OFF);
-	serialPort->setParity(ParityType::PAR_NONE);
-	serialPort->setStopBits(StopBitsType::STOP_1);
-	serialPort->setTimeout(10);
-	serialPort->setPortName("COM1");
-	serialPort->setQueryMode(QextSerialPort::EventDriven);
 
-	CreateHashTableFromEnum(QString(BAUDRATE_ENUM_SHORT_TYPE_NAME),baudRateHash);
-	CreateHashTableFromEnum(QString(DATABITS_ENUM_SHORT_TYPE_NAME),dataBitsHash);
-	CreateHashTableFromEnum(QString(PARITY_ENUM_SHORT_TYPE_NAME),parityHash);
-	CreateHashTableFromEnum(QString(FLOW_ENUM_SHORT_TYPE_NAME),flowControlHash);
-	CreateHashTableFromEnum(QString(STOPBITS_ENUM_SHORT_TYPE_NAME),stopBitsHash);
-	CreateHashTableFromEnum(QString(QUERYMODE_ENUM_SHORT_TYPE_NAME),queryModeHash);
-	CreateHashTableFromEnum(QString(OPENMODE_ENUM_SHORT_TYPE_NAME),openModeHash);
-
-	#pragma warning(pop)
-
-	connect(serialPort, SIGNAL(readyRead()), this, SIGNAL(CaptureThreadReadyRead()));
-	connect(serialPort, SIGNAL(readyRead()), this, SLOT(ProcessSerialData()));
+	//connect(serialPort, SIGNAL(readyRead()), this, SIGNAL(CaptureThreadReadyRead()));
+	//connect(serialPort, SIGNAL(readyRead()), this, SLOT(ProcessSerialData()));
 
 }
 
@@ -96,8 +72,8 @@ SerialPortDevice::SerialPortDevice(QObject *parent) : QObject(parent)
 */
 SerialPortDevice::~SerialPortDevice()
 {
-	disconnect(serialPort, SIGNAL(readyRead()), this, SIGNAL(CaptureThreadReadyRead()));
-	disconnect(serialPort, SIGNAL(readyRead()), this, SLOT(ProcessSerialData()));
+	//disconnect(serialPort, SIGNAL(readyRead()), this, SIGNAL(CaptureThreadReadyRead()));
+	//disconnect(serialPort, SIGNAL(readyRead()), this, SLOT(ProcessSerialData()));
 
 
 	if (serialPort)
@@ -121,314 +97,296 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 	return false;
 }
 
-void SerialPortDevice::ProcessSerialData()
-{
-	return;
-}
-
-QString SerialPortDevice::portName() const
-{
-/*! Returns the Serial Port Name. */
-	return serialPort->portName();
-} 
-
-void SerialPortDevice::setPortName(const QString & name)
-{
-/*! Changes the Serial Port Name to the string parameter(name). */
-	return serialPort->setPortName(name);
-}
-
-BaudRateType SerialPortDevice::baudRate() const 
-{
-	return serialPort->baudRate();
-} 
-
-QString SerialPortDevice::baudRateToString() const 
-{
-/*! Returns the Serial Port BaudRate as a string representation, see SerialPortDevice::BaudRateType_. */
-	return baudRateHash.key((int)serialPort->baudRate(),UNKNOWNENUMSTRING);
-} 
-
-void SerialPortDevice::setBaudRate(BaudRateType baudRate)
-{
-	return serialPort->setBaudRate(baudRate);
-} 
-
-bool SerialPortDevice::setBaudRate(QString baudRate)
-{
-/*! Changes the Serial Port BaudRate configuration to the string parameter(baudrate), see SerialPortDevice::BaudRateType_. */
-	nTmpEnumIndex =  baudRateHash.value(baudRate,-1);
-	if (nTmpEnumIndex>=0)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool SerialPortDevice::isInitialized(bool bDoInit /*=false*/) 
 	{
-		serialPort->setBaudRate((BaudRateType)nTmpEnumIndex);
-		return true;
-	}
-	return false;
-}
-
-DataBitsType SerialPortDevice::dataBits () const
-{
-	return serialPort->dataBits();
-}
-
-QString SerialPortDevice::dataBitsToString() const
-{
-/*! Returns the Serial Port DataBits as a string representation, see SerialPortDevice::DataBitsType_. */
-	return dataBitsHash.key((int)serialPort->dataBits(),UNKNOWNENUMSTRING);
-}
-
-void SerialPortDevice::setDataBits(DataBitsType dataBits)
-{
-	return serialPort->setDataBits(dataBits);
-}
-
-bool SerialPortDevice::setDataBits(QString dataBits)
-{
-/*! Changes the Serial Port DataBits configuration to the string parameter(dataBits), see SerialPortDevice::DataBitsType_. */
-	nTmpEnumIndex =  dataBitsHash.value(dataBits,-1);
-	if (nTmpEnumIndex>=0)
-	{
-		serialPort->setDataBits((DataBitsType)nTmpEnumIndex);
-		return true;
-	}
-	return false;
-}
-
-ParityType SerialPortDevice::parity() const
-{
-	return serialPort->parity();
-}
-
-QString SerialPortDevice::parityToString() const
-{
-/*! Returns the Serial Port Parity as a string representation, see SerialPortDevice::ParityType_. */
-	return parityHash.key((int)serialPort->parity(),UNKNOWNENUMSTRING);
-}
-
-void SerialPortDevice::setParity(ParityType parity)
-{
-	return serialPort->setParity(parity);
-}
-
-bool SerialPortDevice::setParity(QString parity)
-{
-/*! Changes the Serial Port Parity configuration to the string parameter(parity), see SerialPortDevice::ParityType_. */
-	nTmpEnumIndex =  parityHash.value(parity,-1);
-	if (nTmpEnumIndex>=0)
-	{
-		serialPort->setParity((ParityType)nTmpEnumIndex);
-		return true;
-	}
-	return false;
-}
-
-FlowType SerialPortDevice::flowControl() const
-{
-	return serialPort->flowControl();
-}
-
-QString SerialPortDevice::flowControlToString() const
-{
-/*! Returns the Serial Port Flow Control as a string representation, see SerialPortDevice::FlowType_. */
-	return flowControlHash.key((int)serialPort->flowControl(),UNKNOWNENUMSTRING);
-}
-
-void SerialPortDevice::setFlowControl(FlowType flow)
-{
-	return serialPort->setFlowControl(flow);
-}
-
-bool SerialPortDevice::setFlowControl(QString flow)
-{
-/*! Changes the Serial Port Flow Control configuration to the string parameter(flow), see SerialPortDevice::FlowType_. */
-	nTmpEnumIndex =  flowControlHash.value(flow,-1);
-	if (nTmpEnumIndex>=0)
-	{
-		serialPort->setFlowControl((FlowType)nTmpEnumIndex);
-		return true;
-	}
-	return false;
-}
-
-StopBitsType SerialPortDevice::stopBits() const
-{
-	return serialPort->stopBits();
-}
-
-QString SerialPortDevice::stopBitsToString() const
-{
-/*! Returns the Serial Port Stop Bits as a string representation, see SerialPortDevice::StopBitsType_. */
-	return stopBitsHash.key((int)serialPort->stopBits(),UNKNOWNENUMSTRING);
-}
-
-void SerialPortDevice::setStopBits(StopBitsType stopBits)
-{
-	return serialPort->setStopBits(stopBits);
-}
-
-bool SerialPortDevice::setStopBits(QString stopBits)
-{
-/*! Changes the Serial Port Stop Bits configuration to the string parameter(stopBits), see SerialPortDevice::StopBitsType_. */
-	nTmpEnumIndex =  stopBitsHash.value(stopBits,-1);
-	if (nTmpEnumIndex>=0)
-	{
-		serialPort->setStopBits((StopBitsType)nTmpEnumIndex);
-		return true;
-	}
-	return false;
-}
-
-void SerialPortDevice::setTimeout(long millisec)
-{
-/*! Changes the Serial Port Timeout configuration to the long parameter(millisec) in milliseconds. */
-	serialPort->setTimeout(millisec);
-}
-
-void SerialPortDevice::setTimeout(qlonglong millisec)
-{
-/*! Changes the Serial Port Timeout configuration to the qlonglong parameter(millisec) in milliseconds. */
-	serialPort->setTimeout(millisec);
-}
-
-QextSerialPort::QueryMode SerialPortDevice::queryMode() const
-{
-	return serialPort->queryMode();
-}
-
-QString SerialPortDevice::queryModeToString() const
-{
-/*! Returns the Serial Port Query Mode as a string representation, see SerialPortDevice::QueryMode_. */
-	return queryModeHash.key((int)serialPort->queryMode(),UNKNOWNENUMSTRING);
-}
-
-void SerialPortDevice::setQueryMode(QextSerialPort::QueryMode mode)
-{
-	return serialPort->setQueryMode(mode);
-}
-
-bool SerialPortDevice::setQueryMode(QString mode)
-{
-/*! Changes the Serial Port Query Mode configuration to the string parameter(mode), see SerialPortDevice::QueryMode_. */
-	nTmpEnumIndex = queryModeHash.value(mode,-1);
-	if (nTmpEnumIndex>=0)
-	{
-		serialPort->setQueryMode((QextSerialPort::QueryMode)nTmpEnumIndex);
-		return true;
-	}
-	return false;
-}
-
-bool SerialPortDevice::open(QIODevice::OpenMode mode)
-{
-	return serialPort->open(mode);
-}
-
-bool SerialPortDevice::open(QString mode)
-{
-/*! Opens the Serial Port for further usage in the mode string parameter(mode), see SerialPortDevice::OpenMode_. */
-	QStringList tmpStrLst = mode.split("|",QString::SkipEmptyParts);
-	int nFlags = 0;
-	bool bValueFound = false;
-	if (tmpStrLst.isEmpty() == false)
-	{
-		int nTmpEnumIndex = 0;
-		for (int i=0;i<tmpStrLst.count();i++)
+		if (serialPort == NULL) 
 		{
-			nTmpEnumIndex = openModeHash.value(tmpStrLst[i].trimmed(),-1);
-			if (nTmpEnumIndex>=0)
+			if(bDoInit)
 			{
-				nFlags = nFlags + nTmpEnumIndex;
-				bValueFound = true;
+				serialPort = new QSerialPort();
+				return true;
 			}
-			else
-			{
-				qDebug() << __FUNCTION__ << "::False Enumeration type found (" << tmpStrLst[i] << ")!";
-				return false;
-			}
+			return false;
 		}
+		return true;
 	}
-	else
+
+	qint32 SerialPortDevice::baudRate(QSerialPort::Directions dir /*= AllDirections*/) 
 	{
-		qDebug() << __FUNCTION__ << "::No Enumeration type found in (" << mode << ")!";
+		if(isInitialized())
+		{
+			qint32 tmp = serialPort->baudRate(dir);
+			return tmp;
+		}
+		return -1;
+	}
+	
+	bool SerialPortDevice::clear(QSerialPort::Directions dir /*= AllDirections*/)
+	{
+		if(isInitialized())
+		{
+			return serialPort->clear(dir);
+		}
 		return false;
 	}
-	if (bValueFound)
+	
+	void SerialPortDevice::clearError()
 	{
-		return serialPort->open((QIODevice::OpenMode)nFlags);
-	}
-	qDebug() << __FUNCTION__ << "::No Enumeration type found in (" << mode << ")!";
-	return false;
-}
-
-bool SerialPortDevice::isOpen() const
-{
-/*! Returns whether the Serial Port is currently open. */
-	return serialPort->isOpen();
-}
-
-QIODevice::OpenMode SerialPortDevice::openMode() const
-{
-	return serialPort->openMode();
-}
-
-QString SerialPortDevice::openModeToString() const
-{
-/*! Returns the Serial Port Open Mode as a string representation, see SerialPortDevice::OpenMode_. */
-	return openModeHash.key((int)serialPort->openMode(),UNKNOWNENUMSTRING);
-}
-
-void SerialPortDevice::close()
-{
-/*! Closes the Serial Port. */
-	return serialPort->close();
-}
-
-bool SerialPortDevice::CreateHashTableFromEnum(const QString &sTypeName, QHash<QString, int> &hTable)
-{
-	if((sTypeName == BAUDRATE_ENUM_SHORT_TYPE_NAME) ||
-		(sTypeName == DATABITS_ENUM_SHORT_TYPE_NAME) ||
-		(sTypeName == PARITY_ENUM_SHORT_TYPE_NAME) ||
-		(sTypeName == STOPBITS_ENUM_SHORT_TYPE_NAME) ||
-		(sTypeName == FLOW_ENUM_SHORT_TYPE_NAME) ||
-		(sTypeName == QUERYMODE_ENUM_SHORT_TYPE_NAME)
-		)
-	{
-		const QMetaObject metaObject = this->staticMetaObject;//SerialPortEnums::staticMetaObject;//this->staticMetaObject;// 
-		//int test = metaObject.enumeratorCount();
-		//QMetaEnum testmetaEnum = metaObject.enumerator(test-1);
-		//QString teststr = testmetaEnum.name();
-
-		int enumeratorIndex = metaObject.indexOfEnumerator(sTypeName.toLatin1());
-		if (enumeratorIndex >= 0)
+		if(isInitialized())
 		{
-			QMetaEnum metaEnum = metaObject.enumerator(enumeratorIndex);
-			int nKeyCount = metaEnum.keyCount();
-			for (int i=0;i<nKeyCount;i++)
-			{
-				hTable.insert(metaEnum.key(i),metaEnum.value(i));
-			}
-			if (hTable.count() > 0)
-				return true;
-			return false;
+			serialPort->clearError();
 		}
-		else
-		{
-			qDebug() << __FUNCTION__ << "::Unknown Enumeration Type (" << sTypeName << ")!";	
-			return false;
-		}
-		return true;
 	}
-	else if(sTypeName == OPENMODE_ENUM_SHORT_TYPE_NAME)
+	
+	QSerialPort::DataBits SerialPortDevice::dataBits() 
 	{
-		hTable.insert("NotOpen", (int)QIODevice::NotOpen);
-		hTable.insert("ReadOnly", (int)QIODevice::ReadOnly);
-		hTable.insert("WriteOnly", (int)QIODevice::WriteOnly);
-		hTable.insert("ReadWrite", (int)QIODevice::ReadWrite);
-		hTable.insert("Append", (int)QIODevice::Append);
-		hTable.insert("Truncate", (int)QIODevice::Truncate);
-		hTable.insert("Text", (int)QIODevice::Text);
-		hTable.insert("Unbuffered", (int)QIODevice::Unbuffered);
-		return true;
+		if(isInitialized())
+		{
+			return serialPort->dataBits();
+		}
+		return QSerialPort::UnknownDataBits;
 	}
-	return false;
-}
+	
+	QSerialPort::DataErrorPolicy SerialPortDevice::dataErrorPolicy() 
+	{
+		if(isInitialized())
+		{
+			return serialPort->dataErrorPolicy();
+		}
+		return QSerialPort::UnknownPolicy;
+	}
+	
+	QSerialPort::SerialPortError SerialPortDevice::error() 
+	{
+		if(isInitialized())
+		{
+			return serialPort->error();
+		}
+		return QSerialPort::NoError;
+	}
+	
+	QSerialPort::FlowControl SerialPortDevice::flowControl() 
+	{
+		if(isInitialized())
+		{
+			return serialPort->flowControl();
+		}
+		return QSerialPort::UnknownFlowControl;
+	}
+	
+	bool SerialPortDevice::flush()
+	{
+		if(isInitialized())
+		{
+			return serialPort->flush();
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::isDataTerminalReady()
+	{
+		if(isInitialized())
+		{
+			return serialPort->isDataTerminalReady();
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::isRequestToSend()
+	{
+		if(isInitialized())
+		{
+			return serialPort->isRequestToSend();
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::open(QSerialPort::OpenMode mode)
+	{
+		if(isInitialized())
+		{
+			return serialPort->open(mode);
+		}
+		return false;
+	}
+	
+	QSerialPort::Parity SerialPortDevice::parity() 
+	{
+		if(isInitialized())
+		{
+			return serialPort->parity();
+		}
+		return QSerialPort::UnknownParity;
+	}
+	
+	QSerialPort::PinoutSignals SerialPortDevice::pinoutSignals()
+	{
+		if(isInitialized())
+		{
+			return serialPort->pinoutSignals();
+		}
+		return -1;
+	}
+	
+	QString SerialPortDevice::portName() 
+	{
+		if(isInitialized())
+		{
+			return serialPort->portName();
+		}
+		return -1;
+	}
+	
+	qint64 SerialPortDevice::readBufferSize() 
+	{
+		if(isInitialized())
+		{
+			return serialPort->readBufferSize();
+		}
+		return -1;
+	}
+	
+	bool SerialPortDevice::sendBreak(int duration /*= 0*/)
+	{
+		if(isInitialized())
+		{
+			return serialPort->sendBreak(duration);
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::setBaudRate(qint32 baudRate, QSerialPort::Directions dir /*dir = AllDirections*/)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setBaudRate(baudRate, dir);
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::setBreakEnabled(bool set /*= true*/)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setBreakEnabled(set);
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::setDataBits(QSerialPort::DataBits dataBits)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setDataBits(dataBits);
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::setDataErrorPolicy(QSerialPort::DataErrorPolicy policy/* = IgnorePolicy*/)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setDataErrorPolicy(policy);
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::setDataTerminalReady(bool set)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setDataTerminalReady(set);
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::setFlowControl(QSerialPort::FlowControl flow)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setFlowControl(flow);
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::setParity(QSerialPort::Parity parity)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setParity(parity);
+		}
+		return false;
+	}
+	
+	void SerialPortDevice::setPort(const QSerialPortInfo & serialPortInfo)
+	{
+		if(isInitialized(true))
+		{
+			serialPort->setPort(serialPortInfo);
+		}
+	}
+	
+	void SerialPortDevice::setPortName(const QString & name)
+	{
+		if(isInitialized(true))
+		{
+			serialPort->setPortName(name);
+		}
+	}
+	
+	void SerialPortDevice::setReadBufferSize(qint64 size)
+	{
+		if(isInitialized())
+		{
+			serialPort->setReadBufferSize(size);
+		}
+	}
+	
+	bool SerialPortDevice::setRequestToSend(bool set)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setRequestToSend(set);
+		}
+		return false;
+	}
+	
+	void SerialPortDevice::setSettingsRestoredOnClose(bool restore)
+	{
+		if(isInitialized())
+		{
+			serialPort->setSettingsRestoredOnClose(restore);
+		}
+	}
+	
+	bool SerialPortDevice::setStopBits(QSerialPort::StopBits stopBits)
+	{
+		if(isInitialized())
+		{
+			return serialPort->setStopBits(stopBits);
+		}
+		return false;
+	}
+	
+	bool SerialPortDevice::settingsRestoredOnClose() 
+	{
+		if(isInitialized())
+		{
+			return serialPort->settingsRestoredOnClose();
+		}
+		return false;
+	}
+	
+	QSerialPort::StopBits SerialPortDevice::stopBits() 
+	{
+		if(isInitialized())
+		{
+			return serialPort->stopBits();
+		}
+		return QSerialPort::UnknownStopBits;
+	}
+
+
+
+

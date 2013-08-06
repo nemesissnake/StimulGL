@@ -28,12 +28,10 @@
 #include <QtWidgets>
 //#include <Windows.h>
 //#include <QDialog>
-#include <QThread>
-#include <QTimer>
-#include "qextserialenumerator.h"
-#include "qextserialport.h"
-
-
+//#include <QThread>
+//#include <QTimer>
+//#include "qextserialenumerator.h"
+//#include "qextserialport.h"
 
 class SerialPortDevice_Dialog : public QDialog, private Ui::SerialPortDevice_DialogClass
 {
@@ -46,8 +44,8 @@ public:
 private:
 	Ui::SerialPortDevice_DialogClass ui;
 	QTimer *serialTimer;
-	QextSerialPort serialPort;
-	PortSettings serialSettings;
+	//QextSerialPort serialPort;
+	//PortSettings serialSettings;
 
 private:
 	void Initialize();
