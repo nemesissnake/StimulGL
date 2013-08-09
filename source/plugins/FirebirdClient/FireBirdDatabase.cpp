@@ -51,7 +51,7 @@ bool FireBirdDatabase::Initialize()
     }
     if(!pluginLoader_.isLoaded())
     {
-		QString tmpString = MainAppInfo::pluginsDirPath() + QDir::separator() + "sqldrivers" + QDir::separator() + qtIBasePluginName_;
+		QString tmpString = MainAppInfo::appDirPath() + QDir::separator() + qtIBasePluginName_;//+ "sqldrivers" + QDir::separator() + qtIBasePluginName_;
 		pluginLoader_.setFileName(tmpString);        
         if (!pluginLoader_.load())
         {            

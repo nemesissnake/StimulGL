@@ -116,7 +116,7 @@ function connectionError(sError)
 ConnectDisconnectScriptFunctions(true);
 
 //Start the capture thread
-KeyBoardCaptureObj.StartCaptureThread(0, false);
+KeyBoardCaptureObj.StartCaptureThread(0, true);
 //StartCaptureThread(const short method, bool keyForwarding)
 //method == 0 --> KeyPressed
 //method == 1 --> KeyReleased
@@ -152,8 +152,9 @@ KeyBoardCaptureObj.StartCaptureThread(0, false);
 //Log(TBVExchangerobject.tGetBetaMaps());
 //Log(TBVExchangerobject.tGetMapValueOfVoxel(1,2,3,4));// {return tbvNetwIntFace->tGetMapValueOfVoxel(map, x, y, z);};
 //Log(TBVExchangerobject.tGetContrastMaps());
-Log(TBVExchangerobject.activateAutoConnection());
-//Log(TBVExchangerobject.connectToServer("127.0.0.1",80));
+//Log(TBVExchangerobject.activateAutoConnection());
+if(TBVExchangerobject.connectToServer("127.0.0.1",80) == false)
+	CleanupScript();
 //Log(TBVExchangerobject.disconnectFromServer());
 
 //CleanupScript();

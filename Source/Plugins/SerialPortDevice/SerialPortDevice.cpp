@@ -105,6 +105,8 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 			if(bDoInit)
 			{
 				serialPort = new QSerialPort();
+				connect(serialPort, SIGNAL(readyRead()), this, SLOT(readData()));
+				connect(serialPort, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
 				return true;
 			}
 			return false;
@@ -112,21 +114,30 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		return true;
 	}
 
-	qint32 SerialPortDevice::baudRate(QSerialPort::Directions dir /*= AllDirections*/) 
+	void SerialPortDevice::handleError(QSerialPort::SerialPortError error)
+	{
+		//if (error == QSerialPort::ResourceError) 
+		if (error != QSerialPort::UnknownError) 
+		{
+			qDebug() << __FUNCTION__ << ": Critical Error, " << serialPort->errorString();
+			serialPort->close();
+		}
+	}
+
+	qint32 SerialPortDevice::baudRate(int dir /*= AllDirections*/) 
 	{
 		if(isInitialized())
 		{
-			qint32 tmp = serialPort->baudRate(dir);
-			return tmp;
+			return serialPort->baudRate((QSerialPort::Directions)dir);
 		}
 		return -1;
 	}
 	
-	bool SerialPortDevice::clear(QSerialPort::Directions dir /*= AllDirections*/)
+	bool SerialPortDevice::clear(int dir /*= AllDirections*/)
 	{
 		if(isInitialized())
 		{
-			return serialPort->clear(dir);
+			return serialPort->clear((QSerialPort::Directions)dir);
 		}
 		return false;
 	}
@@ -139,40 +150,40 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		}
 	}
 	
-	QSerialPort::DataBits SerialPortDevice::dataBits() 
+	int SerialPortDevice::dataBits() 
 	{
 		if(isInitialized())
 		{
-			return serialPort->dataBits();
+			return (int)serialPort->dataBits();
 		}
-		return QSerialPort::UnknownDataBits;
+		return (int)QSerialPort::UnknownDataBits;
 	}
 	
-	QSerialPort::DataErrorPolicy SerialPortDevice::dataErrorPolicy() 
+	int SerialPortDevice::dataErrorPolicy() 
 	{
 		if(isInitialized())
 		{
-			return serialPort->dataErrorPolicy();
+			return (int)serialPort->dataErrorPolicy();
 		}
-		return QSerialPort::UnknownPolicy;
+		return (int)QSerialPort::UnknownPolicy;
 	}
 	
-	QSerialPort::SerialPortError SerialPortDevice::error() 
+	int SerialPortDevice::error() 
 	{
 		if(isInitialized())
 		{
-			return serialPort->error();
+			return (int)serialPort->error();
 		}
-		return QSerialPort::NoError;
+		return (int)QSerialPort::NoError;
 	}
 	
-	QSerialPort::FlowControl SerialPortDevice::flowControl() 
+	int SerialPortDevice::flowControl() 
 	{
 		if(isInitialized())
 		{
-			return serialPort->flowControl();
+			return (int)serialPort->flowControl();
 		}
-		return QSerialPort::UnknownFlowControl;
+		return (int)QSerialPort::UnknownFlowControl;
 	}
 	
 	bool SerialPortDevice::flush()
@@ -201,30 +212,38 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		}
 		return false;
 	}
-	
-	bool SerialPortDevice::open(QSerialPort::OpenMode mode)
+
+	void SerialPortDevice::close()
 	{
 		if(isInitialized())
 		{
-			return serialPort->open(mode);
+			serialPort->close();
+		}
+	}
+	
+	bool SerialPortDevice::open(int mode)
+	{
+		if(isInitialized())
+		{
+			return serialPort->open((QSerialPort::OpenMode)mode);
 		}
 		return false;
 	}
 	
-	QSerialPort::Parity SerialPortDevice::parity() 
+	int SerialPortDevice::parity() 
 	{
 		if(isInitialized())
 		{
-			return serialPort->parity();
+			return (int)serialPort->parity();
 		}
-		return QSerialPort::UnknownParity;
+		return (int)QSerialPort::UnknownParity;
 	}
 	
-	QSerialPort::PinoutSignals SerialPortDevice::pinoutSignals()
+	int SerialPortDevice::pinoutSignals()
 	{
 		if(isInitialized())
 		{
-			return serialPort->pinoutSignals();
+			return (int)serialPort->pinoutSignals();
 		}
 		return -1;
 	}
@@ -256,11 +275,11 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		return false;
 	}
 	
-	bool SerialPortDevice::setBaudRate(qint32 baudRate, QSerialPort::Directions dir /*dir = AllDirections*/)
+	bool SerialPortDevice::setBaudRate(int baudRate, int dir /*dir = AllDirections*/)
 	{
 		if(isInitialized())
 		{
-			return serialPort->setBaudRate(baudRate, dir);
+			return serialPort->setBaudRate((quint32)baudRate, (QSerialPort::Directions)dir);
 		}
 		return false;
 	}
@@ -274,20 +293,20 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		return false;
 	}
 	
-	bool SerialPortDevice::setDataBits(QSerialPort::DataBits dataBits)
+	bool SerialPortDevice::setDataBits(int dataBits)
 	{
 		if(isInitialized())
 		{
-			return serialPort->setDataBits(dataBits);
+			return serialPort->setDataBits((QSerialPort::DataBits)dataBits);
 		}
 		return false;
 	}
 	
-	bool SerialPortDevice::setDataErrorPolicy(QSerialPort::DataErrorPolicy policy/* = IgnorePolicy*/)
+	bool SerialPortDevice::setDataErrorPolicy(int policy/* = IgnorePolicy*/)
 	{
 		if(isInitialized())
 		{
-			return serialPort->setDataErrorPolicy(policy);
+			return serialPort->setDataErrorPolicy((QSerialPort::DataErrorPolicy)policy);
 		}
 		return false;
 	}
@@ -301,20 +320,20 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		return false;
 	}
 	
-	bool SerialPortDevice::setFlowControl(QSerialPort::FlowControl flow)
+	bool SerialPortDevice::setFlowControl(int flow)
 	{
 		if(isInitialized())
 		{
-			return serialPort->setFlowControl(flow);
+			return serialPort->setFlowControl((QSerialPort::FlowControl)flow);
 		}
 		return false;
 	}
 	
-	bool SerialPortDevice::setParity(QSerialPort::Parity parity)
+	bool SerialPortDevice::setParity(int parity)
 	{
 		if(isInitialized())
 		{
-			return serialPort->setParity(parity);
+			return serialPort->setParity((QSerialPort::Parity)parity);
 		}
 		return false;
 	}
@@ -327,12 +346,31 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		}
 	}
 	
-	void SerialPortDevice::setPortName(const QString & name)
+	bool SerialPortDevice::setPortName(const QString & name)
 	{
 		if(isInitialized(true))
 		{
-			serialPort->setPortName(name);
+			foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) 
+			{
+				//QString tmpString;
+				//tmpString.append("Name        : " + info.portName());
+				//tmpString.append("Description : " + info.description());
+				//tmpString.append("Manufacturer: " + info.manufacturer());
+
+				if(info.portName().toLower() == name.toLower())
+				{
+					//QSerialPort serial;
+					//serialPort = new QSerialPort(name);
+					serialPort->setPort(info);
+					return true;
+					//if (serialPort->open(QIODevice::ReadWrite))
+					//	serialPort->close();
+				
+				}
+			}
 		}
+		return false;
+			//serialPort->setPortName(name);		
 	}
 	
 	void SerialPortDevice::setReadBufferSize(qint64 size)
@@ -360,11 +398,11 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		}
 	}
 	
-	bool SerialPortDevice::setStopBits(QSerialPort::StopBits stopBits)
+	bool SerialPortDevice::setStopBits(int stopBits)
 	{
 		if(isInitialized())
 		{
-			return serialPort->setStopBits(stopBits);
+			return serialPort->setStopBits((QSerialPort::StopBits)stopBits);
 		}
 		return false;
 	}
@@ -377,12 +415,30 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		}
 		return false;
 	}
-	
-	QSerialPort::StopBits SerialPortDevice::stopBits() 
+
+	qint64 SerialPortDevice::writeData(const QString &data)
 	{
 		if(isInitialized())
 		{
-			return serialPort->stopBits();
+			return serialPort->write(data.toLatin1());
+		}
+	}
+
+	void SerialPortDevice::readData()
+	{
+		if(isInitialized())
+		{
+			//QByteArray data = 
+			QString tmpString =	serialPort->readAll();
+			emit SerialDataReceived(tmpString);
+		}
+	}
+	
+	int SerialPortDevice::stopBits() 
+	{
+		if(isInitialized())
+		{
+			return (QSerialPort::StopBits)serialPort->stopBits();
 		}
 		return QSerialPort::UnknownStopBits;
 	}

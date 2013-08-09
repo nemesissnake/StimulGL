@@ -43,9 +43,27 @@ bool SerialPortDevicePlugin::ConfigureScriptEngine(QScriptEngine &engine)
 	engine.setDefaultPrototype(qMetaTypeId<SerialPortDevice*>(), SerialPortDeviceProto);
 	QScriptValue SerialPortDeviceCtor = engine.newFunction(SerialPortDevice::ctor__extensionname, SerialPortDeviceProto);
 	engine.globalObject().setProperty(PLUGIN_SCRIPTOBJECT_NAME, SerialPortDeviceCtor);
-	//int nRes = 
-		qRegisterMetaType<SerialPortDevice>(PLUGIN_SCRIPTOBJECT_NAME);
-	//FinalizeScriptObjectScriptContext(engine, SerialPortDeviceObject);
+	int typeId = qRegisterMetaType<SerialPortDevice>(PLUGIN_SCRIPTOBJECT_NAME);
+	typeId = qRegisterMetaType<QSerialPort::FlowControl>("QSerialPort::FlowControl");
+	typeId = qRegisterMetaType<QSerialPort::BaudRate>("QSerialPort::BaudRate");
+	typeId = qRegisterMetaType<QSerialPort::DataBits>("QSerialPort::DataBits");
+	typeId = qRegisterMetaType<QSerialPort::Direction>("QSerialPort::Direction");
+	typeId = qRegisterMetaType<QSerialPort::StopBits>("QSerialPort::StopBits");
+	typeId = qRegisterMetaType<QSerialPort::Parity>("QSerialPort::Parity");
+
+	//const int typeId = qRegisterMetaType<PFT3::PFT3_Tasks::BaseData*>("PFT3::PFT3_Tasks::BaseData*");
+	//QScriptValue prototype = engine.newObject(new QSerialPort::FlowControl());
+	
+	//engine.setDefaultPrototype(typeId, prototype);
+	//engine.setDefaultPrototype(qMetaTypeId<PFT3::PFT3_Tasks::BaseData>(), prototype);
+
+	//QScriptValue namespaceObj = engine.newObject();
+	//engine.globalObject().setProperty("QSerialPort", namespaceObj);
+
+	//QScriptValue creator = engine->newFunction(createData, prototype);
+	//namespaceObj.setProperty("BaseData", creator);
+
+	
 	return true;
 }
 

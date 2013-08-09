@@ -460,7 +460,7 @@ bool RetinotopyMapper::startObject()
 	QRect tmpRect = retinoMapperWindow->geometry();
 	tmpRect.setHeight(tmpRect.height()+1);//To prevent flickering, (bug, on some systems), doesn't make a change since drawing starts upper left corner.
 	retinoMapperWindow->setGeometry(tmpRect);
-	retinoMapperWindow->setFlags(Qt::WindowStaysOnTopHint);
+	//retinoMapperWindow->setFlags(Qt::WindowStaysOnTopHint);//This gives problems...
 	return true;
 }
 

@@ -28,6 +28,7 @@
 #include <QDesktopWidget>
 //#include <QHash>
 #include <QSerialPort>
+#include <QSerialPortInfo>
 #include "maindefines.h"
 
 //!  The SerialPortDevice class. 
@@ -40,12 +41,12 @@ class SerialPortDevice : public QObject, protected QScriptable
 	Q_CLASSINFO("ScriptAPIClassName", "SerialPort");//Can't use defines here!, moc doesn't handle defines
 
 signals:
-	//! The CaptureThreadReadyRead Signal.
+	//! The SerialDataReceived Signal.
 	/*!
-	You can use this Signal to keep track of when the capture thread is ready for reading data.
-	There's no parameter.
+	This Signal is emitted each time new Serial Data is received.
+	The sData parameter contains the last received data stream.
 	*/
-	//void CaptureThreadReadyRead();
+	void SerialDataReceived(QString sData);
 
 public:
 	SerialPortDevice(QObject *parent = 0);//unsigned short vendor_id = 0x181b, unsigned short product_id = 0x4002, QObject *parent = 0);
@@ -53,47 +54,54 @@ public:
 	~SerialPortDevice();
 
 	static QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
-		
+
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 
 	bool isInitialized(bool bDoInit = false);
+	void handleError(QSerialPort::SerialPortError error);
 	
 	//QSerialPort(QObject * parent = 0)
 	//QSerialPort(const QString & name, QObject * parent = 0)
 	//QSerialPort(const QSerialPortInfo & serialPortInfo, QObject * parent = 0)
 	//virtual	~QSerialPort()
-	qint32 baudRate(QSerialPort::Directions dir = QSerialPort::AllDirections);
-	bool clear(QSerialPort::Directions dir = QSerialPort::AllDirections);
+
+	int baudRate(int dir = (int)QSerialPort::AllDirections);// {return baudRate_((QSerialPort::Directions)dir);};
+	bool clear(int dir = (int)QSerialPort::AllDirections);// {return clear_((QSerialPort::Directions)dir);};
+	bool setFlowControl(int flow);// {return setFlowControl_((QSerialPort::FlowControl)flow);};
 	void clearError();
-	QSerialPort::DataBits dataBits();
-	QSerialPort::DataErrorPolicy dataErrorPolicy();
-	QSerialPort::SerialPortError error();
-	QSerialPort::FlowControl flowControl();
+	int dataBits();
+	int dataErrorPolicy();
+	int error();
+	int flowControl();
 	bool flush();
 	bool isDataTerminalReady();
 	bool isRequestToSend();
-	bool open(QSerialPort::OpenMode mode);
-	QSerialPort::Parity parity();
-	QSerialPort::PinoutSignals pinoutSignals();
+	bool open(int mode);
+	void close();
+	int parity();
+	int pinoutSignals();
 	QString	portName();
 	qint64 readBufferSize();
 	bool sendBreak(int duration = 0);
-	bool setBaudRate(qint32 baudRate, QSerialPort::Directions dir = QSerialPort::AllDirections);
+	bool setBaudRate(int baudRate, int dir = (int)QSerialPort::AllDirections);
 	bool setBreakEnabled(bool set = true);
-	bool setDataBits(QSerialPort::DataBits dataBits);
-	bool setDataErrorPolicy(QSerialPort::DataErrorPolicy policy = QSerialPort::IgnorePolicy);
+	bool setDataBits(int dataBits);
+	bool setDataErrorPolicy(int policy = (int)QSerialPort::IgnorePolicy);
 	bool setDataTerminalReady(bool set);
-	bool setFlowControl(QSerialPort::FlowControl flow);
-	bool setParity(QSerialPort::Parity parity);
-	void setPort(const QSerialPortInfo & serialPortInfo);
-	void setPortName(const QString & name);
+	bool setParity(int parity);
+	bool setPortName(const QString & name);
 	void setReadBufferSize(qint64 size);
 	bool setRequestToSend(bool set);
 	void setSettingsRestoredOnClose(bool restore);
-	bool setStopBits(QSerialPort::StopBits stopBits);
+	bool setStopBits(int stopBits);
 	bool settingsRestoredOnClose();
-	QSerialPort::StopBits stopBits();
+	int stopBits();
+
+	qint64 writeData(const QString &data);
+	void readData();
+
+	void setPort(const QSerialPortInfo & serialPortInfo);
 
 private:
 	QScriptEngine* currentScriptEngine;

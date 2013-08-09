@@ -39,6 +39,7 @@ TBVExchanger::TBVExchanger(QObject *parent) : QObject(parent)
 {
 	currentScriptEngine = NULL;
 	tbvNetwIntFace = NULL;
+	initialize();
 }
 
 TBVExchanger::~TBVExchanger()
@@ -70,7 +71,7 @@ bool TBVExchanger::makeThisAvailableInScript(QString strObjectScriptName, QObjec
 	return false;
 }
 
-bool TBVExchanger::activateAutoConnection()
+bool TBVExchanger::initialize()
 {
 	if(tbvNetwIntFace == NULL)
 	{
@@ -86,18 +87,12 @@ bool TBVExchanger::activateAutoConnection()
 	return true;
 }
 
+bool TBVExchanger::activateAutoConnection()
+{
+	return tbvNetwIntFace->setAutoConnection(true);
+}
+
 bool TBVExchanger::deactivateAutoConnection()
 {
-	if(tbvNetwIntFace != NULL)
-	{
-		disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePreStep,this,&TBVExchanger::executePreStep);
-		disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePostStep,this,&TBVExchanger::executePostStep);
-		disconnect(tbvNetwIntFace,&TBVNetworkInterface::executePostRun,this,&TBVExchanger::executePostRun);
-		disconnect(tbvNetwIntFace,&TBVNetworkInterface::disconnected,this,&TBVExchanger::disconnected);
-		disconnect(tbvNetwIntFace,&TBVNetworkInterface::connected,this,&TBVExchanger::connected);
-		disconnect(tbvNetwIntFace,&TBVNetworkInterface::connectionError,this,&TBVExchanger::connectionError);
-		delete tbvNetwIntFace;
-		tbvNetwIntFace = NULL;
-	}
-	return true;
+	return tbvNetwIntFace->setAutoConnection(false);
 }

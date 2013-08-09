@@ -92,6 +92,8 @@ public slots:
 	bool deactivateAutoConnection();
 
 private:
+	bool initialize();
+
 	QScriptEngine* currentScriptEngine;
 	short m_ExampleProperty;
 	TBVNetworkInterface *tbvNetwIntFace;

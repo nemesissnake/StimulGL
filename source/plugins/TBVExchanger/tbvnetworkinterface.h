@@ -62,6 +62,8 @@ public:
     bool connectToServer(char *ipAddress,quint16 port);
 	bool disconnectFromServer();
 
+	bool setAutoConnection(bool bActivate);
+
 private:
 	QUdpSocket *udpSocket;
 	QTcpSocket *tcpSocket;
