@@ -1,4 +1,8 @@
 //Construct a new Plugin object
+var tTimer = new TriggerTimer();
+var nMaxIdleTime = 2000;
+
+//SerialDataReceived
 var serialPortObject = new SerialPortDevice();
 
 Log(serialPortObject.setPortName("COM6"));
@@ -23,7 +27,9 @@ Log(serialPortObject.setDataBits(8));//Data8 = 8
 Log(serialPortObject.dataBits());
 Log(serialPortObject.setStopBits(1));//OneStop = 1
 Log(serialPortObject.stopBits());
-myFinalCleanup();
+
+tTimer.startTimer(nMaxIdleTime);
+tTimer.timeout.connect(this, myFinalCleanup); 
 
 function myDataReceivedFunction()
 {
@@ -32,12 +38,16 @@ function myDataReceivedFunction()
 	{
 		Log("myDataReceivedFunction argument(" + i + "): " + arguments[i]);
 	}
+	tTimer.startTimer(nMaxIdleTime);
 }
 
 function myFinalCleanup()//Cleanup
 {
 	serialPortObject.SerialDataReceived.disconnect(this, this.myDataReceivedFunction);
+	tTimer.timeout.disconnect(this, myFinalCleanup);
+	tTimer.stopTimer();
 	serialPortObject.close();
+	tTimer = null;
 	myDataReceivedFunction = null;
 	serialPortObject = null;
 	myFinalCleanup = null;

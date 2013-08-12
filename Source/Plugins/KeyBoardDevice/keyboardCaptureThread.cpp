@@ -92,6 +92,7 @@ void keyboardCaptureThread::run()
 			{
 				do 
 				{
+					this->thread()->msleep(1);
 					qApp->processEvents(QEventLoop::ExcludeSocketNotifiers,1);
 				} 
 				while (abortRunning==false);
