@@ -20,6 +20,7 @@
 #define MAINAPPINFO_H
 
 #include <QCoreApplication>
+#include <QStandardPaths>
 #include <QDir>
 #include <QString>
 #include <QTime>
@@ -33,6 +34,7 @@ class MainAppInfo
 private:
 	static QFile *mainLogFile;
 	static QWidget *mainWindow;
+	static QString sAppUserPath;
 
 public:
 
@@ -54,16 +56,19 @@ public:
 		}
 	};
 
-	static bool SetMainWindow(QWidget *mainWin);
+	static bool setMainWindow(QWidget *mainWin);
 	static QString appDirPath()						{return QDir(QCoreApplication::applicationDirPath()).absolutePath();}
+	static QString appUserPath()					{return sAppUserPath;}//QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);}//ie. Windows -> C:/Users/john.doe/Documents
+	static bool setAppUserPath(QString sPath)		{sAppUserPath = sPath;return true;}
+	static QStringList getUserFolderList()			{return (QStringList() << MAIN_PROGRAM_EXAMPLES_DIRNAME << MAIN_PROGRAM_OUTPUTS_DIRNAME); }
 	static QString appDocDirPath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_DOC_DIRNAME + QDir::separator());}
-	static QString appExampleDirPath()				{return (QDir::homePath() + QDir::separator() + "Documents" + QDir::separator() + MAIN_PROGRAM_INTERNAL_NAME "_" MAIN_PROGRAM_FILE_VERSION_STRING + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}//appDirPath() + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}
+	static QString appExampleDirPath()				{return (MainAppInfo::appUserPath() + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}//appDirPath() + QDir::separator() + MAIN_PROGRAM_EXAMPLES_DIRNAME + QDir::separator());}
 	static QString appLogFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_LOGFILE_NAME);}
 	static QString appXsdFilePath()					{return (appDirPath() + QDir::separator() + MAIN_PROGRAM_XSD_DIRNAME + QDir::separator());}
 	static QString pluginsDirPath()
 	{
 		QDir pluginsDir = appDebugDirPath();
-		pluginsDir.cd("plugins");
+		pluginsDir.cd(MAIN_PROGRAM_PLUGINS_DIRNAME);
 		if(!pluginsDir.exists())
 			return appDebugDirPath().absolutePath();
 #ifdef WIN64

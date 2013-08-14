@@ -25,17 +25,19 @@
 
 QFile *MainAppInfo::mainLogFile = NULL;//Needed to initialize the static variable!
 QWidget *MainAppInfo::mainWindow = NULL;//Needed to initialize the static variable!
+QString MainAppInfo::sAppUserPath = "";//Needed to initialize the static variable!
 
 QString MainAppInfo::outputsDirPath()
 {
-	QDir pluginsDir = appDirPath();
-	if(QDir(appDirPath() + QString("/outputs/")).exists()==false)
+	QDir OutputsDir = appUserPath();
+	if(QDir(appUserPath() + QString("/" MAIN_PROGRAM_OUTPUTS_DIRNAME "/")).exists()==false)
 	{
-		QDir().mkdir(QString(appDirPath()) + QString("/outputs/"));
+		QDir().mkdir(QString(appUserPath()) + QString("/" MAIN_PROGRAM_OUTPUTS_DIRNAME "/"));
 	}
-
-	pluginsDir.cd("outputs");
-	return pluginsDir.absolutePath();
+	OutputsDir.cd(MAIN_PROGRAM_OUTPUTS_DIRNAME);
+	//QString tmpString = OutputsDir.absolutePath();
+	//return tmpString;
+	return OutputsDir.absolutePath();
 }
 
 QStringList MainAppInfo::getQTScriptBindingList()	
@@ -102,6 +104,7 @@ void MainAppInfo::MyOutputHandler(QtMsgType type, const QMessageLogContext &cont
 	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("Remove me: fixing toplevel window flags"));
 	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("warning X3206: implicit truncation of vector type"));
 	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("BitBlt failed (The handle is invalid.)"));
+	bSkipErrorForLogWindow = bSkipErrorForLogWindow || (msg.contains("QWindowsNativeFileDialogBase::selectNameFilter: Invalid parameter 'Directories' not found in"));
 	switch (type) 
 	{
 	case QtDebugMsg:
@@ -150,7 +153,7 @@ void MainAppInfo::CloseMainLogFile()
 	}	
 }
 
-bool MainAppInfo::SetMainWindow(QWidget *mainWin)
+bool MainAppInfo::setMainWindow(QWidget *mainWin)
 {
 	mainWindow = mainWin;
 	return true;

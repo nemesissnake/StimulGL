@@ -18,6 +18,7 @@
 
 
 #include "optionpage.h"
+#include <QFileDialog>
 
 OptionPage::OptionPage(QWidget *parent, GlobalApplicationInformation *g_AppInfo) : QDialog(parent), glob_AppInfo(g_AppInfo)
 {
@@ -49,8 +50,13 @@ bool OptionPage::checkSettings()
 		msgBox.exec();
 		return false;
 	}
-
-
+	QDir tmpDir(ui.lneUserDocumentsRootDirectory->text());
+	if((tmpDir.exists() == false) || (ui.lneUserDocumentsRootDirectory->text().isEmpty()))
+	{
+		QMessageBox msgBox(QMessageBox::Warning,"Directory not found","Could not find the User Documents Root Directory, please enter a valid directory!",QMessageBox::Ok,this);
+		msgBox.exec();
+		return false;
+	}
 	return true;
 }
 
@@ -89,7 +95,8 @@ void OptionPage::applySettings()
 	glob_AppInfo->setRegistryInformation(REGISTRY_ENABLENETWORKSERVER,(bool)(ui.chkEnableNetworkServer->checkState() && Qt::Checked),"bool");
 	glob_AppInfo->setRegistryInformation(REGISTRY_SERVERHOSTADDRESS,(QString)(ui.edtNetworkServerAddress->text()),"string");
 	glob_AppInfo->setRegistryInformation(REGISTRY_SERVERHOSTPORT,ui.edtNetworkServerPort->text().toInt(),"int");
-	
+	glob_AppInfo->setRegistryInformation(REGISTRY_USERDOCUMENTSROOTDIRECTORY,(QString)(ui.lneUserDocumentsRootDirectory->text()),"string");
+
 	if (ui.rdb_3DRenderer->isChecked())	
 	{		
 		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 0, "int");//SvgView::Native);	
@@ -113,6 +120,11 @@ void OptionPage::readSettings()
 	QString sTemp;
 	int nTemp;
 
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_USERDOCUMENTSROOTDIRECTORY))
+	{
+		sTemp = glob_AppInfo->getRegistryInformation(REGISTRY_USERDOCUMENTSROOTDIRECTORY).toString();
+		ui.lneUserDocumentsRootDirectory->setText(sTemp);
+	}
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION))
 	{
 		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_DONOTLOADSCRIPTEXTENSION).toBool();
@@ -176,6 +188,19 @@ void OptionPage::readSettings()
 		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE).toBool();
 		ui.chkAllowMultipleInstances->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
 	}
+}
+
+void OptionPage::on_btnBrowseForUserDocumentsRootDirectory_pressed()
+{
+	QFileDialog::Options options = QFlag(QFileDialog::DontResolveSymlinks | QFileDialog::ShowDirsOnly);
+	QFileDialog tmpFileDialog;
+	QString sDirectory;
+	sDirectory = tmpFileDialog.getExistingDirectory(this,
+		"Select the directory",
+		ui.lneUserDocumentsRootDirectory->text(),
+		options);
+	if (!sDirectory.isEmpty())
+		ui.lneUserDocumentsRootDirectory->setText(sDirectory);
 }
 
 void OptionPage::on_chkEnableNetworkServer_toggled(bool)

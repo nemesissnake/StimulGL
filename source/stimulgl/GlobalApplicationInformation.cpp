@@ -31,7 +31,7 @@ GlobalApplicationInformation::GlobalApplicationInformation(QObject *parent)
 	webView = NULL;
 	Initialize();
 	composeJavaScriptConfigurationFile();
-	AppRegistrySettings = new QSettings(getCompanyName(),getTitle());
+	AppRegistrySettings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, getCompanyName(), getTitle());//getCompanyName(),getTitle());//QSettings::IniFormat
 	initAndParseRegistrySettings();
 	copyMainAppInformationStructureToSharedMemory(mainAppInformation);
 };
@@ -141,7 +141,11 @@ QString GlobalApplicationInformation::getInternalName()
 
 QString GlobalApplicationInformation::getTitle()
 {
-	return mainAppInformation.sInternalName +  "(v" + mainAppInformation.sFileVersion + ")";
+#ifdef WIN64
+	return mainAppInformation.sInternalName +  "(v" + mainAppInformation.sFileVersion + ", 64-bits)";
+#else
+	return mainAppInformation.sInternalName +  "(v" + mainAppInformation.sFileVersion + ", 32-bits)";
+#endif
 }
 
 bool GlobalApplicationInformation::shouldLoadScriptBindings()
