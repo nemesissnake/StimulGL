@@ -331,6 +331,7 @@ private:
 	void showSplashMessage(const QString message);
 	void setupMDI();
 	void setupDocumentManager();
+	bool checkUserDirectories(QStringList &lPathsToCheck, bool bShowWarning = false);
 	void setAppDirectories();
 	void createDockWindows();
 	void setupStatusBar();

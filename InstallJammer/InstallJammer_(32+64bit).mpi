@@ -2340,7 +2340,7 @@ array set Properties {
 {<%InstallDir%>}
 
 8233E474-11D3-4263-9C04-F6B9A95FE461,Destination
-{<%MYDOCUMENTS%>/<%AppName%>_<%Version%>/examples/experiments}
+{<%InstallDir%>/examples/experiments}
 
 8233E474-11D3-4263-9C04-F6B9A95FE461,FileSize
 {88081}
@@ -2670,7 +2670,7 @@ B53DB0A7-45C6-43B1-88C0-B14158C1DDA7,NextButton,subst
 {1}
 
 B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,Destination
-{<%MYDOCUMENTS%>/<%AppName%>_<%Version%>/examples/scripts}
+{<%InstallDir%>/examples/scripts}
 
 B75E3E7F-278E-4C06-B50C-02AEF8CC7BCD,FileSize
 {205036}
@@ -2688,7 +2688,7 @@ B8B5252C-BA02-416E-A353-667E13968192,Name
 {Additional Binaries(win32)}
 
 B9E5284F-8A18-4881-AC62-4276DF5666EC,Destination
-{<%MYDOCUMENTS%>/<%AppName%>_<%Version%>/examples}
+{<%InstallDir%>/examples}
 
 B9E5284F-8A18-4881-AC62-4276DF5666EC,FileSize
 {13178683}
@@ -3159,7 +3159,7 @@ FE124F32-8FA4-46F1-B258-E80E59625C4F,ShowSetupType
 {No}
 
 FE7C119F-2B67-439E-A0DF-FA1E714F2630,Destination
-{<%MYDOCUMENTS%>/<%AppName%>_<%Version%>/examples/scripts}
+{<%InstallDir%>/examples/scripts}
 
 FE7C119F-2B67-439E-A0DF-FA1E714F2630,FileSize
 {112214}

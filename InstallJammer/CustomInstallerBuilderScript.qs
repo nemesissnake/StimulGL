@@ -24,9 +24,9 @@ var sInstallerConfiguration = tr(arrConfigList[0]);//win32 or x64
 var sInstallerVersion = tr("2.1.0.4");//<Major>.<Minor>.<Build>.<Revision>
 var sInstallerPlatform = tr("Windows");
 var sQtDirectory_default = tr("C:/Qt/5.1.0");
-var sStimulGLProjectDirectory_default = tr("E:/Projects/StimulGL");//D:/Projects/Sven.Gijsen/StimulGL
+var sStimulGLProjectDirectory_default = tr("E:/Projects/StimulGL");
 var sQtDirectory = sQtDirectory_default;
-var sStimulGLProjectDirectory = sStimulGLProjectDirectory_default;
+var sStimulGLProjectDirectory = sStimulGLProjectDirectory_default;//tr("D:/Projects/Sven.Gijsen/StimulGL");//sStimulGLProjectDirectory_default
 var srcFile = new QFile(strInstallConfigurationFile);
 var dstFile = new QFile(strInstallConfigurationFileCopy);
 
