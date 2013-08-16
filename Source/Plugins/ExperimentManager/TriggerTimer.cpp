@@ -30,8 +30,9 @@ TriggerTimer::TriggerTimer() : QObject(NULL)
 	currentScriptEngine = NULL;
 	nThreadIdealCount = QThread::idealThreadCount();
 	//bool bResult = 
-		connect(this,SIGNAL(stopTimerSignal()),&ThreadActivationTrigger,SLOT(stop()));
-	moveToThread(&_thread);
+		connect(this,SIGNAL(stopTimerSignal()),&ThreadActivationTrigger,SLOT(stop()));//ThreadActivationTrigger = QTimer
+	bool bResult = connect(&_thread, SIGNAL(finished()), this, SLOT(handleThreadFinished()), Qt::DirectConnection);//QueuedConnection);
+	this->moveToThread(&_thread);
 	_thread.start();
 	ThreadActivationTrigger.setInterval(THREADACTIVATIONTRIGGERTIME);
 	ThreadActivationTrigger.moveToThread(&_thread);
@@ -67,7 +68,9 @@ TriggerTimer::~TriggerTimer()
 		{
 			eTimer.stop();
 		}
-	}	
+	}
+
+	_thread.quit();
 	if(_thread.isRunning())
 	{
 		_thread.terminate();//The hard way...
@@ -92,6 +95,11 @@ bool TriggerTimer::makeThisAvailableInScript(QString strObjectScriptName, QObjec
 		return true;
 	}
 	return false;
+}
+
+void TriggerTimer::handleThreadFinished()
+{
+	return;
 }
 
 void TriggerTimer::createTimerTypeHashTable()
@@ -243,6 +251,7 @@ void TriggerTimer::stopTimer()//Do not change the function name without changing
 			qtTimer.stop();
 			bTimerIsRunning = false;
 		}
+		_thread.quit();
 	}
 }
 

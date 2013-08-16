@@ -30,6 +30,7 @@
 #include <QMetaObject>
 #include <QtGlobal>
 #include <QGLFramebufferObject>
+#include <QDir>
 #include "OutputListDelegate.h"
 
 #include "../Plugins/ParallelPortDevice/parallelport.h"
@@ -91,6 +92,7 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 	setWindowTitle(globAppInfo->getTitle());//  MainAppInfo::MainProgramTitle());
 	setUnifiedTitleAndToolBarOnMac(true);
 	createDockWindows();
+	checkUserDirectories(MainAppInfo::getUserFolderList(),true);
 	setAppDirectories();
 	setupScriptEngine();
 	setupStatusBar();
@@ -157,7 +159,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 #ifdef Q_OS_WIN32 //Are we on Windows?
 	timeEndPeriod(1);
 #endif
-	MainAppInfo::SetMainWindow(NULL);
+	MainAppInfo::setMainWindow(NULL);
 	if(DocManager)
 	{
 		disconnect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
@@ -1953,6 +1955,112 @@ bool MainWindow::configurePluginScriptEngine(const int nIndex)
 	return Plugins->GetInterface(nIndex)->ConfigureScriptEngine(* AppScriptEngine->eng);
 }
 
+bool MainWindow::checkUserDirectories(QStringList &lPathsToCheck, bool bShowWarning)
+{
+	//Do we already have an custom valid user path defined in the registry?
+	QString sUserPath = "";
+	bool bNoRegistrySetting = false;
+	if(globAppInfo->checkRegistryInformation(REGISTRY_USERDOCUMENTSROOTDIRECTORY))
+	{
+		sUserPath = QDir::toNativeSeparators(globAppInfo->getRegistryInformation(REGISTRY_USERDOCUMENTSROOTDIRECTORY).toString());
+	}
+	else
+	{
+		bNoRegistrySetting = true;
+	}
+
+	QDir tmpDir;
+	tmpDir.setPath(sUserPath);
+	//Does the directory not exist?
+	if((tmpDir.exists() == false) || bNoRegistrySetting)
+	{
+		if(bNoRegistrySetting == false)
+			qDebug() << __FUNCTION__ << "User Document Path (" << sUserPath << ") doesn't exist. Switching to default path";
+		sUserPath = QDir::toNativeSeparators(MainAppInfo::appDirPath());//Use the default StimulGL installation root path
+		if(globAppInfo->setRegistryInformation(REGISTRY_USERDOCUMENTSROOTDIRECTORY,sUserPath,"string") == false)
+		{
+			qDebug() << __FUNCTION__ << "Could not set the default User Document Path (" << sUserPath << ") in the registry.";
+			MainAppInfo::setAppUserPath(sUserPath);
+			return false;
+		}
+		tmpDir.setPath(sUserPath);
+		if(tmpDir.exists() == false) 
+		{
+			MainAppInfo::setAppUserPath(sUserPath);
+			return false;
+		}
+	}
+	MainAppInfo::setAppUserPath(sUserPath);
+	if(lPathsToCheck.isEmpty())
+			return true;
+	int i;
+	QString tmpString = QDir::toNativeSeparators(tmpDir.canonicalPath() + QDir::separator());
+
+	for(i=0;i<lPathsToCheck.size();i++) 
+	{
+		lPathsToCheck[i] = tmpString.toLower() + lPathsToCheck.at(i).toLower();
+		tmpDir.setPath(lPathsToCheck.at(i));
+		if(tmpDir.exists() == false)
+		{
+			if(tmpDir.mkpath(lPathsToCheck.at(i))==false)
+			{
+				qDebug() << __FUNCTION__ << "Could not create the User Document Directory (" << lPathsToCheck.at(i) << ") ";
+			}
+		}
+	}
+
+	tmpDir.setPath(sUserPath);
+	tmpDir.setFilter(QDir::Dirs | QDir::Writable | QDir::Readable);
+	tmpDir.setSorting(QDir::Name);
+	QFileInfoList tmpList = tmpDir.entryInfoList();
+	QFileInfo fileInfo;
+	for(i=0;i<tmpList.size();i++) 
+	{
+		fileInfo = tmpList.at(i);
+		tmpString = QDir::toNativeSeparators(fileInfo.canonicalFilePath());
+		if(lPathsToCheck.contains(tmpString, Qt::CaseInsensitive))
+		{
+			bool bWriteRights = false;
+			bool bSkipTest = false;
+			QString tmpString2 = tmpString + QDir::separator() + "checkPermissions";
+			QFile tmpFile(tmpString2 + ".tmp");
+			int nUniqueRetries = 5;
+			while(tmpFile.exists())
+			{
+				if(nUniqueRetries == 0)
+				{
+					bSkipTest = true;
+					break;
+				}
+				tmpString2 = tmpString2 + "_";
+				tmpFile.setFileName(tmpString2 + ".tmp");
+				nUniqueRetries--;
+			}
+			if(bSkipTest == false)
+			{
+				if(tmpFile.open(QIODevice::ReadWrite | QIODevice::Append))
+				{
+					tmpFile.close();
+					tmpFile.remove();
+					bWriteRights = true;
+				}
+				if(bWriteRights)
+					lPathsToCheck.removeAll(tmpString.toLower());
+			}
+		}
+	}
+	if(lPathsToCheck.size() > 0)
+	{
+		if(bShowWarning)
+		{
+			QMessageBox::critical(this, globAppInfo->getInternalName(),
+				QObject::tr("%1 does not have write permission for certain user directories, please fix this in the Tools->Options->Directories->'User Documents Root Directory' setting!\n\nWrite permissions are insufficient in:\n%2").arg(globAppInfo->getInternalName()).arg(lPathsToCheck.join("\n")));
+		}
+		return false;
+	}
+	return true;
+}
+
 void MainWindow::setAppDirectories()
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
@@ -2323,6 +2431,7 @@ void MainWindow::openOptionsDialog()
 	case QDialog::Accepted:
 		// Ok was clicked
 		parseRemainingGlobalSettings();
+		checkUserDirectories(MainAppInfo::getUserFolderList(),true);
 		break;
 	case QDialog::Rejected:
 		// Cancel was clicked
@@ -2815,7 +2924,7 @@ void MainWindow::parseRemainingGlobalSettings()
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	setRenderer();
-	configureDebugger();
+	configureDebugger();	
 }
 
 void MainWindow::RecoverLastScreenWindowSettings()

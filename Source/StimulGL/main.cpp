@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 
 		MainWindow *appWindow = new MainWindow();
 		appWindow->setGlobalApplicationInformationObject(globAppInformation);
-		MainAppInfo::SetMainWindow(appWindow);
+		MainAppInfo::setMainWindow(appWindow);
 		GlobalApplicationInformation::MainProgramModeFlags flags = GlobalApplicationInformation::Default;
 		QString tempStr = "";
 		if (argc > 2)

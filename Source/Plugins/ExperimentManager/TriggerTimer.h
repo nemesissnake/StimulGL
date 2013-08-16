@@ -94,6 +94,7 @@ public slots:
 	static double currentTime();
 	bool setTimerType(const QString &sNewTimerType);
 	QString getTimerType() const;
+	void handleThreadFinished();
 	//QObject *GetScriptMetaObject(int nIndex) {if(nIndex == 0) return (QObject *)this->metaObject(); else return NULL;};
 
 private:

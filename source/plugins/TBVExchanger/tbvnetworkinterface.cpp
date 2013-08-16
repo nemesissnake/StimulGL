@@ -19,6 +19,7 @@
 
 TBVNetworkInterface::TBVNetworkInterface() : QThread()
 {
+	udpSocket = NULL;
 	tcpSocket = new QTcpSocket();
 	rTcpSocket = new QTcpSocket();
 	blockSize = 0;
@@ -28,11 +29,30 @@ TBVNetworkInterface::TBVNetworkInterface() : QThread()
 	connect(tcpSocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(writeError(QAbstractSocket::SocketError)));
 
 	querryQueue = new QQueue<QString>;
+}
 
-	udpSocket = new QUdpSocket();
-    udpSocket->bind(55555, QUdpSocket::ShareAddress);
-
-	connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
+bool TBVNetworkInterface::setAutoConnection(bool bActivate)
+{
+	if(bActivate)
+	{
+		if(udpSocket == NULL)
+		{
+			udpSocket = new QUdpSocket();
+			udpSocket->bind(55555, QUdpSocket::ShareAddress);
+		}
+		connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
+		return true;
+	}
+	else
+	{
+		if(udpSocket)
+		{
+			disconnect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
+			delete udpSocket;
+			udpSocket = NULL;
+		}
+		return false;
+	}
 
 }
 
@@ -88,21 +108,24 @@ void TBVNetworkInterface::connectionLost()
 
 bool TBVNetworkInterface::connectToServer(char *ipAddress,quint16 port)
 {
-	tcpSocket->connectToHost(tr(ipAddress),port);
-	if(!tcpSocket->waitForConnected(3000))
-		return false;
-	sendStreamDefinition("Request Socket",tcpSocket);
-
-	msleep(500);
-	rTcpSocket->connectToHost(tr(ipAddress),port);
-	if(!rTcpSocket->waitForConnected(3000))
+	if(tcpSocket)
 	{
-		tcpSocket->close();
-		return false;
+		tcpSocket->connectToHost(tr(ipAddress),port);
+		if(!tcpSocket->waitForConnected(3000))
+			return false;
+		sendStreamDefinition("Request Socket",tcpSocket);
+
+		msleep(500);
+		rTcpSocket->connectToHost(tr(ipAddress),port);
+		if(!rTcpSocket->waitForConnected(3000))
+		{
+			tcpSocket->close();
+			return false;
+		}
+		sendStreamDefinition("Execute Socket",rTcpSocket);	
+		return true;
 	}
-	sendStreamDefinition("Execute Socket",rTcpSocket);
-	
-	return true;
+	return false;
 }
 
 
