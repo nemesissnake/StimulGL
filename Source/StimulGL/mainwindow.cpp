@@ -927,14 +927,13 @@ bool MainWindow::setDefaultGLFormat()
 	StimulGLQGLFormat.setSwapInterval(1); // sync with vertical refresh
 	StimulGLQGLFormat.setSampleBuffers(true);
 
-	//bool bHasOpenGLFramebufferObjects = 
-	QGLFramebufferObject::hasOpenGLFramebufferObjects();
+	//bool bHasOpenGLFramebufferObjects = QGLFramebufferObject::hasOpenGLFramebufferObjects();
 	StimulGLQGLFormat.setDoubleBuffer(true);
 
 
-	if (!QGLFormat::hasOpenGL() || !QGLFramebufferObject::hasOpenGLFramebufferObjects())
+	if (!QGLFormat::hasOpenGL())// || !QGLFramebufferObject::hasOpenGLFramebufferObjects())
 	{
-		qDebug() << "This system does not support OpenGL/framebuffer objects.";
+		qDebug() << "This system does not support OpenGL.";///framebuffer objects
 	}
 
 	//StimulGLQGLFormat.setVersion(3,1);
