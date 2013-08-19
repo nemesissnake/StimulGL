@@ -337,6 +337,24 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		}
 		return false;
 	}
+
+	QByteArray SerialPortDevice::readAll()
+	{
+		if(isInitialized())
+		{
+			return serialPort->readAll();
+		}
+		return QByteArray();
+	}
+
+	QString SerialPortDevice::errorString()
+	{
+		if(isInitialized())
+		{
+			return serialPort->errorString();
+		}
+		return QString();
+	}
 	
 	void SerialPortDevice::setPort(const QSerialPortInfo & serialPortInfo)
 	{
@@ -422,6 +440,7 @@ bool SerialPortDevice::makeThisAvailableInScript(QString strObjectScriptName, QO
 		{
 			return serialPort->write(data.toLatin1());
 		}
+		return 0;
 	}
 
 	void SerialPortDevice::readData()

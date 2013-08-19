@@ -1,13 +1,13 @@
 //Construct a new Plugin object
 var tTimer = new TriggerTimer();
-var nMaxIdleTime = 2000;
+var nMaxIdleTime = 50000;
 
 //SerialDataReceived
 var serialPortObject = new SerialPortDevice();
 
-Log(serialPortObject.setPortName("COM6"));
+Log(serialPortObject.setPortName("COM2"));
 serialPortObject.SerialDataReceived.connect(this, this.myDataReceivedFunction);
-Log(serialPortObject.open(1));
+Log(serialPortObject.open(3));
 //        NotOpen = 0x0000,
 //        ReadOnly = 0x0001,
 //        WriteOnly = 0x0002,
@@ -38,6 +38,7 @@ function myDataReceivedFunction()
 	{
 		Log("myDataReceivedFunction argument(" + i + "): " + arguments[i]);
 	}
+	serialPortObject.writeData("Echo: " + arguments[0]);
 	tTimer.startTimer(nMaxIdleTime);
 }
 

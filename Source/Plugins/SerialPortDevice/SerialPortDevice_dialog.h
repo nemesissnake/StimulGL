@@ -16,22 +16,19 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 //This file implements the UI functionality
 
 #ifndef SerialPortDevice_DIALOG_H
 #define SerialPortDevice_DIALOG_H
 
 #include <QDialog>
+#include <QtCore/QtGlobal>
 #include "ui_SerialPortDevice_dialog.h"
-//#include <QtGui>
+#include "SerialPortDevice.h"
 #include <QtWidgets>
-//#include <Windows.h>
-//#include <QDialog>
-//#include <QThread>
-//#include <QTimer>
-//#include "qextserialenumerator.h"
-//#include "qextserialport.h"
+
+class Console;
+class SettingsDialog;
 
 class SerialPortDevice_Dialog : public QDialog, private Ui::SerialPortDevice_DialogClass
 {
@@ -41,31 +38,25 @@ public:
 	SerialPortDevice_Dialog(QWidget *parent = 0);
 	~SerialPortDevice_Dialog();
 
-private:
-	Ui::SerialPortDevice_DialogClass ui;
-	QTimer *serialTimer;
-	//QextSerialPort serialPort;
-	//PortSettings serialSettings;
+private slots:
+	void openSerialPort();
+	void closeSerialPort();
+	void writeDataString(const QString &sData);
+	void readData(const QString &sData);
+	//void handleError(QSerialPort::SerialPortError error);
 
-private:
-	void Initialize();
-	void CleanupSerialDevice();
-
-private Q_SLOTS:
-	void onPortNameChanged(const QString &sName);
-	void onBaudRateChanged(int idx);
-	void onParityChanged(int idx);
-	void onDataBitsChanged(int idx);
-	void onStopBitsChanged(int idx);
-	void onQueryModeChanged(int idx);
-	void onTimeoutChanged(int val);
-	void onOpenCloseButtonClicked();
-	void onSendButtonClicked();
-	void onReadyRead();
-	void pushButton_btnAvailablePorts_Pressed();
 	void on_cancelButton_clicked();
 	void on_okButton_clicked();
 	void closeEvent(QCloseEvent * e);
+	void SendToConsole();
+
+private:
+	void initActionsConnections();
+	Ui::SerialPortDevice_DialogClass ui;
+	Console *console;
+	SettingsDialog *settings;
+	SerialPortDevice *serial;
+	QVBoxLayout mainConsoleLayout;
 };
 
 #endif // SerialPortDevice_DIALOG_H

@@ -16,15 +16,38 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #include "SerialPortDevice_dialog.h"
+#include "Console.h"
+#include "SettingsDialog.h"
+#include <QMessageBox>
+//#include <QtSerialPort/QSerialPort>
 
 SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(parent)
 {
 	//Gets constructed only once during the load of the plugin
 	ui.setupUi(this);
 
-//#ifdef Q_OS_WIN32 //Are we on Windows?
+	console = new Console;
+	console->setEnabled(false);
+	ui.lneDataToSend->setEnabled(false);
+	mainConsoleLayout.addWidget(console);
+	ui.gbConsole->setLayout(&mainConsoleLayout);
+	serial = new SerialPortDevice(this);
+	settings = new SettingsDialog(this);
+
+	ui.btnConnect->setEnabled(true);
+	ui.btnDisconnect->setEnabled(false);
+	//ui->actionQuit->setEnabled(true);
+	ui.btnConfigure->setEnabled(true);
+
+	initActionsConnections();
+	bool bResult = false;
+	//bResult = connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
+	//connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+	bResult = connect(serial, SIGNAL(SerialDataReceived(QString)), this, SLOT(readData(QString)));		
+	bResult = connect(console, SIGNAL(getData(QString)), this, SLOT(writeDataString(QString)));
+	bResult = connect(ui.lneDataToSend, SIGNAL(returnPressed()), this, SLOT(SendToConsole()));
+	//#ifdef Q_OS_WIN32 //Are we on Windows?
 //	ui.portBox->addItems(QStringList()<<"COM1"<<"COM2"<<"COM3"<<"COM4"<<"COM5"<<"COM6"<<"COM7"<<"COM8"<<"COM9");
 //#else
 //	ui.portBox->addItems(QStringList()<<"/dev/ttyS0"<<"/dev/ttyS1"<<"/dev/ttyUSB0"<<"/dev/ttyUSB1");
@@ -94,8 +117,18 @@ SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(pare
 //	connect(&serialPort, SIGNAL(readyRead()), SLOT(onReadyRead()));
 }
 
+void SerialPortDevice_Dialog::SendToConsole()
+{
+	QString sTextToSend = ui.lneDataToSend->text();
+	if(console->parseTextString(sTextToSend))
+		ui.lneDataToSend->clear();
+}
+
 SerialPortDevice_Dialog::~SerialPortDevice_Dialog()
 {
+	delete settings;
+	//delete ui;
+
 	//CleanupSerialDevice();
 	//disconnect(ui.btnAvailablePorts, SIGNAL(clicked()), this, SLOT(pushButton_btnAvailablePorts_Pressed()));
 	//disconnect(ui.baudRateBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onBaudRateChanged(int)));
@@ -111,8 +144,8 @@ SerialPortDevice_Dialog::~SerialPortDevice_Dialog()
 	//disconnect(serialPort, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
-void SerialPortDevice_Dialog::CleanupSerialDevice()
-{
+//void SerialPortDevice_Dialog::CleanupSerialDevice()
+//{
 	//if (serialTimer)
 	//{
 	//	serialTimer->stop();
@@ -126,7 +159,7 @@ void SerialPortDevice_Dialog::CleanupSerialDevice()
 	//	//serialPort.deleteLater();
 	//	//serialPort = NULL;
 	////}
-}
+//}
 
 void SerialPortDevice_Dialog::on_okButton_clicked()
 {
@@ -145,11 +178,12 @@ void SerialPortDevice_Dialog::on_cancelButton_clicked()
 void SerialPortDevice_Dialog::closeEvent(QCloseEvent * e)
 {
 	Q_UNUSED(e);
+	closeSerialPort();
 	on_cancelButton_clicked();
 }
 
-void SerialPortDevice_Dialog::pushButton_btnAvailablePorts_Pressed()
-{
+//void SerialPortDevice_Dialog::pushButton_btnAvailablePorts_Pressed()
+//{
 	//QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
 
 	//ui.txtSystemPorts->clear();
@@ -172,51 +206,50 @@ void SerialPortDevice_Dialog::pushButton_btnAvailablePorts_Pressed()
 	//{
 	//	ui.txtSystemPorts->append("No available ports found:");
 	//}
-}
+//}
 
-
-void SerialPortDevice_Dialog::onPortNameChanged(const QString &sName)//name
-{
-	Q_UNUSED(sName);
+//void SerialPortDevice_Dialog::onPortNameChanged(const QString &sName)//name
+//{
+//	Q_UNUSED(sName);
 	//if (serialPort.isOpen()) 
 	//{
 	//	serialPort.close();
 	//	ui.rdb_PortIsOpen->setChecked(false);
 	//}
-}
+//}
 
-void SerialPortDevice_Dialog::onBaudRateChanged(int idx)
-{
+//void SerialPortDevice_Dialog::onBaudRateChanged(int idx)
+//{
 	//serialPort.setBaudRate((BaudRateType)ui.baudRateBox->itemData(idx).toInt());
-}
+//}
 
-void SerialPortDevice_Dialog::onParityChanged(int idx)
-{
+//void SerialPortDevice_Dialog::onParityChanged(int idx)
+//{
 	//serialPort.setParity((ParityType)ui.parityBox->itemData(idx).toInt());
-}
+//}
 
-void SerialPortDevice_Dialog::onDataBitsChanged(int idx)
-{
+//void SerialPortDevice_Dialog::onDataBitsChanged(int idx)
+//{
 	//serialPort.setDataBits((DataBitsType)ui.dataBitsBox->itemData(idx).toInt());
-}
+//}
 
-void SerialPortDevice_Dialog::onStopBitsChanged(int idx)
-{
+//void SerialPortDevice_Dialog::onStopBitsChanged(int idx)
+//{
 	//serialPort.setStopBits((StopBitsType)ui.stopBitsBox->itemData(idx).toInt());
-}
+//}
 
-void SerialPortDevice_Dialog::onQueryModeChanged(int idx)
-{
+//void SerialPortDevice_Dialog::onQueryModeChanged(int idx)
+//{
 	//serialPort.setQueryMode((QextSerialPort::QueryMode)ui.queryModeBox->itemData(idx).toInt());
-}
+//}
 
-void SerialPortDevice_Dialog::onTimeoutChanged(int val)
-{
+//void SerialPortDevice_Dialog::onTimeoutChanged(int val)
+//{
 	//serialPort.setTimeout(val);
-}
+//}
 
-void SerialPortDevice_Dialog::onOpenCloseButtonClicked()
-{
+//void SerialPortDevice_Dialog::onOpenCloseButtonClicked()
+//{
 	//if (!serialPort.isOpen()) 
 	//{
 	//	serialPort.setPortName(ui.portBox->currentText());
@@ -233,10 +266,10 @@ void SerialPortDevice_Dialog::onOpenCloseButtonClicked()
 	//	serialTimer->stop();
 	//update the status
 	//ui.rdb_PortIsOpen->setChecked(serialPort.isOpen());
-}
+//}
 
-void SerialPortDevice_Dialog::onSendButtonClicked()
-{
+//void SerialPortDevice_Dialog::onSendButtonClicked()
+//{
 	//if (serialPort.isOpen() && !ui.sendEdit->toPlainText().isEmpty())
 	//{
 	//	QString sToSend = ui.sendEdit->toPlainText();
@@ -264,10 +297,10 @@ void SerialPortDevice_Dialog::onSendButtonClicked()
 	//		}			
 	//	}
 	//}
-}
+//}
 
-void SerialPortDevice_Dialog::onReadyRead()
-{
+//void SerialPortDevice_Dialog::onReadyRead()
+//{
 	//if (serialPort.bytesAvailable()) {
 	//	ui.recvEdit->moveCursor(QTextCursor::End);
 	//	QString sReceived = QString::fromLatin1(serialPort.readAll());
@@ -291,5 +324,80 @@ void SerialPortDevice_Dialog::onReadyRead()
 	//		}
 	//	}		
 	//}
+//}
+
+void SerialPortDevice_Dialog::openSerialPort()
+{
+	SettingsDialog::Settings p = settings->settings();
+	serial->setPortName(p.name);
+	if (serial->open(QIODevice::ReadWrite)) 
+	{
+		if (serial->setBaudRate(p.baudRate)
+			&& serial->setDataBits(p.dataBits)
+			&& serial->setParity(p.parity)
+			&& serial->setStopBits(p.stopBits)
+			&& serial->setFlowControl(p.flowControl)) 
+		{
+
+				console->setEnabled(true);
+				ui.lneDataToSend->setEnabled(true);
+				console->setLocalEchoEnabled(p.localEchoEnabled);
+				ui.btnConnect->setEnabled(false);
+				ui.btnDisconnect->setEnabled(true);
+				ui.btnConfigure->setEnabled(false);
+				//ui->statusBar->showMessage(tr("Connected to %1 : %2, %3, %4, %5, %6")
+				//	.arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
+				//	.arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
+
+		} 
+		//else 
+		//{
+		//	serial->close();
+			//QMessageBox::critical(this, tr("Error"), serial->errorString());
+			//ui->statusBar->showMessage(tr("Open error"));
+		//}
+	} 
+	//else 
+	//{
+	//	QMessageBox::critical(this, tr("Error"), serial->errorString());
+	//	ui->statusBar->showMessage(tr("Configure error"));
+	//}
 }
 
+void SerialPortDevice_Dialog::closeSerialPort()
+{
+	serial->close();
+	console->setEnabled(false);
+	ui.lneDataToSend->setEnabled(false);
+	ui.btnConnect->setEnabled(true);
+	ui.btnDisconnect->setEnabled(false);
+	ui.btnConfigure->setEnabled(true);
+	//ui->statusBar->showMessage(tr("Disconnected"));
+}
+
+void SerialPortDevice_Dialog::writeDataString(const QString &sData)
+{
+	serial->writeData(sData);
+}
+
+void SerialPortDevice_Dialog::readData(const QString &sData)
+{
+	console->putData(sData);
+}
+
+//void SerialPortDevice_Dialog::handleError(QSerialPort::SerialPortError error)
+//{
+//	if (error == QSerialPort::ResourceError) {
+//		QMessageBox::critical(this, tr("Critical Error"), serial->errorString());
+//		closeSerialPort();
+//	}
+//}
+
+void SerialPortDevice_Dialog::initActionsConnections()
+{
+	connect(ui.btnConnect, SIGNAL(clicked()), this, SLOT(openSerialPort()));
+	connect(ui.btnDisconnect, SIGNAL(clicked()), this, SLOT(closeSerialPort()));
+	//connect(ui->actionQuit, SIGNAL(clicked()), this, SLOT(close()));
+	connect(ui.btnConfigure, SIGNAL(clicked()), settings, SLOT(show()));
+	connect(ui.btnClear, SIGNAL(clicked()), console, SLOT(clear()));
+}

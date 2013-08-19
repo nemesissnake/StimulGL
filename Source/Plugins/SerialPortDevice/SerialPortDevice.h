@@ -100,8 +100,9 @@ public slots:
 
 	qint64 writeData(const QString &data);
 	void readData();
-
 	void setPort(const QSerialPortInfo & serialPortInfo);
+	QByteArray readAll();
+	QString errorString();
 
 private:
 	QScriptEngine* currentScriptEngine;
