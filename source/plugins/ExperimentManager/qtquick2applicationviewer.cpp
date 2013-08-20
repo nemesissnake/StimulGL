@@ -18,9 +18,10 @@
 
 #include "qtquick2applicationviewer.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtQml/QQmlEngine>
+#include <QCoreApplication>
+#include <QDir>
+#include <QtQml>
+#include "defines.h"
 
 class QtQuick2ApplicationViewerPrivate
 {
@@ -53,6 +54,7 @@ QtQuick2ApplicationViewer::QtQuick2ApplicationViewer(QObject *parent) : QQuickVi
 		connect(engine(), &QQmlEngine::quit, this, &QtQuick2ApplicationViewer::qtQuick2EngineQuit);
     setResizeMode(QQuickView::SizeRootObjectToView);
 	this->setFlags(Qt::FramelessWindowHint);
+	qml2InterfaceObject = new Qml2Interface(this);	
 }
 
 void QtQuick2ApplicationViewer::qtQuick2EngineQuit()
@@ -64,6 +66,14 @@ void QtQuick2ApplicationViewer::qtQuick2EngineQuit()
 QtQuick2ApplicationViewer::~QtQuick2ApplicationViewer()
 {
     delete d;
+	if(qml2InterfaceObject)
+		delete qml2InterfaceObject;
+}
+
+int QtQuick2ApplicationViewer::registerDefaultCustomQMLTypes()
+{
+	int nTypeID = qmlRegisterSingletonType<Qml2Interface>(PLUGIN_QML_INTERFACE_PROVIDER_URI, PLUGIN_QML_INTERFACE_PROVIDER_MAJOR, PLUGIN_QML_INTERFACE_PROVIDER_MINOR, PLUGIN_QML_INTERFACE_PROVIDER_APINAME, interface_singletontype_provider);
+	return nTypeID;
 }
 
 void QtQuick2ApplicationViewer::setMainQmlFile(const QString &file)

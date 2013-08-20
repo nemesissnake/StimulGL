@@ -20,6 +20,7 @@
 #define QTQUICK2APPLICATIONVIEWER_H
 
 #include <QtQuick/QQuickView>
+#include "Qml2Interface.h"
 
 class QtQuick2ApplicationViewer : public QQuickView
 {
@@ -37,7 +38,8 @@ public:
 
     void setMainQmlFile(const QString &file);
     void addImportPath(const QString &path);
-    void showExpanded();
+	int registerDefaultCustomQMLTypes();
+	void showExpanded();
 
 protected:
 	//bool event(QEvent*);
@@ -49,6 +51,7 @@ private:
 
 	//void configureEventFilter(QObject* parentObject);
     class QtQuick2ApplicationViewerPrivate *d;
+	Qml2Interface *qml2InterfaceObject;
 };
 
 #endif // QTQUICK2APPLICATIONVIEWER_H

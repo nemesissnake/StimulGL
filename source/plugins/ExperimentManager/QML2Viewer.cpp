@@ -175,6 +175,7 @@ bool QML2Viewer::initObject()
 		quick2ViewerWindow->engine()->addImportPath(extPluginPath);
 		qDebug() << __FUNCTION__ "::Added the QML2 extension Plugin path (" << extPluginPath << ").";
 	}
+	quick2ViewerWindow->registerDefaultCustomQMLTypes();
 	//qmlErrorHandler = new QmlErrorHandler(*qmlViewer,this);
 	parseExperimentObjectBlockParameters(true,false);
 	setExperimentMetaObject();

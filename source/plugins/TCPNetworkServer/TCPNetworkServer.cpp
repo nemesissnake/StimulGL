@@ -244,6 +244,7 @@ void TCPNetworkServer::dataFromClientAvailable()
 	//in.skipRawData(sizeof(sAvailableData));
 	emit ClientDataAvailable(sAvailableData);
 	blockSize = 0;
+	dataFromClientAvailable();
 }
 
 void TCPNetworkServer::dataFromServerAvailable()
@@ -264,4 +265,5 @@ void TCPNetworkServer::dataFromServerAvailable()
 	//in.skipRawData(sizeof(sAvailableData));
 	emit ServerDataAvailable(sAvailableData);
 	blockSize = 0;
+	dataFromServerAvailable();
 }

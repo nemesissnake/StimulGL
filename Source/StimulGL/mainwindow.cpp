@@ -1498,7 +1498,7 @@ void MainWindow::createDockWindows()
 	debugLogDock->setWidget(outputWindowList);
 	addDockWidget(Qt::BottomDockWidgetArea, debugLogDock);//(Qt::RightDockWidgetArea, debugLogDock);
 
-	configureOutputWindowAutoScroll(true);
+	configureOutputWindowAutoScroll(false);
 	//viewMenu->addAction(debugLogDock->toggleViewAction());
 	//connect(debugList, SIGNAL(currentTextChanged(const QString &)),
 	//	this, SLOT(insertCustomer(const QString &)));

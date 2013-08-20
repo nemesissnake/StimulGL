@@ -49,7 +49,10 @@
 #define PLUGIN_EXMLDOC_EXTENSION					"exml"
 #define PLUGIN_EXMLDOC_VALIDATION_NAME	PLUGIN_EXMLDOC_EXTENSION "_2002.xsd"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
 #define PLUGIN_QMLDOC_EXTENSION						"qml"
-
+#define PLUGIN_QML_INTERFACE_PROVIDER_URI			"StimulGL.Interface"
+#define PLUGIN_QML_INTERFACE_PROVIDER_APINAME		"StimulGLAPI"
+#define PLUGIN_QML_INTERFACE_PROVIDER_MAJOR			1
+#define PLUGIN_QML_INTERFACE_PROVIDER_MINOR			0
 //Only edit until here!
 
 
