@@ -73,7 +73,7 @@ bool ExperimentEngine::insertExpObjectBlockParameter(const int nObjectID,const Q
 		ExpBlockParams = new tParsedParameterList();
 		pExperimentManager->setExperimentObjectBlockParameterStructure(nObjectID,ExpBlockParams);
 	}
-	bool bRetVal = pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName,sValue,bIsInitializing);
+	bool bRetVal = pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName.toLower(),sValue,bIsInitializing);
 	return bRetVal;
 }
 
@@ -88,7 +88,7 @@ ParsedParameterDefinition ExperimentEngine::getExpObjectBlockParameter(const int
 	PPDResult.bHasChanged = false;
 	PPDResult.sValue = sDefValue;
 	PPDResult.bIsInitialized = true;
-	if (pExperimentManager->getExperimentObjectBlockParameter(nObjectID,sName,PPDResult))		
+	if (pExperimentManager->getExperimentObjectBlockParameter(nObjectID,sName.toLower(),PPDResult))		
 		return PPDResult;
 	else
 		return PPDResult;
@@ -552,5 +552,5 @@ bool ExperimentEngine::setExperimentObjectParameter(const int &nObjectID, const 
  *  This function can be used to immediately set a value of an Experiment Parameter variable for a specific object.
  *	This parameter variable value is immediately set and used.
  */
-	return pExperimentManager->setExperimentObjectFromScriptValue(nObjectID,strName,sScriptVal);
+	return pExperimentManager->setExperimentObjectFromScriptValue(nObjectID,strName.toLower(),sScriptVal);
 }
