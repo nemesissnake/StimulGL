@@ -175,6 +175,8 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 						tmpParDef.sValue = sValue;
 						tmpParDef.bIsInitialized = bIsInitializing;
 						lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpParDef);
+						tmpParDef.sValue = "";
+						tmpParDef =  lExperimentObjectList[i].ExpBlockParams->value(sName);
 						return true;
 					}
 				}
@@ -296,9 +298,13 @@ bool ExperimentManager::setExperimentObjectFromScriptValue(const int &nObjectID,
 						if (lExperimentObjectList[i].ExpBlockParams->contains(sKeyName.toLower()))
 						{
 							if(lExperimentObjectList[i].typedExpParamCntnr)
+							{
+								QString tmpString = sScriptValue.toString();
+								if(expandExperimentBlockParameterValue(tmpString))
+									return lExperimentObjectList[i].typedExpParamCntnr->setExperimentParameter(sKeyName,tmpString);
 								return lExperimentObjectList[i].typedExpParamCntnr->setExperimentParameter(sKeyName,sScriptValue);
-							else
-								return false;
+							}
+							return false;
 						}
 					}
 				}
@@ -2005,6 +2011,7 @@ int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBl
 							{
 								if(nObjectID == tmpObjectNodeList.item(j).toElement().attribute(ID_TAG,"").toInt())//Correct ObjectID?
 								{
+									int nResult = 0;
 									if(tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG).isElement())
 									{
 										tmpElement = tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG);
@@ -2012,7 +2019,6 @@ int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBl
 										int nParameterListCount = tmpParameterNodeList.count();
 										if (nParameterListCount>0)
 										{
-											int nResult = 0;
 											for (int k=0;k<nParameterListCount;k++)//For each parameter
 											{
 												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
@@ -2033,33 +2039,75 @@ int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBl
 														}
 													}
 												}
-												if(k==(nParameterListCount-1))
-													return nResult;											
+												//if(k==(nParameterListCount-1))
+												//{
+
+												//}
 											}
 										}
-										else
-											return 0;
 									}
-									else
-										return -1;
+										
+									//////////////////////////////////////////////////////////////////////////
+									//Let's parse the custom parameters
+									//////////////////////////////////////////////////////////////////////////
+
+									//int nResultPlusCustom = nResult;
+									if(tmpObjectNodeList.item(j).firstChildElement(CUSTOM_PARAMETERS_TAG).isElement())
+									{
+										tmpElement = tmpObjectNodeList.item(j).firstChildElement(CUSTOM_PARAMETERS_TAG);
+										QDomNodeList tmpParameterNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
+										int nParameterListCount = tmpParameterNodeList.count();
+										if (nParameterListCount>0)
+										{
+											for (int k=0;k<nParameterListCount;k++)//For each parameter
+											{
+												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
+												if(!tmpElement.isNull())
+												{
+													tmpString = tmpElement.text().toLower();
+													//if (hParams->contains(tmpString) == false)//Is the Parameter available in the predefined plugin list?
+													//{
+													//	qDebug() << __FUNCTION__ << "::creating a custom predefined EXML parameter: " << tmpString << "!";
+													//}
+													tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
+													if(!tmpElement.isNull())
+													{
+														tmpValue = tmpElement.text();
+														expandExperimentBlockParameterValue(tmpValue);
+														tmpParDef.sValue = tmpValue;
+														tmpParDef.bHasChanged = true;
+														hParams->insert(tmpString,tmpParDef);
+														nResult++;
+													}
+												}
+											}
+										}											
+									}
+									return nResult;
 								}
-								else
-									return -1;
 							}
 							else
-								return -1;
-						}
+							{
+								return -1;//No ID tag
+							}
+						}//end object-for loop
 					}
 					else
-						return -1;//Nothing defined		
+					{
+						return -1;//No Objects defined		
+					}
 				}
 				else
+				{
 					continue;//Search next block
+				}
 			}
 			else
+			{
 				continue;//Search next block
+			}
 		}
-	}
+	}//end block-for loop
 	return -1;
 }
 

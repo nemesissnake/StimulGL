@@ -112,6 +112,8 @@ public:
 	}
 	bool setScriptEngine(QScriptEngine *currScriptEngine) {currentScriptEngine = currScriptEngine; return true;};
 	QScriptEngine *getScriptEngine() {return currentScriptEngine;};
+	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
+	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 
 public slots:
 	bool initExperimentObject();
@@ -126,10 +128,32 @@ public slots:
 	virtual bool setExperimentObjectReadyToUnlock();
 
 	int getObjectID();
-	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
-	ParsedParameterDefinition getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue);
 	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);
 	bool setExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal);
+	bool registerCustomExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal, const int &expParamType, bool bIsInitializing = true)
+	{
+		ExperimentParameterTypeName tmp = (ExperimentParameterTypeName)expParamType;
+		switch (tmp)//expParamType)
+		{
+		case Experiment_ParameterType_String:
+		{
+			QString *tmpNewString = new QString(sScriptVal.toString());
+			//tmpNewObject = qobject_cast<QObject *>(new QString());
+			//tmpNewObject = new QString();   
+			return insertExpObjectParameter<QString>(nObjectID,strName,*tmpNewString,bIsInitializing);
+			//return true;
+		}
+		default:
+			return false;
+		}
+		//Experiment_ParameterType_String		= 0, /*!< enum value 0 */
+		//	Experiment_SubObject_StringArray	= 1, /*!< enum value 1 */
+		//	Experiment_SubObject_Color			= 2, /*!< enum value 2 */
+		//	Experiment_SubObject_Integer		= 3, /*!< enum value 3 */
+		//	Experiment_SubObject_Float			= 4, /*!< enum value 4 */
+		//	Experiment_SubObject_Double			= 5, /*!< enum value 5 */
+		//	Experiment_SubObject_Boolean		= 6, /*!< enum value 6 */		
+	};
 	
 protected:
 	int checkForNextBlockTrial();

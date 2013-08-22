@@ -39,6 +39,20 @@ namespace ExperimentManagerNameSpace
 	};
 
 	/*! 
+	 * The enum ExperimentParameterTypeName represents the type of a experiment parameter by name
+	 */
+	enum ExperimentParameterTypeName
+	{
+		Experiment_ParameterType_String		= 0, /*!< enum value 0 */
+		Experiment_SubObject_StringArray	= 1, /*!< enum value 1 */
+		Experiment_SubObject_Color			= 2, /*!< enum value 2 */
+		Experiment_SubObject_Integer		= 3, /*!< enum value 3 */
+		Experiment_SubObject_Float			= 4, /*!< enum value 4 */
+		Experiment_SubObject_Double			= 5, /*!< enum value 5 */
+		Experiment_SubObject_Boolean		= 6, /*!< enum value 6 */
+	};
+	
+	/*! 
 	 * The enum ExperimentSubObjectState represents the state of the an Experiment (sub)-object 
 	 */
 	enum ExperimentSubObjectState
@@ -182,6 +196,7 @@ namespace ExperimentManagerNameSpace
 	#define BLOCK_TAG						"block"
 	#define PARAMETER_TAG					"parameter"
 	#define PARAMETERS_TAG					"parameters"
+	#define CUSTOM_PARAMETERS_TAG			"custom_parameters"
 	#define BLOCKNUMBER_TAG					"block_number"
 	#define TRIALAMOUNT_TAG					"nr_of_trials"
 	#define INTERNALTRIGGERAMOUNT_TAG		"nr_of_internal_triggers"
