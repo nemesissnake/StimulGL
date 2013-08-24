@@ -174,6 +174,7 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 						tmpParDef.bHasChanged = true;
 						tmpParDef.sValue = sValue;
 						tmpParDef.bIsInitialized = bIsInitializing;
+						tmpParDef.bIsCustom = false;
 						lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpParDef);
 						tmpParDef.sValue = "";
 						tmpParDef =  lExperimentObjectList[i].ExpBlockParams->value(sName);
@@ -213,6 +214,7 @@ bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,co
 								//Important, here we need to set the bFirstRequire option to false for future requests, but return the parameter with true
 								ParsedParameterDefinition tmpPPD(strcParDef);
 								tmpPPD.bIsInitialized = false;
+								tmpPPD.bIsCustom = false;
 								lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpPPD);
 							}
 							return true;
@@ -1929,6 +1931,19 @@ bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBl
 						qDebug() << __FUNCTION__ << "::Could not create a Block Parameter List!";
 						return false;
 					}
+
+					QString sParamName;
+					QHashIterator<QString, ParsedParameterDefinition> hashIter(*lExperimentObjectList[i].ExpBlockParams);
+					while (hashIter.hasNext()) 
+					{
+						hashIter.next();
+						if(hashIter.value().bIsCustom)
+						{
+							sParamName = hashIter.key();
+							//bool bResult = 
+								insertExperimentObjectVariabelePointer(nObjectID,sParamName,hashIter.value().sValue,true);							
+						}
+					}
 					return true;
 				}
 			}
@@ -2039,10 +2054,6 @@ int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBl
 														}
 													}
 												}
-												//if(k==(nParameterListCount-1))
-												//{
-
-												//}
 											}
 										}
 									}
@@ -2051,7 +2062,6 @@ int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBl
 									//Let's parse the custom parameters
 									//////////////////////////////////////////////////////////////////////////
 
-									//int nResultPlusCustom = nResult;
 									if(tmpObjectNodeList.item(j).firstChildElement(CUSTOM_PARAMETERS_TAG).isElement())
 									{
 										tmpElement = tmpObjectNodeList.item(j).firstChildElement(CUSTOM_PARAMETERS_TAG);
@@ -2076,6 +2086,7 @@ int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBl
 														expandExperimentBlockParameterValue(tmpValue);
 														tmpParDef.sValue = tmpValue;
 														tmpParDef.bHasChanged = true;
+														tmpParDef.bIsCustom = true;
 														hParams->insert(tmpString,tmpParDef);
 														nResult++;
 													}

@@ -102,10 +102,12 @@ namespace ExperimentManagerNameSpace
 			sValue = "<undefined>";
 			bHasChanged = true;
 			bIsInitialized = true;
+			bIsCustom = false;
 		}	
 		QString sValue;		 //!< A String that stores the value of the parameter
 		bool bHasChanged;    //!< A Boolean value determing wheter the parameter has been changed since it's initialization
 		bool bIsInitialized; //!< A Boolean value determing wheter the parameter already has been initialized
+		bool bIsCustom;		 //!< A Boolean value determing wheter the parameter is defined by the is custom (defined by the user)
 	};
 
 	/*! Creates a type name for strcParsedParameterDefinition */ 

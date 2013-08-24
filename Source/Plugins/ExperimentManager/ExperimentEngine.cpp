@@ -88,10 +88,15 @@ ParsedParameterDefinition ExperimentEngine::getExpObjectBlockParameter(const int
 	PPDResult.bHasChanged = false;
 	PPDResult.sValue = sDefValue;
 	PPDResult.bIsInitialized = true;
-	if (pExperimentManager->getExperimentObjectBlockParameter(nObjectID,sName.toLower(),PPDResult))		
+	PPDResult.bIsCustom = true;
+	if (pExperimentManager->getExperimentObjectBlockParameter(nObjectID,sName.toLower(),PPDResult))	
+	{
 		return PPDResult;
+	}
 	else
+	{
 		return PPDResult;
+	}
 }
 
 void ExperimentEngine::init()

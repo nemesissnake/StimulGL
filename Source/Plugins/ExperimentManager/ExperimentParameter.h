@@ -40,6 +40,46 @@ public:
 	TypedExperimentParameterContainer() {};
 	~TypedExperimentParameterContainer() 
 	{
+		for (int i=0;i<lCustomAllocatedParameterNames.count();i++)
+		{
+			if(hIntContainer.contains(lCustomAllocatedParameterNames[i]))
+			{
+				delete hIntContainer.take(lCustomAllocatedParameterNames[i]);
+				continue;
+			}
+			else if(hDoubleContainer.contains(lCustomAllocatedParameterNames[i]))
+			{
+				delete hDoubleContainer.take(lCustomAllocatedParameterNames[i]);
+				continue;
+			}
+			else if(hFloatContainer.contains(lCustomAllocatedParameterNames[i]))
+			{
+				delete hFloatContainer.take(lCustomAllocatedParameterNames[i]);
+				continue;
+			}
+			else if(hBoolContainer.contains(lCustomAllocatedParameterNames[i]))
+			{
+				delete hBoolContainer.take(lCustomAllocatedParameterNames[i]);
+				continue;
+			}
+			else if(hQStringContainer.contains(lCustomAllocatedParameterNames[i]))
+			{
+				delete hQStringContainer.take(lCustomAllocatedParameterNames[i]);
+				continue;
+			}
+			else if(hQStringListContainer.contains(lCustomAllocatedParameterNames[i]))
+			{
+				delete hQStringListContainer.take(lCustomAllocatedParameterNames[i]);
+				continue;
+			}
+			else if(hQColorContainer.contains(lCustomAllocatedParameterNames[i]))
+			{
+				delete hQColorContainer.take(lCustomAllocatedParameterNames[i]);
+				continue;
+			}
+		}
+		lCustomAllocatedParameterNames.clear();
+
 		hIntContainer.clear();
 		hDoubleContainer.clear();
 		hFloatContainer.clear();
@@ -48,6 +88,153 @@ public:
 		hQStringListContainer.clear();
 		hQColorContainer.clear();
 	};
+
+	template< typename T1 > bool createExperimentParameter(const QString &strKeyName, QVariant pExpParam)//These are custom defined parameters
+	{
+		if (typeid(T1) == typeid(int))
+		{
+			int *tmpTypeVar;
+			if(hIntContainer.contains(strKeyName.toLower()))
+			{
+				tmpTypeVar = hIntContainer.take(strKeyName.toLower());//get type pointer
+				*tmpTypeVar = pExpParam.toInt();//Change the value	
+			}
+			else
+			{
+				tmpTypeVar = new int(pExpParam.toInt());//allocate a new type
+				lCustomAllocatedParameterNames.append(strKeyName.toLower());//Store the custom allocated parameter name
+			}			
+			hIntContainer.insert(strKeyName.toLower(),tmpTypeVar);
+			return true;
+		}
+		else if (typeid(T1) == typeid(double))
+		{
+			double *tmpTypeVar;
+			if(hDoubleContainer.contains(strKeyName.toLower()))
+			{
+				tmpTypeVar = hDoubleContainer.take(strKeyName.toLower());//get type pointer
+				*tmpTypeVar = pExpParam.toDouble();//Change the value	
+			}
+			else
+			{
+				tmpTypeVar = new double(pExpParam.toDouble());//allocate a new type
+				lCustomAllocatedParameterNames.append(strKeyName.toLower());//Store the custom allocated parameter name
+			}			
+			hDoubleContainer.insert(strKeyName.toLower(),tmpTypeVar);
+			return true;
+		}
+		else if (typeid(T1) == typeid(float))
+		{
+			float *tmpTypeVar;
+			if(hFloatContainer.contains(strKeyName.toLower()))
+			{
+				tmpTypeVar = hFloatContainer.take(strKeyName.toLower());//get type pointer
+				*tmpTypeVar = pExpParam.toFloat();//Change the value	
+			}
+			else
+			{
+				tmpTypeVar = new float(pExpParam.toFloat());//allocate a new type
+				lCustomAllocatedParameterNames.append(strKeyName.toLower());//Store the custom allocated parameter name
+			}			
+			hFloatContainer.insert(strKeyName.toLower(),tmpTypeVar);
+			return true;
+		}
+		else if (typeid(T1) == typeid(bool))
+		{
+			bool *tmpTypeVar;
+			if(hBoolContainer.contains(strKeyName.toLower()))
+			{
+				tmpTypeVar = hBoolContainer.take(strKeyName.toLower());//get type pointer
+				*tmpTypeVar = pExpParam.toBool();//Change the value	
+			}
+			else
+			{
+				tmpTypeVar = new bool(pExpParam.toBool());//allocate a new type
+				lCustomAllocatedParameterNames.append(strKeyName.toLower());//Store the custom allocated parameter name
+			}			
+			hBoolContainer.insert(strKeyName.toLower(),tmpTypeVar);
+			return true;
+		}
+		else if (typeid(T1) == typeid(QString))
+		{
+			QString *tmpTypeVar;
+			if(hQStringContainer.contains(strKeyName.toLower()))
+			{
+				tmpTypeVar = hQStringContainer.take(strKeyName.toLower());//get type pointer
+				*tmpTypeVar = pExpParam.toString();//Change the value				
+				//todo
+				//- check 4 custom {scriptvar} possibility?
+				//- check retino...
+				//- search for insert get set script function that dissapeared?	
+				//dfdsf
+			}
+			else
+			{
+				tmpTypeVar = new QString(pExpParam.toString());//allocate a new type
+				lCustomAllocatedParameterNames.append(strKeyName.toLower());//Store the custom allocated parameter name
+			}
+			hQStringContainer.insert(strKeyName.toLower(),tmpTypeVar);
+			return true;
+		}
+		else if (typeid(T1) == typeid(QStringList))
+		{
+			QStringList *tmpTypeVar;
+			if(hQStringListContainer.contains(strKeyName.toLower()))
+			{
+				tmpTypeVar = hQStringListContainer.take(strKeyName.toLower());//get type pointer
+				*tmpTypeVar = pExpParam.toStringList();//Change the value	
+			}
+			else
+			{
+				tmpTypeVar = new QStringList(pExpParam.toStringList());//allocate a new type
+				lCustomAllocatedParameterNames.append(strKeyName.toLower());//Store the custom allocated parameter name
+			}			
+			hQStringListContainer.insert(strKeyName.toLower(),tmpTypeVar);
+			return true;
+		}
+		else if (typeid(T1) == typeid(QColor))
+		{
+			QColor *tmpTypeVar;
+			if(hQColorContainer.contains(strKeyName.toLower()))
+			{
+				tmpTypeVar = hQColorContainer.take(strKeyName.toLower());//get type pointer
+				*tmpTypeVar = pExpParam.value<QColor>();//Change the value	
+			}
+			else
+			{
+				tmpTypeVar = new QColor(pExpParam.value<QColor>());//allocate a new type
+				lCustomAllocatedParameterNames.append(strKeyName.toLower());//Store the custom allocated parameter name
+			}			
+			hQColorContainer.insert(strKeyName.toLower(),tmpTypeVar);
+			return true;
+		}
+		else
+		{			
+			QString strUnknownTypeName = typeid(T1).name();
+			if (strUnknownTypeName.contains("char",Qt::CaseInsensitive))
+			{
+				QString *tmpTypeVar;
+				if(hQStringContainer.contains(strKeyName.toLower()))
+				{
+					tmpTypeVar = hQStringContainer.take(strKeyName.toLower());//get type pointer
+					*tmpTypeVar = pExpParam.toString();//Change the value	
+				}
+				else
+				{
+					tmpTypeVar = new QString(pExpParam.toString());//allocate a new type
+					lCustomAllocatedParameterNames.append(strKeyName.toLower());//Store the custom allocated parameter name
+				}				
+				hQStringContainer.insert(strKeyName.toLower(),tmpTypeVar);
+				return true;
+			}
+			else
+			{
+				qDebug() << __FUNCTION__ << "::Could not cast type (" + strUnknownTypeName + ")!";
+				return false;
+			}
+		}
+		return false;
+	}
 
 	template< typename T1 > bool insertExperimentParameter(const QString &strKeyName, T1 *pExpParam = NULL)
 	{
@@ -273,6 +460,8 @@ private:
 	QHash<QString, QColor*> hQColorContainer;
 	QHash<QString, QString*> hQStringContainer;
 	QHash<QString, QStringList*> hQStringListContainer;
+
+	QStringList lCustomAllocatedParameterNames;
 };
 
 #endif // EXPERIMENTPARAMETER_H

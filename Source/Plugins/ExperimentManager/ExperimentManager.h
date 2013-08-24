@@ -143,7 +143,7 @@ public:
 		return NULL;
 	}
 
-	template< typename T > bool insertExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName,T &tVariabele)
+	template< typename T > bool insertExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName,T &tVariabele, bool bCreateVariabeleInMemory = false)
 	{
 		if (nObjectID >= 0) 
 		{
@@ -160,7 +160,15 @@ public:
 								return false;
 							if(lExperimentObjectList[i].typedExpParamCntnr == NULL)
 								lExperimentObjectList[i].typedExpParamCntnr = new TypedExperimentParameterContainer();
-							bool bRetVal = lExperimentObjectList[i].typedExpParamCntnr->insertExperimentParameter<T>(sKeyName,&tVariabele);
+							bool bRetVal;
+							if(bCreateVariabeleInMemory)
+							{
+								bRetVal = lExperimentObjectList[i].typedExpParamCntnr->createExperimentParameter<T>(sKeyName,tVariabele);
+							}
+							else
+							{
+								bRetVal = lExperimentObjectList[i].typedExpParamCntnr->insertExperimentParameter<T>(sKeyName,&tVariabele);
+							}
 							return bRetVal;
 						}
 					}
