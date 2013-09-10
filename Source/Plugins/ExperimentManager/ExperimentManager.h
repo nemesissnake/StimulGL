@@ -191,7 +191,7 @@ public slots:
 	void stopExperiment();
 	void changeExperimentSubObjectState(ExperimentSubObjectState nState);
 	QString getCurrentDateTimeStamp();
-	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue, bool bIsInitializing = true);
+	bool insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue, bool bIsInitializing = true, bool bIsCustom = false);
 	bool getExperimentObjectBlockParameter(const int nObjectID,const QString sName, ParsedParameterDefinition &strcParDef);
 	bool logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction = "", const QString &strTag = "", const QString &strMessage = "", const QString &strValue = "");
 	int createExperimentTimer();

@@ -129,7 +129,7 @@ public slots:
 	int getObjectID();
 	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);
 	bool setExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal);
-	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true);
+	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true, bool bIsCustom = false);
 	
 protected:
 	int checkForNextBlockTrial();

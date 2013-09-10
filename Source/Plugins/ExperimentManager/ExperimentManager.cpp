@@ -151,13 +151,14 @@ void ExperimentManager::sendToMainAppLogOutput(const QString &strText2Write)
 	emit WriteToLogOutput(strText2Write);
 }
 
-bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue, bool bIsInitializing)
+bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue, bool bIsInitializing, bool bIsCustom)
 {
 /*! \brief Inserts a specified object parameter for the current experiment block.
  *
  *  Inserts a specified object parameter with objectID(nObjectID), parameter name(sName) and parameter value(sValue) for the current experiment block.
  *  If bIsInitializing is true then this new parameter is marked as Initializing, see #ParsedParameterDefinition.bIsInitialized,
  *  this marks the parameter as unused which can be helpful for further setting the default value.
+ *  The bIsCustom variable determines whether the parameter should be treated as a custom parameter (default = false).
  */
 	if (nObjectID >= 0) 
 	{
@@ -174,7 +175,7 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 						tmpParDef.bHasChanged = true;
 						tmpParDef.sValue = sValue;
 						tmpParDef.bIsInitialized = bIsInitializing;
-						tmpParDef.bIsCustom = false;
+						tmpParDef.bIsCustom = bIsCustom;
 						lExperimentObjectList[i].ExpBlockParams->insert(sName,tmpParDef);
 						tmpParDef.sValue = "";
 						tmpParDef =  lExperimentObjectList[i].ExpBlockParams->value(sName);

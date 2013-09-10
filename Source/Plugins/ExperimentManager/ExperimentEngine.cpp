@@ -60,20 +60,21 @@ ExperimentEngine::~ExperimentEngine()
 	}
 }
 
-bool ExperimentEngine::insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing)
+bool ExperimentEngine::insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing, bool bIsCustom)
 {
 /*! \brief Update or insert an Experiment Block Parameter that can be parsed.
  *
  *  This function can be used to insert or update an Experiment Block Parameter to be parsed for a specific object.
- *  This Parameter can be parsed at the next initialization of a new BlockTrial if not jet initialized.
+ *  This Parameter can be parsed at the next initialization of a new BlockTrial if not yet initialized.
  *  Setting the parameter bIsInitializing to true forces the new parameter to be re-parsed at the next initialization of a new BlockTrial.
+ *  The parameter bIsCustom (default = false) defines whether this parameter should be treated as a custom parameter.
  */
 	if (ExpBlockParams == NULL)
 	{
 		ExpBlockParams = new tParsedParameterList();
 		pExperimentManager->setExperimentObjectBlockParameterStructure(nObjectID,ExpBlockParams);
 	}
-	bool bRetVal = pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName.toLower(),sValue,bIsInitializing);
+	bool bRetVal = pExperimentManager->insertExperimentObjectBlockParameter(nObjectID,sName.toLower(),sValue,bIsInitializing,bIsCustom);
 	return bRetVal;
 }
 
@@ -533,7 +534,7 @@ QScriptValue ExperimentEngine::getExperimentObjectParameter(const int &nObjectID
 //*! \brief retrieves the current value of an Experiment Parameter variable.
 // *
 // *  This function can be used to retrieve the current value of an Experiment Parameter variable for a specific object.
-// *	This parameter variable value is currently in use.
+// *  This parameter variable value is currently in use.
 // */
 	if (currentScriptEngine)
 	{

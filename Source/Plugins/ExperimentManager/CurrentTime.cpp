@@ -78,7 +78,7 @@ static double highResUpTime()
 
     LARGE_INTEGER qpc;
     QueryPerformanceCounter(&qpc);
-    DWORD tickCount = GetTickCount();
+    DWORD tickCount = GetTickCount64();// changed again back from --> timeGetTime();//changed on 10-09-13, should be more stable than GetTickCount(), see http://blogs.msdn.com/b/larryosterman/archive/2009/09/02/what-s-the-difference-between-gettickcount-and-timegettime.aspx;
 
     if (inited) {
         __int64 qpcElapsed = ((qpc.QuadPart - qpcLast.QuadPart) * 1000) / qpcFrequency.QuadPart;
