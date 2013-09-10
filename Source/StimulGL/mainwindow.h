@@ -309,7 +309,7 @@ private:
 	QDockWidget *debugLogDock;
 	QDockWidget *debuggerDock;
 
-	QListWidget *outputWindowList;
+	QTextEdit *outputWindowList;
 	MainWindow *debuggerMainWindow;
 	
 	DocumentManager *DocManager;

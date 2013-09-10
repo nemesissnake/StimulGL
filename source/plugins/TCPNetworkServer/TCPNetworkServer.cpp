@@ -171,6 +171,7 @@ int TCPNetworkServer::sendServerData(QString sData)
 	out.device()->seek(0);
 	out << (quint16)(block.size() - sizeof(quint16));
 	qint64 bytesSend = serverClientConnectionSockets.last()->write(block);		
+	serverClientConnectionSockets.last()->waitForBytesWritten();
 	return (int)bytesSend;
 }
 
@@ -183,7 +184,8 @@ int TCPNetworkServer::sendClientData(QString sData)
 	out << sData;
 	out.device()->seek(0);
 	out << (quint16)(block.size() - sizeof(quint16));
-	qint64 bytesSend = clientConnectionSocket->write(block);		
+	qint64 bytesSend = clientConnectionSocket->write(block);
+	clientConnectionSocket->waitForBytesWritten();
 	return (int)bytesSend;
 }
 

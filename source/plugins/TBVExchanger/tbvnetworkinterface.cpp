@@ -1,4 +1,4 @@
-//Copyright (C) 2013  Michael Luers
+//Copyright (C) 2013  Michael Luehrs
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -20,8 +20,16 @@
 TBVNetworkInterface::TBVNetworkInterface() : QThread()
 {
 	udpSocket = NULL;
+	iIpAddress = "";
+	iPort = 0;
 	tcpSocket = new QTcpSocket();
+	tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+	tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
 	rTcpSocket = new QTcpSocket();
+	rTcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+	rTcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+
 	blockSize = 0;
 	connect(rTcpSocket,SIGNAL(readyRead()),this,SLOT(readExecuteStep()));
 	connect(rTcpSocket,SIGNAL(connected()),this,SLOT(connectionEstablished()));
@@ -96,20 +104,31 @@ void TBVNetworkInterface::processPendingDatagrams()
 
 void TBVNetworkInterface::connectionEstablished()
 {
-	udpSocket->close();
+	if(udpSocket)
+		udpSocket->close();
 	emit connected();
 }
 
 void TBVNetworkInterface::connectionLost()
 {
 	emit disconnected();
-    udpSocket->bind(55555, QUdpSocket::ShareAddress);
+	if(udpSocket)
+		udpSocket->bind(55555, QUdpSocket::ShareAddress);
+	for(int i=0;i<5;i++)
+	{
+		if(connectToServer(iIpAddress,iPort))
+			return;
+	}
+
+
 }
 
 bool TBVNetworkInterface::connectToServer(char *ipAddress,quint16 port)
 {
 	if(tcpSocket)
 	{
+		iIpAddress = ipAddress;
+		iPort = port;
 		tcpSocket->connectToHost(tr(ipAddress),port);
 		if(!tcpSocket->waitForConnected(3000))
 			return false;
@@ -158,8 +177,16 @@ bool TBVNetworkInterface::sendStreamDefinition(char *definition,QTcpSocket *dSoc
 
 bool TBVNetworkInterface::disconnectFromServer()
 {
-	tcpSocket->disconnectFromHost();
-	return tcpSocket->waitForDisconnected();
+	if(tcpSocket)
+	{
+		tcpSocket->disconnectFromHost();
+		return tcpSocket->waitForDisconnected();
+	}
+	else
+	{
+		return false;
+	}
+	
 }
 
 
