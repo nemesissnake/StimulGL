@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen and Michael Luehrs
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -36,11 +36,12 @@ ExperimentTimer::ExperimentTimer(QObject *parent) : QObject(parent)
 	stopped = 0;
 	startTimeInMicroSec = 0;
 	endTimeInMicroSec = 0;
+	terminateTriggeredTimerLoop = false;
 }
 
 ExperimentTimer::~ExperimentTimer()
 {
-
+	terminateTriggeredTimerLoop = true;
 }
 
 QScriptValue ExperimentTimer::ctor__experimentTimer(QScriptContext* context, QScriptEngine* engine)
@@ -128,6 +129,7 @@ bool ExperimentTimer::SleepMSecAccurate(double mSecs)
 	// note: BE SURE YOU CALL timeEndPeriod(1) at program exit!!!
 	// note: that will require linking to winmm.lib
 	// note: never use static initializers (like this) with Winamp plug-ins!
+
 	LARGE_INTEGER freq;
 	LARGE_INTEGER start_tick;
 	if (!QueryPerformanceFrequency(&freq))// Save the performance counter frequency for later use.
@@ -204,4 +206,22 @@ bool ExperimentTimer::SleepMSecAccurate2(double mSecs)
 		while (!doneWaiting); 
 	}
 	return true;
+}
+
+void ExperimentTimer::startTriggeredTimerLoop(double nIntervalTimeMSecs)
+{
+	terminateTriggeredTimerLoop = false;
+	while(!terminateTriggeredTimerLoop)
+	{
+		SleepMSecAccurate(nIntervalTimeMSecs);
+		//Sleep(interval);
+		emit triggeredTimerLoopInvoked();
+		QCoreApplication::processEvents();
+	}
+	terminateTriggeredTimerLoop = false;
+}
+
+void ExperimentTimer::stopTriggeredTimerLoop()
+{
+	terminateTriggeredTimerLoop = true;
 }

@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen and Michael Luehrs
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -28,14 +28,15 @@
 TriggerTimer::TriggerTimer() : QObject(NULL)
 {
 	currentScriptEngine = NULL;
+	fastExperimentThreadedTimer = NULL;
 	nThreadIdealCount = QThread::idealThreadCount();
 	//bool bResult = 
-		connect(this,SIGNAL(stopTimerSignal()),&ThreadActivationTrigger,SLOT(stop()));//ThreadActivationTrigger = QTimer
-	bool bResult = connect(&_thread, SIGNAL(finished()), this, SLOT(handleThreadFinished()), Qt::DirectConnection);//QueuedConnection);
+		connect(this,SIGNAL(stopTimerSignal()),&ThreadActivationTriggerQTimer,SLOT(stop()));//ThreadActivationTrigger = QTimer
+	//bool bResult = connect(&_thread, SIGNAL(finished()), this, SLOT(handleThreadFinished()), Qt::DirectConnection);//QueuedConnection);
 	this->moveToThread(&_thread);
 	_thread.start();
-	ThreadActivationTrigger.setInterval(THREADACTIVATIONTRIGGERTIME);
-	ThreadActivationTrigger.moveToThread(&_thread);
+	ThreadActivationTriggerQTimer.setInterval(THREADACTIVATIONTRIGGERTIME);
+	ThreadActivationTriggerQTimer.moveToThread(&_thread);
 	bDoStopTimer = false;
 	dTriggerInterval = 0.0;
 	dElapsed = 0.0;
@@ -58,10 +59,6 @@ TriggerTimer::~TriggerTimer()
 	{
 		if ((currentTimerType == QPC_TriggerTimerType) || (currentTimerType == QPCNew_TriggerTimerType))
 		{
-			//bool bResult = QMetaObject::invokeMethod(&ThreadActivationTrigger, QString("stop").toLatin1(),Qt::DirectConnection);
-			//bResult = bResult;
-			//ThreadActivationTrigger.moveToThread(this->thread());//QThread::currentThread());//QApplication::instance()->thread()
-			//ThreadActivationTrigger.stop();
 			emit stopTimerSignal();
 		}
 		else if (currentTimerType == QTimer_TriggerTimerType)
@@ -70,11 +67,25 @@ TriggerTimer::~TriggerTimer()
 		}
 	}
 
+	if(fastExperimentThreadedTimer)
+	{
+		fastExperimentThreadedTimer->stopTimer();
+		delete fastExperimentThreadedTimer;
+	}
+
 	_thread.quit();
+	int nForceTerminateRetries = 0;
 	if(_thread.isRunning())
 	{
-		_thread.terminate();//The hard way...
-		_thread.wait(100);
+		_thread.wait(THREADACTIVATIONTRIGGERTIME*2);
+		while(_thread.isRunning())
+		{
+			_thread.terminate();//The hard way...
+			_thread.wait(THREADACTIVATIONTRIGGERTIME);
+			nForceTerminateRetries++;
+			if(nForceTerminateRetries == 10)
+				break;
+		}
 	}
 }
 
@@ -108,6 +119,7 @@ void TriggerTimer::createTimerTypeHashTable()
 	timerTypeHash.insert("QPC_TriggerTimerType", (int)QPC_TriggerTimerType);
 	timerTypeHash.insert("QTimer_TriggerTimerType", (int)QTimer_TriggerTimerType);
 	timerTypeHash.insert("QPCNew_TriggerTimerType", (int)QPCNew_TriggerTimerType);
+	timerTypeHash.insert("Fast_TriggerTimerType", (int)Fast_TriggerTimerType);
 }
 
 bool TriggerTimer::setTimerType(const QString &sNewTimerType)
@@ -163,12 +175,12 @@ void TriggerTimer::startTimer(double dMSec)//Do not change the function name wit
 			resetIntervalTestResults();
 			eTimer.start();
 			emit started();				
-			connect(&ThreadActivationTrigger, SIGNAL(timeout()), this, SLOT(runThreadedTimerFunction()));
+			connect(&ThreadActivationTriggerQTimer, SIGNAL(timeout()), this, SLOT(runThreadedTimerFunction()));
 			//emit timeout();
 			bDoStopTimer = false;
 			dTriggerInterval = dMSec;
 			dNextThreshold = dTriggerInterval;
-			ThreadActivationTrigger.start();
+			ThreadActivationTriggerQTimer.start();
 		}
 		else if (currentTimerType == QPCNew_TriggerTimerType)
 		{
@@ -185,12 +197,12 @@ void TriggerTimer::startTimer(double dMSec)//Do not change the function name wit
 			eTimer.start();
 			dStartTime = WTF::currentTimeMS();
 			emit started();
-			connect(&ThreadActivationTrigger, SIGNAL(timeout()), this, SLOT(runThreadedTimerFunction()));
+			connect(&ThreadActivationTriggerQTimer, SIGNAL(timeout()), this, SLOT(runThreadedTimerFunction()));
 			//emit timeout();
 			bDoStopTimer = false;
 			dTriggerInterval = dMSec;
 			dNextThreshold = dTriggerInterval;
-			ThreadActivationTrigger.start();
+			ThreadActivationTriggerQTimer.start();
 		}
 		else if (currentTimerType == QTimer_TriggerTimerType)
 		{
@@ -198,6 +210,13 @@ void TriggerTimer::startTimer(double dMSec)//Do not change the function name wit
 			emit started();
 			connect(&qtTimer, SIGNAL(timeout()), this, SIGNAL(timeout()));
 			bDoStopTimer = false;
+		}
+		else if (currentTimerType == Fast_TriggerTimerType)
+		{
+			fastExperimentThreadedTimer = new FastThreadedTriggerTimer();
+			connect(fastExperimentThreadedTimer, &FastThreadedTriggerTimer::timeout, this, &TriggerTimer::timeout);
+			bDoStopTimer = false;
+			fastExperimentThreadedTimer->startTimer(dMSec);				
 		}
 	}
 }
@@ -233,14 +252,14 @@ void TriggerTimer::stopTimer()//Do not change the function name without changing
 	{
 		if (currentTimerType == QPC_TriggerTimerType)
 		{
-			ThreadActivationTrigger.stop();
+			ThreadActivationTriggerQTimer.stop();
 			bDoStopTimer = true;
 			eTimer.stop();
 			bTimerIsRunning = false;
 		}
 		else if (currentTimerType == QPCNew_TriggerTimerType)
 		{
-			ThreadActivationTrigger.stop();
+			ThreadActivationTriggerQTimer.stop();
 			bDoStopTimer = true;
 			eTimer.stop();
 			bTimerIsRunning = false;
@@ -249,6 +268,15 @@ void TriggerTimer::stopTimer()//Do not change the function name without changing
 		{
 			bDoStopTimer = true;
 			qtTimer.stop();
+			bTimerIsRunning = false;
+		}
+		else if (currentTimerType == Fast_TriggerTimerType)
+		{
+			bDoStopTimer = true;
+			if(fastExperimentThreadedTimer)
+			{
+				fastExperimentThreadedTimer->stopTimer();
+			}
 			bTimerIsRunning = false;
 		}
 		_thread.quit();

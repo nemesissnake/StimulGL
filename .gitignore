@@ -6,6 +6,7 @@ Thumbs.db
 *.exe
 *.pdb
 *.user
+*.vcxproj.users
 *.aps
 *.pch
 *.vspscc
@@ -62,7 +63,6 @@ Source/QmlExtensions/Plugins/DefaultPlugin/plugins.opensdf
 Source/QmlExtensions/Plugins/DefaultPlugin/plugins.sdf
 output
 Publish/*.lnk
-*.h
 Install/qml/plugins
 Install/plugins/Win32/script/*.embed.manifest
 Install/plugins/Win32/script/*manifest.rc

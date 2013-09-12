@@ -491,18 +491,22 @@ QScriptValue myPrintFunction(QScriptContext *context, QScriptEngine *engine)
 		result.append(context->argument(i).toString());
 	}
 	QScriptValue calleeData = context->callee().data();
-	QListWidget *outputObject = qobject_cast<QListWidget*>(calleeData.toQObject());
-	outputObject->addItem(result);
+	//QListWidget *outputObject = qobject_cast<QListWidget*>(calleeData.toQObject());
+	//outputObject->addItem(result);
+	QTextEdit *outputObject = qobject_cast<QTextEdit*>(calleeData.toQObject());
+	outputObject->setReadOnly(true);
+	outputObject->append(result);
 	return engine->undefinedValue();
 
-	outputObject->setItemDelegate(new OutputListDelegate(outputObject));
+	/*outputObject->setItemDelegate(new OutputListDelegate(outputObject));
 	QListWidgetItem *item = new QListWidgetItem();
 	item->setData(Qt::DisplayRole, "Title");
 	item->setData(Qt::UserRole + 1, "Description");
-	outputObject->addItem(item);
+	outputObject->addItem(item);*/
 
 	return engine->undefinedValue();//outputWindowList
 }
+
 
 QScriptValue myExitScriptFunction(QScriptContext *context, QScriptEngine *engine)
 {
@@ -573,17 +577,17 @@ bool MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 
 void MainWindow::ExternalNetworkDataRecieved(int nClientIndex, QString sAvailableData)
 {
-	write2OutputWindow("-> Network Data Recieved(from client: " + QString::number(nClientIndex) +  ") going to execute...");
+	//write2OutputWindow("-> Network Data Recieved(from client: " + QString::number(nClientIndex) +  ") going to execute...");
 	QScriptValue scriptVal = executeScriptContent(sAvailableData);
 	QString strResult = scriptVal.toString();
 	if (scriptVal.isError()) 
 	{
 		write2OutputWindow("... Script stopped Evaluating due to an error: --> " + strResult + "...");
 	}
-	else
-	{
-		write2OutputWindow("-> Network Data Successfully executed by the Script Engine.");
-	}
+	//else
+	//{
+	//	write2OutputWindow("-> Network Data Successfully executed by the Script Engine.");
+	//}
 }
 
 void MainWindow::shutdownNetworkServer()
@@ -1131,10 +1135,10 @@ void MainWindow::createDefaultMenus()
 
 	editMenu->addSeparator();
 
-	copyDebuggerAction = new QAction(QObject::tr("Copy Selected Output Item(s)"), 0);
+	copyDebuggerAction = new QAction(QObject::tr("Copy Selected Text"), 0);
 	//copyDebuggerAction->setShortcut(QKeySequence(""));
 	copyDebuggerAction->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
-	connect(copyDebuggerAction, SIGNAL(triggered()), this, SLOT(copyDebugger()));
+	connect(copyDebuggerAction, SIGNAL(triggered()), outputWindowList, SLOT(copy()));
 	editMenu->addAction(copyDebuggerAction);
 
 	clearDebuggerAction = new QAction(QObject::tr("Clear All Output Item(s)"), 0);
@@ -1144,7 +1148,7 @@ void MainWindow::createDefaultMenus()
 	editMenu->addAction(clearDebuggerAction);
 
 	
-	saveDebuggerAction = new QAction(QObject::tr("Save All Output Item(s) to a text file..."), 0);
+	saveDebuggerAction = new QAction(QObject::tr("Save All Output information to a text file..."), 0);
 	//saveDebuggerAction->setShortcut(QKeySequence(""));
 	saveDebuggerAction->setStatusTip(tr("Save the Debugger Output window."));
 	connect(saveDebuggerAction, SIGNAL(triggered()), this, SLOT(saveOutputWindow()));
@@ -1369,7 +1373,7 @@ void MainWindow::showDocumentation()
 void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined MAIN_PROGRAM_LOG_SLOT_NAME
 {
 	if(bMainWindowIsInitialized)
-		outputWindowList->addItem(text2Write);
+		outputWindowList->append(text2Write);
 }
 
 /*! \brief Sets the auto scrolling behavior of the Output Log Window.
@@ -1379,7 +1383,7 @@ void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined
  */
 void MainWindow::configureOutputWindowAutoScroll(const bool &bEnable)
 {
-	if(outputWindowList == NULL)
+	/*if(outputWindowList == NULL)
 		return;
 	if(bEnable)
 	{
@@ -1388,8 +1392,7 @@ void MainWindow::configureOutputWindowAutoScroll(const bool &bEnable)
 	else
 	{
 		disconnect(outputWindowList->model(), SIGNAL(rowsInserted ( const QModelIndex &, int, int ) ),	outputWindowList, SLOT(scrollToBottom ()));
-	}
-
+	}*/
 }
 
 /*! \brief Clears the Output Log Window.
@@ -1433,19 +1436,21 @@ bool MainWindow::saveOutputWindow(const QString &sFilePath, const bool &bOverwri
 	}
 	if (file.open(QFile::WriteOnly | QFile::Text)) 
 	{
-		if(outputWindowList->count() > 0)
-		{
-			for(int i=0;i<outputWindowList->count();i++) 
+		if(outputWindowList->toPlainText() != "")
+			file.write(outputWindowList->toPlainText().toLatin1());
+		//if(outputWindowList->count() > 0)
+		//{
+			/*for(int i=0;i<outputWindowList->count();i++) 
 			{
-				file.write(QString(outputWindowList->item(i)->text() + "\n").toLatin1());
-			}
-		}
+			file.write(QString(outputWindowList->item(i)->text() + "\n").toLatin1());
+			}*/
+		//}
 		else
 		{
 			qWarning() << "No data available in Log Output Pane to write.";
 		}		
 		file.close();
-		return true;;
+		return true;
 	}
 	qDebug() << __FUNCTION__ << "Could not write to file: " << fileName;
 	return false;
@@ -1467,12 +1472,12 @@ void MainWindow::copyDebugger()
 	QList <QListWidgetItem *> listItems;
 	QString sResult = "";
 	int nRow,i;
-	listItems = outputWindowList->selectedItems();
+	//listItems = outputWindowList->selectedItems();
 	if(listItems.isEmpty())
 		return;
 	for(i=0;i<listItems.size();i++) 
 	{
-		nRow = outputWindowList->row(listItems[i]);//0 means false
+		nRow = 0;//outputWindowList->row(listItems[i]);//0 means false
 		lListTextAndRows.append(qMakePair(listItems[i]->text(),nRow));
 	}
 	qSort(lListTextAndRows.begin(), lListTextAndRows.end(), QPairSecondComparer());	
@@ -1491,8 +1496,8 @@ void MainWindow::createDockWindows()
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	debugLogDock = new QDockWidget(tr("Output"), this);
 	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);	
-	outputWindowList = new QListWidget(debugLogDock);
-	outputWindowList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	outputWindowList = new QTextEdit(debugLogDock);
+	outputWindowList->setReadOnly(true);
 	//QString tmpColor = QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	//outputWindowList->setStyleSheet("* { background-color:rgb(" + tmpColor + "); padding: 10px ; color:rgb(136,0,21)}");
 	debugLogDock->setWidget(outputWindowList);
@@ -2339,7 +2344,7 @@ void MainWindow::executeDocument()
 		}
 	}	
 	AppScriptEngine->eng->collectGarbage();
-	outputWindowList->scrollToBottom();
+	//outputWindowList->scrollToBottom();
 }
 
 QScriptValue MainWindow::executeScriptContent(const QString &sContent)

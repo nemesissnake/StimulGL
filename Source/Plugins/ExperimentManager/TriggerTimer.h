@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen and Michael Luehrs
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 #include <QThread>
 #include <QtScript>
 #include "ExperimentTimer.h"
+#include "FastThreadedTriggerTimer.h"
 #include "CurrentTime.h"
 #include "maindefines.h"
 
@@ -31,7 +32,8 @@ enum TriggerTimerType
 {
 	QPC_TriggerTimerType			= 0, //!< 0: The Query Performance Counter Timer type
 	QTimer_TriggerTimerType			= 1, //!< 1: The QTimer Timer type
-	QPCNew_TriggerTimerType			= 2  //!< 2: The Query Performance Counter Timer type, new implementation
+	QPCNew_TriggerTimerType			= 2, //!< 2: The Query Performance Counter Timer type, new implementation
+	Fast_TriggerTimerType			= 3  //!< 3: The Fast Timer type
 };
 
 
@@ -105,7 +107,8 @@ private:
 	QHash<QString, int> timerTypeHash;
 	int nThreadIdealCount;
 	QThread _thread;
-	QTimer ThreadActivationTrigger;
+	QTimer ThreadActivationTriggerQTimer;
+	FastThreadedTriggerTimer *fastExperimentThreadedTimer;
 	ExperimentTimer eTimer;
 	QTimer qtTimer;
 	bool bDoStopTimer;

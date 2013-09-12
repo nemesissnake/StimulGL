@@ -1,5 +1,5 @@
 //ExperimentManagerplugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2013  Sven Gijsen and Michael Luehrs
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -33,6 +33,9 @@ class ExperimentTimer : public QObject
 {
 	Q_OBJECT
 
+signals:
+	void triggeredTimerLoopInvoked();
+
 public:
 	ExperimentTimer(QObject *parent = NULL);
 	ExperimentTimer(const ExperimentTimer& other ){Q_UNUSED(other);};//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro
@@ -53,6 +56,9 @@ public slots:
 	static bool SleepMSecAccurate(double mSecs);
 	static bool SleepMSecAccurate2(double mSecs);
 
+	void startTriggeredTimerLoop(double nIntervalTimeMSecs);
+	void stopTriggeredTimerLoop();
+
 private:
 	QScriptEngine* currentScriptEngine;
 
@@ -67,6 +73,8 @@ private:
 	timeval startCount;                         
 	timeval endCount;                           
 #endif
+
+	bool terminateTriggeredTimerLoop;
 	
 };
 
