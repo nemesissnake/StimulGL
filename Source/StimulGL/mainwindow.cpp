@@ -1136,6 +1136,7 @@ void MainWindow::createDefaultMenus()
 	editMenu->addSeparator();
 
 	copyDebuggerAction = new QAction(QObject::tr("Copy Selected Text"), 0);
+	copyDebuggerAction = new QAction(QObject::tr("Copy Selected Text"), 0);
 	//copyDebuggerAction->setShortcut(QKeySequence(""));
 	copyDebuggerAction->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
 	connect(copyDebuggerAction, SIGNAL(triggered()), outputWindowList, SLOT(copy()));
@@ -1374,6 +1375,7 @@ void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined
 {
 	if(bMainWindowIsInitialized)
 		outputWindowList->append(text2Write);
+		//outputWindowList->addItem(text2Write);
 }
 
 /*! \brief Sets the auto scrolling behavior of the Output Log Window.
@@ -1498,6 +1500,7 @@ void MainWindow::createDockWindows()
 	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);	
 	outputWindowList = new QTextEdit(debugLogDock);
 	outputWindowList->setReadOnly(true);
+	//outputWindowList->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	//QString tmpColor = QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	//outputWindowList->setStyleSheet("* { background-color:rgb(" + tmpColor + "); padding: 10px ; color:rgb(136,0,21)}");
 	debugLogDock->setWidget(outputWindowList);
