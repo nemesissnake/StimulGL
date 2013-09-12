@@ -85,3 +85,4 @@ Install/OgreMain_d.dll_
 Install/RenderSystem_GL_d.dll_
 Install/tmp/*
 Install/examples/StimulGL Experiments Repo.lnk
+source/plugins/*/*.vcxproj.user
