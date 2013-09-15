@@ -31,22 +31,16 @@
 <div id="toc_Area">
 <ul id="toc"></ul>
 <h2>Introduction</h2>
-<p>With the Experiment Manager Plug-in it is possible to present different kind of stimuli. It can make use of an Experiment file (*.exml) that defines all the needed stimuli configuration and setup needed for the experiment; see the EXML-File definition. In the StimulGL/scripts folder you may find a script file called “ExperimentManager.qs” that shows how an Experiment Manger Plug-in can be used together with an experiment file. There are also some custom example Experiment files located in the StimulGL/Experiments folder which you can use as template.</p>
+<p>The Experiment Manager Plug-in implements a Experiment Engine that you can use to present various kinds of stimuli. It can load  an Experiment file (*.exml) that defines the configuaration  for the experiment; see the EXML-File definition. The Experiment Manager can be created and used  by a script or can be used directly by executing an Experiment file by  StimulGL.</p>
 <h3>Directories</h3>
-<p>The Experiment manager can make use of different directories inside the main root StimulGL directory, these are:</p>
+<p>The Experiment manager uses the following directories inside the main root StimulGL directory:</p>
 <p><strong>/ouputs</strong><br />
-  this directory is used for writing/storing experiment log files.</p>
-<p><strong>/outputs/RetinoWidget</strong><br />
-  this directory is used for writing/storing experiment stimuli output files.</p>
-<p><strong>/experiments</strong><br />
-  this directory is contains example experiment files (*.exml).</p>
-<p><strong>/scripts</strong><br />
-  this directory contains the Experiment Manager script example files.</p>
+  this directory is used for storing files created by the Experiment Manager.</p>
 <h2>EXML-File definition</h2>
-<p>The experiment file is an XML type of file which is used by the Experiment Manger to configure the stimuli it’s presents. You can manually edit this document in StimulGL or another text/code editor. The first lines consist out of a file header:</p>
+<p>The experiment file is an <a href="http://en.wikipedia.org/wiki/XML"  target="_blank">XML file type</a> that can be loaded by the Experiment Manger for its configuaration. You can manually edit this document in StimulGL or another text/code editor. The first lines consist out of a file header:</p>
 <table class="codeframe"><tr><td>
 <pre class="prettyprint">
-&lt;?xml version='1.0' encoding='UTF-8'?&gt;<br />&lt;!DOCTYPE EXML&gt;<br />&lt;!-- <br />This is a comment example<br />Place you own text here...<br />--&gt;<br />&lt;EXML version=&quot;2.0.0.1&quot;&gt;
+&lt;?xml version='1.0' encoding='UTF-8'?&gt;<br />&lt;!DOCTYPE EXML&gt;<br />&lt;!-- <br />This is a comment example<br />Place you own text here...<br />--&gt;<br />&lt;EXML version=&quot;2.0.0.2&quot;&gt;
 </pre>
 </td></tr></table>
 <p>The header holds the XML and EXML version, there’s no reason for a user to change this manually. You may also find text between the &lt;!-- and --&gt; tag, these are used for comments and the text section between these tags is not parsed by the Experiment Manager.</p>
@@ -56,7 +50,7 @@
 &lt;defines&gt;<br />    &lt;experiment ID=&quot;0&quot;&gt;<br />        &lt;name&gt;Experiment name&lt;/name&gt;<br />        &lt;debugmode&gt;false&lt;/debugmode&gt;<br />    &lt;/experiment&gt;<br />&lt;/defines&gt;
 </pre>
 </td></tr></table>
-<p>The &lt;defines&gt; section has an &lt;experiment&gt; section where the name of the experiment can be defined. Some tags include an ID=&quot;&lt;number&gt;&quot; attribute, this unique ID is automatically generated and used internally by StimulGL and therefore you should not change this. The &lt;debugmode&gt; section defines whether the experiment should be executed in debugmode or not. This debugmode can be helpful during the setup and debugging of the experiment because it outputs some extra information regarding the experiment. Because it can slow down the experiment speed you should never enable it when you run the experiment for gathering information.</p>
+<p>The &lt;defines&gt; section has an &lt;experiment&gt; section where the name of the experiment can be defined. Some tags include an ID=&quot;&lt;number&gt;&quot; attribute, this unique ID is automatically generated and used internally by StimulGL and therefore you should not change this. The &lt;debugmode&gt; section defines whether the experiment should be executed in debugmode or not. This debugmode can be helpful during the setup and debugging of the experiment because it outputs some extra information regarding the experiment. Because it can slow down the experiment speed you should disable it when you need to be sure it runs smoothly.</p>
 <table class="codeframe"><tr>
   <td>
 <pre class="prettyprint">
@@ -103,8 +97,7 @@
 &lt;/connections&gt;
 </pre>
 </td></tr></table>
-<p>&nbsp;</p>
-<p>Inside the &lt;connections&gt; section the declared objects can be connected to each other (internally StimulGL is using the Qt signal/slot mechanism for establishing the connections, see <a href="http://qt-project.org/doc/qt-4.8/signalsandslots.html" target="_blank">http://qt-project.org/doc/qt-4.8/signalsandslots.html</a>). Signals and Slots can be connected to each other, the Signal or Slot (define this first by using the &lt;type&gt; section) signature &lt;signature&gt; can also be defined here.</p>
+<p>Inside the &lt;connections&gt; section the declared objects can be connected to each other (internally StimulGL is using the Qt signal/slot mechanism for establishing the connections, see <a href="http://qt-project.org/doc/qt-5.1/qtcore/signalsandslots.html" target="_blank">http://qt-project.org/doc/qt-5.1/qtcore/signalsandslots.html</a>). Signals and Slots can be connected to each other, the Signal or Slot (define this first by using the &lt;type&gt; section) signature &lt;signature&gt; can also be defined here.</p>
 <table class="codeframe"><tr>
   <td>
 <pre class="prettyprint">
@@ -173,7 +166,7 @@
   <li>MovingBar</li>
   <li>MovingDots</li>
 </ul>
-<p>To make use of one or more of these stimuli types you first have to declare (&lt;declarations&gt; section) an &lt;class&gt;RetinoMap_glwidget&lt;/class&gt; derived object. Connect (&lt;connections&gt; section) a Trigger object to its incrementExternalTrigger() slot and make use of it inside the &lt;actions&gt;, &lt;blocks&gt; section, see example files! Each stimuli type can be configured with specific or universal parameters names (can be used for all the types). All parameter values keep their last value when switching to another block trial, so only changes need to be defined.</p>
+<p>To make use of one or more of these stimuli types you first have to declare (&lt;declarations&gt; section) an &lt;class&gt;RetinotopyMapper&lt;/class&gt; derived object. Connect (&lt;connections&gt; section) a Trigger object to its incrementExternalTrigger() slot and make use of it inside the &lt;actions&gt;, &lt;blocks&gt; section, see example files! Each stimuli type can be configured with specific or universal parameters names (can be used for all the types). All parameter values keep their last value when switching to another block trial, so only changes need to be defined.</p>
 <h3>Universal parameters</h3>
 <table cellpadding="0" cellspacing="0" class="paramtable">
   <tbody>
@@ -320,8 +313,8 @@
     </tr>
     <tr>
       <td><p>OutputFrameFormat</p></td>
-      <td><p>String (&ldquo;PNG&rdquo; or &ldquo;DAT&rdquo;) (default = &ldquo;DAT&rdquo;)</p></td>
-      <td><p>If the OutputTriggerFrame parameter is enabled then this value specifies the output format (and extension). &ldquo;PNG&rdquo; creates a standard (*.png) file format containing the visible stimuli area. See chapter Custom graphical DAT format for an explanation about the DAT format.</p></td>
+      <td><p>String (&ldquo;PNG&rdquo;, &ldquo;DAT&rdquo; or &ldquo;CDAT&rdquo;) (default = &ldquo;DAT&rdquo;)</p></td>
+      <td><p>If the OutputTriggerFrame parameter is enabled then this value specifies the output format (and extension). &ldquo;PNG&rdquo; creates a standard (*.png) file format containing the visible stimuli area. See chapter Custom graphical DAT and CDAT format for an explanation about the DAT and CDAT format.</p></td>
     </tr>
     <tr>
       <td><p>OutputFrameType</p></td>
@@ -343,6 +336,16 @@
       <td><p>Integer value (&gt;=0) (default = 0)</p></td>
       <td><p>This parameter defines how many Trigger Steps of a full cycle should be Empty (The Wedge is then invisible!). These Empty trigger steps are randomly chosen. The randomization keeps the history of empty trigger steps in memory within a block trial.</p></td>
     </tr>
+    <tr>
+      <td><p>RandomizeTriggerStepsArray</p></td>
+      <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+      <td><p>This parameter is only taken into account if the 'RandomizeTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
+    </tr>
+    <tr>
+      <td><p>EmptyTriggerStepsArray</p></td>
+      <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+      <td><p>This parameter is only taken into account if the 'EmptyTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
+      </tr>
   </tbody>
 </table>
 <p>&nbsp;</p>
@@ -558,8 +561,8 @@ rings are also equally divided over the wedge (B).</p>
     </tr>
     <tr>
       <td><p>OutputFrameFormat</p></td>
-      <td><p>String (&ldquo;PNG&rdquo; or &ldquo;DAT&rdquo;) (default = &ldquo;DAT&rdquo;)</p></td>
-      <td><p>If the OutputTriggerFrame parameter is enabled then this value specifies the output format (and extension). &ldquo;PNG&rdquo; creates a standard (*.png) file format containing the visible stimuli area. See chapter Custom graphical DAT format for an explanation about the DAT format</p></td>
+      <td><p>String (&ldquo;PNG&rdquo;, &ldquo;DAT&rdquo; or &ldquo;CDAT&rdquo;) (default = &ldquo;DAT&rdquo;)</p></td>
+      <td><p>If the OutputTriggerFrame parameter is enabled then this value specifies the output format (and extension). &ldquo;PNG&rdquo; creates a standard (*.png) file format containing the visible stimuli area. See chapter Custom graphical DAT and CDAT format for an explanation about the DAT and CDAT format.</p></td>
     </tr>
     <tr>
       <td><p>OutputFrameType</p></td>
@@ -580,6 +583,16 @@ rings are also equally divided over the wedge (B).</p>
       <td><p>EmptyTriggerSteps</p></td>
       <td><p>Integer value (&gt;=0) (default = 0)</p></td>
       <td><p>This parameter defines how many Trigger Steps of a full cycle should be Empty (The Ring is then invisible!). These Empty trigger steps are randomly chosen. The randomization keeps the history of empty trigger steps in memory within a block trial</p></td>
+    </tr>
+    <tr>
+      <td><p>RandomizeTriggerStepsArray</p></td>
+      <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+      <td><p>This parameter is only taken into account if the 'RandomizeTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
+    </tr>
+    <tr>
+      <td><p>EmptyTriggerStepsArray</p></td>
+      <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+      <td><p>This parameter is only taken into account if the 'EmptyTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
     </tr>
   </tbody>
 </table>
@@ -786,8 +799,8 @@ the bar width (in the direction of the fixation point). The bar angle remains th
   </tr>
   <tr>
     <td><p>OutputFrameFormat</p></td>
-    <td><p>String (&ldquo;PNG&rdquo; or &ldquo;DAT&rdquo;) (default = &ldquo;DAT&rdquo;)</p></td>
-    <td><p>If the OutputTriggerFrame parameter is enabled then this value specifies the output format (and extension). &ldquo;PNG&rdquo; creates a standard (*.png) file format containing the visible stimuli area. See chapter Custom graphical DAT format for an explanation about the DAT format</p></td>
+    <td><p>String (&ldquo;PNG&rdquo;, &ldquo;DAT&rdquo; or &ldquo;CDAT&rdquo;) (default = &ldquo;DAT&rdquo;)</p></td>
+    <td><p>If the OutputTriggerFrame parameter is enabled then this value specifies the output format (and extension). &ldquo;PNG&rdquo; creates a standard (*.png) file format containing the visible stimuli area. See chapter Custom graphical DAT and CDAT format for an explanation about the DAT and CDAT format.</p></td>
   </tr>
   <tr>
     <td><p>OutputFrameType</p></td>
@@ -808,6 +821,16 @@ the bar width (in the direction of the fixation point). The bar angle remains th
     <td><p>EmptyTriggerSteps</p></td>
     <td><p>Integer value (&gt;=0) (default = 0)</p></td>
     <td><p>This parameter defines how many Trigger steps of a full cycle should be Empty (The Bar is then invisible!). These Empty trigger steps are randomly chosen. The randomization keeps the history of empty trigger steps in memory within a block trial</p></td>
+  </tr>
+  <tr>
+    <td><p>RandomizeTriggerStepsArray</p></td>
+    <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+    <td><p>This parameter is only taken into account if the 'RandomizeTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
+  </tr>
+  <tr>
+    <td><p>EmptyTriggerStepsArray</p></td>
+    <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+    <td><p>This parameter is only taken into account if the 'EmptyTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
   </tr>
   <br />
 </table>
@@ -1044,7 +1067,8 @@ the screen a fixation point (red) is shown. </p>
 <h2>Experiment Manager Public Signal and Slots</h2>
 <p>The Experiment Manager exposes several <strong>public Signals and Slots</strong> that can be used from within c++ code, a script context or experiment file. These are explained in the <a href="../../Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html">Experiment Manager script class reference</a>.</p>
 <h2>Experiment Output File</h2>
-<h3>Custom graphical DAT format</h3>
+<h3>Custom graphical DAT and CDAT format</h3>
+<h4>DAT format</h4>
 <p>The custom graphical DAT format is created for users who want an easily accessible file format. The file first always starts with a unique header (32 bits), containing the value (0xCAFE1234).</p>
 <table class="codeframe"><tr><td><pre class="prettyprint">
 #define ARGB_FORMAT_HEADER 0xCAFE1234
@@ -1202,13 +1226,41 @@ int _tmain(int argc, _TCHAR* argv[])
         return 0;
 }</pre></td></tr></table>
 <p>You can also make use of the ImageProcessor script object to perform some simple (*.dat) file operations, see chapter ImageProcessor.</p>
+<h4>CDAT format</h4>
+<p>The CDAT format is like a sequential container for the DAT file(s). The file first always starts with a unique header (32 bits), containing the value (0xCAFE5678).</p>
+<table class="codeframe">
+  <tr>
+    <td><pre class="prettyprint">
+#define ARGB_FORMAT_HEADER 0xCAFE5678
+    </pre></td>
+  </tr>
+</table>
+<p><br />
+  After the header the next 8 bytes are reserved for the number of Images the files contains.</p>
+<table class="codeframe">
+  <tr>
+    <td><pre class="prettyprint">
+quint32 itemCount;
+</pre></td>
+  </tr>
+</table>
+<p>After the header the next 8 bytes are reserved for the Image(s) resolution (width (=32 bits) and height (=32 bits)).</p>
+<table class="codeframe">
+  <tr>
+    <td><pre class="prettyprint">
+quint32 width = image.width();
+quint32 height = image.height();</pre></td>
+  </tr>
+</table>
+<p>Hereafter the actual Image(s) data can be found per pixel as a Qt’s QRgb type (image after image).</p>
 <h2>Additional available script classes</h2>
 <p>There are some additional classes defined inside the Experiment Manager which can be used to derive a new object from trough the StimulGL script environment, these are:</p>
-<h3>ImageProcessor&lt;todo&gt;</h3>
-<p>&nbsp;</p>
-<h3>PRTFormatManager&lt;todo&gt;</h3>
-<p>&nbsp;</p>
-<h3>TriggerTimer&lt;todo&gt;</h3>
+<h3>ImageProcessor</h3>
+<h3>PRTFormatManager</h3>
+<h3>TriggerTimer and ExperimentTimer</h3>
+<h3>ExperimentStructure</h3>
+<h3>QML2Viewer</h3>
+<h3>RandomGenerator</h3>
 <p>&nbsp;</p>
 
 </div>
