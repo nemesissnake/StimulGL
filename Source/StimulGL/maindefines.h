@@ -30,17 +30,17 @@
 
 //Also search and change "Q_CLASSINFO("ScriptAPIClassName"..!!!
 
-#define MAIN_PROGRAM_COMPANY_NAME	"MBIC, Maastricht Brain Imaging Center"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_LEGAL_COPYRIGHT	"Copyright (C) 2013"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_FILE_VERSION_STRING_MAJOR	2   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_FILE_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_FILE_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_FILE_VERSION_STRING_BUILD	3   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_BUILD	1   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_INTERNAL_NAME	"StimulGL"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_COMPANY_NAME	"MBIC, Maastricht Brain Imaging Center"   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_LEGAL_COPYRIGHT	"Copyright (C) 2013"   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_FILE_VERSION_STRING_MAJOR	2   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_FILE_VERSION_STRING_MINOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_FILE_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_FILE_VERSION_STRING_BUILD	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_PRODUCT_VERSION_STRING_BUILD	1   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_INTERNAL_NAME	"StimulGL"   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
 #define MAIN_PROGRAM_FULL_NAME							MAIN_PROGRAM_INTERNAL_NAME "(v" MAIN_PROGRAM_FILE_VERSION_STRING ")"
 #define MAIN_PROGRAM_PRODUCT_NAME                       MAIN_PROGRAM_INTERNAL_NAME
 #define MAIN_PROGRAM_AUTHOR_NAME						"Sven Gijsen"
@@ -61,8 +61,8 @@
 #define MAIN_PROGRAM_UNTITLED_NAME						"Untitled"
 #define UNKNOWNENUMSTRING								"Unknown_Enumeration Value"
 #define MAIN_PROGRAM_STANDARD_DATETIME_FORMAT			"yyyyMMddHHmmsszzz"
-#define MAIN_PROGRAM_DEVICE_INTERFACE	"StimulGL.Plugins.DeviceInterface/1.2"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
-#define MAIN_PROGRAM_EXTENSION_INTERFACE	"StimulGL.Plugins.ExtensionInterface/1.2"   //Please do not edit this line manually, see BinaryVersioning.qs (1211595614).
+#define MAIN_PROGRAM_DEVICE_INTERFACE	"StimulGL.Plugins.DeviceInterface/1.2"   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define MAIN_PROGRAM_EXTENSION_INTERFACE	"StimulGL.Plugins.ExtensionInterface/1.2"   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
 
 #define REGISTRY_DONOTLOADSCRIPTEXTENSION				"General/DoNotLoadScriptExtension"
 #define REGISTRY_ALLOWMULTIPLEINHERITANCE				"General/AllowMultipleInheritance"

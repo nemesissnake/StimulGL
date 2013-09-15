@@ -127,26 +127,33 @@ function CleanupScript()
 	StimulGL.cleanupScript();
 }
 
-var sSourcePath = "D:/Projects/StimulGL/Source/";
+var sSourcePath = "E:/Projects/StimulGL/Source/";
 var sDestPath = sSourcePath;
 //var sDestPath = "D:/Projects/StimulGL/Publish/";
 var sSourceList = new CreateArray();
 var sDestList = new CreateArray();
 sSourceList.push(sSourcePath + "StimulGL/maindefines.h");//"E:/Projects/StimulGL/Source/StimulGL/maindefines.h");
-sDestList.push(sDestPath + "StimulGL/maindefines.h");
+sDestList.push(sDestPath + "StimulGL/maindefines.h");//0
 sSourceList.push(sSourcePath + "Plugins/ExperimentManager/defines.h");
-sDestList.push(sDestPath + "Plugins/ExperimentManager/defines.h");
+sDestList.push(sDestPath + "Plugins/ExperimentManager/defines.h");//1
 sSourceList.push(sSourcePath + "Plugins/KeyBoardDevice/defines.h");
-sDestList.push(sDestPath + "Plugins/KeyBoardDevice/defines.h");
+sDestList.push(sDestPath + "Plugins/KeyBoardDevice/defines.h");//2
 sSourceList.push(sSourcePath + "Plugins/ParallelPortDevice/defines.h");
-sDestList.push(sDestPath + "Plugins/ParallelPortDevice/defines.h");
+sDestList.push(sDestPath + "Plugins/ParallelPortDevice/defines.h");//3
 sSourceList.push(sSourcePath + "Plugins/SerialPortDevice/defines.h");
-sDestList.push(sDestPath + "Plugins/SerialPortDevice/defines.h");
+sDestList.push(sDestPath + "Plugins/SerialPortDevice/defines.h");//4
 sSourceList.push(sSourcePath + "Plugins/USBHIDDevice/defines.h");
-sDestList.push(sDestPath + "Plugins/USBHIDDevice/defines.h");
+sDestList.push(sDestPath + "Plugins/USBHIDDevice/defines.h");//5
 sSourceList.push(sSourcePath + "QmlExtensions/Plugins/DefaultPlugin/defines.h");
-sDestList.push(sDestPath + "QmlExtensions/Plugins/DefaultPlugin/defines.h");
-
+sDestList.push(sDestPath + "QmlExtensions/Plugins/DefaultPlugin/defines.h");//6
+sSourceList.push(sSourcePath + "Plugins/FirebirdClient/defines.h");
+sDestList.push(sDestPath + "Plugins/FirebirdClient/defines.h");//7
+sSourceList.push(sSourcePath + "Plugins/PiezoStimDevice/defines.h");
+sDestList.push(sDestPath + "Plugins/PiezoStimDevice/defines.h");//8
+sSourceList.push(sSourcePath + "Plugins/TBVExchanger/defines.h");
+sDestList.push(sDestPath + "Plugins/TBVExchanger/defines.h");//9
+sSourceList.push(sSourcePath + "Plugins/TCPNetworkServer/defines.h");
+sDestList.push(sDestPath + "Plugins/TCPNetworkServer/defines.h");//10
 
 //StimulGL.openFiles("",sSourceList);
 
@@ -486,7 +493,6 @@ if(bDoProcess)
 			sComponentName = "StimulGL_QMLExtensions";			
 			StimulGL_LatestCompReleaseString_Index = StimulGLInfo.GetLatestComponentReleaseByName(sComponentName);
 			sComponentIndex = StimulGLInfo.GetLatestComponentIndexByName(StimulGL_LatestCompReleaseString_Index,sComponentName);
-			
 			tmpCurrentReleaseString = StimulGLInfo.GetComponentVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
 			tmpCurrentReleaseString_Array = tmpCurrentReleaseString.split(".");
 			
@@ -500,17 +506,195 @@ if(bDoProcess)
 			sComponentName = "MediaPlayer";			
 			StimulGL_LatestCompReleaseString_Index = StimulGLInfo.GetLatestComponentReleaseByName(sComponentName);
 			sComponentIndex = StimulGLInfo.GetLatestComponentIndexByName(StimulGL_LatestCompReleaseString_Index,sComponentName);
-			
 			tmpCurrentReleaseString = StimulGLInfo.GetComponentVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
-			
+
 			changeSet[nFileCounter][0][nChangeCounter] = "#define PHONONPLAYER_VERSION_STRING_REVISION";
 			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString + sComment;
+						
 			nChangeCounter++;
 			bDoProcess = true;	
 		}
-		else
+		else if(nFileCounter == 7)//"Plugins/FirebirdClient/defines.h"
 		{
-		
+			sComponentName = "FireBirdClientPlugin";			
+			StimulGL_LatestCompReleaseString_Index = StimulGLInfo.GetLatestComponentReleaseByName(sComponentName);
+			
+			Log(StimulGL_LatestCompReleaseString_Index);
+			
+			sComponentIndex = StimulGLInfo.GetLatestComponentIndexByName(StimulGL_LatestCompReleaseString_Index,sComponentName);
+			
+			tmpCurrentReleaseString = StimulGLInfo.GetComponentVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpCurrentReleaseString_Array = tmpCurrentReleaseString.split(".");
+			tmpProductVersionString = StimulGLInfo.GetComponentProductVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpProductVersionString_Array = tmpProductVersionString.split(".");
+			tmpMinimalXMLString = StimulGLInfo.GetComponentMinimalEXMLVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpMinimalXMLString_Array = tmpMinimalXMLString.split(".");			
+					
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_MAJOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[0] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_MINOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[1] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_REVISION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[2] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_BUILD";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[3] + sComment;
+			nChangeCounter++;			
+			
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_MAJOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[0] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_MINOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[1] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_REVISION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[2] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_BUILD";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[3] + sComment;
+			nChangeCounter++;
+
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + quotedString(StimulGLInfo.GetReleaseByIndex(StimulGL_LatestCompReleaseString_Index)) + sComment;
+			nChangeCounter++;	
+			bDoProcess = true;		
+		}
+		else if(nFileCounter == 8)//"Plugins/PiezoStimDevice/defines.h"
+		{
+			sComponentName = "PiezoStimDevicePlugin";			
+			StimulGL_LatestCompReleaseString_Index = StimulGLInfo.GetLatestComponentReleaseByName(sComponentName);
+			sComponentIndex = StimulGLInfo.GetLatestComponentIndexByName(StimulGL_LatestCompReleaseString_Index,sComponentName);
+			
+			tmpCurrentReleaseString = StimulGLInfo.GetComponentVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpCurrentReleaseString_Array = tmpCurrentReleaseString.split(".");
+			tmpProductVersionString = StimulGLInfo.GetComponentProductVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpProductVersionString_Array = tmpProductVersionString.split(".");
+			tmpMinimalXMLString = StimulGLInfo.GetComponentMinimalEXMLVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpMinimalXMLString_Array = tmpMinimalXMLString.split(".");			
+					
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_MAJOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[0] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_MINOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[1] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_REVISION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[2] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_BUILD";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[3] + sComment;
+			nChangeCounter++;			
+			
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_MAJOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[0] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_MINOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[1] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_REVISION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[2] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_BUILD";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[3] + sComment;
+			nChangeCounter++;
+
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + quotedString(StimulGLInfo.GetReleaseByIndex(StimulGL_LatestCompReleaseString_Index)) + sComment;
+			nChangeCounter++;	
+			bDoProcess = true;	
+		}		
+		else if(nFileCounter == 9)//"Plugins/TBVExchanger/defines.h"
+		{
+			sComponentName = "TBVExchangerPlugin";			
+			StimulGL_LatestCompReleaseString_Index = StimulGLInfo.GetLatestComponentReleaseByName(sComponentName);
+			sComponentIndex = StimulGLInfo.GetLatestComponentIndexByName(StimulGL_LatestCompReleaseString_Index,sComponentName);
+			
+			tmpCurrentReleaseString = StimulGLInfo.GetComponentVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpCurrentReleaseString_Array = tmpCurrentReleaseString.split(".");
+			tmpProductVersionString = StimulGLInfo.GetComponentProductVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpProductVersionString_Array = tmpProductVersionString.split(".");
+			tmpMinimalXMLString = StimulGLInfo.GetComponentMinimalEXMLVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpMinimalXMLString_Array = tmpMinimalXMLString.split(".");			
+					
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_MAJOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[0] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_MINOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[1] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_REVISION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[2] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_BUILD";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[3] + sComment;
+			nChangeCounter++;			
+			
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_MAJOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[0] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_MINOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[1] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_REVISION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[2] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_BUILD";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[3] + sComment;
+			nChangeCounter++;
+
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + quotedString(StimulGLInfo.GetReleaseByIndex(StimulGL_LatestCompReleaseString_Index)) + sComment;
+			nChangeCounter++;	
+			bDoProcess = true;	
+		}		
+		else if(nFileCounter == 10)//"Plugins/TCPNetworkServer/defines.h"
+		{
+			sComponentName = "TCPNetworkServerPlugin";			
+			StimulGL_LatestCompReleaseString_Index = StimulGLInfo.GetLatestComponentReleaseByName(sComponentName);
+			sComponentIndex = StimulGLInfo.GetLatestComponentIndexByName(StimulGL_LatestCompReleaseString_Index,sComponentName);
+			
+			tmpCurrentReleaseString = StimulGLInfo.GetComponentVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpCurrentReleaseString_Array = tmpCurrentReleaseString.split(".");
+			tmpProductVersionString = StimulGLInfo.GetComponentProductVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpProductVersionString_Array = tmpProductVersionString.split(".");
+			tmpMinimalXMLString = StimulGLInfo.GetComponentMinimalEXMLVersionByIndexes(StimulGL_LatestCompReleaseString_Index,sComponentIndex);
+			tmpMinimalXMLString_Array = tmpMinimalXMLString.split(".");			
+					
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_MAJOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[0] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_MINOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[1] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_REVISION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[2] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_FILE_VERSION_STRING_BUILD";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpCurrentReleaseString_Array[3] + sComment;
+			nChangeCounter++;			
+			
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_MAJOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[0] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_MINOR";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[1] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_REVISION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[2] + sComment;
+			nChangeCounter++;
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_PRODUCT_VERSION_STRING_BUILD";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + tmpProductVersionString_Array[3] + sComment;
+			nChangeCounter++;
+
+			changeSet[nFileCounter][0][nChangeCounter] = "#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION";
+			changeSet[nFileCounter][1][nChangeCounter] = changeSet[nFileCounter][0][nChangeCounter] + "\t" + quotedString(StimulGLInfo.GetReleaseByIndex(StimulGL_LatestCompReleaseString_Index)) + sComment;
+			nChangeCounter++;	
+			bDoProcess = true;	
+		}		
+		else
+		{		
 			bDoProcess = false;			
 		}
 		

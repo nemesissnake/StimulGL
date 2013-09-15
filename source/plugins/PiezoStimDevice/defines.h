@@ -22,14 +22,14 @@
 #include "./../../StimulGL/maindefines.h"
 
 //Only edit the below!
-#define PLUGIN_FILE_VERSION_STRING_MAJOR			1
-#define PLUGIN_FILE_VERSION_STRING_MINOR			0
-#define PLUGIN_FILE_VERSION_STRING_REVISION			0
-#define PLUGIN_FILE_VERSION_STRING_BUILD			1
-#define PLUGIN_PRODUCT_VERSION_STRING_MAJOR			1
-#define PLUGIN_PRODUCT_VERSION_STRING_MINOR			0
-#define PLUGIN_PRODUCT_VERSION_STRING_REVISION		0
-#define PLUGIN_PRODUCT_VERSION_STRING_BUILD			1
+#define PLUGIN_FILE_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define PLUGIN_FILE_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define PLUGIN_FILE_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define PLUGIN_FILE_VERSION_STRING_BUILD	1   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define PLUGIN_PRODUCT_VERSION_STRING_MAJOR	1   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define PLUGIN_PRODUCT_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define PLUGIN_PRODUCT_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
+#define PLUGIN_PRODUCT_VERSION_STRING_BUILD	1   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
 #define PLUGIN_LEGAL_COPYRIGHT						"Copyright (C) 2013"
 #define PLUGIN_AUTHOR_NAME							"Sven Gijsen"
 #define PLUGIN_AUTHOR_EMAIL							"sven.gijsen@maastrichtuniversity.nl"
@@ -42,7 +42,7 @@
 #define PLUGIN_FULL_NAME							PLUGIN_INTERNAL_NAME "(v" PLUGIN_FILE_VERSION_STRING ")"
 #define PLUGIN_FILE_DESCRIPTION						"Plugin for controlling the QuaeroSys Piezo Stimulator."
 #define PLUGIN_INFORMATION							PLUGIN_INTERNAL_NAME " Plugin(v" PLUGIN_FILE_VERSION_STRING ") by " PLUGIN_AUTHOR_NAME
-#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION			MAIN_PROGRAM_FILE_VERSION_STRING//Make sure to override the GetMinimalMainProgramVersion() function with this defined value when needed!
+#define PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION	"2.1.0.0"   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
 //Only edit until here!
 
 
