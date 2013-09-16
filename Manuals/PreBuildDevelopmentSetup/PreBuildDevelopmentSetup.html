@@ -30,115 +30,19 @@
 <ul id="toc"></ul>
 <h2>Introduction</h2>
 <p>For developers who wish to build their own StimulGL program or one of its default Plug-ins they can clone a git repository from <a href="http://github.com/svengijsen/StimulGL" target="_blank">https://github.com/svengijsen/StimulGL</a>. This repository can be build/used/distributed under the terms of the GNU General Public License (GPL version 3), see <a href="http://www.gnu.org/licenses/gpl.html" target="_blank">http://www.gnu.org/licenses/gpl.html</a></p>
+<h2>Build Tools</h2>
+<p> You can build your own version of StimulGL using Microsoft Visual Studio 2012. Both solution/project files can be found inside the repository. Soon StimulGL can be build  for various platforms (Windows/Linux/Mac) with 32bit or 64bit support, at this moment only Windows 32 and 64-bit platforms are supported. StimulGL development will always try to stay closely in sync with the latest version of the free libraries it makes use of like the <a href="http://qt-project.org/"  target="_blank">Qt library</a>. Only plugins that are build using the same version of the Qt library used for building StimulGL can be used (are compatible) with StimulGL. </p>
+<h3>Development Environment Setup</h3>
+<p>Setting up an Development Environment for building StimulGL can be difficult due to the fact that it uses many  free and/or open source third party libraries. To make the setup and configuration easier for you we created a single custom repository containing all the source code and libraries for building and running StimulGL with <a href="http://www.microsoft.com/visualstudio/eng/products/visual-studio-overview"  target="_blank">Microsoft Visual Studio 2012</a> (with update 3). If you can install a full version of MSVS2012 and wish to setup an Development Environment that let's you build your own custom version of StimulGL or a StimulGL plugin we advice you to contact us at sven dot gijsen at maastrichtuniversity dot nl. Collaboraters who wish to help improving StimulGL or the StimulGL plugins are off course warmly invited!</p>
 <h2>The StimulGL repository</h2>
-<p>The repository contains the following directories structure:  </p>
+<p>The repository contains the following directories structure: </p>
 <p><strong>/Source</strong> directory:<br />
-  Here you can find all the StimulGL source code together with the Project/Solution files. Inside the /Source directory you find a /Plugin and /StimulGL folder. The /Plugin folder contains all the Plugin projects that can be used by the StimulGL main program. The source code for the StimulGL program can be found in the /StimulGL folder.  </p>
+  Here you can find all the StimulGL source code together with the Project/Solution files. Inside the /Source directory you find a /Plugin and /StimulGL folder. The /Plugin folder contains all the Plugin projects that can be used by the StimulGL main program. The source code for the StimulGL program can be found in the /StimulGL folder. </p>
 <p><strong>/Install</strong> directory:<br />
-  This directory contains all the needed files and binaries that you need for a valid installation. Some of them first need to be build by your IDE and some of them are already available in the /Install directory. A post build can copy the build output from the IDE to this folder.  </p>
+  This directory contains all the needed files and binaries that you need for a valid installation. Some of them first need to be build by your IDE and some of them are already available in the /Install directory. A post build command can copy the build output from the IDE to this folder. </p>
 <p><strong>/InstallJammer</strong> directory:
   This directory is the root directory for the InstallJammer project files and generated files. InstallJammer is used for building the various installers for the StimulGL application.</p>
-<h2>Build Tools</h2>
-<p> You can build your own version of StimulGL using Qt Creator or Microsoft Visual Studio 10.0. Both solution/project files can be found inside the repository. StimulGL can be build in the future for various platforms (Windows/Linux/Mac) with 32bit or 64bit support, at this moment only Windows 32 and 64-bit platforms are supported. StimulGL development will always try to stay closely in sync with the latest version of the Qt library. Only plugins that are build using the same version of the Qt library are compatible.  </p>
-<h3>Development Environment Setup</h3>
-<p> The following guide shows how to install and configure a successful installation for VS2010 and Qt5.0.0 that is ready for building your own version of StimulGL.  </p>
-<h4>Win flex-bison</h4>
-<ul>
-  <li>Download and install the latest vesrion of Win flex-bison, see <a href="http://sourceforge.net/projects/winflexbison/" target="_blank">http://sourceforge.net/projects/winflexbison/</a>.</li>
-  <li>Copy the installed file named <em>win_bison.exe</em> to <em>bison.exe</em> in the same directory(the Qt installation expects this..).</li>
-  <li>Add the Win flex-bison directory to the system path variable.</li>
-</ul>
-<h4>Visual Studio 2010 (SP1)</h4>
-<ul>
-  <li> Install Visual Studio 2010 (32+64bit)</li>
-  <li>Install Visual Studio 2010 SP1</li>
-  <li>Install the Microsoft Windows SDK for Windows 7 and .NET Framework 4, make sure to select the Debugging Tools option under the Common Utilities and to select the Debugging Tools option under the Redistributable Packages.
-    see <a href="http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=8279" target="_blank">http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=8279</a></li>
-  <li>Install Visual C++ 2010 SP1 Compiler Update for the Windows SDK 7.1, see <a href="http://www.microsoft.com/en-us/download/details.aspx?id=4422" target="_blank">http://www.microsoft.com/en-us/download/details.aspx?id=4422</a>.</li>
-  <li>Install the DirectX Software Development Kit (June2010), see <a href="http://www.microsoft.com/en-us/download/details.aspx?id=6812">http://www.microsoft.com/en-us/download/details.aspx?id=6812</a>.</li>
-  <li>Install the Windows Software Development Kit (SDK) for Windows 8, see <a href="http://msdn.microsoft.com/en-us/windows/hardware/hh852363.aspx" target="_blank">http://msdn.microsoft.com/en-us/windows/hardware/hh852363.aspx</a>.</li>
-  <li>Multicore building, to speed up building when using nmake, the compiler can be instructed to use all available CPU cores this way:
-    <ul>
-      <li>Set the environment variable CL (specifying Visual Studio compiler options) to /MP.</li>
-    </ul>
-  </li>
-  </ul>
-<h4>Perl Installation</h4>
-<ul>
-  <li>Get and install Perl from: <a href="http://www.activestate.com/activeperl/downloads" target="_blank">http://www.activestate.com/activeperl/downloads</a> [activestate.com].</li>
-</ul>
-<h4>Qt library for Windows</h4>
-<p>Building the win32 Qt library:</p>
- <ul>
-   <li> Download and run the Qt libraries 5.0.0 for Windows (VS 2010) from <a href="http://qt.nokia.com/downloads" target="_blank">http://qt.nokia.com/downloads</a> and install in C:\Qt\5.0.0\win32, remaining installation options may be kept default</li>
- </ul>
- <p>Building the x64 Qt library:</p>
- <ul>
-   <li> Copy/Paste and Rename the folder “C:\Qt\5.0.0\win32” to “C:\Qt\5.0.0\x64”     </li>
-   <li>Rename the file syncqt.bat to syncqt.bat_ in directory C:\Qt\5.0.0\x64\bin     </li>
-   <li>Rename the file syncqt to syncqt_ in directory C:\Qt\5.0.0\x64\bin     </li>
-   <li>Open the VS2010 X64 Win64 Command prompt     
-     <ul>
-       <li>cd C:\Qt\5.0.0\x64         </li>
-       <li>configure -developer-build -opensource -nomake examples -nomake tests -mp -qt-libpng -qt-libjpeg
-         <ul>
-           <li>Read/accept the license.</li>
-         </ul>
-       </li>
-       <li>nmake         </li>
-       <li>nmake install</li>
-      </ul>
-   </li>
-</ul>
- <h4>Qt Creator for Windows</h4>
- <ul>
-   <li> Download and run the Qt Creator 2.4.0 for Windows from <a href="http://qt.nokia.com/downloads" target="_blank">http://qt.nokia.com/downloads</a> and install in C:\Qt\qtcreator-2.4.0</li>
-   <li> Open Qt Creator     
-     <ul>
-       <li>Goto menu Tools->Options->Build&run->Qt Versions->Add</li>
-       <li>Create the target "Qt 5.0.0 (win32)", C:\Qt\5.0.0\win32\bin\qmake.exe</li>
-       <li> Create the target "Qt 5.0.0 (x64)", C:\Qt\5.0.0\x64\bin\qmake.exe</li>
-      </ul>
-   </li>
-   <li> Close and open Qt Creator again         
-     <ul>
-       <li>Open an example *.pro file and set file association (*.pro) to be opened with Qt Creator         </li>
-       <li>Build the (win32) project and verify that it successfully build         </li>
-       <li>Build the (x64) project and verify that it successfully build </li>
-     </ul>
-   </li>
-  </ul>
-<h4>Qt Visual Studio Plugin</h4>
-<ul>
-  <li> Install the Qt Visual Studio Plugin from <a href="http://qt.nokia.com/downloads" target="_blank">http://qt.nokia.com/downloads</a> (does not work with the Visual Studio Express edition!) </li>
-  <li>Open Visual Studio 10.0    
-    <ul>
-      <li>Goto the menu Qt -> Qt Options -> Add Qt versions:        
-        <ul>
-          <li>Version name: <em>Qt500_win32</em>, Path:              <em>C:\Qt\5.0.0\win32\5.0.0\msvc2010</em></li>
-          
-          <li>Version name: <em>Qt500_x64</em>, Path: <em>C:\Qt\5.0.0\x64\5.0.0\msvc2010</em></li>
-        </ul>
-      </li>
-      </ul>
-  </li>
-  </ul>
-<h4>Additional StimulGL Headers and Libraries</h4>
-<ul>
-  <li> Download and extract the <a href="http://github.com/downloads/svengijsen/StimulGL/Qt%204.8.0%20Script%20bindings%20(32+64bit).rar" target="_blank">additional StimulGL files</a></li>
-  <li> Merge from this archive the folder "5.0.0" with "C:\Qt\5.0.0\" (Adds all needed additional headers and libraries)</li>
-</ul>
-<h4>Environment Variabeles</h4>
-<ul>
-  <li>Add the string <em>;C:\Qt\5.0.0\win32\bin;C:\Qt\5.0.0\x64\bin;C:\Qt\5.0.0\win32\lib;C:\Qt\5.0.0\x64\lib</em> to the end of the System PATH environment variable</li>
-</ul>
-<h4>Optional usefull Tools</h4>
-<ul>
-  <li>Download and install the Git Extensions from <a href="http://code.google.com/p/gitextensions/downloads/list" target="_blank">http://code.google.com/p/gitextensions/downloads/list</a></li>
-  <li> Download and install TortoiseGIT from <a href="http://code.google.com/p/tortoisegit/downloads/list" target="_blank">http://code.google.com/p/tortoisegit/downloads/list</a></li>
-  <li>    Get Python from: <a href="http://www.python.org/download/releases/">http://www.python.org/download/releases/</a> <em>[python.org]</em>.</li>
-  <li>    Get Ruby from: <a href="http://www.rubyinstaller.org/">http://www.rubyinstaller.org/</a> <em>[rubyinstaller.org]</em>.</li>
-  </ul>
+<p>&nbsp;</p>
 <p>&nbsp;</p>
 </div>
 
