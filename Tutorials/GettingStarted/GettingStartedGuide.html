@@ -73,7 +73,7 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
 <p><strong>File</strong> - this menu item contains commands for various file operations like opening, saving and printing files.<br />
   <strong>Edit</strong> - this menu contains commands for the editing of files and search and replace functionalities.<br />
   <strong>Window</strong> - this menu contains commands for organizing, selecting and viewing one or more document editing pane(s).<br />
-  <strong>Script</strong> - this menu contains commands for controlling the internal script engine that can execute script (<em>*.qs</em>) files.<br />
+  <strong>Document</strong> - this menu contains commands for controlling the execution of documents like script (<em>*.qs</em>) files.<br />
   <strong>Tools</strong> - this menu contains an option command where you can configure StimulGL settings.<br />
   <strong>Plugins</strong> - this menu is automatically populated with commands that let you open a the User Interface from plugins that are detected and implemented during the startup of the program. Some plugin and statically linked to StimulGL and therefore its UI is always available through this menu.<br />
   <strong>Help</strong> - this menu contains commands for opening the main StimulGL help and for viewing StimulGL build and detected plugin(s) information. </p>
@@ -88,7 +88,7 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
 </ul>
 <p>You can see that the text is automatically highlighted/styled according to the syntax it contains. Text/code can be commented using the single line comment <em>‘//’</em> or the multi-line <em>‘/*’</em> and <em>‘*/’</em> combination. Three variables are declared (using the <em>var</em> statement) and value is assigned to them except for one variable which is calculated out of the other two. The value of this variable is then used in a special function called <em>Log()</em> that can write to the StimulGL output log pane. To clear the output log pane right-click on it and select <em>Clear All Output Item(s)</em>. Some times you might want to copy one or more lines from the output log pane, you can do this by selecting the lines (optionally with holding down the CTRL and/or SHIFT key) you want to copy to the clipboard and then right-click on it and select <em>Copy Selected Output Item(s)</em>.</p>
 <ul>
-  <li>Execute the Qtscript code by the internal StimulGL script engine by using the key<em> ‘F5’</em> or through the <em>Script -&gt; Run Script</em> command.</li>
+  <li>Execute the Qtscript code by the internal StimulGL script engine by using the key<em> ‘F5’</em> or through the <em>Document -&gt; Execute</em> command.</li>
 </ul>
 <p>The Qtscript code of the current selected document pane is then evaluated and executed. If the script is valid then you can see in the output log pane when the script started/stopped evaluation and how many time it took. For each <em>Log()</em> function call there’s also an additional line appended to the log output pane.</p>
 <h4>Functions and includes</h4>
@@ -99,10 +99,10 @@ echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
   <li>View/activate the <em>FunctionsAndIncludes1.qs</em> file you can use the Window menu for this purpose or use the<em> Ctrl+TAB</em> key combination to scroll through the opened documents.</li>
 </ul>
 <p>Notice that the script starts with an Include statement that allows you to embed other script (*.qs) files. In this case a function named <em>testFunction3</em> is defined in the included script file. The <em>string</em> parameter from the <em>Include</em> statement holds the script file to add, this can be a absolute or a relative path, if only a filename is defined than the <em>Include</em>function searches for the filename inside the directory where the current running script file is stored. <br />
-  You can see that a function header doesn’t need to specify the amount and type of parameter(s) it accepts, nor the return value(see <em>testFunction3</em>) of a function. <em>testFunction1</em> shows how you can iterate through the parameters it receives, but maybe you want to define this like <em>testFunction2</em> to make a better code overview. <br />
+  You can see that a function header doesn’t need to specify the amount and type of parameter(s) it accepts, nor the return value (see <em>testFunction3</em>) of a function. <em>testFunction1</em> shows how you can iterate through the parameters it receives, but maybe you want to define this like <em>testFunction2</em> to make a better code overview. <br />
   Before the script ends we should set the defined functions again to null to make sure that the script engine can perform a better garbage collection, this is explained later (see <a href="#dynamic-object-construction-and-garbage-collection">Dynamic Object construction and Garbage Collection</a>).</p>
 <ul>
-  <li>Execute the Qtscript code by the internal StimulGL script engine by using the key <em>‘F5’</em> or through the <em>Script -&gt; Run Script</em> command.</li>
+  <li>Execute the Qtscript code by the internal StimulGL script engine by using the key <em>‘F5’</em> or through the<em> Document -&gt; Execute </em>command.</li>
 </ul>
 <h4>Additional StimulGL Functions</h4>
 <p>In a previous exercise we already made use of the additional <em>Log()</em> function to write text to the log output pane which can be very useful for debugging purpose. Aside from this <em>Log()</em> function there are more functions made available to the Script Engine of which you can make use of. </p>
@@ -183,6 +183,92 @@ StimulGL has totally no knowledge of the plugins implementation and does not def
   <li>Repeat pressing the <em>'4'</em> keyboard  key until the script finishes.</li>
 </ul>
 <p>The script first creates a new object from a class defined by the plugin. This object is then further used to capture key presses. If you take a look to the log output pane then you’ll see a log entry for each key you just pressed. Each key has a Key Code (a unique number for each key) which is also shown in the entry. After pressing 4 keys the script automatically stops capturing keys and finalizes. </p>
+<h4>Command-line switches</h4>
+<p>StimulGL can be started from the command prompt with special defined switches accompanied with one or more parameter(s). By using these command-line switches it is possible to start StimulGL with one or more pre-defined document(s) and/or to enable/disable certain program features.</p>
+<ul>
+  <li>Start StimulGL.</li>
+  <li>Open the file <em>StartStimulGL.bat</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\BasicScripting\</em>.</li>
+  <li>Examine the code, make sure that it makes sense to you.</li>
+  <li>Close StimulGL and execute the <em>StartStimulGL.bat</em> file.</li>
+  </ul>
+<table width="80%" border="1" align="center">
+  <tr>
+    <th width="13%" align="center" scope="col">SWITCH</th>
+    <th width="54%" scope="col">PARAMETER</th>
+    <th width="33%" scope="col">DESCRIPTION</th>
+  </tr>
+  <tr>
+    <td align="center">-f</td>
+    <td>Path to document(s) separated with a ';' character</td>
+    <td>Allows you to let StimulGL automatically open one or more document(s).</td>
+  </tr>
+  <tr>
+    <td align="center">-v</td>
+    <td>Verbose mode</td>
+    <td>Enables the verbose mode. In this mode StimulGL writes more detailed and more comprehensive information to the log file. It's advised to only use this option for debugging purpose.</td>
+  </tr>
+  <tr>
+    <td align="center">-o</td>
+    <td>Option flags (single number)</td>
+    <td>Allows you to define one or more option flag(s) for StimulGL. Each flag is defined by a number and multiple flags can be combined together by summing up all their numbers. See the below table for the available flags with their numbers. If you would for example want StimulGL to start with the plugins and scriptbinding disabled you would use the command 'StimulGL -o 3'.</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<table width="80%" border="1" align="center">
+  <tr>
+    <th width="18%" align="center" scope="col">FLAG</th>
+    <th width="22%" align="center" scope="col">NUMBER</th>
+    <th width="60%" scope="col">DESCRIPTION</th>
+  </tr>
+  <tr>
+    <td align="left">DisableAllScriptBindings</td>
+    <td align="center">1</td>
+    <td>The Qt Library Script Bindings are not loaded during the startup of StimulGL.</td>
+  </tr>
+  <tr>
+    <td align="left">DisableAllPlugins</td>
+    <td align="center">2</td>
+    <td>The Plugins are not loaded during the startup of StimulGL.</td>
+  </tr>
+  <tr>
+    <td align="left">DisableSplash</td>
+    <td align="center">4</td>
+    <td>The splash message is not shown during the startup of StimulGL.</td>
+  </tr>
+  <tr>
+    <td align="left">DisableNetworkServer</td>
+    <td align="center">8</td>
+    <td>The External Network Server (explained later) is not started during the startup of StimulGL.</td>
+  </tr>
+  <tr>
+    <td align="left">VerboseMode</td>
+    <td align="center">16</td>
+    <td>Verbose mode is enabled during the startup of StimulGL, see above table.</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h4>Multiple program instances and Network Communication</h4>
+<p>StimulGL allows only one instance of the program running simultaneously by default. You can change this in the Tools-&gt;Options menu, there's a 'General' tab with the <em>Allow multiple instandes simultaneously running</em> checkbox. If you uncheck (default) this option and try to start another instance by starting another StimulGL executable you'll notice that the already opened instance is re-activated again and no other instance is opened. New StimulGL instances know about the instance that is already running during startup and then informs/broadcasts some messages (actually these messages are scripts) to this instance. You can see these incoming messages/scripts in the log output pane, you can now see in the log output pane something like:</p>
+<p class="codeframe"><em>-&gt; SocketData Received [Log(&quot;New StimulGL Instance Initializing...&quot;);]<br />
+  New StimulGL Instance Initializing...<br />
+  -&gt; SocketData Successfully executed by the Script Engine.<br />
+  -&gt; SocketData Received [StimulGL.activateMainWindow();]<br />
+  -&gt; SocketData Successfully executed by the Script Engine.</em></p>
+<p>The receiving instance receives 2 scripts (see the above script lines  between the brackets ([])) from an  <strong>internal Network Server</strong> over an internal socket and automatically executes them as you can see. This internal Network Server is used by StimulGL for its own program execution and can only be accessed from the same computer.</p>
+<p>There's also an <strong>External Network Server </strong>available in StimulGL  to which other instances of StimulGL (or other programs made suitable for that) can connect  and  send script commands to that are then automatically executed.  Clients can connect to this StimulGL External Network Server directly from the same computer or over a network such as the internet as long as the network permits/forwards this TCP/IP communication. Let's try this:</p>
+<ul>
+  <li>Start one StimulGL instance and make sure to check the option <em>Allow multiple instandes simultaneously running</em>.</li>
+  <li>Open the Options Dialog by the menu Tools--&gt;Options.</li>
+  <li>Open the 'Network' tab and check the <em>Enable the External Network Server at startup</em> checkbox. Enter '127.0.0.1' in the Server IP-Address and '200' in the Server Port setting.</li>
+  <li>Close and re-start StimulGL again (this is needed for starting the External Network Server if it was not yet enabled in the settings), we'll be calling this instance <em>instance A</em>.</li>
+  <li>Notice the line <em>&quot;Network Server started @ 127.0.0.1:200&quot;</em> in the log output pane, we now know that the server is successfully started.</li>
+  <li>Start another instance of StimulGL, we'll be calling this instance <em>instance B</em>.</li>
+  <li>Notice the line <em>&quot;Configured Network Server disabled.&quot;</em> in the log output pane, because only one Network Server can be active at the same time for a certain Ip-address and port combination.</li>
+  <li>Open the file <em>TCPNetworkClient.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\AdvancedScripting\</em> with <em>instance B</em> of StimulGL.</li>
+  <li>Examine and then execute the Qtscript code.</li>
+  <li>Press  some keys and notice that their corresponding keycode is send (in a script function that logs that value) from StimulGL <em>instance A</em> to <em>instance B</em> over the network card.</li>
+  <li>Press the 'Escape' key to finalize the script, notice how the Server detects that the client disconnects.</li>
+</ul>
 <h2>Creating Experiments with the Experiment Manager</h2>
 <p>StimulGL its main purpose is let the user create/edit and execute behavioral experiments. The functionality for this is completely implemented through a plugin named the <em>ExperimentManager</em>, see the <a href="../../References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">Experiment Manager documentation</a>.This chapter we’ll take a look at it’s features and how it can be used to create and run experiments.</p>
 <h3>Running an Experiment File from the EM Plugin UI</h3>
@@ -191,18 +277,19 @@ StimulGL has totally no knowledge of the plugins implementation and does not def
   <li>Start StimulGL.</li>
   <li>Make sure that the static StimulGL plugin named <em>ExperimentManagerPlugin</em> exists by pressing the <em>‘F2’</em> key or by opening the menu <em>Help -&gt; About StimulGL</em>.</li>
   <li>Open the <em>Experiment Manager plugins User Interface</em> by opening the <em>Plugins -&gt; Extensions Plugins -&gt; Experiment Manager Plugin</em> menu option.</li>
-  <li>Click the<em> Run Experiment File</em> button and browse to open and execute the <em>PolarAngle.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\</em>.</li>
+  <li>Click the<em> Run Experiment File</em> button and browse to open and execute the <em>PolarAngle.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\</em>.</li>
 </ul>
 <p>We should now see a default screen that allows us to start the experiment (by pressing the<em> ‘ALT’ key</em>) or abort (by pressing the <em>CTRL + ‘a’ key</em> combination). After we have started the experiment we should see a <em>Polar angle retinotopic experiment</em> running. We can always abort an experiment by pressing the <em>CTRL + ‘a’</em> key combination or wait until the experiment is finished.</p>
 <ul>
   <li>Abort (<em>CTRL + ‘a’</em>) the experiment or wait until it has finished and close the Experiment Manager User Interface.</li>
 </ul>
 <h3>Running an Experiment File directly from StimulGL</h3>
-<p>Plugins can register specific file types (by file-extension) and link this to a custom block of code from the plugin that can execute the selected file whenever the StimulGL Run Script command gets executed. The Experiment Manager Plugin automatically registers the (<em>*.exml</em>) file type in StimulGL, it also implements a custom execution handler for this type of file. Due to this it’s possible to directly start an experiment file from the StimulGL UI.</p>
+<p>Plugins like the ExperimentManager plugin can register specific file type extensions in StimulGL. These registered file types can then be automatically handled by the plugin itself. This can be a custom widget that can edit a specific type of a  file but also an  implementation for the execution of that specific file type. <br />
+  The Experiment Manager Plugin automatically registers the (<em>*.exml</em>) file type extension in StimulGL and implements a custom execution handler for this type of file. Due to this it’s possible to directly start an experiment file from the StimulGL UI. Let's try this:</p>
 <ul>
   <li>Start StimulGL.</li>
-  <li>Open the file <em>PolarAngle.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\</em>.</li>
-  <li>Execute the Experiment file directly by using the key <em>‘F5’</em> or through the <em>Script -&gt; Run Script</em> command.</li>
+  <li>Open again the file <em>PolarAngle.exml</em> Experiment file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\</em>.</li>
+  <li>Execute the Experiment file directly by using the key <em>‘F5’</em> or through the <em>Document -&gt; Execute</em> command.</li>
   <li>Press the <em>'TAB'</em> key to start the experiment.</li>
   <li>Abort (<em>CTRL + ‘a’</em>) the experiment or wait until it has finished completely.</li>
 </ul>
@@ -215,12 +302,12 @@ StimulGL has totally no knowledge of the plugins implementation and does not def
   <strong>&lt;actions&gt;</strong> : This section contains the actual actions that should be performed when running the experiment. Inside the &lt;blocks&gt; child-element you can for example describe an Block-design experiment.<br />
   <strong>&lt;finalizations&gt;</strong> : This section allows you to perform operations before the script ends.</p>
 <p>The declared objects (&lt;declarations&gt;) have an unique &lt;object ID=&quot;&quot;&gt; tag that is used in all of the remaining above sections to address that object. In the experiment file, in the declarations section, we see that an object named <em>Timer_Object_1</em>, with ID number 0, is declared and derived from the <em>TriggerTimer</em> class. This object is used for the triggering of the experiment. This <em>TriggerTimer</em> class can perform very accurate timing and triggering (by emitting a signal) other objects.</p>
-<p>The second object it declares is named <em>RetinoMap_Object_1</em>, with ID number 0, this object is derived from the <em>RetinoMap_glwidget</em> class. It’s purpose is to support the calculation and drawing (with the use of OpenGL) for various kind of retinotopic stimuli. At the moment there are 2 classes of which you can derive from for presenting visual or other kind of stimuli. These are made available within the <em>Experiment Manager plugin</em>:</p>
+<p>The second object it declares is named <em>RetinoMap_Object_1</em>, with ID number 0, this object is derived from the <em>RetinotopyMapper</em> class. It’s purpose is to support the calculation and drawing (with the use of OpenGL) for various kind of retinotopic stimuli. At the moment there are 2 classes of which you can derive from for presenting visual or other kind of stimuli. These are made available within the <em>Experiment Manager plugin</em>:</p>
 <ol>
-  <li><strong>Retinotopic mapping</strong> experiments which make use of the <em>RetinoMap_glwidget</em> class, see the <a href="../../References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html#retinotopic-mapping">detailed explanation</a>.</li>
-  <li><strong>QML based</strong> experiments which make use of the <em>qmlWidget</em> class, see the below<a href="#qml-based-experiments">explanations</a>.</li>
+  <li><strong>Retinotopic mapping</strong> experiments which make use of the <em>RetinotopyMapper</em> class, see the <a href="../../References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html#retinotopic-mapping">detailed explanation</a>.</li>
+  <li><strong>QML based</strong> experiments which make use of the <em>QML2Viewer</em> class, see the below <a href="#qml-based-experiments">explanations</a>.</li>
 </ol>
-<p>Inside the &lt;connections&gt; section we then connect (&lt;connections&gt;) the timeout() signal from the <em>TriggerTimer</em> object to the<em> incrementExternalTrigger()</em> slot of the <em>RetinoMap_glwidget</em> object. We then initialize (&lt;initializations&gt;) the <em>TriggerTimer</em> object with the<em> startTimer(1000) </em>function. This function initializes and starts the <em>TriggerTimer</em> object which then emits the<em> timeout()</em> signal each 1000 milli-seconds. Before the Block-design experiment actually starts the user is presented a screen where the experiment can be started or aborted. After the user has presses the <em>'TAB'</em> key to start the experiment, the EM executes the experiment defined in the (&lt;actions&gt;, &lt;blocks&gt;) sections.</p>
+<p>Inside the &lt;connections&gt; section we then connect (&lt;connections&gt;) the timeout() signal from the <em>TriggerTimer</em> object to the<em> incrementExternalTrigger()</em> slot of the <em>RetinotopyMapper</em> object. We then initialize (&lt;initializations&gt;) the <em>TriggerTimer</em> object with the<em> startTimer(1000) </em>function. This function initializes and starts the <em>TriggerTimer</em> object which then emits the<em> timeout()</em> signal each 1000 milli-seconds. Before the Block-design experiment actually starts the user is presented a screen where the experiment can be started or aborted. After the user has presses the <em>'TAB'</em> key to start the experiment, the EM executes the experiment defined in the (&lt;actions&gt;, &lt;blocks&gt;) sections.</p>
 <h3>Block-design and Retinotopic mapping Experiments</h3>
 <p>The Block-design definition inside the (&lt;actions&gt;, &lt;blocks&gt;) sections defines one or more experiment blocks (for example: &lt;block ID=&quot;0&quot;&gt;), each block again has an unique ID. Each block is defined by the elements:</p>
 <p><strong>&lt;name&gt;</strong> : With this element you can define the name for the block. At the moment this parameter is not yet used by the EM.<br />
@@ -228,10 +315,10 @@ StimulGL has totally no knowledge of the plugins implementation and does not def
   <strong>&lt;nr_of_trials&gt;</strong> : This element defines the number of trials for this block. For each trial all defined block settings inside the block element are used. Each trial can be triggered by one or more other object(s) (i.e. this could be a timer like the example experiment but also a special hardware port that can emit a signal). This other object then defines how fast it triggers the EM by connecting its signal to the incrementExternalTrigger() slot of the EM. The EM then processes these incoming triggers (signals) automatically by changing the state of the experiment structure automatically. This experiment structure is defined by the current block, trial and internal trigger number. <br />
   <strong>&lt;nr_of_internal_triggers&gt;</strong> : This element defines after how many internal triggers the EM should switch to the next trial for the block (or next block if there are no more trials, or end the experiment if there are no more blocks defined).<br />
   <strong>&lt;nr_of_external_triggers&gt;</strong> : This element defines after how many external triggers received by the EM (by invoking the slot incrementExternalTrigger()) the internal trigger counter should be incremented with one. Normally this is element is set to value ‘1’ making the internal and external trigger counter increment synchronously.<br />
-  <strong>&lt;object ID=&quot;&lt;ID&gt;&quot;&gt;{&lt;parameters&gt;}</strong> : The parameters section defines all the parameter(s) for the experiment object (with Object ID=&lt;ID&gt;). These parameters can here be defined for each block section. These parameters are then automatically parsed and used by the experiment object in our example case by, the object with ID=1, the <em>RetinoMap_glwidget</em> object. </p>
+  <strong>&lt;object ID=&quot;&lt;ID&gt;&quot;&gt;{&lt;parameters&gt;}</strong> : The parameters section defines all the parameter(s) for the experiment object (with Object ID=&lt;ID&gt;). These parameters can here be defined for each block section. These parameters are then automatically parsed and used by the experiment object in our example case by, the object with ID=1, the <em>RetinotopyMapper</em> object. </p>
 <p>We see that each parameter has an unique name and a corresponding value. In the example experiment file there’s a parameter named RetinoPattern. This parameter defines which type of retinotopic mapping visual pattern is shown on the screen for the current block. The first block (with block_number 0) shows an fixation cross (<em>fixation</em>) on the screen, the second block shown a polar angle (<em>PolarAngle</em>) retino pattern on the screen. All parameter names are case insensitive and hold (buffer) their last set value during the whole experiment and therefore you do not need to define the values for them if they don’t change.</p>
 <h3>Running an Experiment File from script</h3>
-<p>Another way to run Experiment files is by doing this inside the script context. We can construct an Experiment Manager plugin object and use this constructed object to run an Experiment. Running experiments like this gives us much more features and control over the Experiment. This is done by integrating/using the EM’s public signals and slots inside the script context:</p>
+<p>Another way to run Experiment files is creating everything inside a script. We can construct an Experiment Manager plugin object and use this constructed object to run an experiment. Running experiments like this gives us much more flexibility and control over the experiment. This is done by making use of the Experiment Managers (short=EM) public signals and slots inside the script context:</p>
 <ul>
   <li>Open the file <em>RetinotopicMapping.qs</em> found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\</em>.</li>
   <li>Quickly examine the Qtscript code.</li>
@@ -263,12 +350,12 @@ StimulGL has totally no knowledge of the plugins implementation and does not def
   After the EM could finalize and stop the Experiment it changes to this state.</p>
 <p>The experiment can be stopped (or aborted) by several reasons, the user can normally abort it by pressing <em>CTRL+’a’</em> when it has been started or when something goes wrong or when the Experiment has been completely executed.</p>
 <h3>QML based Experiments</h3>
-<p>An huge advantage of using a Retinotopic mapping experiment object is it’s speed, accuracy and flexible parameter configurability. Aside Retinotopic experiments there’s also a need for a more less complex experiment type that allows the presentation of rich content like text, movies, sounds, pictures etc. For this purpose the EM also supports the usage of <a href="http://qt-project.org/doc/qt-4.8/gettingstartedqml.html" target="_blank">QML based experiments</a> (*.qml) files by implementing the qmlWidget experiment object (instead of the RetinoMap_glwidget object) in the &lt;declarations&gt; section of the Experiment File.</p>
+<p>An huge advantage of using a Retinotopic mapping experiment object is it’s speed, accuracy and fast/flexible parameter configurability. Aside Retinotopic experiments there’s also a need for a more less complex experiment type that allows the presentation of rich content like text, movies, sounds, pictures etc. For this purpose the EM also supports the usage of <a href="http://qt-project.org/doc/qt-5.0/qtdoc/gettingstartedqml.html" target="_blank">QML based experiments</a> (*.qml) files by implementing the <strong><em>QML2Viewer</em></strong> experiment object (instead of the <em><strong>RetinotopyMapper</strong></em> object) in the &lt;declarations&gt; section of the Experiment File.</p>
 <ul>
   <li>Start StimulGL.</li>
   <li>Make sure that the static StimulGL plugin named <em>ExperimentManagerPlugin</em> exists by pressing the <em>‘F2’</em> key or by opening the menu <em>Help -&gt; About StimulGL</em>.</li>
   <li>Open the <em>Experiment Manager plugins User Interface</em> by opening the<em> Plugins -&gt; Extensions Plugins -&gt; Experiment Manager</em> Plugin menu option.</li>
-  <li>Click the <em>Run QtQuick File</em> button and browse to open and execute the <em>Example_1.qml</em> QML based file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\</em>.</li>
+  <li>Click the <em>Run QtQuick2 File</em> button and browse to open and execute the <em>Example_1.qml</em> QML based file found in the directory <em>StimulGL\examples\GettingStartedGuide\ExperimentManager\experiments\</em>.</li>
 </ul>
 <p>The EM now tries to parse the file and hereafter we can execute the file by pressing again the <em>'ALT'</em> key or abort with the <em>CTRL + ‘a’</em> key combination.</p>
 <ul>
