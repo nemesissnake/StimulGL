@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">ExperimentManager script class
-   &#160;<span id="projectnumber">2.0.0.3</span>
+   &#160;<span id="projectnumber">2.1.0.0</span>
    </div>
    <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
@@ -81,8 +81,10 @@ Public Slots</h2></td></tr>
 <tr class="memitem:a407b993f8251e9a23502a1cd44772e41"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a407b993f8251e9a23502a1cd44772e41">getDebugMode</a> ()</td></tr>
 <tr class="memitem:ae9b3d50bb3af7d85fde90cb97b59e555"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ae9b3d50bb3af7d85fde90cb97b59e555">getExperimentFileName</a> ()</td></tr>
 <tr class="memitem:ad80a833d24cba75fe10b88328629a8da"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ad80a833d24cba75fe10b88328629a8da">getExperimentName</a> ()</td></tr>
-<tr class="memitem:a7828d7cc6a43af0d032f57a7d4e7e37e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, <a class="el" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">ParsedParameterDefinition</a> &amp;strcParDef)</td></tr>
-<tr class="memitem:aaf890d3172645a1d1d427e593013470e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#aaf890d3172645a1d1d427e593013470e">insertExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, const QString sValue, bool bIsInitializing=true)</td></tr>
+<tr class="memitem:a7828d7cc6a43af0d032f57a7d4e7e37e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, ParsedParameterDefinition &amp;strcParDef)</td></tr>
+<tr class="memitem:a5751e9c3f18107aa629628f0e40f7ac4"><td class="memItemLeft" align="right" valign="top">cExperimentStructure *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4">getExperimentStructure</a> ()</td></tr>
+<tr class="memdesc:a5751e9c3f18107aa629628f0e40f7ac4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the in-memory Experiment Structure.  <a href="#a5751e9c3f18107aa629628f0e40f7ac4"></a><br/></td></tr>
+<tr class="memitem:a7298beb770b58918a4994a5538026c2b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7298beb770b58918a4994a5538026c2b">insertExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, const QString sValue, bool bIsInitializing=true, bool bIsCustom=false)</td></tr>
 <tr class="memitem:ab1847af6af9e6acd4b7fca51ed93b70f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ab1847af6af9e6acd4b7fca51ed93b70f">loadExperiment</a> (QString strSource=&quot;&quot;, bool bViewEditTree=true, bool bIsFile=true)</td></tr>
 <tr class="memitem:a439531c8aad7ea5a05df418fb24fcab6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a439531c8aad7ea5a05df418fb24fcab6">logExperimentObjectData</a> (const int &amp;nObjectIndex, const int &amp;nTimerIndex, const QString &amp;strFunction=&quot;&quot;, const QString &amp;strTag=&quot;&quot;, const QString &amp;strMessage=&quot;&quot;, const QString &amp;strValue=&quot;&quot;)</td></tr>
 <tr class="memitem:af4756da1ac430d043a38929310f30fe1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#af4756da1ac430d043a38929310f30fe1">restartExperimentTimer</a> (int nIndex)</td></tr>
@@ -92,6 +94,9 @@ Public Slots</h2></td></tr>
 <tr class="memitem:a34102a745b34ce80c9402b00562b148d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a34102a745b34ce80c9402b00562b148d">setDebugMode</a> (bool mode)</td></tr>
 <tr class="memitem:adedb8d9213a2452e03fb138e382b9d20"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">setExperimentFileName</a> (const QString qstrExpFileName)</td></tr>
 <tr class="memitem:a9f50a2cc340ec61292cbf527d6dd4673"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a9f50a2cc340ec61292cbf527d6dd4673">setExperimentName</a> (QString name)</td></tr>
+<tr class="memitem:a62bbe3afa35c494a35932dccee741367"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a62bbe3afa35c494a35932dccee741367">setExperimentOutputFilePostString</a> (const QString &amp;sPostString)</td></tr>
+<tr class="memitem:af6cb8d15b3b9a9ac9c4de134ff692328"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#af6cb8d15b3b9a9ac9c4de134ff692328">showVisualExperimentEditor</a> (cExperimentStructure *ExpStruct=NULL)</td></tr>
+<tr class="memdesc:af6cb8d15b3b9a9ac9c4de134ff692328"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows the Experiment Graph Editor.  <a href="#af6cb8d15b3b9a9ac9c4de134ff692328"></a><br/></td></tr>
 <tr class="memitem:ad71b7b4a17e1e3781fbb7160ea33c399"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ad71b7b4a17e1e3781fbb7160ea33c399">startExperimentTimer</a> (int nIndex)</td></tr>
 <tr class="memitem:a045c8153c0d23530be3f897dee40a8b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a045c8153c0d23530be3f897dee40a8b1">stopExperiment</a> ()</td></tr>
 <tr class="memitem:a8f45fffa70eaf9416a2f830f5408e6d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a8f45fffa70eaf9416a2f830f5408e6d4">validateExperiment</a> ()</td></tr>
@@ -402,7 +407,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">ParsedParameterDefinition</a> &amp;&#160;</td>
+          <td class="paramtype">ParsedParameterDefinition &amp;&#160;</td>
           <td class="paramname"><em>strcParDef</em>&#160;</td>
         </tr>
         <tr>
@@ -418,12 +423,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aaf890d3172645a1d1d427e593013470e"></a>
+<a class="anchor" id="a5751e9c3f18107aa629628f0e40f7ac4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="class_experiment_manager.html#aaf890d3172645a1d1d427e593013470e">ExperimentManager::insertExperimentObjectBlockParameter</a> </td>
+          <td class="memname">cExperimentStructure * <a class="el" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4">ExperimentManager::getExperimentStructure</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns the in-memory Experiment Structure. </p>
+<p>This function returns a pointer to the in-memory Experiment Structure. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7298beb770b58918a4994a5538026c2b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_experiment_manager.html#a7298beb770b58918a4994a5538026c2b">ExperimentManager::insertExperimentObjectBlockParameter</a> </td>
           <td>(</td>
           <td class="paramtype">const int&#160;</td>
           <td class="paramname"><em>nObjectID</em>, </td>
@@ -444,7 +468,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bIsInitializing</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>bIsInitializing</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bIsCustom</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -455,7 +485,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <p>Inserts a specified object parameter for the current experiment block.</p>
-<p>Inserts a specified object parameter with objectID(nObjectID), parameter name(sName) and parameter value(sValue) for the current experiment block. If bIsInitializing is true then this new parameter is marked as Initializing, see #ParsedParameterDefinition.bIsInitialized, this marks the parameter as unused which can be helpful for further setting the default value.</p>
+<p>Inserts a specified object parameter with objectID(nObjectID), parameter name(sName) and parameter value(sValue) for the current experiment block. If bIsInitializing is true then this new parameter is marked as Initializing, see #ParsedParameterDefinition.bIsInitialized, this marks the parameter as unused which can be helpful for further setting the default value. The bIsCustom variable determines whether the parameter should be treated as a custom parameter (default = false).</p>
 
 </div>
 </div>
@@ -679,6 +709,51 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a62bbe3afa35c494a35932dccee741367"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_experiment_manager.html#a62bbe3afa35c494a35932dccee741367">ExperimentManager::setExperimentOutputFilePostString</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>sPostString</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Configures Experiment Output filename</p>
+<p>Configures Experiment Output filename, the configurable part of the filename is a string that is then integrated in the filename (format = YearMonthDayHourMinuteSecond_&lt;sPostString&gt;.txt ).</p>
+
+</div>
+</div>
+<a class="anchor" id="af6cb8d15b3b9a9ac9c4de134ff692328"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_experiment_manager.html#af6cb8d15b3b9a9ac9c4de134ff692328">ExperimentManager::showVisualExperimentEditor</a> </td>
+          <td>(</td>
+          <td class="paramtype">cExperimentStructure *&#160;</td>
+          <td class="paramname"><em>ExpStruct</em> = <code>NULL</code></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Shows the Experiment Graph Editor. </p>
+<p>Shows a dialog containing the Experiment Graph Editor. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ExpStruct</td><td>a cExperimentStructure to be edited by the Experiment Graph Editor, if this parameter is NULL than the current Experiment Structure in memory is used. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="ad71b7b4a17e1e3781fbb7160ea33c399"></a>
 <div class="memitem">
 <div class="memproto">
@@ -759,7 +834,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:31 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

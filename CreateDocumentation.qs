@@ -9,15 +9,15 @@ var bFileProccessed;
 var nCounter;
 var bSkipStep;
 
-var sQTDirWin32 = tr("C:/Qt/4.8.0/win32/");
-var sQTDirx64 = tr("C:/Qt/4.8.0/x64/");
+var sQTDirWin32 = tr("C:/Qt/5.1.0/win32/");
+var sQTDirx64 = tr("C:/Qt/5.1.0/x64/");
 var sMainDocName = tr("MainDocumentation");
 var sScriptPath = StimulGL.getSelectedScriptFileLocation() + "/";
 var sBinairyPath;
 
 var sInstallerAppName = tr("StimulGL");//StimulGL
 var sInstallerConfiguration = tr("win32");//win32 or x64
-var sInstallerVersion = tr("2.0.0.2");//<Major>.<Minor>.<Build>.<Revision>
+var sInstallerVersion = tr("2.1.0.0");//<Major>.<Minor>.<Build>.<Revision>
 var sInstallerPlatform = tr("Windows");
 
 //var sQtDirectory_default = tr("C:/Qt/4.8.0");
@@ -153,7 +153,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 	bFileProccessed = false;
 	bSkipStep = false;
 	
-	Log("** STEP "  + nCounter + " **");
+	Log("** STEP "  + nCounter + " **, from " + sBinairySteps + " step(s)");
 	if(nCounter==1)
 	{
 		//qhelpgenerator doc.qhp -o doc.qch

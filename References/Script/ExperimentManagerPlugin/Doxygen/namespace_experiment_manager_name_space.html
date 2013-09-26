@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">ExperimentManager script class
-   &#160;<span id="projectnumber">2.0.0.3</span>
+   &#160;<span id="projectnumber">2.1.0.0</span>
    </div>
    <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
@@ -52,13 +52,23 @@
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html">strcParsedParameterDefinition</a></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_experiment_manager_name_space_1_1strc_script_experiment_structure.html">strcScriptExperimentStructure</a></td></tr>
 <tr><td colspan="2"><h2><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a4d7f8db2759d9c2420df21a7cb60fc62"><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
 <a class="el" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html">strcParsedParameterDefinition</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">ParsedParameterDefinition</a></td></tr>
 <tr><td colspan="2"><h2><a name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:abd4e5a9ca38ff0d6921a4d371f4c79ce"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ce">ExperimentParameterTypeName</a> { <br/>
+&#160;&#160;<a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea3d91a422798291af4cbac1f5b537012c">Experiment_ParameterType_String</a> =  0, 
+<a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea4ed3c085dbe23c747158216ae04a1680">Experiment_SubObject_StringArray</a> =  1, 
+<a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceae95c5ada0b233248c13a6cd024302060">Experiment_SubObject_Color</a> =  2, 
+<a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceae1a18650279ae9036bf0111c59c49079">Experiment_SubObject_Integer</a> =  3, 
+<br/>
+&#160;&#160;<a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea48c21034fab02dcc8691dd118303fe84">Experiment_SubObject_Float</a> =  4, 
+<a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea726c47b055b95f2fa20ad3d755da787f">Experiment_SubObject_Double</a> =  5, 
+<a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceaba2822b0b4d688fa7fc48af341313ff6">Experiment_SubObject_Boolean</a> =  6
+<br/>
+ }</td></tr>
 <tr class="memitem:aabc0dbe7da363c1d0ef8d5810637cf81"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81">ExperimentSubObjectState</a> { <br/>
 &#160;&#160;<a class="el" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a66b52bff56bfbfbaf8adf897ad2211af">Experiment_SubObject_Constructing</a> =  0, 
 <a class="el" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ab35fb7b6d09a04ebc2cc1c6a48473c1e">Experiment_SubObject_Initialized</a> =  1, 
@@ -73,6 +83,11 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ae486e4af6f81229836376498ec719235">Experiment_SubObject_Destructing</a> =  8, 
 <a class="el" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a86760da5b3c794c701ed88348146ac0a">Experiment_SubObject_MaxState</a> =  9
 <br/>
+ }</td></tr>
+<tr class="memitem:a983136e922521aa36a5df042e4fed994"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_experiment_manager_name_space.html#a983136e922521aa36a5df042e4fed994">TriggerTimerType</a> { <a class="el" href="namespace_experiment_manager_name_space.html#a983136e922521aa36a5df042e4fed994aa7f84aaf33071db1e78d3c4e0487ca37">QPC_TriggerTimerType_Old</a> =  0, 
+<a class="el" href="namespace_experiment_manager_name_space.html#a983136e922521aa36a5df042e4fed994a1eaa0a3284a3780956f7dcd6f397b0d0">QTimer_TriggerTimerType</a> =  1, 
+<a class="el" href="namespace_experiment_manager_name_space.html#a983136e922521aa36a5df042e4fed994a9c62b60b630088f3061db1bc630bf3f4">QPC_TriggerTimerType</a> =  2, 
+<a class="el" href="namespace_experiment_manager_name_space.html#a983136e922521aa36a5df042e4fed994aae388677441cfdf0d02c83c2b60230ca">Fast_TriggerTimerType</a> =  3
  }</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
@@ -93,6 +108,45 @@ Enumerations</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Enumeration Type Documentation</h2>
+<a class="anchor" id="abd4e5a9ca38ff0d6921a4d371f4c79ce"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ce">ExperimentManagerNameSpace::ExperimentParameterTypeName</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The enum ExperimentParameterTypeName represents the type of a experiment parameter by name </p>
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="abd4e5a9ca38ff0d6921a4d371f4c79cea3d91a422798291af4cbac1f5b537012c"></a>Experiment_ParameterType_String</em>&nbsp;</td><td>
+<p>enum value 0 </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="abd4e5a9ca38ff0d6921a4d371f4c79cea4ed3c085dbe23c747158216ae04a1680"></a>Experiment_SubObject_StringArray</em>&nbsp;</td><td>
+<p>enum value 1 </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="abd4e5a9ca38ff0d6921a4d371f4c79ceae95c5ada0b233248c13a6cd024302060"></a>Experiment_SubObject_Color</em>&nbsp;</td><td>
+<p>enum value 2 </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="abd4e5a9ca38ff0d6921a4d371f4c79ceae1a18650279ae9036bf0111c59c49079"></a>Experiment_SubObject_Integer</em>&nbsp;</td><td>
+<p>enum value 3 </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="abd4e5a9ca38ff0d6921a4d371f4c79cea48c21034fab02dcc8691dd118303fe84"></a>Experiment_SubObject_Float</em>&nbsp;</td><td>
+<p>enum value 4 </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="abd4e5a9ca38ff0d6921a4d371f4c79cea726c47b055b95f2fa20ad3d755da787f"></a>Experiment_SubObject_Double</em>&nbsp;</td><td>
+<p>enum value 5 </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="abd4e5a9ca38ff0d6921a4d371f4c79ceaba2822b0b4d688fa7fc48af341313ff6"></a>Experiment_SubObject_Boolean</em>&nbsp;</td><td>
+<p>enum value 6 </p>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="aabc0dbe7da363c1d0ef8d5810637cf81"></a>
 <div class="memitem">
 <div class="memproto">
@@ -141,11 +195,41 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a983136e922521aa36a5df042e4fed994"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_experiment_manager_name_space.html#a983136e922521aa36a5df042e4fed994">ExperimentManagerNameSpace::TriggerTimerType</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The enum (TriggerTimerType) can store a <a class="el" href="class_trigger_timer.html" title="The TriggerTimer class.">TriggerTimer</a> type </p>
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="a983136e922521aa36a5df042e4fed994aa7f84aaf33071db1e78d3c4e0487ca37"></a>QPC_TriggerTimerType_Old</em>&nbsp;</td><td>
+<p>0: The Query Performance Counter Timer type, the old implementation, this one became obsolete. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a983136e922521aa36a5df042e4fed994a1eaa0a3284a3780956f7dcd6f397b0d0"></a>QTimer_TriggerTimerType</em>&nbsp;</td><td>
+<p>1: The QTimer Timer type, only use if it's necesary to force it to use a QTimer Timer type. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a983136e922521aa36a5df042e4fed994a9c62b60b630088f3061db1bc630bf3f4"></a>QPC_TriggerTimerType</em>&nbsp;</td><td>
+<p>2: The Query Performance Counter Timer type, the new default implementation, Low CPU absorption, No interval jittering, Interval &gt; 15 mSecs. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a983136e922521aa36a5df042e4fed994aae388677441cfdf0d02c83c2b60230ca"></a>Fast_TriggerTimerType</em>&nbsp;</td><td>
+<p>3: The Fast Timer type, another new implementation, Medium CPU absorption, interval jittering, Fast -&gt; Interval &gt; 5 mSecs. </p>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:31 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

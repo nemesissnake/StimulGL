@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Serial Port Device script class
-   &#160;<span id="projectnumber">1.0.0.2</span>
+   &#160;<span id="projectnumber">1.1.0.0</span>
    </div>
    <div id="projectbrief">The Serial Port Device script class reference.</div>
   </td>
@@ -41,7 +41,6 @@
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-slots">Public Slots</a> &#124;
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a>  </div>
@@ -55,92 +54,82 @@
 
 <p><a href="class_serial_port_device-members.html">List of all members.</a></p>
 <table class="memberdecls">
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a841eeded317aae65e9cf6c05441db8fd"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fd">BaudRateType_</a> { <br/>
-&#160;&#160;<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda4f17986767f6ac455af5b2cab7ebd3e1">BAUD110</a> =  110, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdafe5ad32596af874fecf7ab198c529a97">BAUD300</a> =  300, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda1b8d1e301fe309ac48d3fbedc5f2609b">BAUD600</a> =  600, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa9ed95da33a5f0b4b4a581e0a9ddf576">BAUD1200</a> =  1200, 
-<br/>
-&#160;&#160;<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaba7bab2add050dda17d5a14318622cac">BAUD2400</a> =  2400, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda7025bacd0df339fe3e3cf9c1ab98301e">BAUD4800</a> =  4800, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda67cd7fc901d97bdac17bcddeccc1378c">BAUD9600</a> =  9600, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda09222f1f0d965a48116785a08bc76746">BAUD14400</a> =  14400, 
-<br/>
-&#160;&#160;<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdab3e2c5e54c9e655bde69856c94b7f002">BAUD19200</a> =  19200, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda95e24c68e3fb4aefbd27b5edb3b72141">BAUD38400</a> =  38400, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda9e40024a94ad677fb9c3251dd85801c6">BAUD56000</a> =  56000, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa8b25bf7b9bb733519383ae2541ba556">BAUD57600</a> =  57600, 
-<br/>
-&#160;&#160;<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa91778c94a3ae0627d098c78bf4e3218">BAUD115200</a> =  115200, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdabc5d7416d02666fe254111918a4065e8">BAUD128000</a> =  128000, 
-<a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda191a682c5e7f7256089f074a8b393f9a">BAUD256000</a> =  256000
-<br/>
- }</td></tr>
-<tr class="memitem:ad36d6375fdfb6eae857b0b64076e8265"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265">DataBitsType_</a> { <a class="el" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265ae5bd9edfeb6819f888a017657bb6b91a">DATA_5</a> =  5, 
-<a class="el" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a12e9d2cf8136e72eb75dc4de6f28d2f5">DATA_6</a> =  6, 
-<a class="el" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a68558b08a6fcd3ff2f959afd9ebfcc27">DATA_7</a> =  7, 
-<a class="el" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a4568f99c63ef007d2bbeb0f2c0cf6aca">DATA_8</a> =  8
- }</td></tr>
-<tr class="memitem:aa9521a81b97ebed61fe170ae8677bc75"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75">FlowType_</a> { <a class="el" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75ae58f1de8c38fded8f95fbb03dc51fcf3">FLOW_OFF</a>, 
-<a class="el" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75ae129914161d56c3331fa3f287c315156">FLOW_HARDWARE</a>, 
-<a class="el" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75a93f2cf48e0aea9b4d0b9a9de333935a7">FLOW_XONXOFF</a>
- }</td></tr>
-<tr class="memitem:a1cc032021343bcf2146035a7d9c1f093"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093">OpenMode_</a> { <br/>
-&#160;&#160;<a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a69db2b3df07ad129d3c3347879f860ae">NotOpen</a> =  (int)QIODevice::NotOpen, 
-<a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093ae8c88440373262ac17614bb1f3de440f">ReadOnly</a> =  (int)QIODevice::ReadOnly, 
-<a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a9ce6b31304b0ac0d840c0e12263cd617">WriteOnly</a> =  (int)QIODevice::WriteOnly, 
-<a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a1b7b7dbdbbc98dec969661344db90d2b">ReadWrite</a> =  (int)QIODevice::ReadWrite, 
-<br/>
-&#160;&#160;<a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a360629306edd4af1e5400d6597d29d18">Append</a> =  (int)QIODevice::Append, 
-<a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a40d6c810aee30b7e4c370819f98f17a1">Truncate</a> =  (int)QIODevice::Truncate, 
-<a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093aedba3da8c5b8da72043793f09ba40f76">Text</a> =  (int)QIODevice::Text, 
-<a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a800d11c945fa00bb4d58aeddb0d7d14a">Unbuffered</a> = (int)QIODevice::Unbuffered
-<br/>
- }</td></tr>
-<tr class="memitem:afd70ad875a73f6b42aae848be391434c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434c">ParityType_</a> { <br/>
-&#160;&#160;<a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434ca6cd6426867361769554da0f61fbed35e">PAR_NONE</a>, 
-<a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434cabd78546bea70199ebbc6868c7334c018">PAR_ODD</a>, 
-<a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434caceea3b01d4c04c7ecf84f242e5b159bb">PAR_EVEN</a>, 
-<a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434caf81b96a251eca523ebaa71beb2a89951">PAR_MARK</a>, 
-<br/>
-&#160;&#160;<a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434cafe12493d0e4d089eef0e59f9f2323344">PAR_SPACE</a>
-<br/>
- }</td></tr>
-<tr class="memitem:ac1cbf2a80ef8ca1258ab14f1b84d5a2e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2e">QueryMode_</a> { <a class="el" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2eae71a6035227b022831f69daea333d46b">Polling</a>, 
-<a class="el" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2eaa6a89cd804aa7a4945c01ec04bb96eb9">EventDriven</a>
- }</td></tr>
-<tr class="memitem:a159bd1108de166fb0b333b88a4c174c6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6">StopBitsType_</a> { <a class="el" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6aca1cbd01683d6068caf4d617e336dc5d">STOP_1</a>, 
-<a class="el" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6a2f457a2d1392e8f0a6c6991ed7541c8c">STOP_1_5</a>, 
-<a class="el" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6a5e0427785d14d007f8e1a93a7aff3d7d">STOP_2</a>
- }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
-<tr class="memitem:a8158cef8074c78ce92586f2bbff8695d"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a8158cef8074c78ce92586f2bbff8695d">baudRateToString</a> () const </td></tr>
-<tr class="memitem:aae9983c24fbd711b38706fa3bd956c7e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aae9983c24fbd711b38706fa3bd956c7e">close</a> ()</td></tr>
-<tr class="memitem:ab93af696e6af9c817e1436d26fd17152"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ab93af696e6af9c817e1436d26fd17152">dataBitsToString</a> () const </td></tr>
-<tr class="memitem:ad4bfcf12eb77900346567ded70bd82c9"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ad4bfcf12eb77900346567ded70bd82c9">flowControlToString</a> () const </td></tr>
-<tr class="memitem:aec0bc1c9e3d79843c9845e818d531e3b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aec0bc1c9e3d79843c9845e818d531e3b">isOpen</a> () const </td></tr>
-<tr class="memitem:a35ad64b2d6c97873a0f26c2512ee6168"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a35ad64b2d6c97873a0f26c2512ee6168">open</a> (QString mode)</td></tr>
-<tr class="memitem:a8043139890be231c5d8ac7cb5d5e8d80"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a8043139890be231c5d8ac7cb5d5e8d80">openModeToString</a> () const </td></tr>
-<tr class="memitem:a6ec748aa7e4b719ae70c9cc14e20c0fe"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a6ec748aa7e4b719ae70c9cc14e20c0fe">parityToString</a> () const </td></tr>
-<tr class="memitem:a7cac6d85cac8e50fd8620727eb52a0db"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a7cac6d85cac8e50fd8620727eb52a0db">portName</a> () const </td></tr>
-<tr class="memitem:a2630f1462deb96ce1b1239abb0ed2eda"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a2630f1462deb96ce1b1239abb0ed2eda">queryModeToString</a> () const </td></tr>
-<tr class="memitem:a4272eb534b01d7b59f2cc51513c81c4f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a4272eb534b01d7b59f2cc51513c81c4f">setBaudRate</a> (QString baudRate)</td></tr>
-<tr class="memitem:a5fdbb4080f63af0a53474c34b7453658"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a5fdbb4080f63af0a53474c34b7453658">setDataBits</a> (QString dataBits)</td></tr>
-<tr class="memitem:aa41c8603eb8543da4bd1ecd250ea3729"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aa41c8603eb8543da4bd1ecd250ea3729">setFlowControl</a> (QString flow)</td></tr>
-<tr class="memitem:aee5f5a829f4d82970581f426301aa7d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aee5f5a829f4d82970581f426301aa7d2">setParity</a> (QString parity)</td></tr>
-<tr class="memitem:a49f40e0e6133bf18cf967d5578feb93c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a49f40e0e6133bf18cf967d5578feb93c">setPortName</a> (const QString &amp;name)</td></tr>
-<tr class="memitem:a28396bce0326baeb3c4b36596458cca4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a28396bce0326baeb3c4b36596458cca4">setQueryMode</a> (QString mode)</td></tr>
-<tr class="memitem:a47addec2883ea77f3dca457dd4615f19"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a47addec2883ea77f3dca457dd4615f19">setStopBits</a> (QString stopBits)</td></tr>
-<tr class="memitem:a1359e87ccc7f18557e9422aa364066cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a1359e87ccc7f18557e9422aa364066cc">setTimeout</a> (long millisec)</td></tr>
-<tr class="memitem:a697751ef5d0f4abb2729b14ba1672801"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a697751ef5d0f4abb2729b14ba1672801">setTimeout</a> (qlonglong millisec)</td></tr>
-<tr class="memitem:a1beb989d521413d56610dacafb3a96ad"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a1beb989d521413d56610dacafb3a96ad">stopBitsToString</a> () const </td></tr>
+<tr class="memitem:a78c1b734f6a24d6f819cc0e25e8d9633"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a78c1b734f6a24d6f819cc0e25e8d9633">baudRate</a> (int dir=(int) <a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6">SerialPortDeviceNameSpace::AllDirections</a>)</td></tr>
+<tr class="memdesc:a78c1b734f6a24d6f819cc0e25e8d9633"><td class="mdescLeft">&#160;</td><td class="mdescRight">baudRate slot.  <a href="#a78c1b734f6a24d6f819cc0e25e8d9633"></a><br/></td></tr>
+<tr class="memitem:a1b66857d9ba3566eeff6a4e9dbf7a979"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a1b66857d9ba3566eeff6a4e9dbf7a979">clear</a> (int dir=(int) <a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6">SerialPortDeviceNameSpace::AllDirections</a>)</td></tr>
+<tr class="memdesc:a1b66857d9ba3566eeff6a4e9dbf7a979"><td class="mdescLeft">&#160;</td><td class="mdescRight">clear slot.  <a href="#a1b66857d9ba3566eeff6a4e9dbf7a979"></a><br/></td></tr>
+<tr class="memitem:a6298b5af38f2816835284032c8a3781c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a6298b5af38f2816835284032c8a3781c">clearError</a> ()</td></tr>
+<tr class="memdesc:a6298b5af38f2816835284032c8a3781c"><td class="mdescLeft">&#160;</td><td class="mdescRight">clearError slot.  <a href="#a6298b5af38f2816835284032c8a3781c"></a><br/></td></tr>
+<tr class="memitem:aae9983c24fbd711b38706fa3bd956c7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aae9983c24fbd711b38706fa3bd956c7e">close</a> ()</td></tr>
+<tr class="memdesc:aae9983c24fbd711b38706fa3bd956c7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">close slot.  <a href="#aae9983c24fbd711b38706fa3bd956c7e"></a><br/></td></tr>
+<tr class="memitem:a8312b5a51b949392fdd425f88e421bb5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a8312b5a51b949392fdd425f88e421bb5">dataBits</a> ()</td></tr>
+<tr class="memdesc:a8312b5a51b949392fdd425f88e421bb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">dataBits slot.  <a href="#a8312b5a51b949392fdd425f88e421bb5"></a><br/></td></tr>
+<tr class="memitem:a5483f9a389818873116a345bc84b1f30"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a5483f9a389818873116a345bc84b1f30">dataErrorPolicy</a> ()</td></tr>
+<tr class="memdesc:a5483f9a389818873116a345bc84b1f30"><td class="mdescLeft">&#160;</td><td class="mdescRight">dataErrorPolicy slot.  <a href="#a5483f9a389818873116a345bc84b1f30"></a><br/></td></tr>
+<tr class="memitem:a79503901edb42873b5fc25dbbaf1c138"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138">error</a> ()</td></tr>
+<tr class="memdesc:a79503901edb42873b5fc25dbbaf1c138"><td class="mdescLeft">&#160;</td><td class="mdescRight">error slot.  <a href="#a79503901edb42873b5fc25dbbaf1c138"></a><br/></td></tr>
+<tr class="memitem:a2b69d22724682c8c08752d3665a02c83"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a2b69d22724682c8c08752d3665a02c83">errorString</a> ()</td></tr>
+<tr class="memdesc:a2b69d22724682c8c08752d3665a02c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">errorString slot.  <a href="#a2b69d22724682c8c08752d3665a02c83"></a><br/></td></tr>
+<tr class="memitem:a2e654266c7dfc9691ee96e4ee06fa81f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a2e654266c7dfc9691ee96e4ee06fa81f">flowControl</a> ()</td></tr>
+<tr class="memdesc:a2e654266c7dfc9691ee96e4ee06fa81f"><td class="mdescLeft">&#160;</td><td class="mdescRight">flowControl slot.  <a href="#a2e654266c7dfc9691ee96e4ee06fa81f"></a><br/></td></tr>
+<tr class="memitem:a5dc528e7a47daf712f0f7459b18b19ef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a5dc528e7a47daf712f0f7459b18b19ef">flush</a> ()</td></tr>
+<tr class="memdesc:a5dc528e7a47daf712f0f7459b18b19ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">flush slot.  <a href="#a5dc528e7a47daf712f0f7459b18b19ef"></a><br/></td></tr>
+<tr class="memitem:a0154231a3946deb9f9c5b7d31b4bd162"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a0154231a3946deb9f9c5b7d31b4bd162">isDataTerminalReady</a> ()</td></tr>
+<tr class="memdesc:a0154231a3946deb9f9c5b7d31b4bd162"><td class="mdescLeft">&#160;</td><td class="mdescRight">isDataTerminalReady slot.  <a href="#a0154231a3946deb9f9c5b7d31b4bd162"></a><br/></td></tr>
+<tr class="memitem:ab26014478d99bee789ae9a67aa5e8132"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ab26014478d99bee789ae9a67aa5e8132">isRequestToSend</a> ()</td></tr>
+<tr class="memdesc:ab26014478d99bee789ae9a67aa5e8132"><td class="mdescLeft">&#160;</td><td class="mdescRight">isRequestToSend slot.  <a href="#ab26014478d99bee789ae9a67aa5e8132"></a><br/></td></tr>
+<tr class="memitem:ad7063ed14fceb1a2c8bccf5fe3f5c8b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ad7063ed14fceb1a2c8bccf5fe3f5c8b1">open</a> (int mode)</td></tr>
+<tr class="memdesc:ad7063ed14fceb1a2c8bccf5fe3f5c8b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">open slot.  <a href="#ad7063ed14fceb1a2c8bccf5fe3f5c8b1"></a><br/></td></tr>
+<tr class="memitem:ad61261eb077a5807b3d22f8c7d52d877"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ad61261eb077a5807b3d22f8c7d52d877">parity</a> ()</td></tr>
+<tr class="memdesc:ad61261eb077a5807b3d22f8c7d52d877"><td class="mdescLeft">&#160;</td><td class="mdescRight">parity slot.  <a href="#ad61261eb077a5807b3d22f8c7d52d877"></a><br/></td></tr>
+<tr class="memitem:a96264f285617b9f3257a5d733259cb08"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a96264f285617b9f3257a5d733259cb08">pinoutSignals</a> ()</td></tr>
+<tr class="memdesc:a96264f285617b9f3257a5d733259cb08"><td class="mdescLeft">&#160;</td><td class="mdescRight">pinoutSignals slot.  <a href="#a96264f285617b9f3257a5d733259cb08"></a><br/></td></tr>
+<tr class="memitem:a0daa8114d718b413a0a97a6de2393b2a"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a0daa8114d718b413a0a97a6de2393b2a">portName</a> ()</td></tr>
+<tr class="memdesc:a0daa8114d718b413a0a97a6de2393b2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">portName slot.  <a href="#a0daa8114d718b413a0a97a6de2393b2a"></a><br/></td></tr>
+<tr class="memitem:a419bfec6ed7d4e57a2752afa634f0ef3"><td class="memItemLeft" align="right" valign="top">QByteArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a419bfec6ed7d4e57a2752afa634f0ef3">readAll</a> ()</td></tr>
+<tr class="memdesc:a419bfec6ed7d4e57a2752afa634f0ef3"><td class="mdescLeft">&#160;</td><td class="mdescRight">readAll slot.  <a href="#a419bfec6ed7d4e57a2752afa634f0ef3"></a><br/></td></tr>
+<tr class="memitem:a63952df901e6dc05580e078ef07086cf"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a63952df901e6dc05580e078ef07086cf">readBufferSize</a> ()</td></tr>
+<tr class="memdesc:a63952df901e6dc05580e078ef07086cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">readBufferSize slot.  <a href="#a63952df901e6dc05580e078ef07086cf"></a><br/></td></tr>
+<tr class="memitem:a0457b75daff5a71ea9e720220342ef75"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a0457b75daff5a71ea9e720220342ef75">sendBreak</a> (int duration=0)</td></tr>
+<tr class="memdesc:a0457b75daff5a71ea9e720220342ef75"><td class="mdescLeft">&#160;</td><td class="mdescRight">sendBreak slot.  <a href="#a0457b75daff5a71ea9e720220342ef75"></a><br/></td></tr>
+<tr class="memitem:a6a0c416e52f786ad5bfdc354438f7440"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a6a0c416e52f786ad5bfdc354438f7440">setBaudRate</a> (int <a class="el" href="class_serial_port_device.html#a78c1b734f6a24d6f819cc0e25e8d9633">baudRate</a>, int dir=(int) <a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6">SerialPortDeviceNameSpace::AllDirections</a>)</td></tr>
+<tr class="memdesc:a6a0c416e52f786ad5bfdc354438f7440"><td class="mdescLeft">&#160;</td><td class="mdescRight">setBaudRate slot.  <a href="#a6a0c416e52f786ad5bfdc354438f7440"></a><br/></td></tr>
+<tr class="memitem:a704514b3bc71fed9ce169e9dfced987a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a704514b3bc71fed9ce169e9dfced987a">setBreakEnabled</a> (bool set=true)</td></tr>
+<tr class="memdesc:a704514b3bc71fed9ce169e9dfced987a"><td class="mdescLeft">&#160;</td><td class="mdescRight">setBreakEnabled slot.  <a href="#a704514b3bc71fed9ce169e9dfced987a"></a><br/></td></tr>
+<tr class="memitem:afdf174782ca4450731c639488dd4af27"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#afdf174782ca4450731c639488dd4af27">setDataBits</a> (int <a class="el" href="class_serial_port_device.html#a8312b5a51b949392fdd425f88e421bb5">dataBits</a>)</td></tr>
+<tr class="memdesc:afdf174782ca4450731c639488dd4af27"><td class="mdescLeft">&#160;</td><td class="mdescRight">setDataBits slot.  <a href="#afdf174782ca4450731c639488dd4af27"></a><br/></td></tr>
+<tr class="memitem:a8b38754de0f4c3791d31a76abf959b0d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a8b38754de0f4c3791d31a76abf959b0d">setDataErrorPolicy</a> (int policy=(int) <a class="el" href="namespace_serial_port_device_name_space.html#a13d94f9abc9ca2222b8a526a1b8caa39aefce6266ab8d908e3c420ca204dbcd9e">SerialPortDeviceNameSpace::IgnorePolicy</a>)</td></tr>
+<tr class="memdesc:a8b38754de0f4c3791d31a76abf959b0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">setDataErrorPolicy slot.  <a href="#a8b38754de0f4c3791d31a76abf959b0d"></a><br/></td></tr>
+<tr class="memitem:a5dfcc405cef155f242fb78c4cfb4b80e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a5dfcc405cef155f242fb78c4cfb4b80e">setDataTerminalReady</a> (bool set)</td></tr>
+<tr class="memdesc:a5dfcc405cef155f242fb78c4cfb4b80e"><td class="mdescLeft">&#160;</td><td class="mdescRight">setDataTerminalReady slot.  <a href="#a5dfcc405cef155f242fb78c4cfb4b80e"></a><br/></td></tr>
+<tr class="memitem:a26c54dd55fb5f70e3187eec8782c28b2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a26c54dd55fb5f70e3187eec8782c28b2">setFlowControl</a> (int flow)</td></tr>
+<tr class="memdesc:a26c54dd55fb5f70e3187eec8782c28b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">setFlowControl slot.  <a href="#a26c54dd55fb5f70e3187eec8782c28b2"></a><br/></td></tr>
+<tr class="memitem:ad0917d02528bad1b1ed16685887e0604"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ad0917d02528bad1b1ed16685887e0604">setParity</a> (int <a class="el" href="class_serial_port_device.html#ad61261eb077a5807b3d22f8c7d52d877">parity</a>)</td></tr>
+<tr class="memdesc:ad0917d02528bad1b1ed16685887e0604"><td class="mdescLeft">&#160;</td><td class="mdescRight">setParity slot.  <a href="#ad0917d02528bad1b1ed16685887e0604"></a><br/></td></tr>
+<tr class="memitem:ac5374b31a8f0b7f9ce1a041d36969827"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ac5374b31a8f0b7f9ce1a041d36969827">setPort</a> (const QSerialPortInfo &amp;serialPortInfo)</td></tr>
+<tr class="memdesc:ac5374b31a8f0b7f9ce1a041d36969827"><td class="mdescLeft">&#160;</td><td class="mdescRight">setPort slot.  <a href="#ac5374b31a8f0b7f9ce1a041d36969827"></a><br/></td></tr>
+<tr class="memitem:ad248fef3a8042e9ec04354877b22f151"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#ad248fef3a8042e9ec04354877b22f151">setPortName</a> (const QString &amp;name)</td></tr>
+<tr class="memdesc:ad248fef3a8042e9ec04354877b22f151"><td class="mdescLeft">&#160;</td><td class="mdescRight">setPortName slot.  <a href="#ad248fef3a8042e9ec04354877b22f151"></a><br/></td></tr>
+<tr class="memitem:a0a50467cc69a03150de8662f93dc1725"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a0a50467cc69a03150de8662f93dc1725">setReadBufferSize</a> (qint64 size)</td></tr>
+<tr class="memdesc:a0a50467cc69a03150de8662f93dc1725"><td class="mdescLeft">&#160;</td><td class="mdescRight">setReadBufferSize slot.  <a href="#a0a50467cc69a03150de8662f93dc1725"></a><br/></td></tr>
+<tr class="memitem:a726337bcce6906e363963f5083d246d6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a726337bcce6906e363963f5083d246d6">setRequestToSend</a> (bool set)</td></tr>
+<tr class="memdesc:a726337bcce6906e363963f5083d246d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">setRequestToSend slot.  <a href="#a726337bcce6906e363963f5083d246d6"></a><br/></td></tr>
+<tr class="memitem:add2d4502dc5e5208b37f6db1033d2f86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#add2d4502dc5e5208b37f6db1033d2f86">setSettingsRestoredOnClose</a> (bool restore)</td></tr>
+<tr class="memdesc:add2d4502dc5e5208b37f6db1033d2f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">setSettingsRestoredOnClose slot.  <a href="#add2d4502dc5e5208b37f6db1033d2f86"></a><br/></td></tr>
+<tr class="memitem:a851dda506cb078b2632eb70f17c198ea"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a851dda506cb078b2632eb70f17c198ea">setStopBits</a> (int <a class="el" href="class_serial_port_device.html#aff3de6cc151193bddbbe6ee1d22ed044">stopBits</a>)</td></tr>
+<tr class="memdesc:a851dda506cb078b2632eb70f17c198ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">setStopBits slot.  <a href="#a851dda506cb078b2632eb70f17c198ea"></a><br/></td></tr>
+<tr class="memitem:aa73e4903f5ef4a8a220bf9d545f7bccb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aa73e4903f5ef4a8a220bf9d545f7bccb">settingsRestoredOnClose</a> ()</td></tr>
+<tr class="memdesc:aa73e4903f5ef4a8a220bf9d545f7bccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">settingsRestoredOnClose slot.  <a href="#aa73e4903f5ef4a8a220bf9d545f7bccb"></a><br/></td></tr>
+<tr class="memitem:aff3de6cc151193bddbbe6ee1d22ed044"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aff3de6cc151193bddbbe6ee1d22ed044">stopBits</a> ()</td></tr>
+<tr class="memdesc:aff3de6cc151193bddbbe6ee1d22ed044"><td class="mdescLeft">&#160;</td><td class="mdescRight">stopBits slot.  <a href="#aff3de6cc151193bddbbe6ee1d22ed044"></a><br/></td></tr>
+<tr class="memitem:adb1e604dcc48ef58479dfd11eea8dd92"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#adb1e604dcc48ef58479dfd11eea8dd92">writeData</a> (const QString &amp;data)</td></tr>
+<tr class="memdesc:adb1e604dcc48ef58479dfd11eea8dd92"><td class="mdescLeft">&#160;</td><td class="mdescRight">writeData slot.  <a href="#adb1e604dcc48ef58479dfd11eea8dd92"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="signals"></a>
 Signals</h2></td></tr>
-<tr class="memitem:a72acbf5ee6f3a8b80b1fd005be9f0eda"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a72acbf5ee6f3a8b80b1fd005be9f0eda">CaptureThreadReadyRead</a> ()</td></tr>
-<tr class="memdesc:a72acbf5ee6f3a8b80b1fd005be9f0eda"><td class="mdescLeft">&#160;</td><td class="mdescRight">The CaptureThreadReadyRead Signal.  <a href="#a72acbf5ee6f3a8b80b1fd005be9f0eda"></a><br/></td></tr>
+<tr class="memitem:aecc7e602976205602ff3dac36bbc1e94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#aecc7e602976205602ff3dac36bbc1e94">SerialDataReceived</a> (QString sData)</td></tr>
+<tr class="memdesc:aecc7e602976205602ff3dac36bbc1e94"><td class="mdescLeft">&#160;</td><td class="mdescRight">The SerialDataReceived Signal.  <a href="#aecc7e602976205602ff3dac36bbc1e94"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a040f251865128f8ecec5d0027356ef17"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_serial_port_device.html#a040f251865128f8ecec5d0027356ef17">SerialPortDevice</a> (QObject *parent=0)</td></tr>
@@ -150,255 +139,8 @@ Public Member Functions</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> class. </p>
-<p>The <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> can be used to communicate with a USD HID Device. </p>
-</div><hr/><h2>Member Enumeration Documentation</h2>
-<a class="anchor" id="a841eeded317aae65e9cf6c05441db8fd"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fd">SerialPortDevice::BaudRateType_</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The enum (BaudRateType_) can store a BAUDRATE setting for a Serial Port </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fda4f17986767f6ac455af5b2cab7ebd3e1"></a>BAUD110</em>&nbsp;</td><td>
-<p>"BAUD110" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fdafe5ad32596af874fecf7ab198c529a97"></a>BAUD300</em>&nbsp;</td><td>
-<p>"BAUD300" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fda1b8d1e301fe309ac48d3fbedc5f2609b"></a>BAUD600</em>&nbsp;</td><td>
-<p>"BAUD600" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fdaa9ed95da33a5f0b4b4a581e0a9ddf576"></a>BAUD1200</em>&nbsp;</td><td>
-<p>"BAUD1200" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fdaba7bab2add050dda17d5a14318622cac"></a>BAUD2400</em>&nbsp;</td><td>
-<p>"BAUD2400" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fda7025bacd0df339fe3e3cf9c1ab98301e"></a>BAUD4800</em>&nbsp;</td><td>
-<p>"BAUD4800" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fda67cd7fc901d97bdac17bcddeccc1378c"></a>BAUD9600</em>&nbsp;</td><td>
-<p>"BAUD9600" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fda09222f1f0d965a48116785a08bc76746"></a>BAUD14400</em>&nbsp;</td><td>
-<p>"BAUD14400" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fdab3e2c5e54c9e655bde69856c94b7f002"></a>BAUD19200</em>&nbsp;</td><td>
-<p>"BAUD19200" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fda95e24c68e3fb4aefbd27b5edb3b72141"></a>BAUD38400</em>&nbsp;</td><td>
-<p>"BAUD38400" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fda9e40024a94ad677fb9c3251dd85801c6"></a>BAUD56000</em>&nbsp;</td><td>
-<p>"BAUD56000" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fdaa8b25bf7b9bb733519383ae2541ba556"></a>BAUD57600</em>&nbsp;</td><td>
-<p>"BAUD57600" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fdaa91778c94a3ae0627d098c78bf4e3218"></a>BAUD115200</em>&nbsp;</td><td>
-<p>"BAUD115200" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fdabc5d7416d02666fe254111918a4065e8"></a>BAUD128000</em>&nbsp;</td><td>
-<p>"BAUD128000" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a841eeded317aae65e9cf6c05441db8fda191a682c5e7f7256089f074a8b393f9a"></a>BAUD256000</em>&nbsp;</td><td>
-<p>"BAUD256000" </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="ad36d6375fdfb6eae857b0b64076e8265"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265">SerialPortDevice::DataBitsType_</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The enum (DataBitsType_) can store a DATABITS setting for a Serial Port </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="ad36d6375fdfb6eae857b0b64076e8265ae5bd9edfeb6819f888a017657bb6b91a"></a>DATA_5</em>&nbsp;</td><td>
-<p>"DATA_5" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="ad36d6375fdfb6eae857b0b64076e8265a12e9d2cf8136e72eb75dc4de6f28d2f5"></a>DATA_6</em>&nbsp;</td><td>
-<p>"DATA_6" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="ad36d6375fdfb6eae857b0b64076e8265a68558b08a6fcd3ff2f959afd9ebfcc27"></a>DATA_7</em>&nbsp;</td><td>
-<p>"DATA_7" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="ad36d6375fdfb6eae857b0b64076e8265a4568f99c63ef007d2bbeb0f2c0cf6aca"></a>DATA_8</em>&nbsp;</td><td>
-<p>"DATA_8" </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="aa9521a81b97ebed61fe170ae8677bc75"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75">SerialPortDevice::FlowType_</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The enum (FlowType_) can store a FLOWTYPE setting for a Serial Port </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="aa9521a81b97ebed61fe170ae8677bc75ae58f1de8c38fded8f95fbb03dc51fcf3"></a>FLOW_OFF</em>&nbsp;</td><td>
-<p>"FLOW_OFF" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="aa9521a81b97ebed61fe170ae8677bc75ae129914161d56c3331fa3f287c315156"></a>FLOW_HARDWARE</em>&nbsp;</td><td>
-<p>"FLOW_HARDWARE" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="aa9521a81b97ebed61fe170ae8677bc75a93f2cf48e0aea9b4d0b9a9de333935a7"></a>FLOW_XONXOFF</em>&nbsp;</td><td>
-<p>"FLOW_XONXOFF" </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093">SerialPortDevice::OpenMode_</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The enum (OpenMode_) can store a OPENMODE setting for a Serial Port </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093a69db2b3df07ad129d3c3347879f860ae"></a>NotOpen</em>&nbsp;</td><td>
-<p>"NotOpen" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093ae8c88440373262ac17614bb1f3de440f"></a>ReadOnly</em>&nbsp;</td><td>
-<p>"ReadOnly" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093a9ce6b31304b0ac0d840c0e12263cd617"></a>WriteOnly</em>&nbsp;</td><td>
-<p>"WriteOnly" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093a1b7b7dbdbbc98dec969661344db90d2b"></a>ReadWrite</em>&nbsp;</td><td>
-<p>"ReadWrite" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093a360629306edd4af1e5400d6597d29d18"></a>Append</em>&nbsp;</td><td>
-<p>"Append" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093a40d6c810aee30b7e4c370819f98f17a1"></a>Truncate</em>&nbsp;</td><td>
-<p>"Truncate" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093aedba3da8c5b8da72043793f09ba40f76"></a>Text</em>&nbsp;</td><td>
-<p>"Text" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a1cc032021343bcf2146035a7d9c1f093a800d11c945fa00bb4d58aeddb0d7d14a"></a>Unbuffered</em>&nbsp;</td><td>
-<p>"Unbuffered" </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="afd70ad875a73f6b42aae848be391434c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434c">SerialPortDevice::ParityType_</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The enum (ParityType_) can store a PARITYTYPE setting for a Serial Port </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="afd70ad875a73f6b42aae848be391434ca6cd6426867361769554da0f61fbed35e"></a>PAR_NONE</em>&nbsp;</td><td>
-<p>"PAR_NONE" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="afd70ad875a73f6b42aae848be391434cabd78546bea70199ebbc6868c7334c018"></a>PAR_ODD</em>&nbsp;</td><td>
-<p>"PAR_ODD" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="afd70ad875a73f6b42aae848be391434caceea3b01d4c04c7ecf84f242e5b159bb"></a>PAR_EVEN</em>&nbsp;</td><td>
-<p>"PAR_EVEN" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="afd70ad875a73f6b42aae848be391434caf81b96a251eca523ebaa71beb2a89951"></a>PAR_MARK</em>&nbsp;</td><td>
-<p>"PAR_MARK" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="afd70ad875a73f6b42aae848be391434cafe12493d0e4d089eef0e59f9f2323344"></a>PAR_SPACE</em>&nbsp;</td><td>
-<p>"PAR_SPACE" </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="ac1cbf2a80ef8ca1258ab14f1b84d5a2e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2e">SerialPortDevice::QueryMode_</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The enum (QueryMode_) can store a QUERYMODE setting for a Serial Port </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="ac1cbf2a80ef8ca1258ab14f1b84d5a2eae71a6035227b022831f69daea333d46b"></a>Polling</em>&nbsp;</td><td>
-<p>"Polling" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="ac1cbf2a80ef8ca1258ab14f1b84d5a2eaa6a89cd804aa7a4945c01ec04bb96eb9"></a>EventDriven</em>&nbsp;</td><td>
-<p>"EventDriven" </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a159bd1108de166fb0b333b88a4c174c6"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6">SerialPortDevice::StopBitsType_</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>The enum (StopBitsType_) can store a STOPBITS setting for a Serial Port </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="a159bd1108de166fb0b333b88a4c174c6aca1cbd01683d6068caf4d617e336dc5d"></a>STOP_1</em>&nbsp;</td><td>
-<p>"STOP_1" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a159bd1108de166fb0b333b88a4c174c6a2f457a2d1392e8f0a6c6991ed7541c8c"></a>STOP_1_5</em>&nbsp;</td><td>
-<p>"STOP_1_5" </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a159bd1108de166fb0b333b88a4c174c6a5e0427785d14d007f8e1a93a7aff3d7d"></a>STOP_2</em>&nbsp;</td><td>
-<p>"STOP_2" </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<p>The <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> can be used to communicate with a Device connected to the Serial Port. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a040f251865128f8ecec5d0027356ef17"></a>
 <div class="memitem">
 <div class="memproto">
@@ -439,39 +181,76 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a8158cef8074c78ce92586f2bbff8695d"></a>
+<a class="anchor" id="a78c1b734f6a24d6f819cc0e25e8d9633"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">QString <a class="el" href="class_serial_port_device.html#a8158cef8074c78ce92586f2bbff8695d">SerialPortDevice::baudRateToString</a> </td>
+          <td class="memname">qint32 <a class="el" href="class_serial_port_device.html#a78c1b734f6a24d6f819cc0e25e8d9633">SerialPortDevice::baudRate</a> </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Returns the Serial Port BaudRate as a string representation, see <a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fd">SerialPortDevice::BaudRateType_</a>. </p>
-
-</div>
-</div>
-<a class="anchor" id="a72acbf5ee6f3a8b80b1fd005be9f0eda"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_serial_port_device.html#a72acbf5ee6f3a8b80b1fd005be9f0eda">SerialPortDevice::CaptureThreadReadyRead</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td><code> [signal]</code></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dir</em> = <code>(int)<a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6">SerialPortDeviceNameSpace::AllDirections</a></code></td><td>)</td>
+          <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>The CaptureThreadReadyRead Signal. </p>
-<p>You can use this Signal to keep track of when the capture thread is ready for reading data. There's no parameter. </p>
+<p>baudRate slot. </p>
+<p>This function returns the data baud rate for the desired direction. If the setting is successful, it returns the the data baud rate; otherwise it returns -1 and sets an error code which can be obtained by accessing the value of the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error</a> property. To set the baud rate, use the enumeration <a class="el" href="namespace_serial_port_device_name_space.html#a0c08b8bbb255ea1c71426b0470c58423">SerialPortDeviceNameSpace::BaudRate</a> or any positive integer value. Warning: Only the <a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6" title="3: AllDirections.">SerialPortDeviceNameSpace::AllDirections</a> flag is support for setting this property on Windows. Warning: Returns equal baud rate in any direction on Windows. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dir</td><td>a integer value representing the direction of the requested baud rate, see <a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974a">SerialPortDeviceNameSpace::Direction</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value representing the baud rate or -1. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1b66857d9ba3566eeff6a4e9dbf7a979"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a1b66857d9ba3566eeff6a4e9dbf7a979">SerialPortDevice::clear</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dir</em> = <code>(int)<a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6">SerialPortDeviceNameSpace::AllDirections</a></code></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>clear slot. </p>
+<p>This function discards all characters from the output or input buffer, depending on a given direction. Including clear an internal class buffers and the UART (driver) buffers. Also terminate pending read or write operations. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dir</td><td>a integer value representing the direction of the requested baud rate, see <a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974a">SerialPortDeviceNameSpace::Direction</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value determing whether this function could be executed successfully. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a6298b5af38f2816835284032c8a3781c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_serial_port_device.html#a6298b5af38f2816835284032c8a3781c">SerialPortDevice::clearError</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>clearError slot. </p>
+<p>This function sets the error code to the default <a class="el" href="namespace_serial_port_device_name_space.html#aad912746abb9674eedeaa0c8544b4b9aaeea32597a726e5b971afa4dbd86798f9" title="0: No error occurred.">SerialPortDeviceNameSpace::NoError</a> after a call. </p>
 
 </div>
 </div>
@@ -483,230 +262,591 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void <a class="el" href="class_serial_port_device.html#aae9983c24fbd711b38706fa3bd956c7e">SerialPortDevice::close</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td><code> [virtual, slot]</code></td>
+          <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Closes the Serial Port. </p>
+
+<p>close slot. </p>
+<p>This function first emits the aboutToClose() signal, then closes the serial port device and sets its OpenMode to <a class="el" href="namespace_serial_port_device_name_space.html#ad9a78c6b177320c7acb24b27de51fc08aff5658665bb2be24a218b49561bbf8e5" title="0: The device is not open.">SerialPortDeviceNameSpace::NotOpen</a>. The error string is also reset. </p>
 
 </div>
 </div>
-<a class="anchor" id="ab93af696e6af9c817e1436d26fd17152"></a>
+<a class="anchor" id="a8312b5a51b949392fdd425f88e421bb5"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">QString <a class="el" href="class_serial_port_device.html#ab93af696e6af9c817e1436d26fd17152">SerialPortDevice::dataBitsToString</a> </td>
+          <td class="memname">int <a class="el" href="class_serial_port_device.html#a8312b5a51b949392fdd425f88e421bb5">SerialPortDevice::dataBits</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
+          <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns the Serial Port DataBits as a string representation, see <a class="el" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265">SerialPortDevice::DataBitsType_</a>. </p>
+
+<p>dataBits slot. </p>
+<p>This function returns the data bits in a frame. If not successful, it sets an error code which can be obtained by accessing the value of the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error</a> property. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value representing the data bits (see <a class="el" href="namespace_serial_port_device_name_space.html#aeee1d6580c83a0a53079d9bf412bf751">SerialPortDeviceNameSpace::DataBits</a>) setting or -1 if unsuccessfully. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ad4bfcf12eb77900346567ded70bd82c9"></a>
+<a class="anchor" id="a5483f9a389818873116a345bc84b1f30"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">QString <a class="el" href="class_serial_port_device.html#ad4bfcf12eb77900346567ded70bd82c9">SerialPortDevice::flowControlToString</a> </td>
+          <td class="memname">int <a class="el" href="class_serial_port_device.html#a5483f9a389818873116a345bc84b1f30">SerialPortDevice::dataErrorPolicy</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
+          <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns the Serial Port Flow Control as a string representation, see <a class="el" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75">SerialPortDevice::FlowType_</a>. </p>
+
+<p>dataErrorPolicy slot. </p>
+<p>This function returns the error policy how the process receives the character in case of parity error detection. The default policy set is <a class="el" href="namespace_serial_port_device_name_space.html#a13d94f9abc9ca2222b8a526a1b8caa39aefce6266ab8d908e3c420ca204dbcd9e" title="2: Ignores the error for a bad character.">SerialPortDeviceNameSpace::IgnorePolicy</a>. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value representing the error policy (see <a class="el" href="namespace_serial_port_device_name_space.html#a13d94f9abc9ca2222b8a526a1b8caa39">SerialPortDeviceNameSpace::DataErrorPolicy</a>) setting or -1 if unsuccessfully. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="aec0bc1c9e3d79843c9845e818d531e3b"></a>
+<a class="anchor" id="a79503901edb42873b5fc25dbbaf1c138"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="class_serial_port_device.html#aec0bc1c9e3d79843c9845e818d531e3b">SerialPortDevice::isOpen</a> </td>
+          <td class="memname">int <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138">SerialPortDevice::error</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
+          <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns whether the Serial Port is currently open. </p>
+
+<p>error slot. </p>
+<p>This function returns the error status of the serial port, see <a class="el" href="namespace_serial_port_device_name_space.html#aad912746abb9674eedeaa0c8544b4b9a">SerialPortDeviceNameSpace::SerialPortError</a>. The I/O device status returns an error code. For example, if <a class="el" href="class_serial_port_device.html#ad7063ed14fceb1a2c8bccf5fe3f5c8b1" title="open slot.">SerialPortDevice.open()</a> returns false, or a read/write operation returns -1, this property can be used to figure out the reason why the operation failed. The error code is set to the default <a class="el" href="namespace_serial_port_device_name_space.html#aad912746abb9674eedeaa0c8544b4b9aaeea32597a726e5b971afa4dbd86798f9" title="0: No error occurred.">SerialPortDeviceNameSpace::NoError</a> after a call to <a class="el" href="class_serial_port_device.html#a6298b5af38f2816835284032c8a3781c" title="clearError slot.">SerialPortDevice.clearError()</a>. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a35ad64b2d6c97873a0f26c2512ee6168"></a>
+<a class="anchor" id="a2b69d22724682c8c08752d3665a02c83"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SerialPortDevice::open </td>
+          <td class="memname">QString <a class="el" href="class_serial_port_device.html#a2b69d22724682c8c08752d3665a02c83">SerialPortDevice::errorString</a> </td>
           <td>(</td>
-          <td class="paramtype">QString&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>errorString slot. </p>
+<p>This function returns a human-readable description of the last device error that occurred, see <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice.error()</a>. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a string value holding a human-readable description of the last device error that occurred. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2e654266c7dfc9691ee96e4ee06fa81f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="class_serial_port_device.html#a2e654266c7dfc9691ee96e4ee06fa81f">SerialPortDevice::flowControl</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>flowControl slot. </p>
+<p>This function returns the flow control mode. If the function could fetch the current flow control mode it return this mode (see <a class="el" href="namespace_serial_port_device_name_space.html#aa6595c4c022e7e5cc6ace559232d5a99">SerialPortDeviceNameSpace::FlowControl</a>), otherwise it returns -1 and sets an error code which can be obtained by accessing the value of the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error</a> property. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value holding the current control mode or -1. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5dc528e7a47daf712f0f7459b18b19ef"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a5dc528e7a47daf712f0f7459b18b19ef">SerialPortDevice::flush</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>flush slot. </p>
+<p>This function writes as much as possible from the internal write buffer to the underlying serial port without blocking. Call this function for sending the buffered data immediately to the serial port. The number of bytes successfully written depends on the operating system. In most cases, this function does not need to be called, because the <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> class will start sending data automatically once control is returned to the event loop. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value, if any data was written, this function returns true; otherwise returns false. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0154231a3946deb9f9c5b7d31b4bd162"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a0154231a3946deb9f9c5b7d31b4bd162">SerialPortDevice::isDataTerminalReady</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>isDataTerminalReady slot. </p>
+<p>This function returns the state (high or low) of the line signal DTR. If the setting is successful, returns true; otherwise returns false. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value determining whether the DTR signal is high. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab26014478d99bee789ae9a67aa5e8132"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#ab26014478d99bee789ae9a67aa5e8132">SerialPortDevice::isRequestToSend</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>isRequestToSend slot. </p>
+<p>This function returns the state (high or low) of the line signal RTS. If the setting is successful, returns true; otherwise returns false. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value determining whether the RTS signal is high. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ad7063ed14fceb1a2c8bccf5fe3f5c8b1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#ad7063ed14fceb1a2c8bccf5fe3f5c8b1">SerialPortDevice::open</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>mode</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Opens the Serial Port for further usage in the mode string parameter(mode), see <a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093">SerialPortDevice::OpenMode_</a>. </p>
+
+<p>open slot. </p>
+<p>This function opens the serial port using <a class="el" href="namespace_serial_port_device_name_space.html#ad9a78c6b177320c7acb24b27de51fc08">SerialPortDeviceNameSpace::OpenMode</a> mode, and then returns true if successful; otherwise returns false with and sets an error code which can be obtained by calling the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error()</a> method. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>a integer value . </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value determing whether the function executed successfully. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a8043139890be231c5d8ac7cb5d5e8d80"></a>
+<a class="anchor" id="ad61261eb077a5807b3d22f8c7d52d877"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">QString <a class="el" href="class_serial_port_device.html#a8043139890be231c5d8ac7cb5d5e8d80">SerialPortDevice::openModeToString</a> </td>
+          <td class="memname">int <a class="el" href="class_serial_port_device.html#ad61261eb077a5807b3d22f8c7d52d877">SerialPortDevice::parity</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Returns the Serial Port Open Mode as a string representation, see <a class="el" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093">SerialPortDevice::OpenMode_</a>. </p>
-
-</div>
-</div>
-<a class="anchor" id="a6ec748aa7e4b719ae70c9cc14e20c0fe"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QString <a class="el" href="class_serial_port_device.html#a6ec748aa7e4b719ae70c9cc14e20c0fe">SerialPortDevice::parityToString</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Returns the Serial Port Parity as a string representation, see <a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434c">SerialPortDevice::ParityType_</a>. </p>
-
-</div>
-</div>
-<a class="anchor" id="a7cac6d85cac8e50fd8620727eb52a0db"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QString <a class="el" href="class_serial_port_device.html#a7cac6d85cac8e50fd8620727eb52a0db">SerialPortDevice::portName</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Returns the Serial Port Name. </p>
-
-</div>
-</div>
-<a class="anchor" id="a2630f1462deb96ce1b1239abb0ed2eda"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QString <a class="el" href="class_serial_port_device.html#a2630f1462deb96ce1b1239abb0ed2eda">SerialPortDevice::queryModeToString</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Returns the Serial Port Query Mode as a string representation, see <a class="el" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2e">SerialPortDevice::QueryMode_</a>. </p>
-
-</div>
-</div>
-<a class="anchor" id="a4272eb534b01d7b59f2cc51513c81c4f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SerialPortDevice::setBaudRate </td>
-          <td>(</td>
-          <td class="paramtype">QString&#160;</td>
-          <td class="paramname"><em>baudRate</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Changes the Serial Port BaudRate configuration to the string parameter(baudrate), see <a class="el" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fd">SerialPortDevice::BaudRateType_</a>. </p>
+
+<p>parity slot. </p>
+<p>This function returns the parity checking mode, see <a class="el" href="namespace_serial_port_device_name_space.html#a1ec9f4717f43d7735a6d82803d6da353">SerialPortDeviceNameSpace::Parity</a>. If the function could not return the parity checking mode it returns -1 and sets an error code which can be obtained by accessing the value of the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error</a> property. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value representing the parity checking mode or -1 in case of an unsuccessfully result. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a5fdbb4080f63af0a53474c34b7453658"></a>
+<a class="anchor" id="a96264f285617b9f3257a5d733259cb08"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SerialPortDevice::setDataBits </td>
+          <td class="memname">int <a class="el" href="class_serial_port_device.html#a96264f285617b9f3257a5d733259cb08">SerialPortDevice::pinoutSignals</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>pinoutSignals slot. </p>
+<p>This function returns the state of the line signals in a bitmap format, see <a class="el" href="namespace_serial_port_device_name_space.html#a991a2361e9657a410ed1357133c0289a">SerialPortDeviceNameSpace::PinoutSignal</a>. From this result, it is possible to allocate the state of the desired signal by applying a mask "AND", where the mask is the desired enumeration value from SerialPortDevice::PinoutSignals. Note that, this method performs a system call, thus ensuring that the line signal states are returned properly. This is necessary when the underlying operating systems cannot provide proper notifications about the changes. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value representing the line signals in a bitmap format. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0daa8114d718b413a0a97a6de2393b2a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString <a class="el" href="class_serial_port_device.html#a0daa8114d718b413a0a97a6de2393b2a">SerialPortDevice::portName</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>portName slot. </p>
+<p>This function returns the name set by <a class="el" href="class_serial_port_device.html#ac5374b31a8f0b7f9ce1a041d36969827" title="setPort slot.">SerialPortDevice.setPort()</a> or to the <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> constructors. This name is short, i.e. it extract and convert out from the internal variable system location of the device. Conversion algorithm is platform specific:<br/>
+<br/>
+ Platform - Brief Description<br/>
+ Windows - Removes the prefix "\\.\\" from the system location and returns the remainder of the string.<br/>
+ Windows CE - Removes the postfix ":" from the system location and returns the remainder of the string.<br/>
+ Symbian - Returns the system location as it is, as it is equivalent to the port name.<br/>
+ GNU/Linux - Removes the prefix "/dev/" from the system location and returns the remainder of the string.<br/>
+ Mac OSX - Removes the prefix "/dev/cu." and "/dev/tty." from the system location and returns the remainder of the string.<br/>
+ Other *nix - The same as for GNU/Linux. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a string value holding the port name. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a419bfec6ed7d4e57a2752afa634f0ef3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QByteArray <a class="el" href="class_serial_port_device.html#a419bfec6ed7d4e57a2752afa634f0ef3">SerialPortDevice::readAll</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>readAll slot. </p>
+<p>This function reads all available data from the serial device, and returns it as a QByteArray. This function has no way of reporting errors; returning an empty QByteArray() can mean either that no data was currently available for reading, or that an error occurred. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a QByteArray value containing the data that was read. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a63952df901e6dc05580e078ef07086cf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">qint64 <a class="el" href="class_serial_port_device.html#a63952df901e6dc05580e078ef07086cf">SerialPortDevice::readBufferSize</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>readBufferSize slot. </p>
+<p>This function returns the size of the internal read buffer. This limits the amount of data that the client can receive before calling the SerialPortDevice.read() or <a class="el" href="class_serial_port_device.html#a419bfec6ed7d4e57a2752afa634f0ef3" title="readAll slot.">SerialPortDevice.readAll()</a> methods. A read buffer size of 0 (the default) means that the buffer has no size limit, ensuring that no data is lost. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer(64 bit) value holding the size of the internal read buffer. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0457b75daff5a71ea9e720220342ef75"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a0457b75daff5a71ea9e720220342ef75">SerialPortDevice::sendBreak</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>duration</em> = <code>0</code></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sendBreak slot. </p>
+<p>This function sends a continuous stream of zero bits during a specified period of time duration in msec if the terminal is using asynchronous serial data. If the duration is zero then zero bits are transmitted by at least 0.25 seconds, but no more than 0.5 seconds. If the duration is non zero then zero bits are transmitted within a certain period of time depending on the implementation. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">duration</td><td>a integer value representing the duration. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aecc7e602976205602ff3dac36bbc1e94"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_serial_port_device.html#aecc7e602976205602ff3dac36bbc1e94">SerialPortDevice::SerialDataReceived</a> </td>
           <td>(</td>
           <td class="paramtype">QString&#160;</td>
+          <td class="paramname"><em>sData</em></td><td>)</td>
+          <td><code> [signal]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>The SerialDataReceived Signal. </p>
+<p>This Signal is emitted each time new Serial Data is received. The sData parameter contains the last received data stream. </p>
+
+</div>
+</div>
+<a class="anchor" id="a6a0c416e52f786ad5bfdc354438f7440"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a6a0c416e52f786ad5bfdc354438f7440">SerialPortDevice::setBaudRate</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>baudRate</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dir</em> = <code>(int)<a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6">SerialPortDeviceNameSpace::AllDirections</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>setBaudRate slot. </p>
+<p>This function sets the data baud rate for the desired direction. If the setting is successful, it returns true; otherwise it returns false and sets an error code which can be obtained by accessing the value of the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error</a> property. To set the baud rate, use the enumeration <a class="el" href="namespace_serial_port_device_name_space.html#a0c08b8bbb255ea1c71426b0470c58423">SerialPortDeviceNameSpace::BaudRate</a> or any positive integer value. Warning: Only the <a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6" title="3: AllDirections.">SerialPortDeviceNameSpace::AllDirections</a> flag is support for setting this property on Windows. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">baudRate</td><td>a integer value representing the baud rate, see <a class="el" href="namespace_serial_port_device_name_space.html#a0c08b8bbb255ea1c71426b0470c58423">SerialPortDeviceNameSpace::BaudRate</a>. </td></tr>
+    <tr><td class="paramname">dir</td><td>a integer value representing the direction of the requested baud rate, see <a class="el" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974a">SerialPortDeviceNameSpace::Direction</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a704514b3bc71fed9ce169e9dfced987a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a704514b3bc71fed9ce169e9dfced987a">SerialPortDevice::setBreakEnabled</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>set</em> = <code>true</code></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>setBreakEnabled slot. </p>
+<p>This function controls the signal break, depending on the flag set. If set is true then enables the break transmission; otherwise disables. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">set</td><td>a boolean value determining whether the break transmission should be enabled or disabled. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="afdf174782ca4450731c639488dd4af27"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#afdf174782ca4450731c639488dd4af27">SerialPortDevice::setDataBits</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>dataBits</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Changes the Serial Port DataBits configuration to the string parameter(dataBits), see <a class="el" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265">SerialPortDevice::DataBitsType_</a>. </p>
+
+<p>setDataBits slot. </p>
+<p>This function sets the data bits in a frame. If the setting is unsuccessful it returns false and sets an error code which can be obtained by accessing the value of the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error</a> property. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dataBits</td><td>a integer value the data bits in a frame, see <a class="el" href="namespace_serial_port_device_name_space.html#aeee1d6580c83a0a53079d9bf412bf751">SerialPortDeviceNameSpace::DataBits</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="aa41c8603eb8543da4bd1ecd250ea3729"></a>
+<a class="anchor" id="a8b38754de0f4c3791d31a76abf959b0d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SerialPortDevice::setFlowControl </td>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a8b38754de0f4c3791d31a76abf959b0d">SerialPortDevice::setDataErrorPolicy</a> </td>
           <td>(</td>
-          <td class="paramtype">QString&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>policy</em> = <code>(int)<a class="el" href="namespace_serial_port_device_name_space.html#a13d94f9abc9ca2222b8a526a1b8caa39aefce6266ab8d908e3c420ca204dbcd9e">SerialPortDeviceNameSpace::IgnorePolicy</a></code></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>setDataErrorPolicy slot. </p>
+<p>This function sets the error policy how the process receives the character in case of parity error detection. If the setting is unsuccessful, it returns false. The default policy set is <a class="el" href="namespace_serial_port_device_name_space.html#a13d94f9abc9ca2222b8a526a1b8caa39aefce6266ab8d908e3c420ca204dbcd9e" title="2: Ignores the error for a bad character.">SerialPortDeviceNameSpace::IgnorePolicy</a>. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">policy</td><td>a integer value representing the data error policy, see <a class="el" href="namespace_serial_port_device_name_space.html#a13d94f9abc9ca2222b8a526a1b8caa39">SerialPortDeviceNameSpace::DataErrorPolicy</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5dfcc405cef155f242fb78c4cfb4b80e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a5dfcc405cef155f242fb78c4cfb4b80e">SerialPortDevice::setDataTerminalReady</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>set</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>setDataTerminalReady slot. </p>
+<p>This function configures the state (high or low) of the line signal DTR depending on the set flag. If the flag is true then the DTR signal is set to high; otherwise low. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">set</td><td>a boolean value holding the flag value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a26c54dd55fb5f70e3187eec8782c28b2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a26c54dd55fb5f70e3187eec8782c28b2">SerialPortDevice::setFlowControl</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>flow</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Changes the Serial Port Flow Control configuration to the string parameter(flow), see <a class="el" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75">SerialPortDevice::FlowType_</a>. </p>
+
+<p>setFlowControl slot. </p>
+<p>This function sets the desired flow control mode. If the setting is not successful then it returns false and sets an error code which can be obtained by accessing the value of the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error</a> property. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">flow</td><td>a integer value representing the flow control mode, see <a class="el" href="namespace_serial_port_device_name_space.html#aa6595c4c022e7e5cc6ace559232d5a99">SerialPortDeviceNameSpace::FlowControl</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value determing whether this function could be executed successfully. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="aee5f5a829f4d82970581f426301aa7d2"></a>
+<a class="anchor" id="ad0917d02528bad1b1ed16685887e0604"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SerialPortDevice::setParity </td>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#ad0917d02528bad1b1ed16685887e0604">SerialPortDevice::setParity</a> </td>
           <td>(</td>
-          <td class="paramtype">QString&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>parity</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Changes the Serial Port Parity configuration to the string parameter(parity), see <a class="el" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434c">SerialPortDevice::ParityType_</a>. </p>
+
+<p>setParity slot. </p>
+<p>This function configures the parity checking mode. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">parity</td><td>a integer value representing the parity checking mode, see <a class="el" href="namespace_serial_port_device_name_space.html#a1ec9f4717f43d7735a6d82803d6da353">SerialPortDeviceNameSpace::Parity</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a49f40e0e6133bf18cf967d5578feb93c"></a>
+<a class="anchor" id="ac5374b31a8f0b7f9ce1a041d36969827"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class_serial_port_device.html#a49f40e0e6133bf18cf967d5578feb93c">SerialPortDevice::setPortName</a> </td>
+          <td class="memname">void <a class="el" href="class_serial_port_device.html#ac5374b31a8f0b7f9ce1a041d36969827">SerialPortDevice::setPort</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QSerialPortInfo &amp;&#160;</td>
+          <td class="paramname"><em>serialPortInfo</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>setPort slot. </p>
+<p>This function . </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">serialPortInfo</td><td>a QSerialPortInfo value . </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ad248fef3a8042e9ec04354877b22f151"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#ad248fef3a8042e9ec04354877b22f151">SerialPortDevice::setPortName</a> </td>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>name</em></td><td>)</td>
@@ -715,96 +855,197 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Changes the Serial Port Name to the string parameter(name). </p>
+
+<p>setPortName slot. </p>
+<p>This function configures the name of the serial port set by <a class="el" href="class_serial_port_device.html#ac5374b31a8f0b7f9ce1a041d36969827" title="setPort slot.">SerialPortDevice.setPort()</a> or to the <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> constructors. This name is short, i.e. it extract and convert out from the internal variable system location of the device. Conversion algorithm is platform specific:<br/>
+<br/>
+ Platform - Brief Description<br/>
+ Windows - Removes the prefix "\\.\\" from the system location and returns the remainder of the string.<br/>
+ Windows CE - Removes the postfix ":" from the system location and returns the remainder of the string.<br/>
+ Symbian - Returns the system location as it is, as it is equivalent to the port name.<br/>
+ GNU/Linux - Removes the prefix "/dev/" from the system location and returns the remainder of the string.<br/>
+ Mac OSX - Removes the prefix "/dev/cu." and "/dev/tty." from the system location and returns the remainder of the string.<br/>
+ Other *nix - The same as for GNU/Linux. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>a string value holding the serial port name. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a28396bce0326baeb3c4b36596458cca4"></a>
+<a class="anchor" id="a0a50467cc69a03150de8662f93dc1725"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SerialPortDevice::setQueryMode </td>
+          <td class="memname">void <a class="el" href="class_serial_port_device.html#a0a50467cc69a03150de8662f93dc1725">SerialPortDevice::setReadBufferSize</a> </td>
           <td>(</td>
-          <td class="paramtype">QString&#160;</td>
-          <td class="paramname"><em>mode</em></td><td>)</td>
+          <td class="paramtype">qint64&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Changes the Serial Port Query Mode configuration to the string parameter(mode), see <a class="el" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2e">SerialPortDevice::QueryMode_</a>. </p>
+
+<p>setReadBufferSize slot. </p>
+<p>This function sets the size of <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a>'s internal read buffer to be size bytes. If the buffer size is limited to a certain size, <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> will not buffer more than this size of data. Exceptionally, a buffer size of 0 means that the read buffer is unlimited and all incoming data is buffered, this is the default. This option is useful if the data is only read at certain points in time (for instance in a real-time streaming application) or if the serial port should be protected against receiving too much data, which may eventually causes that the application runs out of memory. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>a integer(64 bit) value representing the buffer size. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a class="anchor" id="a47addec2883ea77f3dca457dd4615f19"></a>
+<a class="anchor" id="a726337bcce6906e363963f5083d246d6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SerialPortDevice::setStopBits </td>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a726337bcce6906e363963f5083d246d6">SerialPortDevice::setRequestToSend</a> </td>
           <td>(</td>
-          <td class="paramtype">QString&#160;</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>set</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>setRequestToSend slot. </p>
+<p>This function configures the state (high or low) of the line signal RTS. If the flag is true then the RTS signal is set to high; otherwise low. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">set</td><td>a boolean value holding the flag. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="add2d4502dc5e5208b37f6db1033d2f86"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_serial_port_device.html#add2d4502dc5e5208b37f6db1033d2f86">SerialPortDevice::setSettingsRestoredOnClose</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>restore</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>setSettingsRestoredOnClose slot. </p>
+<p>This function configures the flag which allows to restore the previous settings while closing the serial port. If this flag is true, the settings will be restored; otherwise not. The default state of the <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> class is configured to restore the settings. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">restore</td><td>a boolean value holding the flag. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a851dda506cb078b2632eb70f17c198ea"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#a851dda506cb078b2632eb70f17c198ea">SerialPortDevice::setStopBits</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>stopBits</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Changes the Serial Port Stop Bits configuration to the string parameter(stopBits), see <a class="el" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6">SerialPortDevice::StopBitsType_</a>. </p>
+
+<p>setStopBits slot. </p>
+<p>This function configures the number of stop bits in a frame. If the setting is unsuccessful it returns false and sets an error code which can be obtained by accessing the value of the <a class="el" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">SerialPortDevice::error</a> property. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stopBits</td><td>a integer value representing the stop bits in a frame, see <a class="el" href="namespace_serial_port_device_name_space.html#aea0bd6ac877f51b75a3806678637a736">SerialPortDeviceNameSpace::StopBits</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning whether the function executed successful. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a1359e87ccc7f18557e9422aa364066cc"></a>
+<a class="anchor" id="aa73e4903f5ef4a8a220bf9d545f7bccb"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class_serial_port_device.html#a1359e87ccc7f18557e9422aa364066cc">SerialPortDevice::setTimeout</a> </td>
-          <td>(</td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>millisec</em></td><td>)</td>
-          <td><code> [slot]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Changes the Serial Port Timeout configuration to the long parameter(millisec) in milliseconds. </p>
-
-</div>
-</div>
-<a class="anchor" id="a697751ef5d0f4abb2729b14ba1672801"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="class_serial_port_device.html#a1359e87ccc7f18557e9422aa364066cc">SerialPortDevice::setTimeout</a> </td>
-          <td>(</td>
-          <td class="paramtype">qlonglong&#160;</td>
-          <td class="paramname"><em>millisec</em></td><td>)</td>
-          <td><code> [slot]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-<p>Changes the Serial Port Timeout configuration to the qlonglong parameter(millisec) in milliseconds. </p>
-
-</div>
-</div>
-<a class="anchor" id="a1beb989d521413d56610dacafb3a96ad"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QString <a class="el" href="class_serial_port_device.html#a1beb989d521413d56610dacafb3a96ad">SerialPortDevice::stopBitsToString</a> </td>
+          <td class="memname">bool <a class="el" href="class_serial_port_device.html#aa73e4903f5ef4a8a220bf9d545f7bccb">SerialPortDevice::settingsRestoredOnClose</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const<code> [slot]</code></td>
+          <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns the Serial Port Stop Bits as a string representation, see <a class="el" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6">SerialPortDevice::StopBitsType_</a>. </p>
+
+<p>settingsRestoredOnClose slot. </p>
+<p>This function returns the flag which allows to restore the previous settings while closing the serial port. The default state of the <a class="el" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> class is configured to restore the settings. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value returning the flag. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aff3de6cc151193bddbbe6ee1d22ed044"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="class_serial_port_device.html#aff3de6cc151193bddbbe6ee1d22ed044">SerialPortDevice::stopBits</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>stopBits slot. </p>
+<p>This function returns the number of stop bits in a frame. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value representing the number of stop bits, see <a class="el" href="namespace_serial_port_device_name_space.html#aea0bd6ac877f51b75a3806678637a736">SerialPortDeviceNameSpace::StopBits</a>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="adb1e604dcc48ef58479dfd11eea8dd92"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">qint64 <a class="el" href="class_serial_port_device.html#adb1e604dcc48ef58479dfd11eea8dd92">SerialPortDevice::writeData</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>writeData slot. </p>
+<p>This function writes/sends a string of data over the configured serial port. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>a string value holding the data that should be written/send. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a integer(64 bits) value holding the number of bytes successfully send. </dd></dl>
 
 </div>
 </div>
@@ -812,7 +1053,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:32 for Serial Port Device script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:28 for Serial Port Device script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

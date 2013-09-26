@@ -12,3 +12,7 @@ MainDocumentation.qhc
 /Doxygen/KeyBoardPlugin.cfg
 /Doxygen/ParallelPortPlugin.cfg
 Doxygen/StimulGLMainApplication.cfg
+Doxygen/FireBirdClientPlugin.cfg
+Doxygen/PiezoStimDevicePlugin.cfg
+Doxygen/TBVExchangerPlugin.cfg
+Doxygen/TCPNetworkServerPlugin.cfg

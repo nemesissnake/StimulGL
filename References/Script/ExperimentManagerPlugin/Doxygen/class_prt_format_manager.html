@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">ExperimentManager script class
-   &#160;<span id="projectnumber">2.0.0.3</span>
+   &#160;<span id="projectnumber">2.1.0.0</span>
    </div>
    <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
@@ -56,17 +56,31 @@
 <tr><td colspan="2"><h2><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
 <tr class="memitem:acc10a6d12ff744ab3cc74d94f8f2f4a2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#acc10a6d12ff744ab3cc74d94f8f2f4a2">appendCondition</a> (const QString sConditionName=<a class="el" href="group___prt_format_manager_defines.html#ga6ba2ba8d8e4635315c967a8830e31cc7">PRT_UNDEF_NAME_STRING</a>, const QString sConditionColor=<a class="el" href="group___prt_format_manager_defines.html#gae381a825f969b27c409c8c6f7850b406">PRT_UNDEF_COLOR_STRING</a>)</td></tr>
+<tr class="memdesc:acc10a6d12ff744ab3cc74d94f8f2f4a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a new Condition to the in-memory stimulation protocol.  <a href="#acc10a6d12ff744ab3cc74d94f8f2f4a2"></a><br/></td></tr>
 <tr class="memitem:a9e832b91fd5b00cef57213e42aa19402"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#a9e832b91fd5b00cef57213e42aa19402">appendInterval</a> (const int nConditionIndex=0, const int nBegin=0, const int nEnd=1)</td></tr>
+<tr class="memdesc:a9e832b91fd5b00cef57213e42aa19402"><td class="mdescLeft">&#160;</td><td class="mdescRight">Appends a Interval to an existing Condition to the in-memory stimulation protocol.  <a href="#a9e832b91fd5b00cef57213e42aa19402"></a><br/></td></tr>
 <tr class="memitem:a76f63da2c3fab411afb7476f47f6fcb7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#a76f63da2c3fab411afb7476f47f6fcb7">clearAll</a> ()</td></tr>
+<tr class="memdesc:a76f63da2c3fab411afb7476f47f6fcb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all Parameters and Conditions of the stimulation protocol.  <a href="#a76f63da2c3fab411afb7476f47f6fcb7"></a><br/></td></tr>
 <tr class="memitem:ac636ec7a6c5a29bb49d057b58f93cb37"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#ac636ec7a6c5a29bb49d057b58f93cb37">clearConditions</a> ()</td></tr>
+<tr class="memdesc:ac636ec7a6c5a29bb49d057b58f93cb37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all Conditions of the stimulation protocol.  <a href="#ac636ec7a6c5a29bb49d057b58f93cb37"></a><br/></td></tr>
 <tr class="memitem:a77241ec2bdde079bd79f5fdb37f8ebd6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#a77241ec2bdde079bd79f5fdb37f8ebd6">clearParameters</a> ()</td></tr>
+<tr class="memdesc:a77241ec2bdde079bd79f5fdb37f8ebd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all Parameters of the stimulation protocol.  <a href="#a77241ec2bdde079bd79f5fdb37f8ebd6"></a><br/></td></tr>
 <tr class="memitem:a6988890f74e7cc39e0ebdc7622ebd88b"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#a6988890f74e7cc39e0ebdc7622ebd88b">getParameterDescription</a> (const QString sParamName)</td></tr>
+<tr class="memdesc:a6988890f74e7cc39e0ebdc7622ebd88b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a Parameter description of the stimulation protocol.  <a href="#a6988890f74e7cc39e0ebdc7622ebd88b"></a><br/></td></tr>
 <tr class="memitem:a1abb91279eab3a51675aa295e19a3e4f"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#a1abb91279eab3a51675aa295e19a3e4f">getParameterValue</a> (const QString sParamName)</td></tr>
+<tr class="memdesc:a1abb91279eab3a51675aa295e19a3e4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a Parameter value of the stimulation protocol.  <a href="#a1abb91279eab3a51675aa295e19a3e4f"></a><br/></td></tr>
 <tr class="memitem:a0b53bd653e4f9b74187590a9217eb797"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#a0b53bd653e4f9b74187590a9217eb797">getRGBPaletteColorString</a> (const int nSteps, const int nIndex)</td></tr>
+<tr class="memdesc:a0b53bd653e4f9b74187590a9217eb797"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a specific color ("R G B" string).  <a href="#a0b53bd653e4f9b74187590a9217eb797"></a><br/></td></tr>
 <tr class="memitem:ae2c09fb297e3e99b2c1f6547485e8be1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#ae2c09fb297e3e99b2c1f6547485e8be1">loadFile</a> (const QString sFileName)</td></tr>
+<tr class="memdesc:ae2c09fb297e3e99b2c1f6547485e8be1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads an stimulation protocol (*.prt) file into memory.  <a href="#ae2c09fb297e3e99b2c1f6547485e8be1"></a><br/></td></tr>
 <tr class="memitem:a2888d43c2d05b218122126faf2370d5b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#a2888d43c2d05b218122126faf2370d5b">saveFile</a> (const QString sFileName, const bool bOverWrite=false)</td></tr>
+<tr class="memdesc:a2888d43c2d05b218122126faf2370d5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves an stimulation protocol from memory to a stimulation protocol(*.prt) file.  <a href="#a2888d43c2d05b218122126faf2370d5b"></a><br/></td></tr>
+<tr class="memitem:a65e74d87c0224dd58787f779c08436ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#a65e74d87c0224dd58787f779c08436ae">setConditionColor</a> (const int nConditionIndex, const QString sColor)</td></tr>
+<tr class="memdesc:a65e74d87c0224dd58787f779c08436ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">sets a specific color for a condition ("R G B" string).  <a href="#a65e74d87c0224dd58787f779c08436ae"></a><br/></td></tr>
 <tr class="memitem:ab22f40a5fdc9e1514ba0bfa24f06d0f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#ab22f40a5fdc9e1514ba0bfa24f06d0f1">setParameterValue</a> (const QString sParamName, const QString sParamValue=<a class="el" href="group___prt_format_manager_defines.html#ga8e963eafd0731b891e4a38121fb2e558">PRT_UNDEF_VALUE_STRING</a>, const QString sParamDescription=<a class="el" href="group___prt_format_manager_defines.html#ga9061d0242d46d347e17377fcfcbb9f09">PRT_UNDEF_DESC_STRING</a>)</td></tr>
+<tr class="memdesc:ab22f40a5fdc9e1514ba0bfa24f06d0f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets an Parameter value for the stimulation protocol.  <a href="#ab22f40a5fdc9e1514ba0bfa24f06d0f1"></a><br/></td></tr>
 <tr class="memitem:afe2f2faa79ebbff321761fde07efcffe"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#afe2f2faa79ebbff321761fde07efcffe">SortandMergeAllConditionIntervals</a> ()</td></tr>
+<tr class="memdesc:afe2f2faa79ebbff321761fde07efcffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sorts a Merges all the Condition Intervals of the current Stimulation Protocol.  <a href="#afe2f2faa79ebbff321761fde07efcffe"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:afc81c28106291d22492bdfd6f02d0017"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_prt_format_manager.html#afc81c28106291d22492bdfd6f02d0017">PrtFormatManager</a> (QObject *parent=NULL)</td></tr>
@@ -142,16 +156,17 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Appends a new Condition to the in-memory stimulation protocol.</p>
+
+<p>Appends a new Condition to the in-memory stimulation protocol. </p>
 <p>This function can append a new Condition to the current stimulation protocol in memory. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">sConditionName</td><td>a String containing the new Conditions Name. If no Condition Name is defined than the default <a class="el" href="group___prt_format_manager_defines.html#ga6ba2ba8d8e4635315c967a8830e31cc7">PrtFormatManagerDefines::PRT_UNDEF_NAME_STRING</a> is used. </td></tr>
-    <tr><td class="paramname">sConditionColor</td><td>a String containing the new Conditions Color attribute. The format must be "R G B", Example: "255 0 0". See also <a class="el" href="class_prt_format_manager.html#a0b53bd653e4f9b74187590a9217eb797">PrtFormatManager::getRGBPaletteColorString()</a>. If no Condition Color is defined than the default <a class="el" href="group___prt_format_manager_defines.html#gae381a825f969b27c409c8c6f7850b406">PrtFormatManagerDefines::PRT_UNDEF_COLOR_STRING</a> is used. </td></tr>
+    <tr><td class="paramname">sConditionColor</td><td>a String containing the new Conditions Color attribute. The format must be "R G B", Example: "255 0 0". See also <a class="el" href="class_prt_format_manager.html#a0b53bd653e4f9b74187590a9217eb797" title="Returns a specific color (&quot;R G B&quot; string).">PrtFormatManager::getRGBPaletteColorString()</a>. If no Condition Color is defined than the default <a class="el" href="group___prt_format_manager_defines.html#gae381a825f969b27c409c8c6f7850b406">PrtFormatManagerDefines::PRT_UNDEF_COLOR_STRING</a> is used. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>an integer value holding the new internal index of the appended Condition. See also <a class="el" href="class_prt_format_manager.html#a9e832b91fd5b00cef57213e42aa19402">PrtFormatManager::appendInterval()</a>.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>an integer value holding the new internal index of the appended Condition. See also <a class="el" href="class_prt_format_manager.html#a9e832b91fd5b00cef57213e42aa19402" title="Appends a Interval to an existing Condition to the in-memory stimulation protocol.">PrtFormatManager::appendInterval()</a>. </dd></dl>
 
 </div>
 </div>
@@ -185,7 +200,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Appends a Interval to an existing Condition to the in-memory stimulation protocol.</p>
+
+<p>Appends a Interval to an existing Condition to the in-memory stimulation protocol. </p>
 <p>This function can append a Interval to an existing Condition to the current in-memory stimulation protocol. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -195,7 +211,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>an integer value holding the new internal index of the appended Interval. See also <a class="el" href="class_prt_format_manager.html#acc10a6d12ff744ab3cc74d94f8f2f4a2">PrtFormatManager::appendCondition()</a>.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>an integer value holding the new internal index of the appended Interval. See also <a class="el" href="class_prt_format_manager.html#acc10a6d12ff744ab3cc74d94f8f2f4a2" title="Appends a new Condition to the in-memory stimulation protocol.">PrtFormatManager::appendCondition()</a>. </dd></dl>
 
 </div>
 </div>
@@ -212,9 +228,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Clears all Parameters and Conditions of the stimulation protocol.</p>
-<p>This function clears all Parameters and Conditions of the current stimulation protocol in memory. See also <a class="el" href="class_prt_format_manager.html#ac636ec7a6c5a29bb49d057b58f93cb37">PrtFormatManager::clearConditions()</a> and <a class="el" href="class_prt_format_manager.html#a77241ec2bdde079bd79f5fdb37f8ebd6">PrtFormatManager::clearParameters()</a>. </p>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Parameters and the Conditions could be cleared.</dd></dl>
+
+<p>Clears all Parameters and Conditions of the stimulation protocol. </p>
+<p>This function clears all Parameters and Conditions of the current stimulation protocol in memory. See also <a class="el" href="class_prt_format_manager.html#ac636ec7a6c5a29bb49d057b58f93cb37" title="Clears all Conditions of the stimulation protocol.">PrtFormatManager::clearConditions()</a> and <a class="el" href="class_prt_format_manager.html#a77241ec2bdde079bd79f5fdb37f8ebd6" title="Clears all Parameters of the stimulation protocol.">PrtFormatManager::clearParameters()</a>. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Parameters and the Conditions could be cleared. </dd></dl>
 
 </div>
 </div>
@@ -231,9 +248,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Clears all Conditions of the stimulation protocol.</p>
+
+<p>Clears all Conditions of the stimulation protocol. </p>
 <p>This function clears all Conditions of the current stimulation protocol in memory. </p>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Conditions could be cleared.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Conditions could be cleared. </dd></dl>
 
 </div>
 </div>
@@ -250,9 +268,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Clears all Parameters of the stimulation protocol.</p>
+
+<p>Clears all Parameters of the stimulation protocol. </p>
 <p>This function clears all Parameters of the current stimulation protocol in memory. </p>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Parameters could be cleared.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Parameters could be cleared. </dd></dl>
 
 </div>
 </div>
@@ -270,7 +289,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns a Parameter description of the stimulation protocol.</p>
+
+<p>Returns a Parameter description of the stimulation protocol. </p>
 <p>This function can return a Parameter description of the current stimulation protocol in memory. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -278,7 +298,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a String value holding the requested Parameter description of the current in-memory stimulation protocol. If no parameter with the defined Name could be found then this function will return a <a class="el" href="group___prt_format_manager_defines.html#ga9061d0242d46d347e17377fcfcbb9f09">PrtFormatManagerDefines::PRT_UNDEF_DESC_STRING</a>.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a String value holding the requested Parameter description of the current in-memory stimulation protocol. If no parameter with the defined Name could be found then this function will return a <a class="el" href="group___prt_format_manager_defines.html#ga9061d0242d46d347e17377fcfcbb9f09">PrtFormatManagerDefines::PRT_UNDEF_DESC_STRING</a>. </dd></dl>
 
 </div>
 </div>
@@ -296,7 +316,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns a Parameter value of the stimulation protocol.</p>
+
+<p>Returns a Parameter value of the stimulation protocol. </p>
 <p>This function can return a Parameter value of the current stimulation protocol in memory. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -304,7 +325,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a String value holding the requested Parameter value of the current in-memory stimulation protocol. If no parameter with the defined Name could be found then this function will return a <a class="el" href="group___prt_format_manager_defines.html#ga8e963eafd0731b891e4a38121fb2e558">PrtFormatManagerDefines::PRT_UNDEF_VALUE_STRING</a>.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a String value holding the requested Parameter value of the current in-memory stimulation protocol. If no parameter with the defined Name could be found then this function will return a <a class="el" href="group___prt_format_manager_defines.html#ga8e963eafd0731b891e4a38121fb2e558">PrtFormatManagerDefines::PRT_UNDEF_VALUE_STRING</a>. </dd></dl>
 
 </div>
 </div>
@@ -332,7 +353,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns a specific color ("R G B" string).</p>
+
+<p>Returns a specific color ("R G B" string). </p>
 <p>Returns a Color String from a location of a color palette divided in steps. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -341,7 +363,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a String (a "R G B" String value) holding the Color value. See also <a class="el" href="class_prt_format_manager.html#acc10a6d12ff744ab3cc74d94f8f2f4a2">PrtFormatManager::appendCondition()</a>;</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a String (a "R G B" String value) holding the Color value. See also <a class="el" href="class_prt_format_manager.html#acc10a6d12ff744ab3cc74d94f8f2f4a2" title="Appends a new Condition to the in-memory stimulation protocol.">PrtFormatManager::appendCondition()</a>; </dd></dl>
 
 </div>
 </div>
@@ -359,7 +381,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Loads an stimulation protocol (*.prt) file into memory.</p>
+
+<p>Loads an stimulation protocol (*.prt) file into memory. </p>
 <p>This function can loads an existing stimulation protocol (*.prt) file into memory for further editing. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -367,7 +390,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the stimulation protocol (*.prt) file could be loaded.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the stimulation protocol (*.prt) file could be loaded. </dd></dl>
 
 </div>
 </div>
@@ -395,7 +418,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Saves an stimulation protocol from memory to a stimulation protocol(*.prt) file.</p>
+
+<p>Saves an stimulation protocol from memory to a stimulation protocol(*.prt) file. </p>
 <p>This function can save the current an existing stimulation protocol file in memory to a file. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -404,7 +428,45 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the stimulation protocol could be saved to the file.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the stimulation protocol could be saved to the file. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a65e74d87c0224dd58787f779c08436ae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_prt_format_manager.html#a65e74d87c0224dd58787f779c08436ae">PrtFormatManager::setConditionColor</a> </td>
+          <td>(</td>
+          <td class="paramtype">const int&#160;</td>
+          <td class="paramname"><em>nConditionIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString&#160;</td>
+          <td class="paramname"><em>sColor</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sets a specific color for a condition ("R G B" string). </p>
+<p>Sets a Color String for a specific condition. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nConditionIndex</td><td>an integer representing the index of the condition to set the color from. </td></tr>
+    <tr><td class="paramname">sColor</td><td>a String (a "R G B" String value) holding the Color value for the condition. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value determining whether the color value for that condition could be successfully changed. See also <a class="el" href="class_prt_format_manager.html#acc10a6d12ff744ab3cc74d94f8f2f4a2" title="Appends a new Condition to the in-memory stimulation protocol.">PrtFormatManager::appendCondition()</a>; </dd></dl>
 
 </div>
 </div>
@@ -438,7 +500,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Sets an Parameter value for the stimulation protocol.</p>
+
+<p>Sets an Parameter value for the stimulation protocol. </p>
 <p>This function sets a Parameter value for the current stimulation protocol in memory. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -448,7 +511,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Parameter value for the current stimulation protocol could be set.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Parameter value for the current stimulation protocol could be set. </dd></dl>
 
 </div>
 </div>
@@ -465,9 +528,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Sorts a Merges all the Condition Intervals of the current Stimulation Protocol.</p>
-<p>This function tries to Sort and Merge the Condition Intervals of the current in-memory Stimulation Protocol. After editing a Stimulation Protocol this function could be called prior to the <a class="el" href="class_prt_format_manager.html#a2888d43c2d05b218122126faf2370d5b">PrtFormatManager::saveFile()</a> to optimize the protocol structure. </p>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Condition Intervals could be parsed.</dd></dl>
+
+<p>Sorts a Merges all the Condition Intervals of the current Stimulation Protocol. </p>
+<p>This function tries to Sort and Merge the Condition Intervals of the current in-memory Stimulation Protocol. After editing a Stimulation Protocol this function could be called prior to the <a class="el" href="class_prt_format_manager.html#a2888d43c2d05b218122126faf2370d5b" title="Saves an stimulation protocol from memory to a stimulation protocol(*.prt) file.">PrtFormatManager::saveFile()</a> to optimize the protocol structure. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the Condition Intervals could be parsed. </dd></dl>
 
 </div>
 </div>
@@ -475,7 +539,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:31 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

@@ -1,5 +1,8 @@
 // JavaScript Document
 //
+//var StimulGLInfo = new StimulGL_Information();
+//var sComponentName = "FirebirdClientPlugin";			
+//Log(StimulGLInfo.GetLatestComponentReleaseByName(sComponentName));
 
 function StimulGL_Cleanup()
 {
@@ -31,7 +34,7 @@ function StimulGL_CreateArray(length)
 function StimulGL_Information()
 {
 	//alert('StimulGL constructor');
-  this.StimulGLReleases = [['2.0.0.2', '4.8.0', '1.0.0.1'], ['2.0.0.3', '4.8.0', '1.0.0.1']];//, ['2.0.0.4', '4.8.0', '1.0.0.1']];
+	this.StimulGLReleases = [['2.0.0.2', '4.8.0', '1.0.0.1'], ['2.0.0.3', '4.8.0', '1.0.0.1'], ['2.1.0.0', '5.1.0', '1.0.0.1']];//, ['2.0.0.4', '4.8.0', '1.0.0.1']];
 	var PropCounter = 0;
 	var AuthorCounter = 0;
 	var ComponentCounter = 0;
@@ -60,7 +63,10 @@ function StimulGL_Information()
 	var _extensionname_plugin_Comp_Index = ComponentCounter++;
 	var StimulGL_QMLExtensions_Comp_Index = ComponentCounter++;
 	var MediaPlayer_Comp_Index = ComponentCounter++;
-	
+	var FirebirdClientPlugin_Comp_Index = ComponentCounter++;
+	var PiezoStimDevicePlugin_Comp_Index = ComponentCounter++;
+	var TBVExchangerPlugin_Comp_Index = ComponentCounter++;
+	var TCPNetworkServerPlugin_Comp_Index = ComponentCounter++;
 	
 	this.componentVersioning = StimulGL_CreateArray(1,ComponentCounter,PropCounter);//Default constructor!
 	//StimulGL version (2.0.0.2)
@@ -68,7 +74,7 @@ function StimulGL_Information()
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.Name_Index] = 'ExperimentManagerPlugin';
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.Version_Index] = '2.0.0.2';
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
-    this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this._StimulGLVersion_Index] = 0;
+	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this._StimulGLVersion_Index] = 0;
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.EXML_Index] = '2.0.0.1';
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.DevInterface_Index] = '1.0';
 	this.componentVersioning[0][ExperimentManagerPlugin_Comp_Index][this.ExtInterface_Index] = '1.0';
@@ -129,6 +135,39 @@ function StimulGL_Information()
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.DevInterface_Index] = 'x';
 	this.componentVersioning[0][MediaPlayer_Comp_Index][this.ExtInterface_Index] = 'x';
 	///////////////////////////////////////////////////////////////
+//	this.componentVersioning[0][FirebirdClientPlugin_Comp_Index][this.Name_Index] = 'FireBirdClientPlugin';
+//	this.componentVersioning[0][FirebirdClientPlugin_Comp_Index][this.Version_Index] = '1.0.0.1';
+//	this.componentVersioning[0][FirebirdClientPlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
+//	this.componentVersioning[0][FirebirdClientPlugin_Comp_Index][this._StimulGLVersion_Index] = 2;
+//	this.componentVersioning[0][FirebirdClientPlugin_Comp_Index][this.EXML_Index] = 'x';
+//	this.componentVersioning[0][FirebirdClientPlugin_Comp_Index][this.DevInterface_Index] = '1.2';
+//	this.componentVersioning[0][FirebirdClientPlugin_Comp_Index][this.ExtInterface_Index] = '1.2';	
+	///////////////////////////////////////////////////////////////
+//	this.componentVersioning[0][PiezoStimDevicePlugin_Comp_Index][this.Name_Index] = 'PiezoStimDevicePlugin';
+//	this.componentVersioning[0][PiezoStimDevicePlugin_Comp_Index][this.Version_Index] = '1.0.0.1';
+//	this.componentVersioning[0][PiezoStimDevicePlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
+//	this.componentVersioning[0][PiezoStimDevicePlugin_Comp_Index][this._StimulGLVersion_Index] = 2;
+//	this.componentVersioning[0][PiezoStimDevicePlugin_Comp_Index][this.EXML_Index] = 'x';
+//	this.componentVersioning[0][PiezoStimDevicePlugin_Comp_Index][this.DevInterface_Index] = '1.2';
+//	this.componentVersioning[0][PiezoStimDevicePlugin_Comp_Index][this.ExtInterface_Index] = '1.2';		
+	///////////////////////////////////////////////////////////////
+//	this.componentVersioning[0][TBVExchangerPlugin_Comp_Index][this.Name_Index] = 'TBVExchangerPlugin';
+//	this.componentVersioning[0][TBVExchangerPlugin_Comp_Index][this.Version_Index] = '1.0.0.1';
+//	this.componentVersioning[0][TBVExchangerPlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
+//	this.componentVersioning[0][TBVExchangerPlugin_Comp_Index][this._StimulGLVersion_Index] = 2;
+//	this.componentVersioning[0][TBVExchangerPlugin_Comp_Index][this.EXML_Index] = 'x';
+//	this.componentVersioning[0][TBVExchangerPlugin_Comp_Index][this.DevInterface_Index] = '1.2';
+//	this.componentVersioning[0][TBVExchangerPlugin_Comp_Index][this.ExtInterface_Index] = '1.2';		
+	///////////////////////////////////////////////////////////////
+//	this.componentVersioning[0][TCPNetworkServerPlugin_Comp_Index][this.Name_Index] = 'TCPNetworkServerPlugin';
+//	this.componentVersioning[0][TCPNetworkServerPlugin_Comp_Index][this.Version_Index] = '1.0.0.1';
+//	this.componentVersioning[0][TCPNetworkServerPlugin_Comp_Index][this.ProductVersion_Index] = '1.0.0.1';
+//	this.componentVersioning[0][TCPNetworkServerPlugin_Comp_Index][this._StimulGLVersion_Index] = 2;
+//	this.componentVersioning[0][TCPNetworkServerPlugin_Comp_Index][this.EXML_Index] = 'x';
+//	this.componentVersioning[0][TCPNetworkServerPlugin_Comp_Index][this.DevInterface_Index] = '1.2';
+//	this.componentVersioning[0][TCPNetworkServerPlugin_Comp_Index][this.ExtInterface_Index] = '1.2';		
+	///////////////////////////////////////////////////////////////
+	
 		
 	//StimulGL version (2.0.0.3)
 	///////////////////////////////////////////////////////////////
@@ -144,27 +183,37 @@ function StimulGL_Information()
 	this.componentVersioning[1][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.1',     '1.0.0.1', 0, 'x',       'x',    'x'];
 	this.componentVersioning[1][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '1',       '1.0.0.1', 0, 'x',       'x',    'x'];
 
-//	//StimulGL version (2.0.0.4)
-//	///////////////////////////////////////////////////////////////
-//	nNumberOfComponentChanges = 1; //See below, increment by adding new changes for this release!
-//	tmpArray = StimulGL_CreateArray(1, nNumberOfComponentChanges, PropCounter);
-//	this.componentVersioning.push.apply(this.componentVersioning, tmpArray)
-//	this.componentVersioning[2][ExperimentManagerPlugin_Comp_Index] = ['ExperimentManagerPlugin', '2.0.0.4', '1.0.0.3', 0, '2.0.0.3', '1.4', '1.5'];
-
+	//StimulGL version (2.1.0.0)
+	///////////////////////////////////////////////////////////////
+	nNumberOfComponentChanges = 8;//See below, increment by adding new changes for this release!
+	tmpArray = StimulGL_CreateArray(1,nNumberOfComponentChanges,PropCounter);
+	this.componentVersioning.push.apply(this.componentVersioning, tmpArray)//		Name,	Version,  Product, StimGLVersionIndex, EXML, Device, Interface
+	this.componentVersioning[2][ExperimentManagerPlugin_Comp_Index] = 	['ExperimentManagerPlugin',	'2.1.0.0', '1.0.0.1', 2, '2.1.0.0', '1.2',  '1.2'];
+	this.componentVersioning[2][ParallelPortPlugin_Comp_Index] =        ['ParallelPortPlugin',      '2.0.1.0', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[2][SerialPortPlugin_Comp_Index] =          ['SerialPortPlugin',        '1.1.0.0', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[2][KeyBoardPlugin_Comp_Index] =            ['KeyBoardPlugin',          '1.1.0.0', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[2][USBHIDDevicePlugin_Comp_Index] =        ['USBHIDDevicePlugin',      '2.0.1.0', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[2][_extensionname_plugin_Comp_Index] =     ['_extensionname_plugin',   '1.1.0.0', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[2][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.1.0.0',     '1.0.0.1', 2, 'x',       'x',    'x'];
+	this.componentVersioning[2][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '2',       '1.0.0.1', 2, 'x',       'x',    'x'];
+	this.componentVersioning[2][FirebirdClientPlugin_Comp_Index] =        ['FireBirdClientPlugin',      '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[2][PiezoStimDevicePlugin_Comp_Index] =        ['PiezoStimDevicePlugin',      '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[2][TBVExchangerPlugin_Comp_Index] =        ['TBVExchangerPlugin',     '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[2][TCPNetworkServerPlugin_Comp_Index] =        ['TCPNetworkServerPlugin',      '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 
 	this.DocumentAuditing = StimulGL_CreateArray(6, AuthorCounter); //Default constructor!
 	///////////////////////////////////////////////////////////////
 	this.DocumentAuditing[0][this.Doc_FileName_Index] = 'GettingStartedGuide.html';
 	this.DocumentAuditing[0][this.Doc_Title_Index] = 'Getting Started Guide';
-	this.DocumentAuditing[0][this.Doc_Version_Index] = '1.0.0.2';
-	this.DocumentAuditing[0][this.Doc_Date_Index] = 'November 2012';
+	this.DocumentAuditing[0][this.Doc_Version_Index] = '1.0.1.0';
+	this.DocumentAuditing[0][this.Doc_Date_Index] = 'September 2013';
 	this.DocumentAuditing[0][this.Doc_Authors_Index] = 'Sven Gijsen';
 	
-	this.DocumentAuditing[1] = ['PreBuildDevelopmentSetup.html','Pre Build Development Setup','1.0.0.2','November 2012','Sven Gijsen'];
-	this.DocumentAuditing[2] = ['ExperimentManagerPlugin.html','Experiment Manager Plug-in Documentation','1.0.0.3','November 2012','Sven Gijsen'];
-	this.DocumentAuditing[3] = ['ParallelPortDevicePlugin.html','Parallel Port Plug-in Documentation','2.0.0.2','November 2012','Sven Gijsen'];	
-	this.DocumentAuditing[4] = ['USBHIDDevicePlugin.html','USBHID Device Plug-in Documentation','2.0.0.2','November 2012','Sven Gijsen'];		
-	this.DocumentAuditing[5] = ['ExtensionPluginTemplate.html','Extension Plug-in Template Documentation','2.0.0.2','November 2012','Sven Gijsen'];	
+	this.DocumentAuditing[1] = ['PreBuildDevelopmentSetup.html','Pre Build Development Setup','1.0.1.0','September 2013','Sven Gijsen'];
+	this.DocumentAuditing[2] = ['ExperimentManagerPlugin.html','Experiment Manager Plug-in Documentation','1.0.1.0','September 2013','Sven Gijsen'];
+	this.DocumentAuditing[3] = ['ParallelPortDevicePlugin.html','Parallel Port Plug-in Documentation','2.0.0.2','September 2013','Sven Gijsen'];	
+	this.DocumentAuditing[4] = ['USBHIDDevicePlugin.html','USBHID Device Plug-in Documentation','2.0.0.2','September 2013','Sven Gijsen'];		
+	this.DocumentAuditing[5] = ['ExtensionPluginTemplate.html','Extension Plug-in Template Documentation','2.0.0.2','September 2013','Sven Gijsen'];	
 }
 
 StimulGL_Information.prototype.GetStrippedFileName = function (strFileUrl)//var strFileUrl=window.location.pathname;
@@ -357,7 +406,7 @@ StimulGL_Information.prototype.GetComponentExtensionInterfaceVersionByIndexes = 
 }
 
 StimulGL_Information.prototype.GetMainAppCopyrightString = function ()
-{ return 'Copyright (C) 2012'; }
+{ return 'Copyright (C) 2013'; }
 
 StimulGL_Information.prototype.GetMainAppCompanyName = function ()
 {	return 'MBIC, Maastricht Brain Imaging Center'; }

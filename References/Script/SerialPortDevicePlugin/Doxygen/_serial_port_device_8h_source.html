@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Serial Port Device script class
-   &#160;<span id="projectnumber">1.0.0.2</span>
+   &#160;<span id="projectnumber">1.1.0.0</span>
    </div>
    <div id="projectbrief">The Serial Port Device script class reference.</div>
   </td>
@@ -45,7 +45,7 @@
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//SerialPortDeviceplugin</span>
-<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2012  Sven Gijsen</span>
+<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2013  Sven Gijsen</span>
 <a name="l00003"></a>00003 <span class="comment">//</span>
 <a name="l00004"></a>00004 <span class="comment">//This file is part of StimulGL.</span>
 <a name="l00005"></a>00005 <span class="comment">//StimulGL is free software: you can redistribute it and/or modify</span>
@@ -72,225 +72,119 @@
 <a name="l00026"></a>00026 <span class="preprocessor">#include &lt;QtScript&gt;</span>
 <a name="l00027"></a>00027 <span class="preprocessor">#include &lt;QScriptable&gt;</span>
 <a name="l00028"></a>00028 <span class="preprocessor">#include &lt;QDesktopWidget&gt;</span>
-<a name="l00029"></a>00029 <span class="preprocessor">#include &lt;QHash&gt;</span>
-<a name="l00030"></a>00030 <span class="preprocessor">#include &quot;maindefines.h&quot;</span>
-<a name="l00031"></a>00031 <span class="preprocessor">#include &quot;qextserialport.h&quot;</span>
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033 <span class="preprocessor">#define BAUDRATE_ENUM_TYPE_NAME                 typeid(BaudRateType).name()</span>
-<a name="l00034"></a>00034 <span class="preprocessor"></span><span class="preprocessor">#define BAUDRATE_ENUM_SHORT_TYPE_NAME   &quot;BaudRateType_&quot;</span>
-<a name="l00035"></a>00035 <span class="preprocessor"></span><span class="preprocessor">#define DATABITS_ENUM_TYPE_NAME                 typeid(DataBitsType).name()</span>
-<a name="l00036"></a>00036 <span class="preprocessor"></span><span class="preprocessor">#define DATABITS_ENUM_SHORT_TYPE_NAME   &quot;DataBitsType_&quot;</span>
-<a name="l00037"></a>00037 <span class="preprocessor"></span><span class="preprocessor">#define PARITY_ENUM_TYPE_NAME                   typeid(ParityType).name()</span>
-<a name="l00038"></a>00038 <span class="preprocessor"></span><span class="preprocessor">#define PARITY_ENUM_SHORT_TYPE_NAME             &quot;ParityType_&quot;</span>
-<a name="l00039"></a>00039 <span class="preprocessor"></span><span class="preprocessor">#define STOPBITS_ENUM_TYPE_NAME                 typeid(StopBitsType).name()</span>
-<a name="l00040"></a>00040 <span class="preprocessor"></span><span class="preprocessor">#define STOPBITS_ENUM_SHORT_TYPE_NAME   &quot;StopBitsType_&quot;</span>
-<a name="l00041"></a>00041 <span class="preprocessor"></span><span class="preprocessor">#define FLOW_ENUM_TYPE_NAME                             typeid(FlowType).name()</span>
-<a name="l00042"></a>00042 <span class="preprocessor"></span><span class="preprocessor">#define FLOW_ENUM_SHORT_TYPE_NAME               &quot;FlowType_&quot;</span>
-<a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define QUERYMODE_ENUM_TYPE_NAME                typeid(QextSerialPort::QueryMode).name()</span>
-<a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define QUERYMODE_ENUM_SHORT_TYPE_NAME  &quot;QueryMode_&quot;</span>
-<a name="l00045"></a>00045 <span class="preprocessor"></span><span class="preprocessor">#define OPENMODE_ENUM_TYPE_NAME                 typeid(QIODevice::OpenMode).name()</span>
-<a name="l00046"></a>00046 <span class="preprocessor"></span><span class="preprocessor">#define OPENMODE_ENUM_SHORT_TYPE_NAME   &quot;OpenMode_&quot;</span>
-<a name="l00047"></a>00047 <span class="preprocessor"></span><span class="preprocessor">#define OPENMODE_ENUM_META_TYPE_NAME    &quot;QIODevice::OpenMode&quot;</span>
-<a name="l00048"></a>00048 <span class="preprocessor"></span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include &lt;QSerialPort&gt;</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#include &lt;QSerialPortInfo&gt;</span>
+<a name="l00031"></a>00031 <span class="preprocessor">#include &quot;maindefines.h&quot;</span>
+<a name="l00032"></a>00032 <span class="preprocessor">#include &quot;Global.h&quot;</span>
+<a name="l00033"></a>00033 
+<a name="l00035"></a>00035 
+<a name="l00038"></a><a class="code" href="class_serial_port_device.html">00038</a> <span class="keyword">class </span><a class="code" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> : <span class="keyword">public</span> QObject, <span class="keyword">protected</span> QScriptable
+<a name="l00039"></a>00039 {
+<a name="l00040"></a>00040         Q_OBJECT
+<a name="l00041"></a>00041         Q_CLASSINFO(<span class="stringliteral">&quot;ScriptAPIClassName&quot;</span>, <span class="stringliteral">&quot;SerialPort&quot;</span>);<span class="comment">//Can&#39;t use defines here!, moc doesn&#39;t handle defines</span>
+<a name="l00042"></a>00042 
+<a name="l00043"></a>00043 signals:
+<a name="l00045"></a>00045 
+<a name="l00049"></a>00049         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#aecc7e602976205602ff3dac36bbc1e94" title="The SerialDataReceived Signal.">SerialDataReceived</a>(QString sData);
 <a name="l00050"></a>00050 
-<a name="l00053"></a><a class="code" href="class_serial_port_device.html">00053</a> <span class="keyword">class </span><a class="code" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a> : <span class="keyword">public</span> QObject, <span class="keyword">protected</span> QScriptable
-<a name="l00054"></a>00054 {
-<a name="l00055"></a>00055         Q_OBJECT
-<a name="l00056"></a>00056         Q_CLASSINFO(<span class="stringliteral">&quot;ScriptAPIClassName&quot;</span>, <span class="stringliteral">&quot;SerialPort&quot;</span>);<span class="comment">//Can&#39;t use defines here!, moc doesn&#39;t handle defines</span>
+<a name="l00051"></a>00051 <span class="keyword">public</span>:
+<a name="l00052"></a>00052         <a class="code" href="class_serial_port_device.html#a040f251865128f8ecec5d0027356ef17" title="The SerialPortDevice constructor.">SerialPortDevice</a>(QObject *parent = 0);<span class="comment">//unsigned short vendor_id = 0x181b, unsigned short product_id = 0x4002, QObject *parent = 0);</span>
+<a name="l00053"></a>00053         <a class="code" href="class_serial_port_device.html#a040f251865128f8ecec5d0027356ef17" title="The SerialPortDevice constructor.">SerialPortDevice</a>(<span class="keyword">const</span> <a class="code" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a>&amp; other ){Q_UNUSED(other);}<span class="comment">//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro</span>
+<a name="l00054"></a>00054         <a class="code" href="class_serial_port_device.html#adabb2865db5609fc68650d6785774974" title="The SerialPortDevice destructor.">~SerialPortDevice</a>();
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056         <span class="keyword">static</span> QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058 signals:
-<a name="l00060"></a>00060 
-<a name="l00064"></a>00064         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#a72acbf5ee6f3a8b80b1fd005be9f0eda" title="The CaptureThreadReadyRead Signal.">CaptureThreadReadyRead</a>();
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066 <span class="keyword">public</span>:
-<a name="l00067"></a>00067         Q_ENUMS(<a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fd">BaudRateType_</a>)
-<a name="l00068"></a>00068         Q_ENUMS(<a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265">DataBitsType_</a>)
-<a name="l00069"></a>00069         Q_ENUMS(<a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434c">ParityType_</a>)
-<a name="l00070"></a>00070         Q_ENUMS(<a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6">StopBitsType_</a>)
-<a name="l00071"></a>00071         Q_ENUMS(<a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75">FlowType_</a>)
-<a name="l00072"></a>00072         Q_ENUMS(<a class="code" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2e">QueryMode_</a>)
-<a name="l00073"></a>00073 
-<a name="l00074"></a>00074         
-<a name="l00075"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fd">00075</a>         enum <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fd">BaudRateType_</a>
-<a name="l00076"></a>00076         {
-<a name="l00077"></a>00077 <span class="preprocessor">        #if defined(Q_OS_UNIX) || defined(qdoc)</span>
-<a name="l00078"></a>00078 <span class="preprocessor"></span>                BAUD50 = 50,                            
-<a name="l00079"></a>00079                 BAUD75 = 75,                            
-<a name="l00080"></a>00080                 BAUD134 = 134,              
-<a name="l00081"></a>00081                 BAUD150 = 150,              
-<a name="l00082"></a>00082                 BAUD200 = 200,              
-<a name="l00083"></a>00083                 BAUD1800 = 1800,            
-<a name="l00084"></a>00084 <span class="preprocessor">        #  if defined(B76800) || defined(qdoc)</span>
-<a name="l00085"></a>00085 <span class="preprocessor"></span>                BAUD76800 = 76800,          
-<a name="l00086"></a>00086 <span class="preprocessor">        #  endif</span>
-<a name="l00087"></a>00087 <span class="preprocessor"></span><span class="preprocessor">        #  if (defined(B230400) &amp;&amp; defined(B4000000)) || defined(qdoc)</span>
-<a name="l00088"></a>00088 <span class="preprocessor"></span>                BAUD230400 = 230400,        
-<a name="l00089"></a>00089                 BAUD460800 = 460800,        
-<a name="l00090"></a>00090                 BAUD500000 = 500000,        
-<a name="l00091"></a>00091                 BAUD576000 = 576000,        
-<a name="l00092"></a>00092                 BAUD921600 = 921600,        
-<a name="l00093"></a>00093                 BAUD1000000 = 1000000,      
-<a name="l00094"></a>00094                 BAUD1152000 = 1152000,      
-<a name="l00095"></a>00095                 BAUD1500000 = 1500000,      
-<a name="l00096"></a>00096                 BAUD2000000 = 2000000,      
-<a name="l00097"></a>00097                 BAUD2500000 = 2500000,      
-<a name="l00098"></a>00098                 BAUD3000000 = 3000000,      
-<a name="l00099"></a>00099                 BAUD3500000 = 3500000,      
-<a name="l00100"></a>00100                 BAUD4000000 = 4000000,      
-<a name="l00101"></a>00101 <span class="preprocessor">        #  endif</span>
-<a name="l00102"></a>00102 <span class="preprocessor"></span><span class="preprocessor">        #endif //Q_OS_UNIX</span>
-<a name="l00103"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda4f17986767f6ac455af5b2cab7ebd3e1">00103</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda4f17986767f6ac455af5b2cab7ebd3e1" title="&quot;BAUD110&quot;">BAUD110</a> = 110,                          
-<a name="l00104"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdafe5ad32596af874fecf7ab198c529a97">00104</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdafe5ad32596af874fecf7ab198c529a97" title="&quot;BAUD300&quot;">BAUD300</a> = 300,                          
-<a name="l00105"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda1b8d1e301fe309ac48d3fbedc5f2609b">00105</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda1b8d1e301fe309ac48d3fbedc5f2609b" title="&quot;BAUD600&quot;">BAUD600</a> = 600,                          
-<a name="l00106"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa9ed95da33a5f0b4b4a581e0a9ddf576">00106</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa9ed95da33a5f0b4b4a581e0a9ddf576" title="&quot;BAUD1200&quot;">BAUD1200</a> = 1200,                        
-<a name="l00107"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaba7bab2add050dda17d5a14318622cac">00107</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaba7bab2add050dda17d5a14318622cac" title="&quot;BAUD2400&quot;">BAUD2400</a> = 2400,                        
-<a name="l00108"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda7025bacd0df339fe3e3cf9c1ab98301e">00108</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda7025bacd0df339fe3e3cf9c1ab98301e" title="&quot;BAUD4800&quot;">BAUD4800</a> = 4800,                        
-<a name="l00109"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda67cd7fc901d97bdac17bcddeccc1378c">00109</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda67cd7fc901d97bdac17bcddeccc1378c" title="&quot;BAUD9600&quot;">BAUD9600</a> = 9600,                        
-<a name="l00110"></a>00110 <span class="preprocessor">#if defined(Q_OS_WIN) || defined(qdoc)</span>
-<a name="l00111"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda09222f1f0d965a48116785a08bc76746">00111</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda09222f1f0d965a48116785a08bc76746" title="&quot;BAUD14400&quot;">BAUD14400</a> = 14400,          
-<a name="l00112"></a>00112 <span class="preprocessor">#endif  //Q_OS_WIN</span>
-<a name="l00113"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdab3e2c5e54c9e655bde69856c94b7f002">00113</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdab3e2c5e54c9e655bde69856c94b7f002" title="&quot;BAUD19200&quot;">BAUD19200</a> = 19200,                      
-<a name="l00114"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda95e24c68e3fb4aefbd27b5edb3b72141">00114</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda95e24c68e3fb4aefbd27b5edb3b72141" title="&quot;BAUD38400&quot;">BAUD38400</a> = 38400,                      
-<a name="l00115"></a>00115 <span class="preprocessor">#if defined(Q_OS_WIN) || defined(qdoc)</span>
-<a name="l00116"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda9e40024a94ad677fb9c3251dd85801c6">00116</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda9e40024a94ad677fb9c3251dd85801c6" title="&quot;BAUD56000&quot;">BAUD56000</a> = 56000,          
-<a name="l00117"></a>00117 <span class="preprocessor">#endif  //Q_OS_WIN</span>
-<a name="l00118"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa8b25bf7b9bb733519383ae2541ba556">00118</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa8b25bf7b9bb733519383ae2541ba556" title="&quot;BAUD57600&quot;">BAUD57600</a> = 57600,                      
-<a name="l00119"></a>00119 <span class="preprocessor">#if defined(Q_OS_WIN) || defined(qdoc)</span>
-<a name="l00120"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa91778c94a3ae0627d098c78bf4e3218">00120</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa91778c94a3ae0627d098c78bf4e3218" title="&quot;BAUD115200&quot;">BAUD115200</a> = 115200,            
-<a name="l00121"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdabc5d7416d02666fe254111918a4065e8">00121</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdabc5d7416d02666fe254111918a4065e8" title="&quot;BAUD128000&quot;">BAUD128000</a> = 128000,        
-<a name="l00122"></a><a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda191a682c5e7f7256089f074a8b393f9a">00122</a>                 <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fda191a682c5e7f7256089f074a8b393f9a" title="&quot;BAUD256000&quot;">BAUD256000</a> = 256000         
-<a name="l00123"></a>00123 <span class="preprocessor">#else</span>
-<a name="l00124"></a>00124 <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a841eeded317aae65e9cf6c05441db8fdaa91778c94a3ae0627d098c78bf4e3218" title="&quot;BAUD115200&quot;">BAUD115200</a> = 115200                     
-<a name="l00125"></a>00125 <span class="preprocessor">#endif  //Q_OS_WIN</span>
-<a name="l00126"></a>00126 <span class="preprocessor"></span>        };
-<a name="l00127"></a>00127         
-<a name="l00129"></a><a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265">00129</a>         <span class="keyword">enum</span> <a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265">DataBitsType_</a>
-<a name="l00130"></a>00130         {
-<a name="l00131"></a><a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265ae5bd9edfeb6819f888a017657bb6b91a">00131</a>                 <a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265ae5bd9edfeb6819f888a017657bb6b91a" title="&quot;DATA_5&quot;">DATA_5</a> = 5,                                     
-<a name="l00132"></a><a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a12e9d2cf8136e72eb75dc4de6f28d2f5">00132</a>                 <a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a12e9d2cf8136e72eb75dc4de6f28d2f5" title="&quot;DATA_6&quot;">DATA_6</a> = 6,                                     
-<a name="l00133"></a><a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a68558b08a6fcd3ff2f959afd9ebfcc27">00133</a>                 <a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a68558b08a6fcd3ff2f959afd9ebfcc27" title="&quot;DATA_7&quot;">DATA_7</a> = 7,                                     
-<a name="l00134"></a><a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a4568f99c63ef007d2bbeb0f2c0cf6aca">00134</a>                 <a class="code" href="class_serial_port_device.html#ad36d6375fdfb6eae857b0b64076e8265a4568f99c63ef007d2bbeb0f2c0cf6aca" title="&quot;DATA_8&quot;">DATA_8</a> = 8                                      
-<a name="l00135"></a>00135         };
-<a name="l00136"></a>00136         
-<a name="l00138"></a><a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434c">00138</a>         <span class="keyword">enum</span> <a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434c">ParityType_</a>
-<a name="l00139"></a>00139         {
-<a name="l00140"></a><a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434ca6cd6426867361769554da0f61fbed35e">00140</a>                 <a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434ca6cd6426867361769554da0f61fbed35e" title="&quot;PAR_NONE&quot;">PAR_NONE</a>,                                       
-<a name="l00141"></a><a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434cabd78546bea70199ebbc6868c7334c018">00141</a>                 <a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434cabd78546bea70199ebbc6868c7334c018" title="&quot;PAR_ODD&quot;">PAR_ODD</a>,                                        
-<a name="l00142"></a><a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434caceea3b01d4c04c7ecf84f242e5b159bb">00142</a>                 <a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434caceea3b01d4c04c7ecf84f242e5b159bb" title="&quot;PAR_EVEN&quot;">PAR_EVEN</a>,                                       
-<a name="l00143"></a>00143 <span class="preprocessor">        #if defined(Q_OS_WIN) || defined(qdoc)</span>
-<a name="l00144"></a><a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434caf81b96a251eca523ebaa71beb2a89951">00144</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434caf81b96a251eca523ebaa71beb2a89951" title="&quot;PAR_MARK&quot;">PAR_MARK</a>,                                       
-<a name="l00145"></a>00145 <span class="preprocessor">        #endif</span>
-<a name="l00146"></a><a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434cafe12493d0e4d089eef0e59f9f2323344">00146</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#afd70ad875a73f6b42aae848be391434cafe12493d0e4d089eef0e59f9f2323344" title="&quot;PAR_SPACE&quot;">PAR_SPACE</a>                                       
-<a name="l00147"></a>00147         };
-<a name="l00148"></a>00148         
-<a name="l00150"></a><a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6">00150</a>         <span class="keyword">enum</span> <a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6">StopBitsType_</a>
-<a name="l00151"></a>00151         {
-<a name="l00152"></a><a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6aca1cbd01683d6068caf4d617e336dc5d">00152</a>                 <a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6aca1cbd01683d6068caf4d617e336dc5d" title="&quot;STOP_1&quot;">STOP_1</a>,                                         
-<a name="l00153"></a>00153 <span class="preprocessor">        #if defined(Q_OS_WIN) || defined(qdoc)</span>
-<a name="l00154"></a><a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6a2f457a2d1392e8f0a6c6991ed7541c8c">00154</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6a2f457a2d1392e8f0a6c6991ed7541c8c" title="&quot;STOP_1_5&quot;">STOP_1_5</a>,                                       
-<a name="l00155"></a>00155 <span class="preprocessor">        #endif</span>
-<a name="l00156"></a><a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6a5e0427785d14d007f8e1a93a7aff3d7d">00156</a> <span class="preprocessor"></span>                <a class="code" href="class_serial_port_device.html#a159bd1108de166fb0b333b88a4c174c6a5e0427785d14d007f8e1a93a7aff3d7d" title="&quot;STOP_2&quot;">STOP_2</a>                                          
-<a name="l00157"></a>00157         };
-<a name="l00158"></a>00158         
-<a name="l00160"></a><a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75">00160</a>         <span class="keyword">enum</span> <a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75">FlowType_</a>
-<a name="l00161"></a>00161         {
-<a name="l00162"></a><a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75ae58f1de8c38fded8f95fbb03dc51fcf3">00162</a>                 <a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75ae58f1de8c38fded8f95fbb03dc51fcf3" title="&quot;FLOW_OFF&quot;">FLOW_OFF</a>,                                       
-<a name="l00163"></a><a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75ae129914161d56c3331fa3f287c315156">00163</a>                 <a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75ae129914161d56c3331fa3f287c315156" title="&quot;FLOW_HARDWARE&quot;">FLOW_HARDWARE</a>,                          
-<a name="l00164"></a><a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75a93f2cf48e0aea9b4d0b9a9de333935a7">00164</a>                 <a class="code" href="class_serial_port_device.html#aa9521a81b97ebed61fe170ae8677bc75a93f2cf48e0aea9b4d0b9a9de333935a7" title="&quot;FLOW_XONXOFF&quot;">FLOW_XONXOFF</a>                            
-<a name="l00165"></a>00165         };
+<a name="l00058"></a>00058         <span class="keywordtype">bool</span> isInitialized(<span class="keywordtype">bool</span> bDoInit = <span class="keyword">false</span>);
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060 <span class="keyword">public</span> slots:
+<a name="l00061"></a>00061         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
+<a name="l00062"></a>00062         
+<a name="l00064"></a>00064 
+<a name="l00072"></a>00072         <span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#a78c1b734f6a24d6f819cc0e25e8d9633" title="baudRate slot.">baudRate</a>(<span class="keywordtype">int</span> dir = (<span class="keywordtype">int</span>)<a class="code" href="namespace_serial_port_device_name_space.html#a6ea07040275bb50953120f69fe4d974aa5d183483c4be010d8e53a601c7c53be6" title="3: AllDirections.">SerialPortDeviceNameSpace::AllDirections</a>);
+<a name="l00074"></a>00074 
+<a name="l00079"></a>00079         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a1b66857d9ba3566eeff6a4e9dbf7a979" title="clear slot.">clear</a>(<span class="keywordtype">int</span> dir = (<span class="keywordtype">int</span>)SerialPortDeviceNameSpace::AllDirections);
+<a name="l00081"></a>00081 
+<a name="l00086"></a>00086         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a26c54dd55fb5f70e3187eec8782c28b2" title="setFlowControl slot.">setFlowControl</a>(<span class="keywordtype">int</span> flow);
+<a name="l00088"></a>00088 
+<a name="l00090"></a>00090         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#a6298b5af38f2816835284032c8a3781c" title="clearError slot.">clearError</a>();
+<a name="l00092"></a>00092 
+<a name="l00096"></a>00096         <span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#a8312b5a51b949392fdd425f88e421bb5" title="dataBits slot.">dataBits</a>();
+<a name="l00098"></a>00098 
+<a name="l00102"></a>00102         <span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#a5483f9a389818873116a345bc84b1f30" title="dataErrorPolicy slot.">dataErrorPolicy</a>();
+<a name="l00104"></a>00104 
+<a name="l00109"></a>00109         <span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#a79503901edb42873b5fc25dbbaf1c138" title="error slot.">error</a>();
+<a name="l00111"></a>00111 
+<a name="l00114"></a>00114         QString <a class="code" href="class_serial_port_device.html#a2b69d22724682c8c08752d3665a02c83" title="errorString slot.">errorString</a>();
+<a name="l00116"></a>00116 
+<a name="l00120"></a>00120         <span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#a2e654266c7dfc9691ee96e4ee06fa81f" title="flowControl slot.">flowControl</a>();
+<a name="l00122"></a>00122 
+<a name="l00128"></a>00128         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a5dc528e7a47daf712f0f7459b18b19ef" title="flush slot.">flush</a>();
+<a name="l00130"></a>00130 
+<a name="l00134"></a>00134         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a0154231a3946deb9f9c5b7d31b4bd162" title="isDataTerminalReady slot.">isDataTerminalReady</a>();
+<a name="l00136"></a>00136 
+<a name="l00140"></a>00140         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#ab26014478d99bee789ae9a67aa5e8132" title="isRequestToSend slot.">isRequestToSend</a>();
+<a name="l00142"></a>00142 
+<a name="l00146"></a>00146         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#ad7063ed14fceb1a2c8bccf5fe3f5c8b1" title="open slot.">open</a>(<span class="keywordtype">int</span> mode);
+<a name="l00148"></a>00148 
+<a name="l00151"></a>00151         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#aae9983c24fbd711b38706fa3bd956c7e" title="close slot.">close</a>();
+<a name="l00153"></a>00153 
+<a name="l00157"></a>00157         <span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#ad61261eb077a5807b3d22f8c7d52d877" title="parity slot.">parity</a>();
+<a name="l00159"></a>00159 
+<a name="l00164"></a>00164         <span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#a96264f285617b9f3257a5d733259cb08" title="pinoutSignals slot.">pinoutSignals</a>();
 <a name="l00166"></a>00166 
-<a name="l00168"></a><a class="code" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2e">00168</a>         <span class="keyword">enum</span> <a class="code" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2e">QueryMode_</a>
-<a name="l00169"></a>00169         {
-<a name="l00170"></a><a class="code" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2eae71a6035227b022831f69daea333d46b">00170</a>                 <a class="code" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2eae71a6035227b022831f69daea333d46b" title="&quot;Polling&quot;">Polling</a>,                                        
-<a name="l00171"></a><a class="code" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2eaa6a89cd804aa7a4945c01ec04bb96eb9">00171</a>                 <a class="code" href="class_serial_port_device.html#ac1cbf2a80ef8ca1258ab14f1b84d5a2eaa6a89cd804aa7a4945c01ec04bb96eb9" title="&quot;EventDriven&quot;">EventDriven</a>                                     
-<a name="l00172"></a>00172         };
-<a name="l00173"></a>00173 
-<a name="l00175"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093">00175</a>         <span class="keyword">enum</span> <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093">OpenMode_</a>
-<a name="l00176"></a>00176         {
-<a name="l00177"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a69db2b3df07ad129d3c3347879f860ae">00177</a>                 <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a69db2b3df07ad129d3c3347879f860ae" title="&quot;NotOpen&quot;">NotOpen</a> =       (int)QIODevice::NotOpen,                
-<a name="l00178"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093ae8c88440373262ac17614bb1f3de440f">00178</a>                 <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093ae8c88440373262ac17614bb1f3de440f" title="&quot;ReadOnly&quot;">ReadOnly</a> =      (<span class="keywordtype">int</span>)<a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093ae8c88440373262ac17614bb1f3de440f" title="&quot;ReadOnly&quot;">QIODevice::ReadOnly</a>,               
-<a name="l00179"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a9ce6b31304b0ac0d840c0e12263cd617">00179</a>                 <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a9ce6b31304b0ac0d840c0e12263cd617" title="&quot;WriteOnly&quot;">WriteOnly</a> =     (int)QIODevice::WriteOnly,              
-<a name="l00180"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a1b7b7dbdbbc98dec969661344db90d2b">00180</a>                 <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a1b7b7dbdbbc98dec969661344db90d2b" title="&quot;ReadWrite&quot;">ReadWrite</a> =     (<span class="keywordtype">int</span>)<a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a1b7b7dbdbbc98dec969661344db90d2b" title="&quot;ReadWrite&quot;">QIODevice::ReadWrite</a>,              
-<a name="l00181"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a360629306edd4af1e5400d6597d29d18">00181</a>                 <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a360629306edd4af1e5400d6597d29d18" title="&quot;Append&quot;">Append</a> =        (int)QIODevice::Append,                 
-<a name="l00182"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a40d6c810aee30b7e4c370819f98f17a1">00182</a>                 <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a40d6c810aee30b7e4c370819f98f17a1" title="&quot;Truncate&quot;">Truncate</a> =      (<span class="keywordtype">int</span>)<a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a40d6c810aee30b7e4c370819f98f17a1" title="&quot;Truncate&quot;">QIODevice::Truncate</a>,               
-<a name="l00183"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093aedba3da8c5b8da72043793f09ba40f76">00183</a>                 <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093aedba3da8c5b8da72043793f09ba40f76" title="&quot;Text&quot;">Text</a> =          (int)QIODevice::Text,                   
-<a name="l00184"></a><a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a800d11c945fa00bb4d58aeddb0d7d14a">00184</a>                 <a class="code" href="class_serial_port_device.html#a1cc032021343bcf2146035a7d9c1f093a800d11c945fa00bb4d58aeddb0d7d14a" title="&quot;Unbuffered&quot;">Unbuffered</a> =(<span class="keywordtype">int</span>)QIODevice::Unbuffered          
-<a name="l00185"></a>00185         };
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187         <a class="code" href="class_serial_port_device.html#a040f251865128f8ecec5d0027356ef17" title="The SerialPortDevice constructor.">SerialPortDevice</a>(QObject *parent = 0);<span class="comment">//unsigned short vendor_id = 0x181b, unsigned short product_id = 0x4002, QObject *parent = 0);</span>
-<a name="l00188"></a>00188         <a class="code" href="class_serial_port_device.html#a040f251865128f8ecec5d0027356ef17" title="The SerialPortDevice constructor.">SerialPortDevice</a>(<span class="keyword">const</span> <a class="code" href="class_serial_port_device.html" title="The SerialPortDevice class.">SerialPortDevice</a>&amp; other ){}<span class="comment">//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro</span>
-<a name="l00189"></a>00189         <a class="code" href="class_serial_port_device.html#adabb2865db5609fc68650d6785774974" title="The SerialPortDevice destructor.">~SerialPortDevice</a>();
-<a name="l00190"></a>00190 
-<a name="l00191"></a>00191         <span class="keyword">static</span> QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
-<a name="l00192"></a>00192 
-<a name="l00193"></a>00193         <span class="keywordtype">bool</span> CreateHashTableFromEnum(<span class="keyword">const</span> QString &amp;sTypeName, QHash&lt;QString, int&gt; &amp;hTable);
-<a name="l00194"></a>00194         <span class="keywordtype">void</span> setBaudRate(BaudRateType baudRate);
-<a name="l00195"></a>00195         <span class="keywordtype">void</span> setDataBits(DataBitsType dataBits);
-<a name="l00196"></a>00196         <span class="keywordtype">void</span> setParity(ParityType parity);
-<a name="l00197"></a>00197         <span class="keywordtype">void</span> setFlowControl(FlowType flow);
-<a name="l00198"></a>00198         <span class="keywordtype">void</span> setStopBits(StopBitsType stopBits);
-<a name="l00199"></a>00199         <span class="keywordtype">void</span> setQueryMode(QextSerialPort::QueryMode mode);
-<a name="l00200"></a>00200 
-<a name="l00201"></a>00201         <span class="keywordtype">bool</span> open(QIODevice::OpenMode mode);
-<a name="l00202"></a>00202 
-<a name="l00203"></a>00203         BaudRateType baudRate() <span class="keyword">const</span>;
-<a name="l00204"></a>00204         DataBitsType dataBits () <span class="keyword">const</span>;
-<a name="l00205"></a>00205         ParityType parity() <span class="keyword">const</span>;
-<a name="l00206"></a>00206         FlowType flowControl() <span class="keyword">const</span>;
-<a name="l00207"></a>00207         StopBitsType stopBits() <span class="keyword">const</span>;
-<a name="l00208"></a>00208         QextSerialPort::QueryMode queryMode() <span class="keyword">const</span>;
-<a name="l00209"></a>00209         QIODevice::OpenMode openMode() <span class="keyword">const</span>;
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211 <span class="keyword">private</span> slots:
-<a name="l00212"></a>00212         <span class="keywordtype">void</span> ProcessSerialData();
-<a name="l00213"></a>00213                 
-<a name="l00214"></a>00214 <span class="keyword">public</span> slots:
-<a name="l00215"></a>00215         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
-<a name="l00216"></a>00216 
-<a name="l00217"></a>00217         QString <a class="code" href="class_serial_port_device.html#a7cac6d85cac8e50fd8620727eb52a0db">portName</a>() <span class="keyword">const</span>; 
-<a name="l00218"></a>00218         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#a49f40e0e6133bf18cf967d5578feb93c">setPortName</a>(<span class="keyword">const</span> QString &amp; name);
-<a name="l00219"></a>00219         QString <a class="code" href="class_serial_port_device.html#a8158cef8074c78ce92586f2bbff8695d">baudRateToString</a>() <span class="keyword">const</span>;
-<a name="l00220"></a>00220         <span class="keywordtype">bool</span> setBaudRate(QString baudRate);
-<a name="l00221"></a>00221         QString <a class="code" href="class_serial_port_device.html#ab93af696e6af9c817e1436d26fd17152">dataBitsToString</a>() <span class="keyword">const</span>;
-<a name="l00222"></a>00222         <span class="keywordtype">bool</span> setDataBits(QString dataBits);
-<a name="l00223"></a>00223         QString <a class="code" href="class_serial_port_device.html#a6ec748aa7e4b719ae70c9cc14e20c0fe">parityToString</a>() <span class="keyword">const</span>;
-<a name="l00224"></a>00224         <span class="keywordtype">bool</span> setParity(QString parity);
-<a name="l00225"></a>00225         QString <a class="code" href="class_serial_port_device.html#ad4bfcf12eb77900346567ded70bd82c9">flowControlToString</a>() <span class="keyword">const</span>;
-<a name="l00226"></a>00226         <span class="keywordtype">bool</span> setFlowControl(QString flow);
-<a name="l00227"></a>00227         QString <a class="code" href="class_serial_port_device.html#a1beb989d521413d56610dacafb3a96ad">stopBitsToString</a>() <span class="keyword">const</span>;
-<a name="l00228"></a>00228         <span class="keywordtype">bool</span> setStopBits(QString stopBits);
-<a name="l00229"></a>00229         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#a1359e87ccc7f18557e9422aa364066cc">setTimeout</a>(<span class="keywordtype">long</span> millisec);
-<a name="l00230"></a>00230 
-<a name="l00231"></a>00231         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#a1359e87ccc7f18557e9422aa364066cc">setTimeout</a>(qlonglong millisec);
-<a name="l00232"></a>00232 
-<a name="l00233"></a>00233         QString <a class="code" href="class_serial_port_device.html#a2630f1462deb96ce1b1239abb0ed2eda">queryModeToString</a>() <span class="keyword">const</span>;
-<a name="l00234"></a>00234         <span class="keywordtype">bool</span> setQueryMode(QString mode);
-<a name="l00235"></a>00235         <span class="keywordtype">bool</span> open(QString mode);
-<a name="l00236"></a>00236         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#aec0bc1c9e3d79843c9845e818d531e3b">isOpen</a>() <span class="keyword">const</span>;
-<a name="l00237"></a>00237         QString <a class="code" href="class_serial_port_device.html#a8043139890be231c5d8ac7cb5d5e8d80">openModeToString</a>() <span class="keyword">const</span>;
-<a name="l00238"></a>00238         <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#aae9983c24fbd711b38706fa3bd956c7e">close</a>();
+<a name="l00178"></a>00178         QString <a class="code" href="class_serial_port_device.html#a0daa8114d718b413a0a97a6de2393b2a" title="portName slot.">portName</a>();
+<a name="l00180"></a>00180 
+<a name="l00185"></a>00185         qint64 <a class="code" href="class_serial_port_device.html#a63952df901e6dc05580e078ef07086cf" title="readBufferSize slot.">readBufferSize</a>();
+<a name="l00187"></a>00187 
+<a name="l00193"></a>00193         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a0457b75daff5a71ea9e720220342ef75" title="sendBreak slot.">sendBreak</a>(<span class="keywordtype">int</span> duration = 0);
+<a name="l00195"></a>00195 
+<a name="l00203"></a>00203         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a6a0c416e52f786ad5bfdc354438f7440" title="setBaudRate slot.">setBaudRate</a>(<span class="keywordtype">int</span> baudRate, <span class="keywordtype">int</span> dir = (<span class="keywordtype">int</span>)SerialPortDeviceNameSpace::AllDirections);
+<a name="l00205"></a>00205 
+<a name="l00210"></a>00210         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a704514b3bc71fed9ce169e9dfced987a" title="setBreakEnabled slot.">setBreakEnabled</a>(<span class="keywordtype">bool</span> <span class="keyword">set</span> = <span class="keyword">true</span>);
+<a name="l00212"></a>00212 
+<a name="l00217"></a>00217         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#afdf174782ca4450731c639488dd4af27" title="setDataBits slot.">setDataBits</a>(<span class="keywordtype">int</span> dataBits);
+<a name="l00219"></a>00219 
+<a name="l00224"></a>00224         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a8b38754de0f4c3791d31a76abf959b0d" title="setDataErrorPolicy slot.">setDataErrorPolicy</a>(<span class="keywordtype">int</span> policy = (<span class="keywordtype">int</span>)<a class="code" href="namespace_serial_port_device_name_space.html#a13d94f9abc9ca2222b8a526a1b8caa39aefce6266ab8d908e3c420ca204dbcd9e" title="2: Ignores the error for a bad character.">SerialPortDeviceNameSpace::IgnorePolicy</a>);
+<a name="l00226"></a>00226 
+<a name="l00231"></a>00231         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a5dfcc405cef155f242fb78c4cfb4b80e" title="setDataTerminalReady slot.">setDataTerminalReady</a>(<span class="keywordtype">bool</span> <span class="keyword">set</span>);
+<a name="l00233"></a>00233 
+<a name="l00237"></a>00237         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#ad0917d02528bad1b1ed16685887e0604" title="setParity slot.">setParity</a>(<span class="keywordtype">int</span> parity);
 <a name="l00239"></a>00239 
-<a name="l00240"></a>00240 <span class="keyword">private</span>:
-<a name="l00241"></a>00241         QScriptEngine* currentScriptEngine;
-<a name="l00242"></a>00242         QextSerialPort* serialPort;
-<a name="l00243"></a>00243         QString sTmpTypeName;
-<a name="l00244"></a>00244         <span class="keywordtype">int</span> nTmpEnumIndex;
-<a name="l00245"></a>00245 
-<a name="l00246"></a>00246         QHash&lt;QString, int&gt; baudRateHash;
-<a name="l00247"></a>00247         QHash&lt;QString, int&gt; dataBitsHash;
-<a name="l00248"></a>00248         QHash&lt;QString, int&gt; parityHash;
-<a name="l00249"></a>00249         QHash&lt;QString, int&gt; flowControlHash;
-<a name="l00250"></a>00250         QHash&lt;QString, int&gt; stopBitsHash;
-<a name="l00251"></a>00251         QHash&lt;QString, int&gt; queryModeHash;
-<a name="l00252"></a>00252         QHash&lt;QString, int&gt; openModeHash;
-<a name="l00253"></a>00253 };
+<a name="l00252"></a>00252         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#ad248fef3a8042e9ec04354877b22f151" title="setPortName slot.">setPortName</a>(<span class="keyword">const</span> QString &amp; name);
 <a name="l00254"></a>00254 
-<a name="l00255"></a>00255 <span class="preprocessor">#endif // SerialPortDevice_H</span>
+<a name="l00261"></a>00261         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#a0a50467cc69a03150de8662f93dc1725" title="setReadBufferSize slot.">setReadBufferSize</a>(qint64 size);
+<a name="l00263"></a>00263 
+<a name="l00268"></a>00268         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a726337bcce6906e363963f5083d246d6" title="setRequestToSend slot.">setRequestToSend</a>(<span class="keywordtype">bool</span> <span class="keyword">set</span>);
+<a name="l00270"></a>00270 
+<a name="l00275"></a>00275         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#add2d4502dc5e5208b37f6db1033d2f86" title="setSettingsRestoredOnClose slot.">setSettingsRestoredOnClose</a>(<span class="keywordtype">bool</span> restore);
+<a name="l00277"></a>00277 
+<a name="l00282"></a>00282         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#a851dda506cb078b2632eb70f17c198ea" title="setStopBits slot.">setStopBits</a>(<span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#aff3de6cc151193bddbbe6ee1d22ed044" title="stopBits slot.">stopBits</a>);
+<a name="l00284"></a>00284 
+<a name="l00288"></a>00288         <span class="keywordtype">bool</span> <a class="code" href="class_serial_port_device.html#aa73e4903f5ef4a8a220bf9d545f7bccb" title="settingsRestoredOnClose slot.">settingsRestoredOnClose</a>();
+<a name="l00290"></a>00290 
+<a name="l00293"></a>00293         <span class="keywordtype">int</span> <a class="code" href="class_serial_port_device.html#aff3de6cc151193bddbbe6ee1d22ed044" title="stopBits slot.">stopBits</a>();
+<a name="l00295"></a>00295 
+<a name="l00299"></a>00299         qint64 <a class="code" href="class_serial_port_device.html#adb1e604dcc48ef58479dfd11eea8dd92" title="writeData slot.">writeData</a>(<span class="keyword">const</span> QString &amp;data);
+<a name="l00301"></a>00301 
+<a name="l00304"></a>00304         <span class="keywordtype">void</span> <a class="code" href="class_serial_port_device.html#ac5374b31a8f0b7f9ce1a041d36969827" title="setPort slot.">setPort</a>(<span class="keyword">const</span> QSerialPortInfo &amp;serialPortInfo);
+<a name="l00306"></a>00306 
+<a name="l00310"></a>00310         QByteArray <a class="code" href="class_serial_port_device.html#a419bfec6ed7d4e57a2752afa634f0ef3" title="readAll slot.">readAll</a>();
+<a name="l00311"></a>00311 
+<a name="l00312"></a>00312 <span class="keyword">private</span> slots:
+<a name="l00313"></a>00313         <span class="keywordtype">void</span> readData();
+<a name="l00314"></a>00314         <span class="keywordtype">void</span> handleError(QSerialPort::SerialPortError error);
+<a name="l00315"></a>00315 
+<a name="l00316"></a>00316 <span class="keyword">private</span>:
+<a name="l00317"></a>00317         QScriptEngine* currentScriptEngine;
+<a name="l00318"></a>00318         QSerialPort* serialPort;
+<a name="l00319"></a>00319 };
+<a name="l00320"></a>00320 
+<a name="l00321"></a>00321 <span class="preprocessor">#endif // SerialPortDevice_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:32 for Serial Port Device script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:28 for Serial Port Device script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

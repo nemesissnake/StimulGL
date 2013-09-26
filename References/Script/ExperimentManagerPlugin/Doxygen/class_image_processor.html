@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">ExperimentManager script class
-   &#160;<span id="projectnumber">2.0.0.3</span>
+   &#160;<span id="projectnumber">2.1.0.0</span>
    </div>
    <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
@@ -63,10 +63,24 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
+<tr class="memitem:a39e4fb7b5ccee5be65009f224f4b7655"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#a39e4fb7b5ccee5be65009f224f4b7655">ConcatenateDatFiles</a> (const QStringList &amp;sourceImagePaths, const QString &amp;destinationPath, const bool bOverwrite=false)</td></tr>
+<tr class="memdesc:a39e4fb7b5ccee5be65009f224f4b7655"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenates one or more DAT image(s) (*.dat) to one CDAT (*.cdat) file.  <a href="#a39e4fb7b5ccee5be65009f224f4b7655"></a><br/></td></tr>
 <tr class="memitem:ab41d3daabf836adf9c2f6f0bb31683c5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#ab41d3daabf836adf9c2f6f0bb31683c5">ConvertDatToPngFile</a> (QString strSource, QString strDestination, bool bOverwrite=false)</td></tr>
+<tr class="memdesc:ab41d3daabf836adf9c2f6f0bb31683c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts and saves a custom Dat (*.dat) file to a Png (*.png) file format.  <a href="#ab41d3daabf836adf9c2f6f0bb31683c5"></a><br/></td></tr>
 <tr class="memitem:af8cd1260b86d6199c07a472ed7a8d7bb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#af8cd1260b86d6199c07a472ed7a8d7bb">ConvertPngToDatFile</a> (QString strSource, QString strDestination, bool bOverwrite=false)</td></tr>
-<tr class="memitem:ad217b81b44f6505b07746f5172ce6b2a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#ad217b81b44f6505b07746f5172ce6b2a">ScalePngFile</a> (QString strSource, QString strDestination, int nRatio=1, int nMethod=0, int nColorThreshold=255, bool bOverwrite=false)</td></tr>
-<tr class="memitem:a50c171dbb8375532dd4e219405344434"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#a50c171dbb8375532dd4e219405344434">ScalePngFileBySize</a> (QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod=0, int nColorThreshold=255, bool bOverwrite=false)</td></tr>
+<tr class="memdesc:af8cd1260b86d6199c07a472ed7a8d7bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts and saves a Png (*.png) file to the custom Dat (*.dat) file format.  <a href="#af8cd1260b86d6199c07a472ed7a8d7bb"></a><br/></td></tr>
+<tr class="memitem:afae2c869420ea0e74eb4d6d499718830"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#afae2c869420ea0e74eb4d6d499718830">CreateMeanImageFromPngFiles</a> (const QStringList &amp;sourceImagePaths, const QString &amp;destinationPath, const bool bOverwrite=false)</td></tr>
+<tr class="memdesc:afae2c869420ea0e74eb4d6d499718830"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a mean Png image (*.png) from one or more Png (*.png) images.  <a href="#afae2c869420ea0e74eb4d6d499718830"></a><br/></td></tr>
+<tr class="memitem:a014b08a78a5fef3847f797e2015fa01d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#a014b08a78a5fef3847f797e2015fa01d">getCDATFileNrOfSubFrames</a> (const QString &amp;sourcePath)</td></tr>
+<tr class="memdesc:a014b08a78a5fef3847f797e2015fa01d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the amount of sub-images a specified CDAT (*.cdat) file contains.  <a href="#a014b08a78a5fef3847f797e2015fa01d"></a><br/></td></tr>
+<tr class="memitem:a4031223fe5bcabd8d5a9406b64bce2df"><td class="memItemLeft" align="right" valign="top">QImage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#a4031223fe5bcabd8d5a9406b64bce2df">getImageFromCDATFile</a> (const QString &amp;sourcePath, const int &amp;nIndex=0)</td></tr>
+<tr class="memdesc:a4031223fe5bcabd8d5a9406b64bce2df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a specified QImage from a CDAT (*.cdat) file.  <a href="#a4031223fe5bcabd8d5a9406b64bce2df"></a><br/></td></tr>
+<tr class="memitem:a035c59c948eab3e97766f5a3fa134660"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#a035c59c948eab3e97766f5a3fa134660">ScalePngFile</a> (QString strSource, QString strDestination, int nRatio=1, int nMethod=0, int nColorThreshold=255, bool bOverwrite=false, bool bSmoothFiltering=false)</td></tr>
+<tr class="memdesc:a035c59c948eab3e97766f5a3fa134660"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scales a a Png (*.png) file by a specified Ratio.  <a href="#a035c59c948eab3e97766f5a3fa134660"></a><br/></td></tr>
+<tr class="memitem:ab0047be28bcd0b397cf1afc4ad8d2180"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#ab0047be28bcd0b397cf1afc4ad8d2180">ScalePngFileBySize</a> (QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod=0, int nColorThreshold=255, bool bOverwrite=false, bool bSmoothFiltering=false)</td></tr>
+<tr class="memdesc:ab0047be28bcd0b397cf1afc4ad8d2180"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scales a a Png (*.png) file by a specified Size.  <a href="#ab0047be28bcd0b397cf1afc4ad8d2180"></a><br/></td></tr>
+<tr class="memitem:a7217bb7a1a31b4789e9aea9948558c32"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#a7217bb7a1a31b4789e9aea9948558c32">SplitCDatFile</a> (const QString &amp;sourceImagePath, const QString &amp;destinationPath, const QString &amp;destPreFileName, const bool bOverwrite=false)</td></tr>
+<tr class="memdesc:a7217bb7a1a31b4789e9aea9948558c32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits a CDAT (*.cdat) file into one or more DAT (*.dat) image file(s).  <a href="#a7217bb7a1a31b4789e9aea9948558c32"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5068463ae1a51d6a4ba6a236f2efea16"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_image_processor.html#a5068463ae1a51d6a4ba6a236f2efea16">ImageProcessor</a> (QObject *parent=NULL)</td></tr>
@@ -149,6 +163,51 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a39e4fb7b5ccee5be65009f224f4b7655"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_image_processor.html#a39e4fb7b5ccee5be65009f224f4b7655">ImageProcessor::ConcatenateDatFiles</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QStringList &amp;&#160;</td>
+          <td class="paramname"><em>sourceImagePaths</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>destinationPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&#160;</td>
+          <td class="paramname"><em>bOverwrite</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Concatenates one or more DAT image(s) (*.dat) to one CDAT (*.cdat) file. </p>
+<p>This function Concatenates one or more DAT (*.dat) image file(s) to one CDAT (*.cdat) file specified by a source list and destination directory path. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sourceImagePaths</td><td>a StringList containing the path(s) to the source DAT (*.dat) file(s). </td></tr>
+    <tr><td class="paramname">destinationPath</td><td>a String containing the path to destination concatenated CDAT (*.cdat) file. </td></tr>
+    <tr><td class="paramname">bOverWrite</td><td>a boolean value determining whether the destination file should be automatically overwritten when it already exists. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the concatenated destination file could be saved. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ab41d3daabf836adf9c2f6f0bb31683c5"></a>
 <div class="memitem">
 <div class="memproto">
@@ -179,7 +238,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Converts and saves a custom Dat (*.dat) file to a Png (*.png) file format.</p>
+
+<p>Converts and saves a custom Dat (*.dat) file to a Png (*.png) file format. </p>
 <p>This function Converts and saves a custom Dat (*.dat) file to a Png (*.png) file format. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -189,7 +249,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the target file could be saved.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the target file could be saved. </dd></dl>
 
 </div>
 </div>
@@ -223,7 +283,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Converts and saves a Png (*.png) file to the custom Dat (*.dat) file format.</p>
+
+<p>Converts and saves a Png (*.png) file to the custom Dat (*.dat) file format. </p>
 <p>This function Converts and saves a Png (*.png) file to the custom Dat (*.dat) file format. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -233,16 +294,126 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the target file could be saved.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the target file could be saved. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ad217b81b44f6505b07746f5172ce6b2a"></a>
+<a class="anchor" id="afae2c869420ea0e74eb4d6d499718830"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="class_image_processor.html#ad217b81b44f6505b07746f5172ce6b2a">ImageProcessor::ScalePngFile</a> </td>
+          <td class="memname">bool <a class="el" href="class_image_processor.html#afae2c869420ea0e74eb4d6d499718830">ImageProcessor::CreateMeanImageFromPngFiles</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QStringList &amp;&#160;</td>
+          <td class="paramname"><em>sourceImagePaths</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>destinationPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&#160;</td>
+          <td class="paramname"><em>bOverwrite</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Creates a mean Png image (*.png) from one or more Png (*.png) images. </p>
+<p>This function Creates a mean Png image (*.png) from one or more Png (*.png) images specified by a source list and destination directory path. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sourceImagePaths</td><td>a StringList containing the path(s) to the source Png (*.png) file(s). </td></tr>
+    <tr><td class="paramname">destinationPath</td><td>a String containing the path to destination mean Image Png (*.png) file. </td></tr>
+    <tr><td class="paramname">bOverWrite</td><td>a boolean value determining whether the destination file should be automatically overwritten when it already exists. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the mean image destination file could be saved. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a014b08a78a5fef3847f797e2015fa01d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="class_image_processor.html#a014b08a78a5fef3847f797e2015fa01d">ImageProcessor::getCDATFileNrOfSubFrames</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>sourcePath</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns the amount of sub-images a specified CDAT (*.cdat) file contains. </p>
+<p>This function Returns the amount of sub-images a specified CDAT (*.cdat) file contains, specified by a source CDAT (*.cdat) file path. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sourcePath</td><td>a String containing the path to the source CDAT (*.cdat) file. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a integer containing the number of sub-images, if this function could not execute properly it returns -1. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4031223fe5bcabd8d5a9406b64bce2df"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QImage <a class="el" href="class_image_processor.html#a4031223fe5bcabd8d5a9406b64bce2df">ImageProcessor::getImageFromCDATFile</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>sourcePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>nIndex</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns a specified QImage from a CDAT (*.cdat) file. </p>
+<p>This function Returns a specified QImage from a CDAT (*.cdat) file, specified by a source CDAT (*.cdat) file path and a image index (0 based). </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sourcePath</td><td>a String containing the path to the source CDAT (*.cdat) file. </td></tr>
+    <tr><td class="paramname">nIndex</td><td>a integer containing the index from the requested image in the source CDAT (*.cdat) file. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a QImage object that contains the requested image data, if this function could not execute properly it return an QImage object with size(w=0,h=0). </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a035c59c948eab3e97766f5a3fa134660"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_image_processor.html#a035c59c948eab3e97766f5a3fa134660">ImageProcessor::ScalePngFile</a> </td>
           <td>(</td>
           <td class="paramtype">QString&#160;</td>
           <td class="paramname"><em>strSource</em>, </td>
@@ -275,7 +446,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>bOverwrite</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>bOverwrite</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bSmoothFiltering</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -285,7 +462,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Scales a a Png (*.png) file by a specified Ratio.</p>
+
+<p>Scales a a Png (*.png) file by a specified Ratio. </p>
 <p>This function Scales and saves a Png (*.png) file to a specified destination. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -294,20 +472,21 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">nRatio</td><td>an integer value containing Ratio to which the image should be scaled. </td></tr>
     <tr><td class="paramname">nMethod</td><td>an integer value containing the Scaling Method, see <a class="el" href="class_image_processor.html#ab2644d4cb683c026c210cc45dc069cfb">ImageProcessor::ScalingMethod</a>. </td></tr>
     <tr><td class="paramname">nColorThreshold</td><td>an integer value containing the Threshold value in case the defined Scaling Method is <a class="el" href="class_image_processor.html#ab2644d4cb683c026c210cc45dc069cfba1f13b16111b19c8a4a89bdcd32159627">ScalingMethod_SmoothMonoColoredCustomThreshold</a>. </td></tr>
-    <tr><td class="paramname">bOverWrite</td><td>a Boolean value determing whether the destination file should be automatically overwritten when it already exists. </td></tr>
+    <tr><td class="paramname">bOverWrite</td><td>a Boolean value determining whether the destination file should be automatically overwritten when it already exists. </td></tr>
+    <tr><td class="paramname">bSmoothFiltering</td><td>a Boolean value determining whether a the resulting image is transformed using bilinear filtering. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the target file could be saved.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the target file could be saved. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a50c171dbb8375532dd4e219405344434"></a>
+<a class="anchor" id="ab0047be28bcd0b397cf1afc4ad8d2180"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="class_image_processor.html#a50c171dbb8375532dd4e219405344434">ImageProcessor::ScalePngFileBySize</a> </td>
+          <td class="memname">bool <a class="el" href="class_image_processor.html#ab0047be28bcd0b397cf1afc4ad8d2180">ImageProcessor::ScalePngFileBySize</a> </td>
           <td>(</td>
           <td class="paramtype">QString&#160;</td>
           <td class="paramname"><em>strSource</em>, </td>
@@ -346,6 +525,68 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bOverwrite</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bSmoothFiltering</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Scales a a Png (*.png) file by a specified Size. </p>
+<p>This function Scales and saves a Png (*.png) file to a specified destination. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strSource</td><td>a String containing the path to the source Png (*.png) file. </td></tr>
+    <tr><td class="paramname">strDestination</td><td>a String containing the path to destination Png (*.png) file. </td></tr>
+    <tr><td class="paramname">nXPixels</td><td>an integer value containing the number of pixels (width) to which the image should be scaled. </td></tr>
+    <tr><td class="paramname">nYPixels</td><td>an integer value containing the number of pixels (height) to which the image should be scaled. </td></tr>
+    <tr><td class="paramname">nMethod</td><td>an integer value containing the Scaling Method, see <a class="el" href="class_image_processor.html#ab2644d4cb683c026c210cc45dc069cfb">ImageProcessor::ScalingMethod</a>. </td></tr>
+    <tr><td class="paramname">nColorThreshold</td><td>an integer value containing the Threshold value in case the defined Scaling Method is <a class="el" href="class_image_processor.html#ab2644d4cb683c026c210cc45dc069cfba1f13b16111b19c8a4a89bdcd32159627">ScalingMethod_SmoothMonoColoredCustomThreshold</a>. </td></tr>
+    <tr><td class="paramname">bOverWrite</td><td>a Boolean value determining whether the destination file should be automatically overwritten when it already exists. </td></tr>
+    <tr><td class="paramname">bSmoothFiltering</td><td>a Boolean value determining whether a the resulting image is transformed using bilinear filtering. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the target file could be saved. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7217bb7a1a31b4789e9aea9948558c32"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="class_image_processor.html#a7217bb7a1a31b4789e9aea9948558c32">ImageProcessor::SplitCDatFile</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>sourceImagePath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>destinationPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>destPreFileName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&#160;</td>
           <td class="paramname"><em>bOverwrite</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
@@ -356,21 +597,19 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Scales a a Png (*.png) file by a specified Size.</p>
-<p>This function Scales and saves a Png (*.png) file to a specified destination. </p>
+
+<p>Splits a CDAT (*.cdat) file into one or more DAT (*.dat) image file(s). </p>
+<p>This function Splits a CDAT (*.cdat) file into one or more DAT (*.dat) image file(s), specified by a source and destination directory path. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">strSource</td><td>a String containing the path to the source Png (*.png) file. </td></tr>
-    <tr><td class="paramname">strDestination</td><td>a String containing the path to destination Png (*.png) file. </td></tr>
-    <tr><td class="paramname">nXPixels</td><td>an integer value containing the number of pixels (width) to which the image should be scaled. </td></tr>
-    <tr><td class="paramname">nYPixels</td><td>an integer value containing the number of pixels (height) to which the image should be scaled. </td></tr>
-    <tr><td class="paramname">nMethod</td><td>an integer value containing the Scaling Method, see <a class="el" href="class_image_processor.html#ab2644d4cb683c026c210cc45dc069cfb">ImageProcessor::ScalingMethod</a>. </td></tr>
-    <tr><td class="paramname">nColorThreshold</td><td>an integer value containing the Threshold value in case the defined Scaling Method is <a class="el" href="class_image_processor.html#ab2644d4cb683c026c210cc45dc069cfba1f13b16111b19c8a4a89bdcd32159627">ScalingMethod_SmoothMonoColoredCustomThreshold</a>. </td></tr>
-    <tr><td class="paramname">bOverWrite</td><td>a Boolean value determing whether the destination file should be automatically overwritten when it already exists. </td></tr>
+    <tr><td class="paramname">sourceImagePath</td><td>a String containing the path to the source CDAT (*.cdat) file. </td></tr>
+    <tr><td class="paramname">destinationPath</td><td>a String containing the path to destination directory where the DAT (*.dat) file(s) are saved. </td></tr>
+    <tr><td class="paramname">destPreFileName</td><td>the prefix used for saving the split DAT (*.dat) file(s) --&gt; "&lt;destPreFileName&gt;_&lt;0 based DAT file index&gt;.dat", e.g. studyxyz_3.dat. </td></tr>
+    <tr><td class="paramname">bOverWrite</td><td>a boolean value determining whether the destination file(s) should be automatically overwritten when it already exists. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the target file could be saved.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Boolean value representing whether the split image file(s) could be saved to the destination directory. </dd></dl>
 
 </div>
 </div>
@@ -378,7 +617,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:31 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

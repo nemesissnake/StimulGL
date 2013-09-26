@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">StimulGL QML Extensions
-   &#160;<span id="projectnumber">1.1</span>
+   &#160;<span id="projectnumber">1.1.0.0</span>
    </div>
    <div id="projectbrief">The StimulGL QML Extensions class references.</div>
   </td>
@@ -45,7 +45,7 @@
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//DefaultQMLPlugin</span>
-<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2012  Sven Gijsen</span>
+<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2013  Sven Gijsen</span>
 <a name="l00003"></a>00003 <span class="comment">//</span>
 <a name="l00004"></a>00004 <span class="comment">//This file is part of StimulGL.</span>
 <a name="l00005"></a>00005 <span class="comment">//StimulGL is free software: you can redistribute it and/or modify</span>
@@ -65,57 +65,59 @@
 <a name="l00019"></a>00019 <span class="preprocessor">#ifndef PHONONPLAYER_H</span>
 <a name="l00020"></a>00020 <span class="preprocessor"></span><span class="preprocessor">#define PHONONPLAYER_H</span>
 <a name="l00021"></a>00021 <span class="preprocessor"></span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;phonon&gt;</span>
-<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;QMessageBox&gt;</span>
-<a name="l00024"></a>00024 <span class="comment">//#include &lt;QBuffer&gt;</span>
-<a name="l00025"></a>00025 
+<a name="l00022"></a>00022 <span class="comment">//See //QT5Phonon! and add $(QTDIR)\lib\phonon$(DebugSuffix)4.lib</span>
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024 <span class="comment">//QT5Phonon#include &lt;phonon&gt;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;QMessageBox&gt;</span>
+<a name="l00026"></a>00026 <span class="comment">//#include &lt;QBuffer&gt;</span>
 <a name="l00027"></a>00027 
-<a name="l00030"></a><a class="code" href="class_phonon_player.html">00030</a> <span class="keyword">class </span><a class="code" href="class_phonon_player.html" title="The &quot;MediaPlayer&quot; QML extension, internally known as the PhononPlayer class.">PhononPlayer</a> : <span class="keyword">public</span> QObject
-<a name="l00031"></a>00031 {
-<a name="l00032"></a>00032         Q_OBJECT
-<a name="l00033"></a>00033                 <span class="comment">//Q_PROPERTY(int hour READ hour NOTIFY phononChanged)</span>
-<a name="l00034"></a>00034                 <span class="comment">//Q_PROPERTY(int minute READ minute NOTIFY phononChanged)</span>
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036 <span class="keyword">public</span>:
-<a name="l00037"></a>00037         <a class="code" href="class_phonon_player.html#af3becf4024504761c199fc1a351ecb3c" title="The PhononPlayer constructor.">PhononPlayer</a>(QObject *parent=0);
-<a name="l00038"></a>00038         <a class="code" href="class_phonon_player.html#a0fc36c64e0ddb82e6c8175429a0a25b4" title="The PhononPlayer destructor.">~PhononPlayer</a>();
-<a name="l00039"></a>00039         <span class="keywordtype">bool</span> addFiles(QStringList strFiles = QStringList());
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041 <span class="keyword">public</span> slots:
-<a name="l00042"></a>00042         <span class="keywordtype">bool</span> <a class="code" href="class_phonon_player.html#a2bced3a448f7331d9c7dd030b3957fb3">play</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> index = -1); <span class="comment">// or use Q_INVOKABLE bool play(); to make it available in QML</span>
-<a name="l00043"></a>00043         <span class="keywordtype">bool</span> <a class="code" href="class_phonon_player.html#ae455a018075e62449e4f35525b8a41e9">pause</a>();
-<a name="l00044"></a>00044         <span class="keywordtype">bool</span> <a class="code" href="class_phonon_player.html#a0de6e9be27796cd77d66b4fd77520a91">stop</a>();
-<a name="l00045"></a>00045         <span class="keywordtype">int</span> <a class="code" href="class_phonon_player.html#a646a5a79a19cd37bc087bda1fe5844c9">addFile</a>(<span class="keyword">const</span> QString strFile = QString());
-<a name="l00046"></a>00046         
-<a name="l00047"></a>00047         QStringList <a class="code" href="class_phonon_player.html#a09a20529598c20963c3bf68571a68894">getOutputDevices</a>();
-<a name="l00048"></a>00048         <span class="keywordtype">bool</span> <a class="code" href="class_phonon_player.html#ae39ca75371bf2274dcdf5fcab4ef255b">setOutputDevice</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nIndex);
-<a name="l00049"></a>00049 
-<a name="l00050"></a>00050 <span class="keyword">private</span> slots:
-<a name="l00051"></a>00051         <span class="keywordtype">void</span> stateChanged(Phonon::State newState, Phonon::State oldState);
-<a name="l00052"></a>00052         <span class="keywordtype">void</span> sourceChanged(<span class="keyword">const</span> Phonon::MediaSource &amp;source);
-<a name="l00053"></a>00053         <span class="keywordtype">void</span> metaStateChanged(Phonon::State newState, Phonon::State oldState);
-<a name="l00054"></a>00054         <span class="keywordtype">void</span> aboutToFinish();
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056         <span class="comment">//signals:</span>
-<a name="l00057"></a>00057         <span class="comment">//      void phononChanged();</span>
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="keyword">private</span>:
-<a name="l00060"></a>00060         Phonon::MediaObject *mediaObject;
-<a name="l00061"></a>00061         Phonon::AudioOutput *audioOutput;
-<a name="l00062"></a>00062         Phonon::MediaObject *metaInformationResolver;
-<a name="l00063"></a>00063         QList&lt;Phonon::MediaSource&gt; mediaSources;
-<a name="l00064"></a>00064         Phonon::Path phononPath;
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066         <span class="comment">//QBuffer buffer;</span>
-<a name="l00067"></a>00067         <span class="comment">//static int instances;</span>
-<a name="l00068"></a>00068 };
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070 <span class="preprocessor">#endif // PHONONPLAYER_H</span>
+<a name="l00029"></a>00029 
+<a name="l00032"></a><a class="code" href="class_phonon_player.html">00032</a> <span class="keyword">class </span><a class="code" href="class_phonon_player.html" title="The &quot;MediaPlayer&quot; QML extension, internally known as the PhononPlayer class.">PhononPlayer</a> : <span class="keyword">public</span> QObject
+<a name="l00033"></a>00033 {
+<a name="l00034"></a>00034         Q_OBJECT
+<a name="l00035"></a>00035                 <span class="comment">//Q_PROPERTY(int hour READ hour NOTIFY phononChanged)</span>
+<a name="l00036"></a>00036                 <span class="comment">//Q_PROPERTY(int minute READ minute NOTIFY phononChanged)</span>
+<a name="l00037"></a>00037 
+<a name="l00038"></a>00038 <span class="keyword">public</span>:
+<a name="l00039"></a>00039         <a class="code" href="class_phonon_player.html#af3becf4024504761c199fc1a351ecb3c" title="The PhononPlayer constructor.">PhononPlayer</a>(QObject *parent=0);
+<a name="l00040"></a>00040         <a class="code" href="class_phonon_player.html#a0fc36c64e0ddb82e6c8175429a0a25b4" title="The PhononPlayer destructor.">~PhononPlayer</a>();
+<a name="l00041"></a>00041         <span class="keywordtype">bool</span> addFiles(QStringList strFiles = QStringList());
+<a name="l00042"></a>00042 
+<a name="l00043"></a>00043 <span class="keyword">public</span> slots:
+<a name="l00044"></a>00044         <span class="keywordtype">bool</span> <a class="code" href="class_phonon_player.html#a2bced3a448f7331d9c7dd030b3957fb3">play</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> index = -1); <span class="comment">// or use Q_INVOKABLE bool play(); to make it available in QML</span>
+<a name="l00045"></a>00045         <span class="keywordtype">bool</span> <a class="code" href="class_phonon_player.html#ae455a018075e62449e4f35525b8a41e9">pause</a>();
+<a name="l00046"></a>00046         <span class="keywordtype">bool</span> <a class="code" href="class_phonon_player.html#a0de6e9be27796cd77d66b4fd77520a91">stop</a>();
+<a name="l00047"></a>00047         <span class="keywordtype">int</span> <a class="code" href="class_phonon_player.html#a646a5a79a19cd37bc087bda1fe5844c9">addFile</a>(<span class="keyword">const</span> QString strFile = QString());
+<a name="l00048"></a>00048         
+<a name="l00049"></a>00049         QStringList <a class="code" href="class_phonon_player.html#a09a20529598c20963c3bf68571a68894">getOutputDevices</a>();
+<a name="l00050"></a>00050         <span class="keywordtype">bool</span> <a class="code" href="class_phonon_player.html#ae39ca75371bf2274dcdf5fcab4ef255b">setOutputDevice</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nIndex);
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052 <span class="keyword">private</span> slots:
+<a name="l00053"></a>00053         <span class="comment">//QT5Phononvoid stateChanged(Phonon::State newState, Phonon::State oldState);</span>
+<a name="l00054"></a>00054         <span class="comment">//QT5Phononvoid sourceChanged(const Phonon::MediaSource &amp;source);</span>
+<a name="l00055"></a>00055         <span class="comment">//QT5Phononvoid metaStateChanged(Phonon::State newState, Phonon::State oldState);</span>
+<a name="l00056"></a>00056         <span class="keywordtype">void</span> aboutToFinish();
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058         <span class="comment">//signals:</span>
+<a name="l00059"></a>00059         <span class="comment">//      void phononChanged();</span>
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="keyword">private</span>:
+<a name="l00062"></a>00062         <span class="comment">//QT5PhononPhonon::MediaObject *mediaObject;</span>
+<a name="l00063"></a>00063         <span class="comment">//QT5PhononPhonon::AudioOutput *audioOutput;</span>
+<a name="l00064"></a>00064         <span class="comment">//QT5PhononPhonon::MediaObject *metaInformationResolver;</span>
+<a name="l00065"></a>00065         <span class="comment">//QT5PhononQList&lt;Phonon::MediaSource&gt; mediaSources;</span>
+<a name="l00066"></a>00066         <span class="comment">//QT5PhononPhonon::Path phononPath;</span>
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068         <span class="comment">//QBuffer buffer;</span>
+<a name="l00069"></a>00069         <span class="comment">//static int instances;</span>
+<a name="l00070"></a>00070 };
+<a name="l00071"></a>00071 
+<a name="l00072"></a>00072 <span class="preprocessor">#endif // PHONONPLAYER_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:33 for StimulGL QML Extensions by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:29 for StimulGL QML Extensions by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

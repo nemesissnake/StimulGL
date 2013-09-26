@@ -130,7 +130,7 @@ ConnectDisconnectScriptFunctions(true);
 //Log(getString("This is an Title", "Some Text....","default x"));
 
 bDoCleanup = false;
-sBinairySteps = 7;
+sBinairySteps = 11;
 for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 {
 	bFileProccessed = false;
@@ -139,7 +139,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 	Log("** STEP "  + nCounter + " **");
 	
 		
-	changeSet = StimulGL_CreateArray(8,2); //See the doxygen template document for parameter descriptions!!
+	changeSet = StimulGL_CreateArray(sBinairySteps+1,2); //See the doxygen template document for parameter descriptions!!
 	if(nCounter==1)
 	{
 		ComponentName = "ExperimentManagerPlugin";		
@@ -165,14 +165,16 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[5][0] = preFix + "INPUT" + postFix;
 		changeSet[5][1] = "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentManager.cpp \\\n" +
 		                          "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentManager.h \\\n" +
-					  "../../StimulGL/Source/Plugins/ExperimentManager/qmlWidget.h \\\n" +
-					  "../../StimulGL/Source/Plugins/ExperimentManager/qmlWidget.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/QML2Viewer.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/QML2Viewer.cpp \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/GLWidgetWrapper.h \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/GLWidgetWrapper.cpp \\\n" +
-					  "../../StimulGL/Source/Plugins/ExperimentManager/retinomap_glwidget.h \\\n" +
-					  "../../StimulGL/Source/Plugins/ExperimentManager/retinomap_glwidget.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/RetinotopyMapper.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/RetinotopyMapper.cpp \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/TriggerTimer.h \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/TriggerTimer.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentTimer.h \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentTimer.cpp \\\n" +					  
 					  "../../StimulGL/Source/Plugins/ExperimentManager/prtformatmanager.h \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/prtformatmanager.cpp \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/ImageProcessor.h \\\n" +
@@ -372,7 +374,131 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 //		changeSet[6][1] = "StimulGL.doxygen.Project";
 //		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
 //		changeSet[7][1] = "";		
+	}	
+	else if (nCounter==8)
+	{
+		ComponentName = "FireBirdClientPlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"FireBird Client Device script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"FireBird Client Device script class reference.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/FireBirdClientPlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/FirebirdClient/FirebirdClient.h \\\n" +
+					  "../../StimulGL/Source/Plugins/FirebirdClient/FirebirdClient.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/FirebirdClient/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";	
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";		
 	}
+	else if (nCounter==9)
+	{	
+		ComponentName = "PiezoStimDevicePlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"Piezo Stimulator Device script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"Piezo Stimulator Device script class reference.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/PiezoStimDevicePlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/PiezoStimDevice/PiezoStimDevice.h \\\n" +
+					  "../../StimulGL/Source/Plugins/PiezoStimDevice/PiezoStimDevice.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/PiezoStimDevice/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";	
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";		
+	}
+	else if (nCounter==10)
+	{	
+		ComponentName = "TBVExchangerPlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"Turbo BrainVoyager Exchanger script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"Turbo BrainVoyager Exchanger script class reference.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/TBVExchangerPlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/TBVExchanger/TBVExchanger.h \\\n" +
+					  "../../StimulGL/Source/Plugins/TBVExchanger/TBVExchanger.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/TBVExchanger/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";	
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";		
+	}
+	else if (nCounter==11)
+	{	
+		ComponentName = "TCPNetworkServerPlugin";		
+		Log("Component Name: " + ComponentName);
+		LastComponentReleaseIndex = StimulGL_Info.GetLatestComponentReleaseByName(ComponentName);
+		Log("Last Component Release Index: " + LastComponentReleaseIndex);
+		LastComponentIndex = StimulGL_Info.GetLatestComponentIndexByName(LastComponentReleaseIndex,ComponentName);
+		Log("Last Component Index: " + LastComponentIndex);
+		LastComponentVersion = StimulGL_Info.GetComponentVersionByIndexes(LastComponentReleaseIndex,LastComponentIndex);
+		Log("Last Component Version: " + LastComponentVersion);
+		Log("\n");
+		fileDest = ComponentName + ".cfg";
+		changeSet[0][0] = preFix + "PROJECT_NAME" + postFix;
+		changeSet[0][1] = "\"TCP Network Server Device script class\"";
+		changeSet[1][0] = preFix + "PROJECT_NUMBER" + postFix;
+		changeSet[1][1] = "\"" + LastComponentVersion + "\"";
+		changeSet[2][0] = preFix + "PROJECT_BRIEF" + postFix;
+		changeSet[2][1] = "\"TCP Network Server Device script class reference.\"";
+		changeSet[3][0] = preFix + "PROJECT_LOGO" + postFix;
+		changeSet[3][1] = "";//No quotes for empty!
+		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
+		changeSet[4][1] = "\"../References/Script/TCPNetworkServerPlugin\"";
+		changeSet[5][0] = preFix + "INPUT" + postFix;
+		changeSet[5][1] = "../../StimulGL/Source/Plugins/TCPNetworkServer/TCPNetworkServer.h \\\n" +
+					  "../../StimulGL/Source/Plugins/TCPNetworkServer/TCPNetworkServer.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/TCPNetworkServer/Global.h \\\n";
+		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
+		changeSet[6][1] = "StimulGL.doxygen.Project";	
+		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
+		changeSet[7][1] = "";		
+	}	
 	else
 	{
 		bSkipStep = true;

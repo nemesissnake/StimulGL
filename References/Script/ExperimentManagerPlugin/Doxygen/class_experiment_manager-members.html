@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">ExperimentManager script class
-   &#160;<span id="projectnumber">2.0.0.3</span>
+   &#160;<span id="projectnumber">2.1.0.0</span>
    </div>
    <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
@@ -66,7 +66,8 @@ This is the complete list of members for <a class="el" href="class_experiment_ma
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#ae9b3d50bb3af7d85fde90cb97b59e555">getExperimentFileName</a>()</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#ad80a833d24cba75fe10b88328629a8da">getExperimentName</a>()</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a>(const int nObjectID, const QString sName, ParsedParameterDefinition &amp;strcParDef)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#aaf890d3172645a1d1d427e593013470e">insertExperimentObjectBlockParameter</a>(const int nObjectID, const QString sName, const QString sValue, bool bIsInitializing=true)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4">getExperimentStructure</a>()</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a7298beb770b58918a4994a5538026c2b">insertExperimentObjectBlockParameter</a>(const int nObjectID, const QString sName, const QString sValue, bool bIsInitializing=true, bool bIsCustom=false)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#ab1847af6af9e6acd4b7fca51ed93b70f">loadExperiment</a>(QString strSource=&quot;&quot;, bool bViewEditTree=true, bool bIsFile=true)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a439531c8aad7ea5a05df418fb24fcab6">logExperimentObjectData</a>(const int &amp;nObjectIndex, const int &amp;nTimerIndex, const QString &amp;strFunction=&quot;&quot;, const QString &amp;strTag=&quot;&quot;, const QString &amp;strMessage=&quot;&quot;, const QString &amp;strValue=&quot;&quot;)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#af4756da1ac430d043a38929310f30fe1">restartExperimentTimer</a>(int nIndex)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
@@ -76,6 +77,8 @@ This is the complete list of members for <a class="el" href="class_experiment_ma
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a34102a745b34ce80c9402b00562b148d">setDebugMode</a>(bool mode)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">setExperimentFileName</a>(const QString qstrExpFileName)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a9f50a2cc340ec61292cbf527d6dd4673">setExperimentName</a>(QString name)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a62bbe3afa35c494a35932dccee741367">setExperimentOutputFilePostString</a>(const QString &amp;sPostString)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#af6cb8d15b3b9a9ac9c4de134ff692328">showVisualExperimentEditor</a>(cExperimentStructure *ExpStruct=NULL)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#ad71b7b4a17e1e3781fbb7160ea33c399">startExperimentTimer</a>(int nIndex)</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a045c8153c0d23530be3f897dee40a8b1">stopExperiment</a>()</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="class_experiment_manager.html#a8f45fffa70eaf9416a2f830f5408e6d4">validateExperiment</a>()</td><td><a class="el" href="class_experiment_manager.html">ExperimentManager</a></td><td><code> [slot]</code></td></tr>
@@ -85,7 +88,7 @@ This is the complete list of members for <a class="el" href="class_experiment_ma
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:31 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">ExperimentManager script class
-   &#160;<span id="projectnumber">2.0.0.3</span>
+   &#160;<span id="projectnumber">2.1.0.0</span>
    </div>
    <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
@@ -45,7 +45,7 @@
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//ExperimentManagerplugin</span>
-<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2012  Sven Gijsen</span>
+<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2013  Sven Gijsen</span>
 <a name="l00003"></a>00003 <span class="comment">//</span>
 <a name="l00004"></a>00004 <span class="comment">//This file is part of StimulGL.</span>
 <a name="l00005"></a>00005 <span class="comment">//StimulGL is free software: you can redistribute it and/or modify</span>
@@ -69,11 +69,11 @@
 <a name="l00023"></a>00023 <span class="preprocessor">#include &lt;QObject&gt;</span>
 <a name="l00024"></a>00024 <span class="preprocessor">#include &lt;QString&gt;</span>
 <a name="l00025"></a>00025 <span class="preprocessor">#include &lt;QStringList&gt;</span>
-<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;QtScript&gt;</span>
-<a name="l00027"></a>00027 <span class="preprocessor">#include &lt;QScriptEngine&gt;</span>
-<a name="l00028"></a>00028 <span class="preprocessor">#include &quot;randomc.h&quot;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;QtScript/QtScript&gt;</span>
+<a name="l00027"></a>00027 <span class="preprocessor">#include &lt;QtScript/QScriptEngine&gt;</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include &quot;randomc/randomc.h&quot;</span>
 <a name="l00029"></a>00029 
-<a name="l00030"></a>00030 <span class="preprocessor">#ifdef Q_OS_WIN</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#ifdef Q_OS_WIN32 //Are we on Windows?</span>
 <a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">        #include &quot;windows.h&quot;</span>
 <a name="l00032"></a>00032 <span class="preprocessor">#endif</span>
 <a name="l00033"></a>00033 <span class="preprocessor"></span>
@@ -122,7 +122,7 @@
 <a name="l00076"></a>00076                 <span class="keywordtype">double</span> iinterval = max - min;<span class="comment">// + 1;</span>
 <a name="l00077"></a>00077                 <span class="keywordflow">if</span> (iinterval &lt;= 0)<span class="comment">//&lt;= 0) </span>
 <a name="l00078"></a>00078                         <span class="keywordflow">return</span> 0x80000000; <span class="comment">// error</span>
-<a name="l00079"></a>00079                 <span class="keywordtype">double</span> dsmall = DBL_MIN;
+<a name="l00079"></a>00079                 <span class="comment">//double dsmall = DBL_MIN;</span>
 <a name="l00080"></a>00080                 <span class="keywordtype">double</span> r = (iinterval+DBL_MIN) * Random(); <span class="comment">// truncate</span>
 <a name="l00081"></a>00081                 <span class="comment">//if (r &gt;= iinterval) </span>
 <a name="l00082"></a>00082                 <span class="comment">//      return max;//   r = iinterval-1;</span>
@@ -130,66 +130,66 @@
 <a name="l00084"></a>00084         }
 <a name="l00085"></a>00085 };
 <a name="l00086"></a>00086 
-<a name="l00087"></a>00087 <span class="keyword">enum</span> RandomGenerator_RandomizeMethod
-<a name="l00088"></a>00088 {
-<a name="l00089"></a>00089         RandomGenerator_RandomizeStandard = 0,
-<a name="l00090"></a>00090         RandomGenerator_RandomizePreservedIndexes = 1,
-<a name="l00091"></a>00091         RandomGenerator_RandomizePreservedValues = 2
-<a name="l00092"></a>00092 };
-<a name="l00093"></a>00093 
+<a name="l00088"></a>00088 
+<a name="l00092"></a><a class="code" href="class_random_generator.html">00092</a> <span class="keyword">class </span><a class="code" href="class_random_generator.html" title="The Random Generator class.">RandomGenerator</a> : <span class="keyword">public</span> QObject, <span class="keyword">public</span> QStringList
+<a name="l00093"></a>00093 {
+<a name="l00094"></a>00094         Q_OBJECT
 <a name="l00095"></a>00095 
-<a name="l00099"></a><a class="code" href="class_random_generator.html">00099</a> <span class="keyword">class </span><a class="code" href="class_random_generator.html" title="The Random Generator class.">RandomGenerator</a> : <span class="keyword">public</span> QObject, <span class="keyword">public</span> QStringList
-<a name="l00100"></a>00100 {
-<a name="l00101"></a>00101         Q_OBJECT
-<a name="l00102"></a>00102 
-<a name="l00103"></a>00103 <span class="keyword">public</span>:
-<a name="l00104"></a>00104         <a class="code" href="class_random_generator.html#a930ca446c08689b8f16495ace4f7e11a" title="The RandomGenerator constructor.">RandomGenerator</a>(QObject *parent = NULL);
-<a name="l00105"></a>00105         <a class="code" href="class_random_generator.html#a930ca446c08689b8f16495ace4f7e11a" title="The RandomGenerator constructor.">RandomGenerator</a>(<span class="keyword">const</span> <a class="code" href="class_random_generator.html" title="The Random Generator class.">RandomGenerator</a>&amp; other ){};<span class="comment">//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro</span>
-<a name="l00106"></a>00106         <a class="code" href="class_random_generator.html#adb4c6bb7e072373f374d1be417cceae0" title="The RandomGenerator destructor.">~RandomGenerator</a>();
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108         <span class="keyword">static</span> QScriptValue ctor__randomGenerator(QScriptContext* context, QScriptEngine* engine);
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110         <span class="keywordtype">bool</span> randomizeList(RandomGenerator_RandomizeMethod rMethod = RandomGenerator_RandomizeStandard, QStringList *sList = NULL);             <span class="comment">//Randomizes the class inherited QStringList</span>
-<a name="l00111"></a>00111         <span class="keywordtype">void</span> setScriptEngine(QScriptEngine* engine);
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113 <span class="keyword">public</span> slots:
-<a name="l00114"></a>00114         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#aed5773ee81187a054569279cb5d3f76d">randomizeInt</a>(<span class="keywordtype">int</span> nMin, <span class="keywordtype">int</span> nMax);                                                                   <span class="comment">//just for &lt;int&gt; randomization</span>
-<a name="l00117"></a>00117         <span class="keywordtype">double</span> <a class="code" href="class_random_generator.html#afb866a54076c90d8f29295ec78206135">randomizeDouble</a>(<span class="keywordtype">double</span> dMin, <span class="keywordtype">double</span> dMax);                                               <span class="comment">//just for &lt;double&gt; randomization</span>
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119         QStringList <a class="code" href="class_random_generator.html#a1589a8be84f9d9acff246642bac54198">toStringList</a>();
-<a name="l00120"></a>00120         QStringList <a class="code" href="class_random_generator.html#a6dd5d2b33e0baf2636feba0bdee06e1a">randomize</a>(<span class="keywordtype">int</span> rMethod  = (<span class="keywordtype">int</span>)RandomGenerator_RandomizeStandard);
-<a name="l00121"></a>00121         <span class="keyword">const</span> QString <a class="code" href="class_random_generator.html#aad804d426b9def91916beec17197874b">at</a>(<span class="keywordtype">int</span> i) <span class="keyword">const</span>;
-<a name="l00122"></a>00122         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#ae2d39da959e03463ed824d90443dab3b">count</a>() <span class="keyword">const</span>;
-<a name="l00123"></a>00123         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#ae2d39da959e03463ed824d90443dab3b">count</a>(<span class="keyword">const</span> QString &amp;sValue) <span class="keyword">const</span>;
-<a name="l00124"></a>00124         <span class="keywordtype">bool</span> <a class="code" href="class_random_generator.html#aaf78e93ecbf9d532dabdef6b07985621">isEmpty</a>() <span class="keyword">const</span>;
-<a name="l00125"></a>00125         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#ac15bdbd75d94f321264aeee8b7a4e85a">append</a>(<span class="keyword">const</span> QString &amp;sValue);
-<a name="l00126"></a>00126         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#a94787dff47848a6d99258d4fd5cbf2b2">appendStringList</a>(<span class="keyword">const</span> QStringList &amp;sList);
-<a name="l00127"></a>00127         QString <a class="code" href="class_random_generator.html#af43d6e545af1c7da9740809b39fe48c6">takeFirst</a>();
-<a name="l00128"></a>00128         QString <a class="code" href="class_random_generator.html#ad2ebdc431073f54b509a1c1dfb21f15a">takeLast</a>();
-<a name="l00129"></a>00129         QString <a class="code" href="class_random_generator.html#a9243fbec47066c152feb77ad28895ced">takeAt</a>(<span class="keywordtype">int</span> i);
-<a name="l00130"></a>00130         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#a97751d96a183058bcf04af1667bf0cc5">clear</a>();
-<a name="l00131"></a>00131         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#a8253e3d9c9bd9c506f945844f78806f0">removeAll</a>(<span class="keyword">const</span> QString &amp;sValue);
-<a name="l00132"></a>00132         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#a37ff6bbd9503483cbd59d16442fcca49">removeAt</a>(<span class="keywordtype">int</span> i);
-<a name="l00133"></a>00133         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#a271d2882a8d1ac4526bb1e38ae8ff5c7">indexOf</a>(<span class="keyword">const</span> QString &amp;sValue, <span class="keywordtype">int</span> nFrom = 0) <span class="keyword">const</span>;
-<a name="l00134"></a>00134         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#a99435f5be9301f73a79330b829dfe5c3">swap</a>(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j);
-<a name="l00135"></a>00135         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#a45a7aa70e61ff96f625dfeef98bfea51">insert</a>(<span class="keywordtype">int</span> i, <span class="keyword">const</span> QString &amp;sValue);
-<a name="l00136"></a>00136 
-<a name="l00137"></a>00137 <span class="keyword">private</span>:
-<a name="l00138"></a>00138         QScriptEngine* currentScriptEngine;
-<a name="l00139"></a>00139         TRandomCombined&lt;CRandomMersenne,CRandomMother&gt; *tCombinedRandGen;
-<a name="l00140"></a>00140         <span class="keywordtype">int</span> nSeed;
-<a name="l00141"></a>00141 };
-<a name="l00142"></a>00142 
-<a name="l00143"></a>00143 Q_DECLARE_METATYPE(<a class="code" href="class_random_generator.html" title="The Random Generator class.">RandomGenerator</a>*)
-<a name="l00144"></a>00144 
-<a name="l00145"></a>00145 <span class="preprocessor">#endif // RANDOMGENERATOR_H</span>
+<a name="l00096"></a>00096 <span class="keyword">public</span>:
+<a name="l00097"></a>00097         <a class="code" href="class_random_generator.html#a930ca446c08689b8f16495ace4f7e11a" title="The RandomGenerator constructor.">RandomGenerator</a>(QObject *parent = NULL);
+<a name="l00098"></a>00098         <a class="code" href="class_random_generator.html#a930ca446c08689b8f16495ace4f7e11a" title="The RandomGenerator constructor.">RandomGenerator</a>(<span class="keyword">const</span> <a class="code" href="class_random_generator.html" title="The Random Generator class.">RandomGenerator</a>&amp; other ){Q_UNUSED(other);};<span class="comment">//TODO fill in copy constructor, should be declared for the Q_DECLARE_METATYPE macro</span>
+<a name="l00099"></a>00099         <a class="code" href="class_random_generator.html#adb4c6bb7e072373f374d1be417cceae0" title="The RandomGenerator destructor.">~RandomGenerator</a>();
+<a name="l00100"></a>00100 
+<a name="l00104"></a><a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03">00104</a>         <span class="keyword">enum</span> <a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03">RandomGenerator_RandomizeMethod</a>
+<a name="l00105"></a>00105         {
+<a name="l00106"></a><a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03ac7d39f5128e3bb9c68e0cb0b57a592d7">00106</a>                 <a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03ac7d39f5128e3bb9c68e0cb0b57a592d7" title="0: Standard randomization, it combines two different random number generators (Mersenne twister and M...">RandomGenerator_RandomizeStandard</a>                                               = 0, 
+<a name="l00107"></a><a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03a9c22dc8eb4a23e3e09fa12512f55867a">00107</a>                 <a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03a9c22dc8eb4a23e3e09fa12512f55867a" title="1: Standard randomization where a custom array can be provided that contains the indexes of the value...">RandomGenerator_RandomizePreservedIndexes</a>                               = 1, 
+<a name="l00108"></a><a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03ab00d06ea42c0b9b23f41e883d8fda2b5">00108</a>                 <a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03ab00d06ea42c0b9b23f41e883d8fda2b5" title="2: Standard randomization where a custom array can be provided that contains the values inside the ra...">RandomGenerator_RandomizePreservedValues</a>                                = 2, 
+<a name="l00109"></a><a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03a0c9255c403859fcde70ade2ebf343386">00109</a>                 <a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03a0c9255c403859fcde70ade2ebf343386" title="3: The same as RandomGenerator::RandomGenerator_RandomizePreservedIndexes, the values of the indexes ...">RandomGenerator_RandomizePreservedNonRandomizedIndexes</a>  = 3  
+<a name="l00110"></a>00110         };
+<a name="l00111"></a>00111 
+<a name="l00112"></a>00112         <span class="keyword">static</span> QScriptValue ctor__randomGenerator(QScriptContext* context, QScriptEngine* engine);
+<a name="l00113"></a>00113 
+<a name="l00114"></a>00114         <span class="keywordtype">bool</span> randomizeList(<a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03">RandomGenerator_RandomizeMethod</a> rMethod = <a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03ac7d39f5128e3bb9c68e0cb0b57a592d7" title="0: Standard randomization, it combines two different random number generators (Mersenne twister and M...">RandomGenerator_RandomizeStandard</a>, QStringList *sList = NULL);             <span class="comment">//Randomizes the class inherited QStringList</span>
+<a name="l00115"></a>00115         <span class="keywordtype">void</span> setScriptEngine(QScriptEngine* engine);
+<a name="l00116"></a>00116 
+<a name="l00117"></a>00117 <span class="keyword">public</span> slots:
+<a name="l00118"></a>00118         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
+<a name="l00119"></a>00119 
+<a name="l00127"></a>00127         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#aed5773ee81187a054569279cb5d3f76d" title="Creates a random Integer value.">randomizeInt</a>(<span class="keywordtype">int</span> nMin, <span class="keywordtype">int</span> nMax);
+<a name="l00135"></a>00135         <span class="keywordtype">double</span> <a class="code" href="class_random_generator.html#afb866a54076c90d8f29295ec78206135" title="Creates a random Double value.">randomizeDouble</a>(<span class="keywordtype">double</span> dMin, <span class="keywordtype">double</span> dMax);
+<a name="l00141"></a>00141         QStringList <a class="code" href="class_random_generator.html#a1589a8be84f9d9acff246642bac54198" title="Returns the String List.">toStringList</a>();
+<a name="l00149"></a>00149         QStringList <a class="code" href="class_random_generator.html#a3c1244191d11a4b27367f0c2bd5dbc5f" title="Randomizes and return the String List.">randomize</a>(<span class="keywordtype">int</span> rMethod  = (<span class="keywordtype">int</span>)<a class="code" href="class_random_generator.html#a7907ce6db17b82df2353554173785b03ac7d39f5128e3bb9c68e0cb0b57a592d7" title="0: Standard randomization, it combines two different random number generators (Mersenne twister and M...">RandomGenerator_RandomizeStandard</a>, QStringList sList = QStringList());
+<a name="l00158"></a>00158         <span class="keyword">const</span> QString <a class="code" href="class_random_generator.html#aad804d426b9def91916beec17197874b" title="Returns the String at index position i in the StringList.">at</a>(<span class="keywordtype">int</span> i) <span class="keyword">const</span>;
+<a name="l00163"></a>00163         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#ae2d39da959e03463ed824d90443dab3b" title="Returns the number of String items in the list.">count</a>() <span class="keyword">const</span>;
+<a name="l00169"></a>00169         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#ae2d39da959e03463ed824d90443dab3b" title="Returns the number of String items in the list.">count</a>(<span class="keyword">const</span> QString &amp;sValue) <span class="keyword">const</span>;
+<a name="l00174"></a>00174         <span class="keywordtype">bool</span> <a class="code" href="class_random_generator.html#aaf78e93ecbf9d532dabdef6b07985621" title="Returns true if the list contains no Strings; otherwise returns false.">isEmpty</a>() <span class="keyword">const</span>;
+<a name="l00180"></a>00180         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#ac15bdbd75d94f321264aeee8b7a4e85a" title="Inserts a defined String at the end of the list.">append</a>(<span class="keyword">const</span> QString &amp;sValue);
+<a name="l00187"></a>00187         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#a94787dff47848a6d99258d4fd5cbf2b2" title="Inserts a defined StringList at the end of the list.">appendStringList</a>(<span class="keyword">const</span> QStringList &amp;sList);
+<a name="l00193"></a>00193         QString <a class="code" href="class_random_generator.html#af43d6e545af1c7da9740809b39fe48c6" title="Removes the first String in the list and returns it.">takeFirst</a>();
+<a name="l00199"></a>00199         QString <a class="code" href="class_random_generator.html#ad2ebdc431073f54b509a1c1dfb21f15a" title="Removes the last String in the list and returns it.">takeLast</a>();
+<a name="l00206"></a>00206         QString <a class="code" href="class_random_generator.html#a9243fbec47066c152feb77ad28895ced" title="Removes the String at a defined index position in the list and returns it.">takeAt</a>(<span class="keywordtype">int</span> i);
+<a name="l00211"></a>00211         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#a97751d96a183058bcf04af1667bf0cc5" title="Removes all items from the list.">clear</a>();
+<a name="l00217"></a>00217         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#a8253e3d9c9bd9c506f945844f78806f0" title="Removes all occurrences of a String in the list and returns the number of entries removed...">removeAll</a>(<span class="keyword">const</span> QString &amp;sValue);
+<a name="l00223"></a>00223         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#a37ff6bbd9503483cbd59d16442fcca49" title="Removes the String at a defined index position in the list.">removeAt</a>(<span class="keywordtype">int</span> i);
+<a name="l00231"></a>00231         <span class="keywordtype">int</span> <a class="code" href="class_random_generator.html#a271d2882a8d1ac4526bb1e38ae8ff5c7" title="Returns the index position of the first occurrence of the defined String in the list.">indexOf</a>(<span class="keyword">const</span> QString &amp;sValue, <span class="keywordtype">int</span> nFrom = 0) <span class="keyword">const</span>;
+<a name="l00238"></a>00238         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#a99435f5be9301f73a79330b829dfe5c3" title="Exchange the String value at index position i with the String value at index position j...">swap</a>(<span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j);
+<a name="l00245"></a>00245         <span class="keywordtype">void</span> <a class="code" href="class_random_generator.html#a45a7aa70e61ff96f625dfeef98bfea51" title="Inserts a defined String value at specific index position i.">insert</a>(<span class="keywordtype">int</span> i, <span class="keyword">const</span> QString &amp;sValue);
+<a name="l00246"></a>00246 
+<a name="l00247"></a>00247 <span class="keyword">private</span>:
+<a name="l00248"></a>00248         QScriptEngine* currentScriptEngine;
+<a name="l00249"></a>00249         TRandomCombined&lt;CRandomMersenne,CRandomMother&gt; *tCombinedRandGen;
+<a name="l00250"></a>00250         <span class="keywordtype">int</span> nSeed;
+<a name="l00251"></a>00251 };
+<a name="l00252"></a>00252 
+<a name="l00253"></a>00253 Q_DECLARE_METATYPE(<a class="code" href="class_random_generator.html" title="The Random Generator class.">RandomGenerator</a>*)
+<a name="l00254"></a>00254 
+<a name="l00255"></a>00255 <span class="preprocessor">#endif // RANDOMGENERATOR_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2012 12:10:30 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>
