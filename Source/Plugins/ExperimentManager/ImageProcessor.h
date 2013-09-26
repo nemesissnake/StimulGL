@@ -54,15 +54,94 @@ public:
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
+	
+	/*! \brief Converts and saves a Png (*.png) file to the custom Dat (*.dat) file format.
+	*
+	*  This function Converts and saves a Png (*.png) file to the custom Dat (*.dat) file format.
+	* @param strSource a String containing the path to the source Png (*.png) file.
+	* @param strDestination a String containing the path to destination Dat (*.dat) file.
+	* @param bOverWrite a Boolean value determing whether the destination file should be automatically overwritten when it already exists.
+	* @return a Boolean value representing whether the target file could be saved.
+	*/
 	bool ConvertPngToDatFile(QString strSource, QString strDestination, bool bOverwrite = false);
+	/*! \brief Converts and saves a custom Dat (*.dat) file to a Png (*.png) file format.
+	*
+	*  This function Converts and saves a custom Dat (*.dat) file to a Png (*.png) file format.
+	* @param strSource a String containing the path to the source Dat (*.dat) file.
+	* @param strDestination a String containing the path to destination Png (*.png) file.
+	* @param bOverWrite a Boolean value determing whether the destination file should be automatically overwritten when it already exists.
+	* @return a Boolean value representing whether the target file could be saved.
+	*/	
 	bool ConvertDatToPngFile(QString strSource, QString strDestination, bool bOverwrite = false);
+	/*! \brief Scales a a Png (*.png) file by a specified Ratio.
+	*
+	*  This function Scales and saves a Png (*.png) file to a specified destination.
+	* @param strSource a String containing the path to the source Png (*.png) file.
+	* @param strDestination a String containing the path to destination Png (*.png) file.
+	* @param nRatio an integer value containing Ratio to which the image should be scaled.
+	* @param nMethod an integer value containing the Scaling Method, see ImageProcessor::ScalingMethod.
+	* @param nColorThreshold an integer value containing the Threshold value in case the defined Scaling Method is #ScalingMethod_SmoothMonoColoredCustomThreshold.
+	* @param bOverWrite a Boolean value determining whether the destination file should be automatically overwritten when it already exists.
+	* @param bSmoothFiltering a Boolean value determining whether a the resulting image is transformed using bilinear filtering.
+	* @return a Boolean value representing whether the target file could be saved.
+	*/	
 	bool ScalePngFile(QString strSource, QString strDestination, int nRatio = 1, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false, bool bSmoothFiltering = false);
+	/*! \brief Scales a a Png (*.png) file by a specified Size.
+	*
+	*  This function Scales and saves a Png (*.png) file to a specified destination.
+	* @param strSource a String containing the path to the source Png (*.png) file.
+	* @param strDestination a String containing the path to destination Png (*.png) file.
+	* @param nXPixels an integer value containing the number of pixels (width) to which the image should be scaled.
+	* @param nYPixels an integer value containing the number of pixels (height) to which the image should be scaled.
+	* @param nMethod an integer value containing the Scaling Method, see ImageProcessor::ScalingMethod.
+	* @param nColorThreshold an integer value containing the Threshold value in case the defined Scaling Method is #ScalingMethod_SmoothMonoColoredCustomThreshold.
+	* @param bOverWrite a Boolean value determining whether the destination file should be automatically overwritten when it already exists.
+	* @param bSmoothFiltering a Boolean value determining whether a the resulting image is transformed using bilinear filtering.
+	* @return a Boolean value representing whether the target file could be saved.
+	*/	
 	bool ScalePngFileBySize(QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod = 0, int nColorThreshold = 255, bool bOverwrite = false, bool bSmoothFiltering = false);
+	/*! \brief Creates a mean Png image (*.png) from one or more Png (*.png) images.
+	*
+	*  This function Creates a mean Png image (*.png) from one or more Png (*.png) images specified by a source list and destination directory path.
+	* @param sourceImagePaths a StringList containing the path(s) to the source Png (*.png) file(s).
+	* @param destinationPath a String containing the path to destination mean Image Png (*.png) file.
+	* @param bOverWrite a boolean value determining whether the destination file should be automatically overwritten when it already exists.
+	* @return a Boolean value representing whether the mean image destination file could be saved.
+	*/	
 	bool CreateMeanImageFromPngFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite = false);
+	/*! \brief Concatenates one or more DAT image(s) (*.dat) to one CDAT (*.cdat) file.
+	*
+	*  This function Concatenates one or more DAT (*.dat) image file(s) to one CDAT (*.cdat) file specified by a source list and destination directory path.
+	* @param sourceImagePaths a StringList containing the path(s) to the source DAT (*.dat) file(s).
+	* @param destinationPath a String containing the path to destination concatenated CDAT (*.cdat) file.
+	* @param bOverWrite a boolean value determining whether the destination file should be automatically overwritten when it already exists.
+	* @return a Boolean value representing whether the concatenated destination file could be saved.
+	*/		
 	bool ConcatenateDatFiles(const QStringList &sourceImagePaths,const QString &destinationPath, const bool bOverwrite = false);
-	int SplitCDatFile(const QString &sourceImagePath,const QString &destinationPath, const QString &destPreFileName, const bool bOverwrite = false);
-	//QPixmap ChangeHue(QPixmap &p);
+	/*! \brief Splits a CDAT (*.cdat) file into one or more DAT (*.dat) image file(s).
+	*
+	*  This function Splits a CDAT (*.cdat) file into one or more DAT (*.dat) image file(s), specified by a source and destination directory path.
+	* @param sourceImagePath a String containing the path to the source CDAT (*.cdat) file.
+	* @param destinationPath a String containing the path to destination directory where the DAT (*.dat) file(s) are saved.
+	* @param destPreFileName the prefix used for saving the split DAT (*.dat) file(s) --> "<destPreFileName>_<0 based DAT file index>.dat", e.g. studyxyz_3.dat.
+	* @param bOverWrite a boolean value determining whether the destination file(s) should be automatically overwritten when it already exists.
+	* @return a Boolean value representing whether the split image file(s) could be saved to the destination directory.
+	*/	
+	int SplitCDatFile(const QString &sourceImagePath,const QString &destinationPath, const QString &destPreFileName, const bool bOverwrite = false);	
+	/*! \brief Returns a specified QImage from a CDAT (*.cdat) file.
+	*
+	*  This function Returns a specified QImage from a CDAT (*.cdat) file, specified by a source CDAT (*.cdat) file path and a image index (0 based).
+	* @param sourcePath a String containing the path to the source CDAT (*.cdat) file.
+	* @param nIndex a integer containing the index from the requested image in the source CDAT (*.cdat) file.
+	* @return a QImage object that contains the requested image data, if this function could not execute properly it return an QImage object with size(w=0,h=0).
+	*/	
 	QImage getImageFromCDATFile(const QString &sourcePath, const int &nIndex = 0);
+	/*! \brief Returns the amount of sub-images a specified CDAT (*.cdat) file contains.
+	*
+	*  This function Returns the amount of sub-images a specified CDAT (*.cdat) file contains, specified by a source CDAT (*.cdat) file path.
+	* @param sourcePath a String containing the path to the source CDAT (*.cdat) file.
+	* @return a integer containing the number of sub-images, if this function could not execute properly it returns -1.
+	*/			
 	int getCDATFileNrOfSubFrames(const QString &sourcePath);
 
 private:

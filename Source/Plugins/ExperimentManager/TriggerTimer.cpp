@@ -42,8 +42,8 @@ TriggerTimer::TriggerTimer() : QObject(NULL)
 	dElapsed = 0.0;
 	dNextThreshold = 0.0;
 	dStartTime = 0.0;
-	currentTimerType = QPCNew_TriggerTimerType;
-	createTimerTypeHashTable();
+	currentTimerType = ExperimentManagerNameSpace::QPC_TriggerTimerType;
+	//createTimerTypeHashTable();
 	bTimerIsRunning = false;
 }
 
@@ -57,11 +57,12 @@ TriggerTimer::~TriggerTimer()
 	bDoStopTimer = true;
 	if(bTimerIsRunning)
 	{
-		if ((currentTimerType == QPC_TriggerTimerType) || (currentTimerType == QPCNew_TriggerTimerType))
-		{
+		//if ((currentTimerType == QPC_TriggerTimerType_Old) || (currentTimerType == QPC_TriggerTimerType))
+		//{
 			emit stopTimerSignal();
-		}
-		else if (currentTimerType == QTimer_TriggerTimerType)
+		//}
+		//else 
+		if (currentTimerType == ExperimentManagerNameSpace::QTimer_TriggerTimerType)
 		{
 			eTimer.stop();
 		}
@@ -108,31 +109,36 @@ bool TriggerTimer::makeThisAvailableInScript(QString strObjectScriptName, QObjec
 	return false;
 }
 
-void TriggerTimer::handleThreadFinished()
+//void TriggerTimer::handleThreadFinished()
+//{
+//	return;
+//}
+
+//void TriggerTimer::createTimerTypeHashTable()
+//{
+//	timerTypeHash.clear();
+//	timerTypeHash.insert("QPC_TriggerTimerType_Old", (int)QPC_TriggerTimerType);
+//	timerTypeHash.insert("QTimer_TriggerTimerType", (int)QTimer_TriggerTimerType);
+//	timerTypeHash.insert("QPC_TriggerTimerType", (int)QPCNew_TriggerTimerType);
+//	timerTypeHash.insert("Fast_TriggerTimerType", (int)Fast_TriggerTimerType);
+//}
+
+bool TriggerTimer::setTimerType(const int nNewTimerType)
 {
-	return;
+	return setTimerType((ExperimentManagerNameSpace::TriggerTimerType)nNewTimerType);
 }
 
-void TriggerTimer::createTimerTypeHashTable()
-{
-	timerTypeHash.clear();
-	timerTypeHash.insert("QPC_TriggerTimerType", (int)QPC_TriggerTimerType);
-	timerTypeHash.insert("QTimer_TriggerTimerType", (int)QTimer_TriggerTimerType);
-	timerTypeHash.insert("QPCNew_TriggerTimerType", (int)QPCNew_TriggerTimerType);
-	timerTypeHash.insert("Fast_TriggerTimerType", (int)Fast_TriggerTimerType);
-}
+//bool TriggerTimer::setTimerType(const QString &sNewTimerType)
+//{
+//	int nTmpEnumIndex =  timerTypeHash.value(sNewTimerType,-1);
+//	if (nTmpEnumIndex>=0)
+//	{
+//		return setTimerType((TriggerTimerType)nTmpEnumIndex);
+//	}
+//	return false;
+//}
 
-bool TriggerTimer::setTimerType(const QString &sNewTimerType)
-{
-	int nTmpEnumIndex =  timerTypeHash.value(sNewTimerType,-1);
-	if (nTmpEnumIndex>=0)
-	{
-		return setTimerType((TriggerTimerType)nTmpEnumIndex);
-	}
-	return false;
-}
-
-bool TriggerTimer::setTimerType(TriggerTimerType newTimerType)
+bool TriggerTimer::setTimerType(ExperimentManagerNameSpace::TriggerTimerType newTimerType)
 {
 	if (bTimerIsRunning == false)
 	{
@@ -142,18 +148,14 @@ bool TriggerTimer::setTimerType(TriggerTimerType newTimerType)
 	return false;	
 }
 
-QString TriggerTimer::getTimerType() const
-{
-	return timerTypeHash.key((int)currentTimerType,UNKNOWNENUMSTRING);
-}
+//QString TriggerTimer::getTimerType() const
+//{
+//	return timerTypeHash.key((int)currentTimerType,UNKNOWNENUMSTRING);
+//}
 
 void TriggerTimer::startTimer(double dMSec)//Do not change the function name without changing the below!
 {
-/*! \brief Starts the Trigger Timer.
- *  This function starts the Trigger Timer and then automatically emits a TriggerTimer::timeout() signal when triggered.
- * @param dMSec the period trigger time in milliseconds.
- */
-	if(((currentTimerType == QPC_TriggerTimerType) || (currentTimerType == QPCNew_TriggerTimerType)) && (QThread::currentThread() != &_thread))//Wrong thread
+	if(((currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType_Old) || (currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType)) && (QThread::currentThread() != &_thread))//Wrong thread
 	{
 		QMetaObject::invokeMethod(this, "startTimer", Qt::QueuedConnection,Q_ARG(double, dMSec));//Cannot be a DirectConnection !!
 	}
@@ -161,7 +163,7 @@ void TriggerTimer::startTimer(double dMSec)//Do not change the function name wit
 	{
 		bTimerIsRunning = true;
 		
-		if (currentTimerType == QPC_TriggerTimerType)
+		if (currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType_Old)
 		{
 #ifdef Q_OS_WIN32 //Are we on Windows?
 			//use the SetThreadAffinityMask() function to make your thread stick to one core or the other, so that 'rdtsc' and 
@@ -182,7 +184,7 @@ void TriggerTimer::startTimer(double dMSec)//Do not change the function name wit
 			dNextThreshold = dTriggerInterval;
 			ThreadActivationTriggerQTimer.start();
 		}
-		else if (currentTimerType == QPCNew_TriggerTimerType)
+		else if (currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType)
 		{
 #ifdef Q_OS_WIN32 //Are we on Windows?
 			//use the SetThreadAffinityMask() function to make your thread stick to one core or the other, so that 'rdtsc' and 
@@ -204,14 +206,14 @@ void TriggerTimer::startTimer(double dMSec)//Do not change the function name wit
 			dNextThreshold = dTriggerInterval;
 			ThreadActivationTriggerQTimer.start();
 		}
-		else if (currentTimerType == QTimer_TriggerTimerType)
+		else if (currentTimerType == ExperimentManagerNameSpace::QTimer_TriggerTimerType)
 		{
 			qtTimer.start(dMSec);
 			emit started();
 			connect(&qtTimer, SIGNAL(timeout()), this, SIGNAL(timeout()));
 			bDoStopTimer = false;
 		}
-		else if (currentTimerType == Fast_TriggerTimerType)
+		else if (currentTimerType == ExperimentManagerNameSpace::Fast_TriggerTimerType)
 		{
 			fastExperimentThreadedTimer = new FastThreadedTriggerTimer();
 			connect(fastExperimentThreadedTimer, &FastThreadedTriggerTimer::timeout, this, &TriggerTimer::timeout);
@@ -231,46 +233,39 @@ void TriggerTimer::resetIntervalTestResults()
 
 double TriggerTimer::currentTime() 
 {
-/*! \brief Returns the current UTC time.
-*   This function returns the current UTC time as a double value in seconds, counted from January 1, 1970.
-*   Precision varies depending on platform but is usually as good or better than a millisecond.
-*/
 	return WTF::currentTime();
 }
 
 void TriggerTimer::stopTimer()//Do not change the function name without changing the below!
 {
-/*! \brief Stops the Trigger Timer.
- *  This function immediately stops the Trigger Timer.
- */
-	if(((currentTimerType == QPC_TriggerTimerType) || (currentTimerType == QPCNew_TriggerTimerType)) && (QThread::currentThread() != &_thread))//Wrong thread
+	if(((currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType_Old) || (currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType)) && (QThread::currentThread() != &_thread))//Wrong thread
 	//if((QThread::currentThread() != &_thread))//Wrong thread
 	{
 		QMetaObject::invokeMethod(this, "stopTimer", Qt::QueuedConnection);//Cannot be a DirectConnection !!
 	}
 	else//Right thread
 	{
-		if (currentTimerType == QPC_TriggerTimerType)
+		if (currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType_Old)
 		{
 			ThreadActivationTriggerQTimer.stop();
 			bDoStopTimer = true;
 			eTimer.stop();
 			bTimerIsRunning = false;
 		}
-		else if (currentTimerType == QPCNew_TriggerTimerType)
+		else if (currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType)
 		{
 			ThreadActivationTriggerQTimer.stop();
 			bDoStopTimer = true;
 			eTimer.stop();
 			bTimerIsRunning = false;
 		}
-		else if (currentTimerType == QTimer_TriggerTimerType)
+		else if (currentTimerType == ExperimentManagerNameSpace::QTimer_TriggerTimerType)
 		{
 			bDoStopTimer = true;
 			qtTimer.stop();
 			bTimerIsRunning = false;
 		}
-		else if (currentTimerType == Fast_TriggerTimerType)
+		else if (currentTimerType == ExperimentManagerNameSpace::Fast_TriggerTimerType)
 		{
 			bDoStopTimer = true;
 			if(fastExperimentThreadedTimer)
@@ -287,7 +282,7 @@ void TriggerTimer::runThreadedTimerFunction()
 {
 	if(bDoStopTimer)
 		return;
-	if (currentTimerType == QPCNew_TriggerTimerType)
+	if (currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType)
 	{
 		//dElapsed = eTimer.getElapsedTimeInMilliSec();
 		dElapsed = WTF::currentTimeMS() - dStartTime;
@@ -299,7 +294,7 @@ void TriggerTimer::runThreadedTimerFunction()
 				emit goingAccurate(dRemainingTime);
 				// = WTF::currentTimeMS() - dStartTime;
 				//eTimer.SleepMSecAccurate(dRemainingTime);
-				eTimer.SleepMSecAccurate2(dRemainingTime);
+				eTimer.SleepMSecAccurate(dRemainingTime);
 			}
 			emit timeout();
 			dNextThreshold = dNextThreshold + dTriggerInterval;
@@ -328,7 +323,7 @@ void TriggerTimer::runThreadedTimerFunction()
 			}
 		}
 	}
-	else if (currentTimerType == QPC_TriggerTimerType)
+	else if (currentTimerType == ExperimentManagerNameSpace::QPC_TriggerTimerType_Old)
 	{
 		dElapsed = eTimer.getElapsedTimeInMilliSec();
 		if ((((int)(dElapsed+1)) + intervalTest.dSampleSpeedToUse) >= ((int)dNextThreshold))//Can we dismiss the below?
@@ -337,7 +332,7 @@ void TriggerTimer::runThreadedTimerFunction()
 			if(dRemainingTime > 0.0)
 			{
 				emit goingAccurate(dRemainingTime);
-				eTimer.SleepMSecAccurate(dRemainingTime);
+				eTimer.SleepMSecAccurate_old(dRemainingTime);
 			}
 			emit timeout();
 			dNextThreshold = dNextThreshold + dTriggerInterval;

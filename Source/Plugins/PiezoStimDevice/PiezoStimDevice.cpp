@@ -229,19 +229,19 @@ bool PiezoStimDevice::resolveFunctionSignatures()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-QString PiezoStimDevice::Test(const QString &sParam)
-{
-	if(LoadPiezoLibrary(LIBRARYFILENAME))
-	{
-		typedef int (*MyPrototype)(char *);
-
-		MyPrototype myFunction = (MyPrototype) libPiezoStim->resolve("initStimulator");
-		if (myFunction)
-			return QString::number(myFunction(sParam.toLatin1().data()));
-		return "Function failed";
-	}
-	return LIBRARYLOADFAILEDMESSAGE;
-}
+//QString PiezoStimDevice::Test(const QString &sParam)
+//{
+//	if(LoadPiezoLibrary(LIBRARYFILENAME))
+//	{
+//		typedef int (*MyPrototype)(char *);
+//
+//		MyPrototype myFunction = (MyPrototype) libPiezoStim->resolve("initStimulator");
+//		if (myFunction)
+//			return QString::number(myFunction(sParam.toLatin1().data()));
+//		return "Function failed";
+//	}
+//	return LIBRARYLOADFAILEDMESSAGE;
+//}
 
 int PiezoStimDevice::initStimulator(const QString &sLicense)
 {

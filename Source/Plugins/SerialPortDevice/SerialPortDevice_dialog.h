@@ -43,7 +43,7 @@ private slots:
 	void closeSerialPort();
 	void writeDataString(const QString &sData);
 	void readData(const QString &sData);
-	//void handleError(QSerialPort::SerialPortError error);
+	//void handleError(SerialPortDeviceNameSpace::SerialPortError error);
 
 	void on_cancelButton_clicked();
 	void on_okButton_clicked();

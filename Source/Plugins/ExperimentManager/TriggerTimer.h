@@ -26,20 +26,11 @@
 #include "FastThreadedTriggerTimer.h"
 #include "CurrentTime.h"
 #include "maindefines.h"
-
-/*! The enum (TriggerTimerType) can store a TriggerTimer type */
-enum TriggerTimerType
-{
-	QPC_TriggerTimerType			= 0, //!< 0: The Query Performance Counter Timer type
-	QTimer_TriggerTimerType			= 1, //!< 1: The QTimer Timer type
-	QPCNew_TriggerTimerType			= 2, //!< 2: The Query Performance Counter Timer type, new implementation
-	Fast_TriggerTimerType			= 3  //!< 3: The Fast Timer type
-};
-
+#include "Global.h"
 
 //!  The TriggerTimer class. 
 /*!
-  The Trigger Timer Manager can be used to create a accurate triggered timer.
+  The TriggerTimer can be used to create a accurate/fast triggered threaded (interval) timer.
 */
 class TriggerTimer : public QObject, protected QScriptable
 {
@@ -74,10 +65,14 @@ signals:
 	//! The goingAccurate Signal.
 	/*!
 		This signal is emitted just before the TriggerTimer::timeout signal, the Trigger Timer is then more actively observed (higher CPU load) in order to achieve a more higher accuracy.
+		This signal is only emitted when using the ExperimentManagerNameSpace::QPC_TriggerTimerType or ExperimentManagerNameSpace::QPC_TriggerTimerType_Old type, see TriggerTimer.setTimerType(const int).
 		@param dRemainingTime a double value that represents the remaining time it should take for the Trigger Timer to timeout.
 	*/
 	void goingAccurate(double dRemainingTime);
-	
+	//! The stopTimerSignal Signal.
+	/*!
+		This signal is emitted when the TriggerTimer is stopped.		
+	*/	
 	void stopTimerSignal();
 
 public:
@@ -86,25 +81,43 @@ public:
 	~TriggerTimer();
 
 	static QScriptValue ctor__triggerTimer(QScriptContext* context, QScriptEngine* engine);
-	bool setTimerType(TriggerTimerType newTimerType);
+	bool setTimerType(ExperimentManagerNameSpace::TriggerTimerType newTimerType);
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
 
+	/*! \brief Starts the Trigger Timer.
+	*  This function starts the Trigger Timer and then automatically emits a TriggerTimer::timeout() signal when triggered.
+	* @param dMSec the period trigger time in milliseconds.
+	*/
 	void startTimer(double nMSec);
+	/*! \brief Stops the Trigger Timer.
+	*  This function immediately stops the TriggerTimer, see TriggerTimer.startTimer.
+	*/
 	void stopTimer();
+	/*! \brief Returns the current UTC time.
+	*   This function returns the current UTC time as a double value in seconds, counted from January 1, 1970.
+	*   Precision varies depending on platform but is usually as good or better than a millisecond.
+	*/
 	static double currentTime();
-	bool setTimerType(const QString &sNewTimerType);
-	QString getTimerType() const;
-	void handleThreadFinished();
+	/*! \brief Sets the timer type to use for the TriggerTimer.
+	*   This function Sets the timer type to use for the TriggerTimer, see ExperimentManagerNameSpace::TriggerTimerType.
+	*   @param nNewTimerType a integer value holding the type of the timer, see ExperimentManagerNameSpace::TriggerTimerType.
+	*   @return a boolean value representing whether the function could execute successfully.
+	*/
+	bool setTimerType(const int nNewTimerType);
+	
+	//bool setTimerType(const QString &sNewTimerType);
+	//QString getTimerType() const;
+	//void handleThreadFinished();
 	//QObject *GetScriptMetaObject(int nIndex) {if(nIndex == 0) return (QObject *)this->metaObject(); else return NULL;};
 
 private:
 	void resetIntervalTestResults();
-	void createTimerTypeHashTable();
+	//void createTimerTypeHashTable();
 
 	QScriptEngine* currentScriptEngine;
-	QHash<QString, int> timerTypeHash;
+	//QHash<QString, int> timerTypeHash;
 	int nThreadIdealCount;
 	QThread _thread;
 	QTimer ThreadActivationTriggerQTimer;
@@ -118,7 +131,7 @@ private:
 	double dNextThreshold;
 	double dRemainingTime;
 	strcIntervalTest intervalTest;
-	TriggerTimerType currentTimerType;
+	ExperimentManagerNameSpace::TriggerTimerType currentTimerType;
 	bool bTimerIsRunning;
 
 private slots:
@@ -127,7 +140,7 @@ private slots:
 };
 
 Q_DECLARE_METATYPE(TriggerTimer*)
-Q_DECLARE_FLAGS(TriggerTimerTypes, TriggerTimerType)
+Q_DECLARE_FLAGS(TriggerTimerTypes, ExperimentManagerNameSpace::TriggerTimerType)
 Q_DECLARE_OPERATORS_FOR_FLAGS(TriggerTimerTypes)
 
 #endif // TRIGGERTIMER_H

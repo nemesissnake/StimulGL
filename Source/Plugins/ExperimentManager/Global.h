@@ -27,6 +27,17 @@ class ExperimentManager;
 /*! The namespace for the Experiment Manager */
 namespace ExperimentManagerNameSpace
 {
+	/*! 
+	 * The enum (TriggerTimerType) can store a TriggerTimer type 
+	*/
+	enum TriggerTimerType
+	{
+		QPC_TriggerTimerType_Old		= 0, //!< 0: The Query Performance Counter Timer type, the old implementation, this one became obsolete.
+		QTimer_TriggerTimerType			= 1, //!< 1: The QTimer Timer type, only use if it's necesary to force it to use a QTimer Timer type.
+		QPC_TriggerTimerType			= 2, //!< 2: The Query Performance Counter Timer type, the new default implementation, Low CPU absorption, No interval jittering, Interval > 15 mSecs.
+		Fast_TriggerTimerType			= 3  //!< 3: The Fast Timer type, another new implementation, Medium CPU absorption, interval jittering, Fast -> Interval > 5 mSecs.
+	};
+
 	enum ExperimentTimerType //The type of a experiment timer, used for logging(flags, combinations possible)
 	{
 		Experiment_Timer_None		= 0,

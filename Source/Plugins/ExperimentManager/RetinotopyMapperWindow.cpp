@@ -243,7 +243,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 						parentRetinotopyMapper->randStimStateGenerator->append(QString::number(j));
 					}
 				}
-				parentRetinotopyMapper->randStimStateGenerator->randomizeList(RandomGenerator_RandomizePreservedIndexes,parentRetinotopyMapper->previousRandEmptyStimGenerator);
+				parentRetinotopyMapper->randStimStateGenerator->randomizeList(RandomGenerator::RandomGenerator_RandomizePreservedIndexes,parentRetinotopyMapper->previousRandEmptyStimGenerator);
 			}
 
 

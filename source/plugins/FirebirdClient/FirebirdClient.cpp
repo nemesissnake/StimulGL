@@ -456,6 +456,7 @@ bool FirebirdClient::ExecuteDatabaseQuery(const QString& sQuery)
 	QSqlQuery query;
 	if(RetrieveSQLQuery(sQuery,query))
 	{
+		/*
 		QStringList sList;
 		//int fieldNo = query->record().indexOf("id");
 		//if(fieldNo >= 0)
@@ -468,6 +469,7 @@ bool FirebirdClient::ExecuteDatabaseQuery(const QString& sQuery)
 			}
 			//QString sResult = query.value(0).toString();
 		}
+		*/
 		return true;
 	}
 	return false;

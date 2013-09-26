@@ -42,8 +42,6 @@ SerialPortDevice_Dialog::SerialPortDevice_Dialog(QWidget *parent) : QDialog(pare
 
 	initActionsConnections();
 	bool bResult = false;
-	//bResult = connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
-	//connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 	bResult = connect(serial, SIGNAL(SerialDataReceived(QString)), this, SLOT(readData(QString)));		
 	bResult = connect(console, SIGNAL(getData(QString)), this, SLOT(writeDataString(QString)));
 	bResult = connect(ui.lneDataToSend, SIGNAL(returnPressed()), this, SLOT(SendToConsole()));

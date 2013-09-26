@@ -20,7 +20,6 @@
 #ifndef QML2VIEWER_H
 #define QML2VIEWER_H
 
-//#include "Quick2ContainerWidget.h"
 #include <QQmlContext>
 #include "qtquick2applicationviewer.h"
 #include "ExperimentEngine.h"
@@ -39,12 +38,12 @@ class QML2Viewer : public ExperimentEngine
 	Q_OBJECT
 
 signals:
-	//! The UserWantsToClose Signal.
+	//! The NewSourceLoaded Signal.
 	/*!
-		You can use this Signal to detect whenever the user tries to abort the experiment.
-		No Parameter.
+		You can use this Signal to detect whenever internal QML2 Engine loads a new source.
+		@param sFileURL a string containing the URL of the loaded file.
 	*/
-	void NewSourceLoaded(QString);
+	void NewSourceLoaded(QString sFileURL);
 
 public:
 	QML2Viewer(QObject *parent = NULL);
@@ -52,27 +51,77 @@ public:
 	QML2Viewer(const QML2Viewer& other){Q_UNUSED(other);};//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	static QScriptValue ctor_QML2Viewer(QScriptContext* context, QScriptEngine* engine);
 	
-public:	
-	//bool executeQML2Document(const QString &strSource, bool bIsFile = true);
-
 public slots:
-	bool executeQML2Document(const QString &strSource, bool bIsFile = true);
 
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
-	bool initObject();
-	bool startObject();
-	bool stopObject();
-	bool setObjectID(int nObjID);
-	bool initObjectBlockTrial();
-	QVariant invokeQml2Method(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());	
-	//QVariant invokeQml2JavaScriptCode(const QString &sCode);
 
+	/*! \brief Executes a QML document.
+	*
+	*  This function can execute a QML document.
+	* @param strSource the path to a QML file or the QML code itself.
+	* @param bIsFile a boolean value determining whether the @param strSource is a path to a QML file, if false then the @param strSource is interpreted as QML code.
+	* @return a boolean value determining whether the function could be executed successfully.
+	*/
+	bool executeQML2Document(const QString &strSource, bool bIsFile = true);	
+	
+	bool initObject();
+	
+	bool startObject();
+	
+	bool stopObject();
+	
+	bool setObjectID(int nObjID);
+	
+	bool initObjectBlockTrial();
+	
+	/*! \brief Invokes a QML Method.
+	*
+	*  This function can invoke/call a defined function within the current QML context.
+	* @param strRootObjectName the name of the root item containing the function definition in the QML context.
+	* @param strMethodName the name of the function to be called
+	* @param inputValue1 - these parameters are automatically passed to the function if they are defined.
+	* @return a QVariant containing the invoked function return value converted to a QVariant.
+	*/
+	QVariant invokeQml2Method(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant());	
+	/*! \brief Adds a QPixmap to the internal Image Buffer.
+	*
+	*  This function can add a QPixmap to the internal Image Buffer.
+	*  These images can then be rapidly presented because they are already loaded in memory.
+	* @param pixmap the QPixmap to be added to the internal Image Buffer.
+	* @return a Unique string created by the Image Buffer holding a key to access the newly added image.
+	* See QML2Viewer::getPixmapFromImageBuffer and QML2Viewer::updatePixmapFromImageBuffer.
+	*/	
 	QString addPixmapToImageBuffer(const QPixmap &pixmap);
+	/*! \brief Retrieves a QPixmap to the internal Image Buffer.
+	*
+	*  This function can retrieve a QPixmap to the internal Image Buffer.
+	* @param pixmap the retrieved QPixmap from the internal Image Buffer.
+	* @return a boolean value representing whether the function executed successfully.
+	* See QML2Viewer::addPixmapToImageBuffer.
+	*/	
 	bool getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
+	/*! \brief Updates a QPixmap inside the internal Image Buffer.
+	*
+	*  This function can update a QPixmap that is stored in the internal Image Buffer.
+	* @param pixmap the new QPixmap to which the stored QPixmap inside the Image Buffer should update to.
+	* @param ID the String containing the unique String previously created by the Image Buffer.
+	* @return a boolean value representing whether the function executed successfully.
+	* See QML2Viewer::addPixmapToImageBuffer.
+	*/	
 	bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
+	/*! \brief Removes a QPixmap inside the internal Image Buffer.
+	*
+	*  This function can remove a QPixmap that is stored in the internal Image Buffer.
+	* @param ID the String containing the unique String previously created by the Image Buffer.
+	* @return a boolean value representing whether the function executed successfully.
+	* See QML2Viewer::addPixmapToImageBuffer.
+	*/	
 	bool removePixmapFromImageBuffer(const QString &ID);
+
 	bool setExperimentManager(ExperimentManager *expManager);
+	
 	bool setExperimentObjectReadyToUnlock();
+	
 	QScriptValue getWindow();
 
 protected:
@@ -90,14 +139,10 @@ private:
 	void deleteQML2ViewerWindow();
 
 	ExperimentManager *experimentManager;
-	//QScriptEngine *currentScriptEngine;
 	cExperimentStructure *currentExperimentStructure;
 	QFile tmpFile;
-	//QmlErrorHandler *qmlErrorHandler;
 	ImageListModel *imgLstModel;
 	QtQuick2ApplicationViewer *quick2ViewerWindow;
-	//QWindow *parentWindow;
-
 	QString qmlMainFilePath;
 	QString last_qmlMainFilePath;
 	QObject *rootObject;

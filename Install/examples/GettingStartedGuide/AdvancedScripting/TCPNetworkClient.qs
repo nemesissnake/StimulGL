@@ -1,10 +1,10 @@
-234var KeyBoardCaptureObj = new KeyBoardCapture();
+var KeyBoardCaptureObj = new KeyBoardCapture();//2334
 var objTCPNetworkServer = new TCPNetworkServer();
 var ServerAddress = new Array("127.0.0.1", "200");
 
 ConnectDisconnectScriptFunctions(true);
 Log("connectToServer() result -> " + objTCPNetworkServer.connectToServer(ServerAddress[0],ServerAddress[1]));
-KeyBoardCaptureObj.StartCaptureThread(0, true);
+KeyBoardCaptureObj.StartCaptureThread(0, false);
 
 function ServerDataAvailable(sData)
 {

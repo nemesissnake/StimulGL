@@ -96,6 +96,7 @@ bool QML2Viewer::executeQML2Document(const QString &strSource, bool bIsFile)//QV
 		}
 		else
 		{
+			bRetVal = startObject();
 			qml2EventRoutine(strSource);
 			return true;
 		}
@@ -299,14 +300,6 @@ QVariant QML2Viewer::invokeQml2JavaScriptCode(const QString &sCode)//"functionsI
 
 QVariant QML2Viewer::invokeQml2Method(QString strRootObjectName, QString strMethodName, QVariant inputValue1, QVariant inputValue2, QVariant inputValue3, QVariant inputValue4, QVariant inputValue5, QVariant inputValue6, QVariant inputValue7, QVariant inputValue8, QVariant inputValue9)
 {
-/*! \brief Invokes a QML Method.
- *
- *  This function can invoke/call a defined function within the current QML context.
- * @param strRootObjectName the name of the root item containing the function definition in the QML context.
- * @param strMethodName the name of the function to be called
- * @param inputValue1 - these parameters are automatically passed to the function if they are defined.
- * @return a QVariant containing the invoked function return value converted to a QVariant.
- */
 	if (!rootObject)
 	{
 		rootObject = quick2ViewerWindow->rootObject();// get root object
@@ -584,14 +577,6 @@ bool QML2Viewer::setExperimentManager(ExperimentManager *expManager)
 
 QString QML2Viewer::addPixmapToImageBuffer(const QPixmap &pixmap)
 {
-/*! \brief Adds a QPixmap to the internal Image Buffer.
- *
- *  This function can add a QPixmap to the internal Image Buffer.
- *  These images can then be rapidly presented because they are already loaded in memory.
- * @param pixmap the QPixmap to be added to the internal Image Buffer.
- * @return a Unique string created by the Image Buffer holding a key to access the newly added image.
- * See QML2Viewer::getPixmapFromImageBuffer and QML2Viewer::updatePixmapFromImageBuffer.
- */
 	if (!imgLstModel)
 		return false;
 	return imgLstModel->addPixmap(pixmap);
@@ -599,13 +584,6 @@ QString QML2Viewer::addPixmapToImageBuffer(const QPixmap &pixmap)
 
 bool QML2Viewer::getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 {
-/*! \brief Retrieves a QPixmap to the internal Image Buffer.
- *
- *  This function can retrieve a QPixmap to the internal Image Buffer.
- * @param pixmap the retrieved QPixmap from the internal Image Buffer.
- * @return a boolean value representing whether the function executed successfully.
- * See QML2Viewer::addPixmapToImageBuffer.
- */
 	if (!imgLstModel)
 		return false;
 	if(imgLstModel->getPixmap(*pixmap,ID))
@@ -617,14 +595,6 @@ bool QML2Viewer::getPixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 
 bool QML2Viewer::updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 {
-/*! \brief Updates a QPixmap inside the internal Image Buffer.
- *
- *  This function can update a QPixmap that is stored in the internal Image Buffer.
- * @param pixmap the new QPixmap to which the stored QPixmap inside the Image Buffer should update to.
- * @param ID the String containing the unique String previously created by the Image Buffer.
- * @return a boolean value representing whether the function executed successfully.
- * See QML2Viewer::addPixmapToImageBuffer.
- */
 	if (!imgLstModel)
 		return false;
 	if(imgLstModel->updatePixmap(*pixmap,ID))
@@ -636,13 +606,6 @@ bool QML2Viewer::updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 
 bool QML2Viewer::removePixmapFromImageBuffer(const QString &ID)
 {
-/*! \brief Removes a QPixmap inside the internal Image Buffer.
- *
- *  This function can remove a QPixmap that is stored in the internal Image Buffer.
- * @param ID the String containing the unique String previously created by the Image Buffer.
- * @return a boolean value representing whether the function executed successfully.
- * See QML2Viewer::addPixmapToImageBuffer.
- */
 	if (!imgLstModel)
 		return false;
 	if(imgLstModel->removePixmap(ID))

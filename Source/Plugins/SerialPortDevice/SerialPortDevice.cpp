@@ -74,8 +74,6 @@ SerialPortDevice::~SerialPortDevice()
 {
 	//disconnect(serialPort, SIGNAL(readyRead()), this, SIGNAL(CaptureThreadReadyRead()));
 	//disconnect(serialPort, SIGNAL(readyRead()), this, SLOT(ProcessSerialData()));
-
-
 	if (serialPort)
 	{
 		serialPort->close();

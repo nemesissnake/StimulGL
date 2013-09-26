@@ -65,14 +65,6 @@ bool ImageProcessor::makeThisAvailableInScript(QString strObjectScriptName, QObj
 
 bool ImageProcessor::ConvertPngToDatFile(QString strSource, QString strDestination, bool bOverwrite)
 {
-/*! \brief Converts and saves a Png (*.png) file to the custom Dat (*.dat) file format.
- *
- *  This function Converts and saves a Png (*.png) file to the custom Dat (*.dat) file format.
- * @param strSource a String containing the path to the source Png (*.png) file.
- * @param strDestination a String containing the path to destination Dat (*.dat) file.
- * @param bOverWrite a Boolean value determing whether the destination file should be automatically overwritten when it already exists.
- * @return a Boolean value representing whether the target file could be saved.
- */
 	QFile fileSource(strSource);
 	QFile fileDest(strDestination);
 	QFileInfo fileDestInfo(strDestination);
@@ -112,14 +104,6 @@ bool ImageProcessor::ConvertPngToDatFile(QString strSource, QString strDestinati
 
 bool ImageProcessor::ConvertDatToPngFile(QString strSource, QString strDestination, bool bOverwrite)
 {
-/*! \brief Converts and saves a custom Dat (*.dat) file to a Png (*.png) file format.
- *
- *  This function Converts and saves a custom Dat (*.dat) file to a Png (*.png) file format.
- * @param strSource a String containing the path to the source Dat (*.dat) file.
- * @param strDestination a String containing the path to destination Png (*.png) file.
- * @param bOverWrite a Boolean value determing whether the destination file should be automatically overwritten when it already exists.
- * @return a Boolean value representing whether the target file could be saved.
- */
 	QFile fileSource(strSource);
 	QFile fileDest(strDestination);
 	QFileInfo fileDestInfo(strDestination);
@@ -168,18 +152,6 @@ bool ImageProcessor::ConvertDatToPngFile(QString strSource, QString strDestinati
 
 bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int nRatio, int nMethod, int nColorThreshold, bool bOverwrite, bool bSmoothFiltering)
 {
-/*! \brief Scales a a Png (*.png) file by a specified Ratio.
- *
- *  This function Scales and saves a Png (*.png) file to a specified destination.
- * @param strSource a String containing the path to the source Png (*.png) file.
- * @param strDestination a String containing the path to destination Png (*.png) file.
- * @param nRatio an integer value containing Ratio to which the image should be scaled.
- * @param nMethod an integer value containing the Scaling Method, see ImageProcessor::ScalingMethod.
- * @param nColorThreshold an integer value containing the Threshold value in case the defined Scaling Method is #ScalingMethod_SmoothMonoColoredCustomThreshold.
- * @param bOverWrite a Boolean value determining whether the destination file should be automatically overwritten when it already exists.
- * @param bSmoothFiltering a Boolean value determining whether a the resulting image is transformed using bilinear filtering.
- * @return a Boolean value representing whether the target file could be saved.
- */
 	if (nRatio <= 0)
 		return false;
 	QFile fileSource(strSource);
@@ -194,19 +166,6 @@ bool ImageProcessor::ScalePngFile(QString strSource, QString strDestination, int
 
 bool ImageProcessor::ScalePngFileBySize(QString strSource, QString strDestination, int nXPixels, int nYPixels, int nMethod, int nColorThreshold, bool bOverwrite, bool bSmoothFiltering)
 {
-/*! \brief Scales a a Png (*.png) file by a specified Size.
- *
- *  This function Scales and saves a Png (*.png) file to a specified destination.
- * @param strSource a String containing the path to the source Png (*.png) file.
- * @param strDestination a String containing the path to destination Png (*.png) file.
- * @param nXPixels an integer value containing the number of pixels (width) to which the image should be scaled.
- * @param nYPixels an integer value containing the number of pixels (height) to which the image should be scaled.
- * @param nMethod an integer value containing the Scaling Method, see ImageProcessor::ScalingMethod.
- * @param nColorThreshold an integer value containing the Threshold value in case the defined Scaling Method is #ScalingMethod_SmoothMonoColoredCustomThreshold.
- * @param bOverWrite a Boolean value determining whether the destination file should be automatically overwritten when it already exists.
- * @param bSmoothFiltering a Boolean value determining whether a the resulting image is transformed using bilinear filtering.
- * @return a Boolean value representing whether the target file could be saved.
- */
 	if ((nXPixels <= 0)||(nYPixels <= 0))
 		return false;
 	bool bSaveResult = false;

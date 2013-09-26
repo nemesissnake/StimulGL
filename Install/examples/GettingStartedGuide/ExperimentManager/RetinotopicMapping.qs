@@ -29,7 +29,7 @@ function ConnectDisconnectScriptFunctions(Connect)
 		try 
 		{	
 			ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.ExperimentStateChanged);  
-			//This signal is emitted whenever the EM changes its state, we'll use it to detect changes of the current Block/Trial/Trigger
+			//This signal is emitted whenever the EM changes its state
 			ExperimentManagerObj.WriteToLogOutput.connect(this,this.Log);
 			//This signal emits usefull and extensive debugging information, we'll connect it to the Log function to make sure that we can see it in the Log output Pane
 		} 
@@ -51,27 +51,6 @@ function ConnectDisconnectScriptFunctions(Connect)
 			Log(".*. Something went wrong disconnecting the Signal/Slots:" + e); //If a disconnection fails warn the user!
 		}		
 	}	
-}
-
-function ExperimentStructureChanged(nCurrentBlock,nCurrentTrial,nCurrentTrigger)
-{
-//The signal where this slot is connected to contains 3 parameters (Block,Trial and Trigger) we can examine the parameters that are emitted by:
-//
-//	Log("--- ExperimentStructureChanged arguments count: " + arguments.length);
-//	for (var i = 0; i < arguments.length; ++i)
-//		Log("\t argument(" + i + "):" + arguments[i]);
-//		
-//Alternatively you could use the following function signature and code to make use of the parameters:
-//function ExperimentStructureChanged()//No parameters defined in the function header
-//{	
-//	var nCurrentBlock = arguments[0];
-//	var nCurrentTrial = arguments[1];
-//	var nCurrentTrigger = arguments[2];
-	
-	
-	tmpText = "->-> Block " + nCurrentBlock + ", Trial " + nCurrentTrial + ", Trigger " + nCurrentTrigger;
-	// Here we make use of the function signature parameters to construct	a string containing the current experiment structure information
-	Log(tmpText);
 }
 
 function ExperimentStateChanged(currentState)

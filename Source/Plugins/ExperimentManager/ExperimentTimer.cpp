@@ -123,7 +123,7 @@ double ExperimentTimer::getElapsedTime()
 	return this->getElapsedTimeInSec();
 }
 
-bool ExperimentTimer::SleepMSecAccurate(double mSecs)
+bool ExperimentTimer::SleepMSecAccurate_old(double mSecs)
 {
 	// note: BE SURE YOU CALL timeBeginPeriod(1) at program startup!!!
 	// note: BE SURE YOU CALL timeEndPeriod(1) at program exit!!!
@@ -183,7 +183,7 @@ bool ExperimentTimer::SleepMSecAccurate(double mSecs)
 	return true;
 }
 
-bool ExperimentTimer::SleepMSecAccurate2(double mSecs)
+bool ExperimentTimer::SleepMSecAccurate(double mSecs)
 {
 	double staticStartTimeInMicroSec = WTF::currentTimeMS();
 	double staticRemainingTimeToWait = mSecs;
@@ -213,7 +213,7 @@ void ExperimentTimer::startTriggeredTimerLoop(double nIntervalTimeMSecs)
 	terminateTriggeredTimerLoop = false;
 	while(!terminateTriggeredTimerLoop)
 	{
-		SleepMSecAccurate(nIntervalTimeMSecs);
+		SleepMSecAccurate_old(nIntervalTimeMSecs);
 		//Sleep(interval);
 		emit triggeredTimerLoopInvoked();
 		QCoreApplication::processEvents();

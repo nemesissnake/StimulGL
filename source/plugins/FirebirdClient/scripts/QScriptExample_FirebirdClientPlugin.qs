@@ -68,12 +68,12 @@ if(bResult)
 	Log("OpenDatabase() returned: " + bResult);
 	if(bResult)
 	{
-		bResult = bResult && FirebirdClientobject.InitializeDatabase()
-		Log("InitializeDatabase() returned: " + bResult);	
-		bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryCreateTable)
-		Log("ExecuteDatabaseQuery(QueryCreateTable) returned: " + bResult);
-		bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryInsertRecord)
-		Log("ExecuteDatabaseQuery(QueryInsertRecord) returned: " + bResult);	
+		//bResult = bResult && FirebirdClientobject.InitializeDatabase()
+		//Log("InitializeDatabase() returned: " + bResult);	
+		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryCreateTable)
+		//Log("ExecuteDatabaseQuery(QueryCreateTable) returned: " + bResult);
+		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryInsertRecord)
+		//Log("ExecuteDatabaseQuery(QueryInsertRecord) returned: " + bResult);	
 		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QuerySelectRecords)
 		//Log("ExecuteDatabaseQuery(QuerySelectRecords) returned: " + bResult);	
 		//bResult = bResult && FirebirdClientobject.ExecuteDatabaseQuery(QueryCreateProcedure)

@@ -61,21 +61,11 @@ PrtFormatManager::~PrtFormatManager()
 
 bool PrtFormatManager::clearParameters() 
 {
-/*! \brief Clears all Parameters of the stimulation protocol.
- *
- *  This function clears all Parameters of the current stimulation protocol in memory.
- * @return a Boolean value representing whether the Parameters could be cleared.
- */
 	return setDefaultParameters(PRT_DEFAULT_VERSION);
 }
 
 bool PrtFormatManager::clearConditions()
 {
-/*! \brief Clears all Conditions of the stimulation protocol.
- *
- *  This function clears all Conditions of the current stimulation protocol in memory.
- * @return a Boolean value representing whether the Conditions could be cleared.
- */
 	if (m_PRTConditions.isEmpty() == false)
 	{
 		for (int i=0;i<m_PRTConditions.count();i++)
@@ -92,12 +82,6 @@ bool PrtFormatManager::clearConditions()
 
 bool PrtFormatManager::clearAll() 
 {
-/*! \brief Clears all Parameters and Conditions of the stimulation protocol.
- *
- *  This function clears all Parameters and Conditions of the current stimulation protocol in memory.
- *  See also PrtFormatManager::clearConditions() and PrtFormatManager::clearParameters().
- * @return a Boolean value representing whether the Parameters and the Conditions could be cleared.
- */
 	return (clearConditions() && clearParameters());
 }
 
@@ -139,12 +123,6 @@ bool PrtFormatManager::setDefaultParameters(const int nVersion)
 
 bool PrtFormatManager::loadFile(const QString sFileName)
 {
-/*! \brief Loads an stimulation protocol (*.prt) file into memory.
- *
- *  This function can loads an existing stimulation protocol (*.prt) file into memory for further editing.
- * @param sFileName a String containing the path to the stimulation protocol (*.prt) file.
- * @return a Boolean value representing whether the stimulation protocol (*.prt) file could be loaded.
- */
 	bool bProceedWithConditions = false;
 	bool bRetVal = false;
 	QString tmpString;
@@ -252,13 +230,6 @@ bool PrtFormatManager::loadFile(const QString sFileName)
 
 bool PrtFormatManager::saveFile(const QString sFileName, const bool bOverWrite)
 {
-/*! \brief Saves an stimulation protocol from memory to a stimulation protocol(*.prt) file.
- *
- *  This function can save the current  an existing stimulation protocol file in memory to a file.
- * @param sFileName a String containing the path to the target stimulation protocol (*.prt) file.
- * @param bOverWrite a Boolean value determing whether the target file should be automatically overwritten when it already exists.
- * @return a Boolean value representing whether the stimulation protocol could be saved to the file.
- */
 	//bool bProceedWithConditions = false;
 	bool bRetVal = false;
 	int i,j;
@@ -305,14 +276,6 @@ bool PrtFormatManager::saveFile(const QString sFileName, const bool bOverWrite)
 
 bool PrtFormatManager::setParameterValue(const QString sParamName, const QString sParamValue, const QString sParamDescription)
 {
-/*! \brief Sets an Parameter value for the stimulation protocol.
- *
- *  This function sets a Parameter value for the current stimulation protocol in memory.
- * @param sParamName a String containing the Parameter Name.
- * @param sParamValue a String containing the Parameter Value.
- * @param sParamDescription a String containing the Parameter Description.
- * @return a Boolean value representing whether the Parameter value for the current stimulation protocol could be set.
- */
 	if(m_AllowedParameterNames.contains(sParamName) == false)
 		return false;
 	if(sParamDescription != PRT_UNDEF_DESC_STRING)
@@ -330,26 +293,12 @@ bool PrtFormatManager::setParameterValue(const QString sParamName, const QString
 
 QString PrtFormatManager::getParameterValue(const QString sParamName)
 {
-/*! \brief Returns a Parameter value of the stimulation protocol.
- *
- *  This function can return a Parameter value of the current stimulation protocol in memory.
- * @param sParamName a String containing the requested Parameter's Name.
- * @return a String value holding the requested Parameter value of the current in-memory stimulation protocol. 
- *  If no parameter with the defined Name could be found then this function will return a \ref PrtFormatManagerDefines::PRT_UNDEF_VALUE_STRING.
- */
 	tmpPRTDefinitionParameters = getParameter(sParamName);
 	return tmpPRTDefinitionParameters.sValue;
 }
 
 QString PrtFormatManager::getParameterDescription(const QString sParamName)
 {
-/*! \brief Returns a Parameter description of the stimulation protocol.
- *
- *  This function can return a Parameter description of the current stimulation protocol in memory.
- * @param sParamName a String containing the requested Parameter's Name.
- * @return a String value holding the requested Parameter description of the current in-memory stimulation protocol. 
- *  If no parameter with the defined Name could be found then this function will return a \ref PrtFormatManagerDefines::PRT_UNDEF_DESC_STRING.
- */
 	tmpPRTDefinitionParameters = getParameter(sParamName);
 	return tmpPRTDefinitionParameters.sDescription;
 }
@@ -366,17 +315,6 @@ PRTDefinitionParameters PrtFormatManager::getParameter(const QString sParamName)
 
 int PrtFormatManager::appendCondition(const QString sConditionName, const QString sConditionColor)
 {
-/*! \brief Appends a new Condition to the in-memory stimulation protocol.
- *
- *  This function can append a new Condition to the current stimulation protocol in memory.
- * @param sConditionName a String containing the new Conditions Name.
- *  If no Condition Name is defined than the default \ref PrtFormatManagerDefines::PRT_UNDEF_NAME_STRING is used. 
- * @param sConditionColor a String containing the new Conditions Color attribute. The format must be "R G B", Example: "255 0 0".
- *  See also PrtFormatManager::getRGBPaletteColorString().
- *  If no Condition Color is defined than the default \ref PrtFormatManagerDefines::PRT_UNDEF_COLOR_STRING is used.
- * @return an integer value holding the new internal index of the appended Condition. 
- *  See also PrtFormatManager::appendInterval().
- */
 	tmpConditionsDefinition.sName = sConditionName;
 	tmpConditionsDefinition.sColor = sConditionColor;
 	//tmpIntervalsDefinition.nBegin = 0;
@@ -389,15 +327,6 @@ int PrtFormatManager::appendCondition(const QString sConditionName, const QStrin
 
 int PrtFormatManager::appendInterval(const int nConditionIndex, const int nBegin, const int nEnd)
 {
-/*! \brief Appends a Interval to an existing Condition to the in-memory stimulation protocol.
- *
- *  This function can append a Interval to an existing Condition to the current in-memory stimulation protocol.
- * @param nConditionIndex an integer value containing the index of the Condition to which the Interval should be appended.
- * @param nBegin an integer value specifying the Start of the first piece of time belonging to the Interval that should be appended.
- * @param nEnd an integer value specifying the End of the first piece of time belonging to the Interval that should be appended.
- * @return an integer value holding the new internal index of the appended Interval. 
- *  See also PrtFormatManager::appendCondition().
- */
 	if (m_PRTConditions.isEmpty() == false)
 	{
 		if (m_PRTConditions.count() > nConditionIndex)
@@ -428,14 +357,6 @@ bool PrtFormatManager::setConditionColor(const int nConditionIndex, const QStrin
 
 QString PrtFormatManager::getRGBPaletteColorString(const int nSteps, const int nIndex)
 {
-/*! \brief Returns a specific color ("R G B" string).
- *
- *  Returns a Color String from a location of a color palette divided in steps.
- * @param nSteps an integer representing the number of steps the color palette should be divided to.
- * @param nIndex an integer representing the index location (0-based) of color at the divided color palette.
- * @return a String (a "R G B" String value) holding the Color value.
- * See also PrtFormatManager::appendCondition();
- */
 	QString sRetVal = "0 0 0";
 	QColor tmpColor;
 
@@ -449,12 +370,6 @@ QString PrtFormatManager::getRGBPaletteColorString(const int nSteps, const int n
 
 bool PrtFormatManager::SortandMergeAllConditionIntervals()
 {
-/*! \brief Sorts a Merges all the Condition Intervals of the current Stimulation Protocol.
- *
- *  This function tries to Sort and Merge the Condition Intervals of the current in-memory Stimulation Protocol.
- *  After editing a Stimulation Protocol this function could be called prior to the PrtFormatManager::saveFile() to optimize the protocol structure.
- * @return a Boolean value representing whether the Condition Intervals could be parsed.
- */
 	if (m_PRTConditions.isEmpty() == false)
 	{
 		int nLastIndexZeroBasedPosition;

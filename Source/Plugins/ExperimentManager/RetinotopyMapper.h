@@ -16,15 +16,11 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-
 #ifndef RETINOTOPYMAPPER_H
 #define RETINOTOPYMAPPER_H
 
-//#include <QObject>
 #include "ExperimentEngine.h"
 #include "RetinotopyMapperWindow.h"
-//#include <QPointF>
-//#include <QScriptEngine>
 
 //Below defines must be all in lower case!
 

@@ -35,7 +35,7 @@ function KeyCaptureDetectFunction(keyCode)
         //Debug: "Network Server started @ 137.120.137.130:200"  (mainwindow.cpp:476, void __thiscall MainWindow::setupNetworkServer(const class QString &,unsigned short))
         //ServerAddress = new Array("137.120.137.130", "200");
         //ServerAddress = new Array("137.120.237.117", "200");
-        ServerAddress = new Array("137.120.237.73", "200");
+        ServerAddress = new Array("137.120.136.170", "201");
         if(ServerAddress.length > 1)
         {
             Log("connectToServer() result -> " + objTCPNetworkServer2.connectToServer(ServerAddress[0],ServerAddress[1]));
