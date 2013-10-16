@@ -278,7 +278,7 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 
 bool ExperimentManagerPlugin::ExperimentManagerEXMLDocumentHandler(const QString &docContent, const QString &strHomePath)
 {
-	DocContentInfoStructure docStruct;
+	GlobalApplicationInformation::DocContentInfoStructure docStruct;
 	docStruct.strDocContent = docContent;
 	docStruct.bIsFile = false;
 	docStruct.strDocHomeDir = strHomePath;
@@ -288,7 +288,7 @@ bool ExperimentManagerPlugin::ExperimentManagerEXMLDocumentHandler(const QString
 
 bool ExperimentManagerPlugin::ExperimentManagerQMLDocumentHandler(const QString &docContent, const QString &strHomePath)
 {
-	DocContentInfoStructure docStruct;
+	GlobalApplicationInformation::DocContentInfoStructure docStruct;
 	docStruct.strDocContent = docContent;
 	docStruct.bIsFile = false;
 	docStruct.strDocHomeDir = strHomePath;
@@ -296,12 +296,12 @@ bool ExperimentManagerPlugin::ExperimentManagerQMLDocumentHandler(const QString 
 	return ExecuteContent(docStruct);
 }
 
-bool ExperimentManagerPlugin::ExecuteContent(const DocContentInfoStructure &docStruct)
+bool ExperimentManagerPlugin::ExecuteContent(const GlobalApplicationInformation::DocContentInfoStructure &docStruct)
 {
 	if(ExperimentManagerDiagObject)
 	{
 		ExperimentManagerDiagObject->setContentToExecute(docStruct);
-		return ExperimentManagerDiagObject->executeDocument();
+		return ExperimentManagerDiagObject->executeActiveDocument();
 	}
 	return false;
 }

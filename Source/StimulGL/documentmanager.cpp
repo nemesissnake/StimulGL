@@ -157,6 +157,26 @@ GlobalApplicationInformation::DocType DocumentManager::getDocType(const QString 
 	{
 		return GlobalApplicationInformation::DOCTYPE_SVG;
 	}
+	else if (tmpExt == "xml") 
+	{
+		return GlobalApplicationInformation::DOCTYPE_XML;
+	}
+	else if (tmpExt == "py") 
+	{
+		return GlobalApplicationInformation::DOCTYPE_PYTHON;
+	}
+	else if (tmpExt == "perl") 
+	{
+		return GlobalApplicationInformation::DOCTYPE_PERL;
+	}
+	else if ((tmpExt == "c") || (tmpExt == "cpp") || (tmpExt == "h")) 
+	{
+		return GlobalApplicationInformation::DOCTYPE_CPP;
+	}
+	else if ((tmpExt == "htm") || (tmpExt == "html")) 
+	{
+		return GlobalApplicationInformation::DOCTYPE_HTML;
+	}
 	else if(getKnownDocumentFileHandlerIndex(tmpExt) >= 0)
 	{
 		return GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED;
@@ -220,130 +240,106 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Glob
 	QColor cPaper(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN,STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	QDir dir(MainAppInfo::apiDirPath());
 
-	switch (dStyle)
+	if(dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED)
 	{
-		case GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED:
+		custQsci->setFolding(QsciScintilla::NoFoldStyle);
+		custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+		custQsci->setPaper(cPaper);
+		custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+		custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+		custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+		return true;
+	}
+	else if(dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_PLAINTEXT)
+	{
+		custQsci->setFolding(QsciScintilla::NoFoldStyle);
+		custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
+		custQsci->setPaper(cPaper);
+		custQsci->setBraceMatching(QsciScintilla::NoBraceMatch);
+		custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+		custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+		return true;
+	}
+	else if(dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_XML)
+	{
+		custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+		custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+		QsciLexer *QxmlLexer = new QsciLexerXML(custQsci);
+		custQsci->setLexer(QxmlLexer);
+		QxmlLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
+		if(strAPIFileName.isEmpty() == false)
 		{
-			custQsci->setFolding(QsciScintilla::NoFoldStyle);
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
-			custQsci->setPaper(cPaper);
-			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
-			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
-			return true;
-		}
-		case GlobalApplicationInformation::DOCTYPE_STYLE_PLAINTEXT:
+			if ( dir.entryList(QDir::Files).contains(strAPIFileName) ) 
 			{
-				custQsci->setFolding(QsciScintilla::NoFoldStyle);
-				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
-				custQsci->setPaper(cPaper);
-				custQsci->setBraceMatching(QsciScintilla::NoBraceMatch);
-				custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
-				custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
-				return true;
-			}
-		case GlobalApplicationInformation::DOCTYPE_STYLE_ECMA:
-		{
-			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
-			QsciLexer *Qjslexer = new QsciLexerJavaScript(custQsci);
-			custQsci->setLexer(Qjslexer);
-			Qjslexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
-			if(strAPIFileName.isEmpty() == false)
-			{
-				if ( dir.entryList(QDir::Files).contains(strAPIFileName) ) 
+				QsciAPIs* apis = new QsciAPIs(QxmlLexer);
+				if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
 				{
-					QsciAPIs* apis = new QsciAPIs(Qjslexer);
-					if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
-					{
-						custQsci->setCallTipsStyle(QsciScintilla::CallTipsNoAutoCompletionContext);
-						QStringList apiEntries = getAdditionalApiEntries();
-						if (apiEntries.isEmpty() == false)
-						{
-							for (int i=0;i<apiEntries.count();i++)
-							{
-								apis->add(apiEntries.at(i));
-							}
-						}
-						apis->prepare();
-						Qjslexer->setAPIs(apis);
-					}
-					else 
-					{
-						delete apis;
-					}
+					apis->prepare();
+					QxmlLexer->setAPIs(apis);
+				}
+				else 
+				{
+					delete apis;
 				}
 			}
-			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
-			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
-			return true;
 		}
-		case GlobalApplicationInformation::DOCTYPE_STYLE_XML:
+		custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+		custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+		custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+		return true;
+	}
+	else if( (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_ECMA) || (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_QML) ||
+			 (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_PYTHON) || (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_PERL) ||
+			 (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_CPP) || (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_HTML) )
+	{
+		custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
+		custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
+
+		QsciLexer *tmpLexer = NULL;
+		if(dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_ECMA)
+			tmpLexer = new QsciLexerJavaScript(custQsci);
+		else if (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_QML)
+			tmpLexer = new QsciLexerJavaScript(custQsci);
+		else if (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_PYTHON)
+			tmpLexer = new QsciLexerPython(custQsci);
+		else if (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_PERL)
+			tmpLexer = new QsciLexerPerl(custQsci);
+		else if (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_CPP)
+			tmpLexer = new QsciLexerCPP(custQsci);
+		else if (dStyle == GlobalApplicationInformation::DOCTYPE_STYLE_HTML)
+			tmpLexer = new QsciLexerHTML(custQsci);
+
+		custQsci->setLexer(tmpLexer);
+		tmpLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
+		if(strAPIFileName.isEmpty() == false)
 		{
-			custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-			custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
-			QsciLexer *QxmlLexer = new QsciLexerXML(custQsci);
-			custQsci->setLexer(QxmlLexer);
-			QxmlLexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
-			if(strAPIFileName.isEmpty() == false)
+			if ( dir.entryList(QDir::Files).contains(strAPIFileName) ) 
 			{
-				if ( dir.entryList(QDir::Files).contains(strAPIFileName) ) 
+				QsciAPIs* apis = new QsciAPIs(tmpLexer);
+				if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
 				{
-					QsciAPIs* apis = new QsciAPIs(QxmlLexer);
-					if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
+					custQsci->setCallTipsStyle(QsciScintilla::CallTipsNoAutoCompletionContext);
+					QStringList apiEntries = getAdditionalApiEntries();
+					if (apiEntries.isEmpty() == false)
 					{
-						apis->prepare();
-						QxmlLexer->setAPIs(apis);
+						for (int i=0;i<apiEntries.count();i++)
+						{
+							apis->add(apiEntries.at(i));
+						}
 					}
-					else 
-					{
-						delete apis;
-					}
+					apis->prepare();
+					tmpLexer->setAPIs(apis);
+				}
+				else 
+				{
+					delete apis;
 				}
 			}
-			custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-			custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
-			custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
-			return true;
 		}
-		case GlobalApplicationInformation::DOCTYPE_STYLE_QML:
-			{
-				custQsci->setFolding(QsciScintilla::CircledTreeFoldStyle,2);
-				custQsci->setAutoCompletionSource(QsciScintilla::AcsAll);
-				QsciLexer *Qjslexer = new QsciLexerJavaScript(custQsci);
-				custQsci->setLexer(Qjslexer);
-				Qjslexer->setPaper(cPaper);//Here we need to set it again because the Lexer overwrites the previously stored settings.
-				if(strAPIFileName.isEmpty() == false)
-				{
-					if ( dir.entryList(QDir::Files).contains(strAPIFileName) ) 
-					{
-						QsciAPIs* apis = new QsciAPIs(Qjslexer);
-						if ( apis->load(dir.absoluteFilePath(strAPIFileName)) ) 
-						{
-							custQsci->setCallTipsStyle(QsciScintilla::CallTipsNoAutoCompletionContext);
-							QStringList apiEntries = getAdditionalApiEntries();
-							if (apiEntries.isEmpty() == false)
-							{
-								for (int i=0;i<apiEntries.count();i++)
-								{
-									apis->add(apiEntries.at(i));
-								}
-							}
-							apis->prepare();
-							Qjslexer->setAPIs(apis);
-						}
-						else 
-						{
-							delete apis;
-						}
-					}
-				}
-				custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
-				custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
-				custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
-				return true;
-			}
+		custQsci->setBraceMatching(QsciScintilla::SloppyBraceMatch);//before or after cursor
+		custQsci->setMatchedBraceBackgroundColor(QColor(255,255,120));
+		custQsci->setMatchedBraceForegroundColor(QColor(0,0,255));
+		return true;
 	}
 	return false;
 }
@@ -435,9 +431,35 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 			}		
 		case GlobalApplicationInformation::DOCTYPE_SVG:
 			{
+				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_XML,"xml.api");
 				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
 				break;
 			}
+		case GlobalApplicationInformation::DOCTYPE_XML:
+			{
+				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_XML,"xml.api");
+				break;
+			}	
+		case GlobalApplicationInformation::DOCTYPE_PYTHON:
+			{
+				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_PYTHON,"python.api");
+				break;
+			}	
+		case GlobalApplicationInformation::DOCTYPE_PERL:
+			{
+				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_PERL,"perl.api");
+				break;
+			}	
+		case GlobalApplicationInformation::DOCTYPE_CPP:
+			{
+				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_CPP,"cplusplus.api");
+				break;
+			}	
+		case GlobalApplicationInformation::DOCTYPE_HTML:
+			{
+				customizeDocumentStyle(custQsci,GlobalApplicationInformation::DOCTYPE_STYLE_HTML,"html.api");
+				break;
+			}	
 		case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
 			{
 				custQsci->setAutoCompletionSource(QsciScintilla::AcsNone);
@@ -492,6 +514,7 @@ void DocumentManager::onMarginClicked (int margin, int line, Qt::KeyboardModifie
 	if ( margin == 1 )//	margin that contains line numbers 
 	{
 		tmpScintilla->toggleMarker(line);
+		emit MarkerToggled(line);
 	}
 }
 

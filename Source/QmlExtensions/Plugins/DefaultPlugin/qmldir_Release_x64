@@ -1,2 +1,4 @@
+module StimulGL_QMLExtensions
 Clock 1.0 Clock.qml
 plugin DefaultQMLPlugin_x64_Release ..\ #Name <Path>
+typeinfo StimulGL_QMLExtensions.qmltypes

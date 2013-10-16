@@ -13,10 +13,10 @@ var bSkipStep;
 var sBinairyPath;
 var changeSet;
 
-var sScriptPath = ToWindowsPath(StimulGL.getSelectedScriptFileLocation());
+var sScriptPath = ToWindowsPath(StimulGL.getActiveDocumentFileLocation());
 var sInstallJammerPath = StimulGL.getEnvironmentVariabele("PROGRAMFILES(x86)") + "/InstallJammer/installjammer.exe";
 var strInstallConfigurationFileName = "InstallJammer_(32+64bit)";
-var strInstallConfigurationFile = ToWindowsPath(StimulGL.getSelectedScriptFileLocation() + "/" + strInstallConfigurationFileName + ".mpi");
+var strInstallConfigurationFile = ToWindowsPath(StimulGL.getActiveDocumentFileLocation() + "/" + strInstallConfigurationFileName + ".mpi");
 var strInstallConfigurationFileCopy = sScriptPath + "\\" + strInstallConfigurationFileName + "_tmpCopy.mpi" ;
 var sInstallerAppName = tr("StimulGL");//StimulGL
 var arrConfigList = new Array("win32","x64");

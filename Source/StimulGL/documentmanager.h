@@ -26,6 +26,10 @@
 #include <QtWidgets>
 #include <Qsci/qsciapis.h>
 #include <Qsci/qscilexerjavascript.h>
+#include <Qsci/qscilexerpython.h>
+#include <Qsci/qscilexerperl.h>
+#include <Qsci/qscilexercpp.h>
+#include <Qsci/qscilexerhtml.h>
 #include <Qsci/qscilexerxml.h>
 #include "customqsciscintilla.h"
 #include "scifinddialog.h"
@@ -38,6 +42,7 @@ class DocumentManager : public QObject
 signals:
 	//void DocumentChanged();
 	void NrOfLinesChanged(int);
+	void MarkerToggled(int);
 	void DocumentManagerOutput(QString strText2Output);
 
 public:

@@ -604,6 +604,17 @@ bool QML2Viewer::updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID)
 	return false;
 }
 
+bool QML2Viewer::updatePixmapIDFromImageBuffer(const QString &oldID, const QString &newID)
+{
+	if (!imgLstModel)
+		return false;
+	if(imgLstModel->updatePixmapID(oldID,newID))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool QML2Viewer::removePixmapFromImageBuffer(const QString &ID)
 {
 	if (!imgLstModel)

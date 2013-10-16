@@ -102,8 +102,8 @@ ParsedParameterDefinition ExperimentEngine::getExpObjectBlockParameter(const int
 
 void ExperimentEngine::init()
 {
-	nLastProcessedExternalTriggers = CF_UNINITIALIZED;
-	nCurrExpBlockTrialFrame = CF_UNINITIALIZED;
+	nLastProcessedExternalTriggers = ExperimentStructuresNameSpace::CF_UNINITIALIZED;
+	nCurrExpBlockTrialFrame = ExperimentStructuresNameSpace::CF_UNINITIALIZED;
 	changeSubObjectState(Experiment_SubObject_Initialized);
 }
 
@@ -422,9 +422,9 @@ int ExperimentEngine::checkForNextBlockTrial()
 	bool bHasCurrentBlock = false;
 	cExperimentStructure tmpExpStr = cExperimentStructure(*pExperimentManager->getExperimentStructure());
 	cBlockStructure tmpExpBlockStr = tmpExpStr.getCurrentBlock(bHasCurrentBlock);
-	strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
+	ExperimentStructuresNameSpace::strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
 
-	if((tmpExpStrState.Experiment_ExternalTrigger == RA_REINITIALIZE) && (nCurrExpBlockTrialFrame == CF_UNINITIALIZED))
+	if((tmpExpStrState.Experiment_ExternalTrigger == ExperimentStructuresNameSpace::RA_REINITIALIZE) && (nCurrExpBlockTrialFrame == ExperimentStructuresNameSpace::CF_UNINITIALIZED))
 	{//First Experiment Trial? (Start/Init), occurs before the start of the Trigger(timer)
 		goToNextBlockTrial = true;
 		bFirstCheckAfterExperimentStarted = true;		

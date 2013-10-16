@@ -99,7 +99,7 @@ void ExperimentManager_Dialog::cleanUp()
 	return;
 }
 
-bool ExperimentManager_Dialog::setContentToExecute(DocContentInfoStructure docContentStruct)
+bool ExperimentManager_Dialog::setContentToExecute(GlobalApplicationInformation::DocContentInfoStructure docContentStruct)
 {
 	docContentStructToRun = docContentStruct;
 	return true;
@@ -192,7 +192,7 @@ void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjec
 	}
 }
 
-bool ExperimentManager_Dialog::executeDocument()
+bool ExperimentManager_Dialog::executeActiveDocument()
 {
 	if (((currentExperimentSubObjectState == Experiment_SubObject_Initialized) || (currentExperimentSubObjectState == Experiment_SubObject_Stopped)) == false)
 		return false;
@@ -319,7 +319,7 @@ void ExperimentManager_Dialog::exampleButton_Pressed()
 	docContentStructToRun.strDocContent = "";
 	docContentStructToRun.bIsFile = true;
 	docContentStructToRun.strDocExtension = PLUGIN_EXMLDOC_EXTENSION;
-	executeDocument();
+	executeActiveDocument();
 }
 
 void ExperimentManager_Dialog::exampleButton_2_Pressed()
@@ -327,7 +327,7 @@ void ExperimentManager_Dialog::exampleButton_2_Pressed()
 	docContentStructToRun.strDocContent = "";
 	docContentStructToRun.bIsFile = true;
 	docContentStructToRun.strDocExtension = PLUGIN_QMLDOC_EXTENSION;
-	executeDocument();
+	executeActiveDocument();
 }
 
 void ExperimentManager_Dialog::exampleButton_3_Pressed()

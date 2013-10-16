@@ -3,7 +3,7 @@ var textString = "some text..."; //Declare a String primitive
 var textStringObject = new String(textString); //Here we dynamically Construct a global (ECMA built-in type) String object
 
 //This function makes sure that everything gets nicely cleaned before the script ends
-function ScriptCleanupFunction()//Cleanup
+function ScriptCleanupFunction()//Perform a successfull garbage collection
 {
 	//Disconnect the signal/slots, not implemented here...
 

@@ -26,7 +26,7 @@ RetinotopyMapperWindow::RetinotopyMapperWindow(RetinotopyMapper *parent) : paren
 	outputFile = NULL;
 	bCDATFileReadyToWrite = false;
 	bFistRenderCall = true;
-	nLastOutputTriggerFrameNumber = RA_REINITIALIZE;
+	nLastOutputTriggerFrameNumber = ExperimentStructuresNameSpace::RA_REINITIALIZE;
 }
 
 RetinotopyMapperWindow::~RetinotopyMapperWindow()
@@ -73,7 +73,7 @@ void RetinotopyMapperWindow::postSwapBuffers()
 	bool bHasCurrentBlock = false;
 	cExperimentStructure tmpExpStr;
 	cBlockStructure tmpExpBlockStr;
-	strcExperimentStructureState tmpExpStrState;
+	ExperimentStructuresNameSpace::strcExperimentStructureState tmpExpStrState;
 	if(parentRetinotopyMapper->experimentManager)
 	{
 		if(parentRetinotopyMapper->isDebugMode())
@@ -116,7 +116,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	int elapsedTrialTime = (int)parentRetinotopyMapper->getElapsedTrialTime();
 	int elapsedTrialTimeCopy = elapsedTrialTime;
 	int nExpBlockTrialFrame = parentRetinotopyMapper->getCurrentBlockTrialFrame();
-	strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
+	ExperimentStructuresNameSpace::strcExperimentStructureState tmpExpStrState = tmpExpStr.getCurrentExperimentState();
 	cBlockStructure tmpBlockStrc = tmpExpStr.getCurrentBlock(bHasABlock);
 	if(bHasABlock == false)
 	{
@@ -445,7 +445,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	{
 		if (tmpExpStrState.CurrentBlock_InternalTrigger < nLastOutputTriggerFrameNumber)
 		{
-			nLastOutputTriggerFrameNumber = RA_REINITIALIZE;//tmpExpStrState.CurrentBlock_InternalTrigger;
+			nLastOutputTriggerFrameNumber = ExperimentStructuresNameSpace::RA_REINITIALIZE;//tmpExpStrState.CurrentBlock_InternalTrigger;
 		}
 		if (tmpExpStrState.CurrentBlock_InternalTrigger > nLastOutputTriggerFrameNumber)
 		{

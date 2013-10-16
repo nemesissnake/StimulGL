@@ -128,7 +128,21 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 		else
 			qDebug() << "Configured Network Server disabled.";
 	}
+	bExecuteActiveDocument = StimulGLFlags & GlobalApplicationInformation::ExecuteDocument;
 	return true;
+}
+
+void MainWindow::showEvent(QShowEvent * event)
+{
+	//bool bresult;
+	//if(event->spontaneous())
+	//	bresult = true;
+	if(bExecuteActiveDocument)//see StimulGLFlags & GlobalApplicationInformation::ExecuteDocument)
+	{
+		if (activeMdiChild())
+			executeActiveDocument();
+		bExecuteActiveDocument = false;
+	}
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -195,6 +209,11 @@ bool MainWindow::setContextState(const QString &sContextName)
 		}
 	}	
 	return false;
+}
+
+int MainWindow::getCurrentContextStateScriptID()
+{
+	return pCurrentSetContextState.second;
 }
 
 bool MainWindow::resetContextState(const quint64 &nScriptId)
@@ -291,6 +310,13 @@ QVariant MainWindow::invokeJavaScriptConfigurationFile(const QString &sCode)
 	return globAppInfo->invokeJavaScriptConfigurationFile(sCode);
 }
 
+QString MainWindow::getJavaScriptConfigurationFileContents()
+{
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
+	return globAppInfo->getJavaScriptConfigurationFileContents();
+}
+
 void MainWindow::showJavaScriptConfigurationFile()
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
@@ -376,7 +402,7 @@ void MainWindow::setGlobalApplicationInformationObject(GlobalApplicationInformat
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	globAppInfo = globAppInformation;
-	mainAppInfoStruct = new MainAppInformationStructure(globAppInformation->getMainAppInformationStructure());
+	mainAppInfoStruct = new GlobalApplicationInformation::MainAppInformationStructure(globAppInformation->getMainAppInformationStructure());
 }
 
 void MainWindow::setupMDI()
@@ -401,6 +427,7 @@ void MainWindow::setupDocumentManager()
 	connect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
 	DocManager->appendKnownFileExtensionList(MainAppInfo::getDefaultFileExtList());
 	connect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));
+	connect(DocManager, SIGNAL(MarkerToggled(int)), this, SLOT(handleToggledMarker(int)));
 }
 
 QScriptValue myPauseFunction(QScriptContext *ctx, QScriptEngine *eng)
@@ -785,6 +812,11 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		toUpperCaseAction->setEnabled(hasMdiChild);
 		toLowerCaseAction->setEnabled(hasMdiChild);
 
+		findAction->setEnabled(hasMdiChild);
+		findNextAction->setEnabled(hasMdiChild);
+		findPrevAction->setEnabled(hasMdiChild);
+		replaceAction->setEnabled(hasMdiChild);
+
 		//searchAction->setEnabled(hasMdiChild);
 		saveAction->setEnabled(hasMdiChild);
 		saveAsAction->setEnabled(hasMdiChild);
@@ -858,42 +890,18 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		printAction->setEnabled(false);
 		switch (d)
 		{
-		case GlobalApplicationInformation::DOCTYPE_QTSCRIPT:
-			{
-				if(lCurrentRunningScriptIDList.isEmpty())
-					setScriptRunningStatus(GlobalApplicationInformation::Pending);
-				if(tmpCustomQsciScintilla)
-					printAction->setEnabled(true);
-				break;
-			}
-		case GlobalApplicationInformation::DOCTYPE_JAVASCRIPT:
-			{
-				if(lCurrentRunningScriptIDList.isEmpty())
-					setScriptRunningStatus(GlobalApplicationInformation::Pending);
-				if(tmpCustomQsciScintilla)
-					printAction->setEnabled(true);
-				break;
-			}			
-		case GlobalApplicationInformation::DOCTYPE_SVG:
-			{
-				if(lCurrentRunningScriptIDList.isEmpty())
-					setScriptRunningStatus(GlobalApplicationInformation::Pending);
-				if(tmpCustomQsciScintilla)
-					printAction->setEnabled(true);
-				break;
-			}
-		case GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED:
-			{
-				if(lCurrentRunningScriptIDList.isEmpty())
-					setScriptRunningStatus(GlobalApplicationInformation::Pending);
-				if(tmpCustomQsciScintilla)
-					printAction->setEnabled(true);
-				break;
-			}
 		case GlobalApplicationInformation::DOCTYPE_UNDEFINED:
 			{
 				if(tmpCustomQsciScintilla)
 					printAction->setEnabled(false);
+				break;
+			}
+		default:
+			{
+				if(lCurrentRunningScriptIDList.isEmpty())
+					setScriptRunningStatus(GlobalApplicationInformation::Pending);
+				if(tmpCustomQsciScintilla)
+					printAction->setEnabled(true);
 				break;
 			}
 		}
@@ -988,8 +996,7 @@ void MainWindow::createDefaultMenus()
 	windowMenu = new QMenu(tr("&Window"), this);
 
 	fileNewMenu = fileMenu->addMenu(QIcon(":/resources/new.png"),tr("&New"));
-		
-
+	
 	newDocumentAction = new QAction(tr("Undefined Document"), this);
 	newDocumentAction->setStatusTip(tr("Create an empty document"));
 	tmpNewActionMapping.clear();
@@ -1036,7 +1043,7 @@ void MainWindow::createDefaultMenus()
 	fileMenu->addAction(saveAction);
 
 	saveAsAction = new QAction(tr("Save &As..."), this);
-	saveAsAction->setShortcuts(QKeySequence::SaveAs);
+	saveAsAction->setShortcut(tr("Ctrl+Shift+s"));
 	saveAsAction->setStatusTip(tr("Save the document under a new name"));
 	connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 	fileMenu->addAction(saveAsAction);
@@ -1052,6 +1059,7 @@ void MainWindow::createDefaultMenus()
 	{
 		recentFileActs.append(new QAction(this));
 		recentFileActs.last()->setVisible(false);
+		recentFileActs.last()->setShortcut(QString("Ctrl+Shift+") + QString::number(i+1));
 		connect(recentFileActs.last(), SIGNAL(triggered()), this, SLOT(openRecentFile()));
 	}
 
@@ -1063,25 +1071,49 @@ void MainWindow::createDefaultMenus()
 	fileMenu->addSeparator();
 	updateRecentFileActions();
 
-	closeAction = new QAction(tr("Cl&ose"), this);
+	closeAction = new QAction(tr("&Close"), this);
 	closeAction->setData("Close");
-	closeAction->setShortcut(tr("Ctrl+F4"));
+	closeAction->setShortcut(tr("Ctrl+Shift+C"));
 	closeAction->setStatusTip(tr("Close the active window"));
 	connect(closeAction, SIGNAL(triggered()), this, SLOT(closeSubWindow()));//mdiArea, SLOT(closeActiveSubWindow()));
 	fileMenu->addAction(closeAction);
 
-	closeAllAction = new QAction(tr("Close &All"), this);
+	closeAllAction = new QAction(tr("Close A&ll"), this);
 	closeAllAction->setData("CloseAll");
+	closeAllAction->setShortcut(tr("Ctrl+Shift+F4"));
 	closeAllAction->setStatusTip(tr("Close all the windows"));
 	connect(closeAllAction, SIGNAL(triggered()), this, SLOT(closeSubWindow())); //mdiArea, SLOT(closeAllSubWindows()));
 	fileMenu->addAction(closeAllAction);
 
 	quitAction = new QAction(tr("E&xit"), this);
-	quitAction->setShortcut(QKeySequence(tr("Ctrl+Q")));
+	quitAction->setShortcut(QKeySequence(tr("Alt+F4")));
 	quitAction->setStatusTip(tr("Exit the application"));
 	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(closeAllWindows()));
 	fileMenu->addAction(quitAction);
 	menuBar()->addMenu(fileMenu);//the file menu..........................................................
+
+	editOutputMenu = editMenu->addMenu(tr("&Output Log Pane"));
+
+	copyDebuggerAction = new QAction(QObject::tr("&Copy Selected Text"), 0);
+	//copyDebuggerAction->setShortcut(QKeySequence(""));
+	copyDebuggerAction->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
+	connect(copyDebuggerAction, SIGNAL(triggered()), outputWindowList, SLOT(copy()));
+	editOutputMenu->addAction(copyDebuggerAction);
+
+	clearDebuggerAction = new QAction(QObject::tr("C&lear All Output Item(s)"), 0);
+	//clearDebuggerAction->setShortcut(QKeySequence(""));
+	clearDebuggerAction->setStatusTip(tr("Clear the Debugger Output window."));
+	connect(clearDebuggerAction, SIGNAL(triggered()), this, SLOT(clearDebugger()));
+	editOutputMenu->addAction(clearDebuggerAction);
+
+
+	saveDebuggerAction = new QAction(QObject::tr("&Save All Output information to a text file..."), 0);
+	//saveDebuggerAction->setShortcut(QKeySequence(""));
+	saveDebuggerAction->setStatusTip(tr("Save the Debugger Output window."));
+	connect(saveDebuggerAction, SIGNAL(triggered()), this, SLOT(saveOutputWindow()));
+	editOutputMenu->addAction(saveDebuggerAction);
+
+	editMenu->addSeparator();
 
 	cutAction = new QAction(QIcon(":/resources/cut.png"), tr("Cu&t"), this);
 	cutAction->setShortcuts(QKeySequence::Cut);
@@ -1095,7 +1127,7 @@ void MainWindow::createDefaultMenus()
 	connect(copyAction, SIGNAL(triggered()), this, SLOT(copy()));
 	editMenu->addAction(copyAction);
 
-	pasteAction = new QAction(QIcon(":/resources/paste.png"), tr("&Paste"), this);
+	pasteAction = new QAction(QIcon(":/resources/paste.png"), tr("P&aste"), this);
 	pasteAction->setShortcuts(QKeySequence::Paste);
 	pasteAction->setStatusTip(tr("Paste the clipboard's contents into the current selection"));
 	connect(pasteAction, SIGNAL(triggered()), this, SLOT(paste()));
@@ -1103,25 +1135,25 @@ void MainWindow::createDefaultMenus()
 
 	editMenu->addSeparator();
 
-	findAction = new QAction(QIcon(""), tr("Find"), this);
+	findAction = new QAction(QIcon(""), tr("&Find"), this);
 	findAction->setShortcuts(QKeySequence::Find);
 	findAction->setStatusTip(tr("Find"));
 	connect(findAction, SIGNAL(triggered()), this, SLOT(find()));
 	editMenu->addAction(findAction);
 
-	findNextAction = new QAction(QIcon(""), tr("Find Next"), this);
+	findNextAction = new QAction(QIcon(""), tr("Find &Next"), this);
 	findNextAction->setShortcuts(QKeySequence::FindNext);
 	findNextAction->setStatusTip(tr("Find Next"));
 	connect(findNextAction, SIGNAL(triggered()), this, SLOT(findNext()));
 	editMenu->addAction(findNextAction);
 
-	findPrevAction = new QAction(QIcon(""), tr("Find Previous"), this);
+	findPrevAction = new QAction(QIcon(""), tr("Find &Previous"), this);
 	findPrevAction->setShortcuts(QKeySequence::FindPrevious);
 	findPrevAction->setStatusTip(tr("Find Previous"));
 	connect(findPrevAction, SIGNAL(triggered()), this, SLOT(findPrev()));
 	editMenu->addAction(findPrevAction);
 
-	replaceAction = new QAction(QIcon(""), tr("Replace"), this);
+	replaceAction = new QAction(QIcon(""), tr("&Replace"), this);
 	replaceAction->setShortcuts(QKeySequence::Replace);
 	replaceAction->setStatusTip(tr("Replace"));
 	connect(replaceAction, SIGNAL(triggered()), this, SLOT(replace()));
@@ -1132,28 +1164,6 @@ void MainWindow::createDefaultMenus()
 	//searchAction->setStatusTip(tr("Search through the current document."));
 	//connect(searchAction, SIGNAL(triggered()), this, SLOT(search()));
 	//editMenu->addAction(searchAction);
-
-	editMenu->addSeparator();
-
-	copyDebuggerAction = new QAction(QObject::tr("Copy Selected Text"), 0);
-	copyDebuggerAction = new QAction(QObject::tr("Copy Selected Text"), 0);
-	//copyDebuggerAction->setShortcut(QKeySequence(""));
-	copyDebuggerAction->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
-	connect(copyDebuggerAction, SIGNAL(triggered()), outputWindowList, SLOT(copy()));
-	editMenu->addAction(copyDebuggerAction);
-
-	clearDebuggerAction = new QAction(QObject::tr("Clear All Output Item(s)"), 0);
-	//clearDebuggerAction->setShortcut(QKeySequence(""));
-	clearDebuggerAction->setStatusTip(tr("Clear the Debugger Output window."));
-	connect(clearDebuggerAction, SIGNAL(triggered()), this, SLOT(clearDebugger()));
-	editMenu->addAction(clearDebuggerAction);
-
-	
-	saveDebuggerAction = new QAction(QObject::tr("Save All Output information to a text file..."), 0);
-	//saveDebuggerAction->setShortcut(QKeySequence(""));
-	saveDebuggerAction->setStatusTip(tr("Save the Debugger Output window."));
-	connect(saveDebuggerAction, SIGNAL(triggered()), this, SLOT(saveOutputWindow()));
-	editMenu->addAction(saveDebuggerAction);
 
 	editMenu->addSeparator();
 
@@ -1168,99 +1178,101 @@ void MainWindow::createDefaultMenus()
 	//uncommentAction->setStatusTip(tr("Uncomment out the selected lines."));
 	//connect(uncommentAction, SIGNAL(triggered()), this, SLOT(unComment()));
 	//editMenu->addAction(uncommentAction);
-	goToLineAction = new QAction(QObject::tr("Go to Line"), 0);
-	//goToLineAction->setShortcut(QKeySequence(""));
+	goToLineAction = new QAction(QObject::tr("&Go to Line"), 0);
+	goToLineAction->setShortcut(QKeySequence("CTRL+N"));
 	goToLineAction->setStatusTip(tr("Go to Line."));
 	connect(goToLineAction, SIGNAL(triggered()), this, SLOT(goToLine()));
 	editMenu->addAction(goToLineAction);
-	goToMatchingBraceAction = new QAction(QObject::tr("Jump to the matching brace"), 0);
+	goToMatchingBraceAction = new QAction(QObject::tr("&Jump to the matching brace"), 0);
 	goToMatchingBraceAction->setShortcut(QKeySequence("Ctrl+E"));
 	goToMatchingBraceAction->setStatusTip(tr("Jump to the matching brace."));
 	connect(goToMatchingBraceAction, SIGNAL(triggered()), this, SLOT(jumpToMatchingBrace()));
 	editMenu->addAction(goToMatchingBraceAction);
-	selToMatchingBraceAction = new QAction(QObject::tr("Select to the matching brace"), 0);
+	selToMatchingBraceAction = new QAction(QObject::tr("&Select to the matching brace"), 0);
 	selToMatchingBraceAction->setShortcut(QKeySequence(tr("Shift+Ctrl+E")));
 	selToMatchingBraceAction->setStatusTip(tr("Select to the matching brace."));
 	connect(selToMatchingBraceAction, SIGNAL(triggered()), this, SLOT(selectToMatchingBrace()));
 	editMenu->addAction(selToMatchingBraceAction);
-	lineCommentAction = new QAction(QObject::tr("(Un)Comment the selected line(s)"), 0);
+	lineCommentAction = new QAction(QObject::tr("(Un)Comment the selected l&ine(s)"), 0);
 	lineCommentAction->setShortcut(QKeySequence(tr("Ctrl+k")));
 	lineCommentAction->setStatusTip(tr("(Un)Comment the selected line(s)."));
 	connect(lineCommentAction, SIGNAL(triggered()), this, SLOT(lineComment()));
 	editMenu->addAction(lineCommentAction);
-	blockCommentAction = new QAction(QObject::tr("(Un)Comment the selected block"), 0);
+	blockCommentAction = new QAction(QObject::tr("(Un)Comment the selected &block"), 0);
 	blockCommentAction->setShortcut(QKeySequence(tr("Ctrl+b")));
 	blockCommentAction->setStatusTip(tr("(Un)Comment the selected block."));
 	connect(blockCommentAction, SIGNAL(triggered()), this, SLOT(blockComment()));
 	editMenu->addAction(blockCommentAction);
-	duplicateLineAction = new QAction(QObject::tr("Duplicate the current line"), 0);
+	duplicateLineAction = new QAction(QObject::tr("&Duplicate the current line"), 0);
 	duplicateLineAction->setShortcut(QKeySequence(tr("Ctrl+D")));
 	duplicateLineAction->setStatusTip(tr("Duplicate the selected line."));
 	connect(duplicateLineAction, SIGNAL(triggered()), this, SLOT(duplicateLine()));
 	editMenu->addAction(duplicateLineAction);
-	moveLineUpAction = new QAction(QObject::tr("Move the current line up"), 0);
+	moveLineUpAction = new QAction(QObject::tr("&Move the current line up"), 0);
 	moveLineUpAction->setShortcut(QKeySequence(tr("Ctrl+T")));
 	moveLineUpAction->setStatusTip(tr("Move the current line up."));
 	connect(moveLineUpAction, SIGNAL(triggered()), this, SLOT(moveLineUp()));
 	editMenu->addAction(moveLineUpAction);
-	deleteCurrentLineAction = new QAction(QObject::tr("Delete the current line"), 0);
+	deleteCurrentLineAction = new QAction(QObject::tr("D&elete the current line"), 0);
 	deleteCurrentLineAction->setShortcut(QKeySequence(tr("Ctrl+L")));
 	deleteCurrentLineAction->setStatusTip(tr("Delete the current line."));
 	connect(deleteCurrentLineAction, SIGNAL(triggered()), this, SLOT(deleteCurrentLine()));
 	editMenu->addAction(deleteCurrentLineAction);
-	toUpperCaseAction = new QAction(QObject::tr("Change the line to UPPER CASE"), 0);
-	toUpperCaseAction->setShortcut(QKeySequence(tr("Ctrl+U")));
-	toUpperCaseAction->setStatusTip(tr("Change the line to UPPER CASE."));
-	//connect(toUpperCaseAction, SIGNAL(triggered()), this, SLOT(toUpperCase()));
+	toUpperCaseAction = new QAction(QObject::tr("Change the line to &upper case"), 0);
+	toUpperCaseAction->setShortcut(QKeySequence(tr("Ctrl+Shift+U")));
+	toUpperCaseAction->setStatusTip(tr("Change the line to upper case."));
+	connect(toUpperCaseAction, SIGNAL(triggered()), this, SLOT(toUpperCase()));
 	editMenu->addAction(toUpperCaseAction);
-	toLowerCaseAction = new QAction(QObject::tr("Change the line to lower case"), 0);
-	toLowerCaseAction->setShortcut(QKeySequence(tr("Ctrl+Shift+U")));
+	toLowerCaseAction = new QAction(QObject::tr("Change the line to &lower case"), 0);
+	toLowerCaseAction->setShortcut(QKeySequence(tr("Ctrl+U")));
 	toLowerCaseAction->setStatusTip(tr("Change the line to lower case."));
-	//connect(toLowerCaseAction, SIGNAL(triggered()), this, SLOT(toLowerCase()));
+	connect(toLowerCaseAction, SIGNAL(triggered()), this, SLOT(toLowerCase()));
 	editMenu->addAction(toLowerCaseAction);
 	menuBar()->addMenu(editMenu);//the edit menu..........................................................
 
 	tileAction = new QAction(tr("&Tile"), this);
+	tileAction->setShortcut(QKeySequence(tr("Ctrl+Alt+T")));
 	tileAction->setStatusTip(tr("Tile the windows"));
 	connect(tileAction, SIGNAL(triggered()), mdiArea, SLOT(tileSubWindows()));
 
-	cascadeAction = new QAction(tr("&Cascade"), this);
+	cascadeAction = new QAction(tr("C&ascade"), this);
+	cascadeAction->setShortcut(QKeySequence(tr("Ctrl+Alt+C")));
 	cascadeAction->setStatusTip(tr("Cascade the windows"));
 	connect(cascadeAction, SIGNAL(triggered()), mdiArea, SLOT(cascadeSubWindows()));
 
-	nextAction = new QAction(tr("Ne&xt"), this);
-	nextAction->setShortcuts(QKeySequence::NextChild);
+	nextAction = new QAction(tr("&Next"), this);
+	nextAction->setShortcut(QKeySequence(tr("Ctrl+Tab")));//QKeySequence::NextChild);
 	nextAction->setStatusTip(tr("Move the focus to the next window"));
 	connect(nextAction, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()));
 
-	previousAction = new QAction(tr("Pre&vious"), this);
-	previousAction->setShortcuts(QKeySequence::PreviousChild);
+	previousAction = new QAction(tr("&Previous"), this);
+	previousAction->setShortcut(QKeySequence(tr("Ctrl+Shift+Tab")));//QKeySequence::PreviousChild);
 	previousAction->setStatusTip(tr("Move the focus to the previous window"));
 	connect(previousAction, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()));
 	menuBar()->addMenu(windowMenu);
 	updateWindowMenu();
 	connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(updateWindowMenu()));//the window menu..........................................................
 
-	addRemMarkerAction = new QAction(tr("Add/Remove marker"), this);
-	//addRemMarkerAction->setShortcuts(QKeySequence::NextChild);
+	addRemMarkerAction = new QAction(tr("Add/Remove &marker"), this);
+	addRemMarkerAction->setShortcut(QKeySequence(tr("F2")));
 	addRemMarkerAction->setStatusTip(tr("Add/Remove marker"));
 	connect(addRemMarkerAction, SIGNAL(triggered()), this, SLOT(toggleMarker()));
 	//markersMenu->addAction(addRemMarkerAction);
 
-	nextMarkerAction = new QAction(tr("Next marker"), this);
-	//nextMarkerAction->setShortcuts(QKeySequence::NextChild);
+	nextMarkerAction = new QAction(tr("&Next marker"), this);
+	nextMarkerAction->setShortcut(QKeySequence(tr("F4")));
 	nextMarkerAction->setStatusTip(tr("Next marker"));
 	connect(nextMarkerAction, SIGNAL(triggered()), this, SLOT(nextMarker()));
 	//markersMenu->addAction(nextMarkerAction);
 
-	prevMarkerAction = new QAction(tr("Previous marker"), this);
-	//prevMarkerAction->setShortcuts(QKeySequence::NextChild);
+	prevMarkerAction = new QAction(tr("&Previous marker"), this);
+	prevMarkerAction->setShortcut(QKeySequence(tr("F6")));
 	prevMarkerAction->setStatusTip(tr("Previous marker"));
 	connect(prevMarkerAction, SIGNAL(triggered()), this, SLOT(prevMarker()));
 	//markersMenu->addAction(prevMarkerAction);
 
-	remAllMarkerAction = new QAction(tr("Remove all markers"), this);
-	//remAllMarkerAction->setShortcuts(QKeySequence::NextChild);
+	remAllMarkerAction = new QAction(tr("&Remove all markers"), this);
+	remAllMarkerAction->setShortcut(QKeySequence(tr("F8")));
 	remAllMarkerAction->setStatusTip(tr("Remove all markers"));
 	connect(remAllMarkerAction, SIGNAL(triggered()), this, SLOT(removeAllMarkers()));
 	//markersMenu->addAction(remAllMarkerAction);
@@ -1270,12 +1282,12 @@ void MainWindow::createDefaultMenus()
 	menuBar()->addMenu(markersMenu);
 	updateMarkersMenu();//the markers menu..........................................................
 
-	runDocumentAction = documentMenu->addAction(QIcon(":/resources/runScript.png"),tr("Execute"));
+	runDocumentAction = documentMenu->addAction(QIcon(":/resources/runScript.png"),tr("&Execute"));
 	runDocumentAction->setEnabled(false);
 	runDocumentAction->setShortcut(QKeySequence(tr("F5")));
 	runDocumentAction->setStatusTip(tr("Execute the current document"));
 	runDocumentAction->setData(GlobalApplicationInformation::Execute);
-	connect(runDocumentAction, SIGNAL(triggered()), this, SLOT(executeDocument()));
+	connect(runDocumentAction, SIGNAL(triggered()), this, SLOT(executeActiveDocument()));
 
 	//debugScriptAction = scriptMenu->addAction(tr("Debug Script"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
 	//debugScriptAction->setEnabled(false);//(false);
@@ -1284,13 +1296,13 @@ void MainWindow::createDefaultMenus()
 	//debugScriptAction->setData(GlobalApplicationInformation::Debug);
 	//connect(debugScriptAction, SIGNAL(triggered()), this, SLOT(executeScript()));
 
-	abortDocumentAction = documentMenu->addAction(tr("Abort"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
+	abortDocumentAction = documentMenu->addAction(tr("&Abort"));//QIcon(":/resources/runScript.png"),tr("&Run Script"));
 	abortDocumentAction->setEnabled(false);//false);
 	abortDocumentAction->setShortcut(QKeySequence(tr("F7")));
 	abortDocumentAction->setStatusTip(tr("Abort the current document"));
 	connect(abortDocumentAction, SIGNAL(triggered()), this, SLOT(abortScript()));
 
-	restartScriptEngineAction = documentMenu->addAction(tr("Restart Script Engine"));
+	restartScriptEngineAction = documentMenu->addAction(tr("&Restart Script Engine"));
 	restartScriptEngineAction->setEnabled(false);//false);
 	restartScriptEngineAction->setShortcut(QKeySequence(tr("F9")));
 	restartScriptEngineAction->setStatusTip(tr("Force a restart of the script engine"));
@@ -1317,8 +1329,8 @@ void MainWindow::createDefaultMenus()
 	//viewMenu->addAction(debuggerDock->toggleViewAction());
 	//menuBar()->addMenu(viewMenu);//the view menu..........................................................
 
-	optionsAction = toolsMenu->addAction(tr("O&ptions"));
-	optionsAction->setShortcut(QKeySequence(tr("Ctrl+P")));
+	optionsAction = toolsMenu->addAction(tr("&Options"));
+	optionsAction->setShortcut(QKeySequence(tr("Ctrl+Alt+O")));
 	optionsAction->setStatusTip(tr("Open the options dialog"));
 	//optionsAction->setEnabled(true);
 	connect(optionsAction, SIGNAL(triggered()), this, SLOT(openOptionsDialog()));
@@ -1332,26 +1344,25 @@ void MainWindow::setupHelpMenu()
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
-	helpMenu = menuBar()->addMenu(tr("Help"));
+	helpMenu = menuBar()->addMenu(tr("&Help"));
 	
-	assistantAct = new QAction(tr("Help Contents"), this);
+	assistantAct = new QAction(tr("Help &Contents"), this);
 	assistantAct->setStatusTip(tr("Show the StimulGL Documentation"));
 	helpMenu->addAction(assistantAct);
 	assistantAct->setShortcut(QKeySequence::HelpContents);
 	connect(assistantAct, SIGNAL(triggered()), this, SLOT(showDocumentation()));
 	
-	aboutStimulGLAct = new QAction(tr("About StimulGL"), this);
+	aboutStimulGLAct = new QAction(tr("&About StimulGL"), this);
 	aboutStimulGLAct->setStatusTip(tr("Show the StimulGL About Dialog"));
 	helpMenu->addAction(aboutStimulGLAct);
-	aboutStimulGLAct->setShortcut(QKeySequence(tr("F2")));
 	connect(aboutStimulGLAct, SIGNAL(triggered()), this, SLOT(aboutStimulGL()));
 
-	aboutQtAct = new QAction(tr("About Qt"), this);
+	aboutQtAct = new QAction(tr("About &Qt"), this);
 	aboutQtAct->setStatusTip(tr("Show the Qt About Dialog"));
 	helpMenu->addAction(aboutQtAct);
 	connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
-	historyQtAct = new QAction(tr("StimulGL History"), this);
+	historyQtAct = new QAction(tr("StimulGL &History"), this);
 	historyQtAct->setStatusTip(tr("Show the StimulGL History"));
 	helpMenu->addAction(historyQtAct);
 	connect(historyQtAct, SIGNAL(triggered()), this, SLOT(showJavaScriptConfigurationFile()));
@@ -1366,11 +1377,6 @@ void MainWindow::showDocumentation()
 	helpAssistant->showDocumentation("index.html", globAppInfo);
 }
 
-/*! \brief Appends a text String to the Output Log Window.
- *
- * This function appends a provided String to the Output Log Window.
- * @param text2Write a String value holding the text that should be appended.
- */
 void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined MAIN_PROGRAM_LOG_SLOT_NAME
 {
 	if(bMainWindowIsInitialized)
@@ -1378,40 +1384,11 @@ void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined
 		//outputWindowList->addItem(text2Write);
 }
 
-/*! \brief Sets the auto scrolling behavior of the Output Log Window.
- *
- * This function can enable/disable the auto scrolling behavior of the Output Log Window.
- * @param bEnable a Boolean value determining whether the auto scrolling should be enabled.
- */
-void MainWindow::configureOutputWindowAutoScroll(const bool &bEnable)
-{
-	/*if(outputWindowList == NULL)
-		return;
-	if(bEnable)
-	{
-		connect(outputWindowList->model(), SIGNAL(rowsInserted ( const QModelIndex &, int, int ) ), outputWindowList, SLOT(scrollToBottom ()));
-	}
-	else
-	{
-		disconnect(outputWindowList->model(), SIGNAL(rowsInserted ( const QModelIndex &, int, int ) ),	outputWindowList, SLOT(scrollToBottom ()));
-	}*/
-}
-
-/*! \brief Clears the Output Log Window.
- *
- * This function clears the Output Log Window.
- */
 void MainWindow::clearOutputWindow() 
 {
 	clearDebugger();
 }
 
-/*! \brief Saves the Output Log Window.
- *
- * This function saves the Output Log Window to a text file.
- * @param sFilePath a String value holding the path to the destination file.
- * @param bOverwrite a Boolean value determining whether the destination file may be overwritten in case the file already exists.
- */
 bool MainWindow::saveOutputWindow(const QString &sFilePath, const bool &bOverwrite)
 {
 	QString fileName;
@@ -1496,7 +1473,7 @@ void MainWindow::createDockWindows()
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
-	debugLogDock = new QDockWidget(tr("Output"), this);
+	debugLogDock = new QDockWidget(tr("Output Log"), this);
 	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);	
 	outputWindowList = new QTextEdit(debugLogDock);
 	outputWindowList->setReadOnly(true);
@@ -1506,7 +1483,6 @@ void MainWindow::createDockWindows()
 	debugLogDock->setWidget(outputWindowList);
 	addDockWidget(Qt::BottomDockWidgetArea, debugLogDock);//(Qt::RightDockWidgetArea, debugLogDock);
 
-	configureOutputWindowAutoScroll(false);
 	//viewMenu->addAction(debugLogDock->toggleViewAction());
 	//connect(debugList, SIGNAL(currentTextChanged(const QString &)),
 	//	this, SLOT(insertCustomer(const QString &)));
@@ -2135,65 +2111,39 @@ void MainWindow::setScriptRunningStatus(GlobalApplicationInformation::ActiveScri
 	}
 }
 
-/*! \brief Returns the path to the current active document.
- *
- * This function returns the path to the document that is currently opened and active.
- * @return a String value holding a path to the requested document.
- */
-QString MainWindow::getSelectedScriptFileLocation()
+QString MainWindow::getActiveDocumentFileLocation()
 {
 	return DocManager->getFilePath(activeMdiChild());
 }
 
-/*! \brief Returns the path to the StimulGL Root directory.
- *
- * This function returns the path to the StimulGL Root directory, where the binary is running in.
- * @return a String value holding the path to the Root directory.
- */
 QString MainWindow::getApplicationRootDirPath() 
 {
 	return QDir(QCoreApplication::applicationDirPath()).absolutePath();
 }
 
-/*! \brief Returns the filename of the current active document.
- *
- * This function returns the filename of the document that is currently opened and active.
- * @return a String value holding the filename of the requested document.
- */
-QString MainWindow::getSelectedScriptFileName()
+QString MainWindow::getActiveDocumentFileName()
 {
 	return DocManager->getFileName(activeMdiChild(),true);
 }
 
-/*! \brief Returns the requested Environment Variable.
- *
- * This function can return a Environment Variable value by providing the name of the variable.
- * @param strName a String value holding the name of the requested Environment Variable.
- * @return a String value holding the value of the requested Environment Variable.
- */
 QString MainWindow::getEnvironmentVariabele(QString strName) 
 {
 	return QProcessEnvironment::systemEnvironment().value(strName);
 }
 
-/*! \brief Closes the current active document.
- *
- * This function closes the document that is currently opened and active.
- * @param bAutoSaveChanges a boolean value determining whether the document should first save unsaved changes or not.
- */
-void MainWindow::closeSelectedScriptFile(bool bAutoSaveChanges)
+void MainWindow::closeActiveDocument(bool bAutoSaveChanges)
 {
 	closeSubWindow(bAutoSaveChanges);
 }
 
-/*! \brief Executes the current active document.
- *
- * This function executes the current active document (file that is opened and active).
- */
-void MainWindow::executeDocument()
+void MainWindow::executeActiveDocument()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
-	StimulGLScriptRunMode = (GlobalApplicationInformation::ScriptRunMode)action->data().toInt();
+
+	if(action == NULL)
+		StimulGLScriptRunMode = GlobalApplicationInformation::Execute;
+	else
+		StimulGLScriptRunMode = (GlobalApplicationInformation::ScriptRunMode)action->data().toInt();
 	QMdiSubWindow *currentActiveWindow = activeMdiChild();
 	QString strFileName = DocManager->getFileName(currentActiveWindow);
 
@@ -2245,7 +2195,7 @@ void MainWindow::executeDocument()
 		{
 			clearDebugger();
 			//QTime t;
-			QDir::setCurrent(getSelectedScriptFileLocation());
+			QDir::setCurrent(getActiveDocumentFileLocation());
 
 			QString strDocumentContent = "";
 			CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentActiveWindow));
@@ -2263,7 +2213,7 @@ void MainWindow::executeDocument()
 					bool bResult = false;
 					bool bRetVal = false;
 					QString shortSignature = strDocHandlerSlotName.left(strDocHandlerSlotName.indexOf("("));
-					bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(shortSignature.toLatin1()),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetVal), Q_ARG(QString,strDocumentContent), Q_ARG(QString,getSelectedScriptFileLocation()));				
+					bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(shortSignature.toLatin1()),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetVal), Q_ARG(QString,strDocumentContent), Q_ARG(QString,getActiveDocumentFileLocation()));				
 					//if(bResult)
 					//{
 					//	break;
@@ -2286,7 +2236,7 @@ void MainWindow::executeDocument()
 
 	clearDebugger();
 	QTime t;
-	QDir::setCurrent(getSelectedScriptFileLocation());
+	QDir::setCurrent(getActiveDocumentFileLocation());
 
 	QString strScriptProgram = "";
 	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentActiveWindow));
@@ -2397,21 +2347,12 @@ QScriptValue MainWindow::executeScriptContent(const QString &sContent)
 	return NULL;
 }
 
-/*! \brief Forces the script engine to perform a garbage collection.
- *
- * This function forces the script engine to perform a garbage collection and is therefore a safe and good practice to execute as last command before ending the script.
- */
 void MainWindow::cleanupScript()
 {
 	QTimer::singleShot(10, this, SLOT(abortScript()));
 	emit CleanUpScriptExecuted();
 }
 
-/*! \brief Forces the StimulGL User Interface to become activated.
- *
- * This function forces the the StimulGL User Interface to become activated. An active window is a visible top-level window that has the keyboard input focus.
- * It is the same operation as clicking the mouse on the title bar of a top-level window.
- */
 void MainWindow::activateMainWindow()
 {
 //#ifdef Q_OS_WIN32 //Are we on Windows?
@@ -2464,13 +2405,6 @@ void MainWindow::setStartupFiles(const QString &path)
 	startUpFiles = path.split(";");
 }
 
-
-/*! \brief Opens one or more files.
- *
- *  This function can open one or more files.
- * @param fileToLoad a String containing a single path to a file that should be loaded.
- * @param filesToLoad a String Array containing multiple Strings containing the paths to the files that should be loaded.
- */
 void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesToLoad)
 {
 	QStringList fileNames;
@@ -2787,7 +2721,7 @@ bool MainWindow::check4ReParseFile(const QString &sFilename)
 		QMessageBox::Yes | QMessageBox::No);
 	if (ret == QMessageBox::Yes)
 	{
-		closeSelectedScriptFile(true);
+		closeActiveDocument(true);
 		openFiles(sFilename);
 		return true;
 	}
@@ -2859,6 +2793,7 @@ void MainWindow::updateWindowMenu()
 			text = tr("%1 %2").arg(i + 1).arg(text);
 		}
 		QAction *action  = windowMenu->addAction(text);
+		action->setShortcut(QString("Ctrl+") + QString::number(i+1));
 		action->setCheckable(true);
 		//action ->setChecked(child == DocManager->getDocHandler(activeMdiChild()));
 		action->setChecked(windows.at(i) == activeMdiChild());
@@ -2871,9 +2806,14 @@ void MainWindow::updateMarkersMenu()
 {
 	if (markersMenu) 
 	{
+		for (int i = 0; i < markersMenu->actions().count(); ++i)
+		{
+			markersMenu->removeAction(markersMenu->actions().at(i));
+		}
 		markersMenu->clear();
 
 		CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+
 		markersMenu->addAction(addRemMarkerAction);
 		markersMenu->addAction(nextMarkerAction);
 		markersMenu->addAction(prevMarkerAction);
@@ -2884,11 +2824,14 @@ void MainWindow::updateMarkersMenu()
 			QList<int> list = tmpSci->markers();
 			if ( !list.isEmpty() ) {
 				markersMenu->addSeparator();
-				foreach (int line, list) {
-					QString lineStr = tmpSci->getLine(line).simplified();
+				//foreach (int line, list) 
+				for (int i = 0; i < list.size(); ++i)
+				{
+					QString lineStr = tmpSci->getLine(list.at(i)).simplified();
 					if ( lineStr.length() > 40 )
 						lineStr = lineStr.left(40) + " ...";
-					markersMenu->addAction(QString("%1: %2").arg(line + 1).arg(lineStr), this, SLOT(gotoMarker()));
+					QAction *action  = markersMenu->addAction(QString("%1: %2").arg(list.at(i) + 1).arg(lineStr), this, SLOT(gotoMarker()));
+					action->setShortcut(QString("Ctrl+Alt+") + QString::number(i+1));
 				}
 			}
 		}
@@ -3156,12 +3099,22 @@ void MainWindow::print()
 #endif
 }
 
-void MainWindow::toggleMarker() 
+void MainWindow::handleToggledMarker(int nLine) 
+{
+	updateMarkersMenu();
+}
+
+void MainWindow::toggleMarker(int nLine) 
 {
 	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
 	if (tmpSci)
-		tmpSci->toggleMarker();
-	//initMarkersMenu();
+	{
+		if(nLine>=0)
+			tmpSci->toggleMarker(nLine);
+		else
+			tmpSci->toggleMarker();
+		updateMarkersMenu();
+	}
 }
 
 void MainWindow::nextMarker() 
@@ -3240,52 +3193,16 @@ void MainWindow::findImpl(bool bReplace, bool useParams, QString strFindString, 
 	}
 }
 
-/*! \brief Searches for a provided String inside the currently active document.
- *
- * This function searches for a provided String of text inside the currently active document. Furthermore this action can be specified with special flags.
- * @param useParams a boolean value that determines whether the optional provided parameters should be used. If useParams is false then a Search window appears allowing the user to
- * make further changes. If some text from the document was selected than this String is automatically used for the find String, otherwise the word around the cursor position is used.
- * If useParams is true then no Search window appears and the optional provided parameters are used for the search action, the first found occurrence (starting from the cursor position) 
- * of the find result is then automatically selected.
- * @param strFindString a String holding the text value to use.
- * @param DocFindFlags a String holding the text value to use, you can create this structure in the script like: 
- * \code 
- * var varName=DocFindFlags; 
- * varName.backwards = true; 
- * \endcode 
- * see _DocFindFlags.
- */
 void MainWindow::find(bool useParams, QString strFindString, DocFindFlags findFlags) 
 {
 	findImpl(false,useParams,strFindString,"",findFlags,false);
 }
 
-/*! \brief Searches and replaces a provided String inside the currently active document.
- *
- * This function searches and replaces a provided String of text inside the currently active document. Furthermore this action can be specified with special flags.
- * @param bReplaceAll a boolean value that determines whether all occurrences of the found String should be replaced.
- * @param useParams a boolean value that determines whether the optional provided parameters should be used. If useParams is false then a Replace window appears allowing the user to
- * make further changes. If some text from the document was selected than this String is automatically used for the find String, otherwise the word around the cursor position is used.
- * If useParams is true then no Search window appears and the optional provided parameters are used for the search action, the first found occurrence (starting from the cursor position) 
- * of the find result is then automatically selected.
- * @param strFindString a String holding the String value to search for.
- * @param strReplaceString a String holding the text value to replace the found String strFindString with.
- * @param DocFindFlags a String holding the text value to use, you can create this structure in the script like: 
- * \code 
- * var varName=DocFindFlags; 
- * varName.backwards = true; 
- * \endcode 
- * see _DocFindFlags.
- */
 void MainWindow::replace(bool bReplaceAll, bool useParams, QString strFindString, QString strReplaceString, DocFindFlags findFlags) 
 {
 	findImpl(true,useParams,strFindString,strReplaceString,findFlags,bReplaceAll);
 }
 
-/*! \brief Searches for the last provided String inside the currently active document.
- *
- * This function searches (forwards) for the last provided String of text inside the currently active document starting from the current cursor position.
- */
 void MainWindow::findNext() 
 {
 	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
@@ -3304,13 +3221,9 @@ void MainWindow::findNext()
 	}
 }
 
-/*! \brief Searches for the last provided String inside the currently active document.
- *
- * This function searches (backwards) for the last provided String of text inside the currently active document starting from the current cursor position.
- */
 void MainWindow::findPrev() 
 {
-	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(activeMdiChild());
+	CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
 	if (tmpSci)
 	{
 		QString lastText = DocManager->lastFindText();

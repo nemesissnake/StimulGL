@@ -20,7 +20,6 @@ Thumbs.db
 *.cache
 *.ilk
 *.log
-[Bb]in
 [Dd]ebug*/
 *.sbr
 obj/
@@ -86,3 +85,15 @@ Install/RenderSystem_GL_d.dll_
 Install/tmp/*
 Install/examples/StimulGL Experiments Repo.lnk
 source/plugins/*/*.vcxproj.user
+Install/examples/GettingStartedGuide/ExperimentManager/QtQuick2/HelloWorld_project.qmlproject
+Install/examples/Tutorials/99. PluginExamples/ExperimentManager - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/ExtensionPluginTemplate - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/FirebirdClient - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/KeyBoardDevice - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/ParallelPortDevice - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/PiezoStimDevice - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/SerialPortDevice - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/StimulGL - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/TBVExchanger - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/TCPNetworkServer - Shortcut.lnk
+Install/examples/Tutorials/99. PluginExamples/USBHIDDevice - Shortcut.lnk

@@ -84,7 +84,7 @@ public:
 	}
 };
 
-//!  The Random Generator class. 
+//!  The RandomGenerator class. 
 /*!
 The Random Generator can be used to create and edit randomized lists and numbers. For the randomization it combines two 
 different random number generators (Mersenne twister and Mother-of-All (Multiply with carry).

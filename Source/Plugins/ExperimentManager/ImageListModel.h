@@ -53,6 +53,7 @@ public:
 	QString addPixmap(const QPixmap &pixmap);
 	bool getPixmap(QPixmap &pixmap, const QString &ID);
 	bool updatePixmap(QPixmap &pixmap, const QString &ID);
+	bool updatePixmapID(const QString &oldID, const QString &newID);
 	bool removePixmap(const QString &ID);
 	
 private:

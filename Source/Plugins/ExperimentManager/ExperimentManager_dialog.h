@@ -39,8 +39,8 @@ public:
 	ExperimentManager_Dialog(QWidget *parent = 0);
 	~ExperimentManager_Dialog();
 
-	bool setContentToExecute(DocContentInfoStructure docContentStruct);
-	bool executeDocument();
+	bool setContentToExecute(GlobalApplicationInformation::DocContentInfoStructure docContentStruct);
+	bool executeActiveDocument();
 
 protected:
 	void closeEvent(QCloseEvent *event);
@@ -71,7 +71,7 @@ private:
 	//QVBoxLayout *tmpLayout;
 	ExperimentSubObjectState currentExperimentSubObjectState;
 	ExperimentManager::ExperimentState currentExperimentState;
-	DocContentInfoStructure docContentStructToRun;
+	GlobalApplicationInformation::DocContentInfoStructure docContentStructToRun;
 };
 
 #endif // ExperimentManager_DIALOG_H

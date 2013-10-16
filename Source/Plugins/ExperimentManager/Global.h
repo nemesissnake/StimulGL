@@ -102,6 +102,8 @@ namespace ExperimentManagerNameSpace
 		QList<QString> sDateTimeStamp;
 	} ExperimentSubObjectStateHistory;
 
+
+	//!  The strcParsedParameterDefinition structure. 
 	/*! \struct strcParsedParameterDefinition
 	 * A structure for the Experiment Manager parameter definitions.
 	 */
@@ -170,7 +172,7 @@ namespace ExperimentManagerNameSpace
 	#define FUNC_OBJECT_STOP						"stopExperimentObject"
 	#define FUNC_OBJECT_ABORT						"abortExperimentObject"
 	//#define RETINOMAP_WIDGET_NAME					"RetinoMap_glwidget"
-	//#define QML_WIDGET_NAME							"qmlWidget"
+	//#define QML_WIDGET_NAME						"qmlWidget"
 	#define QML2VIEWER_NAME							"QML2Viewer"
 	#define TRIGGERTIMER_NAME						"TriggerTimer"
 	#define EXPERIMENTTIMER_NAME					"ExperimentTimer"

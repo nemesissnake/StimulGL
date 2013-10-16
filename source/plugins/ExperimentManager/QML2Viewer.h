@@ -109,6 +109,14 @@ public slots:
 	* See QML2Viewer::addPixmapToImageBuffer.
 	*/	
 	bool updatePixmapFromImageBuffer(QPixmap *pixmap, const QString &ID);
+	/*! \brief Updates the ID string of a corresponding QPixmap inside the internal Image Buffer.
+	*
+	*  This function can update the ID string of a corresponding QPixmap that is stored in the internal Image Buffer.
+	* @param oldID the String containing the current ID String, created by the Image Buffer, that should change.
+	* @param newID the String containing the new unique ID string.
+	* @return a boolean value representing whether the function could execute successfully.	
+	*/	
+	bool updatePixmapIDFromImageBuffer(const QString &oldID, const QString &newID);
 	/*! \brief Removes a QPixmap inside the internal Image Buffer.
 	*
 	*  This function can remove a QPixmap that is stored in the internal Image Buffer.

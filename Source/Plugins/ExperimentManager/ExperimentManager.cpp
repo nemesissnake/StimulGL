@@ -135,7 +135,7 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<ImageProcessor>(IMAGEPROCESSOR_NAME);	
 	qRegisterMetaType<PrtFormatManager>(PRTFORMATMANAGER_NAME);
 	qRegisterMetaType<PrtFormatManager>(RANDOMGENERATOR_NAME);
-	qRegisterMetaType<strcExperimentStructureState>(CEXPERIMENTSTRUCTURESTATE_NAME);
+	qRegisterMetaType<ExperimentStructuresNameSpace::strcExperimentStructureState>(CEXPERIMENTSTRUCTURESTATE_NAME);
 	qRegisterMetaType<cExperimentStructure>(CEXPERIMENTSTRUCTURE_NAME);
 	qRegisterMetaType<cBlockStructure>(CBLOCKSTRUCTURE_NAME);
 	qRegisterMetaType<cLoopStructure>(CLOOPSTRUCTURE_NAME);
@@ -143,23 +143,11 @@ void ExperimentManager::RegisterMetaTypes()
 
 void ExperimentManager::sendToMainAppLogOutput(const QString &strText2Write)
 {
-/*! \brief Sends a string of text to the StimulGL Log output Window.
- *
- *  The string parameter (strText2Write) is appended to the StimulGL Log output Window, this 
- *  is done by emitting a signal that is automatically connected to a slot that does the job.
- */
 	emit WriteToLogOutput(strText2Write);
 }
 
 bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue, bool bIsInitializing, bool bIsCustom)
 {
-/*! \brief Inserts a specified object parameter for the current experiment block.
- *
- *  Inserts a specified object parameter with objectID(nObjectID), parameter name(sName) and parameter value(sValue) for the current experiment block.
- *  If bIsInitializing is true then this new parameter is marked as Initializing, see #ParsedParameterDefinition.bIsInitialized,
- *  this marks the parameter as unused which can be helpful for further setting the default value.
- *  The bIsCustom variable determines whether the parameter should be treated as a custom parameter (default = false).
- */
 	if (nObjectID >= 0) 
 	{
 		if (!lExperimentObjectList.isEmpty())
@@ -190,10 +178,6 @@ bool ExperimentManager::insertExperimentObjectBlockParameter(const int nObjectID
 
 bool ExperimentManager::getExperimentObjectBlockParameter(const int nObjectID,const QString sName, ParsedParameterDefinition &strcParDef)
 {
-/*! \brief Returns a boolean value that determines if a specified object parameter from the current experiment block could be retrieved and set.
- *
- *  Returns true if &strcParDef could be set to a specified object parameter with objectID(nObjectID), parameter name(sName) for the current experiment block.
- */
 	if (nObjectID >= 0)
 	{
 		if (!lExperimentObjectList.isEmpty())
@@ -319,11 +303,6 @@ bool ExperimentManager::setExperimentObjectFromScriptValue(const int &nObjectID,
 
 bool ExperimentManager::logExperimentObjectData(const int &nObjectIndex, const int &nTimerIndex, const QString &strFunction, const QString &strTag, const QString &strMessage, const QString &strValue)
 {
-/*! \brief Use this function to log Experiment Data to a logfile.
- *
- *  Returns a boolean value that determines if a log entry consisting of a ObjectID(nObjectIndex), TimerID(nTimerIndex), 
- *  Function(strFunction), Tag(strTag), Message(strMessage) and Value(strValue) could be forwarded to the internal Experiment Data Logger.
- */
 	if (expDataLogger)
 	{
 		expDataLogger->setLogVars(nObjectIndex, nTimerIndex, strFunction, strTag, strMessage, strValue);
@@ -334,11 +313,6 @@ bool ExperimentManager::logExperimentObjectData(const int &nObjectIndex, const i
 
 int ExperimentManager::createExperimentTimer()
 {
-/*! \brief Use this function to create a Experiment Timer.
- *
- *  Returns the TimerID of a newly constructed Experiment Timer.
- *  If this fails the function returns -1.
- */
 	if (expDataLogger)
 	{
 		return expDataLogger->createTimer();
@@ -348,11 +322,6 @@ int ExperimentManager::createExperimentTimer()
 
 bool ExperimentManager::startExperimentTimer(int nIndex)
 {
-/*! \brief Use this function to start a Experiment Timer.
- *
- *  Returns a boolean value that determines if the Timer with TimerID(nIndex) could be started,
- *  otherwise it returns false.
- */
 	if (expDataLogger)
 	{
 		return expDataLogger->startTimer(nIndex);
@@ -362,11 +331,6 @@ bool ExperimentManager::startExperimentTimer(int nIndex)
 
 double ExperimentManager::restartExperimentTimer(int nIndex)
 {
-/*! \brief Use this function to re-start a Experiment Timer.
- *
- *  Returns a boolean value that determines if the Timer with TimerID(nIndex) could be re-started,
- *  otherwise it returns false.
- */
 	if ((expDataLogger) && (nIndex >= 0))
 	{
 		return expDataLogger->restartTimer(nIndex);
@@ -376,11 +340,6 @@ double ExperimentManager::restartExperimentTimer(int nIndex)
 
 double ExperimentManager::elapsedExperimentTimerTime(int nIndex)
 {
-/*! \brief Use this function to retrieve the current elapsed Experiment Timer Time.
- *
- *  Returns a double value that holds the current Experiment Timer Time from the Timer with TimerID(nIndex), 
- *  if the current Time could not be fetched than the function returns -1.
- */
 	if ((expDataLogger) && (nIndex >= 0))
 	{
 		return expDataLogger->elapsedTimerTime(nIndex);
@@ -390,28 +349,16 @@ double ExperimentManager::elapsedExperimentTimerTime(int nIndex)
 
 QString ExperimentManager::getCurrentExperimentState()
 {
-/*! \brief Use this function to retrieve the current Experiment State.
- *
- *  Returns a string containing the current Experiment State.
- */
 	return experimentStateHash.key(getCurrExperimentState(),UNKNOWNENUMSTRING);
 }
 
 QString ExperimentManager::getCurrentDateTimeStamp()
 {
-/*! \brief Use this function to retrieve the current Date/Time.
- *
- *  Returns a string containing the current Date/Time.
- */
 	return (QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 }
 
 QString ExperimentManager::getExperimentFileName()
 {
-/*! \brief Returns the current set experiment filename.
- *
- *  The internal set experiment filename is returned, see #setExperimentFileName.
- */
 	if(QFile::exists(m_ExpFileName))
 	{
 		return m_ExpFileName;
@@ -423,14 +370,9 @@ QString ExperimentManager::getExperimentFileName()
 	}
 }
 
-bool ExperimentManager::setExperimentFileName(const QString qstrExpFileName)
+bool ExperimentManager::setExperimentFileName(const QString sExpFileName)
 {
-/*! \brief Sets the current experiment filename.
- *
- *  The internal experiment filename is set to the parameter qstrExpFileName.
- *  Returns true if the filename exists.
- */
-	m_ExpFileName = qstrExpFileName;
+	m_ExpFileName = sExpFileName;
 	QFileInfo fInfo(m_ExpFileName);
 	if (fInfo.exists())
 	{
@@ -442,11 +384,6 @@ bool ExperimentManager::setExperimentFileName(const QString qstrExpFileName)
 
 bool ExperimentManager::saveExperiment(QString strFile)
 {
-/*! \brief Saves the Experiment from memory to a file.
- *
- *  The current Experiment in memory is saved to a file (strFile), if strFile=="" then the experiment is automatically saved to the last set experiment filename, 
- *  see #setExperimentFileName.
- */
 	if (!currentExperimentTree)
 		return false;
 	
@@ -479,12 +416,6 @@ bool ExperimentManager::saveExperiment(QString strFile)
 
 bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bool bIsFile)
 {
-/*! \brief Loads the Experiment from a file into memory.
- *
- *  The Experiment source (strSource) is load into memory (filepath or content), if strSource=="" then the last set experiment file is automatically loaded in memory, see #setExperimentFileName.
- *  If bIsFile is set to true then the strSource contains a path to the experiment file, if bIsFile is set to false then the strSource contains the content itself.
- *  If bViewEditTree is set to true then the experiment filename is shown in a custom viewer (under construction).
- */
 	if (currentExperimentTree)
 	{
 		delete currentExperimentTree;
@@ -583,11 +514,6 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 
 bool ExperimentManager::validateExperiment()
 {
-/*! \brief Validates the current Experiment from memory.
- *
- *  The current Experiment in memory is validated and return the result.
- */
-
 	if (!currentExperimentTree)
 	{
 		if((loadExperiment("", false) == false) || (!currentExperimentTree))
@@ -657,10 +583,6 @@ bool ExperimentManager::validateExperiment()
 
 bool ExperimentManager::runExperiment()
 {
-/*! \brief Runs the current Experiment from memory.
- *
- *  The current Experiment in memory is started if/after it has successfully loaded.
- */
 #ifdef Q_OS_WIN32 //Are we on Windows?
 	//bool ret = 
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
@@ -735,10 +657,6 @@ void ExperimentManager::initializeDataLogger()
 
 void ExperimentManager::abortExperiment()
 {
-/*! \brief Aborts the current Experiment that is running.
- *
- *  Tries to abort the current Experiment that is running, see #runExperiment.
- */
 	if((getCurrExperimentState()==ExperimentManager_Started) || (getCurrExperimentState()==ExperimentManager_IsStarting))
 	{
 		changeCurrentExperimentState(ExperimentManager_IsStopping);
@@ -750,10 +668,6 @@ void ExperimentManager::abortExperiment()
 
 void ExperimentManager::stopExperiment()
 {
-/*! \brief Stops the current Experiment that is running.
- *
- *  Tries to stop the current Experiment that is running, see #runExperiment.
- */
 	if(getCurrExperimentState()==ExperimentManager_Started)
 	{
 		changeCurrentExperimentState(ExperimentManager_IsStopping);
@@ -1162,45 +1076,25 @@ bool ExperimentManager::configureExperiment()
 
 void ExperimentManager::setDebugMode(bool mode)
 {
-/*! \brief Set the debug mode
- *
- *  The debug mode for the current experiment is changed to the boolean parameter(mode).
- */
 	cExperimentBlockTrialStructure->setExperimentDebugMode(mode);
 }
 
 bool ExperimentManager::getDebugMode()
 {
-/*! \brief Get the debug mode
- *
- *  Returns the configured debug mode for the current experiment.
- */
 	return cExperimentBlockTrialStructure->getExperimentDebugMode();
 }
 
-void ExperimentManager::setExperimentName(QString name)
+void ExperimentManager::setExperimentName(QString sName)
 {
-/*! \brief Set the current experiment name
- *
- *  The experiment name for the current experiment is changed to the string parameter(name).
- */
-	cExperimentBlockTrialStructure->setExperimentName(name);
+	cExperimentBlockTrialStructure->setExperimentName(sName);
 }
 QString ExperimentManager::getExperimentName()
 {
-/*! \brief Get the current experiment name
- *
- *  Returns the configured experiment name for the current experiment.
- */
 	return cExperimentBlockTrialStructure->getExperimentName();
 }
 
 void ExperimentManager::setExperimentOutputFilePostString(const QString &sPostString) 
 {
-/*! \brief Configures Experiment Output filename
- *
- *  Configures Experiment Output filename, the configurable part of the filename is a string that is then integrated in the filename (format = YearMonthDayHourMinuteSecond_<sPostString>.txt ).
- */
 	sExperimentOutputDataPostString = sPostString;
 }
 
@@ -1211,11 +1105,6 @@ VisualExperimentEditor *ExperimentManager::getVisualExperimentEditor()
 	return visExpEditor;
 }
 
-/*! \brief Shows the Experiment Graph Editor
- *
- *  Shows a dialog containing the Experiment Graph Editor.
- * @param ExpStruct a cExperimentStructure to be edited by the Experiment Graph Editor, if this parameter is NULL than the current Experiment Structure in memory is used.
- */
 bool ExperimentManager::showVisualExperimentEditor(cExperimentStructure *ExpStruct)
 {
 	if(ExpStruct == NULL)
@@ -1280,10 +1169,6 @@ bool ExperimentManager::showVisualExperimentEditor(cExperimentStructure *ExpStru
 	//return true;
 }
 
-/*! \brief Returns the in-memory Experiment Structure
- *
- *  This function returns a pointer to the in-memory Experiment Structure.
- */
 cExperimentStructure *ExperimentManager::getExperimentStructure() 
 {
 	return cExperimentBlockTrialStructure;

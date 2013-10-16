@@ -56,6 +56,7 @@ int main(int argc, char **argv)
 		{
 			QStringList sFilesToOpen;
 			int i;
+			bool bExecuteDocument = false;
 			if (argc > 2)
 			{
 				QString tempStr = "";
@@ -69,6 +70,10 @@ int main(int argc, char **argv)
 							i = i + 1;
 							sFilesToOpen.append(QString(argv[i]).split(";"));//separate multiple files (cmd) using a ';' Character!
 						}
+					}
+					else if (tempStr == "-e" | tempStr == "-E")//Immediately execute the loaded (-f <document) document?
+					{
+						bExecuteDocument = true;
 					}
 				}
 			}
@@ -87,6 +92,8 @@ int main(int argc, char **argv)
 				appExchange.sendMessage("StimulGL.openFiles(null,[" + sFileCombination  + "]);");
 			}
 			appExchange.sendMessage("StimulGL.activateMainWindow();");
+			if(bExecuteDocument)
+				appExchange.sendMessage("StimulGL.executeActiveDocument();");
 			bProceed = false;
 		}
 	}
@@ -142,15 +149,23 @@ int main(int argc, char **argv)
 				{
 					flags = (flags | GlobalApplicationInformation::VerboseMode);
 				}
+				else if (tempStr == "-e" | tempStr == "-E")//Immediately execute the loaded (-f <document) document?
+				{
+					flags = (flags | GlobalApplicationInformation::ExecuteDocument);
+				}
 			}
 		}
-		else if (argc == 2)//only path declared!
+		else if (argc == 2)//only one parameter defined!
 		{
 			tempStr = argv[1];
 			if (tempStr == "-v" | tempStr == "-V")//verbose mode?
 			{
 				flags = (flags | GlobalApplicationInformation::VerboseMode);
 			}
+			//else if (tempStr == "-e" | tempStr == "-E")//Immediately execute the loaded (-f <document) document? --> doesn't work here because there's no file loaded, too few parameters
+			//{
+				//flags = (flags | GlobalApplicationInformation::ExecuteDocument);
+			//}
 			else
 			{
 				appWindow->setStartupFiles(argv[1]);

@@ -90,15 +90,12 @@ bool Assistant::startAssistant(GlobalApplicationInformation *GlobAppInfo)
 		}
 
         QStringList args;
-        args << QLatin1String("-collectionFile")
-            << strHelpPackagePath
-            << QLatin1String("-enableRemoteControl");
-
+        args << QLatin1String("-collectionFile") << strHelpPackagePath << QLatin1String("-enableRemoteControl");
         proc->start(app, args);
 
-        if (!proc->waitForStarted()) {
-            QMessageBox::critical(0, GlobAppInfo->getInternalName(),
-                QObject::tr("Unable to launch the help Assistant (%1)").arg(app));
+        if (!proc->waitForStarted()) 
+		{
+            QMessageBox::critical(0, GlobAppInfo->getInternalName(), QObject::tr("Unable to launch the help Assistant (%1)").arg(app));
             return false;
         }    
     }

@@ -194,14 +194,14 @@ function StimulGL_Information()
 	this.componentVersioning[2][KeyBoardPlugin_Comp_Index] =            ['KeyBoardPlugin',          '1.1.0.0', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 	this.componentVersioning[2][USBHIDDevicePlugin_Comp_Index] =        ['USBHIDDevicePlugin',      '2.0.1.0', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 	this.componentVersioning[2][_extensionname_plugin_Comp_Index] =     ['_extensionname_plugin',   '1.1.0.0', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.1.0.0',     '1.0.0.1', 2, 'x',       'x',    'x'];
+	this.componentVersioning[2][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.1',     '1.0.0.1', 2, 'x',       'x',    'x'];
 	this.componentVersioning[2][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '2',       '1.0.0.1', 2, 'x',       'x',    'x'];
 	this.componentVersioning[2][FirebirdClientPlugin_Comp_Index] =        ['FireBirdClientPlugin',      '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 	this.componentVersioning[2][PiezoStimDevicePlugin_Comp_Index] =        ['PiezoStimDevicePlugin',      '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 	this.componentVersioning[2][TBVExchangerPlugin_Comp_Index] =        ['TBVExchangerPlugin',     '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 	this.componentVersioning[2][TCPNetworkServerPlugin_Comp_Index] =        ['TCPNetworkServerPlugin',      '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 
-	this.DocumentAuditing = StimulGL_CreateArray(6, AuthorCounter); //Default constructor!
+	this.DocumentAuditing = StimulGL_CreateArray(13, AuthorCounter); //Default constructor!
 	///////////////////////////////////////////////////////////////
 	this.DocumentAuditing[0][this.Doc_FileName_Index] = 'GettingStartedGuide.html';
 	this.DocumentAuditing[0][this.Doc_Title_Index] = 'Getting Started Guide';
@@ -214,6 +214,13 @@ function StimulGL_Information()
 	this.DocumentAuditing[3] = ['ParallelPortDevicePlugin.html','Parallel Port Plug-in Documentation','2.0.0.2','September 2013','Sven Gijsen'];	
 	this.DocumentAuditing[4] = ['USBHIDDevicePlugin.html','USBHID Device Plug-in Documentation','2.0.0.2','September 2013','Sven Gijsen'];		
 	this.DocumentAuditing[5] = ['ExtensionPluginTemplate.html','Extension Plug-in Template Documentation','2.0.0.2','September 2013','Sven Gijsen'];	
+	this.DocumentAuditing[6] = ['TBVExchangerPlugin.html','Turbo-BrainVoyager Exchanger Plug-in Documentation','1.0.0.1','Oktober 2013','Michael Luehrs'];
+	this.DocumentAuditing[7] = ['FireBirdClientPlugin.html','Firebird Client Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];		
+	this.DocumentAuditing[8] = ['KeyBoardDevicePlugin.html','Keyboard Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	this.DocumentAuditing[9] = ['PiezoStimDevicePlugin.html','PiezoStim Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	this.DocumentAuditing[10] = ['SerialPortDevicePlugin.html','SerialPort Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	this.DocumentAuditing[11] = ['TCPNetworkServerPlugin.html','TCPNetwork Server Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	this.DocumentAuditing[12] = ['StimulGL_QMLExtensions.html','StimulGL QML Extensions Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];					
 }
 
 StimulGL_Information.prototype.GetStrippedFileName = function (strFileUrl)//var strFileUrl=window.location.pathname;

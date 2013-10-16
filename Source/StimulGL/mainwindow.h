@@ -105,47 +105,237 @@ signals:
 	//void NetworkDataAvailable(QString);
 		
 public slots:
-	bool receiveExchangeMessage(const QString &sMessage);
-	QVariant invokeJavaScriptConfigurationFile(const QString &sCode);//undocumented!
-	void showJavaScriptConfigurationFile();//undocumented!
-	void setStartupFiles(const QString &path = QString());
+	/*! \brief Executes and returns a result from a provided Javascript function that is embedded inside the StimulGL application.
+	 *
+	 *  This function executes and returns a result from a provided Javascript function that is embedded inside the StimulGL application.
+	 *  The embedded available Javascript function calls provide a way to request all kind of application and plugin (version) information.
+	 *  The menu command 'Help' --> 'StimulGL History' can also be used to retrieve this kind of information, see also MainWindow.getJavaScriptConfigurationFileContents().
+	 * @param sCode a String containing the Javascript function call that should be executed.
+	 * @return a QVariant value that holds the result of the executed Javascript function call.
+	 */
+	QVariant invokeJavaScriptConfigurationFile(const QString &sCode);
+	/*! \brief returns the content from the embedded JavaScript file inside the StimulGL application.
+	 *  
+	 *  This function returns the content from the embedded JavaScript file inside the StimulGL application that is used for storing all kind of application and plugin (version) information.
+	 *  See also MainWindow.invokeJavaScriptConfigurationFile().
+	 * @return a string containing a copy of the code contents of the embedded JavaScript file.
+	 */
+	QString getJavaScriptConfigurationFileContents();
+	/*! \brief executes the content from the embedded JavaScript file inside the StimulGL application in a QWebView object.
+	 *  
+	 *  This function executes the content from the embedded JavaScript file (of the StimulGL application that is used for storing all kind of application and plugin (version) information) in a QWebView object.
+	 *  See also MainWindow.invokeJavaScriptConfigurationFile().
+	 */
+	void showJavaScriptConfigurationFile();
+	/*! \brief Opens one or more files.
+	 *
+	 *  This function can open one or more files.
+	 * @param fileToLoad a String containing a single path to a file that should be loaded.
+	 * @param filesToLoad a String Array containing multiple Strings containing the paths to the files that should be loaded.
+	 */
 	void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList());
-	void executeDocument();
-	QString getSelectedScriptFileLocation();
+	/*! \brief Executes the current active document.
+	 *
+	 * This function executes the current active document (file that is opened and active).
+	 */
+	void executeActiveDocument();
+	/*! \brief Returns the path to the current active document.
+	 *
+	 * This function returns the path to the document that is currently opened and active.
+	 * @return a String value holding a path to the requested document.
+	 */
+	QString getActiveDocumentFileLocation();
+	/*! \brief Returns the path to the StimulGL QML plugin directory.
+	 *
+	 * This function returns the path to the StimulGL QML plugin directory.
+	 * @return a String value holding the path to the StimulGL QML plugin directory.
+	 */
+	QString getQMLPluginPath() {return MainAppInfo::qmlExtensionsPluginDirPath();};
+	/*! \brief Returns the path to the StimulGL Root directory.
+	 *
+	 * This function returns the path to the StimulGL Root directory, where the binary is running in.
+	 * @return a String value holding the path to the Root directory.
+	 */
 	QString getApplicationRootDirPath();
-	QString getSelectedScriptFileName();
+	/*! \brief Returns the filename of the current active document.
+	 *
+	 * This function returns the filename of the document that is currently opened and active.
+	 * @return a String value holding the filename of the requested document.
+	 */
+	QString getActiveDocumentFileName();
+	/*! \brief Returns the requested Environment Variable.
+	 *
+	 * This function can return a Environment Variable value by providing the name of the variable.
+	 * @param strName a String value holding the name of the requested Environment Variable.
+	 * @return a String value holding the value of the requested Environment Variable.
+	 */
 	QString getEnvironmentVariabele(QString strName);
-	void closeSelectedScriptFile(bool bAutoSaveChanges = false);
+	/*! \brief Closes the current active document.
+	 *
+	 * This function closes the document that is currently opened and active.
+	 * @param bAutoSaveChanges a boolean value determining whether the document should first save unsaved changes or not.
+	 */
+	void closeActiveDocument(bool bAutoSaveChanges = false);
 	//void debugScript();
+	/*! \brief Initializes the main StimulGL application and the dynamic plugin loading.
+	 *
+	 * This function Initializes the main StimulGL application and the dynamic plugin loading, this is automatically done during startup.
+	 * @param mainFlags a GlobalApplicationInformation::MainProgramModeFlags value holding the flags used for the initialization.
+	 */
 	bool initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags = 0);
+	/*! \brief Appends a text String to the Output Log Window.
+	 *
+	 * This function appends a provided String to the Output Log Window.
+	 * @param text2Write a String value holding the text that should be appended.
+	 */
 	void write2OutputWindow(const QString &text2Write = "");
-	void configureOutputWindowAutoScroll(const bool &bEnable);
+	/*! \brief Clears the Output Log Window.
+	 *
+	 * This function clears the Output Log Window.
+	 */
 	void clearOutputWindow();
+	/*! \brief Saves the Output Log Window.
+	 *
+	 * This function saves the Output Log Window to a text file.
+	 * @param sFilePath a String value holding the path to the destination file.
+	 * @param bOverwrite a Boolean value determining whether the destination file may be overwritten in case the file already exists.
+	 */
 	bool saveOutputWindow(const QString &sFilePath = "", const bool &bOverwrite = false);
+	/*! \brief forces the main application event loop to process its events.
+	 *
+	 * This function forces the main application event loop to process its events, see http://qt-project.org/doc/qt-5.1/qtcore/qcoreapplication.html#processEvents.
+	 */
 	void processEvents() {qApp->processEvents();};
+	/*! \brief Forces the script engine to perform a garbage collection.
+	 *
+	 * This function forces the script engine to perform a garbage collection and is therefore a safe and good practice to execute as last command before ending the script.
+	 */
 	void cleanupScript();
+	/*! \brief Forces the StimulGL User Interface to become activated.
+	*
+	* This function forces the the StimulGL User Interface to become activated. An active window is a visible top-level window that has the keyboard input focus.
+	* It is the same operation as clicking the mouse on the title bar of a top-level window.
+	*/
 	void activateMainWindow();
+	/*! \brief Executes the provided script content in the Internal Script Engine and returns the result of that operation.
+	*
+	* This function executes the provided script content in the Internal Script Engine and returns the result of that operation.
+	* This function acts the same as like executing a script file (*.qs) from the StimulGL application, but now the content of the script is directly provided by a string of text.
+	* Before the internal script engine executes the custom script it firsts creates a so called script context state from within the script is then executed. 
+	* This context state holds the stack and can be saved/recovered for later usage, see also MainWindow::saveContextState(), MainWindow::setContextState(), MainWindow.resetContextState(), MainWindow.deleteContextState().
+	* @param sContent a string value holding the script content to execute.
+	* @return a QScriptValue value holding the return value of the script execution.
+	*/
 	QScriptValue executeScriptContent(const QString &sContent);
+	/*! \brief Saves the current internal script engine context state marked with a provided context name for later usage.
+	*
+	* This function saves the current internal script engine context state marked with a provided name for later usage.
+	* @param sContextName a string value holding the script context name.
+	* @return a boolean value determining whether the function could execute successfully.
+	*/
+	bool saveContextState(const QString &sContextName);
+	/*! \brief Sets/switches the current internal script engine to the context state marked with the provided context name.
+	*
+	* This function sets/switches the current internal script engine to the context state marked with the provided context name.
+	* @param sContextName a string value holding the script context name.
+	* @return a boolean value determining whether the function could execute successfully.
+	*/
+	bool setContextState(const QString &sContextName);
+	/*! \brief Resets the current internal script engine context state to the context state marked with a script identifier.
+	*
+	* This function resets the current internal script engine context state to the context state marked with a script identifier, see also MainWindow.getCurrentContextStateScriptID().
+	* If the script identifier is left empty or 0 then the current script state is reset.
+	* @param nScriptId a integer value holding the script identifier (default = 0).
+	* @return a boolean value determining whether the function could execute successfully.
+	*/
+	bool resetContextState(const quint64 &nScriptId = 0);
+	/*! \brief Returns the current internal script engine context state script identifier.
+	*
+	* This function returns the current internal script engine context state script identifier.
+	* @return a integer value holding the requested context state script identifier.
+	*/
+	int getCurrentContextStateScriptID();
+	/*! \brief Deletes the provided context name of the internal script engine context state list.
+	*
+	* This function deletes the provided context name of the internal script engine context state list.
+	* @return a boolean value determining whether the function could execute successfully.
+	*/
+	bool deleteContextState(const QString &sContextName);
+	/*! \brief Forces a complete restart of the internal script engine.
+	*
+	* This function forces a complete restart of the internal script engine.
+	* The engine restarts which means that all running scripts and context states are deleted.
+	* @return a boolean value determining whether the function could execute successfully.
+	*/
 	bool restartScriptEngine();
+	/*! \brief Emulates one or more key press event(s).
+	*
+	* This function emulates one or more key press event(s). These events are executed in a specified QWindow, there's also a option to set a delay.
+	* @param pWindow a pointer to a QWindow, this is the QWindow where the key press event should be executed in (default = NULL), if this parameter is NULL then the current active StimulGL document window is used.
+	* @param keyCode a value (default = 0), this is the key code for the key to emulate, see http://qt-project.org/doc/qt-5.1/qtcore/qt.html#Key-enum.
+	* @param sKeys a string (default = ""), this is a string of keys to emulate.
+	* @param modifier a integer value holding a keyboard modifier value (default = Qt::NoModifier), see http://qt-project.org/doc/qt-5.1/qtcore/qt.html#KeyboardModifier-enum.
+	* @param nDelay a integer value (default = -1) holding the delay in mSeconds between the key presses.
+	* @return a boolean value determining whether the function could execute successfully.
+	*/
 	bool emulateKeyPress(QWindow *pWindow = NULL, const int keyCode = 0, const QString &sKeys = "", const Qt::KeyboardModifiers modifier = Qt::NoModifier, const int nDelay = -1);
-
+	/*! \brief Searches for a provided String inside the currently active document.
+	*
+	* This function searches for a provided String of text inside the currently active document. Furthermore this action can be specified with special flags.
+	* @param useParams a boolean value that determines whether the optional provided parameters should be used. If useParams is false then a Search window appears allowing the user to
+	* make further changes. If some text from the document was selected than this String is automatically used for the find String, otherwise the word around the cursor position is used.
+	* If useParams is true then no Search window appears and the optional provided parameters are used for the search action, the first found occurrence (starting from the cursor position) 
+	* of the find result is then automatically selected.
+	* @param strFindString a String holding the text value to use.
+	* @param DocFindFlags a String holding the text value to use, you can create this structure in the script like: 
+	* \code 
+	* var varName=DocFindFlags; 
+	* varName.backwards = true; 
+	* \endcode 
+	* see _DocFindFlags.
+	*/
 	void find(bool useParams = false, QString strFindString = "", DocFindFlags findFlags = _DocFindFlags());
+	/*! \brief Searches and replaces a provided String inside the currently active document.
+	 *
+	 * This function searches and replaces a provided String of text inside the currently active document. Furthermore this action can be specified with special flags.
+	 * @param bReplaceAll a boolean value that determines whether all occurrences of the found String should be replaced.
+	 * @param useParams a boolean value that determines whether the optional provided parameters should be used. If useParams is false then a Replace window appears allowing the user to
+	 * make further changes. If some text from the document was selected than this String is automatically used for the find String, otherwise the word around the cursor position is used.
+	 * If useParams is true then no Search window appears and the optional provided parameters are used for the search action, the first found occurrence (starting from the cursor position) 
+	 * of the find result is then automatically selected.
+	 * @param strFindString a String holding the String value to search for.
+	 * @param strReplaceString a String holding the text value to replace the found String strFindString with.
+	 * @param DocFindFlags a String holding the text value to use, you can create this structure in the script like: 
+	 * \code 
+	 * var varName=DocFindFlags; 
+	 * varName.backwards = true; 
+	 * \endcode 
+	 * see _DocFindFlags.
+	 */	
 	void replace(bool bReplaceAll = false, bool useParams = false, QString strFindString = "", QString strReplaceString = "", DocFindFlags findFlags = _DocFindFlags());
+	/*! \brief Searches for the last provided String inside the currently active document.
+	 *
+	 * This function searches (forwards) for the last provided String of text inside the currently active document starting from the current cursor position.
+	 */	
 	void findNext();
+	/*! \brief Searches for the last provided String inside the currently active document.
+	 *
+	 * This function searches (backwards) for the last provided String of text inside the currently active document starting from the current cursor position.
+	 */	
 	void findPrev();
+	/*! \brief Closes the StimulGL application.
+	 *
+	 * This function closes the StimulGL application.
+	 */		
+	void quit(){qApp->closeAllWindows();};
+
 #ifdef DEBUG
 	QString testFunction(QString inp = "");
 #endif
-	bool saveContextState(const QString &sContextName);
-	bool setContextState(const QString &sContextName);
-	bool resetContextState(const quint64 &nScriptId = 0);
-	bool deleteContextState(const QString &sContextName);
-	void quit(){qApp->closeAllWindows();};
-
-protected slots:
-	void ExternalNetworkDataRecieved(int nClientIndex, QString sAvailableData);
 
 private slots:
+	void ExternalNetworkDataRecieved(int nClientIndex, QString sAvailableData);
+	bool receiveExchangeMessage(const QString &sMessage);
 	void returnToOldMaxMinSizes();
 	void abortScript();
 	void setupContextMenus();
@@ -183,7 +373,8 @@ private slots:
 	void setActiveSubWindow(QWidget *window);
 	void updateWindowMenu();
 	void updateMarkersMenu();
-	void toggleMarker();
+	void toggleMarker(int nLine = -1);
+	void handleToggledMarker(int nLine = -1);
 	void nextMarker();
 	void prevMarker();
 	void removeAllMarkers();
@@ -277,6 +468,7 @@ private:
 	bool ExtensionPluginsFound;
 	bool PluginsFound;
 	bool bMainWindowIsInitialized;
+	bool bExecuteActiveDocument;
 
 	QTScriptEngine *AppScriptEngine;
 	GlobalApplicationInformation::ActiveScriptMode AppScriptStatus;
@@ -294,6 +486,7 @@ private:
 	//QMenu *viewMenu;
 	QMenu *markersMenu;
 	QMenu *editMenu;
+	QMenu *editOutputMenu;
 	QMenu *toolsMenu;
 	QMenu *windowMenu;
 	QMenu *documentMenu;
@@ -323,7 +516,7 @@ private:
     QStringList pluginFileNames;
 	PluginCollection *Plugins;
 	GlobalApplicationInformation *globAppInfo;
-	MainAppInformationStructure *mainAppInfoStruct;
+	GlobalApplicationInformation::MainAppInformationStructure *mainAppInfoStruct;
 
 	enum { MaxRecentFiles = 8 };
 	QList<QAction *> recentFileActs;
@@ -366,9 +559,11 @@ public:
 	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);
 	void setGlobalApplicationInformationObject(GlobalApplicationInformation *globAppInformation);
 	void RecoverLastScreenWindowSettings();
+	void setStartupFiles(const QString &path = QString());
 
 protected:
 	void closeEvent(QCloseEvent *event);
+	void showEvent(QShowEvent * event);
 	virtual bool openDroppedFiles(const QStringList &pathList);	
 };
 

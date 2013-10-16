@@ -263,6 +263,7 @@ void CustomQsciScintilla::insertText(const QString& text)
 
 bool CustomQsciScintilla::print() 
 {
+#ifndef QT_NO_PRINTER
 	QsciPrinter prn;
 	QPrintDialog dlg(&prn, this->parentWidget());
 	if (dlg.exec() == QDialog::Accepted) {
@@ -296,6 +297,7 @@ bool CustomQsciScintilla::print()
 			return true;
 		}
 	}	
+#endif
 	return false;
 }
 

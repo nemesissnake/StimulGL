@@ -158,8 +158,7 @@ goto BuildEventOK
 echo POSTBUILDSTEP for $(ProjectName) FAILED
 exit 1
 :BuildEventOK
-echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
-</Command>
+echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Post-build event</Message>
@@ -220,8 +219,7 @@ goto BuildEventOK
 echo POSTBUILDSTEP for $(ProjectName) FAILED
 exit 1
 :BuildEventOK
-echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
-</Command>
+echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK</Command>
       <Message>Post-build event</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -277,7 +275,9 @@ echo POSTBUILDSTEP for $(ProjectName) FAILED
 exit 1
 :BuildEventOK
 echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
-</Command>
+
+echo Generating &lt;plugin&gt;.qmltypes file...
+$(QTDIR)\bin\qmlplugindump.exe -notrelocatable StimulGL_QMLExtensions 1.1 $(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform) &gt; $(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions\StimulGL_QMLExtensions.qmltypes</Command>
       <Message>Post-build event</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -333,7 +333,9 @@ echo POSTBUILDSTEP for $(ProjectName) FAILED
 exit 1
 :BuildEventOK
 echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
-</Command>
+
+echo Generating &lt;plugin&gt;.qmltypes file...
+$(QTDIR)\bin\qmlplugindump.exe  StimulGL_QMLExtensions 1.1 $(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform) &gt; $(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions\StimulGL_QMLExtensions.qmltypes</Command>
       <Message>Post-build event</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

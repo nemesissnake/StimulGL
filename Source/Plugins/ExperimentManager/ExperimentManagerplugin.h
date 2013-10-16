@@ -55,7 +55,7 @@ public:
 	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};
 
 private:
-	bool ExecuteContent(const DocContentInfoStructure &docStruct);
+	bool ExecuteContent(const GlobalApplicationInformation::DocContentInfoStructure &docStruct);
 
 	ExperimentManager *ExperimentManagerObject; 
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;

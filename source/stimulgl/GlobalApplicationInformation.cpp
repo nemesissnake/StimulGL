@@ -68,7 +68,7 @@ void GlobalApplicationInformation::Initialize()
 	mainAppInformation.nHostPort = 0;
 }
 
-QDataStream &operator<<(QDataStream &out, const MainAppInformationStructure &mainAppInformationStructure)
+QDataStream &operator<<(QDataStream &out, const GlobalApplicationInformation::MainAppInformationStructure &mainAppInformationStructure)
 {
 	out << mainAppInformationStructure.sCompanyName;
 	out	<< mainAppInformationStructure.sInternalName;
@@ -84,7 +84,7 @@ QDataStream &operator<<(QDataStream &out, const MainAppInformationStructure &mai
 	return out;
 }
 
-QDataStream &operator>>(QDataStream &in, MainAppInformationStructure &mainAppInformationStructure)
+QDataStream &operator>>(QDataStream &in, GlobalApplicationInformation::MainAppInformationStructure &mainAppInformationStructure)
 {
 	//in >> title >> artist >> year;
 	int nTemp;
@@ -322,6 +322,15 @@ void GlobalApplicationInformation::composeJavaScriptConfigurationFile()
 	webViewCast->setContent(bResourceData);//Invokes the loadFinished() signal after loading
 }
 
+QString GlobalApplicationInformation::getJavaScriptConfigurationFileContents()
+{
+	QString sPath = (":/resources/StimulGL.js");
+	QResource tmpRes;
+	tmpRes.setFileName(sPath);
+	QByteArray baResourceData = reinterpret_cast< const char* >( tmpRes.data());
+	return baResourceData;
+}
+
 QVariant GlobalApplicationInformation::invokeJavaScriptConfigurationFile(const QString &sCode)
 {
 	if(webView)
@@ -339,7 +348,7 @@ void GlobalApplicationInformation::showJavaScriptConfigurationFile()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-MainAppInformationStructure GlobalApplicationInformation::getStaticMainAppInformationStructureFromSharedMemory()
+GlobalApplicationInformation::MainAppInformationStructure GlobalApplicationInformation::getStaticMainAppInformationStructureFromSharedMemory()
 {
 	MainAppInformationStructure tmpAppInfoStruct;
 	QSharedMemory sharedMemory;

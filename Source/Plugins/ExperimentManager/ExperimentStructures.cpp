@@ -27,9 +27,9 @@ cBlockStructure_SharedData::cBlockStructure_SharedData()
 	nBlockID = 0;
 	nBlockNumber = 0;
 	sBlockName = "Block(ID=" + QString::number(nBlockID) + ",Number=" + QString::number(nBlockNumber) + ")";
-	nNrOfTrials = RA_ZERO;
-	nNrOfInternalTriggers = RA_ZERO;
-	nNrOfExternalTriggers = RA_ZERO;
+	nNrOfTrials = ExperimentStructuresNameSpace::RA_ZERO;
+	nNrOfInternalTriggers = ExperimentStructuresNameSpace::RA_ZERO;
+	nNrOfExternalTriggers = ExperimentStructuresNameSpace::RA_ZERO;
 }
 
 cBlockStructure_SharedData::cBlockStructure_SharedData(const cBlockStructure_SharedData &other) : QSharedData(other)
@@ -85,9 +85,9 @@ bool cBlockStructure::Initialize()
 	pSharedData->nBlockID = 0;
 	pSharedData->nBlockNumber = 0;
 	pSharedData->sBlockName = "Block(ID=" + QString::number(pSharedData->nBlockID) + ",Number=" + QString::number(pSharedData->nBlockNumber) + ")";
-	pSharedData->nNrOfTrials = RA_ZERO;
-	pSharedData->nNrOfInternalTriggers = RA_ZERO;
-	pSharedData->nNrOfExternalTriggers = RA_ZERO;
+	pSharedData->nNrOfTrials = ExperimentStructuresNameSpace::RA_ZERO;
+	pSharedData->nNrOfInternalTriggers = ExperimentStructuresNameSpace::RA_ZERO;
+	pSharedData->nNrOfExternalTriggers = ExperimentStructuresNameSpace::RA_ZERO;
 	return true;
 }
 
@@ -172,7 +172,7 @@ cLoopStructure *cBlockStructure::resetToFirstFreeLoopPointer()
 		for(int i=0;i<pSharedData->lLoops.count();i++)
 		{
 			nCount = pSharedData->lLoops.at(i)->getLoopCounter();
-			if((nCount >= 0) || (nCount==LCE_UNUSED))
+			if((nCount >= 0) || (nCount==ExperimentStructuresNameSpace::LCE_UNUSED))
 				return pSharedData->lLoops[i];
 		}
 	}
@@ -292,16 +292,16 @@ bool cLoopStructure::Initialize()
 {
 	nLoopID = 0;
 	nLoopNumber = 0;
-	nLoopCounter = LCE_UNUSED;
-	nNrOfLoops = RA_ZERO;
-	nTargetBlockID = RA_UNDEFINED;
+	nLoopCounter = ExperimentStructuresNameSpace::LCE_UNUSED;
+	nNrOfLoops = ExperimentStructuresNameSpace::RA_ZERO;
+	nTargetBlockID = ExperimentStructuresNameSpace::RA_UNDEFINED;
 	return true;
 }
 
 cLoopStructure::cLoopStructure(const int &LoopID,const int &LoopNumber,const int &LoopTargetBlockID,const QString &LoopName,const int &NumberOfLoops) : nLoopID(LoopID), nLoopNumber(LoopNumber), nTargetBlockID(LoopTargetBlockID), sLoopName(LoopName), nNrOfLoops(NumberOfLoops)
 {
 	currentScriptEngine = NULL;
-	nLoopCounter = LCE_UNUSED;
+	nLoopCounter = ExperimentStructuresNameSpace::LCE_UNUSED;
 	if(sLoopName == "")
 		sLoopName = "Loop(ID=" + QString::number(nLoopID) + ",Number=" + QString::number(nLoopNumber) + ")";
 };
@@ -346,13 +346,13 @@ bool cLoopStructure::makeThisAvailableInScript(QString strObjectScriptName, QObj
 
 bool cLoopStructure::initializeCurrentLoopCounter()
 {
-	if(nLoopCounter==LCE_FINISHED)
+	if(nLoopCounter==ExperimentStructuresNameSpace::LCE_FINISHED)
 	{
 		return false;
 	}
-	else if(nLoopCounter==LCE_UNUSED)
+	else if(nLoopCounter==ExperimentStructuresNameSpace::LCE_UNUSED)
 	{
-		nLoopCounter = LCE_FIRSTLOOP;
+		nLoopCounter = ExperimentStructuresNameSpace::LCE_FIRSTLOOP;
 		return true;
 	}
 	return true;
@@ -360,13 +360,13 @@ bool cLoopStructure::initializeCurrentLoopCounter()
 
 int cLoopStructure::incrementCurrentLoopCounter() 
 {
-	if(nLoopCounter==LCE_FINISHED)
+	if(nLoopCounter==ExperimentStructuresNameSpace::LCE_FINISHED)
 	{
-		nLoopCounter = LCE_FINISHED;
+		nLoopCounter = ExperimentStructuresNameSpace::LCE_FINISHED;
 	}
-	else if(nLoopCounter==LCE_UNUSED)
+	else if(nLoopCounter==ExperimentStructuresNameSpace::LCE_UNUSED)
 	{
-		nLoopCounter = LCE_FIRSTLOOP;
+		nLoopCounter = ExperimentStructuresNameSpace::LCE_FIRSTLOOP;
 	}
 	else if((nLoopCounter+1) < nNrOfLoops)
 	{
@@ -374,14 +374,14 @@ int cLoopStructure::incrementCurrentLoopCounter()
 	}
 	else
 	{
-		nLoopCounter = LCE_FINISHED;
+		nLoopCounter = ExperimentStructuresNameSpace::LCE_FINISHED;
 	}
 	return nLoopCounter;
 }
 
 void cLoopStructure::resetCurrentLoopCounter() 
 {
-	nLoopCounter = LCE_UNUSED;
+	nLoopCounter = ExperimentStructuresNameSpace::LCE_UNUSED;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,13 +395,13 @@ cExperimentStructure_SharedData::cExperimentStructure_SharedData()
 	nExperimentID = 0;
 	sExperimentName = "Experiment " + QString::number(nExperimentID);
 	bDebugMode = false;
-	CurrentExperiment_RunState = ES_IDLE;
-	currentExperimentState.Experiment_ExternalTrigger = RA_REINITIALIZE;
-	currentExperimentState.CurrentBlock_BlockID = RA_REINITIALIZE;
-	currentExperimentState.CurrentBlock_ExternalTrigger = RA_REINITIALIZE;
-	currentExperimentState.CurrentBlock_InternalTrigger = RA_REINITIALIZE;
-	currentExperimentState.CurrentBlock_LoopID = RA_REINITIALIZE;
-	currentExperimentState.CurrentBlock_TrialNumber = RA_REINITIALIZE;
+	CurrentExperiment_RunState = ExperimentStructuresNameSpace::ES_IDLE;
+	currentExperimentState.Experiment_ExternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_BlockID = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_ExternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_InternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_LoopID = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	currentExperimentState.CurrentBlock_TrialNumber = ExperimentStructuresNameSpace::RA_REINITIALIZE;
 }
 
 cExperimentStructure_SharedData::cExperimentStructure_SharedData(const cExperimentStructure_SharedData &other) : QSharedData(other)
@@ -474,7 +474,7 @@ bool cExperimentStructure::Initialize()
 	pSharedData->nExperimentID = 0;
 	pSharedData->sExperimentName = "Experiment " + QString::number(pSharedData->nExperimentID);
 	pSharedData->bDebugMode = false;
-	pSharedData->CurrentExperiment_RunState = ES_IDLE;
+	pSharedData->CurrentExperiment_RunState = ExperimentStructuresNameSpace::ES_IDLE;
 	resetExperiment();
 	return true;
 }
@@ -496,26 +496,26 @@ void cExperimentStructure::experimentStructureFromScriptValue(const QScriptValue
 	s = qobject_cast<cExperimentStructure*>(obj.toQObject());
 }
 
-void cExperimentStructure::resetExperimentStateStruct(strcExperimentStructureState *strcExpState)
+void cExperimentStructure::resetExperimentStateStruct(ExperimentStructuresNameSpace::strcExperimentStructureState *strcExpState)
 {
 	if(strcExpState == NULL)
 		return;
-	strcExpState->Experiment_ExternalTrigger = RA_REINITIALIZE;
-	strcExpState->CurrentBlock_BlockID = RA_REINITIALIZE;
-	strcExpState->CurrentBlock_ExternalTrigger = RA_REINITIALIZE;
-	strcExpState->CurrentBlock_InternalTrigger = RA_REINITIALIZE;
-	strcExpState->CurrentBlock_LoopID = RA_REINITIALIZE;
-	strcExpState->CurrentBlock_TrialNumber = RA_REINITIALIZE;
+	strcExpState->Experiment_ExternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	strcExpState->CurrentBlock_BlockID = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	strcExpState->CurrentBlock_ExternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	strcExpState->CurrentBlock_InternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	strcExpState->CurrentBlock_LoopID = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+	strcExpState->CurrentBlock_TrialNumber = ExperimentStructuresNameSpace::RA_REINITIALIZE;
 };
 
 QScriptValue cExperimentStructure::createExperimentStructureStateFromScript(QScriptContext *, QScriptEngine *engine)
 {
-	strcExperimentStructureState s;
+	ExperimentStructuresNameSpace::strcExperimentStructureState s;
 	cExperimentStructure::resetExperimentStateStruct(&s);
 	return engine->toScriptValue(s);
 }
 
-QScriptValue cExperimentStructure::experimentStructureStateToScriptValue(QScriptEngine *engine, const strcExperimentStructureState &s)
+QScriptValue cExperimentStructure::experimentStructureStateToScriptValue(QScriptEngine *engine, const ExperimentStructuresNameSpace::strcExperimentStructureState &s)
 {
 	QScriptValue obj = engine->newObject();
 	obj.setProperty("Experiment_ExternalTrigger", s.Experiment_ExternalTrigger);
@@ -527,7 +527,7 @@ QScriptValue cExperimentStructure::experimentStructureStateToScriptValue(QScript
 	return obj;
 }
 
-void cExperimentStructure::experimentStructureStateFromScriptValue(const QScriptValue &obj, strcExperimentStructureState &s)
+void cExperimentStructure::experimentStructureStateFromScriptValue(const QScriptValue &obj, ExperimentStructuresNameSpace::strcExperimentStructureState &s)
 {
 	s.Experiment_ExternalTrigger = obj.property("Experiment_ExternalTrigger").toInt32();
 	s.CurrentBlock_BlockID = obj.property("CurrentBlock_BlockID").toInt32();
@@ -551,9 +551,9 @@ bool cExperimentStructure::makeThisAvailableInScript(QString strObjectScriptName
 
 void cExperimentStructure::ExperimentStop()
 {
-	if(pSharedData->CurrentExperiment_RunState == ES_RUNNING)
+	if(pSharedData->CurrentExperiment_RunState == ExperimentStructuresNameSpace::ES_RUNNING)
 	{
-		pSharedData->CurrentExperiment_RunState = ES_IDLE ;
+		pSharedData->CurrentExperiment_RunState = ExperimentStructuresNameSpace::ES_IDLE ;
 		emit experimentStopped();
 	}
 }
@@ -565,9 +565,9 @@ void cExperimentStructure::ExperimentAbort()
 
 void cExperimentStructure::ExperimentStart()
 {
-	if(pSharedData->CurrentExperiment_RunState == ES_WAITING_FOR_TRIGGER)
+	if(pSharedData->CurrentExperiment_RunState == ExperimentStructuresNameSpace::ES_WAITING_FOR_TRIGGER)
 	{
-		pSharedData->CurrentExperiment_RunState = ES_RUNNING;
+		pSharedData->CurrentExperiment_RunState = ExperimentStructuresNameSpace::ES_RUNNING;
 		emit experimentStarted();
 	}
 }
@@ -629,9 +629,9 @@ cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(con
 int cExperimentStructure::getCurrentBlockIndex() const
 {
 	if (pSharedData->currentBlockPointer == NULL)
-		return OI_UNDEFINED;
+		return ExperimentStructuresNameSpace::OI_UNDEFINED;
 	if (pSharedData->lBlocks.isEmpty())
-		return OI_UNDEFINED;
+		return ExperimentStructuresNameSpace::OI_UNDEFINED;
 	for (int i=0;i<pSharedData->lBlocks.count();i++)
 	{
 		if(pSharedData->lBlocks[i] == pSharedData->currentBlockPointer)
@@ -639,7 +639,7 @@ int cExperimentStructure::getCurrentBlockIndex() const
 			return i;
 		}
 	}
-	return OI_UNDEFINED;
+	return ExperimentStructuresNameSpace::OI_UNDEFINED;
 }
 
 cBlockStructure cExperimentStructure::getCurrentBlock(bool &bHasCurrBlock) const
@@ -735,16 +735,16 @@ bool cExperimentStructure::prepareExperiment()
 	{
 		pSharedData->currentBlockPointer = pSharedData->firstBlockPointer;
 		pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->resetToFirstFreeLoopPointer();
-		pSharedData->currentExperimentState.Experiment_ExternalTrigger = RA_REINITIALIZE;
+		pSharedData->currentExperimentState.Experiment_ExternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
 		pSharedData->currentExperimentState.CurrentBlock_BlockID = pSharedData->currentBlockPointer->getBlockID();
-		pSharedData->currentExperimentState.CurrentBlock_ExternalTrigger = RA_REINITIALIZE;
-		pSharedData->currentExperimentState.CurrentBlock_InternalTrigger = RA_REINITIALIZE;
+		pSharedData->currentExperimentState.CurrentBlock_ExternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+		pSharedData->currentExperimentState.CurrentBlock_InternalTrigger = ExperimentStructuresNameSpace::RA_REINITIALIZE;
 		if(pSharedData->currentLoopPointer == NULL)
-			pSharedData->currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
+			pSharedData->currentExperimentState.CurrentBlock_LoopID = ExperimentStructuresNameSpace::RA_UNDEFINED;
 		else
 			pSharedData->currentExperimentState.CurrentBlock_LoopID = pSharedData->currentLoopPointer->getLoopID();
-		pSharedData->currentExperimentState.CurrentBlock_TrialNumber = RA_REINITIALIZE;
-		pSharedData->CurrentExperiment_RunState = ES_WAITING_FOR_TRIGGER;
+		pSharedData->currentExperimentState.CurrentBlock_TrialNumber = ExperimentStructuresNameSpace::RA_REINITIALIZE;
+		pSharedData->CurrentExperiment_RunState = ExperimentStructuresNameSpace::ES_WAITING_FOR_TRIGGER;
 		return true;
 	}
 	return false;
@@ -757,21 +757,21 @@ int cExperimentStructure::getExternalTriggerCount() const
 
 void cExperimentStructure::incrementExternalTrigger()
 {
-	if(pSharedData->CurrentExperiment_RunState == ES_IDLE)
+	if(pSharedData->CurrentExperiment_RunState == ExperimentStructuresNameSpace::ES_IDLE)
 		return;
-	if(pSharedData->CurrentExperiment_RunState == ES_WAITING_FOR_TRIGGER)//currentExperimentState.Experiment_ExternalTrigger == RA_REINITIALIZE)//First external experiment trigger!
+	if(pSharedData->CurrentExperiment_RunState == ExperimentStructuresNameSpace::ES_WAITING_FOR_TRIGGER)//currentExperimentState.Experiment_ExternalTrigger == RA_REINITIALIZE)//First external experiment trigger!
 	{
-		if(pSharedData->currentExperimentState.CurrentBlock_BlockID == RA_REINITIALIZE)
+		if(pSharedData->currentExperimentState.CurrentBlock_BlockID == ExperimentStructuresNameSpace::RA_REINITIALIZE)
 		{
 			if(prepareExperiment() == false)
 				return;
 			pSharedData->currentExperimentState.CurrentBlock_BlockID = pSharedData->currentBlockPointer->getBlockID();
 		}
-		if(pSharedData->currentExperimentState.CurrentBlock_LoopID == RA_REINITIALIZE)
+		if(pSharedData->currentExperimentState.CurrentBlock_LoopID == ExperimentStructuresNameSpace::RA_REINITIALIZE)
 		{
 			pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->resetToFirstFreeLoopPointer();
 			if(pSharedData->currentLoopPointer == NULL)
-				pSharedData->currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
+				pSharedData->currentExperimentState.CurrentBlock_LoopID = ExperimentStructuresNameSpace::RA_UNDEFINED;
 			else
 				pSharedData->currentExperimentState.CurrentBlock_LoopID = pSharedData->currentLoopPointer->getLoopID();
 		}
@@ -781,7 +781,7 @@ void cExperimentStructure::incrementExternalTrigger()
 		pSharedData->currentExperimentState.CurrentBlock_TrialNumber = 0;
 		ExperimentStart();
 	}
-	else if(pSharedData->CurrentExperiment_RunState == ES_RUNNING)
+	else if(pSharedData->CurrentExperiment_RunState == ExperimentStructuresNameSpace::ES_RUNNING)
 	{
 		int BlockExtTriggerAmount = pSharedData->currentBlockPointer->getNumberOfExternalTriggers();
 		int BlockIntTriggerAmount = pSharedData->currentBlockPointer->getNumberOfInternalTriggers();
@@ -824,7 +824,7 @@ void cExperimentStructure::incrementExternalTrigger()
 					if(pSharedData->currentLoopPointer)
 						pSharedData->currentExperimentState.CurrentBlock_LoopID = pSharedData->currentLoopPointer->getLoopID();
 					else
-						pSharedData->currentExperimentState.CurrentBlock_LoopID = RA_UNDEFINED;
+						pSharedData->currentExperimentState.CurrentBlock_LoopID = ExperimentStructuresNameSpace::RA_UNDEFINED;
 				}
 				else
 				{

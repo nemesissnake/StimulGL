@@ -194,6 +194,21 @@ bool ImageListModel::updatePixmap(QPixmap &pixmap, const QString &ID)
 	return false;
 }
 
+bool ImageListModel::updatePixmapID(const QString &oldID, const QString &newID)
+{
+	iterImageMap = ImageMap.begin();
+	while (iterImageMap != ImageMap.end()) 
+	{
+		if(iterImageMap.value().strID == oldID)
+		{
+			iterImageMap.value().strID = newID;
+			return true;
+		}
+		++iterImageMap;
+	}
+	return false;
+}
+
 bool ImageListModel::removePixmap(const QString &ID)
 {
 	for (int i=0;i<ImageMap.size();++i)

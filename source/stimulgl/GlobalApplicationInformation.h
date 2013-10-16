@@ -22,33 +22,12 @@
 
 #include <QCoreApplication>
 #include <QSettings>
-//#include "svgview.h"
 #include "maindefines.h"
 
-typedef struct strcDocContentInfoStructure
-{
-	QString strDocContent;
-	QString strDocExtension;
-	QString strDocHomeDir;
-	bool bIsFile;
-} DocContentInfoStructure;
-
-typedef struct strMainAppInformation 
-{
-	QString sCompanyName;
-	QString sInternalName;
-	QString sFileVersion;
-	bool bDoNotLoadScriptBindings;
-	bool bOpenExtDebug;
-	int rRendererType;//SvgView::RendererType
-	bool bHQAntiAlias;
-	bool bAllowMultipleInheritance;
-	bool bEnableNetworkServer;
-	QString sHostAddress;
-	quint16 nHostPort;
-	//See also serialization!!!
-} MainAppInformationStructure;
-
+//!  The GlobalApplicationInformation Class. 
+/*!
+  This class is internally used for storing and sharing the global application information and settings.
+*/
 class GlobalApplicationInformation : public QObject
 {
 	Q_OBJECT
@@ -56,6 +35,30 @@ class GlobalApplicationInformation : public QObject
 public:
 	GlobalApplicationInformation(QObject *parent = NULL);
 	~GlobalApplicationInformation();
+
+	typedef struct strcDocContentInfoStructure
+	{
+		QString strDocContent;
+		QString strDocExtension;
+		QString strDocHomeDir;
+		bool bIsFile;
+	} DocContentInfoStructure;
+
+	typedef struct strMainAppInformation 
+	{
+		QString sCompanyName;
+		QString sInternalName;
+		QString sFileVersion;
+		bool bDoNotLoadScriptBindings;
+		bool bOpenExtDebug;
+		int rRendererType;//SvgView::RendererType
+		bool bHQAntiAlias;
+		bool bAllowMultipleInheritance;
+		bool bEnableNetworkServer;
+		QString sHostAddress;
+		quint16 nHostPort;
+		//See also serialization!!!
+	} MainAppInformationStructure;
 
 	MainAppInformationStructure getMainAppInformationStructure() {return mainAppInformation;};
 	static MainAppInformationStructure getStaticMainAppInformationStructureFromSharedMemory();
@@ -81,6 +84,7 @@ public:
 	bool setRegistryInformation(const QString &sName, const QVariant &vValue, const QString &sType);
 
 	QVariant invokeJavaScriptConfigurationFile(const QString &sCode);
+	QString getJavaScriptConfigurationFileContents();
 	void showJavaScriptConfigurationFile();
 	
 
@@ -122,7 +126,8 @@ public:
 		DisableAllPlugins			= 2,
 		DisableSplash				= 4,
 		DisableNetworkServer		= 8,
-		VerboseMode					= 16
+		VerboseMode					= 16,
+		ExecuteDocument				= 32
 	};
 	Q_DECLARE_FLAGS(MainProgramModeFlags, MainProgramModeFlag)
 
@@ -132,7 +137,12 @@ public:
 		DOCTYPE_QTSCRIPT		= 0x00001,
 		DOCTYPE_JAVASCRIPT		= 0x00002,
 		DOCTYPE_SVG				= 0x00003,
-		DOCTYPE_PLUGIN_DEFINED	= 0x00004
+		DOCTYPE_XML				= 0x00004,
+		DOCTYPE_PYTHON			= 0x00005,
+		DOCTYPE_PERL			= 0x00006,
+		DOCTYPE_CPP				= 0x00007,
+		DOCTYPE_HTML			= 0x00008,
+		DOCTYPE_PLUGIN_DEFINED	= 0x00009
 	};
 	Q_DECLARE_FLAGS(DocTypes, DocType)
 
@@ -142,7 +152,11 @@ public:
 		DOCTYPE_STYLE_ECMA			= 1,
 		DOCTYPE_STYLE_PLAINTEXT		= 2,
 		DOCTYPE_STYLE_XML			= 3,
-		DOCTYPE_STYLE_QML			= 4
+		DOCTYPE_STYLE_QML			= 4,
+		DOCTYPE_STYLE_PYTHON		= 5,
+		DOCTYPE_STYLE_PERL			= 6,
+		DOCTYPE_STYLE_CPP			= 7,
+		DOCTYPE_STYLE_HTML			= 8,
 	};
 	Q_DECLARE_FLAGS(DocTypeStyles, DocTypeStyle)
 };
@@ -153,7 +167,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(GlobalApplicationInformation::ActiveScriptModes)
 Q_DECLARE_OPERATORS_FOR_FLAGS(GlobalApplicationInformation::DocTypes)
 Q_DECLARE_OPERATORS_FOR_FLAGS(GlobalApplicationInformation::DocTypeStyles)
 
-QDataStream &operator<<(QDataStream &out, const MainAppInformationStructure &mainAppInformationStructure);
-QDataStream &operator>>(QDataStream &in, MainAppInformationStructure &mainAppInformationStructure);
+QDataStream &operator<<(QDataStream &out, const GlobalApplicationInformation::MainAppInformationStructure &mainAppInformationStructure);
+QDataStream &operator>>(QDataStream &in, GlobalApplicationInformation::MainAppInformationStructure &mainAppInformationStructure);
 
 #endif // GLOBALAPPLICATIONINFORMATION_H
