@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../../css/Default.css" rel="stylesheet" type="text/css" />
+<link href="../../../google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../../js/jquery.min.js" type="text/javascript"></script>
+<script src="../../../js/jquery.tableofcontents.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../google-code-prettify/prettify.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+	var StimulGLInfo = new StimulGL_Information();
+	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);	
+	$(document).ready(function()
+		{ 
+			$("#toc").tableOfContents(
+				$("#toc_Area"),// Scoped to div#toc_Area
+				{
+					startLevel: 2,// H2 and up
+					depth:4,// H2 through H5,
+				}
+			); 
+			prettyPrint();			
+		}
+	);
+	document.write("<title>" + DocTitle + "</title>");	
+</script>
+</head>
+<body>
+<script type="text/javascript">StimulGLInfo.GetDocumentHeader(window.location.pathname)</script>
+<div id="toc_Area">
+<ul id="toc"></ul>
+<h2>Introduction </h2>
+<p>This Plug-in provides all funtionality for accessing the <a href="http://www.firebirdsql.org/en/start/" target="_blank">Firebird</a> API. <br />
+</p>
+<p>Firebird is a relational database offering many ANSI SQL standard features that runs on Linux, Windows, and a variety of Unix platforms. Firebird offers excellent concurrency, high performance, and powerful language support for stored procedures and triggers. It has been used in production systems, under a variety of names, since 1981.</p>
+<p>The Firebird Project is a commercially independent project of C and C++ programmers, technical advisors and supporters developing and enhancing a multi-platform relational database management system based on the source code released by Inprise Corp (now known as Borland Software Corp) on 25 July, 2000.</p>
+<h2>  Plug-in script access</h2>
+<p>An object of the Firebird Client Plug-in can be created using the following script command:</p>
+<table class="codeframe">
+  <tr><td><pre class="prettyprint">
+var FirebirdClientobject = new FirebirdClient();</pre></td></tr></table>
+<p>You can use this object to access all functions provided by the Firebird Client Plug-in. A list of all available functions can be found in the  <a href="../../Script/FireBirdClientPlugin/Doxygen/class_firebird_client.html">doxygen's reference documentation</a>. </p>
+</div>
+</body>
+</html>

@@ -12,7 +12,7 @@ var bSkipStep;
 var sQTDirWin32 = tr("C:/Qt/5.1.0/win32/");
 var sQTDirx64 = tr("C:/Qt/5.1.0/x64/");
 var sMainDocName = tr("MainDocumentation");
-var sScriptPath = StimulGL.getSelectedScriptFileLocation() + "/";
+var sScriptPath = StimulGL.getActiveDocumentFileLocation() + "/";
 var sBinairyPath;
 
 var sInstallerAppName = tr("StimulGL");//StimulGL
@@ -51,9 +51,10 @@ function CleanUpScript()
 	InstallProcess=null;
 	ConnectDisconnectScriptFunctions=null;
 	processFinished=null;
+	getString = null;
 	CleanUpScript=null;	
 	Log("CleanUpScript exited successfully!");
-	Beep();
+	//Beep();
 	StimulGL.cleanupScript();
 }
 

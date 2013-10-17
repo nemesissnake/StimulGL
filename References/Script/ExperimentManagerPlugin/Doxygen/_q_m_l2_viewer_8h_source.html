@@ -89,74 +89,76 @@
 <a name="l00051"></a>00051         <a class="code" href="class_q_m_l2_viewer.html#a6cd98c4bc3ebca196e0b87072dbcd312" title="The QML2Viewer constructor.">QML2Viewer</a>(<span class="keyword">const</span> <a class="code" href="class_q_m_l2_viewer.html" title="The QML2Viewer class.">QML2Viewer</a>&amp; other){Q_UNUSED(other);};<span class="comment">//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro</span>
 <a name="l00052"></a>00052         <span class="keyword">static</span> QScriptValue ctor_QML2Viewer(QScriptContext* context, QScriptEngine* engine);
 <a name="l00053"></a>00053         
-<a name="l00054"></a>00054 <span class="keyword">public</span>: 
-<a name="l00055"></a>00055         <span class="comment">//bool executeQML2Document(const QString &amp;strSource, bool bIsFile = true);</span>
-<a name="l00056"></a>00056 
-<a name="l00057"></a>00057 <span class="keyword">public</span> slots:
-<a name="l00058"></a>00058         <span class="keywordtype">bool</span> executeQML2Document(<span class="keyword">const</span> QString &amp;strSource, <span class="keywordtype">bool</span> bIsFile = <span class="keyword">true</span>);
-<a name="l00059"></a>00059 
-<a name="l00060"></a>00060         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
-<a name="l00061"></a>00061         <span class="keywordtype">bool</span> initObject();
-<a name="l00062"></a>00062         <span class="keywordtype">bool</span> startObject();
-<a name="l00063"></a>00063         <span class="keywordtype">bool</span> stopObject();
-<a name="l00064"></a>00064         <span class="keywordtype">bool</span> setObjectID(<span class="keywordtype">int</span> nObjID);
-<a name="l00065"></a>00065         <span class="keywordtype">bool</span> initObjectBlockTrial();
-<a name="l00066"></a>00066         QVariant <a class="code" href="class_q_m_l2_viewer.html#a16603caa20bd1a438abd44645c10fd55">invokeQml2Method</a>(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant()); 
-<a name="l00067"></a>00067         <span class="comment">//QVariant invokeQml2JavaScriptCode(const QString &amp;sCode);</span>
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069         QString <a class="code" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51">addPixmapToImageBuffer</a>(<span class="keyword">const</span> QPixmap &amp;pixmap);
-<a name="l00070"></a>00070         <span class="keywordtype">bool</span> <a class="code" href="class_q_m_l2_viewer.html#a7619ca82d490a2dde78617c2dce34c6e">getPixmapFromImageBuffer</a>(QPixmap *pixmap, <span class="keyword">const</span> QString &amp;ID);
-<a name="l00071"></a>00071         <span class="keywordtype">bool</span> <a class="code" href="class_q_m_l2_viewer.html#a44771b27d30bf455ac4b08257af464f3">updatePixmapFromImageBuffer</a>(QPixmap *pixmap, <span class="keyword">const</span> QString &amp;ID);
-<a name="l00072"></a>00072         <span class="keywordtype">bool</span> <a class="code" href="class_q_m_l2_viewer.html#a7dd05f6edb7e18191f82d4913478b4e8">removePixmapFromImageBuffer</a>(<span class="keyword">const</span> QString &amp;ID);
-<a name="l00073"></a>00073         <span class="keywordtype">bool</span> setExperimentManager(<a class="code" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> *expManager);
-<a name="l00074"></a>00074         <span class="keywordtype">bool</span> setExperimentObjectReadyToUnlock();
-<a name="l00075"></a>00075         QScriptValue getWindow();
-<a name="l00076"></a>00076 
-<a name="l00077"></a>00077 <span class="keyword">protected</span>:
-<a name="l00078"></a>00078         <span class="keywordtype">bool</span> eventFilter(QObject *target, QEvent *event);
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 <span class="keyword">private</span> slots:
-<a name="l00081"></a>00081         <span class="keywordtype">void</span> onStatusChanged(QQuickView::Status status);
-<a name="l00082"></a>00082         <span class="keywordtype">void</span> onQuick2ViewWindowClosed();
-<a name="l00083"></a>00083         <span class="keywordtype">void</span> onStartTriggerRecieved();
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085 <span class="keyword">private</span>:
-<a name="l00086"></a>00086         <span class="keywordtype">void</span> initialize();
-<a name="l00087"></a>00087         <span class="keywordtype">void</span> parseExperimentObjectBlockParameters(<span class="keywordtype">bool</span> bInit = <span class="keyword">false</span>, <span class="keywordtype">bool</span> bSetOnlyToDefault = <span class="keyword">false</span>);
-<a name="l00088"></a>00088         <span class="keywordtype">void</span> qml2EventRoutine(QString strContent = <span class="stringliteral">&quot;&quot;</span>);
-<a name="l00089"></a>00089         <span class="keywordtype">void</span> deleteQML2ViewerWindow();
-<a name="l00090"></a>00090 
-<a name="l00091"></a>00091         <a class="code" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> *experimentManager;
-<a name="l00092"></a>00092         <span class="comment">//QScriptEngine *currentScriptEngine;</span>
-<a name="l00093"></a>00093         cExperimentStructure *currentExperimentStructure;
-<a name="l00094"></a>00094         QFile tmpFile;
-<a name="l00095"></a>00095         <span class="comment">//QmlErrorHandler *qmlErrorHandler;</span>
-<a name="l00096"></a>00096         ImageListModel *imgLstModel;
-<a name="l00097"></a>00097         QtQuick2ApplicationViewer *quick2ViewerWindow;
-<a name="l00098"></a>00098         <span class="comment">//QWindow *parentWindow;</span>
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100         QString qmlMainFilePath;
-<a name="l00101"></a>00101         QString last_qmlMainFilePath;
-<a name="l00102"></a>00102         QObject *rootObject;
-<a name="l00103"></a>00103         <span class="keywordtype">int</span> nQML2ViewerID;                                                      <span class="comment">//The ObjectID used to identify the object</span>
-<a name="l00104"></a>00104         QRectF rectScreenRes;                                           <span class="comment">//The screen resolution</span>
-<a name="l00105"></a>00105         QColor colorBackground;                                         <span class="comment">//The color of the background</span>
-<a name="l00106"></a>00106         <span class="keywordtype">float</span> stimWidthPixelAmount;                                     <span class="comment">//The amount of visible stimuli pixels(height)</span>
-<a name="l00107"></a>00107         <span class="keywordtype">float</span> stimHeigthPixelAmount;                            <span class="comment">//The amount of visible stimuli pixels(width)</span>
-<a name="l00108"></a>00108         <span class="keywordtype">bool</span> bParameterChanged;
-<a name="l00109"></a>00109         <span class="keywordtype">bool</span> bFirstQuickWindowAvtivation;
-<a name="l00110"></a>00110         <span class="keywordtype">bool</span> bExperimentUnlocked;
-<a name="l00111"></a>00111 };
-<a name="l00112"></a>00112 Q_DECLARE_METATYPE(<a class="code" href="class_q_m_l2_viewer.html" title="The QML2Viewer class.">QML2Viewer</a>)
-<a name="l00113"></a>00113 Q_DECLARE_METATYPE(<a class="code" href="class_q_m_l2_viewer.html" title="The QML2Viewer class.">QML2Viewer</a>*)
-<a name="l00114"></a>00114 Q_DECLARE_METATYPE(QWindow*)
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116 <span class="preprocessor">#endif // QML2VIEWER_H</span>
+<a name="l00054"></a>00054 <span class="keyword">public</span> slots:
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
+<a name="l00057"></a>00057 
+<a name="l00065"></a>00065         <span class="keywordtype">bool</span> <a class="code" href="class_q_m_l2_viewer.html#a6573bb3cf35b6b7c70f9da3b3028966f" title="Executes a QML document.">executeQML2Document</a>(<span class="keyword">const</span> QString &amp;strSource, <span class="keywordtype">bool</span> bIsFile = <span class="keyword">true</span>);        
+<a name="l00066"></a>00066         
+<a name="l00067"></a>00067         <span class="keywordtype">bool</span> initObject();
+<a name="l00068"></a>00068         
+<a name="l00069"></a>00069         <span class="keywordtype">bool</span> startObject();
+<a name="l00070"></a>00070         
+<a name="l00071"></a>00071         <span class="keywordtype">bool</span> stopObject();
+<a name="l00072"></a>00072         
+<a name="l00073"></a>00073         <span class="keywordtype">bool</span> setObjectID(<span class="keywordtype">int</span> nObjID);
+<a name="l00074"></a>00074         
+<a name="l00075"></a>00075         <span class="keywordtype">bool</span> initObjectBlockTrial();
+<a name="l00076"></a>00076         
+<a name="l00085"></a>00085         QVariant <a class="code" href="class_q_m_l2_viewer.html#a16603caa20bd1a438abd44645c10fd55" title="Invokes a QML Method.">invokeQml2Method</a>(QString strRootObjectName, QString strMethodName, QVariant inputValue1 = QVariant(), QVariant inputValue2 = QVariant(), QVariant inputValue3 = QVariant(), QVariant inputValue4 = QVariant(), QVariant inputValue5 = QVariant(), QVariant inputValue6 = QVariant(), QVariant inputValue7 = QVariant(), QVariant inputValue8 = QVariant(), QVariant inputValue9 = QVariant()); 
+<a name="l00094"></a>00094         QString <a class="code" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51" title="Adds a QPixmap to the internal Image Buffer.">addPixmapToImageBuffer</a>(<span class="keyword">const</span> QPixmap &amp;pixmap);
+<a name="l00102"></a>00102         <span class="keywordtype">bool</span> <a class="code" href="class_q_m_l2_viewer.html#a7619ca82d490a2dde78617c2dce34c6e" title="Retrieves a QPixmap to the internal Image Buffer.">getPixmapFromImageBuffer</a>(QPixmap *pixmap, <span class="keyword">const</span> QString &amp;ID);
+<a name="l00111"></a>00111         <span class="keywordtype">bool</span> <a class="code" href="class_q_m_l2_viewer.html#a44771b27d30bf455ac4b08257af464f3" title="Updates a QPixmap inside the internal Image Buffer.">updatePixmapFromImageBuffer</a>(QPixmap *pixmap, <span class="keyword">const</span> QString &amp;ID);
+<a name="l00119"></a>00119         <span class="keywordtype">bool</span> <a class="code" href="class_q_m_l2_viewer.html#a722b15b6a9369ad82e2bb3c6dff41ec6" title="Updates the ID string of a corresponding QPixmap inside the internal Image Buffer.">updatePixmapIDFromImageBuffer</a>(<span class="keyword">const</span> QString &amp;oldID, <span class="keyword">const</span> QString &amp;newID);
+<a name="l00127"></a>00127         <span class="keywordtype">bool</span> <a class="code" href="class_q_m_l2_viewer.html#a7dd05f6edb7e18191f82d4913478b4e8" title="Removes a QPixmap inside the internal Image Buffer.">removePixmapFromImageBuffer</a>(<span class="keyword">const</span> QString &amp;ID);
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129         <span class="keywordtype">bool</span> setExperimentManager(<a class="code" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> *expManager);
+<a name="l00130"></a>00130         
+<a name="l00131"></a>00131         <span class="keywordtype">bool</span> setExperimentObjectReadyToUnlock();
+<a name="l00132"></a>00132         
+<a name="l00133"></a>00133         QScriptValue getWindow();
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135 <span class="keyword">protected</span>:
+<a name="l00136"></a>00136         <span class="keywordtype">bool</span> eventFilter(QObject *target, QEvent *event);
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138 <span class="keyword">private</span> slots:
+<a name="l00139"></a>00139         <span class="keywordtype">void</span> onStatusChanged(QQuickView::Status status);
+<a name="l00140"></a>00140         <span class="keywordtype">void</span> onQuick2ViewWindowClosed();
+<a name="l00141"></a>00141         <span class="keywordtype">void</span> onStartTriggerRecieved();
+<a name="l00142"></a>00142 
+<a name="l00143"></a>00143 <span class="keyword">private</span>:
+<a name="l00144"></a>00144         <span class="keywordtype">void</span> initialize();
+<a name="l00145"></a>00145         <span class="keywordtype">void</span> parseExperimentObjectBlockParameters(<span class="keywordtype">bool</span> bInit = <span class="keyword">false</span>, <span class="keywordtype">bool</span> bSetOnlyToDefault = <span class="keyword">false</span>);
+<a name="l00146"></a>00146         <span class="keywordtype">void</span> qml2EventRoutine(QString strContent = <span class="stringliteral">&quot;&quot;</span>);
+<a name="l00147"></a>00147         <span class="keywordtype">void</span> deleteQML2ViewerWindow();
+<a name="l00148"></a>00148 
+<a name="l00149"></a>00149         <a class="code" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> *experimentManager;
+<a name="l00150"></a>00150         <a class="code" href="classc_experiment_structure.html" title="The cExperimentStructure class.">cExperimentStructure</a> *currentExperimentStructure;
+<a name="l00151"></a>00151         QFile tmpFile;
+<a name="l00152"></a>00152         ImageListModel *imgLstModel;
+<a name="l00153"></a>00153         QtQuick2ApplicationViewer *quick2ViewerWindow;
+<a name="l00154"></a>00154         QString qmlMainFilePath;
+<a name="l00155"></a>00155         QString last_qmlMainFilePath;
+<a name="l00156"></a>00156         QObject *rootObject;
+<a name="l00157"></a>00157         <span class="keywordtype">int</span> nQML2ViewerID;                                                      <span class="comment">//The ObjectID used to identify the object</span>
+<a name="l00158"></a>00158         QRectF rectScreenRes;                                           <span class="comment">//The screen resolution</span>
+<a name="l00159"></a>00159         QColor colorBackground;                                         <span class="comment">//The color of the background</span>
+<a name="l00160"></a>00160         <span class="keywordtype">float</span> stimWidthPixelAmount;                                     <span class="comment">//The amount of visible stimuli pixels(height)</span>
+<a name="l00161"></a>00161         <span class="keywordtype">float</span> stimHeigthPixelAmount;                            <span class="comment">//The amount of visible stimuli pixels(width)</span>
+<a name="l00162"></a>00162         <span class="keywordtype">bool</span> bParameterChanged;
+<a name="l00163"></a>00163         <span class="keywordtype">bool</span> bFirstQuickWindowAvtivation;
+<a name="l00164"></a>00164         <span class="keywordtype">bool</span> bExperimentUnlocked;
+<a name="l00165"></a>00165 };
+<a name="l00166"></a>00166 Q_DECLARE_METATYPE(<a class="code" href="class_q_m_l2_viewer.html" title="The QML2Viewer class.">QML2Viewer</a>)
+<a name="l00167"></a>00167 Q_DECLARE_METATYPE(<a class="code" href="class_q_m_l2_viewer.html" title="The QML2Viewer class.">QML2Viewer</a>*)
+<a name="l00168"></a>00168 Q_DECLARE_METATYPE(QWindow*)
+<a name="l00169"></a>00169 
+<a name="l00170"></a>00170 <span class="preprocessor">#endif // QML2VIEWER_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 17 2013 11:30:53 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

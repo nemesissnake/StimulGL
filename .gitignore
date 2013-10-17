@@ -16,3 +16,5 @@ Doxygen/FireBirdClientPlugin.cfg
 Doxygen/PiezoStimDevicePlugin.cfg
 Doxygen/TBVExchangerPlugin.cfg
 Doxygen/TCPNetworkServerPlugin.cfg
+
+/Doxygen/StimulGL_QMLExtensions.cfg

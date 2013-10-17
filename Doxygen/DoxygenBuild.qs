@@ -14,7 +14,7 @@ var fileSource = "PluginTemplate.cfg";
 var preFix = "-*/*-";
 var postFix = "-*/*-";
 
-var sScriptPath = StimulGL.getSelectedScriptFileLocation();
+var sScriptPath = StimulGL.getActiveDocumentFileLocation();
 var sBinairyPath = "doxygen";
 var sDoxyFileDir = sScriptPath + "/";
 
@@ -181,6 +181,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 					  "../../StimulGL/Source/Plugins/ExperimentManager/ImageProcessor.cpp \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/RandomGenerator.h \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/RandomGenerator.cpp \\\n" +
+					  "../../StimulGL/Source/Plugins/ExperimentManager/ExperimentStructures.h \\\n" +
 					  "../../StimulGL/Source/Plugins/ExperimentManager/Global.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 		changeSet[6][1] = "StimulGL.doxygen.Project";
@@ -334,11 +335,10 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[4][0] = preFix + "OUTPUT_DIRECTORY" + postFix;
 		changeSet[4][1] = "\"../References/QtQuick/StimulGL_QMLExtensions\"";
 		changeSet[5][0] = preFix + "INPUT" + postFix;
-		changeSet[5][1] = "../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/PhononPlayer.h \\\n" +
-					  "../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/PhononPlayer.cpp \\\n" //+
-					  //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.h \\\n" +
-		                          //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.cpp \\\n" +
-		                          //"../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/defines.h \\\n";
+		changeSet[5][1] = "../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/ogreitem.h \\\n" +		
+					  "../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/OgreCameraNode.h \\\n" +
+					  "../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/TimeModel.h \\\n" +
+		                          "../../StimulGL/Source/QmlExtensions/Plugins/DefaultPlugin/defines.h \\\n";
 		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 		changeSet[6][1] = "StimulGL.doxygen.Project";
 		changeSet[7][0] = preFix + "PREDEFINED" + postFix; //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html //see http://www.stack.nl/~dimitri/doxygen/preprocessing.html
@@ -369,6 +369,7 @@ for(nCounter=1;nCounter<=sBinairySteps;nCounter++)
 		changeSet[5][0] = preFix + "INPUT" + postFix;
 		changeSet[5][1] = "../../StimulGL/Source/StimulGL/mainwindow.h \\\n" +
 					  "../../StimulGL/Source/StimulGL/mainwindow.cpp \\\n" +
+					  "../../StimulGL/Source/StimulGL/GlobalApplicationInformation.h \\\n" +
 					  "../../StimulGL/Source/StimulGL/scifinddialog.h \\\n";
 //		changeSet[6][0] = preFix + "QHP_NAMESPACE" + postFix;
 //		changeSet[6][1] = "StimulGL.doxygen.Project";

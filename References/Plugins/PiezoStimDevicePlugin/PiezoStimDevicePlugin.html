@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../../css/Default.css" rel="stylesheet" type="text/css" />
+<link href="../../../google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../../js/jquery.min.js" type="text/javascript"></script>
+<script src="../../../js/jquery.tableofcontents.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../google-code-prettify/prettify.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+	var StimulGLInfo = new StimulGL_Information();
+	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);	
+	$(document).ready(function()
+		{ 
+			$("#toc").tableOfContents(
+				$("#toc_Area"),// Scoped to div#toc_Area
+				{
+					startLevel: 2,// H2 and up
+					depth:4,// H2 through H5,
+				}
+			); 
+			prettyPrint();			
+		}
+	);
+	document.write("<title>" + DocTitle + "</title>");	
+</script>
+</head>
+<body>
+<script type="text/javascript">StimulGLInfo.GetDocumentHeader(window.location.pathname)</script>
+<div id="toc_Area">
+<ul id="toc"></ul>
+<h2>Introduction </h2>
+<p>This PiezoStim Device Plug-in provides all funtionality for accessing the <a href="http://www.quaerosys.com/index.php?lang=en&amp;page=piezostimulator" target="_blank">QuaroSys Piezostimulator</a> API.</p>
+<p>The QS Piezostimulator is a mechanical tactile stimulator, specified for use in functional imaging experiments like MEG, fMRI or EEG. The stimulation is realized by using several different pin matrices (2x4, 4x4, 2x5, 4x5, etc.). Each of the pins can be driven out to 4096 different heights between 0 and 1.5 mm with a timing accuracy of 0.5 ms.<br />
+  <br />
+  There are separate ports for input and output of trigger signals, enabling a precise synchronization between stimulation and measurement. For more complex experiments, it is even possible to upgrade the system.</p>
+<h2>  Plug-in script access</h2>
+<p>An object of the PiezoStim Device Plug-in can be created using the following script command:</p>
+<table class="codeframe">
+  <tr><td><pre class="prettyprint">
+var PiezoStimDeviceobject = new PiezoStimDevice();</pre></td></tr></table>
+<p>You can use this object to access all functions provided by the PiezoStim Device Plug-in. A list of all available functions can be found in the  <a href="../../Script/PiezoStimDevicePlugin/Doxygen/class_piezo_stim_device.html">doxygen's reference documentation</a>. </p>
+</div>
+</body>
+</html>

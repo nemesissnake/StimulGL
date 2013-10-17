@@ -7,6 +7,7 @@
         <toc>
             <section title="StimulGL" ref="index.html">            
 								<section title="Getting Started Guide" ref="./Tutorials/GettingStarted/GettingStartedGuide.html"></section>
+		            
 		            <section title="Plugins" ref="./References/Plugins/PluginReference.html">
 		                <section title="ExperimentManager Plugin" ref="./References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">
 											<section title="ExperimentManager References" ref="./References/Script/ExperimentManagerPlugin/Doxygen/index.html"></section>
@@ -16,11 +17,28 @@
 										</section>
 										<section title="USBHIDDevice Plugin" ref="./References/Plugins/USBHIDDevicePlugin/USBHIDDevicePlugin.html">
 											<section title="USBHIDDevice References" ref="./References/Script/USBHIDDevicePlugin/Doxygen/index.html"></section>
-										</section>
-										<section title="SerialPortDevice Plugin" ref="">
+										</section>										
+										<section title="SerialPortDevice Plugin" ref="./References/Plugins/SerialPortDevicePlugin/SerialPortDevicePlugin.html">
 											<section title="SerialPortDevice References" ref="./References/Script/SerialPortDevicePlugin/Doxygen/index.html"></section>
 										</section>								
-										<section title="Extension Plugin Template" ref="./References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html"></section>								
+										<section title="FireBirdClient Plugin" ref="./References/Plugins/FireBirdClientPlugin/FireBirdClientPlugin.html">
+											<section title="FireBirdClient References" ref="./References/Script/FireBirdClientPlugin/Doxygen/index.html"></section>
+										</section>
+										<section title="KeyBoardDevice Plugin" ref="./References/Plugins/KeyBoardDevicePlugin/KeyBoardDevicePlugin.html">
+											<section title="KeyBoardDevice References" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/index.html"></section>
+										</section>
+										<section title="PiezoStimDevice Plugin" ref="./References/Plugins/PiezoStimDevicePlugin/PiezoStimDevicePlugin.html">
+											<section title="PiezoStimDevice References" ref="./References/Script/PiezoStimDevicePlugin/Doxygen/index.html"></section>
+										</section>
+										<section title="TBVExchanger Plugin" ref="./References/Plugins/TBVExchangerPlugin/TBVExchangerPlugin.html">
+											<section title="TBVExchanger References" ref="./References/Script/TBVExchangerPlugin/Doxygen/index.html"></section>
+										</section>
+										<section title="StimulGL QML Extensions Plugin" ref="./References/Plugins/StimulGL_QMLExtensions/StimulGL_QMLExtensions.html">
+											<section title="StimulGL QML Extensions References" ref="./References/QtQuick/StimulGL_QMLExtensions/Doxygen/index.html"></section>
+										</section>
+										<section title="TCPNetworkServer Plugin" ref="./References/Plugins/TCPNetworkServerPlugin/TCPNetworkServerPlugin.html">
+											<section title="TCPNetworkServer References" ref="./References/Script/TCPNetworkServerPlugin/Doxygen/index.html"></section>
+										</section>																																																		
 		            </section>
 		            <section title="Scripting" ref="./References/Script/ScriptingReference.html">
 									<section title="StimulGL Main Application" ref="./References/Script/StimulGLMainApp/Doxygen/class_main_window.html"></section>		            
@@ -29,12 +47,17 @@
 									<section title="USBHIDDevice Script Class" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"></section>
 									<section title="SerialPortDevice Script Class" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"></section>
 									<section title="KeyBoardDevice Script Class" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/class_key_board_capture.html"></section>
+		              <section title="FireBirdClient Script Class" ref="./References/Script/FireBirdClientPlugin/Doxygen/class_firebird_client.html"></section>
+			            <section title="PiezoStimDevice Script Class" ref="./References/Script/PiezoStimDevicePlugin/Doxygen/class_piezo_stim_device.html"></section>
+			            <section title="TBVExchanger Script Class" ref="./References/Script/TBVExchangerPlugin/Doxygen/class_t_b_v_exchanger.html"></section>
+			            <section title="TCPNetworkServer Script Class" ref="./References/Script/TCPNetworkServerPlugin/Doxygen/class_t_c_p_network_server.html"></section>
 		            </section> 		            
-		            <section title="QtQuick" ref="">
+		            <section title="QML" ref="./References/QtQuick/QMLExtensionsReference.html">
 									<section title="QML Extensions Class references" ref="./References/QtQuick/StimulGL_QMLExtensions/Doxygen/index.html"></section>
 		            </section>              
-		            <section title="Development" ref="">            
+		            <section title="Development" ref="./References/Developers/Developers.html">            
 										<section title="Pre Development Setup" ref="./Manuals/PreBuildDevelopmentSetup/PreBuildDevelopmentSetup.html"></section>
+										<section title="Extension Plugin Template" ref="./References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html"></section>
 		            </section>
             </section>       
         </toc>
@@ -42,28 +65,42 @@
             <keyword name="StimulGL" ref="index.html"/>
             <keyword name="History" ref="history.html"/>
             <keyword name="License" ref="index.html"/>
+            <keyword name="Develop" ref="./References/Developers/Developers.html"/>            
             <keyword name="Scripting Reference" ref="./References/Script/ScriptingReference.html"/>
             <keyword name="Plugin Reference" ref="./References/Plugins/PluginReference.html"/>
+            <keyword name="QML Plugin Reference" ref="./References/QtQuick/QMLExtensionsReference.html"/>
             <keyword name="Getting Started Guide" ref="./Tutorials/GettingStarted/GettingStartedGuide.html"/>
             <keyword name="Development Setup" ref="././Manuals/PreBuildDevelopmentSetup/PreBuildDevelopmentSetup.html"/>
             <keyword name="Experiment Manager" ref="./References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html"/>
             <keyword name="Parallel Port" ref="./References/Plugins/ParallelPortDevicePlugin/ParallelPortDevicePlugin.html"/>
             <keyword name="USBHID Device" ref="./References/Plugins/USBHIDDevicePlugin/USBHIDDevicePlugin.html"/>
-            <keyword name="Plugin Template" ref="./References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html"/>
+						<keyword name="KeyBoard Device" ref="./References/Plugins/KeyBoardDevicePlugin/KeyBoardDevicePlugin.html"/>						
+						<keyword name="SerialPort Device" ref="./References/Plugins/SerialPortDevicePlugin/SerialPortDevicePlugin.html"/>
+						<keyword name="FireBird Client" ref="./References/Plugins/FireBirdClientPlugin/FireBirdClientPlugin.html"/>
+						<keyword name="PiezoStim Device" ref="./References/Plugins/PiezoStimDevicePlugin/PiezoStimDevicePlugin.html"/>
+						<keyword name="TBV Exchanger" ref="./References/Plugins/TBVExchangerPlugin/TBVExchangerPlugin.html"/>
+						<keyword name="TCP Network" ref="./References/Plugins/TCPNetworkServerPlugin/TCPNetworkServerPlugin.html"/>
+						<keyword name="Plugin Template" ref="./References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html"/>
+						<keyword name="QML Extension" ref="./References/Plugins/StimulGL_QMLExtensions/StimulGL_QMLExtensions.html"/>
+            <keyword name="QML Extensions" ref="./References/QtQuick/StimulGL_QMLExtensions/Doxygen/index.html"/>            
             <keyword name="ExperimentManager Script" ref="./References/Script/ExperimentManagerPlugin/Doxygen/class_experiment_manager.html"/>
             <keyword name="ParallelPort Script" ref="./References/Script/ParallelPortDevicePlugin/Doxygen/class_parallel_port.html"/>
             <keyword name="SerialPort Script" ref="./References/Script/SerialPortDevicePlugin/Doxygen/class_serial_port_device.html"/>
             <keyword name="USBHIDDevice Script" ref="./References/Script/USBHIDDevicePlugin/Doxygen/class_u_s_b_h_i_d_device.html"/>
-            <keyword name="KeyBoardDevice Script" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/class_key_board_capture.html"/>
-            <keyword name="QML Extensions" ref="./References/QtQuick/StimulGL_QMLExtensions/Doxygen/index.html"/>
-            <keyword name="Media Player" ref="./References/QtQuick/StimulGL_QMLExtensions/Doxygen/class_phonon_player.html"/>
-            </keywords>
+            <keyword name="KeyBoardDevice Script" ref="./References/Script/KeyBoardDevicePlugin/Doxygen/class_key_board_capture.html"/>            
+						<keyword name="Firebird Script" ref="./References/Script/FireBirdClientPlugin/Doxygen/class_firebird_client.html"/>
+						<keyword name="PiezoStim Script" ref="./References/Script/PiezoStimDevicePlugin/Doxygen/class_piezo_stim_device.html"/>
+						<keyword name="TBV Exchanger Script" ref="./References/Script/TBVExchangerPlugin/Doxygen/class_t_b_v_exchanger.html"/>
+						<keyword name="TCP Network Server Script" ref="./References/Script/TCPNetworkServerPlugin/Doxygen/class_t_c_p_network_server.html"/>
+        </keywords>
         <files>
             <file>index.html</file>
             <file>history.html</file>
             <file>Additional/about.txt</file>
+            <file>References/Developers/Developers.html</file>            
             <file>References/Script/ScriptingReference.html</file>
             <file>References/Plugins/PluginReference.html</file>
+            <file>References/QtQuick/QMLExtensionsReference.html</file>
             <file>Tutorials/GettingStarted/GettingStartedGuide.html</file>
 						<file>Manuals/PreBuildDevelopmentSetup/PreBuildDevelopmentSetup.html</file>            
             <file>References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html</file>
@@ -74,11 +111,29 @@
 					  <file>References/Script/ParallelPortDevicePlugin/Doxygen/*.*</file>
 						<file>References/Plugins/USBHIDDevicePlugin/USBHIDDevicePlugin.html</file>
             <file>References/Plugins/USBHIDDevicePlugin/images/*.*</file>
-					  <file>References/Script/USBHIDDevicePlugin/Doxygen/*.*</file>
-					  <file>References/Script/SerialPortDevicePlugin/Doxygen/*.*</file>
-					  <file>References/Script/KeyBoardDevicePlugin/Doxygen/*.*</file>			  
+					  <file>References/Script/USBHIDDevicePlugin/Doxygen/*.*</file>					  
+						<file>References/Plugins/SerialPortDevicePlugin/SerialPortDevicePlugin.html</file>
+            <file>References/Plugins/SerialPortDevicePlugin/images/*.*</file>
+					  <file>References/Script/SerialPortDevicePlugin/Doxygen/*.*</file>		
+						<file>References/Plugins/KeyBoardDevicePlugin/KeyBoardDevicePlugin.html</file>
+            <file>References/Plugins/KeyBoardDevicePlugin/images/*.*</file>
+					  <file>References/Script/KeyBoardDevicePlugin/Doxygen/*.*</file>	
+						<file>References/Plugins/FireBirdClientPlugin/FireBirdClientPlugin.html</file>
+            <file>References/Plugins/FireBirdClientPlugin/images/*.*</file>
+					  <file>References/Script/FireBirdClientPlugin/Doxygen/*.*</file>	
+						<file>References/Plugins/PiezoStimDevicePlugin/PiezoStimDevicePlugin.html</file>
+            <file>References/Plugins/PiezoStimDevicePlugin/images/*.*</file>
+					  <file>References/Script/PiezoStimDevicePlugin/Doxygen/*.*</file>	
+						<file>References/Plugins/TBVExchangerPlugin/TBVExchangerPlugin.html</file>
+            <file>References/Plugins/TBVExchangerPlugin/images/*.*</file>
+					  <file>References/Script/TBVExchangerPlugin/Doxygen/*.*</file>	
+						<file>References/Plugins/TCPNetworkServerPlugin/TCPNetworkServerPlugin.html</file>
+            <file>References/Plugins/TCPNetworkServerPlugin/images/*.*</file>
+					  <file>References/Script/TCPNetworkServerPlugin/Doxygen/*.*</file>	
+						<file>References/Plugins/StimulGL_QMLExtensions/StimulGL_QMLExtensions.html</file>
+            <file>References/Plugins/StimulGL_QMLExtensions/images/*.*</file>
+					  <file>References/QtQuick/StimulGL_QMLExtensions/Doxygen/*.*</file>						  					  					  					  					  					  			  
 						<file>References/Plugins/ExtensionPluginTemplate/ExtensionPluginTemplate.html</file>
-						<file>References/QtQuick/StimulGL_QMLExtensions/Doxygen/*.*</file>
 						<file>References/Script/StimulGLMainApp/Doxygen/*.*</file>	
 						<file>css/*.css</file>
 						<file>js/*.js</file>

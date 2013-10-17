@@ -91,11 +91,11 @@
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
 <a name="l00046"></a>00046 <span class="preprocessor">#define EXPERIMENTMANAGER_SCRIPTCONTEXT_NAME    &quot;EM&quot;</span>
 <a name="l00047"></a>00047 <span class="preprocessor"></span>
-<a name="l00048"></a>00048 <span class="keyword">class </span>cExperimentStructure;
+<a name="l00048"></a>00048 <span class="keyword">class </span><a class="code" href="classc_experiment_structure.html" title="The cExperimentStructure class.">cExperimentStructure</a>;
 <a name="l00049"></a>00049 <span class="keyword">class </span>ExperimentTree;
 <a name="l00050"></a>00050 
 <a name="l00052"></a>00052 
-<a name="l00055"></a><a class="code" href="class_experiment_manager.html">00055</a> <span class="keyword">class </span><a class="code" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> : <span class="keyword">public</span> QObject, <span class="keyword">protected</span> QScriptable
+<a name="l00055"></a><a class="code" href="class_experiment_manager.html">00055</a> <span class="keyword">class </span><a class="code" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> : <span class="keyword">public</span> QObject, <span class="keyword">protected</span> QScriptable
 <a name="l00056"></a>00056 {
 <a name="l00057"></a>00057         Q_OBJECT
 <a name="l00058"></a>00058         <span class="comment">//Q_CLASSINFO(&quot;ScriptAPIClassName&quot;, &quot;ExperimentManager&quot;);//Can&#39;t use defines here!, moc doesn&#39;t handle defines, not needed here</span>
@@ -215,94 +215,95 @@
 <a name="l00179"></a>00179         }
 <a name="l00180"></a>00180 
 <a name="l00181"></a>00181 <span class="keyword">public</span> slots:
-<a name="l00182"></a>00182         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a8ca23e16ea2647e2c7ebe83153045296">sendToMainAppLogOutput</a>(<span class="keyword">const</span> QString &amp;strText2Write);
-<a name="l00183"></a>00183         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
-<a name="l00184"></a>00184         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">setExperimentFileName</a>(<span class="keyword">const</span> QString qstrExpFileName);
-<a name="l00185"></a>00185         QString <a class="code" href="class_experiment_manager.html#ae9b3d50bb3af7d85fde90cb97b59e555">getExperimentFileName</a>();
-<a name="l00186"></a>00186         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#ab1847af6af9e6acd4b7fca51ed93b70f">loadExperiment</a>(QString strSource = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">bool</span> bViewEditTree = <span class="keyword">true</span>, <span class="keywordtype">bool</span> bIsFile = <span class="keyword">true</span>);
-<a name="l00187"></a>00187         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#ae1040e5dfe9063c14948878f72c2044f">saveExperiment</a>(QString strFile = <span class="stringliteral">&quot;&quot;</span>);
-<a name="l00188"></a>00188         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a8f45fffa70eaf9416a2f830f5408e6d4">validateExperiment</a>();
-<a name="l00189"></a>00189         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f">runExperiment</a>();
-<a name="l00190"></a>00190         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#abc41d989602e34036630fcaa279d6a4e">abortExperiment</a>();
-<a name="l00191"></a>00191         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a045c8153c0d23530be3f897dee40a8b1">stopExperiment</a>();
-<a name="l00192"></a>00192         <span class="keywordtype">void</span> changeExperimentSubObjectState(ExperimentSubObjectState nState);
-<a name="l00193"></a>00193         QString <a class="code" href="class_experiment_manager.html#a7382ab00376028482a7c8cce177f7363">getCurrentDateTimeStamp</a>();
-<a name="l00194"></a>00194         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a7298beb770b58918a4994a5538026c2b">insertExperimentObjectBlockParameter</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nObjectID,<span class="keyword">const</span> QString sName,<span class="keyword">const</span> QString sValue, <span class="keywordtype">bool</span> bIsInitializing = <span class="keyword">true</span>, <span class="keywordtype">bool</span> bIsCustom = <span class="keyword">false</span>);
-<a name="l00195"></a>00195         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nObjectID,<span class="keyword">const</span> QString sName, ParsedParameterDefinition &amp;strcParDef);
-<a name="l00196"></a>00196         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a439531c8aad7ea5a05df418fb24fcab6">logExperimentObjectData</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nObjectIndex, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nTimerIndex, <span class="keyword">const</span> QString &amp;strFunction = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strTag = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strMessage = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strValue = <span class="stringliteral">&quot;&quot;</span>);
-<a name="l00197"></a>00197         <span class="keywordtype">int</span> <a class="code" href="class_experiment_manager.html#a8162f235ced558e1dd45c804656633db">createExperimentTimer</a>();
-<a name="l00198"></a>00198         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#ad71b7b4a17e1e3781fbb7160ea33c399">startExperimentTimer</a>(<span class="keywordtype">int</span> nIndex);
-<a name="l00199"></a>00199         <span class="keywordtype">double</span> <a class="code" href="class_experiment_manager.html#af4756da1ac430d043a38929310f30fe1">restartExperimentTimer</a>(<span class="keywordtype">int</span> nIndex);
-<a name="l00200"></a>00200         <span class="keywordtype">double</span> <a class="code" href="class_experiment_manager.html#a76821df1152ce7dd6c8dae8dafc2e702">elapsedExperimentTimerTime</a>(<span class="keywordtype">int</span> nIndex);
-<a name="l00201"></a>00201         QString <a class="code" href="class_experiment_manager.html#afecc244df6a6a8118406fd3e3a0ad8a4">getCurrentExperimentState</a>();
-<a name="l00202"></a>00202         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a34102a745b34ce80c9402b00562b148d">setDebugMode</a>(<span class="keywordtype">bool</span> mode);
-<a name="l00203"></a>00203         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a407b993f8251e9a23502a1cd44772e41">getDebugMode</a>();
-<a name="l00204"></a>00204         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a9f50a2cc340ec61292cbf527d6dd4673">setExperimentName</a>(QString name);
-<a name="l00205"></a>00205         QString <a class="code" href="class_experiment_manager.html#ad80a833d24cba75fe10b88328629a8da">getExperimentName</a>();
-<a name="l00206"></a>00206         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a62bbe3afa35c494a35932dccee741367">setExperimentOutputFilePostString</a>(<span class="keyword">const</span> QString &amp;sPostString);
-<a name="l00207"></a>00207         <span class="comment">//QObject* getExperimentStructure();</span>
-<a name="l00208"></a>00208         cExperimentStructure *<a class="code" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4" title="Returns the in-memory Experiment Structure.">getExperimentStructure</a>();
-<a name="l00209"></a>00209         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#af6cb8d15b3b9a9ac9c4de134ff692328" title="Shows the Experiment Graph Editor.">showVisualExperimentEditor</a>(cExperimentStructure *ExpStruct = NULL);
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211 <span class="preprocessor">#ifndef QT_NO_DEBUG</span>
-<a name="l00212"></a>00212 <span class="preprocessor"></span>        QString Test(<span class="keyword">const</span> QString &amp;sInput = <span class="stringliteral">&quot;&quot;</span>);
-<a name="l00213"></a>00213 <span class="preprocessor">#endif</span>
-<a name="l00214"></a>00214 <span class="preprocessor"></span>
-<a name="l00215"></a>00215 
-<a name="l00216"></a>00216 <span class="keyword">private</span>:
-<a name="l00217"></a>00217         <span class="keywordtype">void</span> DefaultConstruct();
-<a name="l00218"></a>00218         <span class="keywordtype">bool</span> WriteAndCloseExperimentOutputData(<span class="keyword">const</span> QString &amp;postFileName = <span class="stringliteral">&quot;&quot;</span>);
-<a name="l00219"></a>00219         <span class="keywordtype">void</span> initializeDataLogger();
-<a name="l00220"></a>00220         <span class="keywordtype">void</span> RegisterMetaTypes();
-<a name="l00221"></a>00221         <span class="keywordtype">bool</span> invokeExperimentObjectsSlots(<span class="keyword">const</span> QString &amp;sSlotName);
-<a name="l00222"></a>00222         <span class="keywordtype">bool</span> prePassiveParseExperiment();
-<a name="l00223"></a>00223         <span class="keywordtype">bool</span> createExperimentStructure();
-<a name="l00224"></a>00224         <span class="keywordtype">bool</span> configureExperiment();
-<a name="l00225"></a>00225         <span class="keywordtype">bool</span> createExperimentObjects();
-<a name="l00226"></a>00226         <span class="keywordtype">bool</span> createExperimentStructureFromDomNodeList(<span class="keyword">const</span> QDomNodeList &amp;ExpBlockTrialsDomNodeLst);
-<a name="l00227"></a>00227         <span class="keywordtype">int</span> createExperimentBlockParamsFromDomNodeList(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nBlockNumber, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
-<a name="l00228"></a>00228         <span class="keywordtype">bool</span> connectExperimentObjects(<span class="keywordtype">bool</span> bDisconnect = <span class="keyword">false</span>, <span class="keywordtype">int</span> nObjectID = -1);
-<a name="l00229"></a>00229         <span class="keywordtype">bool</span> initializeExperiment(<span class="keywordtype">bool</span> bFinalize = <span class="keyword">false</span>);
-<a name="l00230"></a>00230         <span class="keywordtype">bool</span> finalizeExperimentObjects();
-<a name="l00231"></a>00231         <span class="keywordtype">bool</span> startExperimentObjects(<span class="keywordtype">bool</span> bRunFullScreen = <span class="keyword">true</span>);
-<a name="l00232"></a>00232         <span class="keywordtype">bool</span> initExperimentObjects();
-<a name="l00233"></a>00233         <span class="keywordtype">bool</span> stopExperimentObjects();
-<a name="l00234"></a>00234         <span class="keywordtype">bool</span> abortExperimentObjects();
-<a name="l00235"></a>00235         <span class="keywordtype">bool</span> changeExperimentObjectsSignalSlots(<span class="keywordtype">bool</span> bDisconnect = <span class="keyword">false</span>, <span class="keywordtype">int</span> nSpecificIndex = -1);
-<a name="l00236"></a>00236         <span class="keywordtype">void</span> cleanupExperimentObjects();
-<a name="l00237"></a>00237         <span class="keywordtype">void</span> changeCurrentExperimentState(<a class="code" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caad">ExperimentState</a> expCurrState);
-<a name="l00238"></a>00238         QObject *getObjectElementById(<span class="keywordtype">int</span> nID);
-<a name="l00239"></a>00239         <a class="code" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caad">ExperimentState</a> getCurrExperimentState() {<span class="keywordflow">return</span> experimentCurrentState;}
-<a name="l00240"></a>00240         
-<a name="l00241"></a>00241         QDomNodeList ExperimentObjectDomNodeList;
-<a name="l00242"></a>00242         QDomNodeList ExperimentBlockTrialsDomNodeList;
-<a name="l00243"></a>00243         cExperimentStructure *cExperimentBlockTrialStructure;
-<a name="l00244"></a>00244         QList&lt;objectElement&gt; lExperimentObjectList;
-<a name="l00245"></a>00245         ExperimentTree *currentExperimentTree;
-<a name="l00246"></a>00246         <span class="comment">//ExperimentConfiguration strcExperimentConfiguration;</span>
-<a name="l00247"></a>00247         <a class="code" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caad">ExperimentState</a> experimentCurrentState;
-<a name="l00248"></a>00248         QHash&lt;QString, int&gt; experimentStateHash;
-<a name="l00249"></a>00249         VisualExperimentEditor *visExpEditor;
-<a name="l00250"></a>00250 
-<a name="l00251"></a>00251         QByteArray currentExperimentFile;
-<a name="l00252"></a>00252         QByteArray currentValidationFile;
-<a name="l00253"></a>00253 
-<a name="l00254"></a>00254         QObject *parentObject;
-<a name="l00255"></a>00255         QScriptEngine *currentScriptEngine;
-<a name="l00256"></a>00256         <span class="keywordtype">bool</span> m_RunFullScreen;
-<a name="l00257"></a>00257         QString m_ExpFileName;
-<a name="l00258"></a>00258         QString m_ExpFolder;
-<a name="l00259"></a>00259         ExperimentLogger *expDataLogger;
-<a name="l00260"></a>00260         <span class="keywordtype">int</span> nExperimentTimerIndex;
-<a name="l00261"></a>00261         QString sExperimentOutputDataPostString;
-<a name="l00262"></a>00262 };
-<a name="l00263"></a>00263 
-<a name="l00264"></a>00264 <span class="preprocessor">#endif // ExperimentManager_H</span>
+<a name="l00182"></a>00182         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
+<a name="l00183"></a>00183 
+<a name="l00189"></a>00189         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a8ca23e16ea2647e2c7ebe83153045296" title="Sends a text string to the StimulGL Log output pane.">sendToMainAppLogOutput</a>(<span class="keyword">const</span> QString &amp;strText2Write);
+<a name="l00196"></a>00196         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#aae1b09e06c4f52a09c2973dcb18139f5" title="Sets the path for the experiment file.">setExperimentFileName</a>(<span class="keyword">const</span> QString sExpFileName);
+<a name="l00202"></a>00202         QString <a class="code" href="class_experiment_manager.html#ae9b3d50bb3af7d85fde90cb97b59e555" title="Returns the path to the current set experiment file.">getExperimentFileName</a>();
+<a name="l00211"></a>00211         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#ab1847af6af9e6acd4b7fca51ed93b70f" title="Loads the Experiment from a file path into the memory.">loadExperiment</a>(QString strSource = <span class="stringliteral">&quot;&quot;</span>, <span class="keywordtype">bool</span> bViewEditTree = <span class="keyword">true</span>, <span class="keywordtype">bool</span> bIsFile = <span class="keyword">true</span>);
+<a name="l00218"></a>00218         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#ae1040e5dfe9063c14948878f72c2044f" title="Saves the current experiment file from memory to a file.">saveExperiment</a>(QString strFile = <span class="stringliteral">&quot;&quot;</span>);
+<a name="l00224"></a>00224         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a8f45fffa70eaf9416a2f830f5408e6d4" title="Validates the current experiment available in memory.">validateExperiment</a>();
+<a name="l00230"></a>00230         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f" title="Runs the current Experiment available in memory.">runExperiment</a>();
+<a name="l00235"></a>00235         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#abc41d989602e34036630fcaa279d6a4e" title="Aborts the current Experiment that is running.">abortExperiment</a>();
+<a name="l00240"></a>00240         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a045c8153c0d23530be3f897dee40a8b1" title="Stops the current Experiment that is running.">stopExperiment</a>();  
+<a name="l00246"></a>00246         QString <a class="code" href="class_experiment_manager.html#a7382ab00376028482a7c8cce177f7363" title="Use this function to retrieve the current date/time.">getCurrentDateTimeStamp</a>();
+<a name="l00257"></a>00257         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a7298beb770b58918a4994a5538026c2b" title="Inserts a specified object parameter for the current experiment block.">insertExperimentObjectBlockParameter</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nObjectID, <span class="keyword">const</span> QString sName, <span class="keyword">const</span> QString sValue, <span class="keywordtype">bool</span> bIsInitializing = <span class="keyword">true</span>, <span class="keywordtype">bool</span> bIsCustom = <span class="keyword">false</span>);
+<a name="l00265"></a>00265         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e" title="Returns a boolean value that determines if a specified named object parameter from the current experi...">getExperimentObjectBlockParameter</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> nObjectID,<span class="keyword">const</span> QString sName, ParsedParameterDefinition &amp;strcParDef);
+<a name="l00277"></a>00277         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a439531c8aad7ea5a05df418fb24fcab6" title="Use this function to append a experiment data log to the default StimulGL log file.">logExperimentObjectData</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nObjectIndex, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nTimerIndex, <span class="keyword">const</span> QString &amp;strFunction = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strTag = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strMessage = <span class="stringliteral">&quot;&quot;</span>, <span class="keyword">const</span> QString &amp;strValue = <span class="stringliteral">&quot;&quot;</span>);
+<a name="l00283"></a>00283         <span class="keywordtype">int</span> <a class="code" href="class_experiment_manager.html#a8162f235ced558e1dd45c804656633db" title="Use this function to create a Experiment Timer object.">createExperimentTimer</a>();
+<a name="l00290"></a>00290         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#ad71b7b4a17e1e3781fbb7160ea33c399" title="Use this function to start a Experiment Timer object.">startExperimentTimer</a>(<span class="keywordtype">int</span> nIndex);
+<a name="l00297"></a>00297         <span class="keywordtype">double</span> <a class="code" href="class_experiment_manager.html#af4756da1ac430d043a38929310f30fe1" title="Use this function to retrieve the current elapsed Experiment Timer time and restart a Experiment Time...">restartExperimentTimer</a>(<span class="keywordtype">int</span> nIndex);
+<a name="l00304"></a>00304         <span class="keywordtype">double</span> <a class="code" href="class_experiment_manager.html#a76821df1152ce7dd6c8dae8dafc2e702" title="Use this function to retrieve the current elapsed Experiment Timer time.">elapsedExperimentTimerTime</a>(<span class="keywordtype">int</span> nIndex);
+<a name="l00309"></a>00309         QString <a class="code" href="class_experiment_manager.html#afecc244df6a6a8118406fd3e3a0ad8a4" title="Use this function to retrieve the current Experiment State.">getCurrentExperimentState</a>();
+<a name="l00315"></a>00315         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a34102a745b34ce80c9402b00562b148d" title="Sets the debug mode for the experiment.">setDebugMode</a>(<span class="keywordtype">bool</span> mode);
+<a name="l00321"></a>00321         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#a407b993f8251e9a23502a1cd44772e41" title="Get the debug mode for the experiment.">getDebugMode</a>();
+<a name="l00327"></a>00327         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a6d6e2a1c26145a770fb2912ba6fe3686" title="Sets the experiment name for the current experiment.">setExperimentName</a>(QString sName);
+<a name="l00333"></a>00333         QString <a class="code" href="class_experiment_manager.html#ad80a833d24cba75fe10b88328629a8da" title="Returns the current experiment name.">getExperimentName</a>();
+<a name="l00339"></a>00339         <span class="keywordtype">void</span> <a class="code" href="class_experiment_manager.html#a62bbe3afa35c494a35932dccee741367" title="Sets the configurable part of the automatic generated experiment Output filename.">setExperimentOutputFilePostString</a>(<span class="keyword">const</span> QString &amp;sPostString);
+<a name="l00345"></a>00345         <a class="code" href="classc_experiment_structure.html" title="The cExperimentStructure class.">cExperimentStructure</a> *<a class="code" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4" title="Returns the current in-memory Experiment Structure.">getExperimentStructure</a>();
+<a name="l00352"></a>00352         <span class="keywordtype">bool</span> <a class="code" href="class_experiment_manager.html#af6cb8d15b3b9a9ac9c4de134ff692328" title="Shows a Experiment Structure in a Experiment Graph Editor UI.">showVisualExperimentEditor</a>(<a class="code" href="classc_experiment_structure.html" title="The cExperimentStructure class.">cExperimentStructure</a> *ExpStruct = NULL);
+<a name="l00353"></a>00353 
+<a name="l00354"></a>00354 <span class="preprocessor">#ifndef QT_NO_DEBUG</span>
+<a name="l00355"></a>00355 <span class="preprocessor"></span>        QString Test(<span class="keyword">const</span> QString &amp;sInput = <span class="stringliteral">&quot;&quot;</span>);
+<a name="l00356"></a>00356 <span class="preprocessor">#endif</span>
+<a name="l00357"></a>00357 <span class="preprocessor"></span>
+<a name="l00358"></a>00358 <span class="keyword">private</span> slots:
+<a name="l00359"></a>00359         <span class="keywordtype">void</span> changeExperimentSubObjectState(ExperimentSubObjectState nState);
+<a name="l00360"></a>00360 
+<a name="l00361"></a>00361 <span class="keyword">private</span>:
+<a name="l00362"></a>00362         <span class="keywordtype">void</span> DefaultConstruct();
+<a name="l00363"></a>00363         <span class="keywordtype">bool</span> WriteAndCloseExperimentOutputData(<span class="keyword">const</span> QString &amp;postFileName = <span class="stringliteral">&quot;&quot;</span>);
+<a name="l00364"></a>00364         <span class="keywordtype">void</span> initializeDataLogger();
+<a name="l00365"></a>00365         <span class="keywordtype">void</span> RegisterMetaTypes();
+<a name="l00366"></a>00366         <span class="keywordtype">bool</span> invokeExperimentObjectsSlots(<span class="keyword">const</span> QString &amp;sSlotName);
+<a name="l00367"></a>00367         <span class="keywordtype">bool</span> prePassiveParseExperiment();
+<a name="l00368"></a>00368         <span class="keywordtype">bool</span> createExperimentStructure();
+<a name="l00369"></a>00369         <span class="keywordtype">bool</span> configureExperiment();
+<a name="l00370"></a>00370         <span class="keywordtype">bool</span> createExperimentObjects();
+<a name="l00371"></a>00371         <span class="keywordtype">bool</span> createExperimentStructureFromDomNodeList(<span class="keyword">const</span> QDomNodeList &amp;ExpBlockTrialsDomNodeLst);
+<a name="l00372"></a>00372         <span class="keywordtype">int</span> createExperimentBlockParamsFromDomNodeList(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nBlockNumber, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
+<a name="l00373"></a>00373         <span class="keywordtype">bool</span> connectExperimentObjects(<span class="keywordtype">bool</span> bDisconnect = <span class="keyword">false</span>, <span class="keywordtype">int</span> nObjectID = -1);
+<a name="l00374"></a>00374         <span class="keywordtype">bool</span> initializeExperiment(<span class="keywordtype">bool</span> bFinalize = <span class="keyword">false</span>);
+<a name="l00375"></a>00375         <span class="keywordtype">bool</span> finalizeExperimentObjects();
+<a name="l00376"></a>00376         <span class="keywordtype">bool</span> startExperimentObjects(<span class="keywordtype">bool</span> bRunFullScreen = <span class="keyword">true</span>);
+<a name="l00377"></a>00377         <span class="keywordtype">bool</span> initExperimentObjects();
+<a name="l00378"></a>00378         <span class="keywordtype">bool</span> stopExperimentObjects();
+<a name="l00379"></a>00379         <span class="keywordtype">bool</span> abortExperimentObjects();
+<a name="l00380"></a>00380         <span class="keywordtype">bool</span> changeExperimentObjectsSignalSlots(<span class="keywordtype">bool</span> bDisconnect = <span class="keyword">false</span>, <span class="keywordtype">int</span> nSpecificIndex = -1);
+<a name="l00381"></a>00381         <span class="keywordtype">void</span> cleanupExperimentObjects();
+<a name="l00382"></a>00382         <span class="keywordtype">void</span> changeCurrentExperimentState(<a class="code" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caad">ExperimentState</a> expCurrState);
+<a name="l00383"></a>00383         QObject *getObjectElementById(<span class="keywordtype">int</span> nID);
+<a name="l00384"></a>00384         <a class="code" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caad">ExperimentState</a> getCurrExperimentState() {<span class="keywordflow">return</span> experimentCurrentState;}
+<a name="l00385"></a>00385         
+<a name="l00386"></a>00386         QDomNodeList ExperimentObjectDomNodeList;
+<a name="l00387"></a>00387         QDomNodeList ExperimentBlockTrialsDomNodeList;
+<a name="l00388"></a>00388         <a class="code" href="classc_experiment_structure.html" title="The cExperimentStructure class.">cExperimentStructure</a> *cExperimentBlockTrialStructure;
+<a name="l00389"></a>00389         QList&lt;objectElement&gt; lExperimentObjectList;
+<a name="l00390"></a>00390         ExperimentTree *currentExperimentTree;
+<a name="l00391"></a>00391         <span class="comment">//ExperimentConfiguration strcExperimentConfiguration;</span>
+<a name="l00392"></a>00392         <a class="code" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caad">ExperimentState</a> experimentCurrentState;
+<a name="l00393"></a>00393         QHash&lt;QString, int&gt; experimentStateHash;
+<a name="l00394"></a>00394         VisualExperimentEditor *visExpEditor;
+<a name="l00395"></a>00395 
+<a name="l00396"></a>00396         QByteArray currentExperimentFile;
+<a name="l00397"></a>00397         QByteArray currentValidationFile;
+<a name="l00398"></a>00398 
+<a name="l00399"></a>00399         QObject *parentObject;
+<a name="l00400"></a>00400         QScriptEngine *currentScriptEngine;
+<a name="l00401"></a>00401         <span class="keywordtype">bool</span> m_RunFullScreen;
+<a name="l00402"></a>00402         QString m_ExpFileName;
+<a name="l00403"></a>00403         QString m_ExpFolder;
+<a name="l00404"></a>00404         ExperimentLogger *expDataLogger;
+<a name="l00405"></a>00405         <span class="keywordtype">int</span> nExperimentTimerIndex;
+<a name="l00406"></a>00406         QString sExperimentOutputDataPostString;
+<a name="l00407"></a>00407 };
+<a name="l00408"></a>00408 
+<a name="l00409"></a>00409 <span class="preprocessor">#endif // ExperimentManager_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 25 2013 09:24:24 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 17 2013 11:30:53 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

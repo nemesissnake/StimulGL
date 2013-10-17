@@ -57,10 +57,19 @@
 <tr><td colspan="2"><h2><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
 <tr class="memitem:a418131190e009530e8a2b36b61284e51"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51">addPixmapToImageBuffer</a> (const QPixmap &amp;pixmap)</td></tr>
+<tr class="memdesc:a418131190e009530e8a2b36b61284e51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a QPixmap to the internal Image Buffer.  <a href="#a418131190e009530e8a2b36b61284e51"></a><br/></td></tr>
+<tr class="memitem:a6573bb3cf35b6b7c70f9da3b3028966f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_m_l2_viewer.html#a6573bb3cf35b6b7c70f9da3b3028966f">executeQML2Document</a> (const QString &amp;strSource, bool bIsFile=true)</td></tr>
+<tr class="memdesc:a6573bb3cf35b6b7c70f9da3b3028966f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes a QML document.  <a href="#a6573bb3cf35b6b7c70f9da3b3028966f"></a><br/></td></tr>
 <tr class="memitem:a7619ca82d490a2dde78617c2dce34c6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_m_l2_viewer.html#a7619ca82d490a2dde78617c2dce34c6e">getPixmapFromImageBuffer</a> (QPixmap *pixmap, const QString &amp;ID)</td></tr>
+<tr class="memdesc:a7619ca82d490a2dde78617c2dce34c6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a QPixmap to the internal Image Buffer.  <a href="#a7619ca82d490a2dde78617c2dce34c6e"></a><br/></td></tr>
 <tr class="memitem:a16603caa20bd1a438abd44645c10fd55"><td class="memItemLeft" align="right" valign="top">QVariant&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_m_l2_viewer.html#a16603caa20bd1a438abd44645c10fd55">invokeQml2Method</a> (QString strRootObjectName, QString strMethodName, QVariant inputValue1=QVariant(), QVariant inputValue2=QVariant(), QVariant inputValue3=QVariant(), QVariant inputValue4=QVariant(), QVariant inputValue5=QVariant(), QVariant inputValue6=QVariant(), QVariant inputValue7=QVariant(), QVariant inputValue8=QVariant(), QVariant inputValue9=QVariant())</td></tr>
+<tr class="memdesc:a16603caa20bd1a438abd44645c10fd55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invokes a QML Method.  <a href="#a16603caa20bd1a438abd44645c10fd55"></a><br/></td></tr>
 <tr class="memitem:a7dd05f6edb7e18191f82d4913478b4e8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_m_l2_viewer.html#a7dd05f6edb7e18191f82d4913478b4e8">removePixmapFromImageBuffer</a> (const QString &amp;ID)</td></tr>
+<tr class="memdesc:a7dd05f6edb7e18191f82d4913478b4e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a QPixmap inside the internal Image Buffer.  <a href="#a7dd05f6edb7e18191f82d4913478b4e8"></a><br/></td></tr>
 <tr class="memitem:a44771b27d30bf455ac4b08257af464f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_m_l2_viewer.html#a44771b27d30bf455ac4b08257af464f3">updatePixmapFromImageBuffer</a> (QPixmap *pixmap, const QString &amp;ID)</td></tr>
+<tr class="memdesc:a44771b27d30bf455ac4b08257af464f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates a QPixmap inside the internal Image Buffer.  <a href="#a44771b27d30bf455ac4b08257af464f3"></a><br/></td></tr>
+<tr class="memitem:a722b15b6a9369ad82e2bb3c6dff41ec6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_m_l2_viewer.html#a722b15b6a9369ad82e2bb3c6dff41ec6">updatePixmapIDFromImageBuffer</a> (const QString &amp;oldID, const QString &amp;newID)</td></tr>
+<tr class="memdesc:a722b15b6a9369ad82e2bb3c6dff41ec6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the ID string of a corresponding QPixmap inside the internal Image Buffer.  <a href="#a722b15b6a9369ad82e2bb3c6dff41ec6"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="signals"></a>
 Signals</h2></td></tr>
 <tr class="memitem:a34b31a9a7f11d5da4b05ea42be0a531b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_q_m_l2_viewer.html#a34b31a9a7f11d5da4b05ea42be0a531b">NewSourceLoaded</a> (QString sFileURL)</td></tr>
@@ -74,7 +83,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="class_q_m_l2_viewer.html" title="The QML2Viewer class.">QML2Viewer</a> class. </p>
-<p>The <a class="el" href="class_q_m_l2_viewer.html" title="The QML2Viewer class.">QML2Viewer</a> class can be used in combination with the <a class="el" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> for presenting visual or other kind of stimuli using QML/QtQuick. </p>
+<p>The <a class="el" href="class_q_m_l2_viewer.html" title="The QML2Viewer class.">QML2Viewer</a> class can be used in combination with the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> for presenting visual or other kind of stimuli using QML/QtQuick. </p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a6cd98c4bc3ebca196e0b87072dbcd312"></a>
 <div class="memitem">
@@ -130,7 +139,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Adds a QPixmap to the internal Image Buffer.</p>
+
+<p>Adds a QPixmap to the internal Image Buffer. </p>
 <p>This function can add a QPixmap to the internal Image Buffer. These images can then be rapidly presented because they are already loaded in memory. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -138,7 +148,47 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a Unique string created by the Image Buffer holding a key to access the newly added image. See <a class="el" href="class_q_m_l2_viewer.html#a7619ca82d490a2dde78617c2dce34c6e">QML2Viewer::getPixmapFromImageBuffer</a> and <a class="el" href="class_q_m_l2_viewer.html#a44771b27d30bf455ac4b08257af464f3">QML2Viewer::updatePixmapFromImageBuffer</a>.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a Unique string created by the Image Buffer holding a key to access the newly added image. See <a class="el" href="class_q_m_l2_viewer.html#a7619ca82d490a2dde78617c2dce34c6e" title="Retrieves a QPixmap to the internal Image Buffer.">QML2Viewer::getPixmapFromImageBuffer</a> and <a class="el" href="class_q_m_l2_viewer.html#a44771b27d30bf455ac4b08257af464f3" title="Updates a QPixmap inside the internal Image Buffer.">QML2Viewer::updatePixmapFromImageBuffer</a>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a6573bb3cf35b6b7c70f9da3b3028966f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_q_m_l2_viewer.html#a6573bb3cf35b6b7c70f9da3b3028966f">QML2Viewer::executeQML2Document</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>strSource</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bIsFile</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Executes a QML document. </p>
+<p>This function can execute a QML document. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strSource</td><td>the path to a QML file or the QML code itself. </td></tr>
+    <tr><td class="paramname">bIsFile</td><td>a boolean value determining whether the </td></tr>
+    <tr><td class="paramname">strSource</td><td>is a path to a QML file, if false then the </td></tr>
+    <tr><td class="paramname">strSource</td><td>is interpreted as QML code. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the function could be executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -166,7 +216,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Retrieves a QPixmap to the internal Image Buffer.</p>
+
+<p>Retrieves a QPixmap to the internal Image Buffer. </p>
 <p>This function can retrieve a QPixmap to the internal Image Buffer. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -174,7 +225,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a boolean value representing whether the function executed successfully. See <a class="el" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51">QML2Viewer::addPixmapToImageBuffer</a>.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value representing whether the function executed successfully. See <a class="el" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51" title="Adds a QPixmap to the internal Image Buffer.">QML2Viewer::addPixmapToImageBuffer</a>. </dd></dl>
 
 </div>
 </div>
@@ -256,7 +307,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Invokes a QML Method.</p>
+
+<p>Invokes a QML Method. </p>
 <p>This function can invoke/call a defined function within the current QML context. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -266,7 +318,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a QVariant containing the invoked function return value converted to a QVariant.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a QVariant containing the invoked function return value converted to a QVariant. </dd></dl>
 
 </div>
 </div>
@@ -310,7 +362,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Removes a QPixmap inside the internal Image Buffer.</p>
+
+<p>Removes a QPixmap inside the internal Image Buffer. </p>
 <p>This function can remove a QPixmap that is stored in the internal Image Buffer. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -318,7 +371,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a boolean value representing whether the function executed successfully. See <a class="el" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51">QML2Viewer::addPixmapToImageBuffer</a>.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value representing whether the function executed successfully. See <a class="el" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51" title="Adds a QPixmap to the internal Image Buffer.">QML2Viewer::addPixmapToImageBuffer</a>. </dd></dl>
 
 </div>
 </div>
@@ -346,7 +399,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Updates a QPixmap inside the internal Image Buffer.</p>
+
+<p>Updates a QPixmap inside the internal Image Buffer. </p>
 <p>This function can update a QPixmap that is stored in the internal Image Buffer. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -355,7 +409,45 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns:</dt><dd>a boolean value representing whether the function executed successfully. See <a class="el" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51">QML2Viewer::addPixmapToImageBuffer</a>.</dd></dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value representing whether the function executed successfully. See <a class="el" href="class_q_m_l2_viewer.html#a418131190e009530e8a2b36b61284e51" title="Adds a QPixmap to the internal Image Buffer.">QML2Viewer::addPixmapToImageBuffer</a>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a722b15b6a9369ad82e2bb3c6dff41ec6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_q_m_l2_viewer.html#a722b15b6a9369ad82e2bb3c6dff41ec6">QML2Viewer::updatePixmapIDFromImageBuffer</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>oldID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>newID</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Updates the ID string of a corresponding QPixmap inside the internal Image Buffer. </p>
+<p>This function can update the ID string of a corresponding QPixmap that is stored in the internal Image Buffer. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">oldID</td><td>the String containing the current ID String, created by the Image Buffer, that should change. </td></tr>
+    <tr><td class="paramname">newID</td><td>the String containing the new unique ID string. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value representing whether the function could execute successfully. </dd></dl>
 
 </div>
 </div>
@@ -363,7 +455,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 17 2013 11:30:53 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

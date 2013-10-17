@@ -50,7 +50,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>The Experiment Manager class.  
+<p>The <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> class.  
  <a href="class_experiment_manager.html#details">More...</a></p>
 
 <p><a href="class_experiment_manager-members.html">List of all members.</a></p>
@@ -74,32 +74,55 @@ Public Types</h2></td></tr>
 <tr><td colspan="2"><h2><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
 <tr class="memitem:abc41d989602e34036630fcaa279d6a4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#abc41d989602e34036630fcaa279d6a4e">abortExperiment</a> ()</td></tr>
+<tr class="memdesc:abc41d989602e34036630fcaa279d6a4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aborts the current Experiment that is running.  <a href="#abc41d989602e34036630fcaa279d6a4e"></a><br/></td></tr>
 <tr class="memitem:a8162f235ced558e1dd45c804656633db"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a8162f235ced558e1dd45c804656633db">createExperimentTimer</a> ()</td></tr>
+<tr class="memdesc:a8162f235ced558e1dd45c804656633db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this function to create a Experiment Timer object.  <a href="#a8162f235ced558e1dd45c804656633db"></a><br/></td></tr>
 <tr class="memitem:a76821df1152ce7dd6c8dae8dafc2e702"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a76821df1152ce7dd6c8dae8dafc2e702">elapsedExperimentTimerTime</a> (int nIndex)</td></tr>
+<tr class="memdesc:a76821df1152ce7dd6c8dae8dafc2e702"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this function to retrieve the current elapsed Experiment Timer time.  <a href="#a76821df1152ce7dd6c8dae8dafc2e702"></a><br/></td></tr>
 <tr class="memitem:a7382ab00376028482a7c8cce177f7363"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7382ab00376028482a7c8cce177f7363">getCurrentDateTimeStamp</a> ()</td></tr>
+<tr class="memdesc:a7382ab00376028482a7c8cce177f7363"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this function to retrieve the current date/time.  <a href="#a7382ab00376028482a7c8cce177f7363"></a><br/></td></tr>
 <tr class="memitem:afecc244df6a6a8118406fd3e3a0ad8a4"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#afecc244df6a6a8118406fd3e3a0ad8a4">getCurrentExperimentState</a> ()</td></tr>
+<tr class="memdesc:afecc244df6a6a8118406fd3e3a0ad8a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this function to retrieve the current Experiment State.  <a href="#afecc244df6a6a8118406fd3e3a0ad8a4"></a><br/></td></tr>
 <tr class="memitem:a407b993f8251e9a23502a1cd44772e41"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a407b993f8251e9a23502a1cd44772e41">getDebugMode</a> ()</td></tr>
+<tr class="memdesc:a407b993f8251e9a23502a1cd44772e41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the debug mode for the experiment.  <a href="#a407b993f8251e9a23502a1cd44772e41"></a><br/></td></tr>
 <tr class="memitem:ae9b3d50bb3af7d85fde90cb97b59e555"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ae9b3d50bb3af7d85fde90cb97b59e555">getExperimentFileName</a> ()</td></tr>
+<tr class="memdesc:ae9b3d50bb3af7d85fde90cb97b59e555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the path to the current set experiment file.  <a href="#ae9b3d50bb3af7d85fde90cb97b59e555"></a><br/></td></tr>
 <tr class="memitem:ad80a833d24cba75fe10b88328629a8da"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ad80a833d24cba75fe10b88328629a8da">getExperimentName</a> ()</td></tr>
+<tr class="memdesc:ad80a833d24cba75fe10b88328629a8da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current experiment name.  <a href="#ad80a833d24cba75fe10b88328629a8da"></a><br/></td></tr>
 <tr class="memitem:a7828d7cc6a43af0d032f57a7d4e7e37e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, ParsedParameterDefinition &amp;strcParDef)</td></tr>
-<tr class="memitem:a5751e9c3f18107aa629628f0e40f7ac4"><td class="memItemLeft" align="right" valign="top">cExperimentStructure *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4">getExperimentStructure</a> ()</td></tr>
-<tr class="memdesc:a5751e9c3f18107aa629628f0e40f7ac4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the in-memory Experiment Structure.  <a href="#a5751e9c3f18107aa629628f0e40f7ac4"></a><br/></td></tr>
+<tr class="memdesc:a7828d7cc6a43af0d032f57a7d4e7e37e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a boolean value that determines if a specified named object parameter from the current experiment block could be retrieved and set.  <a href="#a7828d7cc6a43af0d032f57a7d4e7e37e"></a><br/></td></tr>
+<tr class="memitem:a5751e9c3f18107aa629628f0e40f7ac4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classc_experiment_structure.html">cExperimentStructure</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4">getExperimentStructure</a> ()</td></tr>
+<tr class="memdesc:a5751e9c3f18107aa629628f0e40f7ac4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current in-memory Experiment Structure.  <a href="#a5751e9c3f18107aa629628f0e40f7ac4"></a><br/></td></tr>
 <tr class="memitem:a7298beb770b58918a4994a5538026c2b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7298beb770b58918a4994a5538026c2b">insertExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, const QString sValue, bool bIsInitializing=true, bool bIsCustom=false)</td></tr>
+<tr class="memdesc:a7298beb770b58918a4994a5538026c2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts a specified object parameter for the current experiment block.  <a href="#a7298beb770b58918a4994a5538026c2b"></a><br/></td></tr>
 <tr class="memitem:ab1847af6af9e6acd4b7fca51ed93b70f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ab1847af6af9e6acd4b7fca51ed93b70f">loadExperiment</a> (QString strSource=&quot;&quot;, bool bViewEditTree=true, bool bIsFile=true)</td></tr>
+<tr class="memdesc:ab1847af6af9e6acd4b7fca51ed93b70f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the Experiment from a file path into the memory.  <a href="#ab1847af6af9e6acd4b7fca51ed93b70f"></a><br/></td></tr>
 <tr class="memitem:a439531c8aad7ea5a05df418fb24fcab6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a439531c8aad7ea5a05df418fb24fcab6">logExperimentObjectData</a> (const int &amp;nObjectIndex, const int &amp;nTimerIndex, const QString &amp;strFunction=&quot;&quot;, const QString &amp;strTag=&quot;&quot;, const QString &amp;strMessage=&quot;&quot;, const QString &amp;strValue=&quot;&quot;)</td></tr>
+<tr class="memdesc:a439531c8aad7ea5a05df418fb24fcab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this function to append a experiment data log to the default StimulGL log file.  <a href="#a439531c8aad7ea5a05df418fb24fcab6"></a><br/></td></tr>
 <tr class="memitem:af4756da1ac430d043a38929310f30fe1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#af4756da1ac430d043a38929310f30fe1">restartExperimentTimer</a> (int nIndex)</td></tr>
+<tr class="memdesc:af4756da1ac430d043a38929310f30fe1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this function to retrieve the current elapsed Experiment Timer time and restart a Experiment Timer object.  <a href="#af4756da1ac430d043a38929310f30fe1"></a><br/></td></tr>
 <tr class="memitem:a98db95ef04ac9a5a0e363b89960df78f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f">runExperiment</a> ()</td></tr>
+<tr class="memdesc:a98db95ef04ac9a5a0e363b89960df78f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the current Experiment available in memory.  <a href="#a98db95ef04ac9a5a0e363b89960df78f"></a><br/></td></tr>
 <tr class="memitem:ae1040e5dfe9063c14948878f72c2044f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ae1040e5dfe9063c14948878f72c2044f">saveExperiment</a> (QString strFile=&quot;&quot;)</td></tr>
+<tr class="memdesc:ae1040e5dfe9063c14948878f72c2044f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the current experiment file from memory to a file.  <a href="#ae1040e5dfe9063c14948878f72c2044f"></a><br/></td></tr>
 <tr class="memitem:a8ca23e16ea2647e2c7ebe83153045296"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a8ca23e16ea2647e2c7ebe83153045296">sendToMainAppLogOutput</a> (const QString &amp;strText2Write)</td></tr>
+<tr class="memdesc:a8ca23e16ea2647e2c7ebe83153045296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a text string to the StimulGL Log output pane.  <a href="#a8ca23e16ea2647e2c7ebe83153045296"></a><br/></td></tr>
 <tr class="memitem:a34102a745b34ce80c9402b00562b148d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a34102a745b34ce80c9402b00562b148d">setDebugMode</a> (bool mode)</td></tr>
-<tr class="memitem:adedb8d9213a2452e03fb138e382b9d20"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">setExperimentFileName</a> (const QString qstrExpFileName)</td></tr>
-<tr class="memitem:a9f50a2cc340ec61292cbf527d6dd4673"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a9f50a2cc340ec61292cbf527d6dd4673">setExperimentName</a> (QString name)</td></tr>
+<tr class="memdesc:a34102a745b34ce80c9402b00562b148d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the debug mode for the experiment.  <a href="#a34102a745b34ce80c9402b00562b148d"></a><br/></td></tr>
+<tr class="memitem:aae1b09e06c4f52a09c2973dcb18139f5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#aae1b09e06c4f52a09c2973dcb18139f5">setExperimentFileName</a> (const QString sExpFileName)</td></tr>
+<tr class="memdesc:aae1b09e06c4f52a09c2973dcb18139f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the path for the experiment file.  <a href="#aae1b09e06c4f52a09c2973dcb18139f5"></a><br/></td></tr>
+<tr class="memitem:a6d6e2a1c26145a770fb2912ba6fe3686"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a6d6e2a1c26145a770fb2912ba6fe3686">setExperimentName</a> (QString sName)</td></tr>
+<tr class="memdesc:a6d6e2a1c26145a770fb2912ba6fe3686"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the experiment name for the current experiment.  <a href="#a6d6e2a1c26145a770fb2912ba6fe3686"></a><br/></td></tr>
 <tr class="memitem:a62bbe3afa35c494a35932dccee741367"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a62bbe3afa35c494a35932dccee741367">setExperimentOutputFilePostString</a> (const QString &amp;sPostString)</td></tr>
-<tr class="memitem:af6cb8d15b3b9a9ac9c4de134ff692328"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#af6cb8d15b3b9a9ac9c4de134ff692328">showVisualExperimentEditor</a> (cExperimentStructure *ExpStruct=NULL)</td></tr>
-<tr class="memdesc:af6cb8d15b3b9a9ac9c4de134ff692328"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows the Experiment Graph Editor.  <a href="#af6cb8d15b3b9a9ac9c4de134ff692328"></a><br/></td></tr>
+<tr class="memdesc:a62bbe3afa35c494a35932dccee741367"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the configurable part of the automatic generated experiment Output filename.  <a href="#a62bbe3afa35c494a35932dccee741367"></a><br/></td></tr>
+<tr class="memitem:af6cb8d15b3b9a9ac9c4de134ff692328"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#af6cb8d15b3b9a9ac9c4de134ff692328">showVisualExperimentEditor</a> (<a class="el" href="classc_experiment_structure.html">cExperimentStructure</a> *ExpStruct=NULL)</td></tr>
+<tr class="memdesc:af6cb8d15b3b9a9ac9c4de134ff692328"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows a Experiment Structure in a Experiment Graph Editor UI.  <a href="#af6cb8d15b3b9a9ac9c4de134ff692328"></a><br/></td></tr>
 <tr class="memitem:ad71b7b4a17e1e3781fbb7160ea33c399"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ad71b7b4a17e1e3781fbb7160ea33c399">startExperimentTimer</a> (int nIndex)</td></tr>
+<tr class="memdesc:ad71b7b4a17e1e3781fbb7160ea33c399"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this function to start a Experiment Timer object.  <a href="#ad71b7b4a17e1e3781fbb7160ea33c399"></a><br/></td></tr>
 <tr class="memitem:a045c8153c0d23530be3f897dee40a8b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a045c8153c0d23530be3f897dee40a8b1">stopExperiment</a> ()</td></tr>
+<tr class="memdesc:a045c8153c0d23530be3f897dee40a8b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the current Experiment that is running.  <a href="#a045c8153c0d23530be3f897dee40a8b1"></a><br/></td></tr>
 <tr class="memitem:a8f45fffa70eaf9416a2f830f5408e6d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a8f45fffa70eaf9416a2f830f5408e6d4">validateExperiment</a> ()</td></tr>
+<tr class="memdesc:a8f45fffa70eaf9416a2f830f5408e6d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates the current experiment available in memory.  <a href="#a8f45fffa70eaf9416a2f830f5408e6d4"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="signals"></a>
 Signals</h2></td></tr>
 <tr class="memitem:a378b240769228b892539095a0093cbd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a378b240769228b892539095a0093cbd1">ExperimentStateHasChanged</a> (int nExperimentMainState, QString timeTextStamp)</td></tr>
@@ -109,12 +132,12 @@ Signals</h2></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a88f00d00a329b7c9e322e70fb025b1aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a88f00d00a329b7c9e322e70fb025b1aa">ExperimentManager</a> (QObject *parent=NULL, QScriptEngine *engine=NULL)</td></tr>
-<tr class="memdesc:a88f00d00a329b7c9e322e70fb025b1aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> constructor.  <a href="#a88f00d00a329b7c9e322e70fb025b1aa"></a><br/></td></tr>
+<tr class="memdesc:a88f00d00a329b7c9e322e70fb025b1aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> constructor.  <a href="#a88f00d00a329b7c9e322e70fb025b1aa"></a><br/></td></tr>
 <tr class="memitem:a43725b247d2311702fe71765945e46ec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a43725b247d2311702fe71765945e46ec">~ExperimentManager</a> ()</td></tr>
-<tr class="memdesc:a43725b247d2311702fe71765945e46ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> destructor.  <a href="#a43725b247d2311702fe71765945e46ec"></a><br/></td></tr>
+<tr class="memdesc:a43725b247d2311702fe71765945e46ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> destructor.  <a href="#a43725b247d2311702fe71765945e46ec"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>The Experiment Manager class. </p>
+<div class="textblock"><p>The <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> class. </p>
 <p>The Experiment Manager can be used configure, open and execute experiment (*.exml) files. </p>
 </div><hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caad"></a>
@@ -127,7 +150,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The enum ExperimentState represents the main state of the <a class="el" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> object </p>
+<p>The enum ExperimentState represents the main state of the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> object </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caadaafc8ebde10bb440ecdace31a426b9a5e"></a>ExperimentManager_NoState</em>&nbsp;</td><td>
 <p>enum value 0 </p>
@@ -188,7 +211,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>The <a class="el" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> constructor. </p>
+<p>The <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> constructor. </p>
 <p>You do not need to specify the parent object. The StimulGL script engine automatically retrieves the parent role </p>
 
 </div>
@@ -207,7 +230,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>The <a class="el" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> destructor. </p>
+<p>The <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> destructor. </p>
 <p>You do not need call the destructor. The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends </p>
 
 </div>
@@ -226,8 +249,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Aborts the current Experiment that is running.</p>
-<p>Tries to abort the current Experiment that is running, see <a class="el" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f">runExperiment</a>.</p>
+
+<p>Aborts the current Experiment that is running. </p>
+<p>Tries to abort the current Experiment that is running, see <a class="el" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f" title="Runs the current Experiment available in memory.">ExperimentManager.runExperiment()</a>. </p>
 
 </div>
 </div>
@@ -244,8 +268,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Use this function to create a Experiment Timer.</p>
-<p>Returns the TimerID of a newly constructed Experiment Timer. If this fails the function returns -1.</p>
+
+<p>Use this function to create a Experiment Timer object. </p>
+<p>This function creates a Experiment Timer object and returns the Timer identifier of the newly constructed Experiment Timer object. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a integer value determining whether this function executed successfully, if it failed it returns -1. </dd></dl>
 
 </div>
 </div>
@@ -263,8 +289,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Use this function to retrieve the current elapsed Experiment Timer Time.</p>
-<p>Returns a double value that holds the current Experiment Timer Time from the Timer with TimerID(nIndex), if the current Time could not be fetched than the function returns -1.</p>
+
+<p>Use this function to retrieve the current elapsed Experiment Timer time. </p>
+<p>This function tries to retrieve the current elapsed Experiment Timer time </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nIndex</td><td>a integer value that holds the Timer identifier. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a double value boolean value holding the elapsed time or -1 in case the function executed unsuccessfully. </dd></dl>
 
 </div>
 </div>
@@ -311,8 +345,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Use this function to retrieve the current Date/Time.</p>
-<p>Returns a string containing the current Date/Time.</p>
+
+<p>Use this function to retrieve the current date/time. </p>
+<p>This function returns the current date/time string formatted as "yyyyMMddHHmmsszzz". </p>
+<dl class="section return"><dt>Returns:</dt><dd>a string value containing the current date/time string. </dd></dl>
 
 </div>
 </div>
@@ -329,8 +365,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Use this function to retrieve the current Experiment State.</p>
-<p>Returns a string containing the current Experiment State.</p>
+
+<p>Use this function to retrieve the current Experiment State. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a string containing the current Experiment State. </dd></dl>
 
 </div>
 </div>
@@ -347,8 +384,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Get the debug mode</p>
-<p>Returns the configured debug mode for the current experiment.</p>
+
+<p>Get the debug mode for the experiment. </p>
+<p>Returns the configured debug mode for the current experiment. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the experiments debug mode is enabled. </dd></dl>
 
 </div>
 </div>
@@ -365,8 +404,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns the current set experiment filename.</p>
-<p>The internal set experiment filename is returned, see <a class="el" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">setExperimentFileName</a>.</p>
+
+<p>Returns the path to the current set experiment file. </p>
+<p>This function returns the path to the current set experiment file, see also <a class="el" href="class_experiment_manager.html#aae1b09e06c4f52a09c2973dcb18139f5" title="Sets the path for the experiment file.">ExperimentManager.setExperimentFileName()</a> </p>
+<dl class="section return"><dt>Returns:</dt><dd>a string containing the path to the current set experiment file. </dd></dl>
 
 </div>
 </div>
@@ -383,8 +424,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Get the current experiment name</p>
-<p>Returns the configured experiment name for the current experiment.</p>
+
+<p>Returns the current experiment name. </p>
+<p>This function returns the configured experiment name for the current experiment. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a string containing the configured experiment name. </dd></dl>
 
 </div>
 </div>
@@ -418,8 +461,17 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Returns a boolean value that determines if a specified object parameter from the current experiment block could be retrieved and set.</p>
-<p>Returns true if &amp;strcParDef could be set to a specified object parameter with objectID(nObjectID), parameter name(sName) for the current experiment block.</p>
+
+<p>Returns a boolean value that determines if a specified named object parameter from the current experiment block could be retrieved and set. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nObjectID</td><td>a integer value that holds the object ID. </td></tr>
+    <tr><td class="paramname">sName</td><td>a string value that contains the parameter name. </td></tr>
+    <tr><td class="paramname">strcParDef</td><td>a ParsedParameterDefinition structure that hold the requested named object parameter after a successful function call. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether this function executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -428,7 +480,7 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">cExperimentStructure * <a class="el" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4">ExperimentManager::getExperimentStructure</a> </td>
+          <td class="memname"><a class="el" href="classc_experiment_structure.html">cExperimentStructure</a> * <a class="el" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4">ExperimentManager::getExperimentStructure</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td><code> [slot]</code></td>
@@ -437,8 +489,9 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Returns the in-memory Experiment Structure. </p>
-<p>This function returns a pointer to the in-memory Experiment Structure. </p>
+<p>Returns the current in-memory Experiment Structure. </p>
+<p>This function returns a pointer to the current in-memory Experiment Structure. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a pointer to a <a class="el" href="classc_experiment_structure.html" title="The cExperimentStructure class.">cExperimentStructure</a> structure, if the function fails it returns NULL. </dd></dl>
 
 </div>
 </div>
@@ -484,8 +537,20 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Inserts a specified object parameter for the current experiment block.</p>
-<p>Inserts a specified object parameter with objectID(nObjectID), parameter name(sName) and parameter value(sValue) for the current experiment block. If bIsInitializing is true then this new parameter is marked as Initializing, see #ParsedParameterDefinition.bIsInitialized, this marks the parameter as unused which can be helpful for further setting the default value. The bIsCustom variable determines whether the parameter should be treated as a custom parameter (default = false).</p>
+
+<p>Inserts a specified object parameter for the current experiment block. </p>
+<p>Inserts a specified object parameter with an object ID, a parameter name and a parameter value in the current experiment block definitions. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nObjectID</td><td>a integer value that holds the object ID. </td></tr>
+    <tr><td class="paramname">sName</td><td>a string value that contains the parameter name. </td></tr>
+    <tr><td class="paramname">sValue</td><td>a string value that contains the parameter value. </td></tr>
+    <tr><td class="paramname">bIsInitializing</td><td>a boolean value, if true then then the new parameter is marked as Initializing, see #ParsedParameterDefinition.bIsInitialized. This property marks the parameter as unused which can be helpful for further setting the default value. </td></tr>
+    <tr><td class="paramname">bIsCustom</td><td>a boolean value that determines whether the parameter should be treated as a custom parameter (default = false). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the function executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -519,8 +584,20 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Loads the Experiment from a file into memory.</p>
-<p>The Experiment source (strSource) is load into memory (filepath or content), if strSource=="" then the last set experiment file is automatically loaded in memory, see <a class="el" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">setExperimentFileName</a>. If bIsFile is set to true then the strSource contains a path to the experiment file, if bIsFile is set to false then the strSource contains the content itself. If bViewEditTree is set to true then the experiment filename is shown in a custom viewer (under construction).</p>
+
+<p>Loads the Experiment from a file path into the memory. </p>
+<p>The Experiment file (*.EXML) is loaded into memory. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strSource</td><td>a string containing the file path to the experiment file (*.EXML), if this value is "" then the last configured experiment file path is automatically loaded in memory, see <a class="el" href="class_experiment_manager.html#aae1b09e06c4f52a09c2973dcb18139f5" title="Sets the path for the experiment file.">ExperimentManager.setExperimentFileName()</a>. A second configurable option (see </td></tr>
+    <tr><td class="paramname">bIsFile)</td><td>is that this variabele can also hold the script content to load. </td></tr>
+    <tr><td class="paramname">bViewEditTree</td><td>a boolean value, if true then the experiment filename is loaded and shown automatically in a custom viewer (under construction). </td></tr>
+    <tr><td class="paramname">bIsFile</td><td>a boolean determining whether the </td></tr>
+    <tr><td class="paramname">strSource</td><td>parameter should be threated as a string containing a path to a experiment file. If false then the parameter is threated threated as a string containing the script content itself. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the function executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -572,8 +649,21 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Use this function to log Experiment Data to a logfile.</p>
-<p>Returns a boolean value that determines if a log entry consisting of a ObjectID(nObjectIndex), TimerID(nTimerIndex), Function(strFunction), Tag(strTag), Message(strMessage) and Value(strValue) could be forwarded to the internal Experiment Data Logger.</p>
+
+<p>Use this function to append a experiment data log to the default StimulGL log file. </p>
+<p>This function appends a experiment data log entry to the default StimulGL log file by forwarding this information to the internal Experiment Data Logger. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nObjectIndex</td><td>a integer value that holds the object ID to which the line to log correlates. </td></tr>
+    <tr><td class="paramname">nTimerIndex</td><td>a integer value that holds the Timer ID to which the line to log correlates. </td></tr>
+    <tr><td class="paramname">strFunction</td><td>a string value that defines the Function string of text of the experiment data log. </td></tr>
+    <tr><td class="paramname">strTag</td><td>a string value that defines the Tag string of text of the experiment data log. </td></tr>
+    <tr><td class="paramname">strMessage</td><td>a string value that defines the Message string of text of the experiment data log. </td></tr>
+    <tr><td class="paramname">strValue</td><td>a string value that defines the Value string of text of the experiment data log. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether this function executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -591,8 +681,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Use this function to re-start a Experiment Timer.</p>
-<p>Returns a boolean value that determines if the Timer with TimerID(nIndex) could be re-started, otherwise it returns false.</p>
+
+<p>Use this function to retrieve the current elapsed Experiment Timer time and restart a Experiment Timer object. </p>
+<p>This function tries to retrieve the current elapsed Experiment Timer time and restart a Experiment Timer object. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nIndex</td><td>a integer value that holds the Timer identifier. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a double value boolean value holding the elapsed time or -1 in case the function executed unsuccessfully. </dd></dl>
 
 </div>
 </div>
@@ -609,8 +707,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Runs the current Experiment from memory.</p>
-<p>The current Experiment in memory is started if/after it has successfully loaded.</p>
+
+<p>Runs the current Experiment available in memory. </p>
+<p>The current available experiment in memory is started if/after it has been successfully loaded and validated. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the function executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -628,8 +728,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Saves the Experiment from memory to a file.</p>
-<p>The current Experiment in memory is saved to a file (strFile), if strFile=="" then the experiment is automatically saved to the last set experiment filename, see <a class="el" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">setExperimentFileName</a>.</p>
+
+<p>Saves the current experiment file from memory to a file. </p>
+<p>The current experiment file in memory is saved to a file. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strFile</td><td>a string containing the path to the to be saved experiment file (*.EXML). If this parameter is empty ("") then the experiment is automatically saved to the last configured experiment file path, see <a class="el" href="class_experiment_manager.html#aae1b09e06c4f52a09c2973dcb18139f5" title="Sets the path for the experiment file.">ExperimentManager.setExperimentFileName()</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the function executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -647,8 +755,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Sends a string of text to the StimulGL Log output Window.</p>
-<p>The string parameter (strText2Write) is appended to the StimulGL Log output Window, this is done by emitting a signal that is automatically connected to a slot that does the job.</p>
+
+<p>Sends a text string to the StimulGL Log output pane. </p>
+<p>This function sends a text string to the StimulGL Log output pane. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">strText2Write</td><td>a string containing the text to send. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -666,46 +781,68 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Set the debug mode</p>
-<p>The debug mode for the current experiment is changed to the boolean parameter(mode).</p>
+
+<p>Sets the debug mode for the experiment. </p>
+<p>This function sets the debug mode for the experiment. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>a boolean value holding the debug mode for the current experiment. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a class="anchor" id="adedb8d9213a2452e03fb138e382b9d20"></a>
+<a class="anchor" id="aae1b09e06c4f52a09c2973dcb18139f5"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="class_experiment_manager.html#adedb8d9213a2452e03fb138e382b9d20">ExperimentManager::setExperimentFileName</a> </td>
+          <td class="memname">bool <a class="el" href="class_experiment_manager.html#aae1b09e06c4f52a09c2973dcb18139f5">ExperimentManager::setExperimentFileName</a> </td>
           <td>(</td>
           <td class="paramtype">const QString&#160;</td>
-          <td class="paramname"><em>qstrExpFileName</em></td><td>)</td>
+          <td class="paramname"><em>sExpFileName</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Sets the current experiment filename.</p>
-<p>The internal experiment filename is set to the parameter qstrExpFileName. Returns true if the filename exists.</p>
+
+<p>Sets the path for the experiment file. </p>
+<p>This function sets the internal path to the experiment file. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sExpFileName</td><td>a string holding the path to the experiment file (*.EXML), see also <a class="el" href="class_experiment_manager.html#ae9b3d50bb3af7d85fde90cb97b59e555" title="Returns the path to the current set experiment file.">ExperimentManager.getExperimentFileName()</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the function executed successfully. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a9f50a2cc340ec61292cbf527d6dd4673"></a>
+<a class="anchor" id="a6d6e2a1c26145a770fb2912ba6fe3686"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class_experiment_manager.html#a9f50a2cc340ec61292cbf527d6dd4673">ExperimentManager::setExperimentName</a> </td>
+          <td class="memname">void <a class="el" href="class_experiment_manager.html#a6d6e2a1c26145a770fb2912ba6fe3686">ExperimentManager::setExperimentName</a> </td>
           <td>(</td>
           <td class="paramtype">QString&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
+          <td class="paramname"><em>sName</em></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Set the current experiment name</p>
-<p>The experiment name for the current experiment is changed to the string parameter(name).</p>
+
+<p>Sets the experiment name for the current experiment. </p>
+<p>This function sets the experiment name for the current experiment. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sName</td><td>a string containing the new experiment name. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -723,8 +860,15 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Configures Experiment Output filename</p>
-<p>Configures Experiment Output filename, the configurable part of the filename is a string that is then integrated in the filename (format = YearMonthDayHourMinuteSecond_&lt;sPostString&gt;.txt ).</p>
+
+<p>Sets the configurable part of the automatic generated experiment Output filename. </p>
+<p>This function sets the configurable part of the automatic generated experiment Output filename. This string is then integrated in the output filename (format = YearMonthDayHourMinuteSecond_&lt;sPostString&gt;.txt ). </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sPostString</td><td>a string containing the configurable post file name string. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -735,7 +879,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool <a class="el" href="class_experiment_manager.html#af6cb8d15b3b9a9ac9c4de134ff692328">ExperimentManager::showVisualExperimentEditor</a> </td>
           <td>(</td>
-          <td class="paramtype">cExperimentStructure *&#160;</td>
+          <td class="paramtype"><a class="el" href="classc_experiment_structure.html">cExperimentStructure</a> *&#160;</td>
           <td class="paramname"><em>ExpStruct</em> = <code>NULL</code></td><td>)</td>
           <td><code> [slot]</code></td>
         </tr>
@@ -743,14 +887,15 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Shows the Experiment Graph Editor. </p>
-<p>Shows a dialog containing the Experiment Graph Editor. </p>
+<p>Shows a Experiment Structure in a Experiment Graph Editor UI. </p>
+<p>This function shows a dialog containing the Experiment Graph Editor containing the provided Experiment Structure, if the provided ExperimentStructure parameter is NULL than the current in-memory Experiment Structure is used instead. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">ExpStruct</td><td>a cExperimentStructure to be edited by the Experiment Graph Editor, if this parameter is NULL than the current Experiment Structure in memory is used. </td></tr>
+    <tr><td class="paramname">ExpStruct</td><td>a <a class="el" href="classc_experiment_structure.html" title="The cExperimentStructure class.">cExperimentStructure</a> to be edited by the Experiment Graph Editor, make it NULL to automatically use the current in-memory Experiment Structure. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether this function executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -768,8 +913,16 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Use this function to start a Experiment Timer.</p>
-<p>Returns a boolean value that determines if the Timer with TimerID(nIndex) could be started, otherwise it returns false.</p>
+
+<p>Use this function to start a Experiment Timer object. </p>
+<p>This function tries to starts a experiment timer object specified with a Timer identifier. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nIndex</td><td>a integer value that holds the Timer identifier. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether this function executed successfully. </dd></dl>
 
 </div>
 </div>
@@ -786,8 +939,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Stops the current Experiment that is running.</p>
-<p>Tries to stop the current Experiment that is running, see <a class="el" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f">runExperiment</a>.</p>
+
+<p>Stops the current Experiment that is running. </p>
+<p>Tries to stop the current Experiment that is running, see <a class="el" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f" title="Runs the current Experiment available in memory.">ExperimentManager.runExperiment()</a>. </p>
 
 </div>
 </div>
@@ -804,8 +958,10 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Validates the current Experiment from memory.</p>
-<p>The current Experiment in memory is validated and return the result.</p>
+
+<p>Validates the current experiment available in memory. </p>
+<p>The current experiment available in memory is validated. </p>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the current experiment could be validated successfully. </dd></dl>
 <p>!!!! emit WriteToLogOutput("Invalid schema, " + strMessage + "(line:" + QString::number(nLine) + ", col:" + QString::number(nColumn) + ")"); </p>
 
 </div>
@@ -826,7 +982,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>The WriteToLogOutput Signal. </p>
-<p>You can use this signal to let the <a class="el" href="class_experiment_manager.html" title="The Experiment Manager class.">ExperimentManager</a> write something to the StimulGL log window. </p>
+<p>You can use this signal to let the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> write something to the StimulGL log window. </p>
 
 </div>
 </div>
@@ -834,7 +990,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 25 2013 09:24:26 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 17 2013 11:30:53 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

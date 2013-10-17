@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../../css/Default.css" rel="stylesheet" type="text/css" />
+<link href="../../../google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../../js/jquery.min.js" type="text/javascript"></script>
+<script src="../../../js/jquery.tableofcontents.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../google-code-prettify/prettify.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+	var StimulGLInfo = new StimulGL_Information();
+	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);	
+	$(document).ready(function()
+		{ 
+			$("#toc").tableOfContents(
+				$("#toc_Area"),// Scoped to div#toc_Area
+				{
+					startLevel: 2,// H2 and up
+					depth:4,// H2 through H5,
+				}
+			); 
+			prettyPrint();			
+		}
+	);
+	document.write("<title>" + DocTitle + "</title>");	
+</script>
+</head>
+<body>
+<script type="text/javascript">StimulGLInfo.GetDocumentHeader(window.location.pathname)</script>
+<div id="toc_Area">
+<ul id="toc"></ul>
+<h2>Introduction </h2>
+<p>This Plug-in provides a direct connection to exchange different kind of data between Turbo-BrainVoyager and StimulGL. <a href="http://www.brainvoyager.com/products/turbobrainvoyager.html" target="_blank">Turbo-BrainVoyager (TBV)</a> is a highly optimized, easy to use software package for the real-time analysis and dynamic visualization of functional magnetic resonance imaging data sets. Most of the Plug-in functions used in TBV are also available in this plug-in. The data access is realized using the direct connection-oriented transmission control protocol (TCP). This allows a reliable and fast transmission of the data. </p>
+<h2>  Plug-in access</h2>
+<p>An object of the TBV Exchanger Plug-in can be created using the following script command:</p>
+<table class="codeframe">
+  <tr><td><pre class="prettyprint">
+var ObjectName = new TBVExchanger();</pre></td></tr></table>
+<p>You can use this object to access all functions provided by the Turbo-BrainVoyager Exchanger Plug-in. A list of all available functions can be found in the doxygen's reference documentation. To use this Plug-in a connection to the Turbo-BrainVoyager is necessary. A description how to establish this connection will be described in the next section. </p>
+<h3>Connection setup</h3>
+<p>The TBV offers different ways to access the analyzed and processed data in real-time. Using a direct TCP/IP connection a fast and reliable method to access these data. Using the TCP/IP export plug-in in TBV allows to set up a server which provides access to most of the data used in TBV. (The plug-in and its documentation can be found on the BrainVoyager homepage) After setting up the server one can try to connect using the server IP and the port that was defined in the TCP/IP export plug-in. Two methods are available to connect to the server. In both cases the server must be reachable and the firewalls has to be configured to allow the connection on the defined ports.<br />
+  </p>
+<h4>Automatic connection</h4>
+<p>This command activates the automatic connect functionality to link to a TBV server if it is available and accessible. Be sure that you firewall is set up correctly and forwards the connections on port 55555. </p>
+<table class="codeframe">
+  <tr>
+    <td><pre class="prettyprint">
+bool activateAutoConnection();</pre></td>
+  </tr>
+</table>
+<h4>Direct connection</h4>
+<p>This command tries to connect to the TBV server on the specified IP address and port. Be sure that you firewall is set up correctly and forwards the connections on the specified port. The function will return true, if the connection was established correctly. </p>
+<table class="codeframe">
+  <tr>
+    <td><pre class="prettyprint">
+bool connectToServer(QString sIPAddress, int port);</pre></td>
+  </tr>
+</table>
+<h3>Available script functionality</h3>
+<p>After setting up the connection one can call different <a href="../../Script/TBVExchangerPlugin/Doxygen/class_t_b_v_exchanger.html">script TBV Exchanger Plug-in member functions</a>, which provide access to the data from the TBV. </p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+</div>
+</body>
+</html>

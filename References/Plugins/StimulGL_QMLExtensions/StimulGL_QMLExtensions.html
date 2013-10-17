@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../../css/Default.css" rel="stylesheet" type="text/css" />
+<link href="../../../google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../../js/jquery.min.js" type="text/javascript"></script>
+<script src="../../../js/jquery.tableofcontents.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../google-code-prettify/prettify.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+	var StimulGLInfo = new StimulGL_Information();
+	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);	
+	$(document).ready(function()
+		{ 
+			$("#toc").tableOfContents(
+				$("#toc_Area"),// Scoped to div#toc_Area
+				{
+					startLevel: 2,// H2 and up
+					depth:4,// H2 through H5,
+				}
+			); 
+			prettyPrint();			
+		}
+	);
+	document.write("<title>" + DocTitle + "</title>");	
+</script>
+</head>
+<body>
+<script type="text/javascript">StimulGLInfo.GetDocumentHeader(window.location.pathname)</script>
+<div id="toc_Area">
+<ul id="toc"></ul>
+<h2>Introduction </h2>
+<p>This default StimulGL QML Extensions    Plug-in can be imported in a QML file to retrieve access to all functionality implemented in by this QML extension Plug-in.</p>
+<h2>  Plug-in QML access</h2>
+<p>To gain access to this QML extensions implemented functionality you should first make sure to import this Plug-in by using the following command:</p>
+<table class="codeframe">
+  <tr><td><pre class="prettyprint">
+import StimulGL_QMLExtensions &lt;version&gt; as MyStimulGLExtensions</pre></td></tr></table>
+<p>In the above statement you should change the &lt;version&gt; tag to the version you wish to use,  probably you may want to change this to the most recent version of this extension which is version  
+<script type="text/javascript" charset="utf-8">
+	document.write(StimulGLInfo.GetComponentVersionByIndexes(StimulGLInfo.GetNumberOfReleases()-1,StimulGLInfo.GetLatestComponentIndexByName(StimulGLInfo.GetNumberOfReleases()-1,"StimulGL_QMLExtensions")) + ".");	
+	
+</script>
+</p>
+<p>A list of all available objects and functions can be found in the <a href="../../QtQuick/StimulGL_QMLExtensions/Doxygen/index.html">doxygen's reference documentation</a>. </p>
+</div>
+</body>
+</html>
