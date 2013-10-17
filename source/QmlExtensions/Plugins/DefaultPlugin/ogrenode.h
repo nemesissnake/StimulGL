@@ -71,7 +71,7 @@ class Viewport;
 class RenderTarget;
 }
 
-class CameraNodeObject;
+class OgreCameraNode;
 
 class OgreNode : public QSGGeometryNode
 {
@@ -84,7 +84,7 @@ public:
     QSize size() const { return m_size; }
     void setQuickWindow(QQuickWindow *window);
 	void setAAEnabled(bool enable);
-    CameraNodeObject *camera() const { return m_cameraObject; }
+    OgreCameraNode *camera() const { return m_cameraObject; }
     void update();
     void updateFBO();
     void init();
@@ -135,7 +135,7 @@ private:
 
     GLuint m_ogreFBO;
 
-    CameraNodeObject *m_cameraObject;
+    OgreCameraNode *m_cameraObject;
 
     bool m_initialized;
     bool m_dirtyFBO;

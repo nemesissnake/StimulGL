@@ -16,13 +16,13 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "cameranodeobject.h"
+#include "OgreCameraNode.h"
 #include <OgreRoot.h>
 #include <OgreSceneNode.h>
 #include <OgreCamera.h>
 #include <QDebug>
 
-CameraNodeObject::CameraNodeObject(Ogre::Camera *cam, QObject *parent) :
+OgreCameraNode::OgreCameraNode(Ogre::Camera *cam, QObject *parent) :
     QObject(parent),
     m_camera(cam),
     m_yaw(0),
@@ -35,14 +35,14 @@ CameraNodeObject::CameraNodeObject(Ogre::Camera *cam, QObject *parent) :
     cam->move(m_position);
 }
 
-void CameraNodeObject::updateRotation()
+void OgreCameraNode::updateRotation()
 {
     m_node->resetOrientation();
     m_node->yaw(Ogre::Radian(Ogre::Degree(m_yaw)));
     m_node->pitch(Ogre::Radian(Ogre::Degree(m_pitch)));
 }
 
-void CameraNodeObject::setZoom(qreal z)
+void OgreCameraNode::setZoom(qreal z)
 {
     m_zoom = z;
     m_node->resetOrientation();
@@ -50,7 +50,7 @@ void CameraNodeObject::setZoom(qreal z)
     updateRotation();
 }
 
-void CameraNodeObject::setPosition(QVector3D p)
+void OgreCameraNode::setPosition(QVector3D p)
 { 
 	m_position.x = p.x(); 
 	m_position.y = p.y(); 
@@ -60,7 +60,7 @@ void CameraNodeObject::setPosition(QVector3D p)
 	updateRotation();
 }
 
-bool CameraNodeObject::setAutoTracking(const bool &bEnable, const QString &sSceneNodeName, const QVector3D &vecOffset)
+bool OgreCameraNode::setAutoTracking(const bool &bEnable, const QString &sSceneNodeName, const QVector3D &vecOffset)
 {
 	if(bEnable == false)
 	{

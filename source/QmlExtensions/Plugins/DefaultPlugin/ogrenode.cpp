@@ -21,7 +21,7 @@
 #include <RenderSystems/GL/OgreGLFBORenderTexture.h>
 
 #include "ogrenode.h"
-#include "cameranodeobject.h"
+#include "OgreCameraNode.h"
 #include <Ogre.h>
 #include "defines.h"
 
@@ -516,7 +516,7 @@ void OgreNode::init()
     //m_sceneManager->createLight("myLight")->setPosition(20, 80, 50);
 	
     // Setup the camera
-    m_cameraObject = new CameraNodeObject(m_camera);
+    m_cameraObject = new OgreCameraNode(m_camera);
     //m_cameraObject->camera()->setAutoTracking(true, m_sceneManager->getRootSceneNode());
 	m_initialized = true;
 }

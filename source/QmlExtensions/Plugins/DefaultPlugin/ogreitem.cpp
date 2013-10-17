@@ -17,7 +17,7 @@
 //
 
 #include "ogreitem.h"
-#include "cameranodeobject.h"
+#include "OgreCameraNode.h"
 
 #include <QtCore/QPropertyAnimation>
 #include <QTimer>

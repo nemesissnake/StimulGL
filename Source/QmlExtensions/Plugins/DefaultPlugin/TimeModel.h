@@ -24,12 +24,12 @@
 #include <qbasictimer.h>
 #include <qapplication.h>
 
-// Implements a "TimeModel" class with hour and minute properties
-// that change on-the-minute yet efficiently sleep the rest
-// of the time.
 class MinuteTimer : public QObject
 {
 	Q_OBJECT
+
+signals:
+	void timeChanged();
 
 public:
 	MinuteTimer(QObject *parent);
@@ -37,10 +37,7 @@ public:
 	void stop();
 	int hour() const;
 	int minute() const;
-
-signals:
-	void timeChanged();
-
+	
 protected:
 	void timerEvent(QTimerEvent *);
 
@@ -49,20 +46,33 @@ private:
 	QBasicTimer timer;
 };
 
+//!  The TimeModel QML extension class. 
+/*!
+  Implements a TimeModel QML extension class with hour and minute properties that change on-the-minute yet efficiently sleep the rest of the time.
+*/
 class TimeModel : public QObject
 {
 	Q_OBJECT
+	//! \brief hour property.
+	/*!  Use this property to access the TimeModel hour property.
+    */
 	Q_PROPERTY(int hour READ hour NOTIFY timeChanged)
+	//! \brief minute property.
+	/*!  Use this property to access the TimeModel minute property.
+    */
 	Q_PROPERTY(int minute READ minute NOTIFY timeChanged)
+
+signals:
+	//! \brief timeChanged() signal.
+	/*!  This signal is emitted automatically each minute, can be used for detecting time changes for whenever a visual representation of this TimeModel needs to change.
+	 */
+	void timeChanged();
 
 public:
 	TimeModel(QObject *parent=0);
 	~TimeModel();
 	int minute() const;
 	int hour() const;
-
-signals:
-	void timeChanged();
 
 private:
 	QTime t;

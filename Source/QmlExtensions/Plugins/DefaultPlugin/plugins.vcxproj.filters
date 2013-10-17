@@ -47,9 +47,6 @@
     <ClCompile Include="DefaultPlugin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PhononPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TimeModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,18 +62,6 @@
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_TimeModel.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_PhononPlayer.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_PhononPlayer.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_PhononPlayer.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_PhononPlayer.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_DefaultPlugin.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
@@ -87,18 +72,6 @@
       <Filter>Generated Files\Release_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_DefaultPlugin.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_cameranodeobject.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_cameranodeobject.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_cameranodeobject.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_cameranodeobject.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ogreitem.cpp">
@@ -113,13 +86,25 @@
     <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ogreitem.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
-    <ClCompile Include="cameranodeobject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ogreitem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ogrenode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_OgreCameraNode.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_OgreCameraNode.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_OgreCameraNode.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_OgreCameraNode.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="OgreCameraNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -127,19 +112,16 @@
     <CustomBuild Include="DefaultPlugin.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="PhononPlayer.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="TimeModel.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="cameranodeobject.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ogreitem.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ogrenode.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="OgreCameraNode.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

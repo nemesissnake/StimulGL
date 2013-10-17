@@ -19,7 +19,6 @@
 #include "DefaultPlugin.h"
 #include "defines.h"
 #include "TimeModel.h"
-#include "PhononPlayer.h"
 #include "ogreitem.h"
 
 void QDefaultQmlPlugin::registerTypes(const char *uri)
