@@ -68,20 +68,38 @@ signals:
 	void CaptureThreadStopped(QString);
 
 public:
+	/*! \brief The KeyBoard Device constructor.
+	*
+	*   You do not need to specify the parent object, 
+	*	the StimulGL script engine automatically retrieves the parent role
+	*/
 	KeyBoardCapture(QObject *parent = NULL);
 	KeyBoardCapture(const KeyBoardCapture& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
-	void setScriptEngine(QScriptEngine *scriptEngine) {parentScriptEngine = scriptEngine;};
+	/*! \brief The KeyBoard Device destructor.
+	*
+	*   You do not need call the destructor. 
+	*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+	*/
 	~KeyBoardCapture();
+	void setScriptEngine(QScriptEngine *scriptEngine) {parentScriptEngine = scriptEngine;};
 
 public slots:
-	bool StartCaptureThread(const short method, bool keyForwarding = true);
+	//! For starting a new Keyboard Capture thread.
+	/*!
+		\param method defines the method use for the capture (see the KeyBoardNameSpace::CaptureKeyMethod).
+		\param keyForwarding a boolean value determining whether the detected key should be forwarded or not.
+		\param lKeyList a list (Array) of key-code values that can cause a capture detection signal (CaptureThreadKeyPressed, CaptureThreadKeyReleased) to occur.
+		\return Whether the thread could be successfully started.
+		\sa StopCaptureThread()
+	*/
+	bool StartCaptureThread(const short method, bool keyForwarding = true, const QList<int> &lKeyList = QList<int>());
+	/*! Stops the Capture Thread(if started), see #StartCaptureThread. */
 	void StopCaptureThread();
 	//QString getVirtualKeyString(const quint32 &keyCode);
-	//bool installCustomScriptHandlerFunction(QString FuncName);
 
 private:
 	void setupKeyCodeTable();
-	QMap<int,QString> mKeyCodes;//QMap<quint32,QString> mKeyCodes;
+	QMap<int,QString> mKeyCodes;
 	keyboardCaptureThread *captureThread;
 
 	static QScriptEngine *parentScriptEngine;

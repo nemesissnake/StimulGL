@@ -24,11 +24,6 @@ Q_DECLARE_METATYPE(QPixmap*)
 
 QScriptEngine * KeyBoardCapture::parentScriptEngine = NULL;//Initialize the static variable
 
-/*! \brief The KeyBoard Device constructor.
-*
-*   You do not need to specify the parent object, 
-*	the StimulGL script engine automatically retrieves the parent role
-*/
 KeyBoardCapture::KeyBoardCapture(QObject *parent) : QObject(parent)
 {
 	captureThread = NULL;
@@ -36,11 +31,6 @@ KeyBoardCapture::KeyBoardCapture(QObject *parent) : QObject(parent)
 	//setupKeyCodeTable();
 }
 
-/*! \brief The KeyBoard Device destructor.
-*
-*   You do not need call the destructor. 
-*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
-*/
 KeyBoardCapture::~KeyBoardCapture()
 {
 	if (captureThread)
@@ -50,56 +40,7 @@ KeyBoardCapture::~KeyBoardCapture()
 	}
 }
 
-//bool KeyBoardCapture::installCustomScriptHandlerFunction(QString FuncName)
-//{
-//	//// From QVariant to QObject *
-//	//QObject * obj = qvariant_cast<QObject *>(item->data(Qt::UserRole));
-//	//// from QObject* to myClass*
-//	//myClass * lmyClass = qobject_cast<myClass *>(obj);
-//
-//	//QObject*	QScriptValue::toQObject()
-//	//QObject*	QScriptEngine::newQObject(value)
-//
-//	QPixmap *tmpPixmap;
-//	//tmpPixmap->setObjectName("aaaa");
-//	tmpPixmap = new QPixmap(15,15);
-//
-//	//emit TestSignal(tmpPixmap);
-//
-//	QScriptValue add = parentScriptEngine->globalObject().property(FuncName);
-//	bool a = add.isFunction();
-//	//QObject *tmpObject = qvariant_cast<QObject *>(*tmpPixmap);
-//	//QScriptValue scriptVal = parentScriptEngine->newQObject(tmpObject);//parentScriptEngine->newQObject((QObject*)tmpPixmap->toQObject());//static_cast<QScriptEngine*>(parent())->newQObject((QObject*)tmpPixmap);
-//	QScriptValue scriptVal = parentScriptEngine->toScriptValue<QPixmap *>(tmpPixmap);//parentScriptEngine->newQObject((QObject*)tmpPixmap->toQObject());//static_cast<QScriptEngine*>(parent())->newQObject((QObject*)tmpPixmap);
-//
-//	//scriptVal = parentScriptEngine->newQObject(tmpPixmap, QScriptEngine::ScriptOwnership);//(QObject*)tmpPixmap);//return engine->newQObject(new ParallelPort(), QScriptEngine::ScriptOwnership);
-//	QScriptValue result = add.call(QScriptValue(), QScriptValueList() << scriptVal << 2);//.toNumber();//
-//	//QString tmpParamString = scriptVal.toString();
-//	bool aa = result.isObject();
-//	QString gg = result.toVariant().typeName();
-//	//tmpPixmap = qscriptvalue_cast<QPixmap *>(scriptVal);
-//	//tmpPixmap = qobject_cast<QPixmap *>(scriptVal.toQObject());
-//	QString tmpResultString = result.toString();
-//	tmpPixmap = parentScriptEngine->fromScriptValue<QPixmap *>(result);
-//	//QString tmp = tmpPixmap->objectName();
-//	int aaa = tmpPixmap->width();
-//
-//
-//	delete tmpPixmap;
-//	tmpPixmap = NULL;
-//
-//	return true;
-//
-//}
-
-//! For starting a new Keyboard Capture thread.
-/*!
-    \param method defines the method use for the capture (see the KeyBoardNameSpace::CaptureKeyMethod).
-	\param keyForwarding a boolean value determining whether the detected key should be forwarded or not.
-	\return Whether the thread could be successfully started.
-    \sa StopCaptureThread()
-*/
-bool KeyBoardCapture::StartCaptureThread(const short method, bool keyForwarding)
+bool KeyBoardCapture::StartCaptureThread(const short method, bool keyForwarding, const QList<int> &lKeyList)
 { 
 	KeyBoardNameSpace::CaptureKeyMethod CapDecMethod;
 	if (method == 0) 
@@ -111,6 +52,7 @@ bool KeyBoardCapture::StartCaptureThread(const short method, bool keyForwarding)
 
 	captureThread = new keyboardCaptureThread(CapDecMethod,this);
 	captureThread->setKeyEventForwarding(keyForwarding);
+	captureThread->setMaskedKeyList(lKeyList);
 
 	connect(captureThread, SIGNAL(recieveThreadKeyPressed(quint32)), this, SIGNAL(CaptureThreadKeyPressed(quint32)));
 	connect(captureThread, SIGNAL(recieveThreadKeyReleased(quint32)), this, SIGNAL(CaptureThreadKeyReleased(quint32)));
@@ -122,7 +64,6 @@ bool KeyBoardCapture::StartCaptureThread(const short method, bool keyForwarding)
 
 void KeyBoardCapture::StopCaptureThread()
 {
-/*! Stops the Capture Thread(if started), see #StartCaptureThread. */
 	disconnect(this, SIGNAL(CaptureThreadKeyPressed(quint32)));
 	disconnect(this, SIGNAL(CaptureThreadKeyReleased(quint32)));
 	disconnect(this, SIGNAL(CaptureThreadStarted(QString)));

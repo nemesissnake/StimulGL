@@ -17,7 +17,7 @@ Rectangle
 	Text 
 	{
 		id: txtInfo
-		text: qsTr("Press key ('1' to '5') for selecting a corresponding vocal sound file,\nPress the 'p' key to play the file.\nPress the 'CTRL+'a' key combination to stop.\n")
+		text: qsTr("Press key ('1' to '5') for selecting a corresponding vocal sound file,\nPress the 'p' key to play the file.\nPress the 'm' key to play a movie file.\nPress the 'CTRL+'a' key combination to stop.\n")
 		anchors.centerIn: parent
 		font.family: "Helvetica"
 		font.pointSize: 20
@@ -49,34 +49,39 @@ Rectangle
 		source: ""
 	}	
 
-	//Audio 
-	//{
-	//	id: playSound
-	//	source: ""
-	//}
+	/*
+	Audio 
+	{
+		id: playSound
+		source: ""
+	}
+	*/
 
-	//Video 
-	//{
-	//	id: video
-	//	x : 100
-	//	width : 400
-	//	height : 400
-	//	source: ""//something like "./Movies/Wildlife.wmv" 
-	//}
+	/*
+	Video 
+	{
+		id: video
+		x : 100
+		width : 400
+		height : 400
+		source: "../Common/Movies/Notes_INTRO_BG.wmv" 
+	}
+	*/
 	
-	//MediaPlayer 
-	//{
-	//	id: mediaplayer
-	//	source: ""//or use a movie file --> "./Movies/Wildlife.wmv"    
-	//}
+	MediaPlayer 
+	{
+		id: mediaplayer
+		source: "../Common/Movies/Notes_INTRO_BG.wmv" 
+	}
 
-	//VideoOutput 
-	//{
-	//	x : 600
-	//	width : 400
-	//	height : 400
-	//	source: mediaplayer
-	//}
+	VideoOutput 
+	{
+		anchors.horizontalCenter: parent.horizontalCenter
+		width : 400
+		height : 400
+		source: mediaplayer
+	}
+	
 
 	////Instead of the keyboard you can also detect a mouse click for a further action to perform...	
 	//MouseArea 
@@ -122,6 +127,11 @@ Rectangle
 				functionsID.playSoundFunction();	
 				event.accepted = true;
 			} 
+			else if (event.key == Qt.Key_M) 
+			{
+				functionsID.playMovieFunction();	
+				event.accepted = true;
+			}			
 		}
 	}
 	
@@ -135,17 +145,12 @@ Rectangle
 			playSoundEffect.source = path;
 			txtInputFile.visible = true;
 			txtInputFile.text = "Selected file: " + path;
-			//var tmpString = new String(path)
-			//playSound.source = path;
-			//mediaplayer.source = path;
 			return true;
 		}
 		function playSoundFunction()
 		{
 			console.log("playSoundFunction()")//only for debugging writes to stimulGL output file
 			playSoundEffect.play();			
-			//mediaplayer.play();
-			//video.play(); 
 			//playSound.play(); 
 			return true;
 		}
@@ -157,6 +162,13 @@ Rectangle
 			txtInputFile.text = "Selected file: " + path;			
 			playSoundEffect.play();			
 			return true;
-		}		
+		}
+		function playMovieFunction()
+		{
+			console.log("playMovieFunction()")//only for debugging writes to stimulGL output file
+			//video.play(); 
+			mediaplayer.play();
+			return true;
+		}				
 	}	
 }

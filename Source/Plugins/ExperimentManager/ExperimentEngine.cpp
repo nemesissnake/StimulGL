@@ -19,11 +19,6 @@
 #include "ExperimentEngine.h"
 #include <omp.h>
 
-/*! \brief The ExperimentEngine constructor.
-*
-*   You do not need to specify the parent object. 
-*	The StimulGL script engine automatically retrieves the parent role
-*/
 ExperimentEngine::ExperimentEngine(QObject *parent)	: QObject(parent)
 {
 	currentSubObjectState = Experiment_SubObject_Constructing;
@@ -41,11 +36,6 @@ ExperimentEngine::ExperimentEngine(QObject *parent)	: QObject(parent)
 	bCurrentSubObjectReadyToUnlock = false;
 }
 
-/*! \brief The ExperimentEngine destructor.
-*
-*   You do not need call the destructor. 
-*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
-*/
 ExperimentEngine::~ExperimentEngine()
 {
 	changeSubObjectState(Experiment_SubObject_Destructing);
@@ -62,13 +52,6 @@ ExperimentEngine::~ExperimentEngine()
 
 bool ExperimentEngine::insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing, bool bIsCustom)
 {
-/*! \brief Update or insert an Experiment Block Parameter that can be parsed.
- *
- *  This function can be used to insert or update an Experiment Block Parameter to be parsed for a specific object.
- *  This Parameter can be parsed at the next initialization of a new BlockTrial if not yet initialized.
- *  Setting the parameter bIsInitializing to true forces the new parameter to be re-parsed at the next initialization of a new BlockTrial.
- *  The parameter bIsCustom (default = false) defines whether this parameter should be treated as a custom parameter.
- */
 	if (ExpBlockParams == NULL)
 	{
 		ExpBlockParams = new tParsedParameterList();
@@ -78,13 +61,13 @@ bool ExperimentEngine::insertExpObjectBlockParameter(const int nObjectID,const Q
 	return bRetVal;
 }
 
+/*! \brief retrieves an buffered Experiment Block Parameter.
+*
+*  This function can be used to retrieve an buffered Experiment Block Parameter for a specific object.
+*	If this parameter is not found then the default String value(sDefValue) is returned.
+*/
 ParsedParameterDefinition ExperimentEngine::getExpObjectBlockParameter(const int nObjectID,const QString sName, QString sDefValue)
 {
-/*! \brief retrieves an buffered Experiment Block Parameter.
- *
- *  This function can be used to retrieve an buffered Experiment Block Parameter for a specific object.
- *	If this parameter is not found then the default String value(sDefValue) is returned.
- */
 	ParsedParameterDefinition PPDResult;
 	PPDResult.bHasChanged = false;
 	PPDResult.sValue = sDefValue;
@@ -109,10 +92,6 @@ void ExperimentEngine::init()
 
 int ExperimentEngine::getObjectID()
 {
-/*! \brief Returns this Object ID.
- *
- *  This function returns its unique Object ID as registered in the ExperimentManager.
- */
 	return nObjectID;
 }
 
@@ -322,10 +301,6 @@ bool ExperimentEngine::abortExperimentObject()
 
 void ExperimentEngine::incrementExternalTrigger()
 {
-/*! \brief Increments the External Trigger.
- *
- *  Invoke this slot to increment the External Trigger.
- */
 	if (bCurrentSubObjectIsLocked)
 	{
 		if (bCurrentSubObjectReadyToUnlock == true)
@@ -531,11 +506,6 @@ bool ExperimentEngine::changeSubObjectState(ExperimentSubObjectState newSubObjec
 
 QScriptValue ExperimentEngine::getExperimentObjectParameter(const int &nObjectID, const QString &strName)
 {
-//*! \brief retrieves the current value of an Experiment Parameter variable.
-// *
-// *  This function can be used to retrieve the current value of an Experiment Parameter variable for a specific object.
-// *  This parameter variable value is currently in use.
-// */
 	if (currentScriptEngine)
 	{
 		//return currentScriptEngine->toScriptValue(getExpObjectVariabelePointer<QString>(nObjectID,strName));
@@ -553,10 +523,5 @@ QScriptValue ExperimentEngine::getExperimentObjectParameter(const int &nObjectID
 
 bool ExperimentEngine::setExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal)
 {
-/*! \brief Sets the current value of an Experiment Parameter variable.
- *
- *  This function can be used to immediately set a value of an Experiment Parameter variable for a specific object.
- *	This parameter variable value is immediately set and used.
- */
 	return pExperimentManager->setExperimentObjectFromScriptValue(nObjectID,strName.toLower(),sScriptVal);
 }

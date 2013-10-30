@@ -120,7 +120,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	cBlockStructure tmpBlockStrc = tmpExpStr.getCurrentBlock(bHasABlock);
 	if(bHasABlock == false)
 	{
-		qDebug() << __FUNCTION__ << "::No current Block defined, exiting...!";
+		qDebug() << __FUNCTION__ << "::No (more) Block defined to process, exiting...!";
 		return;
 	}
 
@@ -518,7 +518,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 					bool bFirstTime = ((bCDATFileReadyToWrite == false) && (outputFile == NULL));
 					if (bFirstTime)
 					{
-						fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + parentRetinotopyMapper->retinoOutputType + "s" + QString(".cdat");//tmpExpStr.getExperimentName()
+						fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + parentRetinotopyMapper->retinoOutputType + QString(".cdat");//tmpExpStr.getExperimentName()
 						if(outputFile)
 						{
 							if(outputFile->isOpen())
@@ -614,7 +614,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 					bool bFirstTime = ((bCDATFileReadyToWrite == false) && (outputFile == NULL));
 					if (bFirstTime)
 					{
-						fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + parentRetinotopyMapper->retinoOutputType + "s" + QString(".cdat");//tmpExpStr.getExperimentName()
+						fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + parentRetinotopyMapper->retinoOutputType + QString(".cdat");//tmpExpStr.getExperimentName()
 						if(outputFile)
 						{
 							if(outputFile->isOpen())

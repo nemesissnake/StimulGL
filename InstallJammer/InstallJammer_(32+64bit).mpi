@@ -292,13 +292,13 @@ File ::87E7881A-6F21-49C8-B805-6B8C5235C79F -name E:/Projects/StimulGL/Install/p
 File ::BE573B22-A4A9-4618-8135-8CD4EDBD2224 -name E:/Projects/StimulGL/Install/plugins/x64/TCPNetworkServerplugin_x64_Release.dll -parent 21B9C60D-2802-481D-BF1F-F26B0588B66E
 File ::61DBE974-2401-4D29-BBDD-E18F4B7B8C3B -name E:/Projects/StimulGL/Install/plugins/x64/FirebirdClientplugin_x64_Release.dll -parent 21B9C60D-2802-481D-BF1F-F26B0588B66E
 FileGroup ::FE7C119F-2B67-439E-A0DF-FA1E714F2630 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {Example Scripts(plugins)} -parent FileGroups
-File ::042C3DF6-0B5C-4589-887B-72D893CD8D57 -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/ParallelPortDevice/scripts} -name E:/Projects/StimulGL/Source/Plugins/ParallelPortDevice/scripts/QScriptExample_ParallelPort.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::42799612-F05F-490E-8107-10EA0EBB05A3 -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/KeyBoardDevice/scripts} -name E:/Projects/StimulGL/Source/Plugins/KeyBoardDevice/scripts/QScriptExample_KeyBoard.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::B6E65DFF-15E2-4827-A12F-72EF3ED8CF84 -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/PiezoStimDevice/scripts} -name E:/Projects/StimulGL/Source/Plugins/PiezoStimDevice/scripts/QScriptExample_PiezoStimDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::734163BB-2D66-4AB3-8E7C-A39732165602 -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/TCPNetworkServer/scripts} -name E:/Projects/StimulGL/Source/Plugins/TCPNetworkServer/scripts/QScriptExample_TCPNetworkServerPlugin.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::B35EE0A2-15AE-4950-915A-2005EF67EE4E -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/TBVExchanger/scripts} -name E:/Projects/StimulGL/Source/Plugins/TBVExchanger/scripts/QScriptExample_TBVExchangerPlugin.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::B51DA7DD-911A-4644-9EF3-C31B59A3EF23 -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/SerialPortDevice/scripts} -name E:/Projects/StimulGL/Source/Plugins/SerialPortDevice/scripts/QScriptExample_SerialPortDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::9AF92E48-2781-4CF4-86DF-2C61F8171153 -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/USBHIDDevice/scripts} -name E:/Projects/StimulGL/Source/Plugins/USBHIDDevice/scripts/QScriptExample_USBHIDDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::042C3DF6-0B5C-4589-887B-72D893CD8D57 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/ParallelPortDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/ParallelPortDevice/scripts/QScriptExample_ParallelPort.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::42799612-F05F-490E-8107-10EA0EBB05A3 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/KeyBoardDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/KeyBoardDevice/scripts/QScriptExample_KeyBoard.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::B6E65DFF-15E2-4827-A12F-72EF3ED8CF84 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/PiezoStimDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/PiezoStimDevice/scripts/QScriptExample_PiezoStimDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::734163BB-2D66-4AB3-8E7C-A39732165602 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/TCPNetworkServer/scripts -name E:/Projects/StimulGL/Source/Plugins/TCPNetworkServer/scripts/QScriptExample_TCPNetworkServerPlugin.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::B35EE0A2-15AE-4950-915A-2005EF67EE4E -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/TBVExchanger/scripts -name E:/Projects/StimulGL/Source/Plugins/TBVExchanger/scripts/QScriptExample_TBVExchangerPlugin.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::B51DA7DD-911A-4644-9EF3-C31B59A3EF23 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/SerialPortDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/SerialPortDevice/scripts/QScriptExample_SerialPortDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::9AF92E48-2781-4CF4-86DF-2C61F8171153 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/USBHIDDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/USBHIDDevice/scripts/QScriptExample_USBHIDDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::D347FA81-B6DB-42A0-AE1A-09D6BFE02D50 -type dir -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/ExperimentManager/scripts} -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::3E7AF30B-74F3-4364-90DC-7EEDC9E29C9D -name cExperimentStructureObject.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::EDD14EFF-6344-47AD-AAB7-E1A415E430F9 -name DatFileConcatination.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
@@ -314,7 +314,7 @@ File ::98A0ECF5-3443-4A4B-A3B5-6DD490A55E76 -name RandomGenerator.qs -parent D34
 File ::2D8C6901-945D-4A9D-B7F0-86432B5EF091 -name scriptContext.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::4B8DF454-BC83-480B-AE22-1EC78FA254F9 -name StructureLoading.exml -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::047F0E4B-C0D5-40C9-9BA5-AB9B1186687B -name TriggerTimer.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
-File ::4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1 -type dir -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/ExperimentManager/experiments} -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/experiments -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1 -type dir -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/ExperimentManager/experiments -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/experiments -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::1BB4934F-B990-4CAA-8C38-863E89C99142 -name Eccentricity1.exml -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
 File ::8770A885-9FB8-4AAA-B807-4682FA371B94 -name Eccentricity2.exml -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
 File ::D18305D0-6E71-4E01-8749-0BE8F0FA4B3F -name MovingBar1.exml -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
@@ -333,7 +333,7 @@ File ::636838E7-9330-4265-8780-3DCA290094DF -name example_2.qml -active 0 -paren
 File ::2CE64AD9-C140-4324-8AD3-6A1141FF796A -type dir -name Transitions -active 0 -parent 3F39F5ED-A754-442D-B580-F1C243438D92
 File ::E8D445ED-E887-4633-9DB6-257693B0A57F -name main.qml -active 0 -parent 2CE64AD9-C140-4324-8AD3-6A1141FF796A
 File ::17053E44-B0FD-493D-98C7-574FA37761FF -name Transitions80.png -active 0 -parent 2CE64AD9-C140-4324-8AD3-6A1141FF796A
-File ::DB5F1389-250F-471E-A6F3-0A7F2E37350F -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/FirebirdClient/scripts} -name E:/Projects/StimulGL/Source/Plugins/FirebirdClient/scripts/QScriptExample_FirebirdClientPlugin.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::DB5F1389-250F-471E-A6F3-0A7F2E37350F -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/FirebirdClient/scripts -name E:/Projects/StimulGL/Source/Plugins/FirebirdClient/scripts/QScriptExample_FirebirdClientPlugin.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 FileGroup ::E5DE8D2A-E046-4945-B382-97B2670A7E75 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name Documents -parent FileGroups
 File ::182C849A-4C78-4BB0-8AB8-DBA019559C3C -name E:/Projects/StimulGL/Install/documents/MainDocumentation.qhc -parent E5DE8D2A-E046-4945-B382-97B2670A7E75
 File ::92D1763F-22CE-4811-860C-50DE5667D48D -name E:/Projects/StimulGL/Install/documents/MainDocumentation.qch -parent E5DE8D2A-E046-4945-B382-97B2670A7E75
@@ -365,46 +365,12 @@ File ::C4C1DB36-2464-4240-9080-FBC4364D2CF4 -name Helloworld.qml -parent 0999CCC
 File ::F60758FC-D545-4360-93B7-F71EA465163C -type dir -name images -parent 0999CCC5-3CC7-4D13-B8B4-CACDA04C74C8
 File ::5E2DE4AA-6641-4758-8461-4F129690BC5B -name ShowExperimentStructure.qml -parent 0999CCC5-3CC7-4D13-B8B4-CACDA04C74C8
 File ::1B0CF94F-096E-4F49-A6F6-D9A8311DBC13 -name CreateQtCreatorProject.qs -parent 0999CCC5-3CC7-4D13-B8B4-CACDA04C74C8
+File ::93F04FE7-F6D0-4782-94F1-74DD9D0074D6 -name HelloWorld_project.qmlproject -active 0 -parent 0999CCC5-3CC7-4D13-B8B4-CACDA04C74C8
+File ::2E65118B-523C-47B6-996B-1C57B658460B -name HelloWorld_project.qmlproject.user -active 0 -parent 0999CCC5-3CC7-4D13-B8B4-CACDA04C74C8
 File ::C1CCA397-1B35-41F2-8C22-597A34654F9C -type dir -name RetinotopicMapping -parent C3FB4773-4DA8-41AE-88D3-38E02A5839A4
 File ::DE2D4AAE-CAD5-4F28-9EF0-155B8ABBA628 -name PolarAngle.exml -parent C1CCA397-1B35-41F2-8C22-597A34654F9C
 File ::9124146C-980A-457C-BF8E-BF01C40DB6F6 -name RetinotopicMapping.qs -parent C1CCA397-1B35-41F2-8C22-597A34654F9C
 File ::23F6D351-6760-4CC8-9D58-C7A0D09D62FA -type dir -name E:/Projects/StimulGL/Install/examples/Tutorials -parent B9E5284F-8A18-4881-AC62-4276DF5666EC
-File ::E5987265-A582-4C39-B93D-72757B18A287 -type dir -name {1. MediaPlayer} -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
-File ::9DDC3238-7AA0-4892-B3EB-E7BA0179D613 -name MediaExample.exml -parent E5987265-A582-4C39-B93D-72757B18A287
-File ::3BA0976C-28EA-4655-BBF3-8CEA5EFDFD9A -name MediaExample.qml -parent E5987265-A582-4C39-B93D-72757B18A287
-File ::A100BFAF-1B70-4192-97AD-4995A4FC06D4 -name MediaExample.qs -parent E5987265-A582-4C39-B93D-72757B18A287
-File ::21E2F12A-A3D6-49C4-829B-A5277BCD79A3 -type dir -name {2. RetinoTopicMapping} -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
-File ::D3094929-97D7-47F3-9B39-C456E6EB693B -name Eccentricity1.exml -parent 21E2F12A-A3D6-49C4-829B-A5277BCD79A3
-File ::2DD15C18-56C1-469F-8A89-3CB44255B576 -name Eccentricity2.exml -parent 21E2F12A-A3D6-49C4-829B-A5277BCD79A3
-File ::D97DB670-2EA1-4FF8-A74D-53B299D45E8B -name MovingBar1.exml -parent 21E2F12A-A3D6-49C4-829B-A5277BCD79A3
-File ::56D5BCCF-1D83-46B5-854E-15F0F88CEB98 -name MovingBar2.exml -parent 21E2F12A-A3D6-49C4-829B-A5277BCD79A3
-File ::6D0A22A5-0162-4815-80D4-AF6AA1EAD42D -name MovingDots1.exml -parent 21E2F12A-A3D6-49C4-829B-A5277BCD79A3
-File ::0683D29F-738D-4D91-AB7A-4683C1EAB7D4 -name Polar1.exml -parent 21E2F12A-A3D6-49C4-829B-A5277BCD79A3
-File ::031F315F-43AB-42F0-8B5D-00F92B3101AD -name Polar2.exml -parent 21E2F12A-A3D6-49C4-829B-A5277BCD79A3
-File ::FAD3D1D7-D5E5-4B6A-8CC0-13A8E0750484 -type dir -name {3. ImageBuffer} -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
-File ::77260493-DC16-47BF-AEE0-4000ACACE6A6 -name ImageBuffer.exml -parent FAD3D1D7-D5E5-4B6A-8CC0-13A8E0750484
-File ::00C1C9F3-9F35-43B5-87E3-F922C98838C4 -name ImageBuffer.qml -parent FAD3D1D7-D5E5-4B6A-8CC0-13A8E0750484
-File ::5258A9CF-FCC0-4851-A06F-0D0EAC005FC9 -name ImageBuffer.qs -parent FAD3D1D7-D5E5-4B6A-8CC0-13A8E0750484
-File ::3D4F91D2-3CE3-440F-A32C-A912E94957B9 -name ImageBuffer_ImageArrays.qs -parent FAD3D1D7-D5E5-4B6A-8CC0-13A8E0750484
-File ::71401BC8-2BC3-408F-AB7E-5406D0F11EB6 -type dir -name {4. UserInterfaces} -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
-File ::B3A63CF5-EB00-40B9-8631-D8BB59B4A244 -name AnalogClock.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::67354C42-5B0F-4CCA-8F46-DD77AFE4FFB5 -name BasicDrawing.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::A049CB97-F931-4B7C-8FBD-B16F8B477A22 -name CalendarWidget.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::CAD9AAB4-4482-44F3-92F5-39E41BD8546F -name CollidingMice.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::7718D600-BD21-4936-BB0E-3652250F8E9D -name ConcentricCircles.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::BDBFB85C-C6F9-407B-A385-8DB6F16CF39A -name DigitalClock.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::ABF6C2F0-D312-4DEF-A5E2-A46570D3F4E7 -name LineEdits.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::F4C2E57E-263D-490A-89D9-EAE5D7677343 -name PainterPaths.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::C44DB275-22E2-43DF-B7AF-9A1E6D222074 -name Screenshot.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::F9D22BA2-7CAA-45A0-A762-5E55BC1296D0 -name StandardDialogs.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::37322E15-99BA-42FA-8A16-89247E5C04A7 -name StreamBookmarks.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::2051A4AE-AB62-48EA-8434-5EFE47F03DC7 -name Transformations.qs -parent 71401BC8-2BC3-408F-AB7E-5406D0F11EB6
-File ::539E8F1F-9552-4F98-9BAC-E5DDDBE57176 -type dir -name {5. ScalableVectorGraphics} -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
-File ::C025B2F2-EFA5-4C8D-86E3-7C0D05B2E174 -name bubbles.svg -parent 539E8F1F-9552-4F98-9BAC-E5DDDBE57176
-File ::0EBCA488-5888-4E88-B8D2-186463053147 -name cubic.svg -parent 539E8F1F-9552-4F98-9BAC-E5DDDBE57176
-File ::F2FC1719-4DF3-49DB-BC41-0A924436A74C -name spheres.svg -parent 539E8F1F-9552-4F98-9BAC-E5DDDBE57176
-File ::F72CC4EF-CA4F-4E9A-A4FC-F1E86BEFB9B1 -type dir -name {99. PluginExamples} -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
-File ::7C17F354-E04E-474E-8C5C-36497ADE633D -name Readme -active 0 -parent F72CC4EF-CA4F-4E9A-A4FC-F1E86BEFB9B1
 File ::C4AAD5E8-3DE4-4527-9C8E-068BD69E05E3 -type dir -name Common -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
 File ::6E1A7E7D-A46D-483F-B039-52354CBE6B20 -type dir -name Images -parent C4AAD5E8-3DE4-4527-9C8E-068BD69E05E3
 File ::223D224E-4340-4A74-93DA-0D54D3A10E1A -type dir -name Additional -parent 6E1A7E7D-A46D-483F-B039-52354CBE6B20
@@ -606,6 +572,57 @@ File ::BEBD34A8-20D7-45A5-BC52-971F0F851550 -name 5.wav -parent 1CAC996C-3054-46
 File ::16EEB2D9-340A-48FF-865A-27ED8088CCB7 -type dir -name XML -parent C4AAD5E8-3DE4-4527-9C8E-068BD69E05E3
 File ::BA062B6F-A0CE-4929-A171-14FA1C6B6FA4 -name frank.xbel -parent 16EEB2D9-340A-48FF-865A-27ED8088CCB7
 File ::B75DFE01-4D96-4C40-B7B1-5435DE3F7429 -name jennifer.xbel -parent 16EEB2D9-340A-48FF-865A-27ED8088CCB7
+File ::68A49D7A-892C-485B-83B6-8A73C5343CB7 -type dir -name Movies -parent C4AAD5E8-3DE4-4527-9C8E-068BD69E05E3
+File ::39E23BBE-B9A6-453A-AAB1-7ADF029AA70E -name Notes_INTRO_BG.wmv -parent 68A49D7A-892C-485B-83B6-8A73C5343CB7
+File ::939B045B-A693-4D14-AE87-32B54103C4DD -type dir -name 1_MediaPlayer -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::DB1C1150-A013-47B4-9A92-60703EF49D34 -name MediaExample.exml -parent 939B045B-A693-4D14-AE87-32B54103C4DD
+File ::D078CE59-F888-4C38-BAE4-28C4B185C473 -name MediaExample.qml -parent 939B045B-A693-4D14-AE87-32B54103C4DD
+File ::A63A5DB5-187E-472D-9A26-41D0A3495AF0 -name MediaExample.qs -parent 939B045B-A693-4D14-AE87-32B54103C4DD
+File ::2630E650-4DBA-4D79-BFCA-EED4153C2FCE -type dir -name 2_RetinoTopicMapping -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::7AF22E61-8741-4DB4-8E95-9AA8A732618C -name Eccentricity1.exml -parent 2630E650-4DBA-4D79-BFCA-EED4153C2FCE
+File ::00B29383-EC70-45C1-A47B-D173951DBCEC -name Eccentricity2.exml -parent 2630E650-4DBA-4D79-BFCA-EED4153C2FCE
+File ::9807B970-084B-4D0E-AE15-38D5C3F88C8F -name MovingBar1.exml -parent 2630E650-4DBA-4D79-BFCA-EED4153C2FCE
+File ::E3D0AAA1-040B-4EFC-B9BE-3D43A4A3DDF7 -name MovingBar2.exml -parent 2630E650-4DBA-4D79-BFCA-EED4153C2FCE
+File ::582D43E8-AAE4-4738-AE75-3D87F960C578 -name MovingDots1.exml -parent 2630E650-4DBA-4D79-BFCA-EED4153C2FCE
+File ::CD8BDD57-6BA7-46BF-A375-CDA3B6BDE3A8 -name Polar1.exml -parent 2630E650-4DBA-4D79-BFCA-EED4153C2FCE
+File ::BEC9DEAE-15CC-4B85-9521-C0F05693FAA7 -name Polar2.exml -parent 2630E650-4DBA-4D79-BFCA-EED4153C2FCE
+File ::FEA98C76-AA73-4FF8-9A01-3B05A5F8958E -type dir -name 3_ImageBuffer -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::EFC751A8-DB71-429E-B754-DDFA8AA3786F -name ImageBuffer.exml -parent FEA98C76-AA73-4FF8-9A01-3B05A5F8958E
+File ::EC00F742-9E78-4D98-B58E-30F9C072644D -name ImageBuffer.qml -parent FEA98C76-AA73-4FF8-9A01-3B05A5F8958E
+File ::4D77A61D-6F8A-43E4-8401-2279CEAFC866 -name ImageBuffer.qs -parent FEA98C76-AA73-4FF8-9A01-3B05A5F8958E
+File ::59AC06F6-3DDF-45F3-9B32-606983CBD9A5 -name ImageBuffer_ImageArrays.qs -parent FEA98C76-AA73-4FF8-9A01-3B05A5F8958E
+File ::AB96D175-1E3C-4F6D-B307-2515036E6DED -type dir -name 4_UserInterfaces -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::DDE48CDC-74FE-4DAE-8CD1-95EC7AAB6875 -name AnalogClock.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::AD18BF15-1B15-410E-9DE6-F78C41B85396 -name BasicDrawing.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::BDE044D0-9498-4F99-B4B8-416DED3EF169 -name CalendarWidget.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::BEB93F2C-8C9C-4018-B31F-51F161301AE5 -name CollidingMice.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::DEC69209-AFF8-4255-880F-8D94BB77877F -name ConcentricCircles.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::94E7E8D1-D89B-4D38-A98F-2E4F009A6009 -name DigitalClock.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::BE5A5347-D358-43DD-BBDE-A1E8DEC7C3C7 -name LineEdits.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::BAD31981-1D58-45B6-95D9-F08FA9B01B73 -name PainterPaths.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::52089AA6-1020-4B05-9913-C680FE3B1460 -name Screenshot.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::C5E6B2C7-9707-4986-8755-45A233368539 -name StandardDialogs.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::41AB6565-9C28-4368-AE9D-73BD1466ABF4 -name StreamBookmarks.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::3DD6E2E0-D8E1-45F5-87D4-75FF987F9C40 -name Transformations.qs -parent AB96D175-1E3C-4F6D-B307-2515036E6DED
+File ::E14196FE-D083-4FFC-8155-E51BBC6C1FDE -type dir -name 5_ScalableVectorGraphics -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::885B537E-DD6A-4251-8853-520D736C71AA -name bubbles.svg -parent E14196FE-D083-4FFC-8155-E51BBC6C1FDE
+File ::04B6EB45-4EC3-4DD4-9394-21AFEF120DAB -name cubic.svg -parent E14196FE-D083-4FFC-8155-E51BBC6C1FDE
+File ::29E1A782-C234-4DE8-A51C-29273A2FF720 -name spheres.svg -parent E14196FE-D083-4FFC-8155-E51BBC6C1FDE
+File ::B3EB2692-32AF-4F6E-8CBA-A6728B0A4EFC -type dir -name 6_RetinoTopicMappingOutput -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::4E9D667F-5BD3-415E-9A88-B92607918A19 -name PolarAngle.exml -parent B3EB2692-32AF-4F6E-8CBA-A6728B0A4EFC
+File ::90C3A486-237C-499E-96A1-F8405D4B98D1 -type dir -name 99_PluginExamples -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::A6ADD8A3-7691-41A3-8E55-D29DA83303A5 -name {ExperimentManager - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::E6B6A906-2FA8-4E32-97EF-8D1314088A0E -name {ExtensionPluginTemplate - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::37334715-7C3B-48D6-89B0-F03CC4A9F12B -name {FirebirdClient - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::4EE0C7AF-828F-4281-9C4E-74D974183173 -name {KeyBoardDevice - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::685DC0D6-4EB8-406B-9687-2F45EC85115E -name {ParallelPortDevice - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::299F3FF6-0DD4-4ABC-BBEC-D1BDFF8F3BF3 -name {PiezoStimDevice - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::65B4510C-F955-4815-A0AF-C1E5CD8EFDF7 -name Readme -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::9B9A2D2A-5136-4335-9358-2D29BC41A97B -name {SerialPortDevice - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::8A5699CB-5233-4440-8A1F-C1EF434F561F -name {StimulGL - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::995E4805-2460-4866-8FD0-C689F9CE45C6 -name {TBVExchanger - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::D442EA9B-7A5E-4CFD-8B7E-1A975C03F1E8 -name {TCPNetworkServer - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::8755AFB4-879F-4312-8558-87248DAF26B0 -name {USBHIDDevice - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
 FileGroup ::13ECD65D-69B5-4F91-B2C0-B4F9548060F8 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {QML Plugins(x64)} -parent FileGroups
 File ::D67119F5-7C9B-470A-B818-511C8343E3F5 -name E:/Projects/StimulGL/Install/qml/plugins/x64/DefaultQMLPlugin_x64_Release.dll -parent 13ECD65D-69B5-4F91-B2C0-B4F9548060F8
 File ::A4FB6D53-45CE-4175-81A5-3A2854BB3CA9 -type dir -name C:/Qt/5.1.0/x64/qml/QtGraphicalEffects -parent 13ECD65D-69B5-4F91-B2C0-B4F9548060F8

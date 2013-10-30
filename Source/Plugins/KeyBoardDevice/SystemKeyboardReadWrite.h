@@ -39,7 +39,8 @@ public:
 	bool connected();																						// Returns whether the keyboard hook is connected
 	bool setConnected(bool state, bool forwardKeyEvents = true);											// Connects / Disconnects the keyboard hook
 
-private:	
+private:
+	bool bOnlyForward;
 	HHOOK keyboardHook;																						// Keyboard hook
 	static LRESULT CALLBACK keyboardProcedure_Forward(int nCode, WPARAM wParam, LPARAM lParam);				// Identifies hook activity
 	static LRESULT CALLBACK keyboardProcedure_NoForward(int nCode, WPARAM wParam, LPARAM lParam);			// Identifies hook activity

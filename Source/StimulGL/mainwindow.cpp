@@ -894,6 +894,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 			{
 				if(tmpCustomQsciScintilla)
 					printAction->setEnabled(false);
+				setScriptRunningStatus(GlobalApplicationInformation::NoScript);
 				break;
 			}
 		default:
@@ -2124,6 +2125,11 @@ QString MainWindow::getApplicationRootDirPath()
 QString MainWindow::getActiveDocumentFileName()
 {
 	return DocManager->getFileName(activeMdiChild(),true);
+}
+
+void MainWindow::enableActiveDocument(bool bEnable)
+{
+	activeMdiChild()->setEnabled(bEnable);
 }
 
 QString MainWindow::getEnvironmentVariabele(QString strName) 

@@ -32,7 +32,7 @@
 SystemKeyboardReadWrite::SystemKeyboardReadWrite() : QObject()
 {
 	keyboardHook = NULL;// Assign to null
-	//bForward_keyEvents = true;
+	bOnlyForward = false;
 }
 
 void SystemKeyboardReadWrite::keyboardProcedure_Main(int nCode, WPARAM wParam, LPARAM lParam, bool bForwardKeys)
@@ -43,13 +43,16 @@ void SystemKeyboardReadWrite::keyboardProcedure_Main(int nCode, WPARAM wParam, L
 		if ((wParam == WM_KEYDOWN))// && ((tmpMethod == KeyBoardNameSpace::KeyPressed) || (tmpMethod == KeyBoardNameSpace::KeyPressedReleased)))
 		{
 			KBDLLHOOKSTRUCT *pKeyboard = (KBDLLHOOKSTRUCT*)lParam;
-			emit SystemKeyboardReadWrite::instance()->keyPressedSignal((quint32) pKeyboard->vkCode);
+			if(SystemKeyboardReadWrite::instance()->bOnlyForward == false)
+				emit SystemKeyboardReadWrite::instance()->keyPressedSignal((quint32) pKeyboard->vkCode);
 		}
 		else if ((wParam == WM_KEYUP)) //&& ((tmpMethod == KeyBoardNameSpace::KeyReleased) || (tmpMethod == KeyBoardNameSpace::KeyPressedReleased)))
 		{			
 			KBDLLHOOKSTRUCT *pKeyboard = (KBDLLHOOKSTRUCT*)lParam;
-			emit SystemKeyboardReadWrite::instance()->keyReleasedSignal((quint32) pKeyboard->vkCode);
-		}		
+			if(SystemKeyboardReadWrite::instance()->bOnlyForward == false)
+				emit SystemKeyboardReadWrite::instance()->keyReleasedSignal((quint32) pKeyboard->vkCode);
+		}
+
 		instance()->setConnected( false, bForwardKeys );
 		instance()->setConnected( true, bForwardKeys );//reconnect
 	}

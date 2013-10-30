@@ -23,9 +23,18 @@ Rectangle
 		objectName: "DebugMode_Functions"
 		function updateExperimentState(block,trial,trigger) 
 		{
-			//console.log("Got message(myQmlFunction):", msg)
-			textItem.text = "Block " + block + ", Trial " + trial + ", Trigger " + trigger
-			return true //"A boolean return value"
+			textItem.text = "Block " + block + ", Trial " + trial + ", Trigger " + trigger;
+			return true;
 		}
+		function updateExperimentState_incLoop(block,trial,trigger,loop) 
+		{
+			textItem.text = "Block " + block + ", Trial " + trial + ", Trigger " + trigger + ", Loop " + loop;
+			return true;
+		}		
+		function setVisibility(bVisible) 
+		{
+			textItem.visible = bVisible;
+			return true;
+		}		
 	}
 }

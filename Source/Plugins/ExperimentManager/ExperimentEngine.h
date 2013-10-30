@@ -81,7 +81,17 @@ signals:
 	void ExperimentStructureChanged(int nBlock,int nTrial,int nInternalTrigger);
 
 public:
+	/*! \brief The ExperimentEngine constructor.
+	*
+	*   You do not need to specify the parent object. 
+	*	The StimulGL script engine automatically retrieves the parent role
+	*/
 	ExperimentEngine(QObject *parent = NULL);
+	/*! \brief The ExperimentEngine destructor.
+	*
+	*   You do not need call the destructor. 
+	*	The StimulGL script engine automatically performs the garbage collection after you set the object to NULL and the script ends
+	*/
 	~ExperimentEngine();
 
 	template< typename T1 > bool insertExpObjectParameter(const int &nObjectID,const QString &sKeyName,const T1 &tVariabele,bool bIsInitializing = true)
@@ -125,10 +135,36 @@ public slots:
 	const QMetaObject *getExperimentMetaObject();
 	virtual bool setExperimentManager(ExperimentManager *expManager);
 	virtual bool setExperimentObjectReadyToUnlock();
-
+	
+	/*! \brief Increments the External Trigger.
+	*
+	*  Invoke this slot to increment the External Trigger.
+	*/
+	void incrementExternalTrigger();
+	/*! \brief Returns this Object ID.
+	 *
+	 *  This function returns its unique Object ID as registered in the ExperimentManager.
+	 */
 	int getObjectID();
+	/*! \brief retrieves the current value of an Experiment Parameter variable.
+	 *
+	 *  This function can be used to retrieve the current value of an Experiment Parameter variable for a specific object.
+	 *  This parameter variable value is currently in use.
+	 */
 	QScriptValue getExperimentObjectParameter(const int &nObjectID, const QString &strName);
+	/*! \brief Sets the current value of an Experiment Parameter variable.
+	*
+	*  This function can be used to immediately set a value of an Experiment Parameter variable for a specific object.
+	*	This parameter variable value is immediately set and used.
+	*/
 	bool setExperimentObjectParameter(const int &nObjectID, const QString &strName, const QScriptValue &sScriptVal);
+	/*! \brief Update or insert an Experiment Block Parameter that can be parsed.
+	 *
+	 *  This function can be used to insert or update an Experiment Block Parameter to be parsed for a specific object.
+	 *  This Parameter can be parsed at the next initialization of a new BlockTrial if not yet initialized.
+	 *  Setting the parameter bIsInitializing to true forces the new parameter to be re-parsed at the next initialization of a new BlockTrial.
+	 *  The parameter bIsCustom (default = false) defines whether this parameter should be treated as a custom parameter.
+	 */
 	bool insertExpObjectBlockParameter(const int nObjectID,const QString sName,const QString sValue,bool bIsInitializing = true, bool bIsCustom = false);
 	
 protected:
@@ -148,7 +184,6 @@ protected:
 	bool changeSubObjectState(ExperimentSubObjectState newSubObjectState);
 
 protected slots:
-	void incrementExternalTrigger();
 	void animate(bool bOnlyCheckBlockTrials = false);
 
 private:

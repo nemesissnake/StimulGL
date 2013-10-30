@@ -4,6 +4,8 @@
 var KeyPressedCounter = 0;
 //Construct a StimulGL Plugin KeyBoard Object
 var KeyBoardCaptureObj = new KeyBoardCapture(); 
+var lAllowedKeyCodeList = new Array(49,50,51,52,53); // keys 1..5
+Log("Allowed key-code(s) to be processed in this script are: " + lAllowedKeyCodeList);
 
 //This function makes sure that everything gets nicely cleaned before the script ends
 function ScriptCleanupFunction()//Cleanup
@@ -33,7 +35,8 @@ function KeyCaptureDetectFunction(keyCode)
 	Log("KeyPressedCounter incremented to: " + KeyPressedCounter + "\n");
 	if (KeyPressedCounter==4)
 	{
-		KeyBoardCaptureObj.StopCaptureThread();		
+		KeyBoardCaptureObj.StopCaptureThread();
+		StimulGL.enableActiveDocument(true);
 	}
 }
 
@@ -60,11 +63,8 @@ KeyBoardCaptureObj.CaptureThreadKeyPressed.connect(this, this.KeyCaptureDetectFu
 KeyBoardCaptureObj.CaptureThreadKeyReleased.connect(this, this.KeyCaptureDetectFunction);
 KeyBoardCaptureObj.CaptureThreadStopped.connect(this, this.KeyCaptureStoppedFunction);
 //Start the capture thread
-KeyBoardCaptureObj.StartCaptureThread(0, false);
-//StartCaptureThread(const short method, bool keyForwarding)
-//method == 0 --> KeyPressed
-//method == 1 --> KeyReleased
-//method == 2 --> KeyPressedReleased
-
+KeyBoardCaptureObj.StartCaptureThread(0, true, lAllowedKeyCodeList);
+StimulGL.enableActiveDocument(false);
+//Because the captured key events are forwarded, eg. to make sure we can control something else, we'll disable the this document to make sure that we don't edit it when executing it.
 
 

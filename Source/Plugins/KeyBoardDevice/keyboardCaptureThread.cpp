@@ -19,11 +19,11 @@
 
 #include "keyboardCaptureThread.h"
 #include "KeyBoardCapture.h"
-#include "SystemKeyboardReadWrite.h"
 
 
 keyboardCaptureThread::keyboardCaptureThread(int method, QObject *parent) : QThread(parent)
 {
+	systemKeyCapture = NULL;
 	isRunning = false;
 	abortRunning = false;
 	bForwardKeyEvents = true;
@@ -33,12 +33,23 @@ keyboardCaptureThread::keyboardCaptureThread(int method, QObject *parent) : QThr
 keyboardCaptureThread::~keyboardCaptureThread()
 {
 	this->stop();
+	if(systemKeyCapture)
+	{
+		delete systemKeyCapture;
+		systemKeyCapture = NULL;
+	}
 }
 
 bool keyboardCaptureThread::setKeyEventForwarding(bool bForward)
 {
 	bForwardKeyEvents = bForward;
 	return bForwardKeyEvents;
+}
+
+bool keyboardCaptureThread::setMaskedKeyList(const QList<int> &keyList)
+{
+	lMaskedKeys = keyList;
+	return true;
 }
 
 bool keyboardCaptureThread::getKeyEventForwarding()
@@ -73,7 +84,11 @@ void keyboardCaptureThread::run()
 {
 	isRunning = true;
 
-	SystemKeyboardReadWrite *systemKeyCapture = NULL;
+	if(systemKeyCapture)
+	{
+		delete systemKeyCapture;
+		systemKeyCapture = NULL;
+	}
 	systemKeyCapture = new SystemKeyboardReadWrite();
 	if (systemKeyCapture)
 	{
@@ -85,9 +100,9 @@ void keyboardCaptureThread::run()
 			bool bKeyReleaseConnected = false;
 			emit recieveThreadStarted(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 			if(bDoHandleKeyPress)
-				bKeyPressConnected = connect(systemKeyCapture->instance(), SIGNAL(keyPressedSignal(quint32)), this, SIGNAL(recieveThreadKeyPressed(quint32)));
+				bKeyPressConnected = connect(systemKeyCapture->instance(), SIGNAL(keyPressedSignal(quint32)), this, SLOT(recieveThreadKeyPressedHandler(quint32)));
 			if(bDoHandleKeyRelease)
-				bKeyReleaseConnected = connect(systemKeyCapture->instance(), SIGNAL(keyReleasedSignal(quint32)), this, SIGNAL(recieveThreadKeyReleased(quint32)));
+				bKeyReleaseConnected = connect(systemKeyCapture->instance(), SIGNAL(keyReleasedSignal(quint32)), this, SLOT(recieveThreadKeyReleasedHandler(quint32)));
 			if ((bKeyPressConnected)||(bKeyReleaseConnected))
 			{
 				do 
@@ -97,9 +112,9 @@ void keyboardCaptureThread::run()
 				} 
 				while (abortRunning==false);
 				if(bKeyPressConnected)
-					disconnect(systemKeyCapture->instance(), SIGNAL(keyPressedSignal(quint32)), this, SIGNAL(recieveThreadKeyPressed(quint32)));
+					disconnect(systemKeyCapture->instance(), SIGNAL(keyPressedSignal(quint32)), this, SLOT(recieveThreadKeyPressedHandler(quint32)));
 				if(bKeyReleaseConnected)
-					disconnect(systemKeyCapture->instance(), SIGNAL(keyReleasedSignal(quint32)), this, SIGNAL(recieveThreadKeyReleased(quint32)));
+					disconnect(systemKeyCapture->instance(), SIGNAL(keyReleasedSignal(quint32)), this, SLOT(recieveThreadKeyReleasedHandler(quint32)));
 			}
 			emit recieveThreadStopped(QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
 			systemKeyCapture->setConnected(false, bForwardKeyEvents);
@@ -109,4 +124,33 @@ void keyboardCaptureThread::run()
 	}	
 	isRunning = false;
 	return;
+}
+
+void keyboardCaptureThread::recieveThreadKeyPressedHandler(quint32 nKeycode)
+{
+	if(lMaskedKeys.isEmpty() == false)
+	{
+		if(lMaskedKeys.contains(nKeycode) == false)
+		{
+			if((bForwardKeyEvents) && systemKeyCapture)
+			{
+				//systemKeyCapture->instance()->keyboardProcedure_Main(49,WM_KEYDOWN,NULL);
+				//CallNextHookEx( HHOOK, nCode, wParam, lParam );
+			}
+			return;
+		}
+	}
+	emit recieveThreadKeyPressed(nKeycode);
+}
+
+void keyboardCaptureThread::recieveThreadKeyReleasedHandler(quint32 nKeycode)
+{
+	if(lMaskedKeys.isEmpty() == false)
+	{
+		if(lMaskedKeys.contains(nKeycode) == false)
+		{
+			//return;
+		}
+	}
+	emit recieveThreadKeyReleased(nKeycode);
 }

@@ -51,6 +51,7 @@ function KeyCaptureStartedFunction()
 function KeyCaptureStoppedFunction(DateTimeStampStopped)
 {
 	Log("\nThe key capture thread was just stopped @ " + DateTimeStampStopped + "\n"); 
+	StimulGL.enableActiveDocument(true);
 	ScriptCleanupFunction();
 }
 
@@ -60,11 +61,14 @@ KeyBoardCaptureObj.CaptureThreadKeyPressed.connect(this, this.KeyCaptureDetectFu
 KeyBoardCaptureObj.CaptureThreadKeyReleased.connect(this, this.KeyCaptureDetectFunction);
 KeyBoardCaptureObj.CaptureThreadStopped.connect(this, this.KeyCaptureStoppedFunction);
 //Start the capture thread
-KeyBoardCaptureObj.StartCaptureThread(0, false);
-//StartCaptureThread(const short method, bool keyForwarding)
+KeyBoardCaptureObj.StartCaptureThread(0, true);
+//StartCaptureThread(const short method, bool keyForwarding, const QList<int> lKeyList (optional))
 //method == 0 --> KeyPressed
 //method == 1 --> KeyReleased
 //method == 2 --> KeyPressedReleased
+//Because the captured key events are forwarded, eg. to make sure we can control something else, we'll disable the this document to make sure that we don't edit it when executing it.
+StimulGL.enableActiveDocument(false);
+
 
 
 

@@ -163,6 +163,12 @@ public slots:
 	 * @return a String value holding the filename of the requested document.
 	 */
 	QString getActiveDocumentFileName();
+		/*! \brief configures the Active(edit) state for the current document.
+	 *
+	 * This function can configures the Active(edit) state for the current document, this can be convenient for (un-)locking the document for editing
+	 * @param bEnable a Boolean value (default = true) determining whether the document should be Activated (Editable).
+	 */
+	void enableActiveDocument(bool bEnable = true);
 	/*! \brief Returns the requested Environment Variable.
 	 *
 	 * This function can return a Environment Variable value by providing the name of the variable.

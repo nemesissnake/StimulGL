@@ -24,11 +24,21 @@
 #include <QDateTime>
 #include "Global.h"
 #include "KeyBoardCapture.h"
+#include "SystemKeyboardReadWrite.h"
+
+#define WM_KEYDOWN                0x0100
+#define WM_KEYUP                  0x0101
 
 class KeyBoardCapture;
 class keyboardCaptureThread : public QThread
 {
 	Q_OBJECT
+
+signals:
+	void recieveThreadKeyPressed(quint32 key);
+	void recieveThreadKeyReleased(quint32 key);
+	void recieveThreadStarted(QString timeTextStamp);
+	void recieveThreadStopped(QString timeTextStamp);
 
 protected:
 	void run();
@@ -38,22 +48,24 @@ public:
 	~keyboardCaptureThread();
 
 	bool setKeyEventForwarding(bool bForward);
+	bool setMaskedKeyList(const QList<int> &keyList = QList<int>());
 	bool getKeyEventForwarding();
 
 public slots:
 	void stop();
+
+private slots:
+	void recieveThreadKeyPressedHandler(quint32 nKeycode);
+	void recieveThreadKeyReleasedHandler(quint32 nKeycode);
 
 private:
 	bool isRunning;
 	bool abortRunning;
 	KeyBoardNameSpace::CaptureKeyMethod dMethod;				//type of CaptureKeyMethod
 	bool bForwardKeyEvents;
+	QList<int> lMaskedKeys;
+	SystemKeyboardReadWrite *systemKeyCapture;
 
-signals:
-	void recieveThreadKeyPressed(quint32 key);
-	void recieveThreadKeyReleased(quint32 key);
-	void recieveThreadStarted(QString timeTextStamp);
-	void recieveThreadStopped(QString timeTextStamp);
 };
 
 #endif // KEYBOARDCAPTURETHREAD_H

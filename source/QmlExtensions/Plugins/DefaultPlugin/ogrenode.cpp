@@ -378,7 +378,7 @@ bool OgreNode::configureUserSettings()
 		try
 		{
 			lBufferedLightSources[i].pLightSource = m_sceneManager->createLight(lBufferedLightSources[i].sName.toLocal8Bit().constData());
-			lBufferedLightSources[i].pLightSource->setType(Ogre::Light::LT_DIRECTIONAL);
+			lBufferedLightSources[i].pLightSource->setType(Ogre::Light::LT_POINT);//LT_DIRECTIONAL);
 			lBufferedLightSources[i].pLightSource->setPosition(lBufferedLightSources[i].xPos, lBufferedLightSources[i].yPos, lBufferedLightSources[i].zPos);
 		}
 		catch(std::exception &e) 
