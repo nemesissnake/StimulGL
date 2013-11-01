@@ -186,6 +186,7 @@ namespace ExperimentManagerNameSpace
 	#define EXPERIMENTSTRUCTURE_NAME				"ExperimentStructure"
 	#define RETINOTOPYMAPPER_NAME					"RetinotopyMapper"
 	#define EXPERIMENTMANAGER_NAME					"ExperimentManager"
+	#define EXPERIMENTSTATE_NAME					"ExperimentState"
 	#define MODULE_NAME								"Experiment Parser"
 	#define MAX_INVOKE_ARG_COUNT					10
 	//#define MIN_SCREEN_UPDATE_TIME				10

@@ -94,11 +94,25 @@ ExperimentManager::~ExperimentManager()
 	cleanupExperiment();
 }
 
+QScriptValue ExperimentManager::ctor__experimentStateEnum(QScriptContext *context, QScriptEngine *engine)
+{
+	int nValue = context->argument(0).toInteger();	
+	if (context->isCalledAsConstructor()) 
+	{
+		return engine->newVariant(0);	
+	}
+	else
+	{
+		return ExperimentManager::ExperimentState(nValue);
+	}
+}
+
 #ifndef QT_NO_DEBUG
+
 QString ExperimentManager::Test(const QString &sInput)
 {
-	//if(currentScriptEngine)
-	//{
+	if(currentScriptEngine)
+	{
 	//	QScriptValue act_Object = currentScriptEngine->currentContext()->parentContext()->activationObject();
 	//	QScriptValue this_Object = currentScriptEngine->currentContext()->parentContext()->thisObject();
 	//	if(currentScriptEngineContexes.isEmpty())
@@ -109,7 +123,21 @@ QString ExperimentManager::Test(const QString &sInput)
 	//		tmpStruct.thisObject = this_Object;
 	//		currentScriptEngineContexes.append(tmpStruct);
 	//	}
-	//}
+		
+		/*
+		qScriptRegisterMetaType(currentScriptEngine, toExperimentStateEnumScriptValue, fromExperimentStateEnumScriptValue);
+		QScriptValue metaObject = currentScriptEngine->newQMetaObject( &staticMetaObject, currentScriptEngine->newFunction(ctor__experimentStateEnum));
+		//currentScriptEngine->globalObject().setProperty( "ExperimentState", metaObject );
+		currentScriptEngine->globalObject().property("ExperimentManager").setProperty( "ExperimentState", metaObject );
+		*/
+	
+		//QScriptValue ctor = currentScriptEngine->newFunction(mySpecialConstructor);
+		//int nType = qRegisterMetaType<ExperimentManager::ExperimentState>("ExperimentState");
+		//const QMetaObject *tmpMeta = QMetaType::metaObjectForType(nType);
+		//qScriptRegisterMetaType(currentScriptEngine,toScriptValue,fromScriptValue);
+		//QScriptValue metaObject = currentScriptEngine->newQMetaObject(tmpMeta,ctor);//&ExperimentManager::ExperimentState
+		//return currentScriptEngine->globalObject().property("ExperimentManager").
+	}
 	//return sInput;
 	//retinoMapper = new RetinotopyMapper(this);
 	//testwindow = new RetinotopyMapper(this);//RetinotopyMapperWindow();
@@ -476,7 +504,7 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bo
 	//			if (bViewEditTree)
 	//				currentExperimentTree->showMaximized();
 	//			setExperimentFileName(fileName);
-	//			changeCurrentExperimentState(ExperimentManager_Loaded);
+	//			changeCurrentExperimentState(Experiment???Manager_Loaded);
 	//			return true;
 	//		}
 	//	}
@@ -489,7 +517,7 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bo
 			currentExperimentTree->showMaximized();
 		setExperimentFileName(fileName);
 		changeCurrentExperimentState(ExperimentManager_Loaded);
-		return true;
+		return prePassiveParseExperiment();
 	}
 	currentExperimentFile.clear();
 	currentValidationFile.clear();
@@ -532,7 +560,7 @@ bool ExperimentManager::validateExperiment()
 		qDebug() << __FUNCTION__ << "::No Experiment validation in memory!";
 		return false;
 	}
-	if(getCurrExperimentState() != ExperimentManager_Loaded)
+	if((getCurrExperimentState() != ExperimentManager_Loaded) && (getCurrExperimentState() != ExperimentManager_PreParsed))
 	{
 		qDebug() << __FUNCTION__ << "::Wrong state, could not validate the experiment!";
 		return false;
@@ -599,20 +627,20 @@ bool ExperimentManager::runExperiment()
 
 	if(!createExperimentObjects())
 	{
-		changeCurrentExperimentState(ExperimentManager_Loaded);
+		changeCurrentExperimentState(ExperimentManager_PreParsed);
 		return false;
 	}
 	
 	if(!connectExperimentObjects())
 	{
-		changeCurrentExperimentState(ExperimentManager_Loaded);
+		changeCurrentExperimentState(ExperimentManager_PreParsed);
 		return false;
 	}
 	changeCurrentExperimentState(ExperimentManager_Configured);
 
 	if(!initializeExperiment())
 	{
-		changeCurrentExperimentState(ExperimentManager_Loaded);
+		changeCurrentExperimentState(ExperimentManager_PreParsed);
 		return false;
 	}
 
@@ -620,7 +648,7 @@ bool ExperimentManager::runExperiment()
 
 	if(!initExperimentObjects())
 	{
-		changeCurrentExperimentState(ExperimentManager_Loaded);
+		changeCurrentExperimentState(ExperimentManager_PreParsed);
 		return false;
 	}
 
@@ -634,7 +662,7 @@ bool ExperimentManager::runExperiment()
 	
 	if(!startExperimentObjects(m_RunFullScreen))
 	{
-		changeCurrentExperimentState(ExperimentManager_Loaded);
+		changeCurrentExperimentState(ExperimentManager_PreParsed);
 		return false;
 	}
 
@@ -970,6 +998,7 @@ bool ExperimentManager::prePassiveParseExperiment()
 		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}
+	changeCurrentExperimentState(ExperimentManager_PreParsed);
 	return true;
 }
 

@@ -77,23 +77,9 @@ function ExperimentStructureChanged()
 	Log(textToShow);
 }
 
-function ExperimentStateChanged()
+function ExperimentStateChanged(currState)
 {
-	//ExperimentManager_NoState	= 0,	This signal can't be catched in this script
-	//ExperimentManager_Constructed	= 1, 	This signal can't be catched in this script
-	//ExperimentManager_Loaded	= 2, 
-	//ExperimentManager_Configured	= 3, 
-	//ExperimentManager_Initialized	= 4, 	
-	//ExperimentManager_IsStarting	= 5, 
-	//ExperimentManager_Started	= 6, 
-	//ExperimentManager_IsStopping	= 7, 
-	//ExperimentManager_Stopped	= 8  
-	
-	//Log("ExperimentStateChanged() arguments count: " + arguments.length);
-	//for (var i = 0; i < arguments.length; ++i)
-	//	Log("mySignalFunction argument: " + arguments[i]); 
-	
-	if(arguments[0] == 4)
+	if(currState == ExperimentManager.ExperimentState.ExperimentManager_Initialized)
 	{	
 		Log("--- ExperimentManager_Initialized");
 		ConnectDisconnectScriptFunctions(true);	
@@ -102,7 +88,7 @@ function ExperimentStateChanged()
 		else
 			Log("--- Failed to install the Custom Script Handler Function");
 	}	
-	if(arguments[0] == 8)
+	if(currState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)
 	{
 		Log("--- ExperimentManager_Stopped");
 		CleanupScript();

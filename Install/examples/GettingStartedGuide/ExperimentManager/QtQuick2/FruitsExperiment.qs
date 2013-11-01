@@ -131,27 +131,16 @@ function VisualizeExperimentStructure(currentExperimentState)
 function ExperimentStateChanged(currentState)
 {
 //The signal where this slot is connected to contains 1 parameters (that holds the current Experiment Manager State).
-//This state is represented using a number following this table:
-//
-//	ExperimentManager_NoState	= 0,	This signal can't be catched in this script
-//	ExperimentManager_Constructed	= 1, 	This signal can't be catched in this script
-//	ExperimentManager_Loaded		= 2, 
-//	ExperimentManager_Configured	= 3, 
-//	ExperimentManager_Initialized	= 4, 	
-//	ExperimentManager_IsStarting	= 5, 
-//	ExperimentManager_Started	= 6, 
-//	ExperimentManager_IsStopping	= 7, 
-//	ExperimentManager_Stopped	= 8  
 	
 	Log(ExperimentManagerObj.getCurrentExperimentState());	
-	if(currentState == 5)
+	if(currentState == ExperimentManager.ExperimentState.ExperimentManager_IsStarting)//ExperimentManager_IsStarting
 	{
 		cExperimentStructure_Object = ExperimentManagerObj.getExperimentStructure();
 		cExperimentStructure_Object.experimentStarted.connect(this, ExperimentStarted);
 		cExperimentStructure_Object.experimentStopped.connect(this, ExperimentStopped);
 		cExperimentStructure_Object.externalTriggerRecieved.connect(this, EM_ExternalTriggerIncremented);		
 	}
-	else if(currentState == 8)
+	else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)//ExperimentManager_Stopped
 	{
 		cExperimentStructure_Object.experimentStarted.disconnect(this, ExperimentStarted);
 		cExperimentStructure_Object.experimentStopped.disconnect(this, ExperimentStopped);

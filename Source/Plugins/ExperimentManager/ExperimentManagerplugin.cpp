@@ -25,6 +25,7 @@
 #include "defines.h"
 
 Q_DECLARE_METATYPE(ExperimentManager*)
+Q_DECLARE_METATYPE(ExperimentManager::ExperimentState);
 
 ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 {
@@ -113,11 +114,15 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 
 bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
 {
+	//Object ExperimentManager
 	QScriptValue ExperimentManagerProto = engine.newQObject(ExperimentManagerObject);
 	engine.setDefaultPrototype(qMetaTypeId<ExperimentManager*>(), ExperimentManagerProto);
 	QScriptValue ExperimentManagerCtor = engine.newFunction(ExperimentManager::ctor__experimentManager, ExperimentManagerProto);
 	engine.globalObject().setProperty(EXPERIMENTMANAGER_NAME, ExperimentManagerCtor);
-
+	//Enum ExperimentState
+	QScriptValue metaObject = engine.newQMetaObject( &ExperimentManager::staticMetaObject, engine.newFunction(ExperimentManager::ctor__experimentStateEnum));
+	engine.globalObject().property(EXPERIMENTMANAGER_NAME).setProperty(EXPERIMENTSTATE_NAME, metaObject);
+	
 	if(ExperimentTimerObject == NULL)
 		ExperimentTimerObject = new ExperimentTimer();
 	QScriptValue ExperimentTimerProto = engine.newQObject(ExperimentTimerObject);

@@ -1,21 +1,3 @@
-Include("./../Common/JavaScript/enum.js");
-var ExperimentManagerStateEnum = new Enum({
-	'ExperimentManager_NoState'		: 0,
-	'ExperimentManager_Constructed'	: 1,
-	'ExperimentManager_Loaded'		: 2, 
-	'ExperimentManager_Configured'	: 3, 
-	'ExperimentManager_Initialized'	: 4, 	
-	'ExperimentManager_IsStarting'	: 5, 
-	'ExperimentManager_Started'		: 6, 
-	'ExperimentManager_IsStopping'	: 7, 
-	'ExperimentManager_Stopped'		: 8  	
-});
-
-//Log(ExperimentManagerStateEnum.getValue('ExperimentManager_Initialized'));
-//Log(ExperimentManagerStateEnum.getKey(3));
-//Log(ExperimentManagerStateEnum.enums);
-//Log(ExperimentManagerStateEnum.getKey(3).toString());
-
 var cExperimentStructure_Object;
 var cBlockStructure_Object0;
 var cBlockStructure_Object1;
@@ -159,20 +141,8 @@ function EM_ExternalTriggerIncremented()
 
 function EM_ExperimentStateChanged(currentEMState,timestamp)
 {
-//The first parameter of the signal where this slot is connected to holds the current Experiment Manager State.
-//This state is represented using a number following this table:
-//1
-//	ExperimentManager_NoState	= 0,	This signal can't be catched in this script
-//	ExperimentManager_Constructed	= 1, 	This signal can't be catched in this script
-//	ExperimentManager_Loaded		= 2, 
-//	ExperimentManager_Configured	= 3, 
-//	ExperimentManager_Initialized	= 4, 	
-//	ExperimentManager_IsStarting	= 5, 
-//	ExperimentManager_Started	= 6, 
-//	ExperimentManager_IsStopping	= 7, 
-//	ExperimentManager_Stopped	= 8  
-	Log("*** EM_ExperimentStateChanged() to:" + ExperimentManagerStateEnum.getKey(currentEMState) + " @" + timestamp);
-	if(currentEMState == ExperimentManagerStateEnum.getValue('ExperimentManager_IsStarting'))		//ExperimentManager_IsStarting
+	Log("*** EM_ExperimentStateChanged() to:" + currentEMState + " @" + timestamp);
+	if(currentEMState == ExperimentManager.ExperimentState.ExperimentManager_IsStarting)		//ExperimentManager_IsStarting
 	{
 		//cExperimentStructure_Object = ExperimentManagerObj.getExperimentStructure();
 		//re-connect...
@@ -180,7 +150,7 @@ function EM_ExperimentStateChanged(currentEMState,timestamp)
 		//cExperimentStructure_Object.experimentStopped.connect(this, ExperimentStopped);
 		//cExperimentStructure_Object.externalTriggerRecieved.connect(this, EM_ExternalTriggerIncremented);
 	}
-	else if(currentEMState == ExperimentManagerStateEnum.getValue('ExperimentManager_Stopped'))	//ExperimentManager_Stopped
+	else if(currentEMState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)	//ExperimentManager_Stopped
 	{
 		//cExperimentStructure_Object.externalTriggerRecieved.disconnect(this, EM_ExternalTriggerIncremented);
 		//CleanupScript();
@@ -392,14 +362,16 @@ function KeyCaptureDetectFunction(keyCode)
 		}
 		else
 		{
-			cExperimentStructure_Object = ExperimentManagerObj.getExperimentStructure();//new cExperimentStructure(ExperimentManagerObj.getExperimentStructure());
+			cExperimentStructure_Object = ExperimentManagerObj.getExperimentStructure();//new cExperimentStructure(ExperimentManagerObj.getExperimentStructure());//ExperimentManagerObj.getExperimentStructure();
 			Log(cExperimentStructure_Object);
-			Log(cExperimentStructure_Object.ExperimentName());
+			Log(cExperimentStructure_Object.ExperimentName);
 		}
 	}	
 	else if(keyCode == 50)//2 = create experiment in script
 	{
 		CreateExperimentFromScript();
+		Log(cExperimentStructure_Object);
+		Log(cExperimentStructure_Object.ExperimentName);		
 	}		
 	else if(keyCode == 51)//3 = change experiment in memory
 	{
@@ -445,7 +417,7 @@ function KeyCaptureDetectFunction(keyCode)
 }
 
 ConnectDisconnectScriptFunctions(true);
-KeyBoardCaptureObj.StartCaptureThread(0, true);//
+KeyBoardCaptureObj.StartCaptureThread(0, true,new Array(27,49,50,51,52,53,54,55,56,57));//Escape-key and key(1..9) are processed
 StimulGL.enableActiveDocument(false);
 sTimer.startTimer(1000);
 ShowMenuCommands();

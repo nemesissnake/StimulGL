@@ -143,37 +143,11 @@ function ExperimentStructureChanged(nCurrentBlock,nCurrentTrial,nCurrentTrigger)
 	}
 }
 
-function ExperimentStateChanged()
+function ExperimentStateChanged(state)
 {
-	//ExperimentManager_NoState	= 0,	This signal can't be catched in this script
-	//ExperimentManager_Constructed	= 1, 	This signal can't be catched in this script
-	//ExperimentManager_Loaded	= 2, 
-	//ExperimentManager_Configured	= 3, 
-	//ExperimentManager_Initialized	= 4, 	
-	//ExperimentManager_IsStarting	= 5, 
-	//ExperimentManager_Started	= 6, 
-	//ExperimentManager_IsStopping	= 7, 
-	//ExperimentManager_Stopped	= 8  
-	
 	var textToShow = "--- The Experiment State Changed to: ";
 	
-	if(arguments[0] == 0)
-	{
-		Log(textToShow + "ExperimentManager_NoState");
-	}
-	else if(arguments[0] == 1)
-	{
-		Log(textToShow + "ExperimentManager_Constructed");
-	}
-	else if(arguments[0] == 2)
-	{
-		Log(textToShow + "ExperimentManager_Loaded");
-	}
-	else if(arguments[0] == 3)
-	{
-		Log(textToShow + "ExperimentManager_Configured");
-	}
-	else if(arguments[0] == 4)
+	if(state == ExperimentManager.ExperimentState.ExperimentManager_Initialized)
 	{
 		Log(textToShow + "ExperimentManager_Initialized");
 		//Now all defined objects in the experiment file are constructed and therefore available in this script, so now we can make the connections between constructed the objects.
@@ -181,19 +155,7 @@ function ExperimentStateChanged()
 		preCacheImages();	
 		preProcessImages();	
 	}	
-	else if(arguments[0] == 5)
-	{	
-		Log(textToShow + "ExperimentManager_IsStarting");
-	}
-	else if(arguments[0] == 6)
-	{	
-		Log(textToShow + "ExperimentManager_Started");		
-	}
-	else if(arguments[0] == 7)
-	{	
-		Log(textToShow + "ExperimentManager_IsStopping");
-	}	
-	else if(arguments[0] == 8)
+	else if(state == ExperimentManager.ExperimentState.ExperimentManager_Stopped)
 	{
 		Log(textToShow + "ExperimentManager_Stopped");
 		CleanupScript();

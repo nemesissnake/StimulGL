@@ -75,21 +75,21 @@ public:
 	ExperimentManager(QObject *parent = NULL, QScriptEngine* engine = NULL);
 	~ExperimentManager();
 
-	Q_ENUMS(ExperimentState)
-
-	/*! The enum ExperimentState represents the main state of the ExperimentManager object */
+	/*! The enum ExperimentState represents the main state of the ExperimentManager object, access in script e.g. : ExperimentManager.ExperimentState.ExperimentManager_Configured */
 	enum ExperimentState 
 	{
-		ExperimentManager_NoState		= 0, /*!< enum value 0 */
-		ExperimentManager_Constructed	= 1, /*!< enum value 1 */
-		ExperimentManager_Loaded		= 2, /*!< enum value 2 */
-		ExperimentManager_Configured	= 3, /*!< enum value 3 */
-		ExperimentManager_Initialized	= 4, /*!< enum value 4 */
-		ExperimentManager_IsStarting	= 5, /*!< enum value 5 */
-		ExperimentManager_Started		= 6, /*!< enum value 6 */
-		ExperimentManager_IsStopping	= 7, /*!< enum value 7 */
-		ExperimentManager_Stopped		= 8  /*!< enum value 8 */
+		ExperimentManager_NoState		= 0, /*!< this state is only internally used by the object while it is constructing, thus not yet fully available and therefore cannot be detected/used in the script environment. */
+		ExperimentManager_Constructed	= 1, /*!< this state is used to determine whenever the object has been constructed, this state also cannot be detected/used in the script environment. */
+		ExperimentManager_Loaded		= 2, /*!< after the Experiment file (*.exml) is successfully loaded (and validated) the ExperimentManager state changes to this state.*/
+		ExperimentManager_PreParsed		= 3, /*!< when the Experiment could be successfully preparsed (after loading) then the ExperimentManager state changes to this state.*/
+		ExperimentManager_Configured	= 4, /*!< after the function runExperiment() is called the ExperimentManager (validates if it has not been done before) and configures the experiment, it then changes to this state if the configuration was done.*/
+		ExperimentManager_Initialized	= 5, /*!< after the Experiment configuration the ExperimentManager tries to initialized and changes the state to this state if this step was successful.*/
+		ExperimentManager_IsStarting	= 6, /*!< after the Experiment initialization the ExperimentManager is ready to actually start the Experiment but first it changes the state to this state.*/
+		ExperimentManager_Started		= 7, /*!< after the Experiment is successfully started the ExperimentManager changes to this state.*/
+		ExperimentManager_IsStopping	= 8, /*!< before the ExperimentManager tries to stop the Experiment it first changes to this state.*/
+		ExperimentManager_Stopped		= 9  /*!< after the ExperimentManager could finalize and stop the Experiment it changes to this state.*/
 	};
+	Q_ENUMS(ExperimentState)
 
 	typedef struct
 	{
@@ -103,6 +103,10 @@ public:
 	} objectElement;
 
 	static QScriptValue ctor__experimentManager(QScriptContext* context, QScriptEngine* engine);
+	static QScriptValue ctor__experimentStateEnum(QScriptContext *context, QScriptEngine *engine);
+	//static QScriptValue toExperimentStateEnumScriptValue(QScriptEngine *engine, const ExperimentState &s);
+	//static void fromExperimentStateEnumScriptValue(const QScriptValue &obj, ExperimentState &s);
+
 	bool cleanupExperiment();
 	bool fetchExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID);
 	tParsedParameterList *getObjectBlockParamListById(int nID);

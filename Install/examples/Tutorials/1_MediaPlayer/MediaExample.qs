@@ -73,25 +73,14 @@ function ConnectDisconnectScriptFunctions(Connect)
 function ExperimentStateChanged(currentState)
 {
 //The signal where this slot is connected to contains 1 parameters (that holds the current Experiment Manager State).
-//This state is represented using a number following this table:
-//
-//	ExperimentManager_NoState	= 0,	This signal can't be catched in this script
-//	ExperimentManager_Constructed	= 1, 	This signal can't be catched in this script
-//	ExperimentManager_Loaded		= 2, 
-//	ExperimentManager_Configured	= 3, 
-//	ExperimentManager_Initialized	= 4, 	
-//	ExperimentManager_IsStarting	= 5, 
-//	ExperimentManager_Started	= 6, 
-//	ExperimentManager_IsStopping	= 7, 
-//	ExperimentManager_Stopped	= 8  
 	
 	Log(ExperimentManagerObj.getCurrentExperimentState());	
-	if (currentState == 3)
+	if (currentState == ExperimentManager.ExperimentState.ExperimentManager_Configured)
 	{
 		//because the used qmlWidget_Object_1 object (used in the below ConnectDisconnectScriptFunctions() function) is declared in the EXML file and is created by the Experiment Mnager DURING the configuration we make sure to call the connect function AFTER the configuration (ExperimentManager_Configured)!
 		ConnectDisconnectScriptFunctions(true); //Connect the signal/slots
 	}
-	else if(currentState == 8)
+	else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)
 	{
 		CleanupScript();
 		//Whenever the experiment is stopped (or aborted) we make sure here that we'll end the script nicely

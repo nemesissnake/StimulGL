@@ -149,15 +149,15 @@ void ExperimentManager_Dialog::LogMessage(QString sMessage)
 
 void ExperimentManager_Dialog::ExperimentStateHasChanged(int nExperimentMainState, QString timeTextStamp)
 {
-	currentExperimentState = (ExperimentManager::ExperimentState)nExperimentMainState;
-	if (currentExperimentState == ExperimentManager::ExperimentManager_Constructed)
-	{
+	//currentExperimentState = (ExperimentManager::ExperimentState)nExperimentMainState;
+	//if (currentExperimentState == ExperimentManager::ExperimentManager_Constructed)
+	//{
 
-	} 
-	else if (currentExperimentState == ExperimentManager::ExperimentManager_Initialized)
-	{
+	//} 
+	//else if (currentExperimentState == ExperimentManager::ExperimentManager_Initialized)
+	//{
 
-	}
+	//}
 }
 
 void ExperimentManager_Dialog::changeExperimentSubObjectState(ExperimentSubObjectState nState)

@@ -136,25 +136,10 @@ function EM_ExternalTriggerIncremented()
 function EM_ExperimentStateChanged(currentState,timestamp)
 {
 //The first parameter of the signal where this slot is connected to holds the current Experiment Manager State.
-//This state is represented using a number following this table:
-//
-//	ExperimentManager_NoState	= 0,	This signal can't be catched in this script
-//	ExperimentManager_Constructed	= 1, 	This signal can't be catched in this script
-//	ExperimentManager_Loaded		= 2, 
-//	ExperimentManager_Configured	= 3, 
-//	ExperimentManager_Initialized	= 4, 	
-//	ExperimentManager_IsStarting	= 5, 
-//	ExperimentManager_Started	= 6, 
-//	ExperimentManager_IsStopping	= 7, 
-//	ExperimentManager_Stopped	= 8  
 	
 	Log("EM_ExperimentStateChanged() to:" + currentState + " @" + timestamp);
 	currentEMState = currentState;
-	if(currentEMState == 4)		//ExperimentManager_Initialized
-	{
-
-	}
-	if(currentEMState == 5)		//ExperimentManager_IsStarting
+	if(currentEMState == ExperimentManager.ExperimentState.ExperimentManager_IsStarting)
 	{
 		cExperimentStructure_Object = ExperimentManagerObj.getExperimentStructure();
 		//re-connect...
@@ -162,11 +147,11 @@ function EM_ExperimentStateChanged(currentState,timestamp)
 		cExperimentStructure_Object.experimentStopped.connect(this, ExperimentStopped);
 		cExperimentStructure_Object.externalTriggerRecieved.connect(this, EM_ExternalTriggerIncremented);
 	}
-	else if(currentEMState == 7)	//ExperimentManager_IsStopping
+	else if(currentEMState == ExperimentManager.ExperimentState.ExperimentManager_IsStopping)
 	{
 		//ExperimentManagerObj.showVisualExperimentEditor(cExperimentStructure_Object);
 	}
-	else if(currentEMState == 8)	//ExperimentManager_Stopped
+	else if(currentEMState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)
 	{
 		CleanupScript();
 		//Whenever the experiment is stopped (or aborted) we make sure here that we'll end the script nicely
