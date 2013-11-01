@@ -61,14 +61,15 @@ Public Types</h2></td></tr>
 &#160;&#160;<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caadaafc8ebde10bb440ecdace31a426b9a5e">ExperimentManager_NoState</a> =  0, 
 <a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada79a730d787943af3017c51343f2ecdeb">ExperimentManager_Constructed</a> =  1, 
 <a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caadaf582c5ccfbb53662819d107ef86bb8d6">ExperimentManager_Loaded</a> =  2, 
-<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada8281752a595678c7fedba0a12f75abed">ExperimentManager_Configured</a> =  3, 
+<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caadafe7cdca3aaa166c3bf11d53be5c1b992">ExperimentManager_PreParsed</a> =  3, 
 <br/>
-&#160;&#160;<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada5355918a6d08df5e0e005163f0e2d8cc">ExperimentManager_Initialized</a> =  4, 
-<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada0bc954ea8433d4541cad1d6242b75deb">ExperimentManager_IsStarting</a> =  5, 
-<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada36e684535b32637c3a5b36bfc849f444">ExperimentManager_Started</a> =  6, 
-<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caadaf32c921a0eb56ca265348e928380ef12">ExperimentManager_IsStopping</a> =  7, 
+&#160;&#160;<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada8281752a595678c7fedba0a12f75abed">ExperimentManager_Configured</a> =  4, 
+<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada5355918a6d08df5e0e005163f0e2d8cc">ExperimentManager_Initialized</a> =  5, 
+<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada0bc954ea8433d4541cad1d6242b75deb">ExperimentManager_IsStarting</a> =  6, 
+<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada36e684535b32637c3a5b36bfc849f444">ExperimentManager_Started</a> =  7, 
 <br/>
-&#160;&#160;<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada95144303ea1f0abb3cb2283e186442c5">ExperimentManager_Stopped</a> =  8
+&#160;&#160;<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caadaf32c921a0eb56ca265348e928380ef12">ExperimentManager_IsStopping</a> =  8, 
+<a class="el" href="class_experiment_manager.html#ad4d79fc2e2aedba5ca0830b7a902caada95144303ea1f0abb3cb2283e186442c5">ExperimentManager_Stopped</a> =  9
 <br/>
  }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-slots"></a>
@@ -89,7 +90,7 @@ Public Slots</h2></td></tr>
 <tr class="memdesc:ae9b3d50bb3af7d85fde90cb97b59e555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the path to the current set experiment file.  <a href="#ae9b3d50bb3af7d85fde90cb97b59e555"></a><br/></td></tr>
 <tr class="memitem:ad80a833d24cba75fe10b88328629a8da"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#ad80a833d24cba75fe10b88328629a8da">getExperimentName</a> ()</td></tr>
 <tr class="memdesc:ad80a833d24cba75fe10b88328629a8da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current experiment name.  <a href="#ad80a833d24cba75fe10b88328629a8da"></a><br/></td></tr>
-<tr class="memitem:a7828d7cc6a43af0d032f57a7d4e7e37e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, ParsedParameterDefinition &amp;strcParDef)</td></tr>
+<tr class="memitem:a7828d7cc6a43af0d032f57a7d4e7e37e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a7828d7cc6a43af0d032f57a7d4e7e37e">getExperimentObjectBlockParameter</a> (const int nObjectID, const QString sName, <a class="el" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">ParsedParameterDefinition</a> &amp;strcParDef)</td></tr>
 <tr class="memdesc:a7828d7cc6a43af0d032f57a7d4e7e37e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a boolean value that determines if a specified named object parameter from the current experiment block could be retrieved and set.  <a href="#a7828d7cc6a43af0d032f57a7d4e7e37e"></a><br/></td></tr>
 <tr class="memitem:a5751e9c3f18107aa629628f0e40f7ac4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classc_experiment_structure.html">cExperimentStructure</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_experiment_manager.html#a5751e9c3f18107aa629628f0e40f7ac4">getExperimentStructure</a> ()</td></tr>
 <tr class="memdesc:a5751e9c3f18107aa629628f0e40f7ac4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current in-memory Experiment Structure.  <a href="#a5751e9c3f18107aa629628f0e40f7ac4"></a><br/></td></tr>
@@ -150,34 +151,37 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The enum ExperimentState represents the main state of the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> object </p>
+<p>The enum ExperimentState represents the main state of the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> object, access in script e.g. : ExperimentManager.ExperimentState.ExperimentManager_Configured </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caadaafc8ebde10bb440ecdace31a426b9a5e"></a>ExperimentManager_NoState</em>&nbsp;</td><td>
-<p>enum value 0 </p>
+<p>this state is only internally used by the object while it is constructing, thus not yet fully available and therefore cannot be detected/used in the script environment. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caada79a730d787943af3017c51343f2ecdeb"></a>ExperimentManager_Constructed</em>&nbsp;</td><td>
-<p>enum value 1 </p>
+<p>this state is used to determine whenever the object has been constructed, this state also cannot be detected/used in the script environment. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caadaf582c5ccfbb53662819d107ef86bb8d6"></a>ExperimentManager_Loaded</em>&nbsp;</td><td>
-<p>enum value 2 </p>
+<p>after the Experiment file (*.exml) is successfully loaded (and validated) the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> state changes to this state. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caadafe7cdca3aaa166c3bf11d53be5c1b992"></a>ExperimentManager_PreParsed</em>&nbsp;</td><td>
+<p>when the Experiment could be successfully preparsed (after loading) then the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> state changes to this state. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caada8281752a595678c7fedba0a12f75abed"></a>ExperimentManager_Configured</em>&nbsp;</td><td>
-<p>enum value 3 </p>
+<p>after the function <a class="el" href="class_experiment_manager.html#a98db95ef04ac9a5a0e363b89960df78f" title="Runs the current Experiment available in memory.">runExperiment()</a> is called the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> (validates if it has not been done before) and configures the experiment, it then changes to this state if the configuration was done. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caada5355918a6d08df5e0e005163f0e2d8cc"></a>ExperimentManager_Initialized</em>&nbsp;</td><td>
-<p>enum value 4 </p>
+<p>after the Experiment configuration the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> tries to initialized and changes the state to this state if this step was successful. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caada0bc954ea8433d4541cad1d6242b75deb"></a>ExperimentManager_IsStarting</em>&nbsp;</td><td>
-<p>enum value 5 </p>
+<p>after the Experiment initialization the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> is ready to actually start the Experiment but first it changes the state to this state. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caada36e684535b32637c3a5b36bfc849f444"></a>ExperimentManager_Started</em>&nbsp;</td><td>
-<p>enum value 6 </p>
+<p>after the Experiment is successfully started the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> changes to this state. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caadaf32c921a0eb56ca265348e928380ef12"></a>ExperimentManager_IsStopping</em>&nbsp;</td><td>
-<p>enum value 7 </p>
+<p>before the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> tries to stop the Experiment it first changes to this state. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="ad4d79fc2e2aedba5ca0830b7a902caada95144303ea1f0abb3cb2283e186442c5"></a>ExperimentManager_Stopped</em>&nbsp;</td><td>
-<p>enum value 8 </p>
+<p>after the <a class="el" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> could finalize and stop the Experiment it changes to this state. </p>
 </td></tr>
 </table>
 </dd>
@@ -450,7 +454,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ParsedParameterDefinition &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">ParsedParameterDefinition</a> &amp;&#160;</td>
           <td class="paramname"><em>strcParDef</em>&#160;</td>
         </tr>
         <tr>
@@ -990,7 +994,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 17 2013 11:30:53 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 1 2013 18:09:25 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

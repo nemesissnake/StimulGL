@@ -7,6 +7,9 @@
         <toc>
             <section title="StimulGL" ref="index.html">            
 								<section title="Getting Started Guide" ref="./Tutorials/GettingStarted/GettingStartedGuide.html"></section>
+								<section title="Examples and Tutorials" ref="./Tutorials/index.html">
+									<section title="Retinotopic Mapping output files" ref="./Tutorials/6_RetinoTopicMappingOutput/6_RetinoTopicMappingOutput.html"></section>
+								</section>
 		            
 		            <section title="Plugins" ref="./References/Plugins/PluginReference.html">
 		                <section title="ExperimentManager Plugin" ref="./References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html">
@@ -65,7 +68,9 @@
             <keyword name="StimulGL" ref="index.html"/>
             <keyword name="History" ref="history.html"/>
             <keyword name="License" ref="index.html"/>
-            <keyword name="Develop" ref="./References/Developers/Developers.html"/>            
+            <keyword name="Develop" ref="./References/Developers/Developers.html"/>
+						<keyword name="Tutorials" ref="./Tutorials/index.html"/>						
+						<keyword name="Examples" ref="./Tutorials/index.html"/>
             <keyword name="Scripting Reference" ref="./References/Script/ScriptingReference.html"/>
             <keyword name="Plugin Reference" ref="./References/Plugins/PluginReference.html"/>
             <keyword name="QML Plugin Reference" ref="./References/QtQuick/QMLExtensionsReference.html"/>
@@ -102,6 +107,7 @@
             <file>References/Plugins/PluginReference.html</file>
             <file>References/QtQuick/QMLExtensionsReference.html</file>
             <file>Tutorials/GettingStarted/GettingStartedGuide.html</file>
+            <file>Tutorials/index.html</file>
 						<file>Manuals/PreBuildDevelopmentSetup/PreBuildDevelopmentSetup.html</file>            
             <file>References/Plugins/ExperimentManagerPlugin/ExperimentManagerPlugin.html</file>
             <file>References/Plugins/ExperimentManagerPlugin/images/*.*</file>
@@ -140,6 +146,12 @@
 						<file>google-code-prettify/*.*</file>
 						<file>Images/*.png</file>
 						<file>Images/*.gif</file>
+						<file>Tutorials/*.*</file>
+						<file>Tutorials/images/*.png</file>
+						<file>Tutorials/images/*.gif</file>
+						<file>Tutorials/6_RetinoTopicMappingOutput/*.*</file>
+						<file>Tutorials/6_RetinoTopicMappingOutput/images/*.png</file>
+						<file>Tutorials/6_RetinoTopicMappingOutput/images/*.gif</file>						
             </files>
         </filterSection>
     </QtHelpProject>

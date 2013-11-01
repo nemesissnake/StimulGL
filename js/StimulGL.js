@@ -201,7 +201,7 @@ function StimulGL_Information()
 	this.componentVersioning[2][TBVExchangerPlugin_Comp_Index] =        ['TBVExchangerPlugin',     '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 	this.componentVersioning[2][TCPNetworkServerPlugin_Comp_Index] =        ['TCPNetworkServerPlugin',      '1.0.0.1', '1.0.0.1', 2, 'x',       '1.2',  '1.2'];
 
-	this.DocumentAuditing = StimulGL_CreateArray(13, AuthorCounter); //Default constructor!
+	this.DocumentAuditing = StimulGL_CreateArray(14, AuthorCounter); //Default constructor!
 	///////////////////////////////////////////////////////////////
 	this.DocumentAuditing[0][this.Doc_FileName_Index] = 'GettingStartedGuide.html';
 	this.DocumentAuditing[0][this.Doc_Title_Index] = 'Getting Started Guide';
@@ -221,6 +221,7 @@ function StimulGL_Information()
 	this.DocumentAuditing[10] = ['SerialPortDevicePlugin.html','SerialPort Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
 	this.DocumentAuditing[11] = ['TCPNetworkServerPlugin.html','TCPNetwork Server Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
 	this.DocumentAuditing[12] = ['StimulGL_QMLExtensions.html','StimulGL QML Extensions Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];					
+	this.DocumentAuditing[13] = ['6_RetinoTopicMappingOutput.html','Retinotopic Mapping output files Tutorial','1.0.0.1','Oktober 2013','Sven Gijsen'];		
 }
 
 StimulGL_Information.prototype.GetStrippedFileName = function (strFileUrl)//var strFileUrl=window.location.pathname;

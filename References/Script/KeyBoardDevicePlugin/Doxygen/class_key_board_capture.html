@@ -56,8 +56,8 @@
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
-<tr class="memitem:a01efbec28f3fe987c3808e8fe0a06a79"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_key_board_capture.html#a01efbec28f3fe987c3808e8fe0a06a79">StartCaptureThread</a> (const short method, bool keyForwarding=true)</td></tr>
-<tr class="memdesc:a01efbec28f3fe987c3808e8fe0a06a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">For starting a new Keyboard Capture thread.  <a href="#a01efbec28f3fe987c3808e8fe0a06a79"></a><br/></td></tr>
+<tr class="memitem:ac3acc1d467d6981870961f6a4b15b3a2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_key_board_capture.html#ac3acc1d467d6981870961f6a4b15b3a2">StartCaptureThread</a> (const short method, bool keyForwarding=true, const QList&lt; int &gt; &amp;lKeyList=QList&lt; int &gt;())</td></tr>
+<tr class="memdesc:ac3acc1d467d6981870961f6a4b15b3a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">For starting a new Keyboard Capture thread.  <a href="#ac3acc1d467d6981870961f6a4b15b3a2"></a><br/></td></tr>
 <tr class="memitem:aa661d8a7767609d963a097c03c3d583a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_key_board_capture.html#aa661d8a7767609d963a097c03c3d583a">StopCaptureThread</a> ()</td></tr>
 <tr><td colspan="2"><h2><a name="signals"></a>
 Signals</h2></td></tr>
@@ -200,12 +200,12 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a01efbec28f3fe987c3808e8fe0a06a79"></a>
+<a class="anchor" id="ac3acc1d467d6981870961f6a4b15b3a2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="class_key_board_capture.html#a01efbec28f3fe987c3808e8fe0a06a79">KeyBoardCapture::StartCaptureThread</a> </td>
+          <td class="memname">bool <a class="el" href="class_key_board_capture.html#ac3acc1d467d6981870961f6a4b15b3a2">KeyBoardCapture::StartCaptureThread</a> </td>
           <td>(</td>
           <td class="paramtype">const short&#160;</td>
           <td class="paramname"><em>method</em>, </td>
@@ -214,7 +214,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>keyForwarding</em> = <code>true</code>&#160;</td>
+          <td class="paramname"><em>keyForwarding</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QList&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lKeyList</em> = <code>QList&lt;int&gt;()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -230,6 +236,7 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">method</td><td>defines the method use for the capture (see the <a class="el" href="namespace_key_board_name_space.html#a71ea7a212636ba012b14cabbb34f7c1b">KeyBoardNameSpace::CaptureKeyMethod</a>). </td></tr>
     <tr><td class="paramname">keyForwarding</td><td>a boolean value determining whether the detected key should be forwarded or not. </td></tr>
+    <tr><td class="paramname">lKeyList</td><td>a list (Array) of key-code values that can cause a capture detection signal (CaptureThreadKeyPressed, CaptureThreadKeyReleased) to occur. </td></tr>
   </table>
   </dd>
 </dl>
@@ -251,7 +258,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Stops the Capture Thread(if started), see <a class="el" href="class_key_board_capture.html#a01efbec28f3fe987c3808e8fe0a06a79" title="For starting a new Keyboard Capture thread.">StartCaptureThread</a>. </p>
+<p>Stops the Capture Thread(if started), see <a class="el" href="class_key_board_capture.html#ac3acc1d467d6981870961f6a4b15b3a2" title="For starting a new Keyboard Capture thread.">StartCaptureThread</a>. </p>
 
 </div>
 </div>
@@ -259,7 +266,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 17 2013 11:30:55 for KeyBoard Device script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 1 2013 18:09:27 for KeyBoard Device script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

@@ -95,31 +95,31 @@
 <a name="l00068"></a>00068         <span class="keywordtype">void</span> <a class="code" href="class_key_board_capture.html#ad6215eaba81005787f9108a051d910f5" title="The CaptureThreadStopped Signal.">CaptureThreadStopped</a>(QString);
 <a name="l00069"></a>00069 
 <a name="l00070"></a>00070 <span class="keyword">public</span>:
-<a name="l00071"></a>00071         <a class="code" href="class_key_board_capture.html#abe4fbd7c1f7e50a98a075afee7f68307" title="The KeyBoard Device constructor.">KeyBoardCapture</a>(QObject *parent = NULL);
-<a name="l00072"></a>00072         <a class="code" href="class_key_board_capture.html#abe4fbd7c1f7e50a98a075afee7f68307" title="The KeyBoard Device constructor.">KeyBoardCapture</a>(<span class="keyword">const</span> <a class="code" href="class_key_board_capture.html" title="The KeyBoard Device class.">KeyBoardCapture</a>&amp; other ){Q_UNUSED(other);}<span class="comment">//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro</span>
-<a name="l00073"></a>00073         <span class="keywordtype">void</span> setScriptEngine(QScriptEngine *scriptEngine) {parentScriptEngine = scriptEngine;};
-<a name="l00074"></a>00074         <a class="code" href="class_key_board_capture.html#a7c3775e2b4bbcf9175e2e3a1194ba1e3" title="The KeyBoard Device destructor.">~KeyBoardCapture</a>();
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076 <span class="keyword">public</span> slots:
-<a name="l00077"></a>00077         <span class="keywordtype">bool</span> <a class="code" href="class_key_board_capture.html#a01efbec28f3fe987c3808e8fe0a06a79" title="For starting a new Keyboard Capture thread.">StartCaptureThread</a>(<span class="keyword">const</span> <span class="keywordtype">short</span> method, <span class="keywordtype">bool</span> keyForwarding = <span class="keyword">true</span>);
-<a name="l00078"></a>00078         <span class="keywordtype">void</span> <a class="code" href="class_key_board_capture.html#aa661d8a7767609d963a097c03c3d583a">StopCaptureThread</a>();
-<a name="l00079"></a>00079         <span class="comment">//QString getVirtualKeyString(const quint32 &amp;keyCode);</span>
-<a name="l00080"></a>00080         <span class="comment">//bool installCustomScriptHandlerFunction(QString FuncName);</span>
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082 <span class="keyword">private</span>:
-<a name="l00083"></a>00083         <span class="keywordtype">void</span> setupKeyCodeTable();
-<a name="l00084"></a>00084         QMap&lt;int,QString&gt; mKeyCodes;<span class="comment">//QMap&lt;quint32,QString&gt; mKeyCodes;</span>
-<a name="l00085"></a>00085         keyboardCaptureThread *captureThread;
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087         <span class="keyword">static</span> QScriptEngine *parentScriptEngine;
-<a name="l00088"></a>00088 };
-<a name="l00089"></a>00089 
-<a name="l00090"></a>00090 <span class="preprocessor">#endif // KEYBOARDCAPTURE_H</span>
+<a name="l00076"></a>00076         <a class="code" href="class_key_board_capture.html#abe4fbd7c1f7e50a98a075afee7f68307" title="The KeyBoard Device constructor.">KeyBoardCapture</a>(QObject *parent = NULL);
+<a name="l00077"></a>00077         <a class="code" href="class_key_board_capture.html#abe4fbd7c1f7e50a98a075afee7f68307" title="The KeyBoard Device constructor.">KeyBoardCapture</a>(<span class="keyword">const</span> <a class="code" href="class_key_board_capture.html" title="The KeyBoard Device class.">KeyBoardCapture</a>&amp; other ){Q_UNUSED(other);}<span class="comment">//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro</span>
+<a name="l00083"></a>00083 <span class="comment"></span>        <a class="code" href="class_key_board_capture.html#a7c3775e2b4bbcf9175e2e3a1194ba1e3" title="The KeyBoard Device destructor.">~KeyBoardCapture</a>();
+<a name="l00084"></a>00084         <span class="keywordtype">void</span> setScriptEngine(QScriptEngine *scriptEngine) {parentScriptEngine = scriptEngine;};
+<a name="l00085"></a>00085 
+<a name="l00086"></a>00086 <span class="keyword">public</span> slots:
+<a name="l00088"></a>00088 
+<a name="l00095"></a>00095         <span class="keywordtype">bool</span> <a class="code" href="class_key_board_capture.html#ac3acc1d467d6981870961f6a4b15b3a2" title="For starting a new Keyboard Capture thread.">StartCaptureThread</a>(<span class="keyword">const</span> <span class="keywordtype">short</span> method, <span class="keywordtype">bool</span> keyForwarding = <span class="keyword">true</span>, <span class="keyword">const</span> QList&lt;int&gt; &amp;lKeyList = QList&lt;int&gt;());
+<a name="l00097"></a>00097         <span class="keywordtype">void</span> <a class="code" href="class_key_board_capture.html#aa661d8a7767609d963a097c03c3d583a">StopCaptureThread</a>();
+<a name="l00098"></a>00098         <span class="comment">//QString getVirtualKeyString(const quint32 &amp;keyCode);</span>
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100 <span class="keyword">private</span>:
+<a name="l00101"></a>00101         <span class="keywordtype">void</span> setupKeyCodeTable();
+<a name="l00102"></a>00102         QMap&lt;int,QString&gt; mKeyCodes;
+<a name="l00103"></a>00103         keyboardCaptureThread *captureThread;
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105         <span class="keyword">static</span> QScriptEngine *parentScriptEngine;
+<a name="l00106"></a>00106 };
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108 <span class="preprocessor">#endif // KEYBOARDCAPTURE_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 17 2013 11:30:55 for KeyBoard Device script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 1 2013 18:09:27 for KeyBoard Device script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

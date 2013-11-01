@@ -66,6 +66,8 @@ Public Slots</h2></td></tr>
 <tr class="memdesc:a5a65673301196b516511dff818550711"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes the provided context name of the internal script engine context state list.  <a href="#a5a65673301196b516511dff818550711"></a><br/></td></tr>
 <tr class="memitem:a64bdbf6fc82dcdeb6c1ae240fc9bee5d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a64bdbf6fc82dcdeb6c1ae240fc9bee5d">emulateKeyPress</a> (QWindow *pWindow=NULL, const int keyCode=0, const QString &amp;sKeys=&quot;&quot;, const Qt::KeyboardModifiers modifier=Qt::NoModifier, const int nDelay=-1)</td></tr>
 <tr class="memdesc:a64bdbf6fc82dcdeb6c1ae240fc9bee5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emulates one or more key press event(s).  <a href="#a64bdbf6fc82dcdeb6c1ae240fc9bee5d"></a><br/></td></tr>
+<tr class="memitem:adcf8c3a9f9db536c287795e9147aa9e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#adcf8c3a9f9db536c287795e9147aa9e7">enableActiveDocument</a> (bool bEnable=true)</td></tr>
+<tr class="memdesc:adcf8c3a9f9db536c287795e9147aa9e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">configures the Active(edit) state for the current document.  <a href="#adcf8c3a9f9db536c287795e9147aa9e7"></a><br/></td></tr>
 <tr class="memitem:a568261340f2dd68c09e4f413478f1d09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a568261340f2dd68c09e4f413478f1d09">executeActiveDocument</a> ()</td></tr>
 <tr class="memdesc:a568261340f2dd68c09e4f413478f1d09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the current active document.  <a href="#a568261340f2dd68c09e4f413478f1d09"></a><br/></td></tr>
 <tr class="memitem:a750d36112c3723c30ae8bdfa774f5657"><td class="memItemLeft" align="right" valign="top">QScriptValue&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a750d36112c3723c30ae8bdfa774f5657">executeScriptContent</a> (const QString &amp;sContent)</td></tr>
@@ -281,6 +283,32 @@ Public Slots</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the function could execute successfully. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="adcf8c3a9f9db536c287795e9147aa9e7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="class_main_window.html#adcf8c3a9f9db536c287795e9147aa9e7">MainWindow::enableActiveDocument</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bEnable</em> = <code>true</code></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>configures the Active(edit) state for the current document. </p>
+<p>This function can configures the Active(edit) state for the current document, this can be convenient for (un-)locking the document for editing </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bEnable</td><td>a Boolean value (default = true) determining whether the document should be Activated (Editable). </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -936,7 +964,7 @@ Public Slots</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 17 2013 11:30:55 for StimulGL Main Application by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 1 2013 18:09:28 for StimulGL Main Application by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>
