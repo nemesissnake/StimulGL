@@ -142,20 +142,9 @@ function EM_ExternalTriggerIncremented()
 function EM_ExperimentStateChanged(currentEMState,timestamp)
 {
 	Log("*** EM_ExperimentStateChanged() to:" + currentEMState + " @" + timestamp);
-	if(currentEMState == ExperimentManager.ExperimentState.ExperimentManager_IsStarting)		//ExperimentManager_IsStarting
+	if(currentEMState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)	//ExperimentManager_Stopped
 	{
-		//cExperimentStructure_Object = ExperimentManagerObj.getExperimentStructure();
-		//re-connect...
-		//cExperimentStructure_Object.experimentStarted.connect(this, ExperimentStarted);
-		//cExperimentStructure_Object.experimentStopped.connect(this, ExperimentStopped);
-		//cExperimentStructure_Object.externalTriggerRecieved.connect(this, EM_ExternalTriggerIncremented);
-	}
-	else if(currentEMState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)	//ExperimentManager_Stopped
-	{
-		//cExperimentStructure_Object.externalTriggerRecieved.disconnect(this, EM_ExternalTriggerIncremented);
-		//CleanupScript();
 		ConnectDisconnectExperimentStructure(false);
-		//Whenever the experiment is stopped (or aborted) we make sure here that we'll end the script nicely
 	}		
 }
 
@@ -195,7 +184,6 @@ function ExperimentStarted()
 function ExperimentStopped()
 {
 	Log("-*- Experiment Stopped");
-	//CleanupScript();
 }
 
 function CreateBlock(BlockObject,ID,Trials,IntTriggers,ExtTriggers)
@@ -262,64 +250,8 @@ function CreateExperimentFromScript()
 	CreateLoop(cLoopStructure_Object0,0,2,cBlockStructure_Object0.getBlockID());//(LoopObject,ID,NumberOfLoops,TargetBlockID)
 	bResult = cBlockStructure_Object1.insertLoop(cLoopStructure_Object0);
 	//Log("Add a defined Loop result: " + bResult);
-	//Log("\tLoop Count: " + cBlockStructure_Object1.getLoopCount());
-	
-	//cLoopStructure_Object1 = new cLoopStructure();
-	//CreateLoop(cLoopStructure_Object1,1,3,cBlockStructure_Object0.getBlockID());//(LoopObject,ID,NumberOfLoops,TargetBlockID)
-	//Log("Add a defined Loop result: " + cBlockStructure_Object1.insertLoop(cLoopStructure_Object1));
-	//Log("\tLoop Count: " + cBlockStructure_Object1.getLoopCount());
-	
-	//cLoopStructure_Object2 = new cLoopStructure();
-	//CreateLoop(cLoopStructure_Object2,2,1,cBlockStructure_Object0.getBlockID());//(LoopObject,ID,NumberOfLoops,TargetBlockID)
-	//Log("Add a defined Loop result: " + cBlockStructure_Object0.insertLoop(cLoopStructure_Object2));
+	//Log("\tLoop Count: " + cBlockStructure_Object1.getLoopCount());	
 
-	
-	//cBlockStructure_Object.BlockName = "Block 0";
-	//Log("Block Name: " + cBlockStructure_Object.BlockName);
-	//cBlockStructure_Object.BlockID = 0;
-	//Log("Block ID: " + cBlockStructure_Object.BlockID);
-	//cBlockStructure_Object.BlockNumber = 0;
-	//Log("Block Number: " + cBlockStructure_Object.BlockNumber);
-	//cBlockStructure_Object.NumberOfTrials = 2;
-	//Log("Block Number Of Trials: " + cBlockStructure_Object.NumberOfTrials);
-	//cBlockStructure_Object.NumberOfInternalTriggers = 2;
-	//Log("Block Number Of Internal Triggers: " + cBlockStructure_Object.NumberOfInternalTriggers);
-	//cBlockStructure_Object.NumberOfExternalTriggers = 2;
-	//Log("Block Number Of External Triggers: " + cBlockStructure_Object.NumberOfExternalTriggers);
-
-	//cLoopStructure_Object.LoopName = "Test Loop";
-	//Log("Loop Name: " + cLoopStructure_Object.LoopName);
-	//cLoopStructure_Object.LoopID = 4;
-	//Log("Loop ID: " + cLoopStructure_Object.LoopID);
-	//cLoopStructure_Object.LoopNumber = 0;
-	//Log("Loop Number: " + cLoopStructure_Object.LoopNumber);
-	//cLoopStructure_Object.NumberOfLoops = 2;
-	//Log("Loop Number Of Loops: " + cLoopStructure_Object.NumberOfLoops);
-
-	//Log("Add a defined Block result: " + cExperimentStructure_Object.insertBlock(cBlockStructure_Object));
-	//cBlockStructure_Object1 = cBlockStructure_Object;//Do not do this! Original is overwritten!
-	//cBlockStructure_Object1.BlockID = 77;
-	//cBlockStructure_Object1.BlockNumber = 2;
-	//cBlockStructure_Object1.NumberOfInternalTriggers = 2;
-	//cBlockStructure_Object1.NumberOfExternalTriggers = 1;
-	//Log("Block Name: " + cBlockStructure_Object1.BlockName);//This returns the default name if not provided
-	//Log("Add a defined Block result: " + cExperimentStructure_Object.insertBlock(cBlockStructure_Object1));
-	//Log();
-
-	//LogState(cExperimentStructureState_Object);
-	//LogState(cExperimentStructure_Object.getCurrentExperimentState());
-	
-//	cExperimentStructure_Object.resetExperiment();
-//	if(cExperimentStructure_Object.prepareExperiment())
-//	{
-//		Log("Experiment Prepared");
-		//cExperimentStructureState_Object = cExperimentStructure_Object.getCurrentExperimentState();
-		//LogState(cExperimentStructureState_Object);
-//	}
-//	else
-//	{
-//		Log("Prepare Experiment failed!");
-//	}	
 	Log("-*- Experiment Created");
 }
 
@@ -341,7 +273,7 @@ function ShowMenuCommands()
 	Log("4\t\t: Show experiment structure (in visual editor)");
 	Log("5\t\t: Show experiment state (in Output log pane)");
 	Log("6\t\t: Execute experiment");
-	//Log("7\t\t: Show this menu");
+
 	Log("9\t\t: Show this menu");
 	Log("Escape\t	: Exit");
 	Log("------------------------------------\n\n");
@@ -375,12 +307,11 @@ function KeyCaptureDetectFunction(keyCode)
 	}		
 	else if(keyCode == 51)//3 = change experiment in memory
 	{
-		//Log(cExperimentStructure_Object.ExperimentName());
 		if(cExperimentStructure_Object != null)
 		{
 			cBlockStructure_Object0.BlockName = "Custom Block Name";
 			cLoopStructure_Object2 = new cLoopStructure();
-			CreateLoop(cLoopStructure_Object2,2,1,cBlockStructure_Object0.getBlockID());//(LoopObject,ID,NumberOfLoops,TargetBlockID)
+			CreateLoop(cLoopStructure_Object2,2,1,cBlockStructure_Object0.getBlockID());
 			Log(">> Add a defined Loop result: " + cBlockStructure_Object0.insertLoop(cLoopStructure_Object2));
 		}
 		else

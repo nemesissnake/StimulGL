@@ -669,7 +669,6 @@ bool ExperimentManager::runExperiment()
 	//move the mouse cursor outside the most right screen
 	QDesktopWidget *dt = QApplication::desktop();
 	QCursor::setPos(dt->width(), dt->height()/2); // not at bottom because then mouse movement on Mac would show dock
-
 	changeCurrentExperimentState(ExperimentManager_Started);
 	return true;
 }

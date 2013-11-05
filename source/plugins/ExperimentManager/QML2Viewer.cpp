@@ -147,7 +147,7 @@ void QML2Viewer::initialize()
 
 bool QML2Viewer::initObject()
 {
-	bFirstQuickWindowAvtivation = true;
+	bFirstQuickWindowActivation = true;
 	bExperimentUnlocked = false;
 	//parentWindow = new QWindow();
 	//parentWindow->setFlags(Qt::FramelessWindowHint);
@@ -484,9 +484,9 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 			fileUrl = QUrl::fromLocalFile(fileString);//fileString);
 			QDir::setCurrent(QFileInfo(fileString).canonicalPath());
 		}
-		else if(bFirstQuickWindowAvtivation)
+		else if(bFirstQuickWindowActivation)
 		{
-			bFirstQuickWindowAvtivation = false;
+			bFirstQuickWindowActivation = false;
 			bExperimentUnlocked = false;
 			fileString = "qrc:/resources/StartQmlFile.qml";
 			fileUrl = QUrl(fileString);
@@ -504,7 +504,7 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 				last_qmlMainFilePath = qmlMainFilePath;
 			bEmitSourceChange = true;
 			fileString = QFileInfo(qmlMainFilePath).canonicalFilePath();
-			fileUrl = QUrl::fromLocalFile(fileString);//fileString);
+			fileUrl = QUrl::fromLocalFile(fileString);
 		}
 	}
 	else   //if(strContent.isEmpty()==false)	

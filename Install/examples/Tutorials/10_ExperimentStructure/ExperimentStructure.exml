@@ -110,8 +110,8 @@ Attributes only apply to readonly non user data, like the ID
 			<block ID="1">
 				<name>PolarAngle_Block</name>
 				<block_number>1</block_number>            
-				<nr_of_trials>6</nr_of_trials>
-				<nr_of_internal_triggers>36</nr_of_internal_triggers>
+				<nr_of_trials>1</nr_of_trials>
+				<nr_of_internal_triggers>6</nr_of_internal_triggers>
 				<nr_of_external_triggers>1</nr_of_external_triggers>
 				<object ID="1">
 					<parameters>
@@ -125,7 +125,7 @@ Attributes only apply to readonly non user data, like the ID
 						</parameter>
 						<parameter ID="2">
 							<name>CycleTriggerAmount</name>
-							<value>12</value>
+							<value>6</value>
 						</parameter>	
 						<parameter ID="3">
 							<name>InternalTriggerDuration</name>
@@ -165,6 +165,20 @@ Attributes only apply to readonly non user data, like the ID
 						</parameter>
 					</parameters>			    	 
 				</object>   
+				<loops>
+					<loop ID="1">
+						<name>Inner_Loop</name>
+						<loop_number>1</loop_number>          
+						<nr_of_loops>1</nr_of_loops>
+						<target_block>1</target_block> 
+					</loop>
+					<loop ID="2">
+						<name>Outer_Loop</name>
+						<loop_number>2</loop_number>          
+						<nr_of_loops>2</nr_of_loops>
+						<target_block>0</target_block> 
+					</loop>					
+				</loops>				
 			</block>
 			
 		</blocks>

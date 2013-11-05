@@ -182,6 +182,7 @@ bool ExperimentEngine::startExperimentObject()
 	bFirstTriggerAfterUnlock = true;
 	pExperimentManager->startExperimentTimer(nFrameTimerIndex);//Starts the Frame timer
 	pExperimentManager->startExperimentTimer(nTrialTimerIndex);//Starts the Trial timer
+		
 	checkForNextBlockTrial();
 	bool bRetVal;
 	if (thisMetaObject)
@@ -216,7 +217,7 @@ bool ExperimentEngine::unlockExperimentObject()
 		bCurrentSubObjectIsLocked = false;
 		if(isDebugMode() && pExperimentManager)
 			pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Unlocked the Experiment Object");
-	}
+	}	
 	return true;
 }
 
@@ -312,6 +313,7 @@ void ExperimentEngine::incrementExternalTrigger()
 				pExperimentManager->getExperimentStructure()->resetExperiment();
 				pExperimentManager->getExperimentStructure()->prepareExperiment();
 				pExperimentManager->getExperimentStructure()->incrementExternalTrigger();
+				emit ExperimentStructureChanged(0,0,0);
 			}
 			//else
 			//{//No Experiment Manager? QML?
@@ -512,7 +514,13 @@ QScriptValue ExperimentEngine::getExperimentObjectParameter(const int &nObjectID
 		QScriptValue sScriptValue;
 		if(pExperimentManager->getExperimentObjectScriptValue(nObjectID,strName,sScriptValue))
 		{
-			//QString test = sScriptValue.toString();
+			if(sScriptValue.isString())
+			{
+				QString test = sScriptValue.toString();
+				//bool bResult = 
+					expandExperimentBlockParameterValue(test);
+				return test;
+			}
 			return sScriptValue;
 		}
 		return currentScriptEngine->undefinedValue();

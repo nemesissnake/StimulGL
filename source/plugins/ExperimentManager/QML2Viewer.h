@@ -160,7 +160,7 @@ private:
 	float stimWidthPixelAmount;					//The amount of visible stimuli pixels(height)
 	float stimHeigthPixelAmount;				//The amount of visible stimuli pixels(width)
 	bool bParameterChanged;
-	bool bFirstQuickWindowAvtivation;
+	bool bFirstQuickWindowActivation;
 	bool bExperimentUnlocked;
 };
 Q_DECLARE_METATYPE(QML2Viewer)
