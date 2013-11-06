@@ -215,6 +215,18 @@ void cBlockStructure::resetAllLoopCounters()
 	}
 }
 
+void cBlockStructure::resetAllInnerLoopCounters(const int &nCurrentLoopCounter)
+{
+	if(pSharedData->lLoops.isEmpty() == false)
+	{
+		for(int i=0;i<pSharedData->lLoops.count();i++)
+		{
+			if(pSharedData->lLoops[i]->getLoopNumber() < nCurrentLoopCounter)
+				pSharedData->lLoops[i]->resetCurrentLoopCounter();
+		}
+	}
+}
+
 cLoopStructure* cBlockStructure::getLoopPointerByID(const int &nLoopID)
 {
 	if(pSharedData->lLoops.isEmpty())//Are there any loops defined?
@@ -797,7 +809,19 @@ void cExperimentStructure::incrementExternalTrigger()
 				{//Next Block?
 					pSharedData->currentExperimentState.CurrentBlock_TrialNumber = 0;//Reset to zero again!
 					nextLoopBlock = pSharedData->currentBlockPointer->incrementToNextLoopPointer(pSharedData->currentLoopPointer);//Do we have a Block defined by a loop?
-					if(nextLoopBlock == NULL)//No Loop Block available
+					if(nextLoopBlock)//Loop Block available?
+					{
+						pSharedData->currentBlockPointer->resetAllInnerLoopCounters(nextLoopBlock->getLoopNumber());
+						int nTargetBlockID = nextLoopBlock->getTargetBlockID();
+						pSharedData->currentBlockPointer = getBlockPointerByID(nTargetBlockID);
+						if(pSharedData->currentBlockPointer == NULL)
+						{
+							ExperimentAbort();
+							return;					
+						}
+						pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->resetToFirstFreeLoopPointer();
+					}//No Loop Block available
+					else
 					{
 						pSharedData->currentBlockPointer->resetAllLoopCounters();
 						//int nFoundIndex = -1;
@@ -808,17 +832,6 @@ void cExperimentStructure::incrementExternalTrigger()
 							return;					
 						}
 						pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->incrementToNextLoopPointer(NULL);
-					}
-					else
-					{
-						int nTargetBlockID = nextLoopBlock->getTargetBlockID();
-						pSharedData->currentBlockPointer = getBlockPointerByID(nTargetBlockID);
-						if(pSharedData->currentBlockPointer == NULL)
-						{
-							ExperimentAbort();
-							return;					
-						}
-						pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->resetToFirstFreeLoopPointer();
 					}
 					pSharedData->currentExperimentState.CurrentBlock_BlockID = pSharedData->currentBlockPointer->getBlockID();
 					if(pSharedData->currentLoopPointer)

@@ -35,7 +35,7 @@ namespace ExperimentStructuresNameSpace
 		RA_FINISHED						= -1,	// -1: Repeats have all been processed/finished
 		RA_REINITIALIZE					= -2,	// -2: Repeats should be re-initialized first
 		RA_INFINITE						= -3,	// -3: Infinite Repeats
-		RA_UNDEFINED					= -4	// -4: None defined (ie. no loops defined)
+		RA_UNDEFINED					= -4	// -4: None defined (i.e. no loops defined)
 	};
 
 	enum LoopCounterException
@@ -336,11 +336,16 @@ public slots:
 	/*!  This function resets all cLoopStructure structures from the block.
 	 */		
 	void resetAllLoopCounters();
+	//! \brief resetAllInnerLoopCounters slot.
+	/*!  This function resets all cLoopStructure structures from the block which have loop number(s) smaller than the provided loop number.
+	 * @param nCurrentLoopCounter a integer value that holds the first outer loop number that should not be reset by this function.
+	 */		
+	void resetAllInnerLoopCounters(const int &nCurrentLoopCounter);
 	//! \brief insertLoop slot.
 	/*!  This function inserts a new cLoopStructure in the block.
 	 * @param cLoop a pointer to a cLoopStructure that should be inserted.
 	 * @return a boolean value determining whether the new cLoopStructure structure could be inserted.
-	 */		
+	 */	
 	bool insertLoop(cLoopStructure *cLoop);
 	//! \brief getNextClosestLoopIDByFromID slot.
 	/*!  This function returns a pointer to the next first cLoopStructureloop where the loop ID value is bigger then the provided loop ID.

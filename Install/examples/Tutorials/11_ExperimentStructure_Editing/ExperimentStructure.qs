@@ -309,6 +309,10 @@ function KeyCaptureDetectFunction(keyCode)
 	{
 		if(cExperimentStructure_Object != null)
 		{
+			if(cBlockStructure_Object0 == null)
+			{
+				cBlockStructure_Object0 = cExperimentStructure_Object.getBlockPointerByID(0);
+			}
 			cBlockStructure_Object0.BlockName = "Custom Block Name";
 			cLoopStructure_Object2 = new cLoopStructure();
 			CreateLoop(cLoopStructure_Object2,2,1,cBlockStructure_Object0.getBlockID());

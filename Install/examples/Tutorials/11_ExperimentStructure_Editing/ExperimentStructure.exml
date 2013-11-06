@@ -167,18 +167,12 @@ Attributes only apply to readonly non user data, like the ID
 				</object>   
 				<loops>
 					<loop ID="1">
-						<name>Inner_Loop</name>
+						<name>Loop_0</name>
 						<loop_number>1</loop_number>          
 						<nr_of_loops>1</nr_of_loops>
-						<target_block>1</target_block> 
-					</loop>
-					<loop ID="2">
-						<name>Outer_Loop</name>
-						<loop_number>2</loop_number>          
-						<nr_of_loops>2</nr_of_loops>
 						<target_block>0</target_block> 
-					</loop>					
-				</loops>				
+					</loop>
+				</loops>
 			</block>
 			
 		</blocks>
