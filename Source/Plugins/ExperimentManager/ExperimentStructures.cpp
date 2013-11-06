@@ -194,8 +194,9 @@ cLoopStructure *cBlockStructure::incrementToNextLoopPointer(cLoopStructure *pCur
 		{
 			if(bReturnNextPointer)
 			{
-				if(pSharedData->lLoops[i]->initializeCurrentLoopCounter())//Initialization of the new loop?
+				if(pSharedData->lLoops[i]->initializeCurrentLoopCounter() >= ExperimentStructuresNameSpace::LCE_FIRSTLOOP)   //initializeCurrentLoopCounter())//Initialization of the new loop?
 					return pSharedData->lLoops[i];
+				return incrementToNextLoopPointer(pSharedData->lLoops[i]);//NULL
 			}
 			if(pSharedData->lLoops[i] == pCurrentLoop)
 				bReturnNextPointer = true;
@@ -222,7 +223,9 @@ void cBlockStructure::resetAllInnerLoopCounters(const int &nCurrentLoopCounter)
 		for(int i=0;i<pSharedData->lLoops.count();i++)
 		{
 			if(pSharedData->lLoops[i]->getLoopNumber() < nCurrentLoopCounter)
+			{
 				pSharedData->lLoops[i]->resetCurrentLoopCounter();
+			}
 		}
 	}
 }
@@ -356,18 +359,29 @@ bool cLoopStructure::makeThisAvailableInScript(QString strObjectScriptName, QObj
 	return false;
 }
 
-bool cLoopStructure::initializeCurrentLoopCounter()
+int cLoopStructure::initializeCurrentLoopCounter()
 {
 	if(nLoopCounter==ExperimentStructuresNameSpace::LCE_FINISHED)
 	{
-		return false;
+		nLoopCounter = ExperimentStructuresNameSpace::LCE_FINISHED;
 	}
 	else if(nLoopCounter==ExperimentStructuresNameSpace::LCE_UNUSED)
 	{
 		nLoopCounter = ExperimentStructuresNameSpace::LCE_FIRSTLOOP;
-		return true;
 	}
-	return true;
+	else if(nLoopCounter==ExperimentStructuresNameSpace::LCE_FIRSTLOOP)//Here's the difference with function incrementCurrentLoopCounter()!
+	{
+		nLoopCounter++;
+	}
+	else if((nLoopCounter+1) < nNrOfLoops)
+	{
+		nLoopCounter++;
+	}
+	else
+	{
+		nLoopCounter = ExperimentStructuresNameSpace::LCE_FINISHED;
+	}
+	return nLoopCounter;
 }
 
 int cLoopStructure::incrementCurrentLoopCounter() 
@@ -394,6 +408,11 @@ int cLoopStructure::incrementCurrentLoopCounter()
 void cLoopStructure::resetCurrentLoopCounter() 
 {
 	nLoopCounter = ExperimentStructuresNameSpace::LCE_UNUSED;
+}
+
+void cLoopStructure::finalizeCurrentLoopCounter() 
+{
+	nLoopCounter = ExperimentStructuresNameSpace::LCE_FINISHED;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -820,6 +839,12 @@ void cExperimentStructure::incrementExternalTrigger()
 							return;					
 						}
 						pSharedData->currentLoopPointer = pSharedData->currentBlockPointer->resetToFirstFreeLoopPointer();
+
+						//if((nextLoopBlock->getLoopCounter() == 0) && ())
+						//{
+						//	nextLoopBlock.set
+						//}
+
 					}//No Loop Block available
 					else
 					{

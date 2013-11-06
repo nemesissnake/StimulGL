@@ -41,8 +41,8 @@ namespace ExperimentStructuresNameSpace
 	enum LoopCounterException
 	{
 		LCE_FIRSTLOOP					=  0,	//   0: This is the first loop
-		LCE_UNUSED						= -1,	//  -1: This loop is fully processed
-		LCE_FINISHED					= -2	//  -2: This loop is not yet used
+		LCE_UNUSED						= -1,	//  -1: This loop is not yet used
+		LCE_FINISHED					= -2	//  -2: This loop is fully processed
 	};
 
 	enum ExperimentRunState
@@ -121,9 +121,10 @@ public:
 	static QScriptValue loopStructureToScriptValue(QScriptEngine *engine, cLoopStructure* const &s);
 	static void loopStructureFromScriptValue(const QScriptValue &obj, cLoopStructure* &s);
 
-	bool initializeCurrentLoopCounter();
+	int initializeCurrentLoopCounter();
 	int incrementCurrentLoopCounter();
 	void resetCurrentLoopCounter();
+	void finalizeCurrentLoopCounter();
 
 public slots:
 	bool makeThisAvailableInScript(QString strObjectScriptName = "", QObject *engine = NULL);//To make the objects (e.g. defined in a *.exml file) available in the script
