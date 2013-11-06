@@ -299,7 +299,7 @@ File ::734163BB-2D66-4AB3-8E7C-A39732165602 -directory <%InstallDir%>/examples/T
 File ::B35EE0A2-15AE-4950-915A-2005EF67EE4E -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/TBVExchanger/scripts -name E:/Projects/StimulGL/Source/Plugins/TBVExchanger/scripts/QScriptExample_TBVExchangerPlugin.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::B51DA7DD-911A-4644-9EF3-C31B59A3EF23 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/SerialPortDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/SerialPortDevice/scripts/QScriptExample_SerialPortDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::9AF92E48-2781-4CF4-86DF-2C61F8171153 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/USBHIDDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/USBHIDDevice/scripts/QScriptExample_USBHIDDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::D347FA81-B6DB-42A0-AE1A-09D6BFE02D50 -type dir -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/ExperimentManager/scripts} -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::D347FA81-B6DB-42A0-AE1A-09D6BFE02D50 -type dir -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/ExperimentManager/scripts -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::3E7AF30B-74F3-4364-90DC-7EEDC9E29C9D -name cExperimentStructureObject.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::EDD14EFF-6344-47AD-AAB7-E1A415E430F9 -name DatFileConcatination.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::EA270538-B799-429A-8BCE-46D8B952F8AA -name DatFileViewer.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
@@ -323,7 +323,7 @@ File ::238DAB8E-B359-42C1-8084-5099559083C9 -name MovingDots1.exml -parent 4D18B
 File ::C064D772-ADA3-4FC6-BB26-842D7759378D -name Polar1.exml -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
 File ::0CD0FA6A-0E35-497C-9121-629F0D3CB1EE -name Polar2.exml -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
 File ::50AF2DC8-ED09-4407-BC53-5ED9C2314EE5 -name qmlExample.exml -active 0 -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
-File ::3F39F5ED-A754-442D-B580-F1C243438D92 -type dir -directory {<%InstallDir%>/examples/Tutorials/99. PluginExamples/ExperimentManager/qml} -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/qml -active 0 -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::3F39F5ED-A754-442D-B580-F1C243438D92 -type dir -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/ExperimentManager/qml -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/qml -active 0 -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::3D5AAD04-ADE6-4479-ADE0-0C5DE3D766A2 -type dir -name examples -active 0 -parent 3F39F5ED-A754-442D-B580-F1C243438D92
 File ::E610BE1B-AC0F-4BDD-A2C3-0BD840FC247C -name Button.qml -active 0 -parent 3D5AAD04-ADE6-4479-ADE0-0C5DE3D766A2
 File ::47D5DF53-B03C-4FB5-96DC-37418D3B9CA7 -name Cell.qml -active 0 -parent 3D5AAD04-ADE6-4479-ADE0-0C5DE3D766A2
@@ -623,6 +623,12 @@ File ::8A5699CB-5233-4440-8A1F-C1EF434F561F -name {StimulGL - Shortcut.lnk} -act
 File ::995E4805-2460-4866-8FD0-C689F9CE45C6 -name {TBVExchanger - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
 File ::D442EA9B-7A5E-4CFD-8B7E-1A975C03F1E8 -name {TCPNetworkServer - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
 File ::8755AFB4-879F-4312-8558-87248DAF26B0 -name {USBHIDDevice - Shortcut.lnk} -active 0 -parent 90C3A486-237C-499E-96A1-F8405D4B98D1
+File ::1728B32C-4F80-4803-9C7A-A9FA005383F5 -type dir -name 10_ExperimentStructure_BlockLoops -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::563B1BF0-B6F1-4E6A-B335-F82847DF7AB7 -type dir -name 11_ExperimentStructure_Editing -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::E8CFDA72-D020-4B22-9444-9CDCFA01DAC6 -type dir -name 12_CustomParameters -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::72638136-2633-4255-98C6-54DB269A37FB -type dir -name 7_Qt3D -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::1DAD1D2E-4557-4937-B0AA-97483B2FC773 -type dir -name 8_Ogre3D -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
+File ::12C89641-36B6-4072-8794-9ED301D94BAC -type dir -name 9_RetinotopyMapper_CustomPainting -parent 23F6D351-6760-4CC8-9D58-C7A0D09D62FA
 FileGroup ::13ECD65D-69B5-4F91-B2C0-B4F9548060F8 -setup Install -active Yes -platforms {Solaris-x86 TarArchive Windows ZipArchive} -name {QML Plugins(x64)} -parent FileGroups
 File ::D67119F5-7C9B-470A-B818-511C8343E3F5 -name E:/Projects/StimulGL/Install/qml/plugins/x64/DefaultQMLPlugin_x64_Release.dll -parent 13ECD65D-69B5-4F91-B2C0-B4F9548060F8
 File ::A4FB6D53-45CE-4175-81A5-3A2854BB3CA9 -type dir -name C:/Qt/5.1.0/x64/qml/QtGraphicalEffects -parent 13ECD65D-69B5-4F91-B2C0-B4F9548060F8
@@ -3161,7 +3167,7 @@ FE124F32-8FA4-46F1-B258-E80E59625C4F,ShowSetupType
 {No}
 
 FE7C119F-2B67-439E-A0DF-FA1E714F2630,Destination
-{<%InstallDir%>/examples/Tutorials/99. PluginExamples}
+{<%InstallDir%>/examples/Tutorials/99_PluginExamples}
 
 FE7C119F-2B67-439E-A0DF-FA1E714F2630,FileSize
 {112214}
