@@ -335,7 +335,7 @@ exit 1
 echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK
 
 echo Generating &lt;plugin&gt;.qmltypes file...
-$(QTDIR)\bin\qmlplugindump.exe  StimulGL_QMLExtensions 1.1 $(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform) &gt; $(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions\StimulGL_QMLExtensions.qmltypes</Command>
+echo $(QTDIR)\bin\qmlplugindump.exe -notrelocatable StimulGL_QMLExtensions 1.1 $(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform) &gt; $(ProjectDir)..\..\..\..\Install\qml\plugins\$(Platform)\StimulGL_QMLExtensions\StimulGL_QMLExtensions.qmltypes</Command>
       <Message>Post-build event</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

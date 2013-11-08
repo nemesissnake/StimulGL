@@ -299,7 +299,7 @@ File ::734163BB-2D66-4AB3-8E7C-A39732165602 -directory <%InstallDir%>/examples/T
 File ::B35EE0A2-15AE-4950-915A-2005EF67EE4E -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/TBVExchanger/scripts -name E:/Projects/StimulGL/Source/Plugins/TBVExchanger/scripts/QScriptExample_TBVExchangerPlugin.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::B51DA7DD-911A-4644-9EF3-C31B59A3EF23 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/SerialPortDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/SerialPortDevice/scripts/QScriptExample_SerialPortDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::9AF92E48-2781-4CF4-86DF-2C61F8171153 -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/USBHIDDevice/scripts -name E:/Projects/StimulGL/Source/Plugins/USBHIDDevice/scripts/QScriptExample_USBHIDDevice.qs -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
-File ::D347FA81-B6DB-42A0-AE1A-09D6BFE02D50 -type dir -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/ExperimentManager/scripts -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::D347FA81-B6DB-42A0-AE1A-09D6BFE02D50 -type dir -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/ExperimentManager/scripts -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/scripts -active 0 -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::3E7AF30B-74F3-4364-90DC-7EEDC9E29C9D -name cExperimentStructureObject.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::EDD14EFF-6344-47AD-AAB7-E1A415E430F9 -name DatFileConcatination.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::EA270538-B799-429A-8BCE-46D8B952F8AA -name DatFileViewer.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
@@ -314,7 +314,7 @@ File ::98A0ECF5-3443-4A4B-A3B5-6DD490A55E76 -name RandomGenerator.qs -parent D34
 File ::2D8C6901-945D-4A9D-B7F0-86432B5EF091 -name scriptContext.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::4B8DF454-BC83-480B-AE22-1EC78FA254F9 -name StructureLoading.exml -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
 File ::047F0E4B-C0D5-40C9-9BA5-AB9B1186687B -name TriggerTimer.qs -parent D347FA81-B6DB-42A0-AE1A-09D6BFE02D50
-File ::4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1 -type dir -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/ExperimentManager/experiments -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/experiments -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
+File ::4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1 -type dir -directory <%InstallDir%>/examples/Tutorials/99_PluginExamples/ExperimentManager/experiments -name E:/Projects/StimulGL/Source/Plugins/ExperimentManager/experiments -active 0 -parent FE7C119F-2B67-439E-A0DF-FA1E714F2630
 File ::1BB4934F-B990-4CAA-8C38-863E89C99142 -name Eccentricity1.exml -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
 File ::8770A885-9FB8-4AAA-B807-4682FA371B94 -name Eccentricity2.exml -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
 File ::D18305D0-6E71-4E01-8749-0BE8F0FA4B3F -name MovingBar1.exml -parent 4D18B6F3-E864-4CAC-A49A-C74D2D38A6A1
