@@ -1,3 +1,4 @@
+var dialog;
 var cExperimentStructure_Object;
 var cBlockStructure_Object0;
 var cBlockStructure_Object1;
@@ -12,56 +13,168 @@ var cLoopStructure_Object4;
 var cLoopStructure_Object;
 var cExperimentStructureState_Object;
 var sTimer = new TriggerTimer();
-var KeyBoardCaptureObj = new KeyBoardCapture(); 							//Construct a StimulGL Plugin KeyBoard Object
 var ExperimentManagerObj = new ExperimentManager(); 						//Here we create the Experiment Manager object that can run experiments.
 var sCurrentScriptLocation = StimulGL.getActiveDocumentFileLocation();			//Here we store the directory-path from this script file for further usage.
 var sExperimentFilePath = sCurrentScriptLocation + "/ExperimentStructure.exml";
+var sExperimentFilePathSaved = sCurrentScriptLocation + "/ExperimentStructure_saved.exml";
 
-function CleanupScript()
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function Dialog(parent)
 {
-	//Pre
-	sTimer.stopTimer();
-	KeyBoardCaptureObj.StopCaptureThread();
-	StimulGL.enableActiveDocument(true);
-	ConnectDisconnectExperimentStructure(false);
-	ConnectDisconnectScriptFunctions(false);
-	//Functions
-	CreateExperimentFromScript = null;
-	ShowMenuCommands = null;
-	getItem = null;
-	LogState = null;	
-	ExperimentStarted = null;
-	ExperimentStopped = null;
-	ExperimentStateChanged = null;
-	KeyCaptureDetectFunction = null;
-	CreateBlock = null;
-	CreateLoop = null;
-	EM_ExperimentStateChanged = null;
-	EM_ExternalTriggerIncremented = null;	
-	ConnectDisconnectScriptFunctions = null;
-	ConnectDisconnectExperimentStructure = null;
-	CleanupScript = null;	
-	//Objects
-	cLoopStructure_Object0 = null;
-	cLoopStructure_Object1 = null;
-	cLoopStructure_Object2 = null;
-	cLoopStructure_Object3 = null;
-	cLoopStructure_Object4 = null;	
-	cBlockStructure_Object0 = null;
-	cBlockStructure_Object1 = null;
-	cBlockStructure_Object2 = null;
-	cBlockStructure_Object3 = null;
-	cBlockStructure_Object4 = null;
-	cExperimentStructure_Object = null;	
-	cExperimentStructureState_Object = null;
-	ExperimentManagerObj = null;
-	sTimer = null;	
-	KeyBoardCaptureObj = null;
-	ExperimentManagerObj = null;
-	//Post
-	Log("\nFinished script cleanup, ready for garbage collection!");
-	Beep();
-	StimulGL.cleanupScript();	
+	QDialog.call(this, parent);
+	var frameStyle = QFrame.Sunken | QFrame.Panel;
+	var layout = new QGridLayout;
+	layout.setColumnStretch(1, 1);	
+	layout.setColumnMinimumWidth(1, 250);
+	
+	this.loadLabel = new QLabel;
+	this.loadLabel.setFrameStyle(frameStyle);
+	this.loadButton = new QPushButton(tr("Load Experiment"));	
+	layout.addWidget(this.loadButton, 0, 0);
+	layout.addWidget(this.loadLabel, 0, 1);
+	/////////////////////////////////////////////////////
+	this.createLabel = new QLabel;
+	this.createLabel.setFrameStyle(frameStyle);
+	this.createButton = new QPushButton(tr("Create Experiment(script)"));	
+	layout.addWidget(this.createButton, 1, 0);
+	layout.addWidget(this.createLabel, 1, 1);
+	/////////////////////////////////////////////////////
+	this.changeLabel = new QLabel;
+	this.changeLabel.setFrameStyle(frameStyle);
+	this.changeButton = new QPushButton(tr("Change Experiment(script)"));	
+	layout.addWidget(this.changeButton, 2, 0);
+	layout.addWidget(this.changeLabel, 2, 1);
+	/////////////////////////////////////////////////////
+	this.showLabel = new QLabel;
+	this.showLabel.setFrameStyle(frameStyle);
+	this.showButton = new QPushButton(tr("Show Experiment(editor)"));	
+	layout.addWidget(this.showButton, 3, 0);
+	layout.addWidget(this.showLabel, 3, 1);
+	/////////////////////////////////////////////////////
+	this.executeLabel = new QLabel;
+	this.executeLabel.setFrameStyle(frameStyle);
+	this.executeButton = new QPushButton(tr("Execute Experiment"));	
+	layout.addWidget(this.executeButton, 4, 0);
+	layout.addWidget(this.executeLabel, 4, 1);
+	/////////////////////////////////////////////////////
+	this.saveLabel = new QLabel;
+	this.saveLabel.setFrameStyle(frameStyle);
+	this.saveButton = new QPushButton(tr("Save Experiment"));	
+	layout.addWidget(this.saveButton, 5, 0);
+	layout.addWidget(this.saveLabel, 5, 1);
+	/////////////////////////////////////////////////////
+	this.exitLabel = new QLabel;
+	this.exitLabel.setFrameStyle(frameStyle);
+	this.exitButton = new QPushButton(tr("Exit"));	
+	layout.addWidget(this.exitButton, 6, 0);
+	layout.addWidget(this.exitLabel, 6, 1);
+
+	this.setLayout(layout);
+	this.windowTitle = tr("Menu Dialog");
+}
+
+Dialog.prototype = new QDialog();
+
+function tr(s) { return s; }
+
+Dialog.prototype.loadExperiment = function()
+{
+	//var items = new Array(tr("Spring"), tr("Summer"), tr("Fall"), tr("Winter"));
+	//var item = QInputDialog.getItem(this, tr("QInputDialog::getItem()"), tr("Season:"), items, 0, false, Qt.WindowFlags(0));
+	//if (item != null & item.length != 0)
+		//this.itemLabel.text = item;
+	
+	if(!ExperimentManagerObj.loadExperiment(sExperimentFilePath,false,true))
+	{
+		Log("~~Failed to load the Experiment file");
+	}
+	else
+	{
+		cExperimentStructure_Object = ExperimentManagerObj.getExperimentStructure();//new cExperimentStructure(ExperimentManagerObj.getExperimentStructure());//ExperimentManagerObj.getExperimentStructure();
+		Log(cExperimentStructure_Object);
+		Log(cExperimentStructure_Object.ExperimentName);
+		dialog.loadLabel.text = sExperimentFilePath;
+	}	
+}
+
+Dialog.prototype.createExperiment = function()
+{
+	CreateExperimentFromScript();
+	Log(cExperimentStructure_Object);
+	Log(cExperimentStructure_Object.ExperimentName);	
+}
+
+Dialog.prototype.changeExperiment = function()
+{
+	if(cExperimentStructure_Object != null)
+	{
+		if(cBlockStructure_Object0 == null)
+		{
+			cBlockStructure_Object0 = cExperimentStructure_Object.getBlockPointerByID(0);
+		}
+		Log("Current block name: " + cBlockStructure_Object0.BlockName);
+		cBlockStructure_Object0.BlockName = "Custom Block Name";
+		//cLoopStructure_Object2 = new cLoopStructure();
+		//CreateLoop(cLoopStructure_Object2,2,1,cBlockStructure_Object0.getBlockID());
+		//Log(">> Add a defined Loop result: " + cBlockStructure_Object0.insertLoop(cLoopStructure_Object2));
+		Log("SetExperiment: " + ExperimentManagerObj.setExperimentStructure(cExperimentStructure_Object));
+	}
+	else
+	{
+		Log("No Experiment configured...")
+	}	
+}
+
+Dialog.prototype.showExperiment = function()
+{
+	if(!ExperimentManagerObj.showVisualExperimentEditor(cExperimentStructure_Object)) //cExperimentStructure_Object1
+	{
+		Log("~~Failed to show the Experiment Structure");
+	}	
+//	LogState(cExperimentStructure_Object.getCurrentExperimentState());	
+}
+
+Dialog.prototype.executeExperiment = function()
+{
+	if(!ExperimentManagerObj.runExperiment()) //Try to run the experiment
+	{
+		Log("~~Failed to execute the Experiment");
+	}
+	else
+	{
+		ConnectDisconnectExperimentStructure(true);
+	}	
+}
+
+Dialog.prototype.saveExperiment = function()
+{
+	if(!ExperimentManagerObj.saveExperiment(sExperimentFilePathSaved)) //Try to run the experiment
+	{
+		Log("~~Failed to save the Experiment");
+	}
+	else
+	{
+		Log("Experiment Saved!");
+	}	
+}
+
+Dialog.prototype.keyPressEvent = function(e /*QKeyEvent e*/)
+{
+	if(e.key() == Qt.Key_Escape)
+	{
+		this.close();
+	}
+	else
+	{
+		QDialog.keyPressEvent(e);
+	}
+}
+
+Dialog.prototype.closeEvent = function() 
+{
+	Log("Dialog closeEvent() detected!");
+	CleanupScript();
 }
 
 function ConnectDisconnectExperimentStructure(Connect)
@@ -108,9 +221,16 @@ function ConnectDisconnectScriptFunctions(Connect)
 		Log("... Connecting Signal/Slots");
 		try 
 		{	
-			KeyBoardCaptureObj.CaptureThreadKeyPressed.connect(this, this.KeyCaptureDetectFunction);
 			ExperimentManagerObj.ExperimentStateHasChanged.connect(this, this.EM_ExperimentStateChanged);  
-			ExperimentManagerObj.WriteToLogOutput.connect(this,this.Log);			
+			ExperimentManagerObj.WriteToLogOutput.connect(this,this.Log);
+				
+			dialog.loadButton["clicked()"].connect(dialog, dialog.loadExperiment);
+			dialog.createButton["clicked()"].connect(dialog, dialog.createExperiment);
+			dialog.changeButton["clicked()"].connect(dialog, dialog.changeExperiment);
+			dialog.showButton["clicked()"].connect(dialog, dialog.showExperiment);
+			dialog.executeButton["clicked()"].connect(dialog, dialog.executeExperiment);
+			dialog.saveButton["clicked()"].connect(dialog, dialog.saveExperiment);
+			dialog.exitButton["clicked()"].connect(this, this.CleanupScript);			
 		} 
 		catch (e) 
 		{
@@ -122,9 +242,16 @@ function ConnectDisconnectScriptFunctions(Connect)
 		Log("... Disconnecting Signal/Slots");
 		try 
 		{	
-			KeyBoardCaptureObj.CaptureThreadKeyPressed.disconnect(this, this.KeyCaptureDetectFunction);
 			ExperimentManagerObj.ExperimentStateHasChanged.disconnect(this, this.EM_ExperimentStateChanged);  
-			ExperimentManagerObj.WriteToLogOutput.disconnect(this,this.Log);	
+			ExperimentManagerObj.WriteToLogOutput.disconnect(this,this.Log);
+			
+			dialog.loadButton["clicked()"].disconnect(dialog, dialog.loadExperiment);
+			dialog.createButton["clicked()"].disconnect(dialog, dialog.createExperiment);
+			dialog.changeButton["clicked()"].disconnect(dialog, dialog.changeExperiment);
+			dialog.showButton["clicked()"].disconnect(dialog, dialog.showExperiment);
+			dialog.executeButton["clicked()"].disconnect(dialog, dialog.executeExperiment);
+			dialog.saveButton["clicked()"].disconnect(dialog, dialog.saveExperiment);
+			dialog.exitButton["clicked()"].disconnect(this, this.CleanupScript);			
 		} 
 		catch (e) 
 		{
@@ -255,104 +382,63 @@ function CreateExperimentFromScript()
 	Log("-*- Experiment Created");
 }
 
-function getItem(title,text,items,current)
+function CleanupScript()
 {
-	var item = QInputDialog.getItem(this, title, text, items, current, false, Qt.WindowFlags(0));
-	return item;
+	//Pre
+	sTimer.stopTimer();
+	dialog.close();
+	ConnectDisconnectExperimentStructure(false);
+	ConnectDisconnectScriptFunctions(false);
+	//Functions
+	CreateExperimentFromScript = null;
+	LogState = null;	
+	ExperimentStarted = null;
+	ExperimentStopped = null;
+	ExperimentStateChanged = null;
+	CreateBlock = null;
+	CreateLoop = null;
+	EM_ExperimentStateChanged = null;
+	EM_ExternalTriggerIncremented = null;	
+	ConnectDisconnectScriptFunctions = null;
+	ConnectDisconnectExperimentStructure = null;
+	CleanupScript = null;	
+	//Objects
+	cLoopStructure_Object0 = null;
+	cLoopStructure_Object1 = null;
+	cLoopStructure_Object2 = null;
+	cLoopStructure_Object3 = null;
+	cLoopStructure_Object4 = null;	
+	cBlockStructure_Object0 = null;
+	cBlockStructure_Object1 = null;
+	cBlockStructure_Object2 = null;
+	cBlockStructure_Object3 = null;
+	cBlockStructure_Object4 = null;
+	cExperimentStructure_Object = null;	
+	cExperimentStructureState_Object = null;
+	ExperimentManagerObj = null;
+	sTimer = null;	
+	ExperimentManagerObj = null;
+	dialog = null;
+	//Dialog
+	Dialog.prototype.keyPressEvent = null;
+	Dialog.prototype.closeEvent = null;	
+	Dialog.prototype.loadExperiment = null;
+	Dialog.prototype.createExperiment = null;
+	Dialog.prototype.changeExperiment = null;
+	Dialog.prototype.showExperiment = null;
+	Dialog.prototype.executeExperiment = null;
+	Dialog.prototype.saveExperiment = null;
+	Dialog.prototype = null;
+	Dialog = null;
+	tr = null;	
+	//Post
+	Log("\nFinished script cleanup, ready for garbage collection!");
+	Beep();
+	StimulGL.cleanupScript();	
 }
 
-function ShowMenuCommands()
-{
-	//StimulGL.clearOutputWindow();
-	Log("------------------------------------");
-	Log("- COMMANDS MENU");
-	Log("------------------------------------");
-	Log("1\t\t: Load experiment from file");
-	Log("2\t\t: Create experiment (in script)");
-	Log("3\t\t: Change experiment");
-	Log("4\t\t: Show experiment structure (in visual editor)");
-	Log("5\t\t: Show experiment state (in Output log pane)");
-	Log("6\t\t: Execute experiment");
-
-	Log("9\t\t: Show this menu");
-	Log("Escape\t	: Exit");
-	Log("------------------------------------\n\n");
-}
-
-function KeyCaptureDetectFunction(keyCode)
-{
-	Log("A key press was detected: " + keyCode); 
-	if(keyCode == 27)//Escape
-	{
-		CleanupScript();
-	}
-	else if(keyCode == 49)//1 = load experiment from file
-	{
-		if(!ExperimentManagerObj.loadExperiment(sExperimentFilePath,false,true))
-		{
-			Log("~~Failed to load the Experiment file");
-		}
-		else
-		{
-			cExperimentStructure_Object = ExperimentManagerObj.getExperimentStructure();//new cExperimentStructure(ExperimentManagerObj.getExperimentStructure());//ExperimentManagerObj.getExperimentStructure();
-			Log(cExperimentStructure_Object);
-			Log(cExperimentStructure_Object.ExperimentName);
-		}
-	}	
-	else if(keyCode == 50)//2 = create experiment in script
-	{
-		CreateExperimentFromScript();
-		Log(cExperimentStructure_Object);
-		Log(cExperimentStructure_Object.ExperimentName);		
-	}		
-	else if(keyCode == 51)//3 = change experiment in memory
-	{
-		if(cExperimentStructure_Object != null)
-		{
-			if(cBlockStructure_Object0 == null)
-			{
-				cBlockStructure_Object0 = cExperimentStructure_Object.getBlockPointerByID(0);
-			}
-			cBlockStructure_Object0.BlockName = "Custom Block Name";
-			cLoopStructure_Object2 = new cLoopStructure();
-			CreateLoop(cLoopStructure_Object2,2,1,cBlockStructure_Object0.getBlockID());
-			Log(">> Add a defined Loop result: " + cBlockStructure_Object0.insertLoop(cLoopStructure_Object2));
-		}
-		else
-		{
-			Log("No Experiment configured...")
-		}	
-	}	
-	else if(keyCode == 52)//4 = show experiment in memory
-	{
-		if(!ExperimentManagerObj.showVisualExperimentEditor(cExperimentStructure_Object)) //cExperimentStructure_Object1
-		{
-			Log("~~Failed to show the Experiment Structure");
-		}
-	}
-	else if(keyCode == 53)//5 = show experiment in memory
-	{
-		LogState(cExperimentStructure_Object.getCurrentExperimentState());
-	}	
-	else if(keyCode == 54)//6 = execute experiment
-	{
-		if(!ExperimentManagerObj.runExperiment()) //Try to run the experiment
-		{
-			Log("~~Failed to execute the Experiment");
-		}
-		else
-		{
-			ConnectDisconnectExperimentStructure(true);
-		}
-	}
-	else if(keyCode == 57)//9 = show the menubar
-	{
-		ShowMenuCommands();
-	}
-}
-
-ConnectDisconnectScriptFunctions(true);
-KeyBoardCaptureObj.StartCaptureThread(0, true,new Array(27,49,50,51,52,53,54,55,56,57));//Escape-key and key(1..9) are processed
-StimulGL.enableActiveDocument(false);
 sTimer.startTimer(1000);
-ShowMenuCommands();
+dialog = new Dialog();
+dialog.show();
+ConnectDisconnectScriptFunctions(true);
+

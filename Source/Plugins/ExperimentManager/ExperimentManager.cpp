@@ -1202,6 +1202,17 @@ cExperimentStructure *ExperimentManager::getExperimentStructure()
 	return cExperimentBlockTrialStructure;
 }
 
+bool ExperimentManager::setExperimentStructure(cExperimentStructure *expStruct) 
+{
+	if(cExperimentBlockTrialStructure)
+	{
+		//delete cExperimentBlockTrialStructure;
+		//cExperimentBlockTrialStructure = NULL;
+	}
+	cExperimentBlockTrialStructure = expStruct;//new cExperimentStructure(expStruct);
+	return true;
+}
+
 //QObject* ExperimentManager::getExperimentStructure() 
 //{
 //	return cExperimentBlockTrialStructure;

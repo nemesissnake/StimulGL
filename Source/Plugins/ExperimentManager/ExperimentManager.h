@@ -347,6 +347,13 @@ public slots:
 	 *  @return a pointer to a cExperimentStructure structure, if the function fails it returns NULL.
 	 */	
 	cExperimentStructure *getExperimentStructure();
+	/*! \brief Sets the in-memory Experiment Structure
+	 *
+	 *  This function sets the current in-memory Experiment Structure.
+	 *  @param expStruct a cExperimentStructure that should be set as the new in-memory Experiment Structure.
+	 *  @return a boolean value determining whether this function executed successfully.
+	 */	
+	bool setExperimentStructure(cExperimentStructure *expStruct = NULL);
 	/*! \brief Shows a Experiment Structure in a Experiment Graph Editor UI.
 	 *
 	 *  This function shows a dialog containing the Experiment Graph Editor containing the provided Experiment Structure, if the provided ExperimentStructure parameter is NULL than the current in-memory Experiment Structure is used instead.
