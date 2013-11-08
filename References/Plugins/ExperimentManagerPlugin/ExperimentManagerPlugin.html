@@ -31,13 +31,13 @@
 <div id="toc_Area">
 <ul id="toc"></ul>
 <h2>Introduction</h2>
-<p>The Experiment Manager Plug-in implements a Experiment Engine that you can use to present various kinds of stimuli. It can load  an Experiment file (*.exml) that defines the configuaration  for the experiment; see the EXML-File definition. The Experiment Manager can be created and used  by a script or can be used directly by executing an Experiment file by  StimulGL.</p>
+<p>The Experiment Manager Plug-in implements a Experiment Engine that you can use to present various kinds of stimuli. It can load  an Experiment file (*.exml) that defines the configuration  for the experiment; see the EXML-File definition. The Experiment Manager can be created and used  by a script or can be used directly by executing an Experiment file by  StimulGL.</p>
 <h3>Directories</h3>
 <p>The Experiment manager uses the following directories inside the main root StimulGL directory:</p>
-<p><strong>/ouputs</strong><br />
+<p><strong>/outputs</strong><br />
   this directory is used for storing files created by the Experiment Manager.</p>
 <h2>EXML-File definition</h2>
-<p>The experiment file is an <a href="http://en.wikipedia.org/wiki/XML"  target="_blank">XML file type</a> that can be loaded by the Experiment Manger for its configuaration. You can manually edit this document in StimulGL or another text/code editor. The first lines consist out of a file header:</p>
+<p>The experiment file is an <a href="http://en.wikipedia.org/wiki/XML"  target="_blank">XML file type</a> that can be loaded by the Experiment Manger for its configuration. You can manually edit this document in StimulGL or another text/code editor. The first lines consist out of a file header:</p>
 <table class="codeframe"><tr><td>
 <pre class="prettyprint">
 &lt;?xml version='1.0' encoding='UTF-8'?&gt;<br />&lt;!DOCTYPE EXML&gt;<br />&lt;!-- <br />This is a comment example<br />Place you own text here...<br />--&gt;<br />&lt;EXML version=&quot;2.0.0.2&quot;&gt;
@@ -64,8 +64,8 @@
     &lt;/object&gt;
 &nbsp;
     &lt;object ID=&quot;1&quot;&gt; 
-        &lt;class&gt;RetinoMap_glwidget&lt;/class&gt;
-        &lt;name&gt;RetinoMap_RenderWidgetGL&lt;/name&gt;
+        &lt;class&gt;RetinotopyMapper&lt;/class&gt;
+        &lt;name&gt;RetinotopyMapper_object&lt;/name&gt;
         &lt;constructor&gt;
             &lt;param1/&gt;
         &lt;/constructor&gt;

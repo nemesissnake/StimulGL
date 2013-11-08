@@ -80,6 +80,8 @@ Public Slots</h2></td></tr>
 <tr class="memdesc:a3799ea3a5c009850e8a0d7d3bef5e80c"><td class="mdescLeft">&#160;</td><td class="mdescRight">incrementToNextLoopPointer slot.  <a href="#a3799ea3a5c009850e8a0d7d3bef5e80c"></a><br/></td></tr>
 <tr class="memitem:aeb0a8cf338eafd2f3a4c616a384a626b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_block_structure.html#aeb0a8cf338eafd2f3a4c616a384a626b">insertLoop</a> (<a class="el" href="classc_loop_structure.html">cLoopStructure</a> *cLoop)</td></tr>
 <tr class="memdesc:aeb0a8cf338eafd2f3a4c616a384a626b"><td class="mdescLeft">&#160;</td><td class="mdescRight">insertLoop slot.  <a href="#aeb0a8cf338eafd2f3a4c616a384a626b"></a><br/></td></tr>
+<tr class="memitem:a4cf9ffeb43f69cbc25b2a773a1f3cadc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_block_structure.html#a4cf9ffeb43f69cbc25b2a773a1f3cadc">resetAllInnerLoopCounters</a> (const int &amp;nCurrentLoopCounter)</td></tr>
+<tr class="memdesc:a4cf9ffeb43f69cbc25b2a773a1f3cadc"><td class="mdescLeft">&#160;</td><td class="mdescRight">resetAllInnerLoopCounters slot.  <a href="#a4cf9ffeb43f69cbc25b2a773a1f3cadc"></a><br/></td></tr>
 <tr class="memitem:a23eb1b8575d01d29e09ce5d0cc3625bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_block_structure.html#a23eb1b8575d01d29e09ce5d0cc3625bb">resetAllLoopCounters</a> ()</td></tr>
 <tr class="memdesc:a23eb1b8575d01d29e09ce5d0cc3625bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">resetAllLoopCounters slot.  <a href="#a23eb1b8575d01d29e09ce5d0cc3625bb"></a><br/></td></tr>
 <tr class="memitem:a8ad8eca90802cba6ade72d5a519589d5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classc_loop_structure.html">cLoopStructure</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classc_block_structure.html#a8ad8eca90802cba6ade72d5a519589d5">resetToFirstFreeLoopPointer</a> ()</td></tr>
@@ -363,6 +365,32 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the new <a class="el" href="classc_loop_structure.html" title="The cLoopStructure class.">cLoopStructure</a> structure could be inserted. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4cf9ffeb43f69cbc25b2a773a1f3cadc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classc_block_structure.html#a4cf9ffeb43f69cbc25b2a773a1f3cadc">cBlockStructure::resetAllInnerLoopCounters</a> </td>
+          <td>(</td>
+          <td class="paramtype">const int &amp;&#160;</td>
+          <td class="paramname"><em>nCurrentLoopCounter</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>resetAllInnerLoopCounters slot. </p>
+<p>This function resets all <a class="el" href="classc_loop_structure.html" title="The cLoopStructure class.">cLoopStructure</a> structures from the block which have loop number(s) smaller than the provided loop number. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nCurrentLoopCounter</td><td>a integer value that holds the first outer loop number that should not be reset by this function. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -662,7 +690,7 @@ Properties</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 1 2013 18:09:25 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 8 2013 13:22:05 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

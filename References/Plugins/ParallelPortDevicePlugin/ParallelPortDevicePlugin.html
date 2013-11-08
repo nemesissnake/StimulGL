@@ -36,14 +36,14 @@ of interface found on
 computers for connecting various peripherals. 
 In computing, a parallel port is a parallel communication physical interface. It is also known 
 as a printer port or Centronics port. The IEEE 1284 standard defines 
-the bi-directional version of the port, which allows the transmission and reception of data 
+the bidirectional version of the port, which allows the transmission and reception of data 
 bits at the same time.</p>
 <p>The Plug-in can not only (single) read/write data but it can also (multiple) capture/generate 
 data which can turn the computer into a simulation/emulation/analysing 
 device. The Plug-In has also features that make it possible to change the Parallel Port Mode and to emit signals.</p>
 <p>The Plug-In can be used to derive an object from and use it in the StimulGL scripting environment. 
 There’s also an User Interface defined inside the Plug-in 
-which can be used to use all the Parallel Ports features directly, you can simply open this UI trought the StimulGL Plugins menu. The following documentation will 
+which can be used to use all the Parallel Ports features directly, you can simply open this UI trough the StimulGL Plug-ins menu. The following documentation will 
 make use of this UI to explain the Plug-in.</p>
 <h2>Hardware</h2>
 <p>The parallel port normally consists out of an DB25 connector, usually found on the back of your computer. New computer sometimes lack the use of an Parallel Port 
@@ -214,8 +214,8 @@ we can calculate the address of each registers in this manner. To find the base 
 to use you could (on Windows) open up the Device Manager and the search for an LPT Device, go to its properties and check the memory I/O range, see below picture:</p>
 <p><img src="images/image05.png" alt=""/></p>
 <p>In the above example picture we can see the address range 1110 - 1117, this would mean that the base address is at 0x1110 (Please note that this is in the hexadecimal format notation!)</p>
-<h2>Analyse and Test</h2>
-<p>After opening the Parallel Ports Plug-in UI trough the StimulGL Plugins menu the following dialog appears:</p>
+<h2>Analyze and Test</h2>
+<p>After opening the Parallel Ports Plug-in UI trough the StimulGL Plug-ins menu the following dialog appears:</p>
 <p><img src="images/image01.png" alt=""/></p>
 <p>By using the first tab you can read/write to/from a parallel port. You can also read the current mode where it is set to. 
   To do this you first have to enter the base address in the Base Address field, see the Parallel Port Registers chapter, 
@@ -234,7 +234,7 @@ check a case from low to high for example. With the receive mask you can check t
 detection of signal changes, otherwise they are ignored.</p>
 <h3>Contact de-bouncing</h3>
 <p>The parallel port is an ideal device to connect an external passive (need no external power for this) switching device to because of its totem-pole TTL output lines. Push-button switches, 
-toggle switches, and electro-mechanical relays all have one thing in common: contacts. It's the metal contacts that make and break the circuit and carry the current in switches and relays. 
+toggle switches, and electromechanical relays all have one thing in common: contacts. It's the metal contacts that make and break the circuit and carry the current in switches and relays. 
 Because they are metal, contacts have mass. And since at least one of the contacts is on a movable strip of metal, it has springiness. Since contacts are designed to open and close quickly, 
 there is little resistance (damping) to their movement.</p>
 <p>Because the moving contacts have mass and springiness with low damping they will be &quot;bouncy&quot; as they make and break. That is, when a normally open (N.O.) pair of contacts is closed, 
@@ -242,7 +242,7 @@ the contacts will come together and bounce off each other several times before f
 The effect is called &quot;contact bounce&quot; or, in a switch, &quot;switch bounce&quot; see below Figure. </p>
 <p><img src="images/image00.png" alt=""/></p>
 <p>Note that contacts can bounce on opening as well as on closing.</p>
-<p>The Plug-in has the ability to ignore this bouncing behaviour after the signal line changes for a pre-defined time period using the User Interface Post Timing Delay controls. 
+<p>The Plug-in has the ability to ignore this bouncing behavior after the signal line changes for a pre-defined time period using the User Interface Post Timing Delay controls. 
 By using these controls you can set the time in which after a line change (Low-High or High-Low) the capture thread ignores line changes. 
 Normally a value of of one or microseconds is more than enough to prevent the bouncing. Please not that all line changes are than ignored, thus depending on the external device you must choose your settings here, 
 e.g. a switch normally can’t be changed faster by a human &lt;50mSecs.</p>

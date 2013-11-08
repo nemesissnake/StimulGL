@@ -59,12 +59,12 @@
 <h2>  Custom Plug-in Setup</h2>
 <p>  After all the required tools are installed and correctly configured you can start with the following setup which describes how you can create and configure you own dynamic Extension Plug-in for StimulGL using the Extension Plug-in template.</p>
 <ol>
-  <li>  Copy and Paste the folder &quot;ExtensionPluginTemplate&quot; (from StimulGL source directory/Source/Plugins/),  rename the new pasted folder to your own &lt;ExtensionName&gt; name (do not use blank spaces for this name!).</li>
+  <li>  Copy and Paste the folder &quot;ExtensionPluginTemplate&quot; (from StimulGL source directory/Source/Plug-ins/),  rename the new pasted folder to your own &lt;ExtensionName&gt; name (do not use blank spaces for this name!).</li>
   <li>Replace the substring &quot;_extensionname_&quot; from all file/(folder)-names with the choosen &lt;ExtensionName&gt; from the previous step.<br />
-    ie. _extensionname__plugin_global.h becomes Retinotopic_Mapping_plugin_global.h if &lt;ExtensionName&gt; = &quot;Retinotopic_Mapping&quot;.</li>
+    i.e. _extensionname__plugin_global.h becomes Retinotopic_Mapping_plugin_global.h if &lt;ExtensionName&gt; = &quot;Retinotopic_Mapping&quot;.</li>
   <li>Replace all substrings &quot;_extensionname_&quot; found in the content of all files to &lt;ExtensionName&gt;, you can use a text editor like UltraEdit  to quickly “replace in files” to do this quickly, select include sub-folders!</li>
   <li>Replace all substrings &quot;_authorname_&quot; found in the content of all files to &lt;AuthorName&gt;.</li>
-  <li>Open the defines.h file and further configure your custom Plug-in.</li>
+  <li>Open the <em>defines.h</em> file and further configure your custom Plug-in.</li>
 </ol>
 <h3>  Device Type Plug-in</h3>
 <p>  If you are planning to build a Device type plug-in instead of an Extension type plug-in you need to perform the following additional steps:</p>
@@ -109,7 +109,7 @@
   <li>  Validate the static load through the help-&gt;about StimulGL menu</li>
 </ol>
 <h2>  Testing</h2>
-<p>To test the new custom Plug-in you can open the &lt;ExtensionName&gt;Plugin.sln solution with Visual Studio 2010 and try to build the solution and validate that the build was successful. If this wasn’t the case than read the chapter common failures to see whether this can lead to a successful solution, otherwise you can contact a StimulGL developer.</p>
+<p>To test the new custom Plug-in you can open the &lt;ExtensionName&gt;Plugin.sln solution with Visual Studio 2010 and try to build the solution and validate that the build was successful. If this was not the case than read the chapter common failures to see whether this can lead to a successful solution, otherwise you can contact a StimulGL developer.</p>
 <h3>  Common Failures</h3>
 <ol>
   <li>  Check needed include and lib files.</li>
