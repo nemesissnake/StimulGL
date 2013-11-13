@@ -357,7 +357,7 @@ bool ExperimentManagerPlugin::LoadAdditionalFile(QString strFilePath)
 {
 	if(ExperimentManagerObject == NULL)
 		ExperimentManagerObject = new ExperimentManager(this);
-	if(ExperimentManagerObject->loadExperiment(strFilePath,false,true))
+	if(ExperimentManagerObject->loadExperiment(strFilePath,true))
 	{
 		return ExperimentManagerObject->showVisualExperimentEditor();
 	}

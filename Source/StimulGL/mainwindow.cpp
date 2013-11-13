@@ -134,6 +134,7 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 
 void MainWindow::showEvent(QShowEvent * event)
 {
+	Q_UNUSED(event);
 	//bool bresult;
 	//if(event->spontaneous())
 	//	bresult = true;
@@ -604,6 +605,7 @@ bool MainWindow::setupNetworkServer(const QString &sAddress, quint16 port)
 
 void MainWindow::ExternalNetworkDataRecieved(int nClientIndex, QString sAvailableData)
 {
+	Q_UNUSED(nClientIndex);
 	//write2OutputWindow("-> Network Data Recieved(from client: " + QString::number(nClientIndex) +  ") going to execute...");
 	QScriptValue scriptVal = executeScriptContent(sAvailableData);
 	QString strResult = scriptVal.toString();
@@ -3107,6 +3109,7 @@ void MainWindow::print()
 
 void MainWindow::handleToggledMarker(int nLine) 
 {
+	Q_UNUSED(nLine);
 	updateMarkersMenu();
 }
 

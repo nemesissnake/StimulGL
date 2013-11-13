@@ -28,7 +28,8 @@
 #include <QGLWidget>
 #include <QDesktopWidget>
 #include <QApplication>
-#include "experimenttree.h"
+//#include "experimenttree.h"
+#include "ExperimentGraphicEditor/ExperimentTreeModel.h"
 #include "Global.h"
 #include "defines.h"
 #include "./../../StimulGL/mainappinfo.h"
@@ -44,6 +45,8 @@
 #endif
 
 #define EXPERIMENTMANAGER_SCRIPTCONTEXT_NAME	"EM"
+
+using namespace ExperimentManagerNameSpace;
 
 class cExperimentStructure;
 class ExperimentTree;
@@ -208,11 +211,10 @@ public slots:
 	 *
 	 *  The Experiment file (*.EXML) is loaded into memory.
 	 *  @param strSource a string containing the file path to the experiment file (*.EXML), if this value is "" then the last configured experiment file path is automatically loaded in memory, see ExperimentManager.setExperimentFileName(). A second configurable option (see @param bIsFile) is that this variabele can also hold the script content to load.
-	 *  @param bViewEditTree a boolean value, if true then the experiment filename is loaded and shown automatically in a custom viewer (under construction).	 
 	 *  @param bIsFile a boolean determining whether the @param strSource parameter should be threated as a string containing a path to a experiment file. If false then the parameter is threated threated as a string containing the script content itself.
 	 *  @return a boolean value determining whether the function executed successfully.
 	 */	
-	bool loadExperiment(QString strSource = "", bool bViewEditTree = true, bool bIsFile = true);
+	bool loadExperiment(QString strSource = "", bool bIsFile = true);
 	/*! \brief Saves the current experiment file from memory to a file.
 	 *
 	 *  The current experiment file in memory is saved to a file.
@@ -398,7 +400,8 @@ private:
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	cExperimentStructure *cExperimentBlockTrialStructure;
 	QList<objectElement> lExperimentObjectList;
-	ExperimentTree *currentExperimentTree;
+	//ExperimentTree *currentExperimentTree;
+	ExperimentTreeModel *currentExperimentTree;
 	//ExperimentConfiguration strcExperimentConfiguration;
 	ExperimentState experimentCurrentState;
 	QHash<QString, int> experimentStateHash;

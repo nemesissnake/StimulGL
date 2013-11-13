@@ -428,28 +428,30 @@ bool ExperimentManager::saveExperiment(QString strFile)
 	if (fileName.isEmpty())
 		return false;
 
-	QFile file(fileName);
-	if (!file.open(QFile::WriteOnly | QFile::Text)) 
-	{
-		//QMessageBox::warning(this, tr("SAX Bookmarks"),	tr("Cannot write file %1:\n%2.").arg(fileName).arg(file.errorString()));
-		return false;
-	}
+	//QFile file(fileName);
+	//if (!file.open(QFile::WriteOnly | QFile::Text)) 
+	//{
+	//	//QMessageBox::warning(this, tr("SAX Bookmarks"),	tr("Cannot write file %1:\n%2.").arg(fileName).arg(file.errorString()));
+	//	return false;
+	//}
 
-	if (currentExperimentTree->write(&file))
+	//if (currentExperimentTree->write(&file))
+	if(currentExperimentTree->write(fileName))
 	{
 		return true;
 	}
 	return false;
 }
 
-bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bool bIsFile)
+bool ExperimentManager::loadExperiment(QString strSource, bool bIsFile)
 {
 	if (currentExperimentTree)
 	{
 		delete currentExperimentTree;
 		currentExperimentTree = NULL;
 	}
-	currentExperimentTree = new ExperimentTree(MainAppInfo::getMainWindow());
+	//currentExperimentTree = new ExperimentTree();//MainAppInfo::getMainWindow()
+	currentExperimentTree = new ExperimentTreeModel();
 	QFile file;
 	QString fileName = "";
 
@@ -513,8 +515,8 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bo
 	//{
 	if (currentExperimentTree->read(currentExperimentFile))
 	{
-		if (bViewEditTree)
-			currentExperimentTree->showMaximized();
+//		if (bViewEditTree)
+//			currentExperimentTree->show();
 		setExperimentFileName(fileName);
 		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return prePassiveParseExperiment();
@@ -544,7 +546,7 @@ bool ExperimentManager::validateExperiment()
 {
 	if (!currentExperimentTree)
 	{
-		if((loadExperiment("", false) == false) || (!currentExperimentTree))
+		if((loadExperiment("") == false) || (!currentExperimentTree))
 		{
 			qDebug() << __FUNCTION__ << "::No Experiment loaded!";
 			return false;
@@ -1139,7 +1141,7 @@ bool ExperimentManager::showVisualExperimentEditor(cExperimentStructure *ExpStru
 	{
 		if(cExperimentBlockTrialStructure == NULL)
 		{
-			//if(loadExperiment("",false,true) == false)
+			//if(loadExperiment("",true) == false)
 			//	return false;
 			if (!prePassiveParseExperiment())
 				return false;

@@ -46,29 +46,35 @@ function Dialog(parent)
 	layout.addWidget(this.changeButton, 2, 0);
 	layout.addWidget(this.changeLabel, 2, 1);
 	/////////////////////////////////////////////////////
-	this.showLabel = new QLabel;
-	this.showLabel.setFrameStyle(frameStyle);
-	this.showButton = new QPushButton(tr("Show Experiment(editor)"));	
-	layout.addWidget(this.showButton, 3, 0);
-	layout.addWidget(this.showLabel, 3, 1);
+	this.showNodeLabel = new QLabel;
+	this.showNodeLabel.setFrameStyle(frameStyle);
+	this.showNodeButton = new QPushButton(tr("Show Experiment(node editor)"));	
+	layout.addWidget(this.showNodeButton, 3, 0);
+	layout.addWidget(this.showNodeLabel, 3, 1);
 	/////////////////////////////////////////////////////
+	this.showTreeLabel = new QLabel;
+	this.showTreeLabel.setFrameStyle(frameStyle);
+	this.showTreeButton = new QPushButton(tr("Show Experiment(tree editor)"));	
+	layout.addWidget(this.showTreeButton, 4, 0);
+	layout.addWidget(this.showTreeLabel, 4, 1);
+	/////////////////////////////////////////////////////	
 	this.executeLabel = new QLabel;
 	this.executeLabel.setFrameStyle(frameStyle);
 	this.executeButton = new QPushButton(tr("Execute Experiment"));	
-	layout.addWidget(this.executeButton, 4, 0);
-	layout.addWidget(this.executeLabel, 4, 1);
+	layout.addWidget(this.executeButton, 5, 0);
+	layout.addWidget(this.executeLabel, 5, 1);
 	/////////////////////////////////////////////////////
 	this.saveLabel = new QLabel;
 	this.saveLabel.setFrameStyle(frameStyle);
 	this.saveButton = new QPushButton(tr("Save Experiment"));	
-	layout.addWidget(this.saveButton, 5, 0);
-	layout.addWidget(this.saveLabel, 5, 1);
+	layout.addWidget(this.saveButton, 6, 0);
+	layout.addWidget(this.saveLabel, 6, 1);
 	/////////////////////////////////////////////////////
 	this.exitLabel = new QLabel;
 	this.exitLabel.setFrameStyle(frameStyle);
 	this.exitButton = new QPushButton(tr("Exit"));	
-	layout.addWidget(this.exitButton, 6, 0);
-	layout.addWidget(this.exitLabel, 6, 1);
+	layout.addWidget(this.exitButton, 7, 0);
+	layout.addWidget(this.exitLabel, 7, 1);
 
 	this.setLayout(layout);
 	this.windowTitle = tr("Menu Dialog");
@@ -85,7 +91,7 @@ Dialog.prototype.loadExperiment = function()
 	//if (item != null & item.length != 0)
 		//this.itemLabel.text = item;
 	
-	if(!ExperimentManagerObj.loadExperiment(sExperimentFilePath,false,true))
+	if(!ExperimentManagerObj.loadExperiment(sExperimentFilePath,true))
 	{
 		Log("~~Failed to load the Experiment file");
 	}
@@ -124,6 +130,19 @@ Dialog.prototype.changeExperiment = function()
 	{
 		Log("No Experiment configured...")
 	}	
+}
+
+Dialog.prototype.showExperimentTree = function()
+{
+	Log("showExperimentTree()... work todo here...");
+	//Log(ExperimentManagerObj.loadExperiment(sExperimentFilePath,true));
+	//bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bool bIsFile)
+	//ExperimentManagerObj.runExperiment(); //Try to run the experiment
+	//if(!ExperimentManagerObj.showVisualExperimentEditor(cExperimentStructure_Object)) //cExperimentStructure_Object1
+	//{
+	//	Log("~~Failed to show the Experiment Structure");
+	//}	
+//	LogState(cExperimentStructure_Object.getCurrentExperimentState());	
 }
 
 Dialog.prototype.showExperiment = function()
@@ -227,7 +246,8 @@ function ConnectDisconnectScriptFunctions(Connect)
 			dialog.loadButton["clicked()"].connect(dialog, dialog.loadExperiment);
 			dialog.createButton["clicked()"].connect(dialog, dialog.createExperiment);
 			dialog.changeButton["clicked()"].connect(dialog, dialog.changeExperiment);
-			dialog.showButton["clicked()"].connect(dialog, dialog.showExperiment);
+			dialog.showNodeButton["clicked()"].connect(dialog, dialog.showExperiment);
+			dialog.showTreeButton["clicked()"].connect(dialog, dialog.showExperimentTree);			
 			dialog.executeButton["clicked()"].connect(dialog, dialog.executeExperiment);
 			dialog.saveButton["clicked()"].connect(dialog, dialog.saveExperiment);
 			dialog.exitButton["clicked()"].connect(this, this.CleanupScript);			
@@ -248,7 +268,8 @@ function ConnectDisconnectScriptFunctions(Connect)
 			dialog.loadButton["clicked()"].disconnect(dialog, dialog.loadExperiment);
 			dialog.createButton["clicked()"].disconnect(dialog, dialog.createExperiment);
 			dialog.changeButton["clicked()"].disconnect(dialog, dialog.changeExperiment);
-			dialog.showButton["clicked()"].disconnect(dialog, dialog.showExperiment);
+			dialog.showNodeButton["clicked()"].disconnect(dialog, dialog.showExperiment);
+			dialog.showTreeButton["clicked()"].disconnect(dialog, dialog.showExperimentTree);				
 			dialog.executeButton["clicked()"].disconnect(dialog, dialog.executeExperiment);
 			dialog.saveButton["clicked()"].disconnect(dialog, dialog.saveExperiment);
 			dialog.exitButton["clicked()"].disconnect(this, this.CleanupScript);			
@@ -426,6 +447,7 @@ function CleanupScript()
 	Dialog.prototype.createExperiment = null;
 	Dialog.prototype.changeExperiment = null;
 	Dialog.prototype.showExperiment = null;
+	Dialog.prototype.showExperimentTree = null;
 	Dialog.prototype.executeExperiment = null;
 	Dialog.prototype.saveExperiment = null;
 	Dialog.prototype = null;

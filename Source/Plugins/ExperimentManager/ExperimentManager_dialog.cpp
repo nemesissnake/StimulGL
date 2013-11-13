@@ -149,6 +149,8 @@ void ExperimentManager_Dialog::LogMessage(QString sMessage)
 
 void ExperimentManager_Dialog::ExperimentStateHasChanged(int nExperimentMainState, QString timeTextStamp)
 {
+	Q_UNUSED(nExperimentMainState);
+	Q_UNUSED(timeTextStamp);
 	//currentExperimentState = (ExperimentManager::ExperimentState)nExperimentMainState;
 	//if (currentExperimentState == ExperimentManager::ExperimentManager_Constructed)
 	//{
@@ -222,7 +224,7 @@ bool ExperimentManager_Dialog::executeActiveDocument()
 		}
 		ExperimentManagerObj = new ExperimentManager(this);
 		connectSignalSlots(false);
-		if(ExperimentManagerObj->loadExperiment(fileSource,false,docContentStructToRun.bIsFile))
+		if(ExperimentManagerObj->loadExperiment(fileSource,docContentStructToRun.bIsFile))
 		{
 			return ExperimentManagerObj->runExperiment();
 		}
