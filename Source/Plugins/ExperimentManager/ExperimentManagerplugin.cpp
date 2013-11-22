@@ -344,7 +344,7 @@ QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtensi
 	{
 		if(ExperimentManagerObject == NULL)
 			ExperimentManagerObject = new ExperimentManager(this);
-		return ExperimentManagerObject->getVisualExperimentEditor();
+		return NULL;//ExperimentManagerObject->getVisualExperimentEditor();
 	} 
 	else if(strExtension.toLower() == "qml")
 	{
@@ -359,7 +359,7 @@ bool ExperimentManagerPlugin::LoadAdditionalFile(QString strFilePath)
 		ExperimentManagerObject = new ExperimentManager(this);
 	if(ExperimentManagerObject->loadExperiment(strFilePath,true))
 	{
-		return ExperimentManagerObject->showVisualExperimentEditor();
+		return NULL;//ExperimentManagerObject->showVisualExperimentEditor();
 	}
 	else
 	{

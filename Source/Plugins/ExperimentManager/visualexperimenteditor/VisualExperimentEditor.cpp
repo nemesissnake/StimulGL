@@ -29,7 +29,7 @@
 
 const int InsertTextButton = 10;
 
-VisualExperimentEditor::VisualExperimentEditor()
+VisualExperimentEditor::VisualExperimentEditor(QWidget *parent) : QWidget(parent)
 {
 	conn = NULL;
 	bAllowSelfRecurrentConnection = true;
@@ -66,7 +66,7 @@ VisualExperimentEditor::VisualExperimentEditor()
 
 VisualExperimentEditor::~VisualExperimentEditor()
 {
-
+	emit destroyed(this);
 }
 
 bool VisualExperimentEditor::eventFilter(QObject *o, QEvent *e)

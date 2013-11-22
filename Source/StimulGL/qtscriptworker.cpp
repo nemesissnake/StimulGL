@@ -140,16 +140,6 @@ bool QTScriptWorker::ImportScriptExtensions()//QDir extensionsDir)
 {
 	QStringList extensions;
 	extensions = MainAppInfo::getQTScriptBindingList();
-	//<< "qt.core"
-	//<< "qt.gui"
-	//<< "qt.xml"
-	//<< "qt.svg"
-	//<< "qt.sql"			
-	//<< "qt.opengl"		
-	//<< "qt.uitools"
-	//<< "qt.network";			
-	//<< "qt.xmlpatterns";	//fails
-	//<< "qt.webkit" removed from project due to error
 	QStringList failExtensions;
 	foreach (const QString &ext, extensions) {
 		QScriptValue ret = eng->importExtension(ext);

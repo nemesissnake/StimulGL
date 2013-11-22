@@ -134,8 +134,8 @@ Dialog.prototype.changeExperiment = function()
 
 Dialog.prototype.showExperimentTree = function()
 {
-	Log("showExperimentTree()... work todo here...");
-	//Log(ExperimentManagerObj.loadExperiment(sExperimentFilePath,true));
+	Log("showExperimentTree()");
+	Log(ExperimentManagerObj.Test("abc"));
 	//bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bool bIsFile)
 	//ExperimentManagerObj.runExperiment(); //Try to run the experiment
 	//if(!ExperimentManagerObj.showVisualExperimentEditor(cExperimentStructure_Object)) //cExperimentStructure_Object1

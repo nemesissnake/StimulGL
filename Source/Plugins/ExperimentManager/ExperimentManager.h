@@ -28,8 +28,8 @@
 #include <QGLWidget>
 #include <QDesktopWidget>
 #include <QApplication>
-//#include "experimenttree.h"
 #include "ExperimentGraphicEditor/ExperimentTreeModel.h"
+#include "ExperimentGraphicEditor/ExperimentGraphicEditor.h"
 #include "Global.h"
 #include "defines.h"
 #include "./../../StimulGL/mainappinfo.h"
@@ -37,7 +37,7 @@
 #include "XmlMessageHandler.h"
 #include "ExperimentParameter.h"
 #include "ExperimentStructures.h"
-#include "ExperimentGraphEditor.h"
+//#include "ExperimentGraphEditor.h"
 #include "visualexperimenteditor/VisualExperimentEditor.h"
 
 #ifdef Q_OS_WIN32 //Are we on Windows?
@@ -49,7 +49,8 @@
 using namespace ExperimentManagerNameSpace;
 
 class cExperimentStructure;
-class ExperimentTree;
+//class ExperimentGraphicEditor;
+//class ExperimentTreeModel;
 
 //!  The ExperimentManager class. 
 /*!
@@ -118,7 +119,9 @@ public:
 	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool getExperimentObjectScriptValue(const int &nObjectID,const QString &sKeyName,QScriptValue &sScriptValue);
 	bool setExperimentObjectFromScriptValue(const int &nObjectID,const QString &sKeyName,const QScriptValue &sScriptValue);
-	VisualExperimentEditor *getVisualExperimentEditor();
+	//VisualExperimentEditor *getVisualExperimentEditor();
+
+	bool createExperimentStructure(QDomNodeList &blockTrialDomNodeLst, ExperimentTreeModel *expTreeModel = NULL, cExperimentStructure* cExpBlockTrialStruct = NULL);
 
 	template< typename T > T* getExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
 	{
@@ -362,7 +365,7 @@ public slots:
 	 *  @param ExpStruct a cExperimentStructure to be edited by the Experiment Graph Editor, make it NULL to automatically use the current in-memory Experiment Structure.
 	 *  @return a boolean value determining whether this function executed successfully.
 	 */	
-	bool showVisualExperimentEditor(cExperimentStructure *ExpStruct = NULL);
+	//bool showVisualExperimentEditor(cExperimentStructure *ExpStruct = NULL);
 
 #ifndef QT_NO_DEBUG
 	QString Test(const QString &sInput = "");
@@ -378,10 +381,9 @@ private:
 	void RegisterMetaTypes();
 	bool invokeExperimentObjectsSlots(const QString &sSlotName);
 	bool prePassiveParseExperiment();
-	bool createExperimentStructure();
 	bool configureExperiment();
 	bool createExperimentObjects();
-	bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst);
+	bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst, cExperimentStructure *expStruct);
 	int createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
 	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);
 	bool initializeExperiment(bool bFinalize = false);
@@ -400,9 +402,8 @@ private:
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	cExperimentStructure *cExperimentBlockTrialStructure;
 	QList<objectElement> lExperimentObjectList;
-	//ExperimentTree *currentExperimentTree;
 	ExperimentTreeModel *currentExperimentTree;
-	//ExperimentConfiguration strcExperimentConfiguration;
+	ExperimentGraphicEditor *ExpGraphicEditor;
 	ExperimentState experimentCurrentState;
 	QHash<QString, int> experimentStateHash;
 	VisualExperimentEditor *visExpEditor;

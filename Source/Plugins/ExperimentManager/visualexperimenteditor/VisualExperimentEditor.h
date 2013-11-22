@@ -45,49 +45,52 @@ QT_END_NAMESPACE
 
 class VisualExperimentEditor : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
+
+signals:
+	void destroyed(QWidget*);
 
 public:
-   VisualExperimentEditor();
-   ~VisualExperimentEditor();
-   
-   bool parseExperimentStructure(cExperimentStructure *ExpStruct);
-   bool eventFilter(QObject *, QEvent *);
-   void load(QDataStream &ds);
-   void save(QDataStream &ds);
+	VisualExperimentEditor(QWidget *parent = NULL);
+	~VisualExperimentEditor();
 
-private slots:
-    void backgroundButtonGroupClicked(QAbstractButton *button);
-    void buttonGroupClicked(int id);
-    void deleteItem();
-    void pointerGroupClicked(int id);
-    void bringToFront();
-    void sendToBack();
-    void itemInserted(DiagramItem *item);
-    void textInserted(QGraphicsTextItem *item);
-    void currentFontChanged(const QFont &font);
-    void fontSizeChanged(const QString &size);
-    void sceneScaleChanged(const QString &scale);
-    void textColorChanged();
-    void itemColorChanged();
-    void lineColorChanged();
-    void textButtonTriggered();
-    void fillButtonTriggered();
-    void lineButtonTriggered();
-    void handleFontChange();
-    void itemSelected(QGraphicsItem *item);
-    void about();
+	bool parseExperimentStructure(cExperimentStructure *ExpStruct);
+	bool eventFilter(QObject *, QEvent *);
+	void load(QDataStream &ds);
+	void save(QDataStream &ds);
+
+	private slots:
+		void backgroundButtonGroupClicked(QAbstractButton *button);
+		void buttonGroupClicked(int id);
+		void deleteItem();
+		void pointerGroupClicked(int id);
+		void bringToFront();
+		void sendToBack();
+		void itemInserted(DiagramItem *item);
+		void textInserted(QGraphicsTextItem *item);
+		void currentFontChanged(const QFont &font);
+		void fontSizeChanged(const QString &size);
+		void sceneScaleChanged(const QString &scale);
+		void textColorChanged();
+		void itemColorChanged();
+		void lineColorChanged();
+		void textButtonTriggered();
+		void fillButtonTriggered();
+		void lineButtonTriggered();
+		void handleFontChange();
+		void itemSelected(QGraphicsItem *item);
+		void about();
 
 private:
-    void createToolBox();
-    void createActions();
-    void createMenus();
-    void createToolbars();
-    QWidget *createBackgroundCellWidget(const QString &text, const QString &image);
-    QWidget *createCellWidget(const QString &text, DiagramItem::DiagramType type);
-    QMenu *createColorMenu(const char *slot, QColor defaultColor);
-    QIcon createColorToolButtonIcon(const QString &image, QColor color);
-    QIcon createColorIcon(QColor color);
+	void createToolBox();
+	void createActions();
+	void createMenus();
+	void createToolbars();
+	QWidget *createBackgroundCellWidget(const QString &text, const QString &image);
+	QWidget *createCellWidget(const QString &text, DiagramItem::DiagramType type);
+	QMenu *createColorMenu(const char *slot, QColor defaultColor);
+	QIcon createColorToolButtonIcon(const QString &image, QColor color);
+	QIcon createColorIcon(QColor color);
 
 	QGraphicsItem *itemAt(const QPointF &pos);
 	bool createConnection(QGraphicsItem *from, QGraphicsItem *to, int nRepeats = 1);
@@ -95,48 +98,48 @@ private:
 	ExperimentGraphConnection *conn;
 	bool bAllowSelfRecurrentConnection;
 
-    DiagramScene *gScene;
-    QGraphicsView *gView;
+	DiagramScene *gScene;
+	QGraphicsView *gView;
 
-    QAction *exitAction;
-    QAction *addAction;
-    QAction *deleteAction;
+	QAction *exitAction;
+	QAction *addAction;
+	QAction *deleteAction;
 
-    QAction *toFrontAction;
-    QAction *sendBackAction;
-    QAction *aboutAction;
+	QAction *toFrontAction;
+	QAction *sendBackAction;
+	QAction *aboutAction;
 
 	QMenuBar *mainMenuBar;
 	QToolBar *mainToolBar;
 
-    QMenu *fileMenu;
-    QMenu *itemMenu;
-    QMenu *aboutMenu;
+	QMenu *fileMenu;
+	QMenu *itemMenu;
+	QMenu *aboutMenu;
 
-    QToolBar *textToolBar;
-    QToolBar *editToolBar;
-    QToolBar *colorToolBar;
-    QToolBar *pointerToolbar;
+	QToolBar *textToolBar;
+	QToolBar *editToolBar;
+	QToolBar *colorToolBar;
+	QToolBar *pointerToolbar;
 
-    QComboBox *sceneScaleCombo;
-    QComboBox *itemColorCombo;
-    QComboBox *textColorCombo;
-    QComboBox *fontSizeCombo;
-    QFontComboBox *fontCombo;
+	QComboBox *sceneScaleCombo;
+	QComboBox *itemColorCombo;
+	QComboBox *textColorCombo;
+	QComboBox *fontSizeCombo;
+	QFontComboBox *fontCombo;
 
-    QToolBox *toolBox;
-    QButtonGroup *buttonGroup;
-    QButtonGroup *pointerTypeGroup;
-    QButtonGroup *backgroundButtonGroup;
-    QToolButton *fontColorToolButton;
-    QToolButton *fillColorToolButton;
-    QToolButton *lineColorToolButton;
-    QAction *boldAction;
-    QAction *underlineAction;
-    QAction *italicAction;
-    QAction *textAction;
-    QAction *fillAction;
-    QAction *lineAction;
+	QToolBox *toolBox;
+	QButtonGroup *buttonGroup;
+	QButtonGroup *pointerTypeGroup;
+	QButtonGroup *backgroundButtonGroup;
+	QToolButton *fontColorToolButton;
+	QToolButton *fillColorToolButton;
+	QToolButton *lineColorToolButton;
+	QAction *boldAction;
+	QAction *underlineAction;
+	QAction *italicAction;
+	QAction *textAction;
+	QAction *fillAction;
+	QAction *lineAction;
 };
 
 #endif // VISUALEXPERIMENTEDITOR_H

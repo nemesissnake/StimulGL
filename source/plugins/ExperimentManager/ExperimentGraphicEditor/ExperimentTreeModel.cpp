@@ -1,3 +1,21 @@
+//ExperimentManagerplugin
+//Copyright (C) 2013  Sven Gijsen
+//
+//This file is part of StimulGL.
+//StimulGL is free software: you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+
 #include <QFile>
 #include <QXmlStreamWriter>
 #include <QGridLayout>
@@ -12,7 +30,6 @@ ExperimentTreeModel::ExperimentTreeModel(QObject *parent) : QStandardItemModel(p
 	doc = NULL;
 	root = NULL;
     rootItem = NULL;
-	tmpString = "";
 
 	nXMLDocumentVersion.major = 1;
 	nXMLDocumentVersion.minor = 0;
@@ -26,42 +43,14 @@ ExperimentTreeModel::ExperimentTreeModel(QObject *parent) : QStandardItemModel(p
 
 ExperimentTreeModel::~ExperimentTreeModel()
 {
-	if(rootItem)
-	{
-		delete rootItem;
-		rootItem = NULL;
-	}
-	if(root)
-	{
-		delete root;
-		root = NULL;
-	}
-	if(doc)
-	{
-		delete doc;
-		doc = NULL;
-	}
+	reset();
 }
 
-void ExperimentTreeModel::fillModel(const QString &xmlContent)
+bool ExperimentTreeModel::fillModel()
 {
-	if(root)
-	{
-		delete root;
-		root = NULL;
-	}
-	if(doc)
-	{
-		delete doc;
-		doc = NULL;
-	}
-	doc = new QDomDocument();
-	doc->setContent(xmlContent);
-	root = new QDomElement(doc->documentElement());
+	if(doc->isNull() || root->isNull() || rootItem == NULL)
+		return false;
 
-    rootItem = new ExperimentTreeItem(root->tagName());//root.tagName() = EXML
-
-	//tmpString = root.tagName();
 	for (int i = 0; i < root->attributes().size(); i++)//version --> <EXML version="2.1.0.0">
 	{
 		//tmpString = root.attributes().item(i).nodeName();
@@ -72,6 +61,7 @@ void ExperimentTreeModel::fillModel(const QString &xmlContent)
 	QDomNode dNode = root->firstChild();//<defines>
     recursiveRead(dNode, rootItem);
 	setItem(0, rootItem);
+	return true;
 }
 
 void ExperimentTreeModel::recursiveRead(QDomNode dNode, ExperimentTreeItem *item)
@@ -85,16 +75,16 @@ void ExperimentTreeModel::recursiveRead(QDomNode dNode, ExperimentTreeItem *item
             {
                 if (dNode.nodeType() == QDomNode::TextNode)
 				{
-					tmpString = dNode.nodeValue();
+					//tmpString = dNode.nodeValue();
                     item->setValue(dNode.nodeValue());
 				}
                 else
                 {
-					tmpString = dNode.nodeName();
+					//tmpString = dNode.nodeName();
                     ExperimentTreeItem *subItem = new ExperimentTreeItem(dNode.nodeName());
 					for (int i = 0; i < dNode.attributes().size(); i++)
 					{
-						tmpString = dNode.attributes().item(i).nodeName();
+						//tmpString = dNode.attributes().item(i).nodeName();
                         subItem->addDefinition(dNode.attributes().item(i).nodeName(), dNode.attributes().item(i).nodeValue(), TreeItemType_Attribute);
 					}
                     item->appendRow(subItem);
@@ -102,12 +92,12 @@ void ExperimentTreeModel::recursiveRead(QDomNode dNode, ExperimentTreeItem *item
             }
             else
             {
-				tmpString = dNode.nodeName();
+				//tmpString = dNode.nodeName();
                 ExperimentTreeItem *item2 = new ExperimentTreeItem(dNode.nodeName());
                 for (int i = 0; i < dNode.attributes().size(); i++)
 				{
-					tmpString = dNode.attributes().item(i).nodeName();
-					tmpString = dNode.attributes().item(i).nodeValue();
+					//tmpString = dNode.attributes().item(i).nodeName();
+					//tmpString = dNode.attributes().item(i).nodeValue();
 					item2->addDefinition(dNode.attributes().item(i).nodeName(), dNode.attributes().item(i).nodeValue(), TreeItemType_Attribute);
 				}
                 for (int i = 0; i < totalOfChilds; i++)
@@ -122,8 +112,8 @@ void ExperimentTreeModel::recursiveRead(QDomNode dNode, ExperimentTreeItem *item
         }
 		else
 		{
-			tmpString = dNode.nodeValue();
-			tmpString = dNode.nodeName();
+			//tmpString = dNode.nodeValue();
+			//tmpString = dNode.nodeName();
 			ExperimentTreeItem *item3 = new ExperimentTreeItem(DEFINITION_TAG_COMMENT);
 			item3->addDefinition(DEFINITION_NAME_VALUE, dNode.nodeValue(), TreeItemType_Comment);
 			item->appendRow(item3);			
@@ -208,11 +198,11 @@ void ExperimentTreeModel::recursiveWrite(QXmlStreamWriter &xml, ExperimentTreeIt
     if (item->hasChildren())
     {		
         xml.writeStartElement(item->getName());
-		tmpString = item->getName();
+		//tmpString = item->getName();
         QList<QString> keyDefinitions = item->getDefinitions().keys();
         for (int i = 0; i < keyDefinitions.count(); i++)
 		{
-			tmpString = keyDefinitions.at(i);
+			//tmpString = keyDefinitions.at(i);
 			if(item->getDefinition(keyDefinitions.at(i)).type == TreeItemType_Attribute)
 				xml.writeAttribute(keyDefinitions.at(i), item->getDefinition(keyDefinitions.at(i)).value.toString());
 			else if(item->getDefinition(keyDefinitions.at(i)).type == TreeItemType_Comment)
@@ -228,13 +218,13 @@ void ExperimentTreeModel::recursiveWrite(QXmlStreamWriter &xml, ExperimentTreeIt
     {
         if (item->getValue() == "")
         {
-			tmpString = item->getName();
+			//tmpString = item->getName();
 			if(item->getName() != DEFINITION_TAG_COMMENT)
 				xml.writeEmptyElement(item->getName());
             QList<QString> keyDefinitions = item->getDefinitions().keys();
             for (int i = 0; i < keyDefinitions.count(); i++)
 			{
-				tmpString = keyDefinitions.at(i);
+				//tmpString = keyDefinitions.at(i);
 				if(item->getDefinition(keyDefinitions.at(i)).type == TreeItemType_Attribute)
 					xml.writeAttribute(keyDefinitions.at(i), item->getDefinition(keyDefinitions.at(i)).value.toString());
 				else if(item->getDefinition(keyDefinitions.at(i)).type == TreeItemType_Comment)
@@ -243,7 +233,7 @@ void ExperimentTreeModel::recursiveWrite(QXmlStreamWriter &xml, ExperimentTreeIt
         }
         else
 		{
-			tmpString = item->getName();
+			//tmpString = item->getName();
             xml.writeTextElement(item->getName(), item->getValue());
 		}
     }
@@ -336,25 +326,57 @@ int ExperimentTreeModel::getDocumentElements(const QStringList &sElementTagName,
 	return ResultDomNodeList.count();		
 }
 
-bool ExperimentTreeModel::read(QByteArray &byteArrayContent)
+//bool ExperimentTreeModel::read(QByteArray &byteArrayContent)
+//{
+//	bool bRetval = false;
+//	QBuffer buffer(&byteArrayContent);
+//	if(buffer.open(QIODevice::ReadOnly))
+//	{
+//		bRetval = read(&buffer);
+//		buffer.close();
+//	}
+//	return bRetval;
+//}
+
+bool ExperimentTreeModel::reset()
 {
-	bool bRetval = false;
-	QBuffer buffer(&byteArrayContent);
-	if(buffer.open(QIODevice::ReadOnly))
+	if(rootItem)
 	{
-		bRetval = read(&buffer);
-		buffer.close();
+		delete rootItem;
+		rootItem = NULL;
 	}
-	return bRetval;
+	if(root)
+	{
+		delete root;
+		root = NULL;
+	}
+	if(doc)
+	{
+		delete doc;
+		doc = NULL;
+	}
+	return true;
 }
 
-bool ExperimentTreeModel::read(QIODevice *device)
+bool ExperimentTreeModel::read(QByteArray &byteArrayContent)
 {
 	QString errorStr;
 	int errorLine;
 	int errorColumn;
+
+	if(root)
+	{
+		delete root;
+		root = NULL;
+	}
+	if(doc)
+	{
+		delete doc;
+		doc = NULL;
+	}
+	doc = new QDomDocument();
 	//Perform a global XML standard parse test
-	if (!doc->setContent(device, true, &errorStr, &errorLine, &errorColumn))
+	if (!doc->setContent(byteArrayContent, true, &errorStr, &errorLine, &errorColumn))
 	{
 		//QMessageBox::information(window(), tr(MODULE_NAME),
 		//	tr("Parse error at line %1, column %2:\n%3")
@@ -365,7 +387,8 @@ bool ExperimentTreeModel::read(QIODevice *device)
 		return false;
 	}
 	//First we search for the Root Tag
-	//QDomElement root = doc->documentElement();
+	root = new QDomElement(doc->documentElement());
+	rootItem = new ExperimentTreeItem(root->tagName());//root.tagName() = EXML
 	if (root->tagName() != ROOT_TAG) 
 	{
 		//QMessageBox::information(window(), tr(MODULE_NAME), tr("The file is not an EXML file."));
@@ -383,8 +406,7 @@ bool ExperimentTreeModel::read(QIODevice *device)
 			nXMLDocumentVersion.minor = lVersion[1].toInt();
 			nXMLDocumentVersion.version = lVersion[2].toInt();
 			nXMLDocumentVersion.build = lVersion[3].toInt();
-			
-			/*
+						
 			//Is the documents version compatible with this class?
 			if(!MainAppInfo::isCompatibleVersion(strMinimalVersion,strCurrentVersion))
 			{
@@ -396,8 +418,6 @@ bool ExperimentTreeModel::read(QIODevice *device)
 				qDebug() << tr("The defined EXML file is not compatible from EXML version %1.%2.%3.%4").arg(nXMLCurrentClassVersion.major).arg(nXMLCurrentClassVersion.minor).arg(nXMLCurrentClassVersion.version).arg(nXMLCurrentClassVersion.build);
 				return false;
 			}
-			*/
-
 		}
 		else
 		{
@@ -407,7 +427,7 @@ bool ExperimentTreeModel::read(QIODevice *device)
 		}
 	}
 	//Version available and compatible!
-	clear();//Clears the tree widget by removing all of its items and selections.
+	//clear();//Clears the tree widget by removing all of its items and selections.
 	//disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), this, SLOT(updateDomElement(QTreeWidgetItem*,int)));
 
 	/*
@@ -449,8 +469,112 @@ bool ExperimentTreeModel::read(QIODevice *device)
 	*/
 
 	//connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), this, SLOT(updateDomElement(QTreeWidgetItem*,int)));
-	return true;
+	return fillModel();
 }
+
+//bool ExperimentTreeModel::read(QIODevice *device)
+//{
+//	QString errorStr;
+//	int errorLine;
+//	int errorColumn;
+//	//Perform a global XML standard parse test
+//	if (!doc->setContent(device, true, &errorStr, &errorLine, &errorColumn))
+//	{
+//		//QMessageBox::information(window(), tr(MODULE_NAME),
+//		//	tr("Parse error at line %1, column %2:\n%3")
+//		//	.arg(errorLine)
+//		//	.arg(errorColumn)
+//		//	.arg(errorStr));
+//		qDebug() << tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
+//		return false;
+//	}
+//	//First we search for the Root Tag
+//	//QDomElement root = doc->documentElement();
+//	if (root->tagName() != ROOT_TAG) 
+//	{
+//		//QMessageBox::information(window(), tr(MODULE_NAME), tr("The file is not an EXML file."));
+//		qDebug() << tr("The file is not an EXML file.");
+//		return false;
+//	} 
+//	else//Found!
+//	{
+//		if (root->hasAttribute(VERSION_TAG))//Check whether we have a version tag defined
+//		{	
+//			QString strCurrentVersion = root->attribute(VERSION_TAG);
+//			QString strMinimalVersion = QString::number(nXMLCurrentClassVersion.major) + "." + QString::number(nXMLCurrentClassVersion.minor) + "." + QString::number(nXMLCurrentClassVersion.version) + "." + QString::number(nXMLCurrentClassVersion.build);
+//			QStringList lVersion = strCurrentVersion.split(".");
+//			nXMLDocumentVersion.major = lVersion[0].toInt();
+//			nXMLDocumentVersion.minor = lVersion[1].toInt();
+//			nXMLDocumentVersion.version = lVersion[2].toInt();
+//			nXMLDocumentVersion.build = lVersion[3].toInt();
+//			
+//			/*
+//			//Is the documents version compatible with this class?
+//			if(!MainAppInfo::isCompatibleVersion(strMinimalVersion,strCurrentVersion))
+//			{
+//				//QMessageBox::information(window(), tr(MODULE_NAME), tr("The defined EXML file is not compatible from EXML version %1.%2.%3.%4")
+//				//	.arg(nXMLCurrentClassVersion.major)
+//				//	.arg(nXMLCurrentClassVersion.minor)
+//				//	.arg(nXMLCurrentClassVersion.version)
+//				//	.arg(nXMLCurrentClassVersion.build));
+//				qDebug() << tr("The defined EXML file is not compatible from EXML version %1.%2.%3.%4").arg(nXMLCurrentClassVersion.major).arg(nXMLCurrentClassVersion.minor).arg(nXMLCurrentClassVersion.version).arg(nXMLCurrentClassVersion.build);
+//				return false;
+//			}
+//			*/
+//
+//		}
+//		else
+//		{
+//			//QMessageBox::information(window(), tr(MODULE_NAME), tr("The EXML file version could not be determined."));
+//			qDebug() << tr("The EXML file version could not be determined.");
+//			return false;
+//		}
+//	}
+//	//Version available and compatible!
+//	clear();//Clears the tree widget by removing all of its items and selections.
+//	//disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), this, SLOT(updateDomElement(QTreeWidgetItem*,int)));
+//
+//	/*
+//
+//	//Search and parse the "declarations" Elements
+//	QDomElement child;
+//	child = root->firstChildElement(DECLARATIONS_TAG);
+//	if (!child.isNull())
+//	{
+//		QTreeWidgetItem *item = createItem(child, NULL);
+//		item->setFlags(item->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEditable));//(item->flags() | Qt::ItemIsEditable);
+//		item->setIcon(0, folderIcon);
+//		item->setText(0, DECLARATIONS_TAG);
+//		//bool folded = (child.attribute(FOLDED_TAG) != BOOL_NO_TAG);
+//		setItemExpanded(item, true);//!folded);
+//		while (!child.isNull()) 
+//		{
+//			parseRootElement(child,EXML_Declarations,item);
+//			child = child.nextSiblingElement(DECLARATIONS_TAG);
+//		}
+//	}
+//
+//	//Search and parse the "actions" Elements
+//	child = root->firstChildElement(ACTIONS_TAG);
+//	if (!child.isNull())
+//	{
+//		QTreeWidgetItem *item = createItem(child, NULL);
+//		item->setFlags(item->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEditable));//(item->flags() | Qt::ItemIsEditable);
+//		item->setIcon(0, folderIcon);
+//		item->setText(0, ACTIONS_TAG);
+//		//bool folded = (child.attribute(FOLDED_TAG) != BOOL_NO_TAG);
+//		setItemExpanded(item, true);//!folded);
+//		while (!child.isNull()) 
+//		{
+//			parseRootElement(child,EXML_Actions,item);
+//			child = child.nextSiblingElement(ACTIONS_TAG);
+//		}
+//	}
+//	*/
+//
+//	//connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), this, SLOT(updateDomElement(QTreeWidgetItem*,int)));
+//	return true;
+//}
 
 //bool ExperimentTreeModel::write(QIODevice *device)
 //{
@@ -471,4 +595,9 @@ bool ExperimentTreeModel::read(QIODevice *device)
 	//QString test = tempstr.readAll();
 
 	//return true;
+//}
+
+//bool ExperimentTreeModel::show(QString sType)
+//{
+//	return true;
 //}

@@ -27,7 +27,7 @@
 #include "TriggerTimer.h"
 #include "RetinotopyMapper.h"
 #include "QML2Viewer.h"
-
+#include "ExperimentStructureVisualizer/ExperimentStructureVisualizer.h"
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
@@ -77,6 +77,7 @@ void ExperimentManager::DefaultConstruct()
 	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
 	visExpEditor = NULL;
+	ExpGraphicEditor = NULL;
 	RegisterMetaTypes();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
 	//rndGen = NULL;
@@ -111,43 +112,15 @@ QScriptValue ExperimentManager::ctor__experimentStateEnum(QScriptContext *contex
 
 QString ExperimentManager::Test(const QString &sInput)
 {
-	if(currentScriptEngine)
-	{
-	//	QScriptValue act_Object = currentScriptEngine->currentContext()->parentContext()->activationObject();
-	//	QScriptValue this_Object = currentScriptEngine->currentContext()->parentContext()->thisObject();
-	//	if(currentScriptEngineContexes.isEmpty())
-	//	{
-	//		QScriptContextStructure1 tmpStruct;
-	//		tmpStruct.sContextName = "name";
-	//		tmpStruct.activationObject = act_Object;
-	//		tmpStruct.thisObject = this_Object;
-	//		currentScriptEngineContexes.append(tmpStruct);
-	//	}
-		
-		/*
-		qScriptRegisterMetaType(currentScriptEngine, toExperimentStateEnumScriptValue, fromExperimentStateEnumScriptValue);
-		QScriptValue metaObject = currentScriptEngine->newQMetaObject( &staticMetaObject, currentScriptEngine->newFunction(ctor__experimentStateEnum));
-		//currentScriptEngine->globalObject().setProperty( "ExperimentState", metaObject );
-		currentScriptEngine->globalObject().property("ExperimentManager").setProperty( "ExperimentState", metaObject );
-		*/
-	
-		//QScriptValue ctor = currentScriptEngine->newFunction(mySpecialConstructor);
-		//int nType = qRegisterMetaType<ExperimentManager::ExperimentState>("ExperimentState");
-		//const QMetaObject *tmpMeta = QMetaType::metaObjectForType(nType);
-		//qScriptRegisterMetaType(currentScriptEngine,toScriptValue,fromScriptValue);
-		//QScriptValue metaObject = currentScriptEngine->newQMetaObject(tmpMeta,ctor);//&ExperimentManager::ExperimentState
-		//return currentScriptEngine->globalObject().property("ExperimentManager").
-	}
-	//return sInput;
-	//retinoMapper = new RetinotopyMapper(this);
-	//testwindow = new RetinotopyMapper(this);//RetinotopyMapperWindow();
-	//testwindow->setFormat(format);
-	//testwindow->resize(640, 480);
-	//testwindow->show();
-	//testwindow->renderNow();
-	//testwindow->renderLater();	
-	//testwindow->setAnimating(true);
-	//retinoMapper->startObject();
+	//if(currentScriptEngine)
+	//{
+	//if(ExpGraphicEditor == NULL)
+	ExpGraphicEditor = new ExperimentGraphicEditor();
+	ExpGraphicEditor->setExperimentManager(this);
+	if(currentExperimentTree)
+		ExpGraphicEditor->setExperimentTreeModel(currentExperimentTree);
+	ExpGraphicEditor->showMaximized();
+	//}
 	return sInput;
 }
 #endif
@@ -424,18 +397,8 @@ bool ExperimentManager::saveExperiment(QString strFile)
 	{
 		fileName = strFile;
 	}
-
 	if (fileName.isEmpty())
 		return false;
-
-	//QFile file(fileName);
-	//if (!file.open(QFile::WriteOnly | QFile::Text)) 
-	//{
-	//	//QMessageBox::warning(this, tr("SAX Bookmarks"),	tr("Cannot write file %1:\n%2.").arg(fileName).arg(file.errorString()));
-	//	return false;
-	//}
-
-	//if (currentExperimentTree->write(&file))
 	if(currentExperimentTree->write(fileName))
 	{
 		return true;
@@ -450,7 +413,6 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bIsFile)
 		delete currentExperimentTree;
 		currentExperimentTree = NULL;
 	}
-	//currentExperimentTree = new ExperimentTree();//MainAppInfo::getMainWindow()
 	currentExperimentTree = new ExperimentTreeModel();
 	QFile file;
 	QString fileName = "";
@@ -497,26 +459,8 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bIsFile)
 		currentValidationFile = validationFile.readAll();
 	validationFile.close();
 
-	//if (bIsFile)
-	//{
-	//	if (file.open(QFile::ReadOnly | QFile::Text))
-	//	{
-	//		if (currentExperimentTree->read(&file))
-	//		{
-	//			if (bViewEditTree)
-	//				currentExperimentTree->showMaximized();
-	//			setExperimentFileName(fileName);
-	//			changeCurrentExperimentState(Experiment???Manager_Loaded);
-	//			return true;
-	//		}
-	//	}
-	//}
-	//else
-	//{
 	if (currentExperimentTree->read(currentExperimentFile))
 	{
-//		if (bViewEditTree)
-//			currentExperimentTree->show();
 		setExperimentFileName(fileName);
 		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return prePassiveParseExperiment();
@@ -743,6 +687,11 @@ bool ExperimentManager::cleanupExperiment()
 	{
 		delete cExperimentBlockTrialStructure;
 		cExperimentBlockTrialStructure = NULL;
+	}
+	if(ExpGraphicEditor)
+	{
+		delete ExpGraphicEditor;
+		ExpGraphicEditor = NULL;
 	}
 	return true;
 }
@@ -992,9 +941,8 @@ bool ExperimentManager::prePassiveParseExperiment()
 	{
 		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
-	}	
-
-	if (!createExperimentStructure())
+	}
+	if (!createExperimentStructure(ExperimentBlockTrialsDomNodeList,currentExperimentTree,cExperimentBlockTrialStructure))
 	{
 		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
@@ -1003,11 +951,11 @@ bool ExperimentManager::prePassiveParseExperiment()
 	return true;
 }
 
-bool ExperimentManager::createExperimentStructure()
+bool ExperimentManager::createExperimentStructure(QDomNodeList &blockTrialDomNodeLst, ExperimentTreeModel *expTreeModel, cExperimentStructure* cExpBlockTrialStruct)
 {
-	if (!currentExperimentTree)
+	if ((expTreeModel == NULL) || (cExpBlockTrialStruct == NULL))
 	{
-		qDebug() << __FUNCTION__ << "::No Experiment loaded!";
+		qDebug() << __FUNCTION__ << "::Could not create the Experiment Structure!";
 		return false;
 	}
 	QStringList strList;
@@ -1016,11 +964,11 @@ bool ExperimentManager::createExperimentStructure()
 	strList.append(ACTIONS_TAG);
 	strList.append(BLOCKTRIALS_TAG);
 	strList.append(BLOCK_TAG);
-	if (currentExperimentTree->getDocumentElements(strList,ExperimentBlockTrialsDomNodeList) >= 0)
+	if (expTreeModel->getDocumentElements(strList,blockTrialDomNodeLst) >= 0)
 	{
-		if(createExperimentStructureFromDomNodeList(ExperimentBlockTrialsDomNodeList))
+		if(createExperimentStructureFromDomNodeList(blockTrialDomNodeLst, cExpBlockTrialStruct))
 		{
-			if(cExperimentBlockTrialStructure->prepareExperiment() == false)
+			if(cExpBlockTrialStruct->prepareExperiment() == false)
 				qDebug() << __FUNCTION__ << "::Could not prepare Experiment Structure!";
 			else
 				return true;
@@ -1128,76 +1076,76 @@ void ExperimentManager::setExperimentOutputFilePostString(const QString &sPostSt
 	sExperimentOutputDataPostString = sPostString;
 }
 
-VisualExperimentEditor *ExperimentManager::getVisualExperimentEditor()
-{
-	if(visExpEditor == NULL)
-		visExpEditor = new VisualExperimentEditor();
-	return visExpEditor;
-}
+//VisualExperimentEditor *ExperimentManager::getVisualExperimentEditor()
+//{
+//	if(visExpEditor == NULL)
+//		visExpEditor = new VisualExperimentEditor();
+//	return visExpEditor;
+//}
 
-bool ExperimentManager::showVisualExperimentEditor(cExperimentStructure *ExpStruct)
-{
-	if(ExpStruct == NULL)
-	{
-		if(cExperimentBlockTrialStructure == NULL)
-		{
-			//if(loadExperiment("",true) == false)
-			//	return false;
-			if (!prePassiveParseExperiment())
-				return false;
-		}
-		ExpStruct = cExperimentBlockTrialStructure;
-	}
-	if(visExpEditor == NULL)
-		visExpEditor = new VisualExperimentEditor();
-	bool bParseResult = visExpEditor->parseExperimentStructure(ExpStruct);
-	if(bParseResult)
-		visExpEditor->show();
-	return bParseResult;
-
-	//QGraphicsScene *gScene = new QGraphicsScene();
-	//QGraphicsView *gView = new QGraphicsView();//(gScene);
-	//QGridLayout *layout = new QGridLayout();
-
-	////gScene->addText("Hello, world!");	
-	//gView->setScene(gScene);
-	//gView->setRenderHint(QPainter::Antialiasing);
-	////    gView.backgroundBrush = new QBrush(new QPixmap("images/cheese.png"));
-	////    gView.cacheMode = new QGraphicsView.CacheMode(QGraphicsView.CacheBackground);
-	////	  gView->dragMode = QGraphicsView.ScrollHandDrag;
-	////    gView.viewportUpdateMode = QGraphicsView.FullViewportUpdate;	
-	////layout->addWidget(gView, 0, 0);
-	////gView->setLayout(layout);
-	//gView->setContextMenuPolicy(Qt::CustomContextMenu);
-	//gView->setWindowTitle("Experiment Graph Editor");
-	//gView->resize(400, 300);
-	//// ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
-
-	////ExperimentGraphBlock *b = new ExperimentGraphBlock(NULL, gScene);
-	////b->addPort("Block Action DoSomething", false, ExperimentGraphPort::NamePort);
-	////b->addPort("0: Block 1", false, ExperimentGraphPort::TypePort);
-	////b->addInputPort("input");
-	////b->addOutputPort("output");
-	////b = b->clone();
-	////b->setPos(150, 0);
-	////b = b->clone();
-	////b->setPos(150, 150);
-
-	//ExperimentGraphEditor *expGraphEditor = new ExperimentGraphEditor(this);
-	//expGraphEditor->install(gScene,gView);
-	//if(expGraphEditor->parseExperimentStructure(ExpStruct))
-	//{
-	//	//connect(ui->action_Save, SIGNAL(triggered()), this, SLOT(saveFile()));
-	//	//connect(ui->action_Load, SIGNAL(triggered()), this, SLOT(loadFile()));
-	//	//connect(ui->action_Quit, SIGNAL(triggered()), qApp, SLOT(quit()));
-	//	//ui->toolBar->addAction("Add block", this, SLOT(addBlock()));
-	//	gView->showMaximized();
-	//	//delete gScene;
-	//	//delete gView;
-	//	//delete layout;
-	//}
-	//return true;
-}
+//bool ExperimentManager::showVisualExperimentEditor(cExperimentStructure *ExpStruct)
+//{
+//	if(ExpStruct == NULL)
+//	{
+//		if(cExperimentBlockTrialStructure == NULL)
+//		{
+//			//if(loadExperiment("",true) == false)
+//			//	return false;
+//			if (!prePassiveParseExperiment())
+//				return false;
+//		}
+//		ExpStruct = cExperimentBlockTrialStructure;
+//	}
+//	if(visExpEditor == NULL)
+//		visExpEditor = new VisualExperimentEditor();
+//	bool bParseResult = visExpEditor->parseExperimentStructure(ExpStruct);
+//	if(bParseResult)
+//		visExpEditor->showMaximized();
+//	return bParseResult;
+//
+//	//QGraphicsScene *gScene = new QGraphicsScene();
+//	//QGraphicsView *gView = new QGraphicsView();//(gScene);
+//	//QGridLayout *layout = new QGridLayout();
+//
+//	////gScene->addText("Hello, world!");	
+//	//gView->setScene(gScene);
+//	//gView->setRenderHint(QPainter::Antialiasing);
+//	////    gView.backgroundBrush = new QBrush(new QPixmap("images/cheese.png"));
+//	////    gView.cacheMode = new QGraphicsView.CacheMode(QGraphicsView.CacheBackground);
+//	////	  gView->dragMode = QGraphicsView.ScrollHandDrag;
+//	////    gView.viewportUpdateMode = QGraphicsView.FullViewportUpdate;	
+//	////layout->addWidget(gView, 0, 0);
+//	////gView->setLayout(layout);
+//	//gView->setContextMenuPolicy(Qt::CustomContextMenu);
+//	//gView->setWindowTitle("Experiment Graph Editor");
+//	//gView->resize(400, 300);
+//	//// ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
+//
+//	////ExperimentGraphBlock *b = new ExperimentGraphBlock(NULL, gScene);
+//	////b->addPort("Block Action DoSomething", false, ExperimentGraphPort::NamePort);
+//	////b->addPort("0: Block 1", false, ExperimentGraphPort::TypePort);
+//	////b->addInputPort("input");
+//	////b->addOutputPort("output");
+//	////b = b->clone();
+//	////b->setPos(150, 0);
+//	////b = b->clone();
+//	////b->setPos(150, 150);
+//
+//	//ExperimentGraphEditor *expGraphEditor = new ExperimentGraphEditor(this);
+//	//expGraphEditor->install(gScene,gView);
+//	//if(expGraphEditor->parseExperimentStructure(ExpStruct))
+//	//{
+//	//	//connect(ui->action_Save, SIGNAL(triggered()), this, SLOT(saveFile()));
+//	//	//connect(ui->action_Load, SIGNAL(triggered()), this, SLOT(loadFile()));
+//	//	//connect(ui->action_Quit, SIGNAL(triggered()), qApp, SLOT(quit()));
+//	//	//ui->toolBar->addAction("Add block", this, SLOT(addBlock()));
+//	//	gView->showMaximized();
+//	//	//delete gScene;
+//	//	//delete gView;
+//	//	//delete layout;
+//	//}
+//	//return true;
+//}
 
 cExperimentStructure *ExperimentManager::getExperimentStructure() 
 {
@@ -2049,10 +1997,10 @@ int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBl
 	return -1;
 }
 
-bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst)
+bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst, cExperimentStructure *expStruct)
 {
 	int nNrOfBlockTrials = ExpBlockTrialsDomNodeLst.count();
-	cExperimentBlockTrialStructure->resetExperiment();
+	expStruct->resetExperiment();
 	cBlockStructure *tmpBlock = NULL;
 	cLoopStructure *tmpLoop = NULL;
 	QDomElement tmpElement;
@@ -2153,7 +2101,7 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 								}
 							}
 						}
-						cExperimentBlockTrialStructure->insertBlock(tmpBlock);//Here we should make a copy to reserve and keep the memory space
+						expStruct->insertBlock(tmpBlock);//Here we should make a copy to reserve and keep the memory space
 						bUpdateSucceeded = true;
 					}
 				}
@@ -2161,7 +2109,7 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 		}
 		if(!bUpdateSucceeded)
 		{
-			cExperimentBlockTrialStructure->resetExperiment();
+			expStruct->resetExperiment();
 			//if(tmpBlock)
 			//	delete tmpBlock;
 			//if(tmpLoop)
