@@ -71,7 +71,8 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	buttonEdit = NULL;
 	expManager = NULL;
 	tmpExpStruct = NULL;
-	visExpEditor = NULL;
+	//visExpEditor = NULL;
+	expStructVisualizer = NULL;
 
 	currentViewSettings.bSkipComments = false;
 	currentViewSettings.bSkipEmptyAttributes = false;
@@ -126,15 +127,17 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 		delete tmpExpStruct;
 	//if(visExpEditor)
 	//	delete visExpEditor;//Doesn't need to be done here...
+	//if(expStructVisualizer)
+	//	delete expStructVisualizer;//Doesn't need to be done here...
 }
 
-void ExperimentGraphicEditor::closeEvent(QCloseEvent *event)
-{
+//void ExperimentGraphicEditor::closeEvent(QCloseEvent *event)
+//{
 	//if ( isHidden() )
-		event->accept();
+	//	event->accept();
 	//this->deleteLater();
-	return;
-}
+	//return;
+//}
 
 void ExperimentGraphicEditor::setExperimentManager(ExperimentManager *pExpManager)
 {
@@ -532,8 +535,28 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 						if(tmpExpStruct)
 							delete tmpExpStruct;
 						tmpExpStruct = new cExperimentStructure();
+						
 						//visExpEditor = expManager->getVisualExperimentEditor(graphicWidget);
 						
+						if(expStructVisualizer == NULL)
+							expStructVisualizer = new ExperimentStructureVisualizer(graphicWidget);
+						if(expStructVisualizer)
+						{
+							//visExpEditor->setAttribute(Qt::WA_DeleteOnClose);
+							bool bResult = connect(expStructVisualizer, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
+							bResult = expManager->createExperimentStructure(tmpList, pExpTreeModel,tmpExpStruct);
+							if(bResult)
+							{
+								gridLayout->addWidget(expStructVisualizer,0,1);
+
+								bool bParseResult = expStructVisualizer->parseExperimentStructure(tmpExpStruct);
+								if(bParseResult)
+									expStructVisualizer->showMaximized();
+
+								//expManager->showVisualExperimentEditor(tmpExpStruct);
+							}
+						}
+						/*
 						if(visExpEditor == NULL)
 							visExpEditor = new VisualExperimentEditor(graphicWidget);
 						if(visExpEditor)
@@ -552,6 +575,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 								//expManager->showVisualExperimentEditor(tmpExpStruct);
 							}
 						}
+						*/
 					}
 				}
 			}
@@ -699,8 +723,12 @@ bool ExperimentGraphicEditor::setExperimentTreeModel(ExperimentTreeModel *expMod
 
 void ExperimentGraphicEditor::childWidgetDestroyed(QWidget* pWidget)
 {
-	if(pWidget == visExpEditor)
+	//if(pWidget == visExpEditor)
+	//{
+	//	visExpEditor = NULL;
+	//}
+	if(pWidget == expStructVisualizer)
 	{
-		visExpEditor = NULL;
-	}
+		expStructVisualizer = NULL;
+	}	
 }

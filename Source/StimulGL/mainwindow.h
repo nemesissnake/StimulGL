@@ -35,9 +35,9 @@
 #include <QtWidgets>
 #include <QTime>
 #include <QDateTime> //QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat())!!!!!
-#include <QNetworkInterface>
-#include <QTest>
-#include <QTestEventList>
+#include <QtNetwork\QNetworkInterface>
+#include <QtTest\QTest>
+#include <QtTest\QTestEventList>
 
 #include "documentwindow.h"
 #include "documentmanager.h"

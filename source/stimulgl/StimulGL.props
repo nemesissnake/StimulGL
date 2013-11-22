@@ -9,7 +9,7 @@
     <!--ShortPlatform-->
     <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.1.0\win32</QTDIR>
     <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.1.0\x64</QTDIR>
-    <QSCINTILLA_272>C:\Qt\QScintilla-gpl-2.7.2</QSCINTILLA_272>
+    <QSCINTILLA>C:\Qt\QScintilla-gpl-2.7.2</QSCINTILLA>
   </PropertyGroup>
   
   <Choose>
@@ -34,8 +34,8 @@
     <BuildMacro Include="QTDIR">
       <Value>$(QTDIR)</Value>
     </BuildMacro>
-    <BuildMacro Include="QSCINTILLA_272">
-      <Value>$(QSCINTILLA_272)</Value>
+    <BuildMacro Include="QSCINTILLA">
+      <Value>$(QSCINTILLA)</Value>
     </BuildMacro>    
   </ItemGroup>
 </Project>

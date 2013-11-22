@@ -18,7 +18,7 @@
 
 
 #include "ExperimentManagerplugin.h"
-#include "visualexperimenteditor/VisualExperimentEditor.h"
+//#include "visualexperimenteditor/VisualExperimentEditor.h"
 #include "ImageProcessor.h"
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"

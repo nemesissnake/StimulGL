@@ -77,7 +77,8 @@ void ExperimentManager::DefaultConstruct()
 	currentExperimentTree = NULL;
 	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
-	visExpEditor = NULL;
+	//visExpEditor = NULL;
+	expStructVisualizer = NULL;
 	ExpGraphicEditor = NULL;
 	RegisterMetaTypes();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
@@ -673,11 +674,18 @@ bool ExperimentManager::cleanupExperiment()
 	cleanupExperimentObjects();
 	currentExperimentFile.clear();
 	currentValidationFile.clear();
-	if(visExpEditor)
+	//if(visExpEditor)
+	//{
+	//	visExpEditor->close();
+	//	delete visExpEditor;
+	//	visExpEditor = NULL;
+
+	//}
+	if(expStructVisualizer)
 	{
-		visExpEditor->close();
-		delete visExpEditor;
-		visExpEditor = NULL;
+		expStructVisualizer->close();
+		delete expStructVisualizer;
+		expStructVisualizer = NULL;
 	}
 	if (currentExperimentTree)
 	{

@@ -42,7 +42,8 @@ class ExperimentTreeModel;
 class ExperimentTreeItem;
 class TreeFilterProxyModel;
 class ExperimentManager;
-class VisualExperimentEditor;
+//class VisualExperimentEditor;
+class ExperimentStructureVisualizer;
 class cExperimentStructure;
 
 class ExperimentGraphicEditor : public QWidget
@@ -57,8 +58,8 @@ public slots:
 	void setExperimentManager(ExperimentManager *pExpManager);
 	bool setExperimentTreeModel(ExperimentTreeModel *expModel = NULL);
 	
-protected slots:
-	void closeEvent(QCloseEvent *event);
+//protected slots:
+//	void closeEvent(QCloseEvent *event);
 
 private slots:
     void newFile();
@@ -121,7 +122,9 @@ private:
 	QModelIndex selectedIndex;
 
 	ExperimentManager *expManager;
-	VisualExperimentEditor *visExpEditor;
+	//VisualExperimentEditor *visExpEditor;
+	ExperimentStructureVisualizer *expStructVisualizer;
+
 	cExperimentStructure *tmpExpStruct; 
 };
 

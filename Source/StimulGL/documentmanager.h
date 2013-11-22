@@ -24,6 +24,7 @@
 #include <QFile>
 #include <QDir>
 #include <QtWidgets>
+
 #include <Qsci/qsciapis.h>
 #include <Qsci/qscilexerjavascript.h>
 #include <Qsci/qscilexerpython.h>

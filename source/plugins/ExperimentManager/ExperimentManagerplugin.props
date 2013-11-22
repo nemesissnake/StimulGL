@@ -9,7 +9,8 @@
     <!--ShortPlatform-->
     <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.1.0\win32</QTDIR>
     <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.1.0\x64</QTDIR>
-    <AGNER>C:\Qt\Agner</AGNER>    
+    <AGNER>C:\Qt\Agner</AGNER>
+    <GRAPHVIZ>C:\Qt\Graphviz2.34</GRAPHVIZ>
   </PropertyGroup>
   
   <Choose>
@@ -36,6 +37,9 @@
     </BuildMacro>
     <BuildMacro Include="AGNER">
       <Value>$(AGNER)</Value>
-    </BuildMacro>    
+    </BuildMacro>
+    <BuildMacro Include="GRAPHVIZ">
+      <Value>$(GRAPHVIZ)</Value>
+    </BuildMacro>  
   </ItemGroup>
 </Project>
