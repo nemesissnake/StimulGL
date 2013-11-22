@@ -27,7 +27,8 @@
 #include "TriggerTimer.h"
 #include "RetinotopyMapper.h"
 #include "QML2Viewer.h"
-#include "ExperimentStructureVisualizer/ExperimentStructureVisualizer.h"
+#include "ExperimentGraphicEditor/ExperimentGraphicEditor.h"
+//#include "ExperimentStructureVisualizer/ExperimentStructureVisualizer.h"
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {

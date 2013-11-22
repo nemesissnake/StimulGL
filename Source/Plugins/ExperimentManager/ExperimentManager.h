@@ -26,10 +26,9 @@
 #include <QtScript/QScriptable>
 #include <QGraphicsView>
 #include <QGLWidget>
+#include <QDomNodeList>
 #include <QDesktopWidget>
 #include <QApplication>
-#include "ExperimentGraphicEditor/ExperimentTreeModel.h"
-#include "ExperimentGraphicEditor/ExperimentGraphicEditor.h"
 #include "Global.h"
 #include "defines.h"
 #include "./../../StimulGL/mainappinfo.h"
@@ -49,8 +48,8 @@
 using namespace ExperimentManagerNameSpace;
 
 class cExperimentStructure;
-//class ExperimentGraphicEditor;
-//class ExperimentTreeModel;
+class ExperimentGraphicEditor;
+class ExperimentTreeModel;
 
 //!  The ExperimentManager class. 
 /*!
