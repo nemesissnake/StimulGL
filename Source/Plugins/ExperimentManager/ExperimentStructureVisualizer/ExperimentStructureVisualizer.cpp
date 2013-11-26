@@ -283,12 +283,12 @@ bool ExperimentStructureVisualizer::drawGraph()
 			_scene->applyLayout();
 			//_scene->setRootNode(tmpNode);
 			//_scene->setSceneRect(QRectF(0, 0, 400, 400));
-			QRectF tmpRect = _scene->sceneRect();
+			//QRectF tmpRect = _scene->sceneRect();
 			//_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
 			//_view->setScene(_scene);
 
 			
-			_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
+			//_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
 			//_scene->saveLayout("D:\\Projects\\Sven.Gijsen\\StimulGL\\Install\\debug.png",1);
 
 

@@ -200,8 +200,7 @@ void QGVScene::applyLayout()
 	//if(_context && _graph)
 	//{
 	
-		if(gvLayout(_context, _graph, "dot") != 0)//neato or fdp
-		//if(gvLayout(_context, _graph, "fdp") != 0)
+		if(gvLayout(_context, _graph, "dot") != 0)//neato or fdp , 		//if(gvLayout(_context, _graph, "fdp") != 0)
 		{
 			/*
 			* Crash?

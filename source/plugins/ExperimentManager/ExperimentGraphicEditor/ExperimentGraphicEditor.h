@@ -95,6 +95,9 @@ private:
 	QScrollArea *scrollArea;
 	QWidget *graphicWidget;
 	QGridLayout *gridLayout;
+
+	QVBoxLayout *vLayout;
+
 	QTableWidget *tblWidgetView;
 	TreeFilterProxyModel *filterModel;
 	ExperimentTreeModel *pExpTreeModel;		//used for setExperimentTreeModel() -> Pointer

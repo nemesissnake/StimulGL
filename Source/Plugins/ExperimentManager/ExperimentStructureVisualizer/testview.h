@@ -77,6 +77,7 @@ private:
 	QMenu *menuEdit;
 	QToolButton *buttonFile;
 	QToolButton *buttonEdit;
+	QVBoxLayout *graphViewLayout;
 
 	QGVScene *_scene;
 	expSceneItemStrc expSceneItems;

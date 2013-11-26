@@ -463,4 +463,7 @@ sTimer.startTimer(1000);
 dialog = new Dialog();
 dialog.show();
 ConnectDisconnectScriptFunctions(true);
+//
+dialog.loadExperiment();
+dialog.showExperimentTree();
 

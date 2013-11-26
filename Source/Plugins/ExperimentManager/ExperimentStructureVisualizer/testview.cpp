@@ -20,16 +20,12 @@ testView::testView(QWidget *parent) : QWidget(parent)
 	menuEdit = NULL;
 	buttonFile = NULL;
 	buttonEdit = NULL;
-	//_view = NULL;
+	graphViewLayout = NULL;
 	_scene = NULL;
 
 	resetExpSceneItemsCollection(expSceneItems);
 	configureActions(true);
 	setupMenuAndActions();
-
-	//_scene = new QGVScene("DEMO", this);
-	//_view = new QGraphicsViewEc(this);
-
 	setupLayout();
 	
     //connect(_scene, SIGNAL(nodeContextMenu(QGVNode*)), SLOT(nodeContextMenu(QGVNode*)));
@@ -52,6 +48,8 @@ testView::~testView()
 		delete toolBar;
 	if(_scene)
 		delete _scene;
+	if(graphViewLayout)
+		delete graphViewLayout;
 	resetExpSceneItemsCollection(expSceneItems);
 	emit destroyed(this);
 }
@@ -142,6 +140,7 @@ void testView::setupLayout()
 
 	//ui->graphicsView->fitInView(QRectF(0.0,0.0,200.0,200.0), Qt::KeepAspectRatio);
 	//ui->graphicsView->setMinimumSize(200,200);
+	//ui->graphicsView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	//_scene->saveLayout("D:\\Projects\\Sven.Gijsen\\StimulGL\\Install\\debug.png",1);
 
 
@@ -149,15 +148,20 @@ void testView::setupLayout()
 	//gView->ensureVisible(rectNeededSize, dLeftCanvasMargin, dTopCanvasMargin);
 	//gView->centerOn(rectNeededSize.x()/2,rectNeededSize.y()/2);
 		
-	toolBar->setMinimumSize(300,0);
+	//toolBar->setMinimumSize(300,0);
 	ui->mainLayout->setMenuBar(toolBar);
-	ui->mainLayout->addWidget(ui->graphicsView);
+	//ui->mainLayout->addWidget(ui->graphicsView);
+	if(graphViewLayout == NULL)
+		graphViewLayout = new QVBoxLayout(ui->graphicsView);
+	ui->mainLayout->addLayout(graphViewLayout);
 	ui->mainLayout->setContentsMargins(0,0,0,0);
 	ui->mainLayout->setSpacing(0);
 
-	QSize tmp = ui->mainLayout->minimumSize();//61,61...
 	//tmp = this->minimumSize();
-	setLayout(ui->mainLayout);	
+	//setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	//setMinimumSize(150,0);
+	//QSize tmp = ui->mainLayout->minimumSize();//61,61...
+	setLayout(ui->mainLayout);
 }
 
 void testView::showEvent ( QShowEvent * event )
@@ -292,12 +296,16 @@ bool testView::drawGraph()
 			_scene->applyLayout();
 			//_scene->setRootNode(tmpNode);
 			//_scene->setSceneRect(QRectF(0, 0, 400, 400));
-			QRectF tmpRect = _scene->sceneRect();
+			//QRectF tmpRect = _scene->sceneRect();
+			//tmpRect = tmpRect;
+			//ui->graphicsView->setLayout(ui->mainLayout);
+			//ui->graphicsView.SetLayout()
 			//_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
 			//_view->setScene(_scene);
 
 			
-			ui->graphicsView->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
+			//ui->graphicsView->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
+			//ui->graphicsView->setLayout(graphViewLayout);
 			//_scene->saveLayout("D:\\Projects\\Sven.Gijsen\\StimulGL\\Install\\debug.png",1);
 
 
@@ -493,7 +501,7 @@ bool testView::parseExperimentStructure(cExperimentStructure *ExpStruct)
 			}
 		}
 	}
-	return true;//drawGraph();
+	return drawGraph();
 }
 
 QGVNode *testView::getGVNodePointer(const int &nTargetBlockID)

@@ -450,14 +450,14 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 	if (item->hasChildren())
 	{
 		graphicWidget = new QWidget();
-		gridLayout = new QGridLayout(graphicWidget);
-
+		
 		ExperimentTreeItem *child;
 		for (int i = 0; i < item->rowCount(); i++)
 		{
 			child = item->child(i);
 			if (!child->hasChildren())
 			{
+				gridLayout = new QGridLayout(graphicWidget);
 				gridLayout->addWidget(new QLabel(child->getName(), graphicWidget),i,0);
 				QString defValue;
 				if (child->getType().toString().toLower() == "enum" || child->getType().toString().toLower() == "enum_text" || child->getType().toString().toLower() == "list")
@@ -551,15 +551,32 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 								bResult = expManager->createExperimentStructure(tmpList, pExpTreeModel,tmpExpStruct);
 								if(bResult)
 								{
-									gridLayout->addWidget(tmpTestView,0,1);
+									//gridLayout->addWidget(tmpTestView,0,0);
+									//gridLayout->addWidget(tmpTestView,1,1);
+									//gridLayout->addWidget(tmpTestView,0,1);
+									//int nRows = gridLayout->rowCount();
+									//int nCols = gridLayout->columnCount();
+
+									vLayout = new QVBoxLayout(graphicWidget);
 
 									bool bParseResult = tmpTestView->parseExperimentStructure(tmpExpStruct);
 									if(bParseResult)
 										tmpTestView->showMaximized();
+
+									QSize tmpSize = graphicWidget->sizeHint();
+
+									graphicWidget->setMinimumSize(400,400);
+									graphicWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+									//tmpSize = tmpTestView->minimumSize();
+									//tmpSize = tmpSize;
+
 										//QTimer::singleShot(2000,expStructVisualizer,SLOT("drawGraph()"));
 										//bool bParseResult = expStructVisualizer->parseExperimentStructure(tmpExpStruct);
 
 									//expManager->showVisualExperimentEditor(tmpExpStruct);
+									graphicWidget->setLayout(vLayout);
+									scrollArea->setWidget(graphicWidget);
+									return;
 								}
 							}
 							/*

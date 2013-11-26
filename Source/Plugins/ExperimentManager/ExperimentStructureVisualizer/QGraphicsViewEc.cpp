@@ -5,6 +5,9 @@
 QGraphicsViewEc::QGraphicsViewEc(QWidget* parent) : QGraphicsView(parent)
 {
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+	setMaximumSize(10000,10000);
+	setMinimumSize(100,100);
+	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 
