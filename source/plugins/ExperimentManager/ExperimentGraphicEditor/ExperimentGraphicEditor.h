@@ -44,6 +44,7 @@ class TreeFilterProxyModel;
 class ExperimentManager;
 //class VisualExperimentEditor;
 class ExperimentStructureVisualizer;
+class testView;
 class cExperimentStructure;
 
 class ExperimentGraphicEditor : public QWidget
@@ -124,6 +125,7 @@ private:
 	ExperimentManager *expManager;
 	//VisualExperimentEditor *visExpEditor;
 	ExperimentStructureVisualizer *expStructVisualizer;
+	testView *tmpTestView;
 
 	cExperimentStructure *tmpExpStruct; 
 };

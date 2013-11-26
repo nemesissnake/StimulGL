@@ -1,5 +1,5 @@
-#include "ExperimentStructureVisualizer.h"
-#include "QGVScene.h"
+#include "testview.h"
+#include "ui_testview.h"
 #include "QGraphicsViewEc.h"
 #include "../ExperimentStructures.h"
 #include <QMessageBox>
@@ -8,9 +8,11 @@
 #include <QMenu>
 #include <QVBoxLayout>
 
-ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : QWidget(parent)
+testView::testView(QWidget *parent) : QWidget(parent)
 {
-	mainLayout = NULL;
+	ui = new Ui::testView();
+	ui->setupUi(this);
+
 	action_Quit = NULL;
 	action_Test = NULL;
 	toolBar = NULL;
@@ -18,7 +20,7 @@ ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : 
 	menuEdit = NULL;
 	buttonFile = NULL;
 	buttonEdit = NULL;
-	_view = NULL;
+	//_view = NULL;
 	_scene = NULL;
 
 	resetExpSceneItemsCollection(expSceneItems);
@@ -34,8 +36,9 @@ ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : 
     //connect(_scene, SIGNAL(nodeDoubleClick(QGVNode*)), SLOT(nodeDoubleClick(QGVNode*)));
 }
 
-ExperimentStructureVisualizer::~ExperimentStructureVisualizer()
+testView::~testView()
 {
+	delete ui;
     configureActions(false);
 	if(menuFile)
 		delete menuFile;
@@ -49,15 +52,11 @@ ExperimentStructureVisualizer::~ExperimentStructureVisualizer()
 		delete toolBar;
 	if(_scene)
 		delete _scene;
-	if(_view)
-		delete _view;
-	if(mainLayout)
-		delete mainLayout;
 	resetExpSceneItemsCollection(expSceneItems);
 	emit destroyed(this);
 }
 
-void ExperimentStructureVisualizer::resetExpSceneItemsCollection(expSceneItemStrc &tmpExpSceneItems)
+void testView::resetExpSceneItemsCollection(expSceneItemStrc &tmpExpSceneItems)
 {
 	tmpExpSceneItems.sExperimentName = "<undefined>";
 	if(tmpExpSceneItems.lLoops.isEmpty() == false)
@@ -78,7 +77,7 @@ void ExperimentStructureVisualizer::resetExpSceneItemsCollection(expSceneItemStr
 	}
 }
 
-void ExperimentStructureVisualizer::configureActions(bool bCreate)
+void testView::configureActions(bool bCreate)
 {
 	if(bCreate)
 	{
@@ -100,7 +99,7 @@ void ExperimentStructureVisualizer::configureActions(bool bCreate)
 	}
 }
 
-void ExperimentStructureVisualizer::setupMenuAndActions()
+void testView::setupMenuAndActions()
 {
 	toolBar = new QToolBar(this);
 
@@ -130,34 +129,44 @@ void ExperimentStructureVisualizer::setupMenuAndActions()
 	
 }
 
-void ExperimentStructureVisualizer::Test()
+void testView::Test()
 {
 	drawGraph();
 }
 
-void ExperimentStructureVisualizer::setupLayout()
+void testView::setupLayout()
 {
-	//_scene = new QGVScene("DEMO", this);
-	_view = new QGraphicsViewEc(this);
-	//_view->setScene(_scene);
+	_scene = new QGVScene("DEMO", this);
+	//ui->graphicsView = new QGraphicsViewEc(this);
+	ui->graphicsView->setScene(_scene);
 
-	mainLayout = new QVBoxLayout();
-	mainLayout->setMenuBar(toolBar);
-	mainLayout->addWidget(_view);
-	mainLayout->setContentsMargins(0,0,0,0);
-	mainLayout->setSpacing(0);
-	setLayout(mainLayout);	
+	//ui->graphicsView->fitInView(QRectF(0.0,0.0,200.0,200.0), Qt::KeepAspectRatio);
+	//ui->graphicsView->setMinimumSize(200,200);
+	//_scene->saveLayout("D:\\Projects\\Sven.Gijsen\\StimulGL\\Install\\debug.png",1);
+
+
+	//rectNeededSize
+	//gView->ensureVisible(rectNeededSize, dLeftCanvasMargin, dTopCanvasMargin);
+	//gView->centerOn(rectNeededSize.x()/2,rectNeededSize.y()/2);
+		
+	toolBar->setMinimumSize(300,0);
+	ui->mainLayout->setMenuBar(toolBar);
+	ui->mainLayout->addWidget(ui->graphicsView);
+	ui->mainLayout->setContentsMargins(0,0,0,0);
+	ui->mainLayout->setSpacing(0);
+
+	QSize tmp = ui->mainLayout->minimumSize();//61,61...
+	//tmp = this->minimumSize();
+	setLayout(ui->mainLayout);	
 }
 
-void ExperimentStructureVisualizer::showEvent ( QShowEvent * event )
+void testView::showEvent ( QShowEvent * event )
 {
 	//QTimer::singleShot(2000,this,SLOT("drawGraph()"));//drawGraph();
 }
 
-bool ExperimentStructureVisualizer::drawGraph()
+bool testView::drawGraph()
 {    
-	if(_view == NULL)
-		return false;	
 	if(_scene == NULL)
 		_scene = new QGVScene("DEMO", this);
 	else
@@ -255,7 +264,7 @@ bool ExperimentStructureVisualizer::drawGraph()
 	*/
 	
 		//_view = new QGraphicsViewEc(this);
-			_view->setScene(_scene);
+			//ui->graphicsView->setScene(_scene);
 
 			//Configure scene attributes
 			_scene->setGraphAttribute("label", "Experiment Structure");
@@ -288,7 +297,7 @@ bool ExperimentStructureVisualizer::drawGraph()
 			//_view->setScene(_scene);
 
 			
-			_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
+			ui->graphicsView->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
 			//_scene->saveLayout("D:\\Projects\\Sven.Gijsen\\StimulGL\\Install\\debug.png",1);
 
 
@@ -348,11 +357,11 @@ bool ExperimentStructureVisualizer::drawGraph()
     //Layout scene
     _scene->applyLayout();
 	//QRectF tmpRect = _scene->sceneRect();
-	_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
-	_view->setScene(_scene);
+	ui->graphicsView->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
+	ui->graphicsView->setScene(_scene);
 }
 
-void ExperimentStructureVisualizer::nodeContextMenu(QGVNode *node)
+void testView::nodeContextMenu(QGVNode *node)
 {
     //Context menu example
     QMenu menu(node->label());
@@ -366,7 +375,7 @@ void ExperimentStructureVisualizer::nodeContextMenu(QGVNode *node)
         return;
 }
 
-void ExperimentStructureVisualizer::nodeDoubleClick(QGVNode *node)
+void testView::nodeDoubleClick(QGVNode *node)
 {
 	//node->moveBy(10,10);
 	//_scene->setNodeAttribute("pos","200,200");
@@ -385,7 +394,7 @@ void ExperimentStructureVisualizer::nodeDoubleClick(QGVNode *node)
 	//_scene->saveLayout("E:\\Projects\\qgv\\debug\\debug.png",1);
 }
 
-bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructure *ExpStruct)
+bool testView::parseExperimentStructure(cExperimentStructure *ExpStruct)
 {//Make sure to first call the above install()!
 	resetExpSceneItemsCollection(expSceneItems);
 
@@ -487,7 +496,7 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 	return true;//drawGraph();
 }
 
-QGVNode *ExperimentStructureVisualizer::getGVNodePointer(const int &nTargetBlockID)
+QGVNode *testView::getGVNodePointer(const int &nTargetBlockID)
 {
 	for(int i=0;i<expSceneItems.lBlocks.count();i++)
 	{

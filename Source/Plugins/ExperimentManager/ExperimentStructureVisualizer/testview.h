@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef TESTVIEW_H
+#define TESTVIEW_H
 
 #include <QWidget>
 #include "QGVScene.h"
@@ -11,28 +11,31 @@ class QVBoxLayout;
 class QGraphicsViewEc;
 class cExperimentStructure;
 
-class ExperimentStructureVisualizer : public QWidget
+namespace Ui {class testView;};
+
+class testView : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 signals:
 	void destroyed(QWidget*);
 
 public:
-    explicit ExperimentStructureVisualizer(QWidget *parent = 0);
-    ~ExperimentStructureVisualizer();
+	explicit testView(QWidget *parent = 0);
+	~testView();
 
 	bool parseExperimentStructure(cExperimentStructure *ExpStruct);
 
 private slots:
-    void nodeContextMenu(QGVNode* node);
-    void nodeDoubleClick(QGVNode* node);
+	void nodeContextMenu(QGVNode* node);
+	void nodeDoubleClick(QGVNode* node);
 	void Test();
 
 protected:
 	void showEvent ( QShowEvent * event );
 
 private:
+	Ui::testView *ui;
 
 	struct expLoopItemStrc 
 	{
@@ -67,7 +70,6 @@ private:
 	void resetExpSceneItemsCollection(expSceneItemStrc &tmpExpSceneItems);
 	QGVNode *getGVNodePointer(const int &nTargetBlockID);
 
-	QVBoxLayout *mainLayout;
 	QAction *action_Quit;
 	QAction *action_Test;
 	QToolBar *toolBar;
@@ -75,10 +77,9 @@ private:
 	QMenu *menuEdit;
 	QToolButton *buttonFile;
 	QToolButton *buttonEdit;
-	
-	QGraphicsViewEc *_view;
-    QGVScene *_scene;
+
+	QGVScene *_scene;
 	expSceneItemStrc expSceneItems;
 };
 
-#endif // MAINWINDOW_H
+#endif // TESTVIEW_H

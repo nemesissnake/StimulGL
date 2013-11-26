@@ -797,6 +797,27 @@
     <ClCompile Include="ExperimentGraphicEditor\FindDialog.cpp">
       <Filter>Source Files\ExperimentGraphicEditor</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_testview.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_testview.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_testview.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_testview.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_testview.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_testview.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="ExperimentStructureVisualizer\testview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -861,6 +882,9 @@
     </ClInclude>
     <ClInclude Include="ExperimentGraphicEditor\ExperimentTreeItem.h">
       <Filter>Header Files\ExperimentGraphicEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_testview.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -983,6 +1007,12 @@
     </CustomBuild>
     <CustomBuild Include="ExperimentGraphicEditor\FindDialog.h">
       <Filter>Header Files\ExperimentGraphicEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ExperimentStructureVisualizer\testview.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ExperimentStructureVisualizer\testview.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
