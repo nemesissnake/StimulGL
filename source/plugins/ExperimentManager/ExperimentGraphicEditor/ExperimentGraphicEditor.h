@@ -45,6 +45,7 @@ class TreeFilterProxyModel;
 class ExperimentManager;
 class ExperimentStructureVisualizer;
 class cExperimentStructure;
+class ExperimentParameterDefinitionContainer;
 
 class ExperimentGraphicEditor : public QWidget
 {
@@ -131,6 +132,7 @@ private:
 	ExperimentStructureVisualizer *expStructVisualizer;
 
 	cExperimentStructure *tmpExpStruct; 
+	ExperimentParameterDefinitionContainer *expObjectParamDefs;
 };
 
 #endif // ExperimentGraphicEditor_H

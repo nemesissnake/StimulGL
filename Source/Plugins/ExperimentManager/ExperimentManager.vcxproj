@@ -1757,6 +1757,7 @@ echo POSTBUILDSTEP for $(ProjectName) COMPLETED OK</Command>
     <ClCompile Include="ExperimentManager.cpp" />
     <ClCompile Include="ExperimentManager_dialog.cpp" />
     <ClCompile Include="ExperimentManagerplugin.cpp" />
+    <ClCompile Include="ExperimentParameter.cpp" />
     <ClCompile Include="ExperimentStructures.cpp" />
     <ClCompile Include="ExperimentStructureVisualizer\ExperimentStructureVisualizer.cpp" />
     <ClCompile Include="ExperimentStructureVisualizer\QGraphicsViewEc.cpp" />

@@ -73,6 +73,7 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	expManager = NULL;
 	tmpExpStruct = NULL;
 	expStructVisualizer = NULL;
+	expObjectParamDefs = NULL;
 
 	currentViewSettings.bSkipComments = false;
 	currentViewSettings.bSkipEmptyAttributes = false;
@@ -125,6 +126,8 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 		expManager = NULL;
 	if(tmpExpStruct)
 		delete tmpExpStruct;
+	if(expObjectParamDefs)
+		delete expObjectParamDefs;		
 	//if(expStructVisualizer)
 	//	delete expStructVisualizer;//Doesn't need to be done here...
 }
@@ -518,7 +521,25 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 			}
 			else//it has children...
 			{
-				if((item->getName().toLower() == "blocks") && (i==0))
+				if((item->getName().toLower() == PARAMETERS_TAG))
+				{
+					expObjectParamDefs = new ExperimentParameterDefinitionContainer();
+					if((child->getName().toLower() == PARAMETER_TAG))
+					{
+						if(child->hasChildren())
+						{
+							int nChildCount = child->childCount();
+							for (int j=0;j<nChildCount;j++)
+							{
+								//QString sValue = item->child(i)->child(j)->getName();
+								QString sValue = child->child(j)->getName();
+								sValue = child->child(j)->getValue();
+								sValue = sValue;
+							}
+						}
+					}
+				}
+				else if((item->getName().toLower() == BLOCKTRIALS_TAG) && (i==0))
 				{					
 					//QString tmpString = child->getName();
 					if(pExpTreeModel)

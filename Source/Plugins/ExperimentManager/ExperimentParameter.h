@@ -23,6 +23,7 @@
 #include <QString>
 #include <QHash>
 #include <QColor>
+#include <QScriptEngine>
 
 template <typename T>
 QVariantList toVariantList( const QList<T> &list )
@@ -33,6 +34,33 @@ QVariantList toVariantList( const QList<T> &list )
 
 	return newList;
 }
+
+/*! 
+* The enum ExperimentParameterTypeName represents the type of a experiment parameter by name
+*/
+enum ExperimentParameterTypeName
+{
+	Experiment_ParameterType_String			= 0, /*!< enum value 0 */
+	Experiment_ParameterType_StringArray	= 1, /*!< enum value 1 */
+	Experiment_ParameterType_Color			= 2, /*!< enum value 2 */
+	Experiment_ParameterType_Integer		= 3, /*!< enum value 3 */
+	Experiment_ParameterType_Float			= 4, /*!< enum value 4 */
+	Experiment_ParameterType_Double			= 5, /*!< enum value 5 */
+	Experiment_ParameterType_Boolean		= 6, /*!< enum value 6 */
+};
+
+class ExperimentParameterDefinitionContainer
+{
+public:
+	
+	ExperimentParameterDefinitionContainer();
+	~ExperimentParameterDefinitionContainer();
+
+private:
+
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class TypedExperimentParameterContainer
 {
