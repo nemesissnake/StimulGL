@@ -704,9 +704,6 @@
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ExperimentGraphicEditor.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
-    <ClCompile Include="ExperimentStructureVisualizer\ExperimentStructureVisualizer.cpp">
-      <Filter>Source Files\ExperimentStructureVisualizer</Filter>
-    </ClCompile>
     <ClCompile Include="ExperimentStructureVisualizer\QGraphicsViewEc.cpp">
       <Filter>Source Files\ExperimentStructureVisualizer</Filter>
     </ClCompile>
@@ -724,24 +721,6 @@
     </ClCompile>
     <ClCompile Include="ExperimentStructureVisualizer\QGVSubGraph.cpp">
       <Filter>Source Files\ExperimentStructureVisualizer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ExperimentStructureVisualizer.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_ExperimentStructureVisualizer.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_ExperimentStructureVisualizer.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ExperimentStructureVisualizer.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_ExperimentStructureVisualizer.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ExperimentStructureVisualizer.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_QGraphicsViewEc.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
@@ -797,26 +776,26 @@
     <ClCompile Include="ExperimentGraphicEditor\FindDialog.cpp">
       <Filter>Source Files\ExperimentGraphicEditor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_testview.cpp">
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ExperimentStructureVisualizer.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_testview.cpp">
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_ExperimentStructureVisualizer.cpp">
       <Filter>Generated Files\Debug_x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_testview.cpp">
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_ExperimentStructureVisualizer.cpp">
       <Filter>Generated Files\Release_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_testview.cpp">
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ExperimentStructureVisualizer.cpp">
       <Filter>Generated Files\Release_x64</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_testview.cpp">
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_ExperimentStructureVisualizer.cpp">
       <Filter>Generated Files\Template_Win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_testview.cpp">
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ExperimentStructureVisualizer.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
-    <ClCompile Include="ExperimentStructureVisualizer\testview.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ExperimentStructureVisualizer\ExperimentStructureVisualizer.cpp">
+      <Filter>Source Files\ExperimentStructureVisualizer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -883,7 +862,7 @@
     <ClInclude Include="ExperimentGraphicEditor\ExperimentTreeItem.h">
       <Filter>Header Files\ExperimentGraphicEditor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_testview.h">
+    <ClInclude Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_ExperimentStructureVisualizer.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -984,9 +963,6 @@
     <CustomBuild Include="ExperimentGraphicEditor\FindDialog.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="ExperimentStructureVisualizer\ExperimentStructureVisualizer.h">
-      <Filter>Header Files\ExperimentStructureVisualizer</Filter>
-    </CustomBuild>
     <CustomBuild Include="ExperimentStructureVisualizer\QGraphicsViewEc.h">
       <Filter>Header Files\ExperimentStructureVisualizer</Filter>
     </CustomBuild>
@@ -1008,11 +984,11 @@
     <CustomBuild Include="ExperimentGraphicEditor\FindDialog.h">
       <Filter>Header Files\ExperimentGraphicEditor</Filter>
     </CustomBuild>
-    <CustomBuild Include="ExperimentStructureVisualizer\testview.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ExperimentStructureVisualizer\testview.ui">
+    <CustomBuild Include="ExperimentStructureVisualizer\ExperimentStructureVisualizer.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ExperimentStructureVisualizer\ExperimentStructureVisualizer.h">
+      <Filter>Header Files\ExperimentStructureVisualizer</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

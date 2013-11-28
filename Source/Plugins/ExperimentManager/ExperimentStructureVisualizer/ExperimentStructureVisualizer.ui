@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>testView</class>
- <widget class="QWidget" name="testView">
+ <class>ExperimentStructureVisualizer</class>
+ <widget class="QWidget" name="ExperimentStructureVisualizer">
   <property name="geometry">
    <rect>
     <x>0</x>

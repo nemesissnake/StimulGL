@@ -19,8 +19,9 @@
 #ifndef ExperimentGraphicEditor_H
 #define ExperimentGraphicEditor_H
 
-#define APP_NAME "Experiment Graphic Editor"
-#define VERSION "v1.0"
+#define APP_NAME		"Experiment Graphic Editor"
+#define VERSION			"v1.0"
+#define TABLEVIEWINDEX	1
 
 #include <QWidget>
 #include <QModelIndex>
@@ -42,14 +43,15 @@ class ExperimentTreeModel;
 class ExperimentTreeItem;
 class TreeFilterProxyModel;
 class ExperimentManager;
-//class VisualExperimentEditor;
 class ExperimentStructureVisualizer;
-class testView;
 class cExperimentStructure;
 
 class ExperimentGraphicEditor : public QWidget
 {
     Q_OBJECT
+
+signals:
+	void onTableViewRedrawned(int nNewWidth, int nNewHeight);
         
 public:
     explicit ExperimentGraphicEditor(QWidget *parent = 0);
@@ -61,6 +63,7 @@ public slots:
 	
 //protected slots:
 //	void closeEvent(QCloseEvent *event);
+//	void resizeEvent(QResizeEvent * event);
 
 private slots:
     void newFile();
@@ -69,6 +72,7 @@ private slots:
 	void saveFile();
 	void showInfo(const QModelIndex &index);
 	void fillTableView(const QString &textToFind, const QStringList &filters);
+	void tableViewResized(int pos, int index);
     void selectTreeItem();
     void showFindDialog();
     void setNewModel();
@@ -95,8 +99,6 @@ private:
 	QScrollArea *scrollArea;
 	QWidget *graphicWidget;
 	QGridLayout *gridLayout;
-
-	QVBoxLayout *vLayout;
 
 	QTableWidget *tblWidgetView;
 	TreeFilterProxyModel *filterModel;
@@ -126,9 +128,7 @@ private:
 	QModelIndex selectedIndex;
 
 	ExperimentManager *expManager;
-	//VisualExperimentEditor *visExpEditor;
 	ExperimentStructureVisualizer *expStructVisualizer;
-	testView *tmpTestView;
 
 	cExperimentStructure *tmpExpStruct; 
 };

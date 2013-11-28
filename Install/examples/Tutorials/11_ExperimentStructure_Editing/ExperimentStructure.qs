@@ -15,7 +15,7 @@ var cExperimentStructureState_Object;
 var sTimer = new TriggerTimer();
 var ExperimentManagerObj = new ExperimentManager(); 						//Here we create the Experiment Manager object that can run experiments.
 var sCurrentScriptLocation = StimulGL.getActiveDocumentFileLocation();			//Here we store the directory-path from this script file for further usage.
-var sExperimentFilePath = sCurrentScriptLocation + "/ExperimentStructure.exml";
+var sExperimentFilePath = sCurrentScriptLocation + "/ExperimentStructure2.exml";
 var sExperimentFilePathSaved = sCurrentScriptLocation + "/ExperimentStructure_saved.exml";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

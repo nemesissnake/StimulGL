@@ -1,5 +1,5 @@
 #include "ExperimentStructureVisualizer.h"
-#include "QGVScene.h"
+#include "ui_ExperimentStructureVisualizer.h"
 #include "QGraphicsViewEc.h"
 #include "../ExperimentStructures.h"
 #include <QMessageBox>
@@ -7,10 +7,10 @@
 #include <QToolButton>
 #include <QMenu>
 #include <QVBoxLayout>
+#include <QResizeEvent>
 
 ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : QWidget(parent)
 {
-	mainLayout = NULL;
 	action_Quit = NULL;
 	action_Test = NULL;
 	toolBar = NULL;
@@ -18,24 +18,24 @@ ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : 
 	menuEdit = NULL;
 	buttonFile = NULL;
 	buttonEdit = NULL;
-	_view = NULL;
+	graphViewLayout = NULL;
 	_scene = NULL;
+	nWidgetMargin = 45;
+	dGraphViewScale = 0.9;//fill till 90%
+
+	ui = new Ui::ExperimentStructureVisualizer();
+	ui->setupUi(this);
 
 	resetExpSceneItemsCollection(expSceneItems);
 	configureActions(true);
 	setupMenuAndActions();
-
-	//_scene = new QGVScene("DEMO", this);
-	//_view = new QGraphicsViewEc(this);
-
+	createScene();
 	setupLayout();
-	
-    //connect(_scene, SIGNAL(nodeContextMenu(QGVNode*)), SLOT(nodeContextMenu(QGVNode*)));
-    //connect(_scene, SIGNAL(nodeDoubleClick(QGVNode*)), SLOT(nodeDoubleClick(QGVNode*)));
 }
 
 ExperimentStructureVisualizer::~ExperimentStructureVisualizer()
 {
+	delete ui;
     configureActions(false);
 	if(menuFile)
 		delete menuFile;
@@ -49,10 +49,8 @@ ExperimentStructureVisualizer::~ExperimentStructureVisualizer()
 		delete toolBar;
 	if(_scene)
 		delete _scene;
-	if(_view)
-		delete _view;
-	if(mainLayout)
-		delete mainLayout;
+	if(graphViewLayout)
+		delete graphViewLayout;
 	resetExpSceneItemsCollection(expSceneItems);
 	emit destroyed(this);
 }
@@ -60,6 +58,8 @@ ExperimentStructureVisualizer::~ExperimentStructureVisualizer()
 void ExperimentStructureVisualizer::resetExpSceneItemsCollection(expSceneItemStrc &tmpExpSceneItems)
 {
 	tmpExpSceneItems.sExperimentName = "<undefined>";
+	tmpExpSceneItems.gvStartExperimentNode = NULL;
+	tmpExpSceneItems.gvEndExperimentNode = NULL;	
 	if(tmpExpSceneItems.lLoops.isEmpty() == false)
 	{
 		//for (i=0;i<tmpExpSceneItems.lLoops.count();i++)
@@ -75,6 +75,10 @@ void ExperimentStructureVisualizer::resetExpSceneItemsCollection(expSceneItemStr
 		//	delete tmpExpSceneItems.lBlocks[i].gvNode;
 		//}
 		tmpExpSceneItems.lBlocks.clear();
+	}
+	if(tmpExpSceneItems.lAutoConns.isEmpty() == false)
+	{
+		tmpExpSceneItems.lAutoConns.clear();
 	}
 }
 
@@ -116,12 +120,8 @@ void ExperimentStructureVisualizer::setupMenuAndActions()
 	buttonEdit=new QToolButton(this);
 	buttonEdit->setText("Edit ");
 	buttonEdit->setPopupMode(QToolButton::InstantPopup);
-	menuEdit = new QMenu();//FileButton
+	menuEdit = new QMenu();//EditButton
 	menuEdit->addAction(action_Test);
-	//menuEdit->addAction(actionAdd_Node);
-	//menuEdit->addAction(actionAdd_Subnode);
-	//menuEdit->addAction(action_Remove_Node);
-	//menuEdit->addAction(actionAdd_Attribute);
 	buttonEdit->setMenu(menuEdit);
 	toolBar->addWidget(buttonEdit);
 
@@ -132,224 +132,209 @@ void ExperimentStructureVisualizer::setupMenuAndActions()
 
 void ExperimentStructureVisualizer::Test()
 {
-	drawGraph();
+	resizeStructureView(ui->graphicsView->size().width(),ui->graphicsView->size().height());
+	int test = ui->graphicsView->maximumWidth();
+	//drawGraph();	
+}
+
+void ExperimentStructureVisualizer::createScene()
+{
+	_scene = new QGVScene("GraphicScene", this);
+	connect(_scene, SIGNAL(nodeContextMenu(QGVNode*)), SLOT(nodeContextMenu(QGVNode*)));
+	connect(_scene, SIGNAL(nodeDoubleClick(QGVNode*)), SLOT(nodeDoubleClick(QGVNode*)));
+	ui->graphicsView->setScene(_scene);
 }
 
 void ExperimentStructureVisualizer::setupLayout()
 {
-	//_scene = new QGVScene("DEMO", this);
-	_view = new QGraphicsViewEc(this);
-	//_view->setScene(_scene);
-
-	mainLayout = new QVBoxLayout();
-	mainLayout->setMenuBar(toolBar);
-	mainLayout->addWidget(_view);
-	mainLayout->setContentsMargins(0,0,0,0);
-	mainLayout->setSpacing(0);
-	setLayout(mainLayout);	
+	ui->mainLayout->setMenuBar(toolBar);
+	if(graphViewLayout == NULL)
+		graphViewLayout = new QVBoxLayout(ui->graphicsView);
+	ui->mainLayout->addLayout(graphViewLayout);
+	ui->mainLayout->setContentsMargins(0,0,0,0);
+	ui->mainLayout->setSpacing(0);
+	setLayout(ui->mainLayout);
 }
 
-void ExperimentStructureVisualizer::showEvent ( QShowEvent * event )
-{
-	//QTimer::singleShot(2000,this,SLOT("drawGraph()"));//drawGraph();
+void ExperimentStructureVisualizer::resizeStructureView(const int &nWidth, const int &nHeight)
+{	
+	if(ui->graphicsView)
+	{
+		ui->graphicsView->setFixedSize(nWidth-nWidgetMargin,nHeight-nWidgetMargin);
+	}
 }
 
-bool ExperimentStructureVisualizer::drawGraph()
+bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 {    
-	if(_view == NULL)
-		return false;	
 	if(_scene == NULL)
-		_scene = new QGVScene("DEMO", this);
+		createScene();
 	else
 		_scene->clear();
-	///QString sDotContent;
-	//sDotContent = "digraph test{node [style=filled,fillcolor=white];N1 -> N2;N2 -> N3;N3 -> N4;N4 -> N1;}";
-	//sDotContent = "digraph {"
-	//"	subgraph cluster_0 "
-	//"	{"
-	//"		label=\"Subgraph A\";"
-	//"		a -> b;"
-	//"		b -> c;"
-	//"		c -> d;"
-	//"	}"
-	//"	subgraph cluster_1 {"
-	//"		label=\"Subgraph B\";"
-	//"		a -> f;"
-	//"		f -> c;"
-	//"	}"
-	//"}";
-	//sDotContent = "digraph test123{"
-	//"	a -> b[label=\"0.2\",weight=\"0.2\"];"
-	//"	a -> c[label=\"0.4\",weight=\"0.4\"];"
-	//"	c -> b[label=\"0.6\",weight=\"0.6\"];"
-	//"	c -> e[label=\"0.6\",weight=\"0.6\"];"
-	//"	e -> e[label=\"0.1\",weight=\"0.1\"];"
-	//"	e -> b[label=\"0.7\",weight=\"0.7\"];"
-	//"}";
 
-    //_scene->loadLayout(sDotContent);
-    //connect(_scene, SIGNAL(nodeContextMenu(QGVNode*)), SLOT(nodeContextMenu(QGVNode*)));
-    //connect(_scene, SIGNAL(nodeDoubleClick(QGVNode*)), SLOT(nodeDoubleClick(QGVNode*)));
-    //_view->setScene(_scene);
-    //return;
+	if(sDotContent.isEmpty()==false)
+	{
+		//QString sDotContent2 = "digraph test{node [style=filled,fillcolor=white];N1 -> N2;N2 -> N3;N3 -> N4;N4 -> N1;}";
+		//sDotContent = "digraph {"
+		//"	subgraph cluster_0 "
+		//"	{"
+		//"		label=\"Subgraph A\";"
+		//"		a -> b;"
+		//"		b -> c;"
+		//"		c -> d;"
+		//"	}"
+		//"	subgraph cluster_1 {"
+		//"		label=\"Subgraph B\";"
+		//"		a -> f;"
+		//"		f -> c;"
+		//"	}"
+		//"}";
+		//QString sDotContent2 = "digraph test123{"
+		//"	a -> b[label=\"0.2\",weight=\"0.2\"];"
+		//"	a -> c[label=\"0.4\",weight=\"0.4\"];"
+		//"	c -> b[label=\"0.6\",weight=\"0.6\"];"
+		//"	c -> e[label=\"0.6\",weight=\"0.6\"];"
+		//"	e -> e[label=\"0.1\",weight=\"0.1\"];"
+		//"	e -> b[label=\"0.7\",weight=\"0.7\"];"
+		//"}";
 
-	/*		
-			QString sBlockName;
-			QList<QGVSubGraph *> tmpGraph;
-			QList<QGVNode *> tmpNodeInt;
-			QList<QGVNode *> tmpNodeLoops;
-			QList<QGVEdge *> tmpConnectionLoops;
-			QList<QGVEdge *> tmpBackLoops;
-			int nBlockCount = 5;
-			//Add some nodes
-			for(int i=0;i<nBlockCount;i++)
+		_scene->loadLayout(sDotContent);//gives error!
+		//connect(_scene, SIGNAL(nodeContextMenu(QGVNode*)), SLOT(nodeContextMenu(QGVNode*)));
+		//connect(_scene, SIGNAL(nodeDoubleClick(QGVNode*)), SLOT(nodeDoubleClick(QGVNode*)));
+		//_view->setScene(_scene);
+		return true;
+	}
+	else
+	{
+		//Configure scene attributes
+		_scene->setGraphAttribute("label", "Experiment Structure");
+		_scene->setGraphAttribute("splines", "spline");//"polyline");//"spline");//"line");//"ortho");
+		_scene->setGraphAttribute("rankdir", "LR");
+		//_scene->setGraphAttribute("concentrate", "true"); //Error !
+		_scene->setGraphAttribute("nodesep", "0.2");
+
+		_scene->setNodeAttribute("shape", "box");
+		//_scene->setNodeAttribute("orientation", "0");
+		_scene->setNodeAttribute("style", "filled");
+		_scene->setNodeAttribute("fillcolor", "lightgrey");
+		_scene->setNodeAttribute("height", "1.2");
+
+		_scene->setNodeAttribute("labelfontname", "Times-Bold");
+		_scene->setNodeAttribute("labelfontsize", "6");
+		_scene->setNodeAttribute("labelfontcolor", "red");
+
+		_scene->setEdgeAttribute("minlen", "3");
+		//_scene->setEdgeAttribute("dir", "both");
+
+
+		//START AND END EXPERIMENT//
+		expSceneItems.gvStartExperimentNode = _scene->addNode("Start of\n experiment");
+		expSceneItems.gvStartExperimentNode->setAttribute("shape", "hexagon");
+		expSceneItems.gvEndExperimentNode = _scene->addNode("End of\n experiment");
+		expSceneItems.gvEndExperimentNode->setAttribute("shape", "hexagon");
+
+		//BLOCKS//
+		if(expSceneItems.lBlocks.isEmpty() == false)
+		{
+			for (int i=0;i<expSceneItems.lBlocks.count();i++)
 			{
-				sBlockName = "Block " + QString::number(i);
-				tmpGraph.append(_scene->addSubGraph(sBlockName));
-				tmpGraph.last()->setAttribute("label", sBlockName + " Label");
-				//tmpGraph.last()
-				tmpNodeInt.append(tmpGraph.last()->addNode(sBlockName + "(internal)\nTrials: 6\nTriggers(int): 2\nTriggers(ext): 1"));
-				tmpNodeLoops.append(tmpGraph.last()->addNode("Loops"));
+				expSceneItems.lBlocks[i].gvNode = _scene->addNode(QString("%1 %2").arg(expSceneItems.lBlocks[i].sName).arg(expSceneItems.lBlocks[i].nNumber));
+				if(i==0)
+					_scene->setRootNode(expSceneItems.lBlocks[i].gvNode);
 			}
-			//QGVNode *node1 = _scene->addNode("Block 1");
-			//node1->setIcon(QImage(":/icons/Gnome-System-Run-64.png"));
+		}
+		else
+		{
+			return false;//no blocks defined...
+		}
 
-			//Add some edges(Connections)
-			for(int i=0;i<nBlockCount-1;i++)
-			{	
-				tmpConnectionLoops.append(_scene->addEdge(tmpNodeInt[i], tmpNodeInt[i+1], "Connection()"));
-				tmpConnectionLoops.last()->setAttribute("color", "blue");
-				tmpConnectionLoops.last()->setAttribute("weight", "9999");
+		//AUTO-CONNECTIONS//
+		QGVNode *tmpSourceBlock = NULL;
+		QGVNode *tmpTargetBlock = NULL;
+		for (int i=0;i<expSceneItems.lAutoConns.count();i++)
+		{	
+			tmpSourceBlock = NULL;
+			tmpTargetBlock = NULL;
+			if(expSceneItems.lAutoConns[i].nSourceBlockId >= 0)
+			{
+				if(expSceneItems.lAutoConns[i].nTargetBlockId >= 0)//Block to Block connection
+				{
+					tmpSourceBlock = getGVNodePointer(expSceneItems.lAutoConns[i].nSourceBlockId);
+					if(tmpSourceBlock)
+					{
+						tmpTargetBlock = getGVNodePointer(expSceneItems.lAutoConns[i].nTargetBlockId);
+						if(tmpTargetBlock)
+						{
+							expSceneItems.lAutoConns[i].gvEdge = _scene->addEdge(tmpSourceBlock, tmpTargetBlock, "Middle()");
+							expSceneItems.lAutoConns[i].gvEdge->setAttribute("color", "brown");
+							expSceneItems.lAutoConns[i].gvEdge->setAttribute("weight", "9999");
+							continue;
+						}
+					}
+				}
+				else //End of experiment, no target
+				{
+					tmpSourceBlock = getGVNodePointer(expSceneItems.lAutoConns[i].nSourceBlockId);
+					if(tmpSourceBlock)
+					{
+						expSceneItems.lAutoConns[i].gvEdge = _scene->addEdge(tmpSourceBlock, expSceneItems.gvEndExperimentNode, "End()");
+						expSceneItems.lAutoConns[i].gvEdge->setAttribute("color", "red");
+						//expSceneItems.lAutoConns[i].gvEdge->setAttribute("weight", "9999");
+						continue;
+					}
+				}
 			}
+			else
+			{
+				if(expSceneItems.lAutoConns[i].nTargetBlockId >= 0)//Start of Experiment, no source
+				{
+					tmpTargetBlock = getGVNodePointer(expSceneItems.lAutoConns[i].nTargetBlockId);
+					if(tmpTargetBlock)
+					{
+						expSceneItems.lAutoConns[i].gvEdge = _scene->addEdge(expSceneItems.gvStartExperimentNode, tmpTargetBlock, "Start()");
+						expSceneItems.lAutoConns[i].gvEdge->setAttribute("color", "green");
+						//expSceneItems.lAutoConns[i].gvEdge->setAttribute("weight", "9999");
+						continue;
+					}
+				}
+			}
+			//Could not handle the connection, so delete it
+			expSceneItems.lAutoConns.removeAt(i);
+			i--;
+		}
 
-			//Add some edges(Loops)
-			tmpBackLoops.append(_scene->addEdge(tmpNodeLoops[3], tmpNodeInt[2], "Loop 1"));
-			tmpBackLoops.last()->setAttribute("color", "green");
-			//tmpBackLoops.append(_scene->addEdge(tmpNodeLoops[3], tmpNodeInt[0], "Loop 3"));
-			//tmpBackLoops.last()->setAttribute("color", "green");
-			//tmpBackLoops.append(_scene->addEdge(tmpNodeLoops[3], tmpNodeInt[1], "Loop 2b"));//a is drawn above b!
-			//tmpBackLoops.last()->setAttribute("color", "green");
-			//tmpBackLoops.last()->setAttribute("weight", "1");
-			//tmpBackLoops.append(_scene->addEdge(tmpNodeLoops[3], tmpNodeInt[1], "Loop 2a"));//a is drawn above b!
-			//tmpBackLoops.last()->setAttribute("color", "green");
-			//tmpBackLoops.last()->setAttribute("weight", "2");
-
-			tmpBackLoops.append(_scene->addEdge(tmpNodeInt[2], tmpNodeLoops[3], "Loop 4"));
-			tmpBackLoops.last()->setAttribute("color", "green");
-
-			tmpBackLoops.append(_scene->addEdge(tmpNodeInt[2], tmpNodeLoops[1], "Loop 5"));
-			tmpBackLoops.last()->setAttribute("color", "green");
-			tmpBackLoops.append(_scene->addEdge( tmpNodeLoops[1], tmpNodeInt[2],"Loop 6"));
-			tmpBackLoops.last()->setAttribute("color", "green");
-			tmpBackLoops.append(_scene->addEdge( tmpNodeInt[0], tmpNodeInt[4],"Loop 7"));
-			tmpBackLoops.last()->setAttribute("color", "green");
-
-			//Add Start and End
-			tmpNodeInt.append(_scene->addNode("End of\n experiment"));
-			tmpNodeInt.last()->setAttribute("shape", "hexagon");
-			_scene->addEdge(tmpNodeInt[nBlockCount-1], tmpNodeInt.last(), "XXX")->setAttribute("color", "red");
-			tmpNodeInt.append(_scene->addNode("Start of\n experiment"));
-			tmpNodeInt.last()->setAttribute("shape", "hexagon");
-			_scene->addEdge(tmpNodeInt.last(), tmpNodeInt[0], "XXX")->setAttribute("color", "red");
-
-	*/
-	
-		//_view = new QGraphicsViewEc(this);
-			_view->setScene(_scene);
-
-			//Configure scene attributes
-			_scene->setGraphAttribute("label", "Experiment Structure");
-			_scene->setGraphAttribute("splines", "spline");//"polyline");//"spline");//"line");//"ortho");
-			_scene->setGraphAttribute("rankdir", "LR");
-			//_scene->setGraphAttribute("concentrate", "true"); //Error !
-			_scene->setGraphAttribute("nodesep", "0.2");
-
-			_scene->setNodeAttribute("shape", "box");
-			//_scene->setNodeAttribute("orientation", "0");
-			_scene->setNodeAttribute("style", "filled");
-			_scene->setNodeAttribute("fillcolor", "lightgrey");
-			_scene->setNodeAttribute("height", "1.2");
-
-			_scene->setNodeAttribute("labelfontname", "Times-Bold");
-			_scene->setNodeAttribute("labelfontsize", "6");
-			_scene->setNodeAttribute("labelfontcolor", "red");
-
-			_scene->setEdgeAttribute("minlen", "3");
-
-			//QList<QGraphicsItem*> items = _scene->items();//QRectF(pos - QPointF(1,1), QSize(3,3)));
-			//foreach(QGraphicsItem *item, items)
-			//	if (item->type() > QGraphicsItem::UserType)
-			QGVNode *tmpNode = _scene->addNode("label1");
-			_scene->applyLayout();
-			//_scene->setRootNode(tmpNode);
-			//_scene->setSceneRect(QRectF(0, 0, 400, 400));
-			//QRectF tmpRect = _scene->sceneRect();
-			//_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
-			//_view->setScene(_scene);
-
-			
-			//_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
-			//_scene->saveLayout("D:\\Projects\\Sven.Gijsen\\StimulGL\\Install\\debug.png",1);
-
-
-			//rectNeededSize
-			//gView->ensureVisible(rectNeededSize, dLeftCanvasMargin, dTopCanvasMargin);
-			//gView->centerOn(rectNeededSize.x()/2,rectNeededSize.y()/2);
-
+		//LOOPS//
+		if(expSceneItems.lLoops.isEmpty() == false)
+		{
+			QGVNode *tmpSourceGVNode = NULL;
+			QGVNode *tmpTargetGVNode = NULL;
+			for (int i=0;i<expSceneItems.lLoops.count();i++)
+			{
+				tmpSourceGVNode = getGVNodePointer(expSceneItems.lLoops[i].nSourceBlockId);
+				tmpTargetGVNode = getGVNodePointer(expSceneItems.lLoops[i].nTargetBlockId);
+				if((tmpSourceGVNode) && (tmpTargetGVNode))
+					expSceneItems.lLoops[i].gvEdge = _scene->addEdge(tmpSourceGVNode,tmpTargetGVNode,QString("%1 %2").arg(expSceneItems.lLoops[i].sName).arg(expSceneItems.lLoops[i].nNumber));
+			}
+		}
+		//Layout scene
+		_scene->applyLayout();
+				
+		QRectF currentSceneRect = _scene->itemsBoundingRect();
+		qreal dScaleFactor = ((ui->graphicsView->size().width()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.width();
+		ui->graphicsView->scale(dScaleFactor, dScaleFactor);
+		ui->graphicsView->centerOn(currentSceneRect.center());
+		ui->graphicsView->centerOn(_scene->itemsBoundingRect().center());
+	}
 	return true;
 
-	//Configure scene attributes
-	_scene->setGraphAttribute("label", "Experiment Structure");
-	_scene->setGraphAttribute("splines", "spline");//"polyline");//"spline");//"line");//"ortho");
-	_scene->setGraphAttribute("rankdir", "LR");
-	//_scene->setGraphAttribute("concentrate", "true"); //Error !
-	_scene->setGraphAttribute("nodesep", "0.2");
-
-	_scene->setNodeAttribute("shape", "box");
-	//_scene->setNodeAttribute("orientation", "0");
-	_scene->setNodeAttribute("style", "filled");
-	_scene->setNodeAttribute("fillcolor", "lightgrey");
-	_scene->setNodeAttribute("height", "1.2");
-
-	_scene->setNodeAttribute("labelfontname", "Times-Bold");
-	_scene->setNodeAttribute("labelfontsize", "6");
-	_scene->setNodeAttribute("labelfontcolor", "red");
-
-	_scene->setEdgeAttribute("minlen", "3");
-	//_scene->setEdgeAttribute("dir", "both");
-	
-	if(expSceneItems.lBlocks.isEmpty() == false)
-	{
-		for (int i=0;i<expSceneItems.lBlocks.count();i++)
-		{
-			expSceneItems.lBlocks[i].gvNode = _scene->addNode(QString("%1 %2").arg(expSceneItems.lBlocks[i].sName).arg(expSceneItems.lBlocks[i].nNumber));
-			if(i==0)
-				_scene->setRootNode(expSceneItems.lBlocks[i].gvNode);
-		}
-	}
-
-	if(expSceneItems.lLoops.isEmpty() == false)
-	{
-		QGVNode *tmpSourceGVNode = NULL;
-		QGVNode *tmpTargetGVNode = NULL;
-		for (int i=0;i<expSceneItems.lLoops.count();i++)
-		{
-			tmpSourceGVNode = getGVNodePointer(expSceneItems.lLoops[i].nSourceBlockId);
-			tmpTargetGVNode = getGVNodePointer(expSceneItems.lLoops[i].nTargetBlockId);
-			if((tmpSourceGVNode) && (tmpTargetGVNode))
-				expSceneItems.lLoops[i].gvEdge = _scene->addEdge(tmpSourceGVNode,tmpTargetGVNode,QString("%1 %2").arg(expSceneItems.lLoops[i].sName).arg(expSceneItems.lLoops[i].nNumber));
-		}
-	}
-	//gvEdge = 
-
-	
-
-
-    //Layout scene
-    _scene->applyLayout();
-	//QRectF tmpRect = _scene->sceneRect();
-	_view->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
-	_view->setScene(_scene);
+	//node1->setIcon(QImage(":/icons/Gnome-System-Run-64.png"));
+	//QList<QGraphicsItem*> items = _scene->items();//QRectF(pos - QPointF(1,1), QSize(3,3)));
+	//foreach(QGraphicsItem *item, items)
+	//	if (item->type() > QGraphicsItem::UserType)
+			
+	//ui->graphicsView->fitInView(_scene->sceneRect(), Qt::KeepAspectRatio);
+	//rectNeededSize
+	//gView->ensureVisible(rectNeededSize, dLeftCanvasMargin, dTopCanvasMargin);
+	//gView->centerOn(rectNeededSize.x()/2,rectNeededSize.y()/2);
 }
 
 void ExperimentStructureVisualizer::nodeContextMenu(QGVNode *node)
@@ -391,18 +376,34 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 
 	int nExpBlockCount = ExpStruct->getBlockCount();
 	cBlockStructure *tmpBlock = NULL;
+	cBlockStructure *lastBlock = NULL;
 	int nNextSearchBlockNumber = 0;
 	int nNextSearchLoopID = 0;
 	expBlockItemStrc tmpBlockItem;
 	expLoopItemStrc tmpLoopItem;
-
+	
+	expAutoConnItemStrc tmpAutoConnItem;
+	
 	expSceneItems.sExperimentName = ExpStruct->getExperimentName();
 	for (int i=0;i<nExpBlockCount;i++)
 	{
+		tmpAutoConnItem.gvEdge = NULL;
+		tmpAutoConnItem.nSourceBlockId = -1;
+		tmpAutoConnItem.nTargetBlockId = -1;
+		//if(i==0)
+		//	tmpAutoConnItem.tConnType = AutoConnType_StartToBlock;
+		//else
+		//	tmpAutoConnItem.tConnType = AutoConnType_BlockToBlock;
+
+		lastBlock = tmpBlock;
 		tmpBlock = NULL;
 		tmpBlock = ExpStruct->getNextClosestBlockNumberByFromNumber(nNextSearchBlockNumber);
 		if(tmpBlock) 
 		{
+			if(lastBlock)
+				tmpAutoConnItem.nSourceBlockId = lastBlock->getBlockID();
+			tmpAutoConnItem.nTargetBlockId = tmpBlock->getBlockID();
+
 			nNextSearchBlockNumber = tmpBlock->getBlockNumber() + 1;
 			tmpBlockItem.nId = tmpBlock->getBlockID();
 			tmpBlockItem.nNumber = tmpBlock->getBlockNumber();
@@ -410,24 +411,15 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 			//tmpBlockItem.gvNode = _scene->addNode(QString("%1 %2").arg(tmpBlockItem.sName).arg(tmpBlockItem.nNumber));
 			tmpBlockItem.gvNode = NULL;
 			expSceneItems.lBlocks.append(tmpBlockItem);
-
-
-			//ExperimentGraphBlock *gBlock = new ExperimentGraphBlock(NULL);
-			//gScene->addItem(gBlock);
-			//gBlock->setName(tmpBlock->getBlockName());
-			//gBlock->setID(tmpBlock->getBlockID());
-			//gBlock->addPort(tmpBlock->getBlockName(), false, ExperimentGraphPort::NamePort);
-			//gBlock->addPort(QString::number(tmpBlock->getBlockID()) + ": Blocknumber " + QString::number(tmpBlock->getBlockNumber()), false, ExperimentGraphPort::TypePort);
-			//gBlock->addInputPort("In");
-			//gBlock->addOutputPort("Out");
-			//tmpRect = gBlock->boundingRect();
-			//gBlock->setPos(dLeftCanvasMargin + (i*dBlockDistance) + tmpRect.width()/2, dTopCanvasMargin + tmpRect.height()/2);
-			//mBlockPositions.insert(gBlock->getID(),gBlock->pos());
-			//if((tmpRect.x() + tmpRect.width() + (dLeftCanvasMargin*2)) > rectNeededSize.width())
-			//	rectNeededSize.setWidth(tmpRect.x() + tmpRect.width() + (dLeftCanvasMargin*2));
-			//if((tmpRect.y() + tmpRect.height() + (dTopCanvasMargin*2)) > rectNeededSize.height())
-			//	rectNeededSize.setHeight(tmpRect.y() + tmpRect.height()  + (dTopCanvasMargin*2));
-			////gBlock = b->clone();
+		}
+		expSceneItems.lAutoConns.append(tmpAutoConnItem);
+		if(i==(nExpBlockCount-1))
+		{
+			//tmpAutoConnItem.tConnType = AutoConnType_BlockToEnd;
+			tmpAutoConnItem.nSourceBlockId = tmpBlock->getBlockID();
+			tmpAutoConnItem.nTargetBlockId = -1;
+			//tmpAutoConnItem.gvEdge = NULL;
+			expSceneItems.lAutoConns.append(tmpAutoConnItem);
 		}
 	}
 	nNextSearchBlockNumber = 0;
@@ -459,39 +451,21 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 						tmpLoopItem.nNumberOfLoops = tmpLoop->getNumberOfLoops();
 						tmpLoopItem.nSourceBlockId = tmpBlock->getBlockID();
 						tmpLoopItem.nTargetBlockId = nTargetBlockID;
-
-
-
-						//if((tmpSourceGVNode)&&(tmpTargetGVNode))
-						//	tmpLoopItem.gvEdge = _scene->addEdge(tmpSourceGVNode,tmpTargetGVNode,QString("%1 %2").arg(tmpLoopItem.sName).arg(tmpLoopItem.nNumber));
-						//else
-							tmpLoopItem.gvEdge = NULL;
-						
+						tmpLoopItem.gvEdge = NULL;						
 						expSceneItems.lLoops.append(tmpLoopItem);
-
-						//if ((mBlockPositions.contains(nTargetBlockID)) && (mBlockPositions.contains(tmpBlock->getBlockID())))
-						//{
-							//tmpFromGraphItem = itemAt(mBlockPositions.value(tmpBlock->getBlockID()));
-							//tmpToGraphItem = itemAt(mBlockPositions.value(nTargetBlockID));
-							//tmpFromBlockGraphItem = (ExperimentGraphBlock*)tmpFromGraphItem;
-							//tmpToBlockGraphItem = (ExperimentGraphBlock*)tmpToGraphItem;		
-							//QVector<ExperimentGraphPort*> tmpFromPorts = tmpFromBlockGraphItem->ports();
-							//QVector<ExperimentGraphPort*> tmpToPorts = tmpToBlockGraphItem->ports();
-							//createConnection(tmpFromPorts[3],tmpToPorts[2]);
-						//}
 					}
 				}
 			}
 		}
 	}
-	return true;//drawGraph();
+	return drawGraph();
 }
 
-QGVNode *ExperimentStructureVisualizer::getGVNodePointer(const int &nTargetBlockID)
+QGVNode *ExperimentStructureVisualizer::getGVNodePointer(const int &nBlockID)
 {
 	for(int i=0;i<expSceneItems.lBlocks.count();i++)
 	{
-		if(expSceneItems.lBlocks[i].nId == nTargetBlockID)
+		if(expSceneItems.lBlocks[i].nId == nBlockID)
 		{
 			return expSceneItems.lBlocks[i].gvNode;
 		}
