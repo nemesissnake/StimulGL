@@ -24,6 +24,7 @@
 #include <QHash>
 #include <QColor>
 #include <QScriptEngine>
+#include <QRegularExpression>
 
 template <typename T>
 QVariantList toVariantList( const QList<T> &list )
@@ -31,7 +32,6 @@ QVariantList toVariantList( const QList<T> &list )
 	QVariantList newList;
 	foreach( const T &item, list )
 		newList << item;
-
 	return newList;
 }
 
@@ -46,7 +46,43 @@ enum ExperimentParameterTypeName
 	Experiment_ParameterType_Integer		= 3, /*!< enum value 3 */
 	Experiment_ParameterType_Float			= 4, /*!< enum value 4 */
 	Experiment_ParameterType_Double			= 5, /*!< enum value 5 */
-	Experiment_ParameterType_Boolean		= 6, /*!< enum value 6 */
+	Experiment_ParameterType_Boolean		= 6  /*!< enum value 6 */
+	//Experiment_ParameterType_Enumeration	= 7  /*!< enum value 7 */
+};
+
+struct ExperimentParameterMinMaxRestriction
+{
+	bool bEnabled;
+	QVariant vValue;
+};
+
+struct ExperimentParameterDefinitionRestriction
+{
+	QStringList lAllowedValues;
+	ExperimentParameterMinMaxRestriction MinimalValue;
+	ExperimentParameterMinMaxRestriction MaximalValue;
+	QRegularExpression rRegularExpression;
+};
+
+struct ExperimentParameterDefinitionDependency
+{
+	int nDenpendencyId;
+	QRegularExpression rRegularExpression;
+};
+
+struct ExperimentParameterDefinition
+{
+	int nId;
+	bool bEnabled;
+	QString sName;
+	QString sDisplayName;
+	QString sGroupName;
+	QString sInformation;
+	ExperimentParameterTypeName eType;
+	QVariant vDefaultValue;
+	//QList<ExperimentParameterDefinitionRestriction> Restrictions;
+	ExperimentParameterDefinitionRestriction Restriction;
+	QList<ExperimentParameterDefinitionDependency> Dependencies;
 };
 
 class ExperimentParameterDefinitionContainer
@@ -56,8 +92,12 @@ public:
 	ExperimentParameterDefinitionContainer();
 	~ExperimentParameterDefinitionContainer();
 
-private:
+	int getID(const QString &sName);
+	QString getName(const int &nId);
+	ExperimentParameterDefinition *item(const int &nId);
 
+private:
+	QList<ExperimentParameterDefinition> expParamDefinitions;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -91,7 +91,7 @@ Attributes only apply to readonly non user data, like the ID
                         </parameter>
                         <parameter ID="7">
                             <name>FixationColor</name>
-                            <value>#FF0000</value>
+                            <value>#FF1122</value>
                         </parameter>
                         <parameter ID="8">
                             <name>StimuliRefreshRate</name>

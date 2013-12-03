@@ -27,8 +27,7 @@
 #include "TriggerTimer.h"
 #include "RetinotopyMapper.h"
 #include "QML2Viewer.h"
-#include "ExperimentGraphicEditor/ExperimentGraphicEditor.h"
-//#include "ExperimentStructureVisualizer/ExperimentStructureVisualizer.h"
+#include "ExperimentUserInterface/ExperimentGraphicEditor.h"
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
@@ -78,7 +77,7 @@ void ExperimentManager::DefaultConstruct()
 	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
 	//visExpEditor = NULL;
-	expStructVisualizer = NULL;
+	//expStructVisualizer = NULL;
 	ExpGraphicEditor = NULL;
 	RegisterMetaTypes();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
@@ -681,12 +680,12 @@ bool ExperimentManager::cleanupExperiment()
 	//	visExpEditor = NULL;
 
 	//}
-	if(expStructVisualizer)
-	{
-		expStructVisualizer->close();
-		delete expStructVisualizer;
-		expStructVisualizer = NULL;
-	}
+	//if(expStructVisualizer)
+	//{
+	//	expStructVisualizer->close();
+	//	delete expStructVisualizer;
+	//	expStructVisualizer = NULL;
+	//}
 	if (currentExperimentTree)
 	{
 		delete currentExperimentTree;

@@ -36,9 +36,6 @@
 #include "XmlMessageHandler.h"
 #include "ExperimentParameter.h"
 #include "ExperimentStructures.h"
-#include "ExperimentStructureVisualizer/ExperimentStructureVisualizer.h"
-//#include "ExperimentGraphEditor.h"
-//#include "visualexperimenteditor/VisualExperimentEditor.h"
 
 #ifdef Q_OS_WIN32 //Are we on Windows?
 #include <windows.h>
@@ -51,7 +48,6 @@ using namespace ExperimentManagerNameSpace;
 class cExperimentStructure;
 class ExperimentGraphicEditor;
 class ExperimentTreeModel;
-class ExperimentStructureVisualizer;
 
 //!  The ExperimentManager class. 
 /*!
@@ -407,8 +403,6 @@ private:
 	ExperimentGraphicEditor *ExpGraphicEditor;
 	ExperimentState experimentCurrentState;
 	QHash<QString, int> experimentStateHash;
-	//VisualExperimentEditor *visExpEditor;
-	ExperimentStructureVisualizer *expStructVisualizer;
 
 	QByteArray currentExperimentFile;
 	QByteArray currentValidationFile;
