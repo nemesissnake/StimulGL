@@ -454,6 +454,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 		gridLayout = new QGridLayout();
 		ExperimentTreeItem *child;
 		QVariant tmpVarValue;
+		bool bDoParseDependencies = false;
 		if(tmpParametersWidget)
 		{
 			delete tmpParametersWidget;
@@ -589,25 +590,29 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 														qDebug() << __FUNCTION__ << "wrong defined boolean value for parameter " << sName << "(> " << child->child(j)->getValue() << ")";
 														tmpVarValue = tmpParamDef->vDefaultValue;
 													}
-													tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue);
+													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+														bDoParseDependencies = true;
 													gridLayout->addWidget(tmpParametersWidget,i,1);
 												}	
 												else if(tmpParamDef->eType == Experiment_ParameterType_String)
 												{
 													tmpVarValue = sValue;
-													tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue);
+													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+														bDoParseDependencies = true;
 													gridLayout->addWidget(tmpParametersWidget,i,1);
 												}
 												else if(tmpParamDef->eType == Experiment_ParameterType_Integer)
 												{
 													tmpVarValue = sValue.toInt();
-													tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue);
+													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+														bDoParseDependencies = true;
 													gridLayout->addWidget(tmpParametersWidget,i,1);
 												}
 												else if(tmpParamDef->eType == Experiment_ParameterType_Color)
 												{
 													tmpVarValue = QColor(sValue);
-													tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue);
+													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+														bDoParseDependencies = true;
 													gridLayout->addWidget(tmpParametersWidget,i,1);
 												}
 											}
@@ -648,6 +653,11 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 					}
 				}
 			}
+		}
+		if(tmpParametersWidget)
+		{
+			if(bDoParseDependencies)
+				tmpParametersWidget->parseDependencies();
 		}
 		graphicWidget->setLayout(gridLayout);
 		scrollArea->setWidget(graphicWidget);

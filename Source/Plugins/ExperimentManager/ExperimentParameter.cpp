@@ -103,13 +103,13 @@ ExperimentParameterDefinitionContainer::ExperimentParameterDefinitionContainer()
 	//tmpExpParamDef.Restriction.MinimalValue.vValue = 0;
 	tmpExpParamDef.Restriction.MaximalValue.bEnabled = false;
 	//tmpExpParamDef.Restriction.MaximalValue.vValue = 0;	
-	tmpExpParamDefRestriction.rRegularExpression.setPattern("#([0-9a-fA-f][0-9a-fA-f])\\g{1}\\g{1}");
+	//tmpExpParamDefRestriction.rRegularExpression.setPattern("#([0-9a-fA-f][0-9a-fA-f])\\g{1}\\g{1}");
 	//tmpExpParamDefRestriction.rRegularExpression.setPatternOptions();
 	//tmpExpParamDef.Restrictions.append(tmpExpParamDefRestriction);
-	//tmpExpParamDefDependency.nDenpendencyId = 0;
-	//tmpExpParamDefDependency.rRegularExpression.setPattern("");
+	tmpExpParamDefDependency.sDependencyName = "RetinoPattern";
+	tmpExpParamDefDependency.rRegularExpression.setPattern("PolarAngLE");//yes("PolarAngl");//no("PolarAngl1");
 	//tmpExpParamDefDependency.rRegularExpression.setPatternOptions();
-	//tmpExpParamDef.Dependencies.append(tmpExpParamDefDependency);
+	tmpExpParamDef.Dependencies.append(tmpExpParamDefDependency);
 	expParamDefinitions.append(tmpExpParamDef);
 	//expParamDefinitions.last().Restriction.lAllowedValues << "PolarAngle" << "Eccentricity" << "MovingBar" << "MovingDots" << "Fixation" << "Custom";
 }

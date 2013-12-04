@@ -24,6 +24,7 @@ ExperimentParameterVisualizer::ExperimentParameterVisualizer(QWidget *parent) : 
 	propertyEditor = NULL;
 	mainLayout = NULL;
 	lGroupProperties.manager = NULL;
+	lVariantPropertyManager = NULL;
 
 	ui = new Ui::ExperimentParameterVisualizer();
 	ui->setupUi(this);
@@ -36,71 +37,19 @@ ExperimentParameterVisualizer::ExperimentParameterVisualizer(QWidget *parent) : 
 
 ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 {
-	int i,j;
-	if(lBoolPropertyManagers.isEmpty() == false)
+	int i;
+	if(lVariantPropertyManager)
 	{
-		for (i=0;i<lBoolPropertyManagers.count();i++)
-		{
-			delete lBoolPropertyManagers[i];
-		}
-		lBoolPropertyManagers.clear();
+		delete lVariantPropertyManager;
+		lVariantPropertyManager = NULL;
 	}
-	//if(lStringPropertyManagers.isEmpty() == false)
-	//{
-	//	for (i=0;i<lStringPropertyManagers.count();i++)
-	//	{
-	//		delete lStringPropertyManagers[i];
-	//	}
-	//	lStringPropertyManagers.clear();
-	//}
-	if(lEnumPropertyManagers.isEmpty() == false)
+	for (i=0;i<lGroupProperties.lProperties.count();i++)
 	{
-		for (i=0;i<lEnumPropertyManagers.count();i++)
-		{
-			delete lEnumPropertyManagers[i];
-		}
-		lEnumPropertyManagers.clear();
-	}
-	if(lIntPropertyManagers.isEmpty() == false)
-	{
-		for (i=0;i<lIntPropertyManagers.count();i++)
-		{
-			delete lIntPropertyManagers[i];
-		}
-		lIntPropertyManagers.clear();
-	}
-	if(lVariantPropertyManagers.isEmpty() == false)
-	{
-		for (i=0;i<lVariantPropertyManagers.count();i++)
-		{
-			delete lVariantPropertyManagers[i];
-		}
-		lVariantPropertyManagers.clear();
-	}
-	
-		
-	
-	//if(lGroupProperties.isEmpty() == false)
-	//{
-	//	for (int i=0;i<lGroupProperties.count();i++)
-	//	{
-	//		delete lGroupProperties[i]->manager;
-	//		for (j=0;j<lGroupProperties[i]->lProperties.count();j++)
-	//		{
-	//			delete lGroupProperties[i]->lProperties[j];
-	//		}
-	//		lGroupProperties[i]->lProperties.clear();
-	//	}
-	//	lGroupProperties.clear();
-	//}
-	for (j=0;j<lGroupProperties.lProperties.count();j++)
-	{
-		delete lGroupProperties.lProperties[j];
+		delete lGroupProperties.lProperties[i];
 	}
 	lGroupProperties.lProperties.clear();
 	if(lGroupProperties.manager)
 		delete lGroupProperties.manager;
-
 	if(propertyEditor)
 	{
 		delete propertyEditor;
@@ -111,7 +60,6 @@ ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 		delete mainLayout;
 		mainLayout = NULL;
 	}
-
 	delete ui;
 	emit destroyed(this);
 }
@@ -122,30 +70,30 @@ int ExperimentParameterVisualizer::getPropertyGroupIndex(const QString &sPropert
 		return -2;
 	else if(lGroupProperties.manager == NULL)
 		return -1;
-	//for (int i=0;i<lGroupProperties.count();i++)
-	//{
-		if(lGroupProperties.lProperties.isEmpty())
-			return -1;//continue;
-		for (int j=0;j<lGroupProperties.lProperties.count();j++)
+	if(lGroupProperties.lProperties.isEmpty())
+		return -1;
+	for (int j=0;j<lGroupProperties.lProperties.count();j++)
+	{
+		if(lGroupProperties.lProperties[j]->propertyName() == sPropertyGroupName)//Case sensitive!
 		{
-			if(lGroupProperties.lProperties[j]->propertyName() == sPropertyGroupName)//Case sensitive!
-			{
-				return j;
-			}
+			return j;
 		}
-	//}
+	}
 	return -1;
 }
 
-bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinition *expParamDef, const QVariant &vValue)
+bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinition *expParamDef, const QVariant &vValue, bool bSkipDependencyParse)
 {
 	if(expParamDef == NULL)
 		return false;
+
 	bool bNewGroup = false;
 	bool bDoMinMax = false;
 	bool bDoEnumeratedList = false;
 	int nPropertyGroupIndex = getPropertyGroupIndex(expParamDef->sGroupName);
-	lVariantPropertyManagers.append(new QtVariantPropertyManager(this));
+
+	if(lVariantPropertyManager == NULL)
+		lVariantPropertyManager = new QtVariantPropertyManager(this);
 
 	QVariant::Type varType;
 	if(expParamDef->eType == Experiment_ParameterType_Color)
@@ -178,7 +126,8 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 		varType = QVariant::String;
 	}
 
-	QtVariantProperty *item1 = lVariantPropertyManagers.last()->addProperty(varType,expParamDef->sDisplayName);
+	QtVariantProperty *item1 = lVariantPropertyManager->addProperty(varType,expParamDef->sDisplayName);
+	item1->setPropertyId(expParamDef->sName);// + "_" + QString::number(expParamDef->nId));
 
 	if(bDoEnumeratedList)
 	{
@@ -192,17 +141,15 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 		//enumManager->setEnumIcons(item8, enumIcons);
 		//set value?
 	}
-
 	if(bDoMinMax)
 	{
 		if(expParamDef->Restriction.MinimalValue.bEnabled)
 			item1->setAttribute(QLatin1String("minimum"), expParamDef->Restriction.MinimalValue.vValue);
 		if(expParamDef->Restriction.MaximalValue.bEnabled)
 			item1->setAttribute(QLatin1String("maximum"), expParamDef->Restriction.MaximalValue.vValue);
-	}
-	
+	}	
 	QtVariantEditorFactory *tmpFactory = new QtVariantEditorFactory(this);
-	propertyEditor->setFactoryForManager(lVariantPropertyManagers.last(), tmpFactory);
+	propertyEditor->setFactoryForManager(lVariantPropertyManager, tmpFactory);
 
 	if(nPropertyGroupIndex == -1)
 	{
@@ -228,15 +175,15 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 
 	if(varType == QVariant::Color)
 	{
-		lVariantPropertyManagers.last()->setValue(item1,QColor(vValue.toString()));
+		lVariantPropertyManager->setValue(item1,QColor(vValue.toString()));
 	}
 	else if(varType == QVariant::Bool)
 	{
-		lVariantPropertyManagers.last()->setValue(item1,vValue.toBool());
+		lVariantPropertyManager->setValue(item1,vValue.toBool());
 	}
 	else if(varType == QVariant::Int)
 	{
-		lVariantPropertyManagers.last()->setValue(item1,vValue.toInt());
+		lVariantPropertyManager->setValue(item1,vValue.toInt());
 	}
 	else if(varType == QVariant::String)
 	{
@@ -247,26 +194,115 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 			{
 				if(expParamDef->Restriction.lAllowedValues.at(i).toLower() == sSearchVal)
 				{
-					//lEnumPropertyManagers.last()->setValue(item1,i);
-					lVariantPropertyManagers.last()->setValue(item1,i);
+					lVariantPropertyManager->setValue(item1,i);
 					break;
 				}
 			}
 		}
 		else
 		{
-			lVariantPropertyManagers.last()->setValue(item1,vValue.toString());
+			lVariantPropertyManager->setValue(item1,vValue.toString());
 		}		
 	}
 	else
 	{
-		lVariantPropertyManagers.last()->setValue(item1,vValue.toString());
+		lVariantPropertyManager->setValue(item1,vValue.toString());
 	}
 	
-
 	item1->setToolTip(expParamDef->sInformation);
 	item1->setWhatsThis("");
 	item1->setStatusTip("");
+
+	if(expParamDef->Dependencies.isEmpty() == false)
+	{
+		for (int k=0;k<expParamDef->Dependencies.count();k++)
+		{
+			addDependency(item1,expParamDef->Dependencies[k]);
+		}
+	}
+	if(bSkipDependencyParse)
+		return true;
+	return parseDependencies();
+}
+
+bool ExperimentParameterVisualizer::addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependency &dependencyParamDef)
+{
+	propertyDependency tmpPropertyDependency;
+	tmpPropertyDependency.vProperty = variantProperty;
+	tmpPropertyDependency.definition = dependencyParamDef;
+	lPropertyDependencies.append(tmpPropertyDependency);
 	return true;
 }
+
+bool ExperimentParameterVisualizer::parseDependencies()
+{
+	if(lPropertyDependencies.isEmpty())
+		return true;
+	if(lVariantPropertyManager == NULL)
+		return true;
+	for (int k=0;k<lPropertyDependencies.count();k++)
+	{
+		//	QSet<QtProperty *>::const_iterator it;
+		//	for (it = lVariantPropertyManager->properties().cbegin(); it != lVariantPropertyManager->properties().cend(); ++it)
+		//	{
+		//		*it = (*it).toLower();
+
+		QSet<QtProperty*>::const_iterator it = lVariantPropertyManager->properties().cbegin();
+		while (it != lVariantPropertyManager->properties().cend()) 
+		{
+			QString sID = (*it)->propertyId();
+			if(sID.isEmpty())
+			{
+				++it;
+				continue;
+			}
+			QString tmpName = (*it)->propertyName();
+				
+			int nResult = QString::compare(lPropertyDependencies[k].definition.sDependencyName,sID,Qt::CaseInsensitive);
+			if(nResult==0)
+			{
+				//QRegularExpression regExp(lPropertyDependencies[k].definition.rRegularExpression, QRegularExpression::CaseInsensitiveOption);
+				QString tmpValue = (*it)->valueText();
+				QString tmpPattern = lPropertyDependencies[k].definition.rRegularExpression.pattern();
+				QRegularExpressionMatch match = lPropertyDependencies[k].definition.rRegularExpression.match(tmpValue);
+				//if(lPropertyDependencies[k].definition.rRegularExpression.match((*it)->valueText()).hasMatch())
+				if(match.hasMatch())
+				{
+					int a = 3;
+				}
+				else
+				{
+					int b = 3;
+				}
+
+				//QRegularExpressionMatch match = re.match("abc123 def");
+				//bool hasMatch = match.hasMatch();
+				
+				//for (int m=0;m<lVariantPropertyManager->properties().count();m++)
+				//{
+				//	if(lVariantPropertyManagers.at(m).)
+
+				//QString tmpName = lVariantPropertyManager->properties().values.at(m)->propertyName();
+				//	tmpName = tmpName;
+				//}
+				//lPropertyDependencies.at(k).vProperty->setEnabled(false);
+			}
+			++it;
+		}
+
+	//lVariantPropertyManagers
+	//if(tmpParamDef->Dependencies.isEmpty() == false)
+	//{
+	//	ExperimentParameterDefinition *dependencyParamDef;
+	//	for (int k=0;k<tmpParamDef->Dependencies.count();k++)
+	//	{
+	//		dependencyParamDef = tmpExpObjectParamDefs->item(nID);
+	//		if(dependencyParamDef->)
+	//	}
+	}
+
+	
+	return true;
+}
+
 

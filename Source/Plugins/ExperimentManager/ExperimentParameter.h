@@ -66,7 +66,7 @@ struct ExperimentParameterDefinitionRestriction
 
 struct ExperimentParameterDefinitionDependency
 {
-	int nDenpendencyId;
+	QString sDependencyName;
 	QRegularExpression rRegularExpression;
 };
 

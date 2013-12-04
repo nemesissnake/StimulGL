@@ -44,7 +44,9 @@ public:
 	ExperimentParameterVisualizer(const ExperimentParameterVisualizer& other){Q_UNUSED(other)};
 	~ExperimentParameterVisualizer();
 
-	bool addProperty(const ExperimentParameterDefinition *expParamDef, const QVariant &vValue);
+	bool addProperty(const ExperimentParameterDefinition *expParamDef, const QVariant &vValue, bool bSkipDependencyParse = true);
+	bool parseDependencies();
+	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependency &dependencyParamDef);
 
 private:
 	Ui::ExperimentParameterVisualizer *ui;
@@ -56,13 +58,16 @@ private:
 		QList<QtProperty *> lProperties;
 	};
 
+	struct propertyDependency
+	{
+		QtVariantProperty *vProperty;
+		ExperimentParameterDefinitionDependency definition;
+	};
+
 	QtAbstractPropertyBrowser *propertyEditor;
 	propertyGroupStruct lGroupProperties;
-	QList<QtBoolPropertyManager*> lBoolPropertyManagers;
-	//QList<QtStringPropertyManager*> lStringPropertyManagers;
-	QList<QtEnumPropertyManager*> lEnumPropertyManagers;
-	QList<QtIntPropertyManager*> lIntPropertyManagers;
-	QList<QtVariantPropertyManager*> lVariantPropertyManagers;
+	QtVariantPropertyManager* lVariantPropertyManager;
+	QList<propertyDependency> lPropertyDependencies;
 
 	int getPropertyGroupIndex(const QString &sPropertyGroupName);
 };
