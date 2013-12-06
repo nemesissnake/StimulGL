@@ -42,6 +42,7 @@
 #include "ExperimentTreeItem.h"
 #include "ExperimentStructureVisualizer.h"
 #include "ExperimentParameterVisualizer.h"
+#include "ExperimentParameterDefinition.h"
 
 ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(parent)//, ui(new Ui::ExperimentGraphicEditor)
 {
@@ -564,7 +565,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 								{
 									if(nID>=0)
 									{
-										ExperimentParameterDefinition *tmpParamDef = tmpExpObjectParamDefs->item(nID);
+										ExperimentParameterDefinitionStrc *tmpParamDef = tmpExpObjectParamDefs->item(nID);
 										if (tmpParamDef)
 										{
 											if(tmpParametersWidget == NULL)
@@ -588,7 +589,14 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 													else
 													{
 														qDebug() << __FUNCTION__ << "wrong defined boolean value for parameter " << sName << "(> " << child->child(j)->getValue() << ")";
-														tmpVarValue = tmpParamDef->vDefaultValue;
+														if(tmpParamDef->sDefaultValue == BOOL_TRUE_TAG)
+														{
+															tmpVarValue = true;
+														}
+														else
+														{
+															tmpVarValue = false;
+														}
 													}
 													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
 														bDoParseDependencies = true;
@@ -658,6 +666,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 		{
 			if(bDoParseDependencies)
 				tmpParametersWidget->parseDependencies();
+			tmpParametersWidget->setAutoDepencyParsing(true);
 		}
 		graphicWidget->setLayout(gridLayout);
 		scrollArea->setWidget(graphicWidget);

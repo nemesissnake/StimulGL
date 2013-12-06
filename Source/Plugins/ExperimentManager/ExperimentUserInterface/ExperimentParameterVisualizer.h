@@ -29,6 +29,7 @@
 //#include "qtgroupboxpropertybrowser.h"
 
 #include "ExperimentParameter.h"
+#include "ExperimentParameterDefinition.h"
 
 namespace Ui {class ExperimentParameterVisualizer;};
 
@@ -44,9 +45,13 @@ public:
 	ExperimentParameterVisualizer(const ExperimentParameterVisualizer& other){Q_UNUSED(other)};
 	~ExperimentParameterVisualizer();
 
-	bool addProperty(const ExperimentParameterDefinition *expParamDef, const QVariant &vValue, bool bSkipDependencyParse = true);
-	bool parseDependencies();
-	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependency &dependencyParamDef);
+	bool addProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue);
+	bool parseDependencies(QtVariantProperty *variantProperty = NULL);
+	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef);
+	void setAutoDepencyParsing(bool bEnable);
+
+private slots:
+	void propertyValueChanged(QtProperty *property, const QVariant &value);
 
 private:
 	Ui::ExperimentParameterVisualizer *ui;
@@ -61,13 +66,14 @@ private:
 	struct propertyDependency
 	{
 		QtVariantProperty *vProperty;
-		ExperimentParameterDefinitionDependency definition;
+		ExperimentParameterDefinitionDependencyStrc definition;
 	};
 
 	QtAbstractPropertyBrowser *propertyEditor;
 	propertyGroupStruct lGroupProperties;
 	QtVariantPropertyManager* lVariantPropertyManager;
 	QList<propertyDependency> lPropertyDependencies;
+	bool bAutoDepencyParsing;
 
 	int getPropertyGroupIndex(const QString &sPropertyGroupName);
 };

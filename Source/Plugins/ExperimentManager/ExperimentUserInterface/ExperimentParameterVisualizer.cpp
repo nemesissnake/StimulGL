@@ -25,6 +25,7 @@ ExperimentParameterVisualizer::ExperimentParameterVisualizer(QWidget *parent) : 
 	mainLayout = NULL;
 	lGroupProperties.manager = NULL;
 	lVariantPropertyManager = NULL;
+	bAutoDepencyParsing = false;
 
 	ui = new Ui::ExperimentParameterVisualizer();
 	ui->setupUi(this);
@@ -37,15 +38,14 @@ ExperimentParameterVisualizer::ExperimentParameterVisualizer(QWidget *parent) : 
 
 ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 {
-	int i;
 	if(lVariantPropertyManager)
 	{
 		delete lVariantPropertyManager;
 		lVariantPropertyManager = NULL;
 	}
-	for (i=0;i<lGroupProperties.lProperties.count();i++)
+	for (QList<QtProperty*>::iterator it=lGroupProperties.lProperties.begin();it!=lGroupProperties.lProperties.end();++it)
 	{
-		delete lGroupProperties.lProperties[i];
+		delete (*it);
 	}
 	lGroupProperties.lProperties.clear();
 	if(lGroupProperties.manager)
@@ -82,7 +82,7 @@ int ExperimentParameterVisualizer::getPropertyGroupIndex(const QString &sPropert
 	return -1;
 }
 
-bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinition *expParamDef, const QVariant &vValue, bool bSkipDependencyParse)
+bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue)
 {
 	if(expParamDef == NULL)
 		return false;
@@ -93,7 +93,10 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 	int nPropertyGroupIndex = getPropertyGroupIndex(expParamDef->sGroupName);
 
 	if(lVariantPropertyManager == NULL)
+	{
 		lVariantPropertyManager = new QtVariantPropertyManager(this);
+		connect(lVariantPropertyManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(propertyValueChanged(QtProperty *, const QVariant &)));
+	}
 
 	QVariant::Type varType;
 	if(expParamDef->eType == Experiment_ParameterType_Color)
@@ -215,17 +218,29 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 
 	if(expParamDef->Dependencies.isEmpty() == false)
 	{
-		for (int k=0;k<expParamDef->Dependencies.count();k++)
+		for (QList<ExperimentParameterDefinitionDependencyStrc>::const_iterator it=expParamDef->Dependencies.cbegin();it!=expParamDef->Dependencies.cend();++it)
 		{
-			addDependency(item1,expParamDef->Dependencies[k]);
+			addDependency(item1,(*it));
 		}
 	}
-	if(bSkipDependencyParse)
+
+	if(bAutoDepencyParsing == false)
 		return true;
 	return parseDependencies();
 }
 
-bool ExperimentParameterVisualizer::addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependency &dependencyParamDef)
+void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, const QVariant &value)
+{
+	Q_UNUSED(value);
+	//QString sName = value.toString();
+	//sName = property->valueText();
+	//sName = property->propertyName();
+	//sName = sName;
+	if(bAutoDepencyParsing)
+		parseDependencies((QtVariantProperty*) property);
+}
+
+bool ExperimentParameterVisualizer::addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef)
 {
 	propertyDependency tmpPropertyDependency;
 	tmpPropertyDependency.vProperty = variantProperty;
@@ -234,75 +249,52 @@ bool ExperimentParameterVisualizer::addDependency(QtVariantProperty *variantProp
 	return true;
 }
 
-bool ExperimentParameterVisualizer::parseDependencies()
+bool ExperimentParameterVisualizer::parseDependencies(QtVariantProperty *variantProperty)
 {
 	if(lPropertyDependencies.isEmpty())
 		return true;
 	if(lVariantPropertyManager == NULL)
 		return true;
-	for (int k=0;k<lPropertyDependencies.count();k++)
-	{
-		//	QSet<QtProperty *>::const_iterator it;
-		//	for (it = lVariantPropertyManager->properties().cbegin(); it != lVariantPropertyManager->properties().cend(); ++it)
-		//	{
-		//		*it = (*it).toLower();
 
-		QSet<QtProperty*>::const_iterator it = lVariantPropertyManager->properties().cbegin();
-		while (it != lVariantPropertyManager->properties().cend()) 
+	QList<propertyDependency>::const_iterator itDependency;
+	for (itDependency = lPropertyDependencies.cbegin(); itDependency != lPropertyDependencies.cend(); ++itDependency)
+	{
+		if(variantProperty != NULL)
+		{
+			if(itDependency->definition.sDependencyName.toLower() != variantProperty->propertyName().toLower())
+				continue;
+		}
+		for (QSet<QtProperty*>::const_iterator it=lVariantPropertyManager->properties().cbegin();it!=lVariantPropertyManager->properties().cend();++it)
 		{
 			QString sID = (*it)->propertyId();
 			if(sID.isEmpty())
-			{
-				++it;
 				continue;
-			}
 			QString tmpName = (*it)->propertyName();
 				
-			int nResult = QString::compare(lPropertyDependencies[k].definition.sDependencyName,sID,Qt::CaseInsensitive);
+			int nResult = QString::compare(itDependency->definition.sDependencyName,sID,Qt::CaseInsensitive);
 			if(nResult==0)
 			{
-				//QRegularExpression regExp(lPropertyDependencies[k].definition.rRegularExpression, QRegularExpression::CaseInsensitiveOption);
-				QString tmpValue = (*it)->valueText();
-				QString tmpPattern = lPropertyDependencies[k].definition.rRegularExpression.pattern();
-				QRegularExpressionMatch match = lPropertyDependencies[k].definition.rRegularExpression.match(tmpValue);
-				//if(lPropertyDependencies[k].definition.rRegularExpression.match((*it)->valueText()).hasMatch())
-				if(match.hasMatch())
+				//QRegularExpression regExp(itDependency->definition.rRegularExpression, QRegularExpression::CaseInsensitiveOption);
+				//QString tmpValue = (*it)->valueText();
+				//QString tmpPattern = itDependency->.definition.rRegularExpression.pattern();
+				//QRegularExpressionMatch match = itDependency->definition.rRegularExpression.match(tmpValue);
+				if(itDependency->definition.rRegularExpression.match((*it)->valueText()).hasMatch())
 				{
-					int a = 3;
+					itDependency->vProperty->setEnabled(true);
 				}
 				else
 				{
-					int b = 3;
+					itDependency->vProperty->setEnabled(false);
 				}
-
-				//QRegularExpressionMatch match = re.match("abc123 def");
-				//bool hasMatch = match.hasMatch();
-				
-				//for (int m=0;m<lVariantPropertyManager->properties().count();m++)
-				//{
-				//	if(lVariantPropertyManagers.at(m).)
-
-				//QString tmpName = lVariantPropertyManager->properties().values.at(m)->propertyName();
-				//	tmpName = tmpName;
-				//}
-				//lPropertyDependencies.at(k).vProperty->setEnabled(false);
 			}
-			++it;
 		}
-
-	//lVariantPropertyManagers
-	//if(tmpParamDef->Dependencies.isEmpty() == false)
-	//{
-	//	ExperimentParameterDefinition *dependencyParamDef;
-	//	for (int k=0;k<tmpParamDef->Dependencies.count();k++)
-	//	{
-	//		dependencyParamDef = tmpExpObjectParamDefs->item(nID);
-	//		if(dependencyParamDef->)
-	//	}
-	}
-
-	
+	}	
 	return true;
+}
+
+void ExperimentParameterVisualizer::setAutoDepencyParsing(bool bEnable)
+{
+	bAutoDepencyParsing = bEnable;
 }
 
 

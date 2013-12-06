@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>resources/StartQmlFile.qml</file>
         <file>resources/UnlockedQmlFile.qml</file>
+        <file>resources/RetinotopyMapper.xdef</file>
     </qresource>
 </RCC>
