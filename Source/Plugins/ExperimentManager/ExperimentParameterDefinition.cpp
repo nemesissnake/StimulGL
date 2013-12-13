@@ -24,7 +24,6 @@
 
 ExperimentParameterDefinitionContainer::ExperimentParameterDefinitionContainer()
 {
-	LoadFromFile("");
 	return;
 
 	ExperimentParameterDefinitionStrc tmpExpParamDef;
@@ -172,14 +171,10 @@ ExperimentParameterDefinitionStrc *ExperimentParameterDefinitionContainer::item(
 
 bool ExperimentParameterDefinitionContainer::LoadFromFile(const QString &sFilePath)
 {
-	QString fileString = "qrc:/resources/RetinotopyMapper.xdef";
-	QUrl fileUrl = QUrl(fileString);
-	fileString = "C:\\Users\\sven.gijsen\\Desktop\\desktop.xdef";//":/resources/RetinotopyMapper.xdef";
-
-	QFile* file = new QFile(fileString);
+	QFile* file = new QFile(sFilePath);
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) 
 	{
-        qDebug() << __FUNCTION__ << "Couldn't open the file " << fileString;
+        qDebug() << __FUNCTION__ << "Couldn't open the file " << sFilePath;
         return false;
     }
     QXmlStreamReader xml(file);

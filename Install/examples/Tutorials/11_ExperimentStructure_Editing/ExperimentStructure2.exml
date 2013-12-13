@@ -63,40 +63,126 @@ Attributes only apply to readonly non user data, like the ID
                     <parameters>
                         <parameter ID="0">
                             <name>RetinoPattern</name>
-                            <value>fixation</value>
+                            <value>polarangle</value>
                         </parameter>
                         <parameter ID="1">
-                            <name>ShowFixPoint</name>
-                            <value>true</value>
-                        </parameter>
-                        <parameter ID="2">
-                            <name>FixationSize</name>
-                            <value>12</value>
-                        </parameter>
-                        <parameter ID="3">
-                            <name>StimulusWidthSpan</name>
-                            <value>768</value>
-                        </parameter>
-                        <parameter ID="4">
-                            <name>StimulusHeightSpan</name>
-                            <value>768</value>
-                        </parameter>
-                        <parameter ID="5">
                             <name>StimuliRefreshRate</name>
                             <value>30</value>
                         </parameter>
-                        <parameter ID="6">
+                        <parameter ID="2">
+                            <name>ShowFixPoint</name>
+                            <value>true</value>
+                        </parameter>
+                        <parameter ID="3">
+                            <name>FixationSize</name>
+                            <value>12</value>
+                        </parameter>
+                        <parameter ID="4">
+                            <name>FixationColor</name>
+                            <value>#FF1122</value>
+                        </parameter>
+                        <parameter ID="5">
                             <name>BackGroundColor</name>
                             <value>#575757</value>
                         </parameter>
+                        <parameter ID="6">
+                            <name>StimulusWidthSpan</name>
+                            <value>768</value>
+                        </parameter>
                         <parameter ID="7">
-                            <name>FixationColor</name>
-                            <value>#FF1122</value>
+                            <name>StimulusHeightSpan</name>
+                            <value>768</value>
                         </parameter>
                         <parameter ID="8">
                             <name>StimuliRefreshRate</name>
                             <value>30</value>
                         </parameter>
+                        <parameter ID="9">
+                            <name>AntiAliasing</name>
+                            <value>true</value>
+                        </parameter>                        
+                        <parameter ID="10">
+                            <name>GapDiameter</name>
+                            <value>25</value>
+                        </parameter>                        
+                        <parameter ID="11">
+                            <name>CheckerColor1</name>
+                            <value>#FFFFFA</value>
+                        </parameter>
+                        <parameter ID="12">
+                            <name>CheckerColor2</name>
+                            <value>#000001</value>
+                        </parameter>                        
+                        <parameter ID="13">
+                            <name>PolarCheckAmount</name>
+                            <value>5</value>
+                        </parameter>
+                        <parameter ID="14">
+                            <name>PolarRingAmount</name>
+                            <value>21</value>
+                        </parameter> 
+                        <parameter ID="15">
+                            <name>PolarRotationDirection</name>
+                            <value>-1</value>
+                        </parameter>
+                        
+                        <parameter ID="16">
+                            <name>InternalTriggerDuration</name>
+                            <value>1000.0</value>
+                        </parameter>    
+                        <parameter ID="17">
+                            <name>CycleTriggerAmount</name>
+                            <value>8</value>
+                        </parameter>
+                        <parameter ID="18">
+                            <name>FlickrFrequency</name>
+                            <value>4.5</value>
+                        </parameter>
+                        <parameter ID="19">
+                            <name>CorticalMagnitudeFactor</name>
+                            <value>0.3</value>
+                        </parameter>
+                        <parameter ID="20">
+                            <name>DisableCortMagFac</name>
+                            <value>true</value>
+                        </parameter>                                                                                                
+                        
+                        <parameter ID="21">
+                            <name>OutputTriggerFrame</name>
+                            <value>true</value>
+                        </parameter>
+                        <parameter ID="22">
+                            <name>OutputFrameFormat</name>
+                            <value>Mask</value>
+                        </parameter>
+                        <parameter ID="23">
+                            <name>OutputFrameType</name>
+                            <value>CDAT</value>
+                        </parameter>  
+                        
+                        <parameter ID="24">
+                            <name>RandomizeTriggerSteps</name>
+                            <value>true</value>
+                        </parameter>
+                        <parameter ID="25">
+                            <name>EmptyTriggerSteps</name>
+                            <value>true</value>
+                        </parameter>
+                        <parameter ID="26">
+                            <name>RandomizeTriggerStepsArray</name>
+                            <value>1,2,3,4</value>
+                        </parameter>
+                        <parameter ID="27">
+                            <name>EmptyTriggerStepsArray</name>
+                            <value>5,6,7,8</value>
+                        </parameter>
+                                                                                                                        
+                        
+                        
+                        
+                                                                                              
+                                      
+                                                                                               
                     </parameters>
                 </object>
             </block>

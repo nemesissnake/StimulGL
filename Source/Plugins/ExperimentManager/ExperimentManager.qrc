@@ -3,5 +3,7 @@
         <file>resources/StartQmlFile.qml</file>
         <file>resources/UnlockedQmlFile.qml</file>
         <file>resources/RetinotopyMapper.xdef</file>
+        <file>resources/Clockwise.png</file>
+        <file>resources/Counterclockwise.png</file>
     </qresource>
 </RCC>

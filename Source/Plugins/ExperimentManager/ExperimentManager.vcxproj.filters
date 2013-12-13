@@ -716,6 +716,27 @@
     <ClCompile Include="ExperimentParameterDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ExperimentUserInterface\ParameterPropertyExtensions.cpp">
+      <Filter>Source Files\ExperimentUserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ParameterPropertyExtensions.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_ParameterPropertyExtensions.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_ParameterPropertyExtensions.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_ParameterPropertyExtensions.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_ParameterPropertyExtensions.cpp">
+      <Filter>Generated Files\Template_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_ParameterPropertyExtensions.cpp">
+      <Filter>Generated Files\Template_x64</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -893,6 +914,9 @@
     </CustomBuild>
     <CustomBuild Include="ExperimentParameterDefinition.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ExperimentUserInterface\ParameterPropertyExtensions.h">
+      <Filter>Header Files\ExperimentUserInterface</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

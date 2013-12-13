@@ -52,11 +52,11 @@ public:
 	~ExperimentManagerPlugin();
 
 	bool ConfigureScriptEngine(QScriptEngine &engine);
-	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};
+	QString GetMinimalMainProgramVersion() {return PLUGIN_MAIN_PROGRAM_MINIMAL_VERSION;};	
 
-private:
+private:	
 	bool ExecuteContent(const GlobalApplicationInformation::DocContentInfoStructure &docStruct);
-
+	
 	ExperimentManager *ExperimentManagerObject; 
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;
 	TriggerTimer *TriggerTimerObject;
@@ -74,7 +74,7 @@ public slots:
     bool ShowGUI();
 	bool IsCompatible() {return PluginInterface::IsCompatible();};
 	QStringList GetAdditionalFileExtensions() {return (QStringList() << "Experiment files (*.exml);;" << "QML documents (*.qml);;");};
-	QStringList GetAdditionalFileSlotHandlers() {return (QStringList() << "exml|ExperimentManagerEXMLDocumentHandler(const QString &, const QString &)" << "qml|ExperimentManagerQMLDocumentHandler(const QString &, const QString &)");};
+	QStringList GetAdditionalFileSlotHandlers() {return (QStringList() << "exml|ExperimentManagerEXMLDocumentHandler(const QString &, const QString &)" << "qml|ExperimentManagerQMLDocumentHandler(const QString &, const QString &)" << "xdef");};
 	bool ExperimentManagerEXMLDocumentHandler(const QString &docContent, const QString &strHomePath);
 	bool ExperimentManagerQMLDocumentHandler(const QString &docContent, const QString &strHomePath);
 	QObject *GetScriptMetaObject(int nIndex);

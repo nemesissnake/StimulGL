@@ -23,7 +23,7 @@ ExperimentParameterVisualizer::ExperimentParameterVisualizer(QWidget *parent) : 
 {
 	propertyEditor = NULL;
 	mainLayout = NULL;
-	lGroupProperties.manager = NULL;
+	groupManager = NULL;
 	lVariantPropertyManager = NULL;
 	bAutoDepencyParsing = false;
 
@@ -43,13 +43,9 @@ ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 		delete lVariantPropertyManager;
 		lVariantPropertyManager = NULL;
 	}
-	for (QList<QtProperty*>::iterator it=lGroupProperties.lProperties.begin();it!=lGroupProperties.lProperties.end();++it)
-	{
-		delete (*it);
-	}
-	lGroupProperties.lProperties.clear();
-	if(lGroupProperties.manager)
-		delete lGroupProperties.manager;
+	deleteSubGroupProperties(&lGroupPropertyCollection.propItem);
+	if(groupManager)
+		delete groupManager;
 	if(propertyEditor)
 	{
 		delete propertyEditor;
@@ -64,22 +60,88 @@ ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 	emit destroyed(this);
 }
 
-int ExperimentParameterVisualizer::getPropertyGroupIndex(const QString &sPropertyGroupName)
-{	
-	if(sPropertyGroupName.isEmpty())
-		return -2;
-	else if(lGroupProperties.manager == NULL)
-		return -1;
-	if(lGroupProperties.lProperties.isEmpty())
-		return -1;
-	for (int j=0;j<lGroupProperties.lProperties.count();j++)
+void ExperimentParameterVisualizer::deleteSubGroupProperties(QList<propertyContainerItem> *pRootGroupPropertyItem)
+{
+	if(pRootGroupPropertyItem == NULL) 
+		return;
+	if(pRootGroupPropertyItem->isEmpty() == false)
 	{
-		if(lGroupProperties.lProperties[j]->propertyName() == sPropertyGroupName)//Case sensitive!
+		for (QList<propertyContainerItem>::iterator it=pRootGroupPropertyItem->begin();it!=pRootGroupPropertyItem->end();++it)
 		{
-			return j;
+			if(it->pSubItems)
+			{
+				deleteSubGroupProperties(it->pSubItems);
+				it->pSubItems->clear();
+			}
+			delete it->lGroupProperty;
+			delete it->pSubItems;
 		}
+		pRootGroupPropertyItem->clear();
+		return;
 	}
-	return -1;
+}
+
+bool ExperimentParameterVisualizer::addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList)
+{	
+	if(groupManager == NULL)
+		groupManager = new QtGroupPropertyManager(this);
+	if(sPropertyGroupNames.isEmpty())
+		return false;
+	if(pRootGroupPropertyItemList == NULL)
+		return false;
+	
+	QStringList tmpPropGroups = sPropertyGroupNames.split(EXPERIMENT_PARAMETER_LISTSEP_CHAR, QString::SkipEmptyParts);
+	propertyContainerItem tmpPropertyContainerItem;
+
+	if(pRootGroupPropertyItemList->isEmpty() == false)
+	{
+		for (int j=0;j<pRootGroupPropertyItemList->count();j++)
+		{
+			if(pRootGroupPropertyItemList->at(j).lGroupProperty->propertyName() == tmpPropGroups.at(0))//Case sensitive!
+			{
+				if(tmpPropGroups.count() == 1)
+				{
+					pRootGroupPropertyItemList->at(j).lGroupProperty->addSubProperty(item1);
+					return true;
+				}
+				else
+				{
+					tmpPropGroups.removeFirst();
+					if(pRootGroupPropertyItemList->at(j).pSubItems == NULL)
+						(*pRootGroupPropertyItemList)[j].pSubItems = new QList<propertyContainerItem>;
+					
+					bool bGroupIsPresent = false;
+					for (QSet<QtProperty*>::const_iterator it=groupManager->properties().cbegin();it!=groupManager->properties().cend();++it)
+					{
+						if((*it)->propertyName() == tmpPropGroups.at(0))
+						{
+							bGroupIsPresent = true;
+							break;
+						}
+					}
+
+					if(bGroupIsPresent == false)
+					{
+						QtProperty *tmpProperty = groupManager->addProperty(tmpPropGroups.at(0));
+						pRootGroupPropertyItemList->at(j).lGroupProperty->addSubProperty(tmpProperty);
+						tmpPropertyContainerItem.pSubItems = NULL;
+						tmpPropertyContainerItem.lGroupProperty = tmpProperty;
+						pRootGroupPropertyItemList->at(j).pSubItems->append(tmpPropertyContainerItem);
+					}
+
+
+					return addPropertyToSubGroup(tmpPropGroups.join(EXPERIMENT_PARAMETER_LISTSEP_CHAR), item1, pRootGroupPropertyItemList->at(j).pSubItems);
+				}
+			}
+		}
+	}	
+	tmpPropertyContainerItem.pSubItems = NULL;
+	tmpPropertyContainerItem.lGroupProperty = groupManager->addProperty(sPropertyGroupNames);
+	pRootGroupPropertyItemList->append(tmpPropertyContainerItem);
+	int nPropertyGroupIndex = pRootGroupPropertyItemList->count() - 1;	
+	pRootGroupPropertyItemList->at(nPropertyGroupIndex).lGroupProperty->addSubProperty(item1);
+	propertyEditor->addProperty(pRootGroupPropertyItemList->at(nPropertyGroupIndex).lGroupProperty);
+	return true;
 }
 
 bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue)
@@ -87,14 +149,12 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 	if(expParamDef == NULL)
 		return false;
 
-	bool bNewGroup = false;
 	bool bDoMinMax = false;
 	bool bDoEnumeratedList = false;
-	int nPropertyGroupIndex = getPropertyGroupIndex(expParamDef->sGroupName);
 
 	if(lVariantPropertyManager == NULL)
 	{
-		lVariantPropertyManager = new QtVariantPropertyManager(this);
+		lVariantPropertyManager = new VariantExtensionPropertyManager(this);
 		connect(lVariantPropertyManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(propertyValueChanged(QtProperty *, const QVariant &)));
 	}
 
@@ -112,6 +172,10 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 		varType = QVariant::Int;
 		bDoMinMax = true;
 	}
+	else if(expParamDef->eType == Experiment_ParameterType_RotationDirection)
+	{
+		varType = (QVariant::Type) VariantExtensionPropertyManager::rotationDirectionTypeId();
+	}
 	else if(expParamDef->eType == Experiment_ParameterType_String)
 	{		
 		if(expParamDef->Restriction.lAllowedValues.isEmpty() == false)
@@ -124,11 +188,20 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 			varType = QVariant::String;
 		}
 	}
+	else if ((expParamDef->eType == Experiment_ParameterType_Float) || (expParamDef->eType == Experiment_ParameterType_Double))
+	{
+		varType = QVariant::Double;
+		bDoMinMax = true;
+	}
+	else if(expParamDef->eType == Experiment_ParameterType_StringArray)
+	{
+		varType = (QVariant::Type) VariantExtensionPropertyManager::stringArrayTypeId();
+	}
 	else
 	{
 		varType = QVariant::String;
 	}
-
+	
 	QtVariantProperty *item1 = lVariantPropertyManager->addProperty(varType,expParamDef->sDisplayName);
 	item1->setPropertyId(expParamDef->sName);// + "_" + QString::number(expParamDef->nId));
 
@@ -151,29 +224,16 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 		if(expParamDef->Restriction.MaximalValue.bEnabled)
 			item1->setAttribute(QLatin1String("maximum"), expParamDef->Restriction.MaximalValue.vValue);
 	}	
-	QtVariantEditorFactory *tmpFactory = new QtVariantEditorFactory(this);
-	propertyEditor->setFactoryForManager(lVariantPropertyManager, tmpFactory);
-
-	if(nPropertyGroupIndex == -1)
+	VariantExtensionPropertyFactory *tmpFactory = new VariantExtensionPropertyFactory(this);
+	propertyEditor->setFactoryForManager((QtVariantPropertyManager*)lVariantPropertyManager, (QtVariantEditorFactory*)tmpFactory);
+		
+	if (expParamDef->sGroupName.isEmpty())
 	{
-		if(lGroupProperties.manager == NULL)
-			lGroupProperties.manager = new QtGroupPropertyManager(this);
-		lGroupProperties.lProperties.append(lGroupProperties.manager->addProperty(expParamDef->sGroupName));
-		nPropertyGroupIndex = lGroupProperties.lProperties.count() - 1;
-		bNewGroup = true;
-	}	
-	if(bNewGroup)//New Subgroup defined, create a new one
-	{
-		lGroupProperties.lProperties.at(nPropertyGroupIndex)->addSubProperty(item1);
-		propertyEditor->addProperty(lGroupProperties.lProperties.at(nPropertyGroupIndex));
+		propertyEditor->addProperty(item1);//Here we do not use a subgroup, use root location
 	}
-	else if (nPropertyGroupIndex != -2)//Subgroup already defined, use that one
+	else
 	{
-		lGroupProperties.lProperties.at(nPropertyGroupIndex)->addSubProperty(item1);
-	}
-	else//Here we do not use a subgroup, use root location
-	{
-		propertyEditor->addProperty(item1);
+		addPropertyToSubGroup(expParamDef->sGroupName, item1, &lGroupPropertyCollection.propItem);
 	}
 
 	if(varType == QVariant::Color)
@@ -204,8 +264,14 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 		}
 		else
 		{
+			//if(vValue.type() == )
+			QString tmpStr = vValue.toString();
 			lVariantPropertyManager->setValue(item1,vValue.toString());
 		}		
+	}
+	else if(varType == (QVariant::Type) VariantExtensionPropertyManager::rotationDirectionTypeId())
+	{
+		lVariantPropertyManager->setValue(item1,vValue.toInt());//VariantExtensionPropertyManager::RotationDirectionEnum
 	}
 	else
 	{
@@ -232,17 +298,13 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, const QVariant &value)
 {
 	Q_UNUSED(value);
-	//QString sName = value.toString();
-	//sName = property->valueText();
-	//sName = property->propertyName();
-	//sName = sName;
 	if(bAutoDepencyParsing)
 		parseDependencies((QtVariantProperty*) property);
 }
 
 bool ExperimentParameterVisualizer::addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef)
 {
-	propertyDependency tmpPropertyDependency;
+	propertyDependencyStruct tmpPropertyDependency;
 	tmpPropertyDependency.vProperty = variantProperty;
 	tmpPropertyDependency.definition = dependencyParamDef;
 	lPropertyDependencies.append(tmpPropertyDependency);
@@ -256,21 +318,24 @@ bool ExperimentParameterVisualizer::parseDependencies(QtVariantProperty *variant
 	if(lVariantPropertyManager == NULL)
 		return true;
 
-	QList<propertyDependency>::const_iterator itDependency;
+	QList<propertyDependencyStruct>::const_iterator itDependency;
 	for (itDependency = lPropertyDependencies.cbegin(); itDependency != lPropertyDependencies.cend(); ++itDependency)
 	{
 		if(variantProperty != NULL)
 		{
-			if(itDependency->definition.sDependencyName.toLower() != variantProperty->propertyName().toLower())
-				continue;
+			if(itDependency->definition.sDependencyName.toLower() != variantProperty->propertyId().toLower())
+			{
+				//QString s1 = itDependency->definition.sDependencyName.toLower();
+				//QString s2 = variantProperty->propertyId().toLower();
+				continue;  
+			}
 		}
 		for (QSet<QtProperty*>::const_iterator it=lVariantPropertyManager->properties().cbegin();it!=lVariantPropertyManager->properties().cend();++it)
 		{
 			QString sID = (*it)->propertyId();
 			if(sID.isEmpty())
 				continue;
-			QString tmpName = (*it)->propertyName();
-				
+			//QString tmpName = (*it)->propertyName();				
 			int nResult = QString::compare(itDependency->definition.sDependencyName,sID,Qt::CaseInsensitive);
 			if(nResult==0)
 			{
@@ -295,6 +360,13 @@ bool ExperimentParameterVisualizer::parseDependencies(QtVariantProperty *variant
 void ExperimentParameterVisualizer::setAutoDepencyParsing(bool bEnable)
 {
 	bAutoDepencyParsing = bEnable;
+}
+
+void ExperimentParameterVisualizer::resizeParameterView(const int &nWidth, const int &nHeight)
+{	
+	Q_UNUSED(nWidth);
+	this->setFixedWidth(300);
+	this->setFixedHeight(nHeight - 50);
 }
 
 

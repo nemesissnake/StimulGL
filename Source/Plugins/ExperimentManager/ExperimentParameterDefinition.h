@@ -40,13 +40,13 @@
 #define EXPERIMENT_PARAMETER_MAXIMAL_TAG		"maximal"
 #define EXPERIMENT_PARAMETER_VALUE_TAG			"value"
 #define EXPERIMENT_PARAMETER_ALLOWED_TAG		"allowed"
-#define EXPERIMENT_PARAMETER_LISTSEP_CHAR		";"
 #define EXPERIMENT_PARAMETER_DEPENDENCIES_TAG	"dependencies"
 #define EXPERIMENT_PARAMETER_DEPENDENCY_TAG		"dependency"
 #define EXPERIMENT_PARAMETER_RELATION_TAG		"relation"
 #define EXPERIMENT_PARAMETER_REGEXP_TAG			"regularexpression"
 #define EXPERIMENT_PARAMETER_PATTERN_TAG		"pattern"
 #define EXPERIMENT_PARAMETER_CASESENSITIVE_TAG	"casesensitive"
+#define EXPERIMENT_PARAMETER_LISTSEP_CHAR		";"
 
 enum ExperimentParameterSection
 {
@@ -62,14 +62,15 @@ enum ExperimentParameterSection
 
 enum ExperimentParameterTypeName
 {
-	Experiment_ParameterType_Unknown		= 0,
-	Experiment_ParameterType_String			= 1,
-	Experiment_ParameterType_StringArray	= 2,
-	Experiment_ParameterType_Color			= 3,
-	Experiment_ParameterType_Integer		= 4,
-	Experiment_ParameterType_Float			= 5,
-	Experiment_ParameterType_Double			= 6,
-	Experiment_ParameterType_Boolean		= 7
+	Experiment_ParameterType_Unknown			= 0,
+	Experiment_ParameterType_String				= 1,
+	Experiment_ParameterType_StringArray		= 2,
+	Experiment_ParameterType_Color				= 3,
+	Experiment_ParameterType_Integer			= 4,
+	Experiment_ParameterType_Float				= 5,
+	Experiment_ParameterType_Double				= 6,
+	Experiment_ParameterType_Boolean			= 7,
+	Experiment_ParameterType_RotationDirection	= 8
 	//See also below here!!!	
 };
 
@@ -77,13 +78,14 @@ struct mapParamDefinitionsTypesStrc : QMap<QString, ExperimentParameterTypeName>
 {
 	mapParamDefinitionsTypesStrc()
 	{
-		this->operator[]( "string" )		= Experiment_ParameterType_String;
-		this->operator[]( "stringlist" )	= Experiment_ParameterType_StringArray;
-		this->operator[]( "color" )			= Experiment_ParameterType_Color;
-		this->operator[]( "integer" )		= Experiment_ParameterType_Integer;
-		this->operator[]( "float" )			= Experiment_ParameterType_Float;
-		this->operator[]( "double" )		= Experiment_ParameterType_Double;
-		this->operator[]( "boolean" )		= Experiment_ParameterType_Boolean;
+		this->operator[]( "string" )			= Experiment_ParameterType_String;
+		this->operator[]( "stringarray" )		= Experiment_ParameterType_StringArray;
+		this->operator[]( "color" )				= Experiment_ParameterType_Color;
+		this->operator[]( "integer" )			= Experiment_ParameterType_Integer;
+		this->operator[]( "float" )				= Experiment_ParameterType_Float;
+		this->operator[]( "double" )			= Experiment_ParameterType_Double;
+		this->operator[]( "boolean" )			= Experiment_ParameterType_Boolean;
+		this->operator[]( "rotationdirection" )	= Experiment_ParameterType_RotationDirection;
 	};
 	~mapParamDefinitionsTypesStrc(){};
 };
@@ -127,7 +129,7 @@ struct ExperimentParameterDefinitionStrc
 	bool bEnabled;
 	QString sName;
 	QString sDisplayName;
-	QString sGroupName;
+	QString sGroupName;//Can also be a directory like "Root;Item 1;SubItem A"
 	QString sInformation;
 	ExperimentParameterTypeName eType;
 	QString sDefaultValue;

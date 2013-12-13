@@ -18,7 +18,6 @@
 
 
 #include "ExperimentManagerplugin.h"
-//#include "visualexperimenteditor/VisualExperimentEditor.h"
 #include "ImageProcessor.h"
 #include "TriggerTimer.h"
 #include "ExperimentStructures.h"
@@ -41,10 +40,10 @@ ExperimentManagerPlugin::ExperimentManagerPlugin(QObject *parent)
 	cExperimentStructureObject = NULL;
 	cBlockStructureObject = NULL;
 	cLoopStructureObject = NULL;
-	Qml2ViewerObject = NULL;
+	Qml2ViewerObject = NULL;	
 	ExperimentManagerDiagObject = new ExperimentManager_Dialog();
 	ExperimentManagerObject = new ExperimentManager(ExperimentManagerDiagObject,NULL);
-	strPluginInformation = PLUGIN_INFORMATION;
+	strPluginInformation = PLUGIN_INFORMATION;	
 	Q_INIT_RESOURCE(ExperimentManager);
 }
 
@@ -313,7 +312,7 @@ bool ExperimentManagerPlugin::ExecuteContent(const GlobalApplicationInformation:
 
 int ExperimentManagerPlugin::GetAdditionalFileTypeStyle(QString strExtension) 
 {
-	if(strExtension.toLower() == "exml")
+	if((strExtension.toLower() == "exml") || (strExtension.toLower() == "xdef"))
 	{
 		return GlobalApplicationInformation::DOCTYPE_STYLE_XML;
 	} 

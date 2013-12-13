@@ -130,7 +130,7 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 	if(tmpExpStruct)
 		delete tmpExpStruct;
 	if(tmpExpObjectParamDefs)
-		delete tmpExpObjectParamDefs;	
+		tmpExpObjectParamDefs = NULL;	
 	if(tmpParametersWidget)
 		delete tmpParametersWidget;
 	//if(expStructVisualizer)
@@ -246,7 +246,7 @@ void ExperimentGraphicEditor::setupExperimentTreeView()
 	tblWidgetView->verticalHeader()->setHidden(true);
 		
 	connect(horSplitter, SIGNAL(splitterMoved(int, int)), this, SLOT(tableViewResized(int, int)));
-	connect(tblWidgetView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(selectTreeItem()));
+	//connect(tblWidgetView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(selectTreeItem()));
 	connect(treeView, SIGNAL(clicked(QModelIndex)), this, SLOT(showInfo(QModelIndex)));
 }
 
@@ -462,10 +462,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 			tmpParametersWidget = NULL;
 		}
 		if(tmpExpObjectParamDefs)
-		{
-			delete tmpExpObjectParamDefs;
 			tmpExpObjectParamDefs = NULL;
-		}
 		for (int i = 0; i < item->rowCount(); i++)
 		{
 			child = item->child(i);
@@ -553,7 +550,10 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 								if(item->child(i)->child(j)->getName().toLower() == NAME_TAG)
 								{
 									if(tmpExpObjectParamDefs == NULL)
-										tmpExpObjectParamDefs = new ExperimentParameterDefinitionContainer();
+									{
+										tmpExpObjectParamDefs = ExperimentManager::getExperimentParameterDefinition("RetinotopyMapper");
+									}
+										//tmpExpObjectParamDefs = new ExperimentParameterDefinitionContainer();
 									sName = item->child(i)->child(j)->getValue();
 									nID = tmpExpObjectParamDefs->getID(sName);
 									if(nID<0)
@@ -572,6 +572,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 											{
 												tmpParametersWidget = new ExperimentParameterVisualizer(graphicWidget);
 												connect(tmpParametersWidget, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
+												connect(this, SIGNAL(onTableViewRedrawned(int, int)), tmpParametersWidget, SLOT(resizeParameterView(int, int)));
 											}
 											if(tmpParamDef->bEnabled)
 											{
@@ -600,28 +601,48 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 													}
 													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
 														bDoParseDependencies = true;
-													gridLayout->addWidget(tmpParametersWidget,i,1);
 												}	
 												else if(tmpParamDef->eType == Experiment_ParameterType_String)
 												{
 													tmpVarValue = sValue;
 													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
 														bDoParseDependencies = true;
-													gridLayout->addWidget(tmpParametersWidget,i,1);
 												}
 												else if(tmpParamDef->eType == Experiment_ParameterType_Integer)
 												{
 													tmpVarValue = sValue.toInt();
 													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
 														bDoParseDependencies = true;
-													gridLayout->addWidget(tmpParametersWidget,i,1);
 												}
+												else if(tmpParamDef->eType == Experiment_ParameterType_RotationDirection)
+												{
+													tmpVarValue = sValue.toInt();
+													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+														bDoParseDependencies = true;
+												}												
 												else if(tmpParamDef->eType == Experiment_ParameterType_Color)
 												{
 													tmpVarValue = QColor(sValue);
 													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
 														bDoParseDependencies = true;
-													gridLayout->addWidget(tmpParametersWidget,i,1);
+												}
+												else if(tmpParamDef->eType == Experiment_ParameterType_Float)
+												{
+													tmpVarValue = sValue.toFloat();
+													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+														bDoParseDependencies = true;
+												}
+												else if(tmpParamDef->eType == Experiment_ParameterType_Double)
+												{
+													tmpVarValue = sValue.toDouble();
+													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+														bDoParseDependencies = true;
+												}
+												else if(tmpParamDef->eType == Experiment_ParameterType_StringArray)
+												{
+													tmpVarValue = sValue;//.split(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR,QString::SkipEmptyParts);
+													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+														bDoParseDependencies = true;
 												}
 											}
 										}
@@ -650,6 +671,8 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							bResult = expManager->createExperimentStructure(tmpList, pExpTreeModel,tmpExpStruct);
 							if(bResult)
 							{
+								//int nRows = gridLayout->rowCount();
+								//int nColumns = gridLayout->columnCount();
 								gridLayout->addWidget(expStructVisualizer,0,1);
 								if(horSplitter->count() > TABLEVIEWINDEX)
 									expStructVisualizer->resizeStructureView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
@@ -664,6 +687,9 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 		}
 		if(tmpParametersWidget)
 		{
+			gridLayout->addWidget(tmpParametersWidget,0,0);
+			if(horSplitter->count() > TABLEVIEWINDEX)
+				tmpParametersWidget->resizeParameterView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
 			if(bDoParseDependencies)
 				tmpParametersWidget->parseDependencies();
 			tmpParametersWidget->setAutoDepencyParsing(true);

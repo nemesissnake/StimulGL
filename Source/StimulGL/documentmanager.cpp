@@ -703,7 +703,7 @@ int DocumentManager::getKnownDocumentFileHandlerIndex(const QString &strExtensio
 		for (int i=0;i<nCount;i++)
 		{
 			tmpList = pluginDocHandlerStore.strDocHandlerInfoList.at(i).split("|",QString::SkipEmptyParts);
-			if (tmpList.count() > 1)
+			if (tmpList.count() > 0)
 			{
 				if(tmpList.at(0) == strExtension)
 					return i;

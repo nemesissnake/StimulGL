@@ -28,6 +28,9 @@
 #include "RetinotopyMapper.h"
 #include "QML2Viewer.h"
 #include "ExperimentUserInterface/ExperimentGraphicEditor.h"
+#include "ExperimentParameterDefinition.h"
+
+QList<ExperimentParameterDefinitionCollection> *ExperimentManager::lExperimentParameterDefinitions = NULL;
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
@@ -49,7 +52,7 @@ QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context,
 *	The StimulGL script engine automatically retrieves the parent role
 */
 ExperimentManager::ExperimentManager(QObject *parent, QScriptEngine* engine) : QObject(parent), parentObject(parent)
-{
+{	
 	currentScriptEngine = engine;
 	DefaultConstruct();
 }
@@ -59,7 +62,6 @@ bool ExperimentManager::makeThisAvailableInScript(QString strObjectScriptName, Q
 	if (engine)
 	{
 		currentScriptEngine = reinterpret_cast<QScriptEngine *>(engine);
-		//QObject *someObject = this;//new MyObject;
 		QScriptValue objectValue = currentScriptEngine->newQObject(this);
 		currentScriptEngine->globalObject().setProperty(strObjectScriptName, objectValue);
 		return true;
@@ -76,15 +78,38 @@ void ExperimentManager::DefaultConstruct()
 	currentExperimentTree = NULL;
 	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
-	//visExpEditor = NULL;
-	//expStructVisualizer = NULL;
 	ExpGraphicEditor = NULL;
 	RegisterMetaTypes();
+	fetchExperimentParameterDefinitions();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
-	//rndGen = NULL;
-	//rndCounter = 0;
 }
 
+void ExperimentManager::fetchExperimentParameterDefinitions()
+{
+	if(lExperimentParameterDefinitions)
+		return;
+	else
+		lExperimentParameterDefinitions = new QList<ExperimentParameterDefinitionCollection>;
+	QString fileString = ":/resources/RetinotopyMapper.xdef";//"C:\\Users\\sven.gijsen\\Desktop\\desktop.xdef";//":/resources/RetinotopyMapper.xdef";//"qrc:/resources/RetinotopyMapper.xdef";
+	ExperimentParameterDefinitionCollection tmpParDefCollection;
+
+	tmpParDefCollection.sCollectionName = RETINOTOPYMAPPER_NAME;
+	tmpParDefCollection.cExperimentParameterDefinition = new ExperimentParameterDefinitionContainer();
+	tmpParDefCollection.cExperimentParameterDefinition->LoadFromFile(fileString);
+	lExperimentParameterDefinitions->append(tmpParDefCollection);
+}
+
+ExperimentParameterDefinitionContainer *ExperimentManager::getExperimentParameterDefinition(const QString &sCollectionName)
+{
+	if(lExperimentParameterDefinitions->isEmpty())
+		return NULL;
+	for(int i=0;i<lExperimentParameterDefinitions->count();i++)
+	{
+		if(lExperimentParameterDefinitions->at(i).sCollectionName == sCollectionName)
+			return lExperimentParameterDefinitions->at(i).cExperimentParameterDefinition;
+	}	
+	return NULL;
+}
 
 /*! \brief The ExperimentManager destructor.
 *
@@ -94,6 +119,18 @@ void ExperimentManager::DefaultConstruct()
 ExperimentManager::~ExperimentManager()
 {
 	cleanupExperiment();
+	if(lExperimentParameterDefinitions)
+	{
+		if(lExperimentParameterDefinitions->isEmpty() == false)
+		{
+			for (int i=0;i<lExperimentParameterDefinitions->count();i++)
+			{
+				delete (*lExperimentParameterDefinitions)[i].cExperimentParameterDefinition;
+				(*lExperimentParameterDefinitions)[i].sCollectionName = "";
+			}
+			lExperimentParameterDefinitions->clear();
+		}
+	}
 }
 
 QScriptValue ExperimentManager::ctor__experimentStateEnum(QScriptContext *context, QScriptEngine *engine)

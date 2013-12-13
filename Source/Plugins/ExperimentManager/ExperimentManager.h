@@ -48,6 +48,13 @@ using namespace ExperimentManagerNameSpace;
 class cExperimentStructure;
 class ExperimentGraphicEditor;
 class ExperimentTreeModel;
+class ExperimentParameterDefinitionContainer;
+
+struct ExperimentParameterDefinitionCollection
+{
+	ExperimentParameterDefinitionContainer* cExperimentParameterDefinition;
+	QString sCollectionName;
+};
 
 //!  The ExperimentManager class. 
 /*!
@@ -107,6 +114,7 @@ public:
 	static QScriptValue ctor__experimentStateEnum(QScriptContext *context, QScriptEngine *engine);
 	//static QScriptValue toExperimentStateEnumScriptValue(QScriptEngine *engine, const ExperimentState &s);
 	//static void fromExperimentStateEnumScriptValue(const QScriptValue &obj, ExperimentState &s);
+	static ExperimentParameterDefinitionContainer *getExperimentParameterDefinition(const QString &sCollectionName);
 
 	bool cleanupExperiment();
 	bool fetchExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID);
@@ -372,6 +380,8 @@ private slots:
 	void changeExperimentSubObjectState(ExperimentSubObjectState nState);
 
 private:
+	static void fetchExperimentParameterDefinitions();
+
 	void DefaultConstruct();
 	bool WriteAndCloseExperimentOutputData(const QString &postFileName = "");
 	void initializeDataLogger();
@@ -395,6 +405,7 @@ private:
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
 	
+	static QList<ExperimentParameterDefinitionCollection> *lExperimentParameterDefinitions;
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	cExperimentStructure *cExperimentBlockTrialStructure;

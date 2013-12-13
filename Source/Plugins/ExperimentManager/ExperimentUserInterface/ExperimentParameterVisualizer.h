@@ -25,11 +25,10 @@
 #include "qtvariantproperty.h"
 #include "qteditorfactory.h"
 #include "qttreepropertybrowser.h"
-//#include "qtbuttonpropertybrowser.h"
-//#include "qtgroupboxpropertybrowser.h"
 
 #include "ExperimentParameter.h"
 #include "ExperimentParameterDefinition.h"
+#include "ParameterPropertyExtensions.h"
 
 namespace Ui {class ExperimentParameterVisualizer;};
 
@@ -50,32 +49,48 @@ public:
 	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef);
 	void setAutoDepencyParsing(bool bEnable);
 
+public slots:
+	void resizeParameterView(const int &nWidth, const int &nHeight);
+
 private slots:
 	void propertyValueChanged(QtProperty *property, const QVariant &value);
 
 private:
 	Ui::ExperimentParameterVisualizer *ui;
 	QVBoxLayout *mainLayout;
-
-	struct propertyGroupStruct
+		
+	struct propertyContainerItem
 	{
-		QtGroupPropertyManager* manager;
-		QList<QtProperty *> lProperties;
+		QtProperty *lGroupProperty;
+		QList<propertyContainerItem> *pSubItems;
+		propertyContainerItem()
+		{
+			lGroupProperty = NULL;
+			pSubItems = NULL;
+		}
 	};
 
-	struct propertyDependency
+	struct propertyContainerItems
+	{
+		QList<propertyContainerItem> propItem;
+	};
+
+	struct propertyDependencyStruct
 	{
 		QtVariantProperty *vProperty;
 		ExperimentParameterDefinitionDependencyStrc definition;
 	};
 
-	QtAbstractPropertyBrowser *propertyEditor;
-	propertyGroupStruct lGroupProperties;
-	QtVariantPropertyManager* lVariantPropertyManager;
-	QList<propertyDependency> lPropertyDependencies;
+	QtTreePropertyBrowser *propertyEditor;
+	QtGroupPropertyManager* groupManager;
+	propertyContainerItems lGroupPropertyCollection;
+	//QtVariantPropertyManager* lVariantPropertyManager;
+	VariantExtensionPropertyManager* lVariantPropertyManager;
+	QList<propertyDependencyStruct> lPropertyDependencies;
 	bool bAutoDepencyParsing;
 
-	int getPropertyGroupIndex(const QString &sPropertyGroupName);
+	bool addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList);
+	void deleteSubGroupProperties(QList<propertyContainerItem> *pRootGroupPropertyItemList);
 };
 
 #endif // EXPERIMENTPARAMETERVISUALIZER_H
