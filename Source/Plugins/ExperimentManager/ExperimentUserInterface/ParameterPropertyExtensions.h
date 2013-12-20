@@ -20,18 +20,18 @@
 #define PARAMETERPROPERTYEXTENSIONS_H
 
 #include "qtvariantproperty.h"
-#include <QFrame>
+#include <QVBoxLayout>
 #include <QComboBox>
-#include <QTextEdit>
-#include <QHBoxLayout>
-#include <QPushButton>
+#include <QDialog>
+#include <QPlainTextEdit>
+#include <QDialogButtonBox>
 
 #define EXPERIMENT_PARAMETER_ARRAYSEP_CHAR		","
 
 class StringArrayPropertyType{};
 Q_DECLARE_METATYPE(StringArrayPropertyType)
 
-class StringArrayPropertyWidget : public QFrame 
+class StringArrayPropertyWidget : public QComboBox 
 {
 	Q_OBJECT
 
@@ -43,11 +43,20 @@ public:
 	~StringArrayPropertyWidget();
 
 	void setText(const QString &sText);
+	void setSeperator(const QString &sSeperator);
+
+private slots:
+	void currentIndexChangedSlot(int nIndex);
+	void checkAcception();
 
 private:
-	QHBoxLayout *layout;
-	QTextEdit *textEdit;
-	QPushButton *button;
+	QDialog *tmpDialog;
+	QVBoxLayout *tmpLayout;
+	QPlainTextEdit *tmpTextEdit;
+	QDialogButtonBox *buttonBox;
+
+	QString sCurrentList;
+	QString sCurrentSeperator;
 };
 
 class RotationDirectionPropertyType{};

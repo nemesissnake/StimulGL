@@ -39,26 +39,7 @@ class ExperimentParameterVisualizer : public QWidget
 signals:
 	void destroyed(QWidget*);
 
-public:
-	explicit ExperimentParameterVisualizer(QWidget *parent = NULL);
-	ExperimentParameterVisualizer(const ExperimentParameterVisualizer& other){Q_UNUSED(other)};
-	~ExperimentParameterVisualizer();
-
-	bool addProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue);
-	bool parseDependencies(QtVariantProperty *variantProperty = NULL);
-	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef);
-	void setAutoDepencyParsing(bool bEnable);
-
-public slots:
-	void resizeParameterView(const int &nWidth, const int &nHeight);
-
-private slots:
-	void propertyValueChanged(QtProperty *property, const QVariant &value);
-
 private:
-	Ui::ExperimentParameterVisualizer *ui;
-	QVBoxLayout *mainLayout;
-		
 	struct propertyContainerItem
 	{
 		QtProperty *lGroupProperty;
@@ -78,18 +59,41 @@ private:
 	struct propertyDependencyStruct
 	{
 		QtVariantProperty *vProperty;
-		ExperimentParameterDefinitionDependencyStrc definition;
+		QList<ExperimentParameterDefinitionDependencyStrc> definitions;
+		propertyDependencyStruct()
+		{
+			vProperty = NULL;
+		}
 	};
 
+public:
+	explicit ExperimentParameterVisualizer(QWidget *parent = NULL);
+	ExperimentParameterVisualizer(const ExperimentParameterVisualizer& other){Q_UNUSED(other)};
+	~ExperimentParameterVisualizer();
+
+	bool addParameterProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue);
+	bool addGroupProperties(const QList<ExperimentGroupDefinitionStrc> *expParamDef);
+	bool parseDependencies(QtVariantProperty *variantProperty = NULL);
+	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef);
+	void setAutoDepencyParsing(bool bEnable);
+
+public slots:
+	void resizeParameterView(const int &nWidth, const int &nHeight);
+
+private slots:
+	void propertyValueChanged(QtProperty *property, const QVariant &value);
+
+private:
+	Ui::ExperimentParameterVisualizer *ui;
+	QVBoxLayout *mainLayout;
 	QtTreePropertyBrowser *propertyEditor;
 	QtGroupPropertyManager* groupManager;
 	propertyContainerItems lGroupPropertyCollection;
-	//QtVariantPropertyManager* lVariantPropertyManager;
 	VariantExtensionPropertyManager* lVariantPropertyManager;
 	QList<propertyDependencyStruct> lPropertyDependencies;
 	bool bAutoDepencyParsing;
 
-	bool addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList);
+	bool addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList, QString &sSandPath = QString(""));
 	void deleteSubGroupProperties(QList<propertyContainerItem> *pRootGroupPropertyItemList);
 };
 

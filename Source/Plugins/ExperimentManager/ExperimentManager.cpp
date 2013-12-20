@@ -95,7 +95,7 @@ void ExperimentManager::fetchExperimentParameterDefinitions()
 
 	tmpParDefCollection.sCollectionName = RETINOTOPYMAPPER_NAME;
 	tmpParDefCollection.cExperimentParameterDefinition = new ExperimentParameterDefinitionContainer();
-	tmpParDefCollection.cExperimentParameterDefinition->LoadFromFile(fileString);
+	tmpParDefCollection.cExperimentParameterDefinition->loadFromFile(fileString);
 	lExperimentParameterDefinitions->append(tmpParDefCollection);
 }
 

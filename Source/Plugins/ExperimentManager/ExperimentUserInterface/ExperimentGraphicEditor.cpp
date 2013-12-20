@@ -455,6 +455,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 		gridLayout = new QGridLayout();
 		ExperimentTreeItem *child;
 		QVariant tmpVarValue;
+		QList<int> nIDList;
 		bool bDoParseDependencies = false;
 		if(tmpParametersWidget)
 		{
@@ -544,7 +545,8 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							int nChildCount = child->childCount();
 							QString sName = "";
 							QString sValue = "";
-							int nID = -1;
+							//int nID = -1;
+							nIDList.clear();
 							for (int j=0;j<nChildCount;j++)
 							{							
 								if(item->child(i)->child(j)->getName().toLower() == NAME_TAG)
@@ -555,94 +557,104 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 									}
 										//tmpExpObjectParamDefs = new ExperimentParameterDefinitionContainer();
 									sName = item->child(i)->child(j)->getValue();
-									nID = tmpExpObjectParamDefs->getID(sName);
-									if(nID<0)
-										break;
+									//nID = tmpExpObjectParamDefs->getFirstID(sName);
+									if(tmpExpObjectParamDefs->getParameterIDList(sName, nIDList))
+									{
+										if(nIDList.isEmpty())
+											break;
+									}
+									//if(nID<0)
+									//	break;
 								}
 								if(item->child(i)->child(j)->getName().toLower() == VALUE_TAG)
 									sValue = item->child(i)->child(j)->getValue();
 								if((sName.isEmpty() || sValue.isEmpty()) == false)
 								{
-									if(nID>=0)
+									//if(nID>=0)
+									if(nIDList.isEmpty() == false)
 									{
-										ExperimentParameterDefinitionStrc *tmpParamDef = tmpExpObjectParamDefs->item(nID);
-										if (tmpParamDef)
+										for(int x=0;x<nIDList.count();x++)
 										{
-											if(tmpParametersWidget == NULL)
+											ExperimentParameterDefinitionStrc *tmpParamDef = tmpExpObjectParamDefs->parameterItem(nIDList[x]);
+											if (tmpParamDef)
 											{
-												tmpParametersWidget = new ExperimentParameterVisualizer(graphicWidget);
-												connect(tmpParametersWidget, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
-												connect(this, SIGNAL(onTableViewRedrawned(int, int)), tmpParametersWidget, SLOT(resizeParameterView(int, int)));
-											}
-											if(tmpParamDef->bEnabled)
-											{
-												if(tmpParamDef->eType == Experiment_ParameterType_Boolean)
+												if(tmpParametersWidget == NULL)
 												{
-													sValue = sValue.toLower();
-													if(sValue == BOOL_TRUE_TAG)
+													tmpParametersWidget = new ExperimentParameterVisualizer(graphicWidget);
+													tmpParametersWidget->addGroupProperties(tmpExpObjectParamDefs->groupItems());
+													connect(tmpParametersWidget, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
+													connect(this, SIGNAL(onTableViewRedrawned(int, int)), tmpParametersWidget, SLOT(resizeParameterView(int, int)));
+												}
+												if(tmpParamDef->bEnabled)
+												{
+													if(tmpParamDef->eType == Experiment_ParameterType_Boolean)
 													{
-														tmpVarValue = true;
-													}
-													else if(sValue == BOOL_FALSE_TAG)
-													{
-														tmpVarValue = false;
-													}
-													else
-													{
-														qDebug() << __FUNCTION__ << "wrong defined boolean value for parameter " << sName << "(> " << child->child(j)->getValue() << ")";
-														if(tmpParamDef->sDefaultValue == BOOL_TRUE_TAG)
+														sValue = sValue.toLower();
+														if(sValue == BOOL_TRUE_TAG)
 														{
 															tmpVarValue = true;
 														}
-														else
+														else if(sValue == BOOL_FALSE_TAG)
 														{
 															tmpVarValue = false;
 														}
+														else
+														{
+															qDebug() << __FUNCTION__ << "wrong defined boolean value for parameter " << sName << "(> " << child->child(j)->getValue() << ")";
+															if(tmpParamDef->sDefaultValue == BOOL_TRUE_TAG)
+															{
+																tmpVarValue = true;
+															}
+															else
+															{
+																tmpVarValue = false;
+															}
+														}
+														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
+															bDoParseDependencies = true;
+													}	
+													else if(tmpParamDef->eType == Experiment_ParameterType_String)
+													{
+														tmpVarValue = sValue;
+														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
+															bDoParseDependencies = true;
 													}
-													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
-														bDoParseDependencies = true;
-												}	
-												else if(tmpParamDef->eType == Experiment_ParameterType_String)
-												{
-													tmpVarValue = sValue;
-													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
-														bDoParseDependencies = true;
-												}
-												else if(tmpParamDef->eType == Experiment_ParameterType_Integer)
-												{
-													tmpVarValue = sValue.toInt();
-													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
-														bDoParseDependencies = true;
-												}
-												else if(tmpParamDef->eType == Experiment_ParameterType_RotationDirection)
-												{
-													tmpVarValue = sValue.toInt();
-													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
-														bDoParseDependencies = true;
-												}												
-												else if(tmpParamDef->eType == Experiment_ParameterType_Color)
-												{
-													tmpVarValue = QColor(sValue);
-													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
-														bDoParseDependencies = true;
-												}
-												else if(tmpParamDef->eType == Experiment_ParameterType_Float)
-												{
-													tmpVarValue = sValue.toFloat();
-													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
-														bDoParseDependencies = true;
-												}
-												else if(tmpParamDef->eType == Experiment_ParameterType_Double)
-												{
-													tmpVarValue = sValue.toDouble();
-													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
-														bDoParseDependencies = true;
-												}
-												else if(tmpParamDef->eType == Experiment_ParameterType_StringArray)
-												{
-													tmpVarValue = sValue;//.split(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR,QString::SkipEmptyParts);
-													if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
-														bDoParseDependencies = true;
+													else if(tmpParamDef->eType == Experiment_ParameterType_Integer)
+													{
+														tmpVarValue = sValue.toInt();
+														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
+															bDoParseDependencies = true;
+													}
+													else if(tmpParamDef->eType == Experiment_ParameterType_RotationDirection)
+													{
+														tmpVarValue = sValue.toInt();
+														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
+															bDoParseDependencies = true;
+													}												
+													else if(tmpParamDef->eType == Experiment_ParameterType_Color)
+													{
+														tmpVarValue = QColor(sValue);
+														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
+															bDoParseDependencies = true;
+													}
+													else if(tmpParamDef->eType == Experiment_ParameterType_Float)
+													{
+														tmpVarValue = sValue.toFloat();
+														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
+															bDoParseDependencies = true;
+													}
+													else if(tmpParamDef->eType == Experiment_ParameterType_Double)
+													{
+														tmpVarValue = sValue.toDouble();
+														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
+															bDoParseDependencies = true;
+													}
+													else if(tmpParamDef->eType == Experiment_ParameterType_StringArray)
+													{
+														tmpVarValue = sValue;//.split(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR,QString::SkipEmptyParts);
+														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
+															bDoParseDependencies = true;
+													}
 												}
 											}
 										}

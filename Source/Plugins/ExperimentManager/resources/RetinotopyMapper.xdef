@@ -1,620 +1,823 @@
 <?xml version="1.0" encoding="utf-8"?>
-<parameters>
 
-    <parameter id="0">
-        <enabled>true</enabled>
-        <name>retinopattern</name>
-        <displayname>Pattern</displayname>
-        <groupname>Global</groupname>
-        <information>The Retinotopic Pattern to use</information>
-        <type>string</type>
-        <defaultvalue>PolarAngle</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>false</enabled>
-      			<value>0</value>
-      		</minimal>
-      		<maximal>
-      			<enabled>false</enabled>
-      			<value>0</value>
-      		</maximal> 
-      		<regularexpression>
-      			<pattern></pattern>
-      			<casesensitive>false</casesensitive>
-      		</regularexpression>
-					<allowed>PolarAngle;Eccentricity;MovingBar;MovingDots;Fixation;Custom</allowed>
-      	</restriction>
-    </parameter>
-    
-    <parameter id="1">
-        <enabled>true</enabled>
-        <name>stimulirefreshrate</name>
-        <displayname>Refresh Rate</displayname>
-        <groupname>Global</groupname>
-        <information>The Refresh Rate of the Stimuli</information>
-        <type>integer</type>
-        <defaultvalue>0</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0</value>
-      		</minimal>
-      		<maximal>
-      			<enabled>false</enabled>
-      			<value>0</value>
-      		</maximal> 
-      		<regularexpression>
-      			<pattern></pattern>
-      			<casesensitive>false</casesensitive>
-      		</regularexpression>
-      	</restriction>
-    </parameter>      
-    
-    <parameter id="2">
-        <enabled>true</enabled>
-        <name>showfixpoint</name>
-        <displayname>Show</displayname>
-        <groupname>Fixation Point</groupname>
-        <information>The Visibility of the Fixation Point</information>
-        <type>boolean</type>
-        <defaultvalue>true</defaultvalue>
-    </parameter>    
-    
-    <parameter id="3">
-        <enabled>true</enabled>
-        <name>fixationsize</name>
-        <displayname>Size</displayname>
-        <groupname>Fixation Point</groupname>
-        <information>The Size of the Fixation Point</information>
-        <type>integer</type>
-        <defaultvalue>8</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0</value>
-      		</minimal>
-      		<maximal>
-      			<enabled>false</enabled>
-      			<value>0</value>
-      		</maximal> 
-      		<regularexpression>
-      			<pattern></pattern>
-      			<casesensitive>false</casesensitive>
-      		</regularexpression>
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>showfixpoint</relation>
-        		<regularexpression>
-        			<pattern>true</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter>  
-    
-    <parameter id="4">
-        <enabled>true</enabled>
-        <name>fixationcolor</name>
-        <displayname>Color</displayname>
-        <groupname>Fixation Point</groupname>
-        <information>The Color of the Fixation Point</information>
-        <type>color</type>
-        <defaultvalue>#FF0000</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>showfixpoint</relation>
-        		<regularexpression>
-        			<pattern>true</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>         
-    </parameter>
-    
-    <parameter id="5">
-        <enabled>true</enabled>
-        <name>backgroundcolor</name>
-        <displayname>BackGround Color</displayname>
-        <groupname>Global</groupname>
-        <information>The Color of the Stimuli Background</information>
-        <type>color</type>
-        <defaultvalue>#575757</defaultvalue>
-    </parameter>
-    
-    <parameter id="6">
-        <enabled>true</enabled>
-        <name>stimuluswidthspan</name>
-        <displayname>Width</displayname>
-        <groupname>Global;Size</groupname>
-        <information>The Width of the Stimuli in Pixels</information>
-        <type>integer</type>
-        <defaultvalue>480</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0</value>
-      		</minimal>
-      		<maximal>
-      			<enabled>false</enabled>
-      			<value>0</value>
-      		</maximal> 
-      		<regularexpression>
-      			<pattern></pattern>
-      			<casesensitive>false</casesensitive>
-      		</regularexpression>
-      	</restriction>
-    </parameter>          
+<definitions>
+	<groups>
+		<group id="0">
+	    <enabled>true</enabled>
+	    <grouppath>Global</grouppath>
+		</group>
+		<group id="1">
+	    <enabled>true</enabled>
+	    <grouppath>PolarAngle</grouppath>
+		  <dependencies>
+		  	<dependency id="0">
+		  		<relationid>0</relationid>
+		  		<regularexpression>
+		  			<pattern>PolarAngle</pattern>
+		  			<casesensitive>false</casesensitive>
+		  		</regularexpression>
+		  	</dependency>
+		  </dependencies>
+		</group>	
+		<group id="2">
+	    <enabled>true</enabled>
+	    <grouppath>Eccentricity</grouppath>
+	    <dependencies>
+		  	<dependency id="0">
+		  		<relationid>0</relationid>
+		  		<regularexpression>
+		  			<pattern>Eccentricity</pattern>
+		  			<casesensitive>false</casesensitive>
+		  		</regularexpression>
+		  	</dependency>
+		  </dependencies>
+		</group>
+		<group id="3">
+	    <enabled>true</enabled>
+	    <grouppath>MovingBar</grouppath>
+		  <dependencies>
+		  	<dependency id="0">
+		  		<relationid>0</relationid>
+		  		<regularexpression>
+		  			<pattern>MovingBar</pattern>
+		  			<casesensitive>false</casesensitive>
+		  		</regularexpression>
+		  	</dependency>
+		  </dependencies>
+		</group>
+		<group id="4">
+	    <enabled>true</enabled>
+	    <grouppath>MovingDots</grouppath>
+		  <dependencies>
+		  	<dependency id="0">
+		  		<relationid>0</relationid>
+		  		<regularexpression>
+		  			<pattern>MovingDots</pattern>
+		  			<casesensitive>false</casesensitive>
+		  		</regularexpression>
+		  	</dependency>
+		  </dependencies>
+		</group>
+	</groups>
 
-    <parameter id="7">
-        <enabled>true</enabled>
-        <name>stimulusheightspan</name>
-        <displayname>Height</displayname>
-        <groupname>Global;Size</groupname>
-        <information>The Height of the Stimuli in Pixels</information>
-        <type>integer</type>
-        <defaultvalue>480</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0</value>
-      		</minimal>
-      		<maximal>
-      			<enabled>false</enabled>
-      			<value>0</value>
-      		</maximal> 
-      		<regularexpression>
-      			<pattern></pattern>
-      			<casesensitive>false</casesensitive>
-      		</regularexpression>
-      	</restriction>
-    </parameter> 
-    
-    <parameter id="8">
-        <enabled>true</enabled>
-        <name>antialiasing</name>
-        <displayname>Anti-aliasing</displayname>
-        <groupname>Global</groupname>
-        <information>Determines whether Anti-Aliasing should be enabled</information>
-        <type>boolean</type>
-        <defaultvalue>true</defaultvalue>
-    </parameter>
-
-    <parameter id="9">
-        <enabled>true</enabled>
-        <name>gapdiameter</name>
-        <displayname>GapDiameter</displayname>
-        <groupname>PolarAngle</groupname>
-        <information>The Diameter of the gap in Pixels</information>
-        <type>integer</type>
-        <defaultvalue>20</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0</value>
-      		</minimal>      		
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter>          
-
-    <parameter id="10">
-        <enabled>true</enabled>
-        <name>checkercolor1</name>
-        <displayname>Color(Checker 1)</displayname>
-        <groupname>PolarAngle;Coloring</groupname>
-        <information>The Color of the first Checker</information>
-        <type>color</type>
-        <defaultvalue>#FFFFFF</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter> 
-    
-    <parameter id="11">
-        <enabled>true</enabled>
-        <name>checkercolor2</name>
-        <displayname>Color(Checker 2)</displayname>
-        <groupname>PolarAngle;Coloring</groupname>
-        <information>The Color of the second Checker</information>
-        <type>color</type>
-        <defaultvalue>#000000</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter> 
-    
-    <parameter id="12">
-        <enabled>true</enabled>
-        <name>polarcheckamount</name>
-        <displayname>Number of Checkers</displayname>
-        <groupname>PolarAngle</groupname>
-        <information>The Number of Checkers along the Wedge Rotation Direction</information>
-        <type>integer</type>
-        <defaultvalue>4</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0</value>
-      		</minimal>      		
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter> 
-    
-    <parameter id="13">
-        <enabled>true</enabled>
-        <name>polarringamount</name>
-        <displayname>Number of Rings</displayname>
-        <groupname>PolarAngle</groupname>
-        <information>The Number of partial Rings inside/along the Wedge Direction</information>
-        <type>integer</type>
-        <defaultvalue>20</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0</value>
-      		</minimal>      		
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter> 
-    
-    <parameter id="14">
-        <enabled>true</enabled>
-        <name>polarrotationdirection</name>
-        <displayname>Rotation Direction</displayname>
-        <groupname>PolarAngle</groupname>
-        <information>The Rotation Direction of the Wedge</information>
-        <type>rotationdirection</type>
-        <defaultvalue>-1</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter> 
-    
-    <parameter id="15">
-        <enabled>true</enabled>
-        <name>internaltriggerduration</name>
-        <displayname>Trigger Duration</displayname>
-        <groupname>PolarAngle</groupname>
-        <information>The Expected Internal Trigger Duration Time in milliseconds</information>
-        <type>float</type>
-        <defaultvalue>2000.0</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>50.0</value>
-      		</minimal>      		
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter> 
-    
-    <parameter id="16">
-        <enabled>true</enabled>
-        <name>cycletriggeramount</name>
-        <displayname>Cycle Triggers</displayname>
-        <groupname>PolarAngle</groupname>
-        <information>The Amount of Triggers it takes to complete a full Cycle</information>
-        <type>integer</type>
-        <defaultvalue>1</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>1</value>
-      		</minimal>      		
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter> 
-    
-    <parameter id="17">
-        <enabled>true</enabled>
-        <name>flickrfrequency</name>
-        <displayname>Flicker Frequency</displayname>
-        <groupname>PolarAngle</groupname>
-        <information>The Frequency of the Checker Color Flickering</information>
-        <type>float</type>
-        <defaultvalue>5.0</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0.0</value>
-      		</minimal>      		
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter> 
-    
-    <parameter id="18">
-        <enabled>true</enabled>
-        <name>disablecortmagfac</name>
-        <displayname>Disabled</displayname>
-        <groupname>PolarAngle;Cortical Magnitude</groupname>
-        <information>Disable the Cortical Magnitude Feature</information>
-        <type>boolean</type>
-        <defaultvalue>false</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter>     
-    
-    <parameter id="19">
-        <enabled>true</enabled>
-        <name>corticalmagnitudefactor</name>
-        <displayname>Factor</displayname>
-        <groupname>PolarAngle;Cortical Magnitude</groupname>
-        <information>The Cortical Magnitude Factor</information>
-        <type>float</type>
-        <defaultvalue>0.2</defaultvalue>
-      	<restriction>
-      		<minimal>
-      			<enabled>true</enabled>
-      			<value>0.0</value>
-      		</minimal>      		
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        	<dependency id="1">
-        		<relation>disablecortmagfac</relation>
-        		<regularexpression>
-        			<pattern>false</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>        	
-        </dependencies>      	
-    </parameter>                                 
-    
-    <parameter id="20">
-        <enabled>true</enabled>
-        <name>outputtriggerframe</name>
-        <displayname>Enabled</displayname>
-        <groupname>PolarAngle;Output</groupname>
-        <information>Whether the Output of Generated Stimuli Frames Feature should be enabled</information>
-        <type>boolean</type>
-        <defaultvalue>false</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter>                                 
-    
-    <parameter id="21">
-        <enabled>true</enabled>
-        <name>outputframeformat</name>
-        <displayname>Format</displayname>
-        <groupname>PolarAngle;Output</groupname>
-        <information>The Format of the Generated Stimuli Frame</information>
-        <type>string</type>
-        <defaultvalue>Frame</defaultvalue>
-      	<restriction>
-					<allowed>Frame;Mask</allowed>
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        	<dependency id="1">
-        		<relation>outputtriggerframe</relation>
-        		<regularexpression>
-        			<pattern>true</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>        	
-        </dependencies>      	
-    </parameter>                                 
-    
-    <parameter id="22">
-        <enabled>true</enabled>
-        <name>outputframetype</name>
-        <displayname>Type</displayname>
-        <groupname>PolarAngle;Output</groupname>
-        <information>The File Type of the Generated Stimuli Frame</information>
-        <type>string</type>
-        <defaultvalue>DAT</defaultvalue>
-      	<restriction>
-					<allowed>DAT;PNG;CDAT</allowed>     		
-      	</restriction>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        	<dependency id="1">
-        		<relation>outputtriggerframe</relation>
-        		<regularexpression>
-        			<pattern>true</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>        	
-        </dependencies>      	
-    </parameter>                                 
-    
-    <parameter id="23">
-        <enabled>true</enabled>
-        <name>discretetriggersteps</name>
-        <displayname>Discrete</displayname>
-        <groupname>PolarAngle</groupname>
-        <information>Whether the transition between trigger steps should be discrete</information>
-        <type>boolean</type>
-        <defaultvalue>false</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter>                                 
-    
-    <parameter id="24">
-        <enabled>true</enabled>
-        <name>randomizetriggersteps</name>
-        <displayname>Enable</displayname>
-        <groupname>PolarAngle;Randomisation</groupname>
-        <information>Whether the Randomisation of Trigger Steps should be enabled</information>
-        <type>boolean</type>
-        <defaultvalue>false</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter>                                 
-    
-    <parameter id="25">
-        <enabled>true</enabled>
-        <name>emptytriggersteps</name>
-        <displayname>Enabled</displayname>
-        <groupname>PolarAngle;Empty Steps</groupname>
-        <information>How many Empty Trigger Steps one full cycle contains</information>
-        <type>integer</type>
-        <defaultvalue>false</defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter>                                 
-    
-    <parameter id="26">
-        <enabled>true</enabled>
-        <name>randomizetriggerstepsarray</name>
-        <displayname>Array(predefined)</displayname>
-        <groupname>PolarAngle;Randomisation</groupname>
-        <information>The pre-defined Array containing the Randomisation Stimuli Frames for each Trigger Step</information>
-        <type>stringarray</type>
-        <defaultvalue></defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        	<dependency id="1">
-        		<relation>randomizetriggersteps</relation>
-        		<regularexpression>
-        			<pattern>true</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>        	
-        </dependencies>      	
-    </parameter>                                 
-    
-    <parameter id="27">
-        <enabled>true</enabled>
-        <name>emptytriggerstepsarray</name>
-        <displayname>Array(predefined)</displayname>
-        <groupname>PolarAngle;Empty Steps</groupname>
-        <information>The pre-defined Array containing the Empty Stimuli Frames for each Trigger Step</information>
-        <type>stringarray</type>
-        <defaultvalue></defaultvalue>
-        <dependencies>
-        	<dependency id="0">
-        		<relation>retinopattern</relation>
-        		<regularexpression>
-        			<pattern>PolarAngle</pattern>
-        			<casesensitive>false</casesensitive>
-        		</regularexpression>
-        	</dependency>
-        </dependencies>      	
-    </parameter>                                 
-    
-</parameters>
+	<parameters>
+	
+	    <parameter id="0">
+	        <enabled>true</enabled>
+	        <name>retinopattern</name>
+	        <displayname>Pattern</displayname>
+	        <grouppath>Global</grouppath>
+	        <information>The Retinotopic Pattern to use</information>
+	        <type>string</type>
+	        <defaultvalue>PolarAngle</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>false</enabled>
+	      			<value>0</value>
+	      		</minimal>
+	      		<maximal>
+	      			<enabled>false</enabled>
+	      			<value>0</value>
+	      		</maximal> 
+	      		<regularexpression>
+	      			<pattern></pattern>
+	      			<casesensitive>false</casesensitive>
+	      		</regularexpression>
+						<allowed>PolarAngle;Eccentricity;MovingBar;MovingDots;Fixation;Custom</allowed>
+	      	</restriction>
+	    </parameter>
+	    
+	    <parameter id="1">
+	        <enabled>true</enabled>
+	        <name>stimulirefreshrate</name>
+	        <displayname>Refresh Rate</displayname>
+	        <grouppath>Global</grouppath>
+	        <information>The Refresh Rate of the Stimuli</information>
+	        <type>integer</type>
+	        <defaultvalue>0</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>
+	      		<maximal>
+	      			<enabled>false</enabled>
+	      			<value>0</value>
+	      		</maximal> 
+	      		<regularexpression>
+	      			<pattern></pattern>
+	      			<casesensitive>false</casesensitive>
+	      		</regularexpression>
+	      	</restriction>
+	    </parameter>      
+	    
+	    <parameter id="2">
+	        <enabled>true</enabled>
+	        <name>showfixpoint</name>
+	        <displayname>Show</displayname>
+	        <grouppath>Global;Fixation Point</grouppath>
+	        <information>The Visibility of the Fixation Point</information>
+	        <type>boolean</type>
+	        <defaultvalue>true</defaultvalue>
+	    </parameter>    
+	    
+	    <parameter id="3">
+	        <enabled>true</enabled>
+	        <name>fixationsize</name>
+	        <displayname>Size</displayname>
+	        <grouppath>Global;Fixation Point</grouppath>
+	        <information>The Size of the Fixation Point</information>
+	        <type>integer</type>
+	        <defaultvalue>8</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>
+	      		<maximal>
+	      			<enabled>false</enabled>
+	      			<value>0</value>
+	      		</maximal> 
+	      		<regularexpression>
+	      			<pattern></pattern>
+	      			<casesensitive>false</casesensitive>
+	      		</regularexpression>
+	      	</restriction>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>2</relationid>
+	        		<regularexpression>
+	        			<pattern>true</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>
+	        </dependencies>      	
+	    </parameter>  
+	    
+	    <parameter id="4">
+	        <enabled>true</enabled>
+	        <name>fixationcolor</name>
+	        <displayname>Color</displayname>
+	        <grouppath>Global;Fixation Point</grouppath>
+	        <information>The Color of the Fixation Point</information>
+	        <type>color</type>
+	        <defaultvalue>#FF0000</defaultvalue>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>2</relationid>
+	        		<regularexpression>
+	        			<pattern>true</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>
+	        </dependencies>         
+	    </parameter>
+	    
+	    <parameter id="5">
+	        <enabled>true</enabled>
+	        <name>backgroundcolor</name>
+	        <displayname>BackGround Color</displayname>
+	        <grouppath>Global</grouppath>
+	        <information>The Color of the Stimuli Background</information>
+	        <type>color</type>
+	        <defaultvalue>#575757</defaultvalue>
+	    </parameter>
+	    
+	    <parameter id="6">
+	        <enabled>true</enabled>
+	        <name>stimuluswidthspan</name>
+	        <displayname>Width</displayname>
+	        <grouppath>Global;Size</grouppath>
+	        <information>The Width of the Stimuli in Pixels</information>
+	        <type>integer</type>
+	        <defaultvalue>480</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>
+	      		<maximal>
+	      			<enabled>false</enabled>
+	      			<value>0</value>
+	      		</maximal> 
+	      		<regularexpression>
+	      			<pattern></pattern>
+	      			<casesensitive>false</casesensitive>
+	      		</regularexpression>
+	      	</restriction>
+	    </parameter>          
+	
+	    <parameter id="7">
+	        <enabled>true</enabled>
+	        <name>stimulusheightspan</name>
+	        <displayname>Height</displayname>
+	        <grouppath>Global;Size</grouppath>
+	        <information>The Height of the Stimuli in Pixels</information>
+	        <type>integer</type>
+	        <defaultvalue>480</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>
+	      		<maximal>
+	      			<enabled>false</enabled>
+	      			<value>0</value>
+	      		</maximal> 
+	      		<regularexpression>
+	      			<pattern></pattern>
+	      			<casesensitive>false</casesensitive>
+	      		</regularexpression>
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="8">
+	        <enabled>true</enabled>
+	        <name>antialiasing</name>
+	        <displayname>Anti-aliasing</displayname>
+	        <grouppath>Global</grouppath>
+	        <information>Determines whether Anti-Aliasing should be enabled</information>
+	        <type>boolean</type>
+	        <defaultvalue>true</defaultvalue>
+	    </parameter>
+	
+	    <parameter id="9">
+	        <enabled>true</enabled>
+	        <name>gapdiameter</name>
+	        <displayname>GapDiameter</displayname>
+	        <grouppath>PolarAngle</grouppath>
+	        <information>The Diameter of the gap in Pixels</information>
+	        <type>integer</type>
+	        <defaultvalue>20</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter>          
+	
+	    <parameter id="10">
+	        <enabled>true</enabled>
+	        <name>checkercolor1</name>
+	        <displayname>Color(Checker 1)</displayname>
+	        <grouppath>PolarAngle;Coloring</grouppath>
+	        <information>The Color of the first Checker</information>
+	        <type>color</type>
+	        <defaultvalue>#FFFFFF</defaultvalue>
+	    </parameter> 
+	    
+	    <parameter id="11">
+	        <enabled>true</enabled>
+	        <name>checkercolor2</name>
+	        <displayname>Color(Checker 2)</displayname>
+	        <grouppath>PolarAngle;Coloring</grouppath>
+	        <information>The Color of the second Checker</information>
+	        <type>color</type>
+	        <defaultvalue>#000000</defaultvalue>
+	    </parameter> 
+	    
+	    <parameter id="12">
+	        <enabled>true</enabled>
+	        <name>polarcheckamount</name>
+	        <displayname>Number of Checkers</displayname>
+	        <grouppath>PolarAngle</grouppath>
+	        <information>The Number of Checkers along the Wedge Rotation Direction</information>
+	        <type>integer</type>
+	        <defaultvalue>4</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="13">
+	        <enabled>true</enabled>
+	        <name>polarringamount</name>
+	        <displayname>Number of Rings</displayname>
+	        <grouppath>PolarAngle</grouppath>
+	        <information>The Number of partial Rings inside/along the Wedge Direction</information>
+	        <type>integer</type>
+	        <defaultvalue>20</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="14">
+	        <enabled>true</enabled>
+	        <name>polarrotationdirection</name>
+	        <displayname>Rotation Direction</displayname>
+	        <grouppath>PolarAngle</grouppath>
+	        <information>The Rotation Direction of the Wedge</information>
+	        <type>rotationdirection</type>
+	        <defaultvalue>-1</defaultvalue>
+	    </parameter> 
+	    
+	    <parameter id="15">
+	        <enabled>true</enabled>
+	        <name>internaltriggerduration</name>
+	        <displayname>Trigger Duration</displayname>
+	        <grouppath>PolarAngle</grouppath>
+	        <information>The Expected Internal Trigger Duration Time in milliseconds</information>
+	        <type>float</type>
+	        <defaultvalue>2000.0</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>50.0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="16">
+	        <enabled>true</enabled>
+	        <name>cycletriggeramount</name>
+	        <displayname>Cycle Triggers</displayname>
+	        <grouppath>PolarAngle</grouppath>
+	        <information>The Amount of Triggers it takes to complete a full Cycle</information>
+	        <type>integer</type>
+	        <defaultvalue>1</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>1</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="17">
+	        <enabled>true</enabled>
+	        <name>flickrfrequency</name>
+	        <displayname>Flicker Frequency</displayname>
+	        <grouppath>PolarAngle</grouppath>
+	        <information>The Frequency of the Checker Color Flickering</information>
+	        <type>float</type>
+	        <defaultvalue>5.0</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0.0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="18">
+	        <enabled>true</enabled>
+	        <name>disablecortmagfac</name>
+	        <displayname>Disabled</displayname>
+	        <grouppath>PolarAngle;Cortical Magnitude</grouppath>
+	        <information>Disable the Cortical Magnitude Feature</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>     
+	    
+	    <parameter id="19">
+	        <enabled>true</enabled>
+	        <name>corticalmagnitudefactor</name>
+	        <displayname>Factor</displayname>
+	        <grouppath>PolarAngle;Cortical Magnitude</grouppath>
+	        <information>The Cortical Magnitude Factor</information>
+	        <type>float</type>
+	        <defaultvalue>0.2</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0.0</value>
+	      		</minimal>      		
+	      	</restriction>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>18</relationid>
+	        		<regularexpression>
+	        			<pattern>false</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="20">
+	        <enabled>true</enabled>
+	        <name>outputtriggerframe</name>
+	        <displayname>Enabled</displayname>
+	        <grouppath>PolarAngle;Output</grouppath>
+	        <information>Whether the Output of Generated Stimuli Frames Feature should be enabled</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>                                 
+	    
+	    <parameter id="21">
+	        <enabled>true</enabled>
+	        <name>outputframeformat</name>
+	        <displayname>Format</displayname>
+	        <grouppath>PolarAngle;Output</grouppath>
+	        <information>The Format of the Generated Stimuli Frame</information>
+	        <type>string</type>
+	        <defaultvalue>Frame</defaultvalue>
+	      	<restriction>
+						<allowed>Frame;Mask</allowed>
+	      	</restriction>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>20</relationid>
+	        		<regularexpression>
+	        			<pattern>true</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="22">
+	        <enabled>true</enabled>
+	        <name>outputframetype</name>
+	        <displayname>Type</displayname>
+	        <grouppath>PolarAngle;Output</grouppath>
+	        <information>The File Type of the Generated Stimuli Frame</information>
+	        <type>string</type>
+	        <defaultvalue>DAT</defaultvalue>
+	      	<restriction>
+						<allowed>DAT;PNG;CDAT</allowed>     		
+	      	</restriction>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>20</relationid>
+	        		<regularexpression>
+	        			<pattern>true</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="23">
+	        <enabled>true</enabled>
+	        <name>discretetriggersteps</name>
+	        <displayname>Discrete</displayname>
+	        <grouppath>PolarAngle</grouppath>
+	        <information>Whether the transition between trigger steps should be discrete</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>                                 
+	    
+	    <parameter id="24">
+	        <enabled>true</enabled>
+	        <name>randomizetriggersteps</name>
+	        <displayname>Enable</displayname>
+	        <grouppath>PolarAngle;Randomisation</grouppath>
+	        <information>Whether the Randomisation of Trigger Steps should be enabled</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>                                 
+	    
+	    <parameter id="25">
+	        <enabled>true</enabled>
+	        <name>emptytriggersteps</name>
+	        <displayname>Amount</displayname>
+	        <grouppath>PolarAngle;Empty Steps</grouppath>
+	        <information>How many Empty Trigger Steps one full cycle contains</information>
+	        <type>integer</type>
+	        <defaultvalue>false</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>      		
+	      	</restriction>        
+	    </parameter>                                 
+	    
+	    <parameter id="26">
+	        <enabled>true</enabled>
+	        <name>randomizetriggerstepsarray</name>
+	        <displayname>Array(predefined)</displayname>
+	        <grouppath>PolarAngle;Randomisation</grouppath>
+	        <information>The pre-defined Array containing the Randomisation Stimuli Frames for each Trigger Step</information>
+	        <type>stringarray</type>
+	        <defaultvalue></defaultvalue>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>24</relationid>
+	        		<regularexpression>
+	        			<pattern>true</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="27">
+	        <enabled>true</enabled>
+	        <name>emptytriggerstepsarray</name>
+	        <displayname>Array(predefined)</displayname>
+	        <grouppath>PolarAngle;Empty Steps</grouppath>
+	        <information>The pre-defined Array containing the Empty Stimuli Frames for each Trigger Step</information>
+	        <type>stringarray</type>
+	        <defaultvalue></defaultvalue>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>25</relationid>
+	        		<regularexpression>
+	        			<pattern>^[1-9][0-9]*$</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="28">
+	        <enabled>true</enabled>
+	        <name>gapdiameter</name>
+	        <displayname>GapDiameter</displayname>
+	        <grouppath>Eccentricity</grouppath>
+	        <information>The Diameter of the gap in Pixels</information>
+	        <type>integer</type>
+	        <defaultvalue>20</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter>          
+	
+	    <parameter id="29">
+	        <enabled>true</enabled>
+	        <name>checkercolor1</name>
+	        <displayname>Color(Checker 1)</displayname>
+	        <grouppath>Eccentricity;Coloring</grouppath>
+	        <information>The Color of the first Checker</information>
+	        <type>color</type>
+	        <defaultvalue>#FFFFFF</defaultvalue>
+	    </parameter> 
+	    
+	    <parameter id="30">
+	        <enabled>true</enabled>
+	        <name>checkercolor2</name>
+	        <displayname>Color(Checker 2)</displayname>
+	        <grouppath>Eccentricity;Coloring</grouppath>
+	        <information>The Color of the second Checker</information>
+	        <type>color</type>
+	        <defaultvalue>#000000</defaultvalue>
+	    </parameter> 
+	    
+	    <parameter id="31">
+	        <enabled>true</enabled>
+	        <name>polarcheckamount</name>
+	        <displayname>Number of Checkers</displayname>
+	        <grouppath>Eccentricity</grouppath>
+	        <information>The Number of Checkers along the Wedge Rotation Direction</information>
+	        <type>integer</type>
+	        <defaultvalue>4</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="32">
+	        <enabled>true</enabled>
+	        <name>polarringamount</name>
+	        <displayname>Number of Rings</displayname>
+	        <grouppath>Eccentricity</grouppath>
+	        <information>The Number of partial Rings inside/along the Wedge Direction</information>
+	        <type>integer</type>
+	        <defaultvalue>20</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="33">
+	        <enabled>true</enabled>
+	        <name>polarrotationdirection</name>
+	        <displayname>Rotation Direction</displayname>
+	        <grouppath>Eccentricity</grouppath>
+	        <information>The Rotation Direction of the Wedge</information>
+	        <type>rotationdirection</type>
+	        <defaultvalue>-1</defaultvalue>
+	    </parameter> 
+	    
+	    <parameter id="34">
+	        <enabled>true</enabled>
+	        <name>internaltriggerduration</name>
+	        <displayname>Trigger Duration</displayname>
+	        <grouppath>Eccentricity</grouppath>
+	        <information>The Expected Internal Trigger Duration Time in milliseconds</information>
+	        <type>float</type>
+	        <defaultvalue>2000.0</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>50.0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="35">
+	        <enabled>true</enabled>
+	        <name>cycletriggeramount</name>
+	        <displayname>Cycle Triggers</displayname>
+	        <grouppath>Eccentricity</grouppath>
+	        <information>The Amount of Triggers it takes to complete a full Cycle</information>
+	        <type>integer</type>
+	        <defaultvalue>1</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>1</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="36">
+	        <enabled>true</enabled>
+	        <name>flickrfrequency</name>
+	        <displayname>Flicker Frequency</displayname>
+	        <grouppath>Eccentricity</grouppath>
+	        <information>The Frequency of the Checker Color Flickering</information>
+	        <type>float</type>
+	        <defaultvalue>5.0</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0.0</value>
+	      		</minimal>      		
+	      	</restriction>
+	    </parameter> 
+	    
+	    <parameter id="37">
+	        <enabled>true</enabled>
+	        <name>disablecortmagfac</name>
+	        <displayname>Disabled</displayname>
+	        <grouppath>Eccentricity;Cortical Magnitude</grouppath>
+	        <information>Disable the Cortical Magnitude Feature</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>     
+	    
+	    <parameter id="38">
+	        <enabled>true</enabled>
+	        <name>corticalmagnitudefactor</name>
+	        <displayname>Factor</displayname>
+	        <grouppath>Eccentricity;Cortical Magnitude</grouppath>
+	        <information>The Cortical Magnitude Factor</information>
+	        <type>float</type>
+	        <defaultvalue>0.2</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0.0</value>
+	      		</minimal>      		
+	      	</restriction>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>37</relationid>
+	        		<regularexpression>
+	        			<pattern>false</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="39">
+	        <enabled>true</enabled>
+	        <name>outputtriggerframe</name>
+	        <displayname>Enabled</displayname>
+	        <grouppath>Eccentricity;Output</grouppath>
+	        <information>Whether the Output of Generated Stimuli Frames Feature should be enabled</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>                                 
+	    
+	    <parameter id="40">
+	        <enabled>true</enabled>
+	        <name>outputframeformat</name>
+	        <displayname>Format</displayname>
+	        <grouppath>Eccentricity;Output</grouppath>
+	        <information>The Format of the Generated Stimuli Frame</information>
+	        <type>string</type>
+	        <defaultvalue>Frame</defaultvalue>
+	      	<restriction>
+						<allowed>Frame;Mask</allowed>
+	      	</restriction>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>39</relationid>
+	        		<regularexpression>
+	        			<pattern>true</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="41">
+	        <enabled>true</enabled>
+	        <name>outputframetype</name>
+	        <displayname>Type</displayname>
+	        <grouppath>Eccentricity;Output</grouppath>
+	        <information>The File Type of the Generated Stimuli Frame</information>
+	        <type>string</type>
+	        <defaultvalue>DAT</defaultvalue>
+	      	<restriction>
+						<allowed>DAT;PNG;CDAT</allowed>     		
+	      	</restriction>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>39</relationid>
+	        		<regularexpression>
+	        			<pattern>true</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="42">
+	        <enabled>true</enabled>
+	        <name>discretetriggersteps</name>
+	        <displayname>Discrete</displayname>
+	        <grouppath>Eccentricity</grouppath>
+	        <information>Whether the transition between trigger steps should be discrete</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>                                 
+	    
+	    <parameter id="43">
+	        <enabled>true</enabled>
+	        <name>randomizetriggersteps</name>
+	        <displayname>Enable</displayname>
+	        <grouppath>Eccentricity;Randomisation</grouppath>
+	        <information>Whether the Randomisation of Trigger Steps should be enabled</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>                                 
+	    
+	    <parameter id="44">
+	        <enabled>true</enabled>
+	        <name>emptytriggersteps</name>
+	        <displayname>Amount</displayname>
+	        <grouppath>Eccentricity;Empty Steps</grouppath>
+	        <information>How many Empty Trigger Steps one full cycle contains</information>
+	        <type>integer</type>
+	        <defaultvalue>false</defaultvalue>
+	      	<restriction>
+	      		<minimal>
+	      			<enabled>true</enabled>
+	      			<value>0</value>
+	      		</minimal>      		
+	      	</restriction>        
+	    </parameter>                                 
+	    
+	    <parameter id="45">
+	        <enabled>true</enabled>
+	        <name>randomizetriggerstepsarray</name>
+	        <displayname>Array(predefined)</displayname>
+	        <grouppath>Eccentricity;Randomisation</grouppath>
+	        <information>The pre-defined Array containing the Randomisation Stimuli Frames for each Trigger Step</information>
+	        <type>stringarray</type>
+	        <defaultvalue></defaultvalue>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>43</relationid>
+	        		<regularexpression>
+	        			<pattern>true</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>        	
+	        </dependencies>      	
+	    </parameter>                                 
+	    
+	    <parameter id="46">
+	        <enabled>true</enabled>
+	        <name>emptytriggerstepsarray</name>
+	        <displayname>Array(predefined)</displayname>
+	        <grouppath>Eccentricity;Empty Steps</grouppath>
+	        <information>The pre-defined Array containing the Empty Stimuli Frames for each Trigger Step</information>
+	        <type>stringarray</type>
+	        <defaultvalue></defaultvalue>
+	        <dependencies>
+	        	<dependency id="0">
+	        		<relationid>44</relationid>
+	        		<regularexpression>
+	        			<pattern>^[1-9][0-9]*$</pattern>
+	        			<casesensitive>false</casesensitive>
+	        		</regularexpression>
+	        	</dependency>          	
+	        </dependencies>      	
+	    </parameter>        
+	    
+	</parameters>
+</definitions>	

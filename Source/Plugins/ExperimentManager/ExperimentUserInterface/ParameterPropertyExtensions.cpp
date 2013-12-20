@@ -18,42 +18,93 @@
 
 #include "ParameterPropertyExtensions.h"
 
-StringArrayPropertyWidget::StringArrayPropertyWidget(QWidget *parent) : QFrame(parent), textEdit(NULL), button(NULL), layout(NULL)
+StringArrayPropertyWidget::StringArrayPropertyWidget(QWidget *parent) : QComboBox(parent)
 {
-	textEdit = new QTextEdit();
-	button = new QPushButton();
-	layout = new QHBoxLayout();
-
-
-
-	textEdit->setText("AA BB");
-	button->setText("Butt");
-
-	layout->addWidget(textEdit);
-	layout->addWidget(button);
-
-	this->setLayout(layout);
-	this->show();
-
-	//this->addItem(QIcon(":/resources/Clockwise.png"),VariantExtensionPropertyManager::rotationDirectionString(VariantExtensionPropertyManager::ROTATION_DIR_CLOCKWISE), VariantExtensionPropertyManager::ROTATION_DIR_CLOCKWISE);
-	//this->addItem(QIcon(":/resources/Counterclockwise.png"),VariantExtensionPropertyManager::rotationDirectionString(VariantExtensionPropertyManager::ROTATION_DIR_COUNTERCLOCKWISE), VariantExtensionPropertyManager::ROTATION_DIR_COUNTERCLOCKWISE);
-	//this->setText("Pietje");
+	tmpDialog = NULL;
+	tmpLayout = NULL;
+	tmpTextEdit = NULL;
+	buttonBox = NULL;
+	sCurrentList = "";
+	sCurrentSeperator = EXPERIMENT_PARAMETER_ARRAYSEP_CHAR;//Default value...
+	//this->setEditable(true);
+	this->setFrame(false);
+	this->addItem(sCurrentList);
+	this->addItem("<Edit...>");
+	this->setCurrentText("");
+	connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(currentIndexChangedSlot(int)));
 };
 
 StringArrayPropertyWidget::~StringArrayPropertyWidget()
 {
-	if (textEdit)
-		delete textEdit;
-	if (button)
-		delete button;
-	if (layout)
-		delete layout;
+	if(tmpTextEdit)
+	{
+		delete tmpTextEdit;
+		tmpTextEdit = NULL;
+	}
+	if(buttonBox)
+	{
+		delete buttonBox;
+		buttonBox = NULL;
+	}
+	if(tmpLayout)
+	{
+		delete tmpLayout;
+		tmpLayout = NULL;
+	}
+	if(tmpDialog)
+	{
+		delete tmpDialog;
+		tmpDialog = NULL;
+	}
 }
 
 void StringArrayPropertyWidget::setText(const QString &sText)
 {
-	if(textEdit)
-		textEdit->setText(sText);
+	sCurrentList = sText;
+	if(this->count() > 1)
+	{
+		this->setItemText(0,sCurrentList);
+		emit PropertyWidgetChanged(sCurrentList);
+	}
+}
+
+void StringArrayPropertyWidget::setSeperator(const QString &sSeperator)
+{
+	sCurrentSeperator = sSeperator;
+}
+
+void StringArrayPropertyWidget::currentIndexChangedSlot(int nIndex)
+{
+	if(nIndex==1)//Edit
+	{
+		if(tmpDialog == NULL)
+		{
+			tmpDialog = new QDialog(this);
+			tmpLayout = new QVBoxLayout(tmpDialog);
+			tmpTextEdit = new QPlainTextEdit(this);
+			tmpLayout->addWidget(tmpTextEdit);
+			buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+			tmpLayout->addWidget(buttonBox);
+			connect(buttonBox, SIGNAL(accepted()), this, SLOT(checkAcception()));
+			connect(buttonBox, SIGNAL(rejected()), tmpDialog, SLOT(reject()));
+		}
+		tmpTextEdit->setPlainText(sCurrentList.replace(sCurrentSeperator,"\n"));
+		if(tmpDialog->exec() == 1)
+		{
+			QStringList tmpStrings = tmpTextEdit->toPlainText().split("\n",QString::SkipEmptyParts);
+			setText(tmpStrings.join(sCurrentSeperator));
+		}			
+		setCurrentIndex(0);
+	}
+}
+
+void StringArrayPropertyWidget::checkAcception()
+{	
+	if(tmpDialog)
+	{
+
+		tmpDialog->accept();
+	}	
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -208,13 +259,15 @@ QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager 
 	{
 		StringArrayPropertyWidget *editor = new StringArrayPropertyWidget(parent);
 		bool bResult;
-		QStringList tmpStringList = manager->value(property).toString().split(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR,QString::SkipEmptyParts);
+		//QStringList tmpStringList = manager->value(property).toString().split(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR,QString::SkipEmptyParts);
 		//editor->setText(manager->value(property).toString().replace(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR,"\n"));//   .split(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR,QString::SkipEmptyParts))
 		//editor->setText(manager->value(property).toString());
 		//editor->setFilter(manager->filter(property));
 		createdEditors[property].append(editor);
 		editorToProperty[editor] = property;
-		//bResult = connect(editor, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
+		bResult = connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
+		editor->setSeperator(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR);
+		editor->setText(manager->value(property).toString());
 		bResult = connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
 		return editor;
 	}

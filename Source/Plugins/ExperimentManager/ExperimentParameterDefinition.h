@@ -25,39 +25,44 @@
 #include <QRegularExpression>
 #include <QXmlStreamReader>
 
+#define EXPERIMENT_GROUP_TAG					"group"
+#define EXPERIMENT_GROUPS_TAG					"groups"
 #define EXPERIMENT_PARAMETER_TAG				"parameter"
 #define EXPERIMENT_PARAMETERS_TAG				"parameters"
-#define EXPERIMENT_PARAMETER_ID_TAG				"id"
-#define EXPERIMENT_PARAMETER_ENABLED_TAG		"enabled"
-#define EXPERIMENT_PARAMETER_NAME_TAG			"name"
-#define EXPERIMENT_PARAMETER_DISPLAYNAME_TAG	"displayname"
-#define EXPERIMENT_PARAMETER_GROUPNAME_TAG		"groupname"
-#define EXPERIMENT_PARAMETER_INFORMATION_TAG	"information"
-#define EXPERIMENT_PARAMETER_TYPE_TAG			"type"
-#define EXPERIMENT_PARAMETER_DEFAULTVALUE_TAG	"defaultvalue"
-#define EXPERIMENT_PARAMETER_RESTRICTION_TAG	"restriction"
-#define EXPERIMENT_PARAMETER_MINIMAL_TAG		"minimal"
-#define EXPERIMENT_PARAMETER_MAXIMAL_TAG		"maximal"
-#define EXPERIMENT_PARAMETER_VALUE_TAG			"value"
-#define EXPERIMENT_PARAMETER_ALLOWED_TAG		"allowed"
-#define EXPERIMENT_PARAMETER_DEPENDENCIES_TAG	"dependencies"
-#define EXPERIMENT_PARAMETER_DEPENDENCY_TAG		"dependency"
-#define EXPERIMENT_PARAMETER_RELATION_TAG		"relation"
-#define EXPERIMENT_PARAMETER_REGEXP_TAG			"regularexpression"
-#define EXPERIMENT_PARAMETER_PATTERN_TAG		"pattern"
-#define EXPERIMENT_PARAMETER_CASESENSITIVE_TAG	"casesensitive"
-#define EXPERIMENT_PARAMETER_LISTSEP_CHAR		";"
+#define EXPERIMENT_ID_TAG						"id"
+#define EXPERIMENT_ENABLED_TAG					"enabled"
+#define EXPERIMENT_NAME_TAG						"name"
+#define EXPERIMENT_DISPLAYNAME_TAG				"displayname"
+#define EXPERIMENT_GROUPPATH_TAG				"grouppath"
+#define EXPERIMENT_INFORMATION_TAG				"information"
+#define EXPERIMENT_TYPE_TAG						"type"
+#define EXPERIMENT_DEFAULTVALUE_TAG				"defaultvalue"
+#define EXPERIMENT_RESTRICTION_TAG				"restriction"
+#define EXPERIMENT_MINIMAL_TAG					"minimal"
+#define EXPERIMENT_MAXIMAL_TAG					"maximal"
+#define EXPERIMENT_VALUE_TAG					"value"
+#define EXPERIMENT_ALLOWED_TAG					"allowed"
+#define EXPERIMENT_DEPENDENCIES_TAG				"dependencies"
+#define EXPERIMENT_DEPENDENCY_TAG				"dependency"
+#define EXPERIMENT_RELATION_TAG					"relationid"
+#define EXPERIMENT_REGEXP_TAG					"regularexpression"
+#define EXPERIMENT_PATTERN_TAG					"pattern"
+#define EXPERIMENT_CASESENSITIVE_TAG			"casesensitive"
+#define EXPERIMENT_LISTSEP_CHAR					";"
 
-enum ExperimentParameterSection
+enum ExperimentDefinitionSection
 {
-	Experiment_ParameterSection_Root					= 0,
-	Experiment_ParameterSection_Parameter				= 1,
-	Experiment_ParameterSection_Restriction				= 2,
-	Experiment_ParameterSection_Restriction_Minimal		= 3,
-	Experiment_ParameterSection_Restriction_Maximal		= 4,
-	Experiment_ParameterSection_Restriction_RegExp		= 5,
-	Experiment_ParameterSection_Dependency				= 6,
-	Experiment_ParameterSection_Dependency_RegExp		= 7
+	Experiment_ParameterSection_Root					=  0,
+	Experiment_ParameterSection_Parameter				=  1,
+	Experiment_ParameterSection_Restriction				=  2,
+	Experiment_ParameterSection_Restriction_Minimal		=  3,
+	Experiment_ParameterSection_Restriction_Maximal		=  4,
+	Experiment_ParameterSection_Restriction_RegExp		=  5,
+	Experiment_ParameterSection_Dependency				=  6,
+	Experiment_ParameterSection_Dependency_RegExp		=  7,
+	Experiment_GroupSection_Group						=  8,
+	Experiment_GroupSection_Dependency					=  9,
+	Experiment_GroupSection_Dependency_RegExp			= 10
 };
 
 enum ExperimentParameterTypeName
@@ -113,12 +118,14 @@ struct ExperimentParameterDefinitionRestrictionStrc
 struct ExperimentParameterDefinitionDependencyStrc
 {
 	int nId;
-	QString sDependencyName;
+	//QString sDependencyName;
+	int nDependencyParameterID;
 	QRegularExpression rRegularExpression;
 	ExperimentParameterDefinitionDependencyStrc()
 	{
 		this->nId = -1;
-		this->sDependencyName = "";
+		//this->sDependencyName = "";
+		this->nDependencyParameterID = -1;
 	};
 	~ExperimentParameterDefinitionDependencyStrc() {};
 };
@@ -129,7 +136,7 @@ struct ExperimentParameterDefinitionStrc
 	bool bEnabled;
 	QString sName;
 	QString sDisplayName;
-	QString sGroupName;//Can also be a directory like "Root;Item 1;SubItem A"
+	QString sGroupPath;//Can also be a directory like "Root;Item 1;SubItem A"
 	QString sInformation;
 	ExperimentParameterTypeName eType;
 	QString sDefaultValue;
@@ -143,7 +150,7 @@ struct ExperimentParameterDefinitionStrc
 		this->bEnabled = false;
 		this->sName = "";
 		this->sDisplayName = "";
-		this->sGroupName = "";
+		this->sGroupPath = "";
 		this->sInformation = "";
 		this->eType = Experiment_ParameterType_Unknown;
 		this->sDefaultValue = "";
@@ -151,6 +158,21 @@ struct ExperimentParameterDefinitionStrc
 	~ExperimentParameterDefinitionStrc() {};
 };
 
+struct ExperimentGroupDefinitionStrc
+{
+	int nId;
+	bool bEnabled;
+	QString sGroupPath;
+	QList<ExperimentParameterDefinitionDependencyStrc> Dependencies;
+
+	ExperimentGroupDefinitionStrc()
+	{
+		this->nId = -1;
+		this->bEnabled = false;
+		this->sGroupPath = "";
+	};
+	~ExperimentGroupDefinitionStrc() {};
+};
 
 class ExperimentParameterDefinitionContainer
 {
@@ -159,17 +181,22 @@ public:
 	ExperimentParameterDefinitionContainer();
 	~ExperimentParameterDefinitionContainer();
 	
-	bool LoadFromFile(const QString &sFilePath);//const QUrl &SFileUrl);
-	int getID(const QString &sName);
-	QString getName(const int &nId);
-	ExperimentParameterDefinitionStrc *item(const int &nId);
+	bool loadFromFile(const QString &sFilePath);//const QUrl &SFileUrl);
+	int getFirstParametrID(const QString &sName);
+	bool getParameterIDList(const QString &sName, QList<int> &sList);
+	QString getParameterName(const int &nId);
+	ExperimentParameterDefinitionStrc *parameterItem(const int &nId);
+	QList<ExperimentGroupDefinitionStrc> *groupItems() {return &expGroupDefinitions;};
 
 private:
 
 	ExperimentParameterDefinitionStrc *parseParameterDefinition(QXmlStreamReader& xml);
-	bool addElementDataToStructure(QXmlStreamReader& xml, ExperimentParameterDefinitionStrc &expParamDefStrc, ExperimentParameterSection &expParamSection) const;
+	ExperimentGroupDefinitionStrc *parseGroupDefinition(QXmlStreamReader& xml);
+	bool addParameterDataToStructure(QXmlStreamReader& xml, ExperimentParameterDefinitionStrc &expParamDefStrc, ExperimentDefinitionSection &expParamSection) const;
+	bool addGroupDataToStructure(QXmlStreamReader& xml, ExperimentGroupDefinitionStrc &expGroupDefStrc, ExperimentDefinitionSection &expParamSection) const;
 
 	QList<ExperimentParameterDefinitionStrc> expParamDefinitions;
+	QList<ExperimentGroupDefinitionStrc> expGroupDefinitions;
 	mapParamDefinitionsTypesStrc mParamDefinitionsTypesMap;
 };
 

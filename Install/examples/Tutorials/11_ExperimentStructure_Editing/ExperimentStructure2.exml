@@ -63,7 +63,7 @@ Attributes only apply to readonly non user data, like the ID
                     <parameters>
                         <parameter ID="0">
                             <name>RetinoPattern</name>
-                            <value>polarangle</value>
+                            <value>Eccentricity</value>
                         </parameter>
                         <parameter ID="1">
                             <name>StimuliRefreshRate</name>
@@ -175,13 +175,7 @@ Attributes only apply to readonly non user data, like the ID
                         <parameter ID="27">
                             <name>EmptyTriggerStepsArray</name>
                             <value>5,6,7,8</value>
-                        </parameter>
-                                                                                                                        
-                        
-                        
-                        
-                                                                                              
-                                      
+                        </parameter>  
                                                                                                
                     </parameters>
                 </object>

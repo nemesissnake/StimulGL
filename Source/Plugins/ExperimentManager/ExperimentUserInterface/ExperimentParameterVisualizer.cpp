@@ -81,7 +81,7 @@ void ExperimentParameterVisualizer::deleteSubGroupProperties(QList<propertyConta
 	}
 }
 
-bool ExperimentParameterVisualizer::addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList)
+bool ExperimentParameterVisualizer::addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList, QString &sSandPath)
 {	
 	if(groupManager == NULL)
 		groupManager = new QtGroupPropertyManager(this);
@@ -90,14 +90,14 @@ bool ExperimentParameterVisualizer::addPropertyToSubGroup(const QString &sProper
 	if(pRootGroupPropertyItemList == NULL)
 		return false;
 	
-	QStringList tmpPropGroups = sPropertyGroupNames.split(EXPERIMENT_PARAMETER_LISTSEP_CHAR, QString::SkipEmptyParts);
+	QStringList tmpPropGroups = sPropertyGroupNames.split(EXPERIMENT_LISTSEP_CHAR, QString::SkipEmptyParts);
 	propertyContainerItem tmpPropertyContainerItem;
-
+	
 	if(pRootGroupPropertyItemList->isEmpty() == false)
 	{
 		for (int j=0;j<pRootGroupPropertyItemList->count();j++)
 		{
-			if(pRootGroupPropertyItemList->at(j).lGroupProperty->propertyName() == tmpPropGroups.at(0))//Case sensitive!
+			if(pRootGroupPropertyItemList->at(j).lGroupProperty->propertyId() == sSandPath + tmpPropGroups.at(0))//Case sensitive!
 			{
 				if(tmpPropGroups.count() == 1)
 				{
@@ -106,6 +106,7 @@ bool ExperimentParameterVisualizer::addPropertyToSubGroup(const QString &sProper
 				}
 				else
 				{
+					sSandPath = sSandPath + tmpPropGroups.first() + ";";
 					tmpPropGroups.removeFirst();
 					if(pRootGroupPropertyItemList->at(j).pSubItems == NULL)
 						(*pRootGroupPropertyItemList)[j].pSubItems = new QList<propertyContainerItem>;
@@ -113,30 +114,29 @@ bool ExperimentParameterVisualizer::addPropertyToSubGroup(const QString &sProper
 					bool bGroupIsPresent = false;
 					for (QSet<QtProperty*>::const_iterator it=groupManager->properties().cbegin();it!=groupManager->properties().cend();++it)
 					{
-						if((*it)->propertyName() == tmpPropGroups.at(0))
+						if((*it)->propertyId() == sSandPath + tmpPropGroups.at(0))//Case sensitive!
 						{
 							bGroupIsPresent = true;
 							break;
 						}
 					}
-
 					if(bGroupIsPresent == false)
 					{
 						QtProperty *tmpProperty = groupManager->addProperty(tmpPropGroups.at(0));
+						tmpProperty->setPropertyId(sSandPath + tmpPropGroups.at(0));
 						pRootGroupPropertyItemList->at(j).lGroupProperty->addSubProperty(tmpProperty);
 						tmpPropertyContainerItem.pSubItems = NULL;
 						tmpPropertyContainerItem.lGroupProperty = tmpProperty;
 						pRootGroupPropertyItemList->at(j).pSubItems->append(tmpPropertyContainerItem);
 					}
-
-
-					return addPropertyToSubGroup(tmpPropGroups.join(EXPERIMENT_PARAMETER_LISTSEP_CHAR), item1, pRootGroupPropertyItemList->at(j).pSubItems);
+					return addPropertyToSubGroup(tmpPropGroups.join(EXPERIMENT_LISTSEP_CHAR), item1, pRootGroupPropertyItemList->at(j).pSubItems,sSandPath);
 				}
 			}
 		}
 	}	
 	tmpPropertyContainerItem.pSubItems = NULL;
 	tmpPropertyContainerItem.lGroupProperty = groupManager->addProperty(sPropertyGroupNames);
+	tmpPropertyContainerItem.lGroupProperty->setPropertyId(sSandPath + sPropertyGroupNames);
 	pRootGroupPropertyItemList->append(tmpPropertyContainerItem);
 	int nPropertyGroupIndex = pRootGroupPropertyItemList->count() - 1;	
 	pRootGroupPropertyItemList->at(nPropertyGroupIndex).lGroupProperty->addSubProperty(item1);
@@ -144,7 +144,108 @@ bool ExperimentParameterVisualizer::addPropertyToSubGroup(const QString &sProper
 	return true;
 }
 
-bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue)
+bool ExperimentParameterVisualizer::addGroupProperties(const QList<ExperimentGroupDefinitionStrc> *expParamDef)
+{
+	if(expParamDef == NULL)
+		return false;
+	if(expParamDef->isEmpty())
+		return false;
+	if(lVariantPropertyManager == NULL)
+	{
+		lVariantPropertyManager = new VariantExtensionPropertyManager(this);
+		connect(lVariantPropertyManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(propertyValueChanged(QtProperty *, const QVariant &)));
+	}
+	if(groupManager == NULL)
+		groupManager = new QtGroupPropertyManager(this);	
+
+	int nPropertyGroupIndex;
+	QList<propertyContainerItem> *pCurrentRootGroupPropertyItemList = NULL;
+	QString sSandPath;
+	//QString tmpGroupName;
+	QStringList sCurrentRelativePathItems;	
+	QtProperty *parentProperty;
+	bool bFirstLoop;
+	bool bItemAlreadyExists;
+
+	for (QList<ExperimentGroupDefinitionStrc>::const_iterator it=expParamDef->cbegin();it!=expParamDef->cend();++it)
+	{
+		pCurrentRootGroupPropertyItemList = &lGroupPropertyCollection.propItem;
+		bFirstLoop = true;
+		bItemAlreadyExists;
+		parentProperty = NULL;
+		if((it->bEnabled) && (it->sGroupPath.isEmpty() == false))
+		{
+			sSandPath = "";
+			//tmpGroupName = it->sGroupName;
+			sCurrentRelativePathItems = it->sGroupPath.split(EXPERIMENT_LISTSEP_CHAR,QString::SkipEmptyParts);
+			if(sCurrentRelativePathItems.isEmpty())
+				continue;
+			while(sCurrentRelativePathItems.isEmpty() == false)
+			{
+				//Does it already exist in the current level?
+				bItemAlreadyExists = false;
+				for (QList<propertyContainerItem>::iterator itProp=pCurrentRootGroupPropertyItemList->begin();itProp!=pCurrentRootGroupPropertyItemList->end();++itProp)
+				{
+					QString sPropID = itProp->lGroupProperty->propertyId();
+					if(sPropID.startsWith(sSandPath + sCurrentRelativePathItems.at(0)))
+					{
+						bItemAlreadyExists = true;
+						//Make sure that a sub-group list is available
+						if(itProp->pSubItems == NULL)
+							itProp->pSubItems = new QList<propertyContainerItem>;
+						//Set Parent and Increment the current property group pointer
+						parentProperty = itProp->lGroupProperty;
+						pCurrentRootGroupPropertyItemList = itProp->pSubItems; 
+						break;
+					}
+				}
+				if(bItemAlreadyExists == false)
+				{
+					propertyContainerItem tmpPropertyContainerItem;
+					tmpPropertyContainerItem.pSubItems = NULL;
+					tmpPropertyContainerItem.lGroupProperty = groupManager->addProperty(sCurrentRelativePathItems.at(0));
+					tmpPropertyContainerItem.lGroupProperty->setPropertyId(sSandPath + sCurrentRelativePathItems.at(0));
+
+					//Append this newly created group property
+					pCurrentRootGroupPropertyItemList->append(tmpPropertyContainerItem);		
+					nPropertyGroupIndex = pCurrentRootGroupPropertyItemList->count() - 1;
+					QtProperty *tmpProperty = pCurrentRootGroupPropertyItemList->at(nPropertyGroupIndex).lGroupProperty;
+
+					if(bFirstLoop)
+						propertyEditor->addProperty(tmpProperty);
+					else
+						parentProperty->addSubProperty(tmpProperty);
+
+					if(sCurrentRelativePathItems.count() > 1)//Are there more sub-group's to check/add?
+					{
+						//Make sure that a sub-group list is available
+						if(pCurrentRootGroupPropertyItemList->at(nPropertyGroupIndex).pSubItems == NULL)
+							(*pCurrentRootGroupPropertyItemList)[nPropertyGroupIndex].pSubItems = new QList<propertyContainerItem>;
+						//Set Parent and Increment the current property group pointer
+						parentProperty = pCurrentRootGroupPropertyItemList->at(nPropertyGroupIndex).lGroupProperty;
+						pCurrentRootGroupPropertyItemList = pCurrentRootGroupPropertyItemList->at(nPropertyGroupIndex).pSubItems;
+					}
+					else
+					{
+						//Configure Dependencies?
+						if(it->Dependencies.isEmpty() == false)
+						{
+							for (QList<ExperimentParameterDefinitionDependencyStrc>::const_iterator itDep=it->Dependencies.cbegin();itDep!=it->Dependencies.cend();++itDep)
+							{
+								addDependency((QtVariantProperty *)tmpProperty,(*itDep));
+							}
+						}
+					}
+				}
+				sSandPath = sSandPath + sCurrentRelativePathItems.takeFirst() + EXPERIMENT_LISTSEP_CHAR;
+				bFirstLoop = false;
+			}
+		}		
+	}
+	return true;
+}
+
+bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue)
 {
 	if(expParamDef == NULL)
 		return false;
@@ -203,7 +304,7 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 	}
 	
 	QtVariantProperty *item1 = lVariantPropertyManager->addProperty(varType,expParamDef->sDisplayName);
-	item1->setPropertyId(expParamDef->sName);// + "_" + QString::number(expParamDef->nId));
+	item1->setPropertyId(QString::number(expParamDef->nId));
 
 	if(bDoEnumeratedList)
 	{
@@ -227,13 +328,13 @@ bool ExperimentParameterVisualizer::addProperty(const ExperimentParameterDefinit
 	VariantExtensionPropertyFactory *tmpFactory = new VariantExtensionPropertyFactory(this);
 	propertyEditor->setFactoryForManager((QtVariantPropertyManager*)lVariantPropertyManager, (QtVariantEditorFactory*)tmpFactory);
 		
-	if (expParamDef->sGroupName.isEmpty())
+	if (expParamDef->sGroupPath.isEmpty())
 	{
 		propertyEditor->addProperty(item1);//Here we do not use a subgroup, use root location
 	}
 	else
 	{
-		addPropertyToSubGroup(expParamDef->sGroupName, item1, &lGroupPropertyCollection.propItem);
+		addPropertyToSubGroup(expParamDef->sGroupPath, item1, &lGroupPropertyCollection.propItem);
 	}
 
 	if(varType == QVariant::Color)
@@ -304,10 +405,18 @@ void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, c
 
 bool ExperimentParameterVisualizer::addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef)
 {
+	for (QList<propertyDependencyStruct>::iterator it=lPropertyDependencies.begin();it!=lPropertyDependencies.end();++it)
+	{
+		if(it->vProperty == variantProperty)
+		{
+			it->definitions.append(dependencyParamDef);
+			return true;
+		}
+	}
 	propertyDependencyStruct tmpPropertyDependency;
 	tmpPropertyDependency.vProperty = variantProperty;
-	tmpPropertyDependency.definition = dependencyParamDef;
 	lPropertyDependencies.append(tmpPropertyDependency);
+	lPropertyDependencies.last().definitions.append(dependencyParamDef);
 	return true;
 }
 
@@ -318,38 +427,72 @@ bool ExperimentParameterVisualizer::parseDependencies(QtVariantProperty *variant
 	if(lVariantPropertyManager == NULL)
 		return true;
 
-	QList<propertyDependencyStruct>::const_iterator itDependency;
-	for (itDependency = lPropertyDependencies.cbegin(); itDependency != lPropertyDependencies.cend(); ++itDependency)
+	QList<propertyDependencyStruct>::iterator itDependency;
+	//First make sure everything is enabled
+	for (itDependency = lPropertyDependencies.begin(); itDependency != lPropertyDependencies.end(); ++itDependency)
 	{
 		if(variantProperty != NULL)
 		{
-			if(itDependency->definition.sDependencyName.toLower() != variantProperty->propertyId().toLower())
+			for (QList<ExperimentParameterDefinitionDependencyStrc>::const_iterator itDef=itDependency->definitions.cbegin();itDef!=itDependency->definitions.cend();++itDef)
 			{
-				//QString s1 = itDependency->definition.sDependencyName.toLower();
-				//QString s2 = variantProperty->propertyId().toLower();
-				continue;  
+				if(QString::number(itDef->nDependencyParameterID) == variantProperty->propertyId())
+				{
+					itDependency->vProperty->setEnabled(true);
+					break;
+				}
 			}
+		}
+		else
+		{
+			if(itDependency->vProperty)
+				itDependency->vProperty->setEnabled(true);
+		}
+	}
+	//Now we need to check what to disable
+	for (itDependency = lPropertyDependencies.begin(); itDependency != lPropertyDependencies.end(); ++itDependency)
+	{
+		if(variantProperty != NULL)
+		{
+			bool bPropertyFound = false;
+			for (QList<ExperimentParameterDefinitionDependencyStrc>::const_iterator itDef=itDependency->definitions.cbegin();itDef!=itDependency->definitions.cend();++itDef)
+			{
+				if(QString::number(itDef->nDependencyParameterID) == variantProperty->propertyId())
+				{
+					//QString sName = variantProperty->propertyName();
+					//int n1 = itDef->nDependencyParameterID;
+					//QString s2 = variantProperty->propertyId().toLower();
+					bPropertyFound = true;
+					break;  
+				}
+			}
+			if(bPropertyFound == false)
+				continue;
 		}
 		for (QSet<QtProperty*>::const_iterator it=lVariantPropertyManager->properties().cbegin();it!=lVariantPropertyManager->properties().cend();++it)
 		{
-			QString sID = (*it)->propertyId();
-			if(sID.isEmpty())
+			int nID = -1;
+			QString tmpS = (*it)->propertyId();
+			if(tmpS.isEmpty())
 				continue;
-			//QString tmpName = (*it)->propertyName();				
-			int nResult = QString::compare(itDependency->definition.sDependencyName,sID,Qt::CaseInsensitive);
-			if(nResult==0)
+			if(tmpS == "0")
 			{
-				//QRegularExpression regExp(itDependency->definition.rRegularExpression, QRegularExpression::CaseInsensitiveOption);
-				//QString tmpValue = (*it)->valueText();
-				//QString tmpPattern = itDependency->.definition.rRegularExpression.pattern();
-				//QRegularExpressionMatch match = itDependency->definition.rRegularExpression.match(tmpValue);
-				if(itDependency->definition.rRegularExpression.match((*it)->valueText()).hasMatch())
+				nID = 0;
+			}
+			else
+			{
+				nID = tmpS.toInt();
+				if(nID == 0)
+					continue;
+			}
+			for (QList<ExperimentParameterDefinitionDependencyStrc>::const_iterator itDef=itDependency->definitions.cbegin();itDef!=itDependency->definitions.cend();++itDef)
+			{
+				if(itDef->nDependencyParameterID == nID)
 				{
-					itDependency->vProperty->setEnabled(true);
-				}
-				else
-				{
-					itDependency->vProperty->setEnabled(false);
+					if(itDef->rRegularExpression.match((*it)->valueText()).hasMatch() == false)
+					{
+						itDependency->vProperty->setEnabled(false);
+						break;
+					}
 				}
 			}
 		}
