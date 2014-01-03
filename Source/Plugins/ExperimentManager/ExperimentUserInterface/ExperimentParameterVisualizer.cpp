@@ -19,22 +19,57 @@
 #include "ExperimentParameterVisualizer.h"
 #include "ui_ExperimentParameterVisualizer.h"
 
+//void ExperimentParameterVisualizer::ExperimentParameterVisualizerDefaultConstruct()
+//{
+//	propertyEditor = NULL;
+//	mainLayout = NULL;
+//	groupManager = NULL;
+//	lVariantPropertyManager = NULL;
+//	variantExtensionFactory = NULL;
+//	bAutoDepencyParsing = false;
+//
+//	ui = new Ui::ExperimentParameterVisualizer();
+//	ui->setupUi(this);
+//
+//	mainLayout = new QVBoxLayout(this);
+//	this->setLayout(mainLayout);
+//}
+
 ExperimentParameterVisualizer::ExperimentParameterVisualizer(QWidget *parent) : QWidget(parent)
 {
 	propertyEditor = NULL;
 	mainLayout = NULL;
 	groupManager = NULL;
 	lVariantPropertyManager = NULL;
+	variantExtensionFactory = NULL;
 	bAutoDepencyParsing = false;
 
 	ui = new Ui::ExperimentParameterVisualizer();
 	ui->setupUi(this);
-	
+
 	mainLayout = new QVBoxLayout(this);
 	this->setLayout(mainLayout);
 	propertyEditor = new QtTreePropertyBrowser();
 	mainLayout->addWidget(propertyEditor);
 }
+
+ExperimentParameterVisualizer::ExperimentParameterVisualizer(const ExperimentParameterVisualizer& other)
+{
+	//ExperimentParameterVisualizerDefaultConstruct();
+	////QtTreePropertyBrowser *propertyEditor;
+	//propertyEditor = new QtTreePropertyBrowser(other.propertyEditor);
+	//mainLayout->addWidget(propertyEditor);
+	////QtGroupPropertyManager* groupManager;
+	//groupManager = new QtGroupPropertyManager(other.groupManager);
+	////propertyContainerItems lGroupPropertyCollection;
+	//lGroupPropertyCollection = other.lGroupPropertyCollection; 
+	////VariantExtensionPropertyManager* lVariantPropertyManager;
+	//lVariantPropertyManager = new VariantExtensionPropertyManager(other.lVariantPropertyManager);
+	////QList<propertyDependencyStruct> lPropertyDependencies;
+	//lPropertyDependencies = other.lPropertyDependencies;
+	//bAutoDepencyParsing = true;//other.bAutoDepencyParsing;
+	Q_UNUSED(other);
+};
 
 ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 {
@@ -42,6 +77,11 @@ ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 	{
 		delete lVariantPropertyManager;
 		lVariantPropertyManager = NULL;
+	}
+	if(variantExtensionFactory == NULL)
+	{
+		delete variantExtensionFactory;
+		variantExtensionFactory = NULL;
 	}
 	deleteSubGroupProperties(&lGroupPropertyCollection.propItem);
 	if(groupManager)
@@ -277,6 +317,14 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 	{
 		varType = (QVariant::Type) VariantExtensionPropertyManager::rotationDirectionTypeId();
 	}
+	else if(expParamDef->eType == Experiment_ParameterType_EccentricityDirection)
+	{
+		varType = (QVariant::Type) VariantExtensionPropertyManager::eccentricityDirectionTypeId();
+	}
+	else if(expParamDef->eType == Experiment_ParameterType_MovementDirection)
+	{
+		varType = (QVariant::Type) VariantExtensionPropertyManager::movementDirectionTypeId();
+	}	
 	else if(expParamDef->eType == Experiment_ParameterType_String)
 	{		
 		if(expParamDef->Restriction.lAllowedValues.isEmpty() == false)
@@ -324,9 +372,14 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 			item1->setAttribute(QLatin1String("minimum"), expParamDef->Restriction.MinimalValue.vValue);
 		if(expParamDef->Restriction.MaximalValue.bEnabled)
 			item1->setAttribute(QLatin1String("maximum"), expParamDef->Restriction.MaximalValue.vValue);
-	}	
-	VariantExtensionPropertyFactory *tmpFactory = new VariantExtensionPropertyFactory(this);
-	propertyEditor->setFactoryForManager((QtVariantPropertyManager*)lVariantPropertyManager, (QtVariantEditorFactory*)tmpFactory);
+	}
+
+	if(variantExtensionFactory == NULL)
+	{
+		variantExtensionFactory = new VariantExtensionPropertyFactory(this);
+		//VariantExtensionPropertyFactory *tmpFactory = new VariantExtensionPropertyFactory(this);
+		propertyEditor->setFactoryForManager((QtVariantPropertyManager*)lVariantPropertyManager, (QtVariantEditorFactory*)variantExtensionFactory);
+	}
 		
 	if (expParamDef->sGroupPath.isEmpty())
 	{
@@ -349,7 +402,7 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 	{
 		lVariantPropertyManager->setValue(item1,vValue.toInt());
 	}
-	else if(varType == QVariant::String)
+	else if((varType == QVariant::String) || (varType == (QVariant::Type) QtVariantPropertyManager::enumTypeId()))
 	{
 		if(bDoEnumeratedList)
 		{

@@ -61,6 +61,10 @@ private:
 
 class RotationDirectionPropertyType{};
 Q_DECLARE_METATYPE(RotationDirectionPropertyType)
+class MovementDirectionPropertyType{};
+Q_DECLARE_METATYPE(MovementDirectionPropertyType)
+class EccentricityDirectionPropertyType{};
+Q_DECLARE_METATYPE(EccentricityDirectionPropertyType)
 
 class RotationDirectionPropertyWidget : public QComboBox 
 {
@@ -71,6 +75,30 @@ signals:
 
 public:
 	RotationDirectionPropertyWidget(QWidget *parent = NULL);
+
+};
+
+class MovementDirectionPropertyWidget : public QComboBox 
+{
+	Q_OBJECT
+
+signals:
+	void PropertyWidgetChanged(const QString&);
+
+public:
+	MovementDirectionPropertyWidget(QWidget *parent = NULL);
+
+};
+
+class EccentricityDirectionPropertyWidget : public QComboBox 
+{
+	Q_OBJECT
+
+signals:
+	void PropertyWidgetChanged(const QString&);
+
+public:
+	EccentricityDirectionPropertyWidget(QWidget *parent = NULL);
 
 };
 
@@ -93,6 +121,20 @@ public:
 		ROTATION_DIR_CLOCKWISE			=  1
 	};
 
+	enum MovementDirectionEnum
+	{
+		MOVEMENT_DIR_DOWNUP				= -1,
+		MOVEMENT_DIR_UNDEFINED			=  0,
+		MOVEMENT_DIR_UPDOWN				=  1
+	};
+
+	enum EccentricityDirectionEnum
+	{
+		ECCENTRICITY_DIR_DECREASE		= -1,
+		ECCENTRICITY_DIR_UNDEFINED		=  0,
+		ECCENTRICITY_DIR_INCREASE		=  1
+	};
+
 	VariantExtensionPropertyManager(QObject *parent = NULL);
 	~VariantExtensionPropertyManager();
 
@@ -100,12 +142,23 @@ public:
 	{
 		return qMetaTypeId<RotationDirectionPropertyType>();
 	}
+	static int movementDirectionTypeId()
+	{
+		return qMetaTypeId<MovementDirectionPropertyType>();
+	}
+	static int eccentricityDirectionTypeId()
+	{
+		return qMetaTypeId<EccentricityDirectionPropertyType>();
+	}
 	static int stringArrayTypeId()
 	{
 		return qMetaTypeId<StringArrayPropertyType>();
 	}
 
 	static QString rotationDirectionString(enum RotationDirectionEnum);
+	static QString movementDirectionString(enum MovementDirectionEnum eValue);
+	static QString eccentricityDirectionString(enum EccentricityDirectionEnum eValue);
+
 	bool isPropertyTypeSupported(int propertyType) const;
 	bool hasCustomPropertyType(const QtProperty *property) const;
 	bool isManagedCustomPropertyType(const QtProperty *property) const;
@@ -146,6 +199,8 @@ private:
 	};
 	QMap<const QtProperty *, Data> theValues;
 	static QMap<int, QString> mRotationDirection;
+	static QMap<int, QString> mMovementDirection;
+	static QMap<int, QString> mEccentricityDirection;
 };
 
 //////////////////////////////////////////////////////////////////////////////////

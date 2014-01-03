@@ -28,9 +28,7 @@
 #include "RetinotopyMapper.h"
 #include "QML2Viewer.h"
 #include "ExperimentUserInterface/ExperimentGraphicEditor.h"
-#include "ExperimentParameterDefinition.h"
-
-QList<ExperimentParameterDefinitionCollection> *ExperimentManager::lExperimentParameterDefinitions = NULL;
+#include "ExperimentUserInterFace/ExperimentParameterWidgets.h"
 
 QScriptValue ExperimentManager::ctor__experimentManager(QScriptContext* context, QScriptEngine* engine)
 {
@@ -79,36 +77,10 @@ void ExperimentManager::DefaultConstruct()
 	cExperimentBlockTrialStructure = NULL;
 	expDataLogger = NULL;
 	ExpGraphicEditor = NULL;
+	expParamWidgets = NULL;
 	RegisterMetaTypes();
-	fetchExperimentParameterDefinitions();
+	expParamWidgets = ExperimentParameterWidgets::instance();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
-}
-
-void ExperimentManager::fetchExperimentParameterDefinitions()
-{
-	if(lExperimentParameterDefinitions)
-		return;
-	else
-		lExperimentParameterDefinitions = new QList<ExperimentParameterDefinitionCollection>;
-	QString fileString = ":/resources/RetinotopyMapper.xdef";//"C:\\Users\\sven.gijsen\\Desktop\\desktop.xdef";//":/resources/RetinotopyMapper.xdef";//"qrc:/resources/RetinotopyMapper.xdef";
-	ExperimentParameterDefinitionCollection tmpParDefCollection;
-
-	tmpParDefCollection.sCollectionName = RETINOTOPYMAPPER_NAME;
-	tmpParDefCollection.cExperimentParameterDefinition = new ExperimentParameterDefinitionContainer();
-	tmpParDefCollection.cExperimentParameterDefinition->loadFromFile(fileString);
-	lExperimentParameterDefinitions->append(tmpParDefCollection);
-}
-
-ExperimentParameterDefinitionContainer *ExperimentManager::getExperimentParameterDefinition(const QString &sCollectionName)
-{
-	if(lExperimentParameterDefinitions->isEmpty())
-		return NULL;
-	for(int i=0;i<lExperimentParameterDefinitions->count();i++)
-	{
-		if(lExperimentParameterDefinitions->at(i).sCollectionName == sCollectionName)
-			return lExperimentParameterDefinitions->at(i).cExperimentParameterDefinition;
-	}	
-	return NULL;
 }
 
 /*! \brief The ExperimentManager destructor.
@@ -119,18 +91,6 @@ ExperimentParameterDefinitionContainer *ExperimentManager::getExperimentParamete
 ExperimentManager::~ExperimentManager()
 {
 	cleanupExperiment();
-	if(lExperimentParameterDefinitions)
-	{
-		if(lExperimentParameterDefinitions->isEmpty() == false)
-		{
-			for (int i=0;i<lExperimentParameterDefinitions->count();i++)
-			{
-				delete (*lExperimentParameterDefinitions)[i].cExperimentParameterDefinition;
-				(*lExperimentParameterDefinitions)[i].sCollectionName = "";
-			}
-			lExperimentParameterDefinitions->clear();
-		}
-	}
 }
 
 QScriptValue ExperimentManager::ctor__experimentStateEnum(QScriptContext *context, QScriptEngine *engine)
@@ -178,6 +138,14 @@ void ExperimentManager::RegisterMetaTypes()
 	qRegisterMetaType<cExperimentStructure>(CEXPERIMENTSTRUCTURE_NAME);
 	qRegisterMetaType<cBlockStructure>(CBLOCKSTRUCTURE_NAME);
 	qRegisterMetaType<cLoopStructure>(CLOOPSTRUCTURE_NAME);
+}
+
+void ExperimentManager::cleanupSingletons()
+{
+	if (expParamWidgets)
+	{
+		expParamWidgets->drop();
+	}
 }
 
 void ExperimentManager::sendToMainAppLogOutput(const QString &strText2Write)

@@ -167,7 +167,10 @@ void ExperimentStructureVisualizer::setupLayout()
 {
 	ui->mainLayout->setMenuBar(toolBar);
 	if(graphViewLayout == NULL)
-		graphViewLayout = new QVBoxLayout(ui->graphicsView);
+	{
+		graphViewLayout = new QVBoxLayout();
+		graphViewLayout->addWidget(ui->graphicsView);
+	}
 	ui->mainLayout->addLayout(graphViewLayout);
 	ui->mainLayout->setContentsMargins(0,0,0,0);
 	ui->mainLayout->setSpacing(0);
@@ -338,6 +341,7 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 				
 		QRectF currentSceneRect = _scene->itemsBoundingRect();
 		qreal dScaleFactor = ((ui->graphicsView->size().width()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.width();
+		ui->graphicsView->resetTransform();
 		ui->graphicsView->scale(dScaleFactor, dScaleFactor);
 		ui->graphicsView->centerOn(currentSceneRect.center());
 		ui->graphicsView->centerOn(_scene->itemsBoundingRect().center());

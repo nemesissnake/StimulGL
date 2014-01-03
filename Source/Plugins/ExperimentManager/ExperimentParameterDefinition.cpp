@@ -85,7 +85,7 @@ QString ExperimentParameterDefinitionContainer::getParameterName(const int &nId)
 	return "";
 }
 
-ExperimentParameterDefinitionStrc *ExperimentParameterDefinitionContainer::parameterItem(const int &nId)
+ExperimentParameterDefinitionStrc *ExperimentParameterDefinitionContainer::getParameterDefinition(const int &nId)
 {
 	if((expParamDefinitions.isEmpty()) || (nId<0))
 		return NULL;

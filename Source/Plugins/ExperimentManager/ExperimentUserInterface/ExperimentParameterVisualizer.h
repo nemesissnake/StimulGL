@@ -68,7 +68,7 @@ private:
 
 public:
 	explicit ExperimentParameterVisualizer(QWidget *parent = NULL);
-	ExperimentParameterVisualizer(const ExperimentParameterVisualizer& other){Q_UNUSED(other)};
+	ExperimentParameterVisualizer(const ExperimentParameterVisualizer& other);
 	~ExperimentParameterVisualizer();
 
 	bool addParameterProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue);
@@ -90,9 +90,11 @@ private:
 	QtGroupPropertyManager* groupManager;
 	propertyContainerItems lGroupPropertyCollection;
 	VariantExtensionPropertyManager* lVariantPropertyManager;
+	VariantExtensionPropertyFactory *variantExtensionFactory;
 	QList<propertyDependencyStruct> lPropertyDependencies;
 	bool bAutoDepencyParsing;
 
+	//void ExperimentParameterVisualizerDefaultConstruct();
 	bool addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList, QString &sSandPath = QString(""));
 	void deleteSubGroupProperties(QList<propertyContainerItem> *pRootGroupPropertyItemList);
 };

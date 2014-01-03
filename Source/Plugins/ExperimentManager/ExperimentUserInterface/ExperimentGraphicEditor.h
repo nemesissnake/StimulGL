@@ -99,7 +99,7 @@ private:
 	QToolBar *toolBar;
 	QSplitter *horSplitter;
 	QScrollArea *scrollArea;
-	QWidget *graphicWidget;
+	QWidget *dynamicGraphicWidget;
 	QGridLayout *gridLayout;
 
 	QTableWidget *tblWidgetView;
@@ -107,7 +107,7 @@ private:
 	ExperimentTreeModel *pExpTreeModel;		//used for setExperimentTreeModel() -> Pointer
 	ExperimentTreeModel loadedExpTreeModel; //used for openFile();
 	FindDialog *findDlg;
-	AttributeWidget *attWidget;
+	AttributeWidget *attWidget;	
 
 	QVBoxLayout *mainLayout;
 	QAction *actionNew_File;
@@ -125,7 +125,6 @@ private:
 	QToolButton *buttonFile;
 	QToolButton *buttonEdit;
 
-	//QString tmpString;
 	TreeFilterSettings currentViewSettings;
 	QModelIndex selectedIndex;
 
@@ -133,7 +132,7 @@ private:
 	ExperimentStructureVisualizer *expStructVisualizer;
 	cExperimentStructure *tmpExpStruct; 
 	ExperimentParameterDefinitionContainer *tmpExpObjectParamDefs;
-	ExperimentParameterVisualizer *tmpParametersWidget;
+	QHash<QString, ExperimentParameterVisualizer *> staticGraphicWidgetsHashTable;
 };
 
 #endif // ExperimentGraphicEditor_H

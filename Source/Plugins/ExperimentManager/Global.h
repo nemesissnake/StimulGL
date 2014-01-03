@@ -178,6 +178,8 @@ namespace ExperimentManagerNameSpace
 	//#define MIN_SCREEN_UPDATE_TIME				10
 	//#define MAX_SCREEN_UPDATE_TIME				16.6667f
 
+	#define RETINOTOPYMAPPER_PARAMDEF_PATH			":/resources/RetinotopyMapper.xdef"
+
 	#define DEFAULT_OUTPUTFILE				"Out.txt"
 	#define ARGB_FORMAT_HEADER				0xCAFE1234
 	#define ARGB_FORMAT_HEADER_CONC			0xCAFE5678

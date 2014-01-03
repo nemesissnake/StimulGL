@@ -48,13 +48,7 @@ using namespace ExperimentManagerNameSpace;
 class cExperimentStructure;
 class ExperimentGraphicEditor;
 class ExperimentTreeModel;
-class ExperimentParameterDefinitionContainer;
-
-struct ExperimentParameterDefinitionCollection
-{
-	ExperimentParameterDefinitionContainer* cExperimentParameterDefinition;
-	QString sCollectionName;
-};
+class ExperimentParameterWidgets;
 
 //!  The ExperimentManager class. 
 /*!
@@ -114,8 +108,9 @@ public:
 	static QScriptValue ctor__experimentStateEnum(QScriptContext *context, QScriptEngine *engine);
 	//static QScriptValue toExperimentStateEnumScriptValue(QScriptEngine *engine, const ExperimentState &s);
 	//static void fromExperimentStateEnumScriptValue(const QScriptValue &obj, ExperimentState &s);
-	static ExperimentParameterDefinitionContainer *getExperimentParameterDefinition(const QString &sCollectionName);
+	//static ExperimentParameterDefinitionContainer *getExperimentParameterDefinition(const QString &sCollectionName);
 
+	void cleanupSingletons();
 	bool cleanupExperiment();
 	bool fetchExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID);
 	tParsedParameterList *getObjectBlockParamListById(int nID);
@@ -124,7 +119,6 @@ public:
 	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool getExperimentObjectScriptValue(const int &nObjectID,const QString &sKeyName,QScriptValue &sScriptValue);
 	bool setExperimentObjectFromScriptValue(const int &nObjectID,const QString &sKeyName,const QScriptValue &sScriptValue);
-	//VisualExperimentEditor *getVisualExperimentEditor();
 
 	bool createExperimentStructure(QDomNodeList &blockTrialDomNodeLst, ExperimentTreeModel *expTreeModel = NULL, cExperimentStructure* cExpBlockTrialStruct = NULL);
 
@@ -380,8 +374,6 @@ private slots:
 	void changeExperimentSubObjectState(ExperimentSubObjectState nState);
 
 private:
-	static void fetchExperimentParameterDefinitions();
-
 	void DefaultConstruct();
 	bool WriteAndCloseExperimentOutputData(const QString &postFileName = "");
 	void initializeDataLogger();
@@ -405,7 +397,7 @@ private:
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
 	
-	static QList<ExperimentParameterDefinitionCollection> *lExperimentParameterDefinitions;
+	ExperimentParameterWidgets *expParamWidgets;
 	QDomNodeList ExperimentObjectDomNodeList;
 	QDomNodeList ExperimentBlockTrialsDomNodeList;
 	cExperimentStructure *cExperimentBlockTrialStructure;
@@ -414,7 +406,7 @@ private:
 	ExperimentGraphicEditor *ExpGraphicEditor;
 	ExperimentState experimentCurrentState;
 	QHash<QString, int> experimentStateHash;
-
+	
 	QByteArray currentExperimentFile;
 	QByteArray currentValidationFile;
 

@@ -5,5 +5,9 @@
         <file>resources/RetinotopyMapper.xdef</file>
         <file>resources/Clockwise.png</file>
         <file>resources/Counterclockwise.png</file>
+        <file>resources/Decrease.png</file>
+        <file>resources/Downwards.png</file>
+        <file>resources/Increase.png</file>
+        <file>resources/Upwards.png</file>
     </qresource>
 </RCC>

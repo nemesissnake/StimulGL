@@ -115,14 +115,32 @@ RotationDirectionPropertyWidget::RotationDirectionPropertyWidget(QWidget *parent
 	this->addItem(QIcon(":/resources/Counterclockwise.png"),VariantExtensionPropertyManager::rotationDirectionString(VariantExtensionPropertyManager::ROTATION_DIR_COUNTERCLOCKWISE), VariantExtensionPropertyManager::ROTATION_DIR_COUNTERCLOCKWISE);
 };
 
+MovementDirectionPropertyWidget::MovementDirectionPropertyWidget(QWidget *parent) : QComboBox(parent) 
+{
+	this->addItem(QIcon(":/resources/Upwards.png"),VariantExtensionPropertyManager::movementDirectionString(VariantExtensionPropertyManager::MOVEMENT_DIR_DOWNUP), VariantExtensionPropertyManager::MOVEMENT_DIR_DOWNUP);
+	this->addItem(QIcon(":/resources/Downwards.png"),VariantExtensionPropertyManager::movementDirectionString(VariantExtensionPropertyManager::MOVEMENT_DIR_UPDOWN), VariantExtensionPropertyManager::MOVEMENT_DIR_UPDOWN);
+};
+
+EccentricityDirectionPropertyWidget::EccentricityDirectionPropertyWidget(QWidget *parent) : QComboBox(parent) 
+{
+	this->addItem(QIcon(":/resources/Decrease.png"),VariantExtensionPropertyManager::eccentricityDirectionString(VariantExtensionPropertyManager::ECCENTRICITY_DIR_DECREASE), VariantExtensionPropertyManager::ECCENTRICITY_DIR_DECREASE);
+	this->addItem(QIcon(":/resources/Increase.png"),VariantExtensionPropertyManager::eccentricityDirectionString(VariantExtensionPropertyManager::ECCENTRICITY_DIR_INCREASE), VariantExtensionPropertyManager::ECCENTRICITY_DIR_INCREASE);
+};
+
 /////////////////////////////////////////////////////////////////////////////////
 
 QMap<int, QString> VariantExtensionPropertyManager::mRotationDirection;
+QMap<int, QString> VariantExtensionPropertyManager::mMovementDirection;
+QMap<int, QString> VariantExtensionPropertyManager::mEccentricityDirection;
 
 VariantExtensionPropertyManager::VariantExtensionPropertyManager(QObject *parent) : QtVariantPropertyManager(parent)
 {
 	mRotationDirection[ROTATION_DIR_CLOCKWISE] = "Clockwise";
 	mRotationDirection[ROTATION_DIR_COUNTERCLOCKWISE] = "CounterClockwise";
+	mMovementDirection[MOVEMENT_DIR_DOWNUP] = "Upwards";
+	mMovementDirection[MOVEMENT_DIR_UPDOWN] = "Downwards";
+	mEccentricityDirection[ECCENTRICITY_DIR_DECREASE] = "Decrease";
+	mEccentricityDirection[ECCENTRICITY_DIR_INCREASE] = "Increase";
 }
 
 VariantExtensionPropertyManager::~VariantExtensionPropertyManager(void)
@@ -134,16 +152,28 @@ QString VariantExtensionPropertyManager::rotationDirectionString(enum RotationDi
 	return mRotationDirection[eValue];
 };
 
+QString VariantExtensionPropertyManager::movementDirectionString(enum MovementDirectionEnum eValue)
+{
+	return mMovementDirection[eValue];
+};
+
+QString VariantExtensionPropertyManager::eccentricityDirectionString(enum EccentricityDirectionEnum eValue)
+{
+	return mEccentricityDirection[eValue];
+};
+
 bool VariantExtensionPropertyManager::isPropertyTypeSupported(int propertyType) const
 {
-	if ((propertyType == rotationDirectionTypeId()) || (propertyType == stringArrayTypeId()))
+	if ((propertyType == movementDirectionTypeId()) || (propertyType == eccentricityDirectionTypeId()) || (propertyType == rotationDirectionTypeId()) || (propertyType == stringArrayTypeId()))
 		return true;
 	return QtVariantPropertyManager::isPropertyTypeSupported(propertyType);
 }
 
 bool VariantExtensionPropertyManager::hasCustomPropertyType(const QtProperty *property) const
 {
-	if((propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::rotationDirectionTypeId()) ||
+	if( (propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::movementDirectionTypeId()) ||
+		(propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::eccentricityDirectionTypeId()) ||
+		(propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::rotationDirectionTypeId()) ||
 		(propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::stringArrayTypeId()) )
 		return true;
 	return false;
@@ -178,6 +208,16 @@ void VariantExtensionPropertyManager::setValue(QtProperty *property, const QVari
 		{
 			RotationDirectionEnum tmpEnum = (RotationDirectionEnum)val.toInt();
 			data.value = VariantExtensionPropertyManager::rotationDirectionString(tmpEnum);
+		}
+		else if(propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::movementDirectionTypeId())
+		{
+			MovementDirectionEnum tmpEnum = (MovementDirectionEnum)val.toInt();
+			data.value = VariantExtensionPropertyManager::movementDirectionString(tmpEnum);
+		}
+		else if(propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::eccentricityDirectionTypeId())
+		{
+			EccentricityDirectionEnum tmpEnum = (EccentricityDirectionEnum)val.toInt();
+			data.value = VariantExtensionPropertyManager::eccentricityDirectionString(tmpEnum);
 		}
 		else if(propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::stringArrayTypeId())
 		{
@@ -246,6 +286,30 @@ QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager 
 	if (manager->propertyType(property) == VariantExtensionPropertyManager::rotationDirectionTypeId()) 
 	{
 		RotationDirectionPropertyWidget *editor = new RotationDirectionPropertyWidget(parent);
+		bool bResult;
+		//editor->setText(manager->value(property).toString());
+		//editor->setFilter(manager->filter(property));
+		createdEditors[property].append(editor);
+		editorToProperty[editor] = property;
+		bResult = connect(editor, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
+		bResult = connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
+		return editor;
+	}
+	else if (manager->propertyType(property) == VariantExtensionPropertyManager::movementDirectionTypeId()) 
+	{
+		MovementDirectionPropertyWidget *editor = new MovementDirectionPropertyWidget(parent);
+		bool bResult;
+		//editor->setText(manager->value(property).toString());
+		//editor->setFilter(manager->filter(property));
+		createdEditors[property].append(editor);
+		editorToProperty[editor] = property;
+		bResult = connect(editor, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
+		bResult = connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
+		return editor;
+	}
+	else if (manager->propertyType(property) == VariantExtensionPropertyManager::eccentricityDirectionTypeId()) 
+	{
+		EccentricityDirectionPropertyWidget *editor = new EccentricityDirectionPropertyWidget(parent);
 		bool bResult;
 		//editor->setText(manager->value(property).toString());
 		//editor->setFilter(manager->filter(property));

@@ -43,6 +43,7 @@
 #include "ExperimentStructureVisualizer.h"
 #include "ExperimentParameterVisualizer.h"
 #include "ExperimentParameterDefinition.h"
+#include "ExperimentParameterWidgets.h"
 
 ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(parent)//, ui(new Ui::ExperimentGraphicEditor)
 {
@@ -54,7 +55,7 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	horSplitter = NULL;
 	toolBar = NULL;
 	findDlg = NULL;
-	graphicWidget = NULL;
+	dynamicGraphicWidget = NULL;
 	pExpTreeModel = NULL;
 	filterModel = NULL;
 	mainLayout = NULL;
@@ -76,8 +77,7 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	tmpExpStruct = NULL;
 	expStructVisualizer = NULL;
 	tmpExpObjectParamDefs = NULL;
-	tmpParametersWidget = NULL;
-
+	
 	currentViewSettings.bSkipComments = false;
 	currentViewSettings.bSkipEmptyAttributes = false;
 	
@@ -93,14 +93,15 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 ExperimentGraphicEditor::~ExperimentGraphicEditor()
 {
 	configureActions(false);
+	staticGraphicWidgetsHashTable.clear();
 	if(gridLayout)
 		delete gridLayout;
 	if(treeView)
 		delete treeView;
 	if(attWidget)
 		delete attWidget;
-	if(graphicWidget)
-		delete graphicWidget;
+	if(dynamicGraphicWidget)
+		delete dynamicGraphicWidget;	
 	if(tblWidgetView)
 		delete tblWidgetView;
 	if(scrollArea)
@@ -131,10 +132,6 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 		delete tmpExpStruct;
 	if(tmpExpObjectParamDefs)
 		tmpExpObjectParamDefs = NULL;	
-	if(tmpParametersWidget)
-		delete tmpParametersWidget;
-	//if(expStructVisualizer)
-	//	delete expStructVisualizer;//Doesn't need to be done here...
 }
 
 void ExperimentGraphicEditor::setExperimentManager(ExperimentManager *pExpManager)
@@ -396,10 +393,10 @@ void ExperimentGraphicEditor::closeFile()
 		pExpTreeModel = NULL;
 	}
 	//Deleting scroll widget && cleaning QSrollArea
-	if (graphicWidget != NULL)
+	if (dynamicGraphicWidget != NULL)
 	{
-		delete graphicWidget;
-		graphicWidget = NULL;
+		delete dynamicGraphicWidget;
+		dynamicGraphicWidget = NULL;
 	}
 	//Hiding QTableWidget
 	tblWidgetView->setHidden(true);
@@ -444,24 +441,20 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 	selectedIndex = index;
 	QModelIndex originalIndex = dynamic_cast<TreeFilterProxyModel*>(treeView->model())->mapToSource(index);
 	ExperimentTreeItem *item = pExpTreeModel->itemFromIndex(originalIndex);
-	if (graphicWidget != NULL)
+	if (dynamicGraphicWidget != NULL)
 	{
-		delete graphicWidget;
-		graphicWidget = NULL;
+		delete dynamicGraphicWidget;
+		dynamicGraphicWidget = NULL;
 	}
 	if (item->hasChildren())
 	{
-		graphicWidget = new QWidget();
+		dynamicGraphicWidget = new QWidget();
 		gridLayout = new QGridLayout();
 		ExperimentTreeItem *child;
 		QVariant tmpVarValue;
-		QList<int> nIDList;
+		QList<int> nIDList;		
+		ExperimentParameterVisualizer *tmpParametersWidget = NULL;
 		bool bDoParseDependencies = false;
-		if(tmpParametersWidget)
-		{
-			delete tmpParametersWidget;
-			tmpParametersWidget = NULL;
-		}
 		if(tmpExpObjectParamDefs)
 			tmpExpObjectParamDefs = NULL;
 		for (int i = 0; i < item->rowCount(); i++)
@@ -469,11 +462,11 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 			child = item->child(i);
 			if (!child->hasChildren())
 			{
-				gridLayout->addWidget(new QLabel(child->getName(), graphicWidget),i,0);
+				gridLayout->addWidget(new QLabel(child->getName(), dynamicGraphicWidget),i,0);
 				QString defValue;
 				if (child->getType().toString().toLower() == "enum" || child->getType().toString().toLower() == "enum_text" || child->getType().toString().toLower() == "list")
 				{
-					QComboBox *cbList = new QComboBox(graphicWidget);
+					QComboBox *cbList = new QComboBox(dynamicGraphicWidget);
 					cbList->addItem("<Default>");
 					cbList->addItems(child->getAvailableValuesList());
 					QString value = "<Default>";
@@ -487,7 +480,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 				}
 				else if (child->getType().toString().toLower() == "bool" || child->getType().toString().toLower() == "boolean")
 				{
-					QComboBox *cbBool = new QComboBox(graphicWidget);
+					QComboBox *cbBool = new QComboBox(dynamicGraphicWidget);
 					QStringList items;
 					items.append("<Default>");
 					items.append("TRUE");
@@ -515,7 +508,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 				}
 				else
 				{
-					QLineEdit *lineEdit = new QLineEdit("<Default>",graphicWidget);
+					QLineEdit *lineEdit = new QLineEdit("<Default>",dynamicGraphicWidget);
 					lineEdit->setToolTip(child->getDescription().toString());
 					QString value = child->getValue();
 					if (value != "")
@@ -536,136 +529,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 			}
 			else//it has children...
 			{
-				if((item->getName().toLower() == PARAMETERS_TAG))
-				{	
-					if((child->getName().toLower() == PARAMETER_TAG))
-					{
-						if(child->hasChildren())
-						{
-							int nChildCount = child->childCount();
-							QString sName = "";
-							QString sValue = "";
-							//int nID = -1;
-							nIDList.clear();
-							for (int j=0;j<nChildCount;j++)
-							{							
-								if(item->child(i)->child(j)->getName().toLower() == NAME_TAG)
-								{
-									if(tmpExpObjectParamDefs == NULL)
-									{
-										tmpExpObjectParamDefs = ExperimentManager::getExperimentParameterDefinition("RetinotopyMapper");
-									}
-										//tmpExpObjectParamDefs = new ExperimentParameterDefinitionContainer();
-									sName = item->child(i)->child(j)->getValue();
-									//nID = tmpExpObjectParamDefs->getFirstID(sName);
-									if(tmpExpObjectParamDefs->getParameterIDList(sName, nIDList))
-									{
-										if(nIDList.isEmpty())
-											break;
-									}
-									//if(nID<0)
-									//	break;
-								}
-								if(item->child(i)->child(j)->getName().toLower() == VALUE_TAG)
-									sValue = item->child(i)->child(j)->getValue();
-								if((sName.isEmpty() || sValue.isEmpty()) == false)
-								{
-									//if(nID>=0)
-									if(nIDList.isEmpty() == false)
-									{
-										for(int x=0;x<nIDList.count();x++)
-										{
-											ExperimentParameterDefinitionStrc *tmpParamDef = tmpExpObjectParamDefs->parameterItem(nIDList[x]);
-											if (tmpParamDef)
-											{
-												if(tmpParametersWidget == NULL)
-												{
-													tmpParametersWidget = new ExperimentParameterVisualizer(graphicWidget);
-													tmpParametersWidget->addGroupProperties(tmpExpObjectParamDefs->groupItems());
-													connect(tmpParametersWidget, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
-													connect(this, SIGNAL(onTableViewRedrawned(int, int)), tmpParametersWidget, SLOT(resizeParameterView(int, int)));
-												}
-												if(tmpParamDef->bEnabled)
-												{
-													if(tmpParamDef->eType == Experiment_ParameterType_Boolean)
-													{
-														sValue = sValue.toLower();
-														if(sValue == BOOL_TRUE_TAG)
-														{
-															tmpVarValue = true;
-														}
-														else if(sValue == BOOL_FALSE_TAG)
-														{
-															tmpVarValue = false;
-														}
-														else
-														{
-															qDebug() << __FUNCTION__ << "wrong defined boolean value for parameter " << sName << "(> " << child->child(j)->getValue() << ")";
-															if(tmpParamDef->sDefaultValue == BOOL_TRUE_TAG)
-															{
-																tmpVarValue = true;
-															}
-															else
-															{
-																tmpVarValue = false;
-															}
-														}
-														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
-															bDoParseDependencies = true;
-													}	
-													else if(tmpParamDef->eType == Experiment_ParameterType_String)
-													{
-														tmpVarValue = sValue;
-														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
-															bDoParseDependencies = true;
-													}
-													else if(tmpParamDef->eType == Experiment_ParameterType_Integer)
-													{
-														tmpVarValue = sValue.toInt();
-														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
-															bDoParseDependencies = true;
-													}
-													else if(tmpParamDef->eType == Experiment_ParameterType_RotationDirection)
-													{
-														tmpVarValue = sValue.toInt();
-														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
-															bDoParseDependencies = true;
-													}												
-													else if(tmpParamDef->eType == Experiment_ParameterType_Color)
-													{
-														tmpVarValue = QColor(sValue);
-														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
-															bDoParseDependencies = true;
-													}
-													else if(tmpParamDef->eType == Experiment_ParameterType_Float)
-													{
-														tmpVarValue = sValue.toFloat();
-														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
-															bDoParseDependencies = true;
-													}
-													else if(tmpParamDef->eType == Experiment_ParameterType_Double)
-													{
-														tmpVarValue = sValue.toDouble();
-														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
-															bDoParseDependencies = true;
-													}
-													else if(tmpParamDef->eType == Experiment_ParameterType_StringArray)
-													{
-														tmpVarValue = sValue;//.split(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR,QString::SkipEmptyParts);
-														if(tmpParametersWidget->addParameterProperty(tmpParamDef, tmpVarValue))
-															bDoParseDependencies = true;
-													}
-												}
-											}
-										}
-									}
-									break;
-								}
-							}
-						}
-					}
-				}
-				else if((item->getName().toLower() == BLOCKTRIALS_TAG) && (i==0))
+				if((item->getName().toLower() == BLOCKTRIALS_TAG) && (i==0))
 				{						
 					if(pExpTreeModel)
 					{
@@ -673,9 +537,9 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 						if(tmpExpStruct)
 							delete tmpExpStruct;
 						tmpExpStruct = new cExperimentStructure();
-						
+
 						if(expStructVisualizer == NULL)
-							expStructVisualizer = new ExperimentStructureVisualizer(graphicWidget);
+							expStructVisualizer = new ExperimentStructureVisualizer();//dynamicGraphicWidget);
 						if(expStructVisualizer)
 						{
 							bool bResult = connect(expStructVisualizer, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
@@ -685,29 +549,72 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								//int nRows = gridLayout->rowCount();
 								//int nColumns = gridLayout->columnCount();
-								gridLayout->addWidget(expStructVisualizer,0,1);
+								//gridLayout->addWidget(expStructVisualizer,0,1);
+								
 								if(horSplitter->count() > TABLEVIEWINDEX)
 									expStructVisualizer->resizeStructureView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
 								bool bResult = expStructVisualizer->parseExperimentStructure(tmpExpStruct);								
 								if(bResult)
+								{
+									//expStructVisualizer->setLayout(gridLayout);
+									scrollArea->takeWidget();
+									scrollArea->setWidget(expStructVisualizer);
 									expStructVisualizer->showMaximized();
+									return;
+								}
 							}
 						}
 					}
+					break;
+				}
+				else if((item->getName().toLower() == PARAMETERS_TAG))
+				{	
+					if((child->getName().toLower() == PARAMETER_TAG))
+					{
+						if(child->hasChildren())
+						{
+							QString sParamCollName = RETINOTOPYMAPPER_NAME;
+							if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+							{
+								tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+							}
+							else
+							{
+								ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+								tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+								if(tmpParametersWidget == NULL)
+								{
+									qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+								}
+								else
+								{
+									staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+								}								
+							}
+						}
+					}
+					break;//Break the children loop
 				}
 			}
 		}
 		if(tmpParametersWidget)
 		{
+			connect(tmpParametersWidget, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
+			connect(this, SIGNAL(onTableViewRedrawned(int, int)), tmpParametersWidget, SLOT(resizeParameterView(int, int)));
 			gridLayout->addWidget(tmpParametersWidget,0,0);
 			if(horSplitter->count() > TABLEVIEWINDEX)
 				tmpParametersWidget->resizeParameterView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
 			if(bDoParseDependencies)
 				tmpParametersWidget->parseDependencies();
 			tmpParametersWidget->setAutoDepencyParsing(true);
+			scrollArea->takeWidget();
+			scrollArea->setWidget(tmpParametersWidget);
+			return;
+
 		}
-		graphicWidget->setLayout(gridLayout);
-		scrollArea->setWidget(graphicWidget);
+		dynamicGraphicWidget->setLayout(gridLayout);
+		scrollArea->takeWidget();
+		scrollArea->setWidget(dynamicGraphicWidget);		
 	}
 }
 
@@ -751,7 +658,7 @@ void ExperimentGraphicEditor::selectTreeItem()
 			{
 				if (label->text() == selectedUID)
 				{
-					graphicWidget->activateWindow();
+					dynamicGraphicWidget->activateWindow();
 					widgetItem->widget()->setFocus(Qt::OtherFocusReason);
 				}
 			}
@@ -829,7 +736,7 @@ void ExperimentGraphicEditor::addDefinition()
 void ExperimentGraphicEditor::saveNewData()
 {
 	QModelIndex sourceIndex = filterModel->mapToSource(treeView->selectionModel()->currentIndex());
-	pExpTreeModel->saveNewData(graphicWidget, sourceIndex);
+	pExpTreeModel->saveNewData(dynamicGraphicWidget, sourceIndex);
 }
 
 void ExperimentGraphicEditor::setViewFilter(const TreeFilterSettings &newViewSettings)
@@ -853,8 +760,4 @@ void ExperimentGraphicEditor::childWidgetDestroyed(QWidget* pWidget)
 	{
 		expStructVisualizer = NULL;
 	}	
-	else if(pWidget == tmpParametersWidget)
-	{
-		tmpParametersWidget = NULL;
-	}
 }

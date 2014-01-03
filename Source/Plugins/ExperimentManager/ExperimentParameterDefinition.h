@@ -67,15 +67,17 @@ enum ExperimentDefinitionSection
 
 enum ExperimentParameterTypeName
 {
-	Experiment_ParameterType_Unknown			= 0,
-	Experiment_ParameterType_String				= 1,
-	Experiment_ParameterType_StringArray		= 2,
-	Experiment_ParameterType_Color				= 3,
-	Experiment_ParameterType_Integer			= 4,
-	Experiment_ParameterType_Float				= 5,
-	Experiment_ParameterType_Double				= 6,
-	Experiment_ParameterType_Boolean			= 7,
-	Experiment_ParameterType_RotationDirection	= 8
+	Experiment_ParameterType_Unknown				= 0,
+	Experiment_ParameterType_String					= 1,
+	Experiment_ParameterType_StringArray			= 2,
+	Experiment_ParameterType_Color					= 3,
+	Experiment_ParameterType_Integer				= 4,
+	Experiment_ParameterType_Float					= 5,
+	Experiment_ParameterType_Double					= 6,
+	Experiment_ParameterType_Boolean				= 7,
+	Experiment_ParameterType_RotationDirection		= 8,
+	Experiment_ParameterType_MovementDirection		= 9,
+	Experiment_ParameterType_EccentricityDirection	= 10
 	//See also below here!!!	
 };
 
@@ -83,14 +85,16 @@ struct mapParamDefinitionsTypesStrc : QMap<QString, ExperimentParameterTypeName>
 {
 	mapParamDefinitionsTypesStrc()
 	{
-		this->operator[]( "string" )			= Experiment_ParameterType_String;
-		this->operator[]( "stringarray" )		= Experiment_ParameterType_StringArray;
-		this->operator[]( "color" )				= Experiment_ParameterType_Color;
-		this->operator[]( "integer" )			= Experiment_ParameterType_Integer;
-		this->operator[]( "float" )				= Experiment_ParameterType_Float;
-		this->operator[]( "double" )			= Experiment_ParameterType_Double;
-		this->operator[]( "boolean" )			= Experiment_ParameterType_Boolean;
-		this->operator[]( "rotationdirection" )	= Experiment_ParameterType_RotationDirection;
+		this->operator[]( "string" )				= Experiment_ParameterType_String;
+		this->operator[]( "stringarray" )			= Experiment_ParameterType_StringArray;
+		this->operator[]( "color" )					= Experiment_ParameterType_Color;
+		this->operator[]( "integer" )				= Experiment_ParameterType_Integer;
+		this->operator[]( "float" )					= Experiment_ParameterType_Float;
+		this->operator[]( "double" )				= Experiment_ParameterType_Double;
+		this->operator[]( "boolean" )				= Experiment_ParameterType_Boolean;
+		this->operator[]( "rotationdirection" )		= Experiment_ParameterType_RotationDirection;
+		this->operator[]( "movementdirection" )		= Experiment_ParameterType_MovementDirection;
+		this->operator[]( "eccentricitydirection" )	= Experiment_ParameterType_EccentricityDirection;
 	};
 	~mapParamDefinitionsTypesStrc(){};
 };
@@ -185,8 +189,9 @@ public:
 	int getFirstParametrID(const QString &sName);
 	bool getParameterIDList(const QString &sName, QList<int> &sList);
 	QString getParameterName(const int &nId);
-	ExperimentParameterDefinitionStrc *parameterItem(const int &nId);
-	QList<ExperimentGroupDefinitionStrc> *groupItems() {return &expGroupDefinitions;};
+	ExperimentParameterDefinitionStrc *getParameterDefinition(const int &nId);
+	QList<ExperimentParameterDefinitionStrc> *getParameterDefinitions() {return &expParamDefinitions;};
+	QList<ExperimentGroupDefinitionStrc> *getGroupDefinitions() {return &expGroupDefinitions;};
 
 private:
 

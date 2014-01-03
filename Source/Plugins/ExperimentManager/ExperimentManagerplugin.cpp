@@ -51,6 +51,7 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 {
 	if(ExperimentManagerObject)
 	{
+		ExperimentManagerObject->cleanupSingletons();
 		delete ExperimentManagerObject;
 		ExperimentManagerObject = NULL;
 	}
