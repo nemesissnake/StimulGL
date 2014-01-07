@@ -312,11 +312,11 @@
 	    <parameter id="14">
 	        <enabled>true</enabled>
 	        <name>polarrotationdirection</name>
-	        <displayname>Rotation Direction</displayname>
+	        <displayname>Direction</displayname>
 	        <grouppath>PolarAngle</grouppath>
 	        <information>The Rotation Direction of the Wedge</information>
 	        <type>rotationdirection</type>
-	        <defaultvalue>-1</defaultvalue>
+	        <defaultvalue>1</defaultvalue>
 	    </parameter> 
 	    
 	    <parameter id="15">
@@ -601,7 +601,7 @@
 	    <parameter id="33">
 	        <enabled>true</enabled>
 	        <name>eccentricitydirection</name>
-	        <displayname>Eccentricity Direction</displayname>
+	        <displayname>Direction</displayname>
 	        <grouppath>Eccentricity</grouppath>
 	        <information>The Eccentricity Direction of the Ring</information>
 	        <type>eccentricitydirection</type>
@@ -874,7 +874,7 @@
 	    <parameter id="51">
 	        <enabled>true</enabled>
 	        <name>movingbardirection</name>
-	        <displayname>Moving Bar Direction</displayname>
+	        <displayname>Direction</displayname>
 	        <grouppath>MovingBar</grouppath>
 	        <information>The Movement Direction of the Bar</information>
 	        <type>movementdirection</type>
@@ -900,7 +900,7 @@
 	    <parameter id="53">
 	        <enabled>true</enabled>
 	        <name>movingbarcoverage</name>
-	        <displayname>Angle</displayname>
+	        <displayname>Coverage</displayname>
 	        <grouppath>MovingBar</grouppath>
 	        <information>The active stimulus area coverage of a full bar cycle movement.</information>
 	        <type>float</type>

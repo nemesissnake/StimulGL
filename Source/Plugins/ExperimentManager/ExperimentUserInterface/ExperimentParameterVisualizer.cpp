@@ -289,6 +289,7 @@ bool ExperimentParameterVisualizer::addGroupProperties(const QList<ExperimentGro
 
 bool ExperimentParameterVisualizer::setParameter(const QString &sName, const QString &sValue, const bool &bSetModified)
 {
+	return true;
 	QList<propertyParameterValueDef> tmpParamValueDefs;
 	tmpParamValueDefs = lParameterPropertyNamedHash.values(sName.toLower());
 	foreach(propertyParameterValueDef tmpParamValueDef, tmpParamValueDefs)
