@@ -274,12 +274,12 @@ void VariantExtensionPropertyFactory::slotSetValue(const QString &val)
 		}
 	}
 	return;
-};
+}
 
 void VariantExtensionPropertyFactory::slotEditorDestroyed(QObject *obj)
 {
 	Q_UNUSED(obj);
-};
+}
 
 QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager *manager, QtProperty *property, QWidget *parent)
 {

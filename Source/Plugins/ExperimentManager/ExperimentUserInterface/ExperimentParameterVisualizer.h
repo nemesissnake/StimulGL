@@ -66,12 +66,24 @@ private:
 		}
 	};
 
+	struct propertyParameterValueDef
+	{
+		QtVariantProperty* vProperty;
+		QVariant::Type vType;
+		propertyParameterValueDef()
+		{
+			vProperty = NULL;
+			vType = QVariant::Invalid;
+		}
+	};
+
 public:
 	explicit ExperimentParameterVisualizer(QWidget *parent = NULL);
 	ExperimentParameterVisualizer(const ExperimentParameterVisualizer& other);
 	~ExperimentParameterVisualizer();
 
 	bool addParameterProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue);
+	bool setParameter(const QString &sName, const QString &sValue, const bool &bSetModified = true);
 	bool addGroupProperties(const QList<ExperimentGroupDefinitionStrc> *expParamDef);
 	bool parseDependencies(QtVariantProperty *variantProperty = NULL);
 	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef);
@@ -92,6 +104,8 @@ private:
 	VariantExtensionPropertyManager* lVariantPropertyManager;
 	VariantExtensionPropertyFactory *variantExtensionFactory;
 	QList<propertyDependencyStruct> lPropertyDependencies;
+	QHash<QString, propertyParameterValueDef> lParameterPropertyNamedHash;
+	QHash<QString, int> lEnumeratedParameterPropertyValuesHash;
 	bool bAutoDepencyParsing;
 
 	//void ExperimentParameterVisualizerDefaultConstruct();

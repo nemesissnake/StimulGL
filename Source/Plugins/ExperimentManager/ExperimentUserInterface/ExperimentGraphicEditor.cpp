@@ -573,27 +573,99 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 					{
 						if(child->hasChildren())
 						{
-							QString sParamCollName = RETINOTOPYMAPPER_NAME;
-							if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+							if(i==0)
 							{
-								tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
-							}
-							else
-							{
-								ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
-								tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
-								if(tmpParametersWidget == NULL)
+								QString sParamCollName = RETINOTOPYMAPPER_NAME;
+								if(staticGraphicWidgetsHashTable.contains(sParamCollName))
 								{
-									qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+									tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
 								}
 								else
 								{
-									staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
-								}								
+									ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+									tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+									if(tmpParametersWidget == NULL)
+									{
+										qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+									}
+									else
+									{
+										staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+									}								
+								}
 							}
+							//Set the values
+							////////////////////////////
+							int nChildCount = child->childCount();
+							QString sName = "";
+							QString sValue = "";
+							//int nID = -1;
+							for (int j=0;j<nChildCount;j++)
+							{							
+								if(item->child(i)->child(j)->getName().toLower() == NAME_TAG)
+								{
+									//if(tmpExpObjectParamDefs == NULL)
+									//{
+									//	tmpExpObjectParamDefs = ExperimentManager::getExperimentParameterDefinition("RetinotopyMapper");
+									//}
+									//tmpExpObjectParamDefs = new ExperimentParameterDefinitionContainer();
+									sName = item->child(i)->child(j)->getValue();
+									//nID = tmpExpObjectParamDefs->getID(sName);
+									//if(nID<0)
+									//	break;
+								}
+								else if(item->child(i)->child(j)->getName().toLower() == VALUE_TAG)
+								{
+									sValue = item->child(i)->child(j)->getValue();
+								}
+								if((sName.isEmpty() || sValue.isEmpty()) == false)
+								{
+									bool bResult = tmpParametersWidget->setParameter(sName,sValue);
+									bResult = bResult;
+									//if(nID>=0)
+									//{
+										//ExperimentParameterDefinitionStrc *tmpParamDef = tmpExpObjectParamDefs->item(nID);
+										//if (tmpParamDef)
+										//{
+											//if(tmpParametersWidget == NULL)
+											//{
+											//	tmpParametersWidget = new ExperimentParameterVisualizer(graphicWidget);
+											//	connect(tmpParametersWidget, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
+											//	connect(this, SIGNAL(onTableViewRedrawned(int, int)), tmpParametersWidget, SLOT(resizeParameterView(int, int)));
+											//}
+											//if(tmpParamDef->bEnabled)
+											//{
+											//	if(tmpParamDef->eType == Experiment_ParameterType_Boolean)
+											//	{
+											//		sValue = sValue.toLower();
+											//		if(sValue == BOOL_TRUE_TAG)
+											//		{
+											//			tmpVarValue = true;
+											//		}
+											//		else if(sValue == BOOL_FALSE_TAG)
+											//		{
+											//			tmpVarValue = false;
+											//		}
+											//		else
+											//		{
+											//			qDebug() << __FUNCTION__ << "wrong defined boolean value for parameter " << sName << "(> " << child->child(j)->getValue() << ")";
+											//			if(tmpParamDef->sDefaultValue == BOOL_TRUE_TAG)
+											//			{
+											//				tmpVarValue = true;
+											//			}
+											//			else
+											//			{
+											//				tmpVarValue = false;
+											//			}
+											//		}
+											//		if(tmpParametersWidget->addProperty(tmpParamDef, tmpVarValue))
+											//			bDoParseDependencies = true;
+								}
+							}
+							////////////////////////
 						}
 					}
-					break;//Break the children loop
+					//break;//Break the children loop
 				}
 			}
 		}

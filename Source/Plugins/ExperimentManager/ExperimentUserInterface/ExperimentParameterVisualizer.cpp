@@ -17,6 +17,7 @@
 //
 
 #include "ExperimentParameterVisualizer.h"
+#include <QDebug>
 #include "ui_ExperimentParameterVisualizer.h"
 
 //void ExperimentParameterVisualizer::ExperimentParameterVisualizerDefaultConstruct()
@@ -73,6 +74,7 @@ ExperimentParameterVisualizer::ExperimentParameterVisualizer(const ExperimentPar
 
 ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 {
+	lParameterPropertyNamedHash.clear();
 	if(lVariantPropertyManager)
 	{
 		delete lVariantPropertyManager;
@@ -285,6 +287,93 @@ bool ExperimentParameterVisualizer::addGroupProperties(const QList<ExperimentGro
 	return true;
 }
 
+bool ExperimentParameterVisualizer::setParameter(const QString &sName, const QString &sValue, const bool &bSetModified)
+{
+	QList<propertyParameterValueDef> tmpParamValueDefs;
+	tmpParamValueDefs = lParameterPropertyNamedHash.values(sName.toLower());
+	foreach(propertyParameterValueDef tmpParamValueDef, tmpParamValueDefs)
+	{
+		if(tmpParamValueDef.vProperty != NULL)
+		{
+			if(tmpParamValueDef.vType == (QVariant::Type) QtVariantPropertyManager::enumTypeId())
+			{
+				QString tmpString = QString(sName + "_" + sValue).toLower();
+				if(lEnumeratedParameterPropertyValuesHash.contains(tmpString))
+				{
+					tmpParamValueDef.vProperty->setValue(lEnumeratedParameterPropertyValuesHash.value(tmpString));
+				}
+				else
+				{
+					//Enum not registered...
+					qDebug() << __FUNCTION__ << "Enumerated value(" << tmpString << ") not registered.";
+					return false;
+				}
+			}
+			else if(tmpParamValueDef.vType == QVariant::Color)
+			{
+				tmpParamValueDef.vProperty->setValue(QColor(sValue));
+			}
+			else if(tmpParamValueDef.vType == QVariant::Bool)
+			{
+				if(sValue.toLower() == "true")
+				{
+					tmpParamValueDef.vProperty->setValue(true);
+				}
+				else if(sValue.toLower() == "false")
+				{
+					tmpParamValueDef.vProperty->setValue(false);
+				}
+				else
+				{
+					qDebug() << __FUNCTION__ << "Wrong defined boolean value(" << sValue << ").";
+					return false;
+				}
+			}
+			else if(tmpParamValueDef.vType == QVariant::Int)
+			{
+				tmpParamValueDef.vProperty->setValue(sValue.toInt());
+			}
+			else if(tmpParamValueDef.vType == QVariant::String)
+			{
+				tmpParamValueDef.vProperty->setValue(sValue);
+			}
+			else if(tmpParamValueDef.vType == QVariant::Double)
+			{
+				tmpParamValueDef.vProperty->setValue(sValue.toDouble());
+			}
+			else if(tmpParamValueDef.vType == (QVariant::Type) VariantExtensionPropertyManager::stringArrayTypeId())
+			{
+				tmpParamValueDef.vProperty->setValue(sValue);
+			}
+			else if(tmpParamValueDef.vType == (QVariant::Type) VariantExtensionPropertyManager::rotationDirectionTypeId())
+			{
+				tmpParamValueDef.vProperty->setValue(sValue.toInt());
+			}
+			else if(tmpParamValueDef.vType == (QVariant::Type) VariantExtensionPropertyManager::eccentricityDirectionTypeId())
+			{
+				tmpParamValueDef.vProperty->setValue(sValue);
+			}
+			else if(tmpParamValueDef.vType == (QVariant::Type) VariantExtensionPropertyManager::movementDirectionTypeId())
+			{
+				tmpParamValueDef.vProperty->setValue(sValue);
+			}
+			else
+			{
+				//Unknown Type..
+				qDebug() << __FUNCTION__ << "Unknown Type(" << tmpParamValueDef.vType << ").";
+				return false;
+			}
+			if(bSetModified)
+				tmpParamValueDef.vProperty->setModified(true);
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue)
 {
 	if(expParamDef == NULL)
@@ -353,18 +442,32 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 	
 	QtVariantProperty *item1 = lVariantPropertyManager->addProperty(varType,expParamDef->sDisplayName);
 	item1->setPropertyId(QString::number(expParamDef->nId));
+	propertyParameterValueDef tmpParamValueDef;
+	tmpParamValueDef.vType = varType;
+	tmpParamValueDef.vProperty = item1;
+	lParameterPropertyNamedHash.insertMulti(expParamDef->sName,tmpParamValueDef);
 
 	if(bDoEnumeratedList)
 	{
-		item1->setAttribute(QLatin1String("enumNames"), expParamDef->Restriction.lAllowedValues);
-		//QMap<int, QIcon> enumIcons;
-		//enumIcons[0] = QIcon(":/demo/images/up.png");
-		//enumIcons[1] = QIcon(":/demo/images/right.png");
-		//enumIcons[2] = QIcon(":/demo/images/down.png");
-		//enumIcons[3] = QIcon(":/demo/images/left.png");
-		//item1->setAttribute(QLatin1String("enumIcons"), enumIcons);
-		//enumManager->setEnumIcons(item8, enumIcons);
-		//set value?
+		if(expParamDef->Restriction.lAllowedValues.isEmpty() == false)
+		{
+			item1->setAttribute(QLatin1String("enumNames"), expParamDef->Restriction.lAllowedValues);
+			int nTempEnumValue = 0;
+			QString sAllowedValue = "";
+			foreach(sAllowedValue, expParamDef->Restriction.lAllowedValues)
+			{
+				lEnumeratedParameterPropertyValuesHash.insert(QString(expParamDef->sName + "_" + sAllowedValue).toLower(),nTempEnumValue);
+				//QMap<int, QIcon> enumIcons;
+				//enumIcons[0] = QIcon(":/demo/images/up.png");
+				//enumIcons[1] = QIcon(":/demo/images/right.png");
+				//enumIcons[2] = QIcon(":/demo/images/down.png");
+				//enumIcons[3] = QIcon(":/demo/images/left.png");
+				//item1->setAttribute(QLatin1String("enumIcons"), enumIcons);
+				//enumManager->setEnumIcons(item8, enumIcons);
+				//set value?
+				nTempEnumValue++;
+			}
+		}
 	}
 	if(bDoMinMax)
 	{

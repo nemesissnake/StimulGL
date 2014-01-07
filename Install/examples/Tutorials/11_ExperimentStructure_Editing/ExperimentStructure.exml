@@ -146,7 +146,7 @@ Attributes only apply to readonly non user data, like the ID
                         </parameter>
                         <parameter ID="9">
                             <name>PolarRotationDirection</name>
-                            <value>-1</value>
+                            <value>1</value>
                         </parameter>
                         <parameter ID="10">
                             <name>FlickrFrequency</name>

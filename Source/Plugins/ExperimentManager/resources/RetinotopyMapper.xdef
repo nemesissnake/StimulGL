@@ -419,9 +419,9 @@
 	        <grouppath>PolarAngle;Output</grouppath>
 	        <information>The Format of the Generated Stimuli Frame</information>
 	        <type>string</type>
-	        <defaultvalue>Frame</defaultvalue>
+	        <defaultvalue>DAT</defaultvalue>
 	      	<restriction>
-						<allowed>Frame;Mask</allowed>
+						<allowed>DAT;PNG;CDAT</allowed>     		
 	      	</restriction>
 	        <dependencies>
 	        	<dependency id="0">
@@ -441,10 +441,10 @@
 	        <grouppath>PolarAngle;Output</grouppath>
 	        <information>The File Type of the Generated Stimuli Frame</information>
 	        <type>string</type>
-	        <defaultvalue>DAT</defaultvalue>
+	        <defaultvalue>Frame</defaultvalue>
 	      	<restriction>
-						<allowed>DAT;PNG;CDAT</allowed>     		
-	      	</restriction>
+						<allowed>Frame;Mask</allowed>
+	      	</restriction>	      	
 	        <dependencies>
 	        	<dependency id="0">
 	        		<relationid>20</relationid>
@@ -568,7 +568,7 @@
 	    
 	    <parameter id="31">
 	        <enabled>true</enabled>
-	        <name>Eccentricitycheckamount</name>
+	        <name>eccentricitycheckamount</name>
 	        <displayname>Number of Checkers</displayname>
 	        <grouppath>Eccentricity</grouppath>
 	        <information>The Number of Checkers inside one Eccentricity Ring</information>
@@ -708,10 +708,10 @@
 	        <grouppath>Eccentricity;Output</grouppath>
 	        <information>The Format of the Generated Stimuli Frame</information>
 	        <type>string</type>
-	        <defaultvalue>Frame</defaultvalue>
+	        <defaultvalue>DAT</defaultvalue>
 	      	<restriction>
-						<allowed>Frame;Mask</allowed>
-	      	</restriction>
+						<allowed>DAT;PNG;CDAT</allowed>     		
+	      	</restriction>	        
 	        <dependencies>
 	        	<dependency id="0">
 	        		<relationid>39</relationid>
@@ -730,10 +730,10 @@
 	        <grouppath>Eccentricity;Output</grouppath>
 	        <information>The File Type of the Generated Stimuli Frame</information>
 	        <type>string</type>
-	        <defaultvalue>DAT</defaultvalue>
+	        <defaultvalue>Frame</defaultvalue>
 	      	<restriction>
-						<allowed>DAT;PNG;CDAT</allowed>     		
-	      	</restriction>
+						<allowed>Frame;Mask</allowed>
+	      	</restriction>	        
 	        <dependencies>
 	        	<dependency id="0">
 	        		<relationid>39</relationid>
@@ -978,10 +978,10 @@
 	        <grouppath>MovingBar;Output</grouppath>
 	        <information>The Format of the Generated Stimuli Frame</information>
 	        <type>string</type>
-	        <defaultvalue>Frame</defaultvalue>
+	        <defaultvalue>DAT</defaultvalue>
 	      	<restriction>
-						<allowed>Frame;Mask</allowed>
-	      	</restriction>
+						<allowed>DAT;PNG;CDAT</allowed>     		
+	      	</restriction>	        
 	        <dependencies>
 	        	<dependency id="0">
 	        		<relationid>39</relationid>
@@ -1000,10 +1000,10 @@
 	        <grouppath>MovingBar;Output</grouppath>
 	        <information>The File Type of the Generated Stimuli Frame</information>
 	        <type>string</type>
-	        <defaultvalue>DAT</defaultvalue>
+	        <defaultvalue>Frame</defaultvalue>
 	      	<restriction>
-						<allowed>DAT;PNG;CDAT</allowed>     		
-	      	</restriction>
+						<allowed>Frame;Mask</allowed>
+	      	</restriction>	        
 	        <dependencies>
 	        	<dependency id="0">
 	        		<relationid>39</relationid>
