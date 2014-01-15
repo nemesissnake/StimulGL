@@ -73,9 +73,26 @@ class RotationDirectionPropertyWidget : public QComboBox
 signals:
 	void PropertyWidgetChanged(const QString&);
 
+private slots:
+	void currentIndexChangedSlot(int nIndex);
+
 public:
 	RotationDirectionPropertyWidget(QWidget *parent = NULL);
 
+	enum RotationDirectionEnum
+	{
+		ROTATION_DIR_COUNTERCLOCKWISE	= -1,
+		ROTATION_DIR_UNDEFINED			=  0,
+		ROTATION_DIR_CLOCKWISE			=  1
+	};
+
+	static QString rotationDirectionString(enum RotationDirectionEnum);
+	static RotationDirectionEnum rotationDirectionEnum(const QString &sName);
+	void setValue(const QString &sText);
+
+private:
+	static QMap<int, RotationDirectionEnum> indexToEnumHash;
+	static QMap<int, QString> mRotationDirection;
 };
 
 class MovementDirectionPropertyWidget : public QComboBox 
@@ -85,9 +102,26 @@ class MovementDirectionPropertyWidget : public QComboBox
 signals:
 	void PropertyWidgetChanged(const QString&);
 
+private slots:
+	void currentIndexChangedSlot(int nIndex);
+
 public:
 	MovementDirectionPropertyWidget(QWidget *parent = NULL);
 
+	enum MovementDirectionEnum
+	{
+		MOVEMENT_DIR_DOWNUP				= -1,
+		MOVEMENT_DIR_UNDEFINED			=  0,
+		MOVEMENT_DIR_UPDOWN				=  1
+	};
+
+	static QString movementDirectionString(enum MovementDirectionEnum eValue);
+	static MovementDirectionEnum movementDirectionEnum(const QString &sName);
+	void setValue(const QString &sText);
+
+private:
+	static QMap<int, MovementDirectionEnum> indexToEnumHash;
+	static QMap<int, QString> mMovementDirection;
 };
 
 class EccentricityDirectionPropertyWidget : public QComboBox 
@@ -97,9 +131,26 @@ class EccentricityDirectionPropertyWidget : public QComboBox
 signals:
 	void PropertyWidgetChanged(const QString&);
 
+private slots:
+	void currentIndexChangedSlot(int nIndex);
+
 public:
 	EccentricityDirectionPropertyWidget(QWidget *parent = NULL);
 
+	enum EccentricityDirectionEnum
+	{
+		ECCENTRICITY_DIR_DECREASE		= -1,
+		ECCENTRICITY_DIR_UNDEFINED		=  0,
+		ECCENTRICITY_DIR_INCREASE		=  1
+	};
+
+	static QString eccentricityDirectionString(enum EccentricityDirectionEnum eValue);
+	static EccentricityDirectionEnum eccentricityDirectionEnum(const QString &sName);
+	void setValue(const QString &sText);
+
+private:
+	static QMap<int, EccentricityDirectionEnum> indexToEnumHash;
+	static QMap<int, QString> mEccentricityDirection;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,31 +160,9 @@ class VariantExtensionPropertyManager :	public QtVariantPropertyManager
 	Q_OBJECT
 
 signals:
-	void valueChanged(QtProperty *, const QString &);
 	void filterChanged(QtProperty *, const QString &);
 
 public:
-
-	enum RotationDirectionEnum
-	{
-		ROTATION_DIR_COUNTERCLOCKWISE	= -1,
-		ROTATION_DIR_UNDEFINED			=  0,
-		ROTATION_DIR_CLOCKWISE			=  1
-	};
-
-	enum MovementDirectionEnum
-	{
-		MOVEMENT_DIR_DOWNUP				= -1,
-		MOVEMENT_DIR_UNDEFINED			=  0,
-		MOVEMENT_DIR_UPDOWN				=  1
-	};
-
-	enum EccentricityDirectionEnum
-	{
-		ECCENTRICITY_DIR_DECREASE		= -1,
-		ECCENTRICITY_DIR_UNDEFINED		=  0,
-		ECCENTRICITY_DIR_INCREASE		=  1
-	};
 
 	VariantExtensionPropertyManager(QObject *parent = NULL);
 	~VariantExtensionPropertyManager();
@@ -154,10 +183,6 @@ public:
 	{
 		return qMetaTypeId<StringArrayPropertyType>();
 	}
-
-	static QString rotationDirectionString(enum RotationDirectionEnum);
-	static QString movementDirectionString(enum MovementDirectionEnum eValue);
-	static QString eccentricityDirectionString(enum EccentricityDirectionEnum eValue);
 
 	bool isPropertyTypeSupported(int propertyType) const;
 	bool hasCustomPropertyType(const QtProperty *property) const;
@@ -198,9 +223,6 @@ private:
 		//QString filter;
 	};
 	QMap<const QtProperty *, Data> theValues;
-	static QMap<int, QString> mRotationDirection;
-	static QMap<int, QString> mMovementDirection;
-	static QMap<int, QString> mEccentricityDirection;
 };
 
 //////////////////////////////////////////////////////////////////////////////////

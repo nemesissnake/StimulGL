@@ -51,6 +51,7 @@ class ExperimentTreeModel : public QStandardItemModel
 
     public slots:
         void saveNewData(QWidget *widgetContainer, const QModelIndex &parentIndex);
+		void saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex);
 
     private:
 		void recursiveRead(QDomNode dNode, ExperimentTreeItem *item);
@@ -62,7 +63,6 @@ class ExperimentTreeModel : public QStandardItemModel
 		QDomDocument *doc;
 		QDomElement *root;
         ExperimentTreeItem *rootItem;
-		//QString tmpString;
 		ExperimentManagerNameSpace::EXML_DocVersion nXMLCurrentClassVersion;
 		ExperimentManagerNameSpace::EXML_DocVersion nXMLDocumentVersion;
 };

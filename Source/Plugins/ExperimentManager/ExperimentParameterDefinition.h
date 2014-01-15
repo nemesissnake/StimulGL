@@ -34,6 +34,7 @@
 #define EXPERIMENT_NAME_TAG						"name"
 #define EXPERIMENT_DISPLAYNAME_TAG				"displayname"
 #define EXPERIMENT_GROUPPATH_TAG				"grouppath"
+#define EXPERIMENT_AUTOHIDE_TAG					"autohide"
 #define EXPERIMENT_INFORMATION_TAG				"information"
 #define EXPERIMENT_TYPE_TAG						"type"
 #define EXPERIMENT_DEFAULTVALUE_TAG				"defaultvalue"
@@ -122,14 +123,14 @@ struct ExperimentParameterDefinitionRestrictionStrc
 struct ExperimentParameterDefinitionDependencyStrc
 {
 	int nId;
-	//QString sDependencyName;
 	int nDependencyParameterID;
+	bool bHideWhenInactive;
 	QRegularExpression rRegularExpression;
 	ExperimentParameterDefinitionDependencyStrc()
 	{
 		this->nId = -1;
-		//this->sDependencyName = "";
 		this->nDependencyParameterID = -1;
+		this->bHideWhenInactive = false;
 	};
 	~ExperimentParameterDefinitionDependencyStrc() {};
 };

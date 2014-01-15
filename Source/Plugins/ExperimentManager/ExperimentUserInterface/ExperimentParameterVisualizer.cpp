@@ -75,6 +75,7 @@ ExperimentParameterVisualizer::ExperimentParameterVisualizer(const ExperimentPar
 ExperimentParameterVisualizer::~ExperimentParameterVisualizer()
 {
 	lParameterPropertyNamedHash.clear();
+	lVariantPropertyDefinitionHash.clear();
 	if(lVariantPropertyManager)
 	{
 		delete lVariantPropertyManager;
@@ -203,7 +204,6 @@ bool ExperimentParameterVisualizer::addGroupProperties(const QList<ExperimentGro
 	int nPropertyGroupIndex;
 	QList<propertyContainerItem> *pCurrentRootGroupPropertyItemList = NULL;
 	QString sSandPath;
-	//QString tmpGroupName;
 	QStringList sCurrentRelativePathItems;	
 	QtProperty *parentProperty;
 	bool bFirstLoop;
@@ -218,7 +218,6 @@ bool ExperimentParameterVisualizer::addGroupProperties(const QList<ExperimentGro
 		if((it->bEnabled) && (it->sGroupPath.isEmpty() == false))
 		{
 			sSandPath = "";
-			//tmpGroupName = it->sGroupName;
 			sCurrentRelativePathItems = it->sGroupPath.split(EXPERIMENT_LISTSEP_CHAR,QString::SkipEmptyParts);
 			if(sCurrentRelativePathItems.isEmpty())
 				continue;
@@ -289,7 +288,6 @@ bool ExperimentParameterVisualizer::addGroupProperties(const QList<ExperimentGro
 
 bool ExperimentParameterVisualizer::setParameter(const QString &sName, const QString &sValue, const bool &bSetModified)
 {
-	return true;
 	QList<propertyParameterValueDef> tmpParamValueDefs;
 	tmpParamValueDefs = lParameterPropertyNamedHash.values(sName.toLower());
 	foreach(propertyParameterValueDef tmpParamValueDef, tmpParamValueDefs)
@@ -447,6 +445,7 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 	tmpParamValueDef.vType = varType;
 	tmpParamValueDef.vProperty = item1;
 	lParameterPropertyNamedHash.insertMulti(expParamDef->sName,tmpParamValueDef);
+	lVariantPropertyDefinitionHash.insertMulti(item1,expParamDef);
 
 	if(bDoEnumeratedList)
 	{
@@ -523,13 +522,13 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 		else
 		{
 			//if(vValue.type() == )
-			QString tmpStr = vValue.toString();
+			//QString tmpStr = vValue.toString();
 			lVariantPropertyManager->setValue(item1,vValue.toString());
 		}		
 	}
-	else if(varType == (QVariant::Type) VariantExtensionPropertyManager::rotationDirectionTypeId())
+	else if(varType == QVariant::Double)
 	{
-		lVariantPropertyManager->setValue(item1,vValue.toInt());//VariantExtensionPropertyManager::RotationDirectionEnum
+		lVariantPropertyManager->setValue(item1,vValue.toString());
 	}
 	else
 	{
@@ -558,6 +557,69 @@ void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, c
 	Q_UNUSED(value);
 	if(bAutoDepencyParsing)
 		parseDependencies((QtVariantProperty*) property);
+	QList<const ExperimentParameterDefinitionStrc*> lParamDefs = lVariantPropertyDefinitionHash.values(property);
+	foreach(const ExperimentParameterDefinitionStrc* paramDef, lParamDefs)
+	{
+		if(paramDef->eType == Experiment_ParameterType_String)
+		{
+			if(paramDef->Restriction.lAllowedValues.isEmpty() == true)
+			{
+				emit editFinished(QString(paramDef->sName), value.toString());
+			}
+			else
+			{
+				int nIndex = value.toInt();
+				if(paramDef->Restriction.lAllowedValues.count() > nIndex)
+				{
+					emit editFinished(QString(paramDef->sName), paramDef->Restriction.lAllowedValues.at(nIndex));
+				}
+				else
+				{
+					qDebug() << __FUNCTION__ << "::Could not cast integer to enum (" + paramDef->sName + ")!";
+				}
+			}			
+		}
+		else if(paramDef->eType == Experiment_ParameterType_StringArray)
+		{
+			emit editFinished(QString(paramDef->sName), value.toString());
+		}
+		else if(paramDef->eType == Experiment_ParameterType_Color)
+		{
+			emit editFinished(QString(paramDef->sName), value.toString());
+		}
+		else if(paramDef->eType == Experiment_ParameterType_Integer)
+		{
+			emit editFinished(QString(paramDef->sName), value.toString());
+		}
+		else if(paramDef->eType == Experiment_ParameterType_Float)
+		{
+			emit editFinished(QString(paramDef->sName), value.toString());
+		}
+		else if(paramDef->eType == Experiment_ParameterType_Double)
+		{
+			emit editFinished(QString(paramDef->sName), value.toString());
+		}
+		else if(paramDef->eType == Experiment_ParameterType_Boolean)
+		{
+			emit editFinished(QString(paramDef->sName), value.toString());
+		}
+		else if(paramDef->eType == Experiment_ParameterType_RotationDirection)
+		{
+			emit editFinished(QString(paramDef->sName), QString::number((int)RotationDirectionPropertyWidget::rotationDirectionEnum(value.toString())));
+		}
+		else if(paramDef->eType == Experiment_ParameterType_MovementDirection)
+		{
+			emit editFinished(QString(paramDef->sName), QString::number((int)MovementDirectionPropertyWidget::movementDirectionEnum(value.toString())));
+		}
+		else if(paramDef->eType == Experiment_ParameterType_EccentricityDirection)
+		{
+			emit editFinished(QString(paramDef->sName), QString::number((int)EccentricityDirectionPropertyWidget::eccentricityDirectionEnum(value.toString())));
+		}
+		else
+		{
+			qDebug() << __FUNCTION__ << "Unknown Type(" << paramDef->eType << " for parameter " << paramDef->sName << ").";
+		}
+	}
 }
 
 bool ExperimentParameterVisualizer::addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef)
@@ -595,6 +657,9 @@ bool ExperimentParameterVisualizer::parseDependencies(QtVariantProperty *variant
 				if(QString::number(itDef->nDependencyParameterID) == variantProperty->propertyId())
 				{
 					itDependency->vProperty->setEnabled(true);
+					QList<QtBrowserItem*> tmpList = propertyEditor->items(itDependency->vProperty);
+					foreach(QtBrowserItem *bItem,tmpList)
+						propertyEditor->setItemVisible(bItem,true);	
 					break;
 				}
 			}
@@ -602,7 +667,12 @@ bool ExperimentParameterVisualizer::parseDependencies(QtVariantProperty *variant
 		else
 		{
 			if(itDependency->vProperty)
+			{
 				itDependency->vProperty->setEnabled(true);
+				QList<QtBrowserItem*> tmpList = propertyEditor->items(itDependency->vProperty);
+				foreach(QtBrowserItem *bItem,tmpList)
+					propertyEditor->setItemVisible(bItem,true);
+			}
 		}
 	}
 	//Now we need to check what to disable
@@ -648,6 +718,12 @@ bool ExperimentParameterVisualizer::parseDependencies(QtVariantProperty *variant
 					if(itDef->rRegularExpression.match((*it)->valueText()).hasMatch() == false)
 					{
 						itDependency->vProperty->setEnabled(false);
+						if(itDef->bHideWhenInactive)
+						{							
+							QList<QtBrowserItem*> tmpList = propertyEditor->items(itDependency->vProperty);
+							foreach(QtBrowserItem *bItem,tmpList)
+								propertyEditor->setItemVisible(bItem,false);						
+						}
 						break;
 					}
 				}

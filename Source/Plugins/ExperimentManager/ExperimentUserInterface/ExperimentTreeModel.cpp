@@ -24,6 +24,7 @@
 #include <QComboBox>
 #include "ExperimentTreeModel.h"
 #include "ExperimentTreeItem.h"
+#include "ExperimentParameterDefinition.h"
 
 ExperimentTreeModel::ExperimentTreeModel(QObject *parent) : QStandardItemModel(parent)
 {
@@ -123,47 +124,161 @@ void ExperimentTreeModel::recursiveRead(QDomNode dNode, ExperimentTreeItem *item
     while (!dNode.isNull());
 }
 
+void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex)
+{
+	ExperimentTreeItem *m_parent = itemFromIndex(parentIndex);
+
+	if (m_parent != NULL)
+	{
+		int totalChilds = m_parent->childCount();
+		QString sParamName;
+		QString sParamValue;
+		int nValueIndex;
+		int nHighestIDNumber=-1;
+		bool bParamFound = false;
+		bool bDoBreak = false;
+		TreeItemDefinition tmpTreeItemDef;
+		QMap<QString,TreeItemDefinition> m_definitions;
+
+		for (int j=0;j<totalChilds;j++)
+		{
+			if(m_parent->child(j)->getName() == EXPERIMENT_PARAMETER_TAG)
+			{
+				if(m_parent->child(j)->hasChildren())
+				{
+					m_definitions = m_parent->child(j)->getDefinitions();
+					QMapIterator<QString, TreeItemDefinition> it(m_definitions);
+					while (it.hasNext()) 
+					{
+						it.next();
+						if(it.key().toLower() == EXPERIMENT_ID_TAG)
+						{
+							if(it.value().value.toInt() > nHighestIDNumber)
+							{
+								nHighestIDNumber = it.value().value.toInt();
+							}
+							break;
+						}
+					}
+					sParamName = ""; 
+					sParamValue = "";
+					nValueIndex = -1;
+					for(int i=0;i<m_parent->child(j)->childCount();i++)
+					{
+						if(m_parent->child(j)->child(i)->getName() == EXPERIMENT_NAME_TAG)
+						{
+							if (sName.compare(m_parent->child(j)->child(i)->getValue(), Qt::CaseInsensitive) == 0)
+							{
+								sParamName = m_parent->child(j)->child(i)->getValue();
+							}
+							else
+							{
+								continue;	
+							}							
+						}
+						else if(m_parent->child(j)->child(i)->getName() == EXPERIMENT_VALUE_TAG)
+						{
+							sParamValue = m_parent->child(j)->child(i)->getValue();
+							nValueIndex = i;
+						}
+						if((nValueIndex != -1) && (sParamName.isEmpty() == false))
+						{
+							if (sName.compare(sParamName, Qt::CaseInsensitive) == 0)
+							{
+								m_parent->child(j)->child(nValueIndex)->setValue(sValue);
+								ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j)->child(nValueIndex));
+								m_parent->child(j)->removeRow(nValueIndex);
+								m_parent->child(j)->insertRow(nValueIndex, item);								
+								sParamName = ""; 
+								sParamValue = "";
+								nValueIndex = -1;
+								bParamFound = true;
+								//We break because then only the first parameter would be changed. 
+								//In a non-unique situation this would not be compatible, so you need to comment the below 2 lines.
+								bDoBreak = true;
+								break;
+							}
+						}
+					}
+				}
+				else
+				{
+					continue;
+				}
+				if(bDoBreak)
+					break;
+			}
+		}
+		if(bParamFound == false)
+		{
+			//we need to add this new data to the tree model
+			ExperimentTreeItem *item = new ExperimentTreeItem(EXPERIMENT_PARAMETER_TAG, "");
+			m_parent->appendRow(item);			
+			TreeItemDefinition tmpTreeItemDefinition;
+			tmpTreeItemDefinition.type = TreeItemType_Attribute;
+			tmpTreeItemDefinition.value = QString::number(nHighestIDNumber + 1);
+			QMap<QString,TreeItemDefinition> m_definitions = item->getDefinitions();
+			m_definitions.insert(QString(EXPERIMENT_ID_TAG).toUpper(), tmpTreeItemDefinition);
+			item->setDefinitions(m_definitions);
+			//Append the name
+			ExperimentTreeItem *subNameItem = new ExperimentTreeItem(EXPERIMENT_NAME_TAG, sName);
+			item->appendRow(subNameItem);			
+			//Append the value
+			subNameItem = new ExperimentTreeItem(EXPERIMENT_VALUE_TAG, sValue);
+			item->appendRow(subNameItem);
+		}
+	}
+}
+
 void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelIndex &parentIndex)
 {
     ExperimentTreeItem *m_parent = itemFromIndex(parentIndex);
-
+	//int nRow = parentIndex.row();
+	//int nCol = parentIndex.column();
 	if (m_parent != NULL)
 	{
 		int totalChilds = m_parent->childCount();
 		QGridLayout *gridLayout = dynamic_cast<QGridLayout*>(widgetContainer->layout());
 
-		for (int i = 0; i < gridLayout->rowCount(); i++)
+		if(gridLayout == NULL)
 		{
-            QWidgetItem *widgetItem = dynamic_cast<QWidgetItem*>(gridLayout->itemAtPosition(i,3));
-			if (widgetItem)
+			//ExperimentParameterVisualizer *paramVisualizer = dynamic_cast<ExperimentParameterVisualizer*>(widgetContainer->layout());
+		}
+		else
+		{
+			for (int i = 0; i < gridLayout->rowCount(); i++)
 			{
-				QLabel *label = dynamic_cast<QLabel*>(widgetItem->widget());
-				QWidgetItem *widgetItem2 = dynamic_cast<QWidgetItem*>(gridLayout->itemAtPosition(i,1));
-
-				if (label && widgetItem2)
+				QWidgetItem *widgetItem = dynamic_cast<QWidgetItem*>(gridLayout->itemAtPosition(i,3));
+				if (widgetItem)
 				{
-					for (int j = 0; j < totalChilds; j++)
+					QLabel *label = dynamic_cast<QLabel*>(widgetItem->widget());
+					QWidgetItem *widgetItem2 = dynamic_cast<QWidgetItem*>(gridLayout->itemAtPosition(i,1));
+
+					if (label && widgetItem2)
 					{
-						if (label->text() == m_parent->child(j)->getUID())
+						for (int j = 0; j < totalChilds; j++)
 						{
-							QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widgetItem2->widget());
-							QComboBox *comboBox = qobject_cast<QComboBox*>(widgetItem2->widget());
-							if (lineEdit)
-								m_parent->child(j)->setValue(lineEdit->text());
-							else if (comboBox)
-                            {
-                                QString valAux = "";
-                                if (comboBox->currentText() == "TRUE")
-                                    valAux = "1";
-                                else if (comboBox->currentText() == "FALSE")
-                                    valAux = "0";
+							if (label->text() == m_parent->child(j)->getUID())
+							{
+								QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widgetItem2->widget());
+								QComboBox *comboBox = qobject_cast<QComboBox*>(widgetItem2->widget());
+								if (lineEdit)
+									m_parent->child(j)->setValue(lineEdit->text());
+								else if (comboBox)
+								{
+									QString valAux = "";
+									if (comboBox->currentText() == "TRUE")
+										valAux = "1";
+									else if (comboBox->currentText() == "FALSE")
+										valAux = "0";
 
-                                m_parent->child(j)->setValue(valAux);
-                            }
+									m_parent->child(j)->setValue(valAux);
+								}
 
-							ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j));
-							m_parent->removeRow(j);
-							m_parent->insertRow(j, item);
+								ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j));
+								m_parent->removeRow(j);
+								m_parent->insertRow(j, item);
+							}
 						}
 					}
 				}

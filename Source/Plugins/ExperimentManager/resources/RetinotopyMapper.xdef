@@ -7,11 +7,12 @@
 	    <grouppath>Global</grouppath>
 		</group>
 		<group id="1">
-	    <enabled>true</enabled>
-	    <grouppath>PolarAngle</grouppath>
+	    <enabled>true</enabled>	   
+	    <grouppath>PolarAngle specific</grouppath>
 		  <dependencies>
 		  	<dependency id="0">
 		  		<relationid>0</relationid>
+		  		<autohide>true</autohide>
 		  		<regularexpression>
 		  			<pattern>PolarAngle</pattern>
 		  			<casesensitive>false</casesensitive>
@@ -21,10 +22,11 @@
 		</group>	
 		<group id="2">
 	    <enabled>true</enabled>
-	    <grouppath>Eccentricity</grouppath>
+	    <grouppath>Eccentricity specific</grouppath>
 	    <dependencies>
 		  	<dependency id="0">
 		  		<relationid>0</relationid>
+		  		<autohide>true</autohide>
 		  		<regularexpression>
 		  			<pattern>Eccentricity</pattern>
 		  			<casesensitive>false</casesensitive>
@@ -34,10 +36,11 @@
 		</group>
 		<group id="3">
 	    <enabled>true</enabled>
-	    <grouppath>MovingBar</grouppath>
+	    <grouppath>MovingBar specific</grouppath>
 		  <dependencies>
 		  	<dependency id="0">
 		  		<relationid>0</relationid>
+		  		<autohide>true</autohide>
 		  		<regularexpression>
 		  			<pattern>MovingBar</pattern>
 		  			<casesensitive>false</casesensitive>
@@ -47,10 +50,11 @@
 		</group>
 		<group id="4">
 	    <enabled>true</enabled>
-	    <grouppath>MovingDots</grouppath>
+	    <grouppath>MovingDots specific</grouppath>
 		  <dependencies>
 		  	<dependency id="0">
 		  		<relationid>0</relationid>
+		  		<autohide>true</autohide>
 		  		<regularexpression>
 		  			<pattern>MovingDots</pattern>
 		  			<casesensitive>false</casesensitive>
@@ -245,7 +249,7 @@
 	        <enabled>true</enabled>
 	        <name>gapdiameter</name>
 	        <displayname>GapDiameter</displayname>
-	        <grouppath>PolarAngle</grouppath>
+	        <grouppath>PolarAngle specific</grouppath>
 	        <information>The Diameter of the gap in Pixels</information>
 	        <type>integer</type>
 	        <defaultvalue>20</defaultvalue>
@@ -261,7 +265,7 @@
 	        <enabled>true</enabled>
 	        <name>checkercolor1</name>
 	        <displayname>Color(Checker 1)</displayname>
-	        <grouppath>PolarAngle;Coloring</grouppath>
+	        <grouppath>PolarAngle specific;Coloring</grouppath>
 	        <information>The Color of the first Checker</information>
 	        <type>color</type>
 	        <defaultvalue>#FFFFFF</defaultvalue>
@@ -271,7 +275,7 @@
 	        <enabled>true</enabled>
 	        <name>checkercolor2</name>
 	        <displayname>Color(Checker 2)</displayname>
-	        <grouppath>PolarAngle;Coloring</grouppath>
+	        <grouppath>PolarAngle specific;Coloring</grouppath>
 	        <information>The Color of the second Checker</information>
 	        <type>color</type>
 	        <defaultvalue>#000000</defaultvalue>
@@ -281,7 +285,7 @@
 	        <enabled>true</enabled>
 	        <name>polarcheckamount</name>
 	        <displayname>Number of Checkers</displayname>
-	        <grouppath>PolarAngle</grouppath>
+	        <grouppath>PolarAngle specific</grouppath>
 	        <information>The Number of Checkers along the Wedge Rotation Direction</information>
 	        <type>integer</type>
 	        <defaultvalue>4</defaultvalue>
@@ -297,7 +301,7 @@
 	        <enabled>true</enabled>
 	        <name>polarringamount</name>
 	        <displayname>Number of Rings</displayname>
-	        <grouppath>PolarAngle</grouppath>
+	        <grouppath>PolarAngle specific</grouppath>
 	        <information>The Number of partial Rings inside/along the Wedge Direction</information>
 	        <type>integer</type>
 	        <defaultvalue>20</defaultvalue>
@@ -313,7 +317,7 @@
 	        <enabled>true</enabled>
 	        <name>polarrotationdirection</name>
 	        <displayname>Direction</displayname>
-	        <grouppath>PolarAngle</grouppath>
+	        <grouppath>PolarAngle specific</grouppath>
 	        <information>The Rotation Direction of the Wedge</information>
 	        <type>rotationdirection</type>
 	        <defaultvalue>1</defaultvalue>
@@ -323,7 +327,7 @@
 	        <enabled>true</enabled>
 	        <name>internaltriggerduration</name>
 	        <displayname>Trigger Duration</displayname>
-	        <grouppath>PolarAngle</grouppath>
+	        <grouppath>PolarAngle specific</grouppath>
 	        <information>The Expected Internal Trigger Duration Time in milliseconds</information>
 	        <type>float</type>
 	        <defaultvalue>2000.0</defaultvalue>
@@ -339,7 +343,7 @@
 	        <enabled>true</enabled>
 	        <name>cycletriggeramount</name>
 	        <displayname>Cycle Triggers</displayname>
-	        <grouppath>PolarAngle</grouppath>
+	        <grouppath>PolarAngle specific</grouppath>
 	        <information>The Amount of Triggers it takes to complete a full Cycle</information>
 	        <type>integer</type>
 	        <defaultvalue>1</defaultvalue>
@@ -355,7 +359,7 @@
 	        <enabled>true</enabled>
 	        <name>flickrfrequency</name>
 	        <displayname>Flicker Frequency</displayname>
-	        <grouppath>PolarAngle</grouppath>
+	        <grouppath>PolarAngle specific</grouppath>
 	        <information>The Frequency of the Checker Color Flickering</information>
 	        <type>float</type>
 	        <defaultvalue>5.0</defaultvalue>
@@ -371,7 +375,7 @@
 	        <enabled>true</enabled>
 	        <name>disablecortmagfac</name>
 	        <displayname>Disabled</displayname>
-	        <grouppath>PolarAngle;Cortical Magnitude</grouppath>
+	        <grouppath>PolarAngle specific;Cortical Magnitude</grouppath>
 	        <information>Disable the Cortical Magnitude Feature</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -381,7 +385,7 @@
 	        <enabled>true</enabled>
 	        <name>corticalmagnitudefactor</name>
 	        <displayname>Factor</displayname>
-	        <grouppath>PolarAngle;Cortical Magnitude</grouppath>
+	        <grouppath>PolarAngle specific;Cortical Magnitude</grouppath>
 	        <information>The Cortical Magnitude Factor</information>
 	        <type>float</type>
 	        <defaultvalue>0.2</defaultvalue>
@@ -406,7 +410,7 @@
 	        <enabled>true</enabled>
 	        <name>outputtriggerframe</name>
 	        <displayname>Enabled</displayname>
-	        <grouppath>PolarAngle;Output</grouppath>
+	        <grouppath>PolarAngle specific;Output</grouppath>
 	        <information>Whether the Output of Generated Stimuli Frames Feature should be enabled</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -416,7 +420,7 @@
 	        <enabled>true</enabled>
 	        <name>outputframeformat</name>
 	        <displayname>Format</displayname>
-	        <grouppath>PolarAngle;Output</grouppath>
+	        <grouppath>PolarAngle specific;Output</grouppath>
 	        <information>The Format of the Generated Stimuli Frame</information>
 	        <type>string</type>
 	        <defaultvalue>DAT</defaultvalue>
@@ -438,7 +442,7 @@
 	        <enabled>true</enabled>
 	        <name>outputframetype</name>
 	        <displayname>Type</displayname>
-	        <grouppath>PolarAngle;Output</grouppath>
+	        <grouppath>PolarAngle specific;Output</grouppath>
 	        <information>The File Type of the Generated Stimuli Frame</information>
 	        <type>string</type>
 	        <defaultvalue>Frame</defaultvalue>
@@ -460,7 +464,7 @@
 	        <enabled>true</enabled>
 	        <name>discretetriggersteps</name>
 	        <displayname>Discrete</displayname>
-	        <grouppath>PolarAngle</grouppath>
+	        <grouppath>PolarAngle specific</grouppath>
 	        <information>Whether the transition between trigger steps should be discrete</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -470,7 +474,7 @@
 	        <enabled>true</enabled>
 	        <name>randomizetriggersteps</name>
 	        <displayname>Enable</displayname>
-	        <grouppath>PolarAngle;Randomisation</grouppath>
+	        <grouppath>PolarAngle specific;Randomisation</grouppath>
 	        <information>Whether the Randomisation of Trigger Steps should be enabled</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -480,7 +484,7 @@
 	        <enabled>true</enabled>
 	        <name>emptytriggersteps</name>
 	        <displayname>Amount</displayname>
-	        <grouppath>PolarAngle;Empty Steps</grouppath>
+	        <grouppath>PolarAngle specific;Empty Steps</grouppath>
 	        <information>How many Empty Trigger Steps one full cycle contains</information>
 	        <type>integer</type>
 	        <defaultvalue>false</defaultvalue>
@@ -496,7 +500,7 @@
 	        <enabled>true</enabled>
 	        <name>randomizetriggerstepsarray</name>
 	        <displayname>Array(predefined)</displayname>
-	        <grouppath>PolarAngle;Randomisation</grouppath>
+	        <grouppath>PolarAngle specific;Randomisation</grouppath>
 	        <information>The pre-defined Array containing the Randomisation Stimuli Frames for each Trigger Step</information>
 	        <type>stringarray</type>
 	        <defaultvalue></defaultvalue>
@@ -515,7 +519,7 @@
 	        <enabled>true</enabled>
 	        <name>emptytriggerstepsarray</name>
 	        <displayname>Array(predefined)</displayname>
-	        <grouppath>PolarAngle;Empty Steps</grouppath>
+	        <grouppath>PolarAngle specific;Empty Steps</grouppath>
 	        <information>The pre-defined Array containing the Empty Stimuli Frames for each Trigger Step</information>
 	        <type>stringarray</type>
 	        <defaultvalue></defaultvalue>
@@ -534,7 +538,7 @@
 	        <enabled>true</enabled>
 	        <name>gapdiameter</name>
 	        <displayname>GapDiameter</displayname>
-	        <grouppath>Eccentricity</grouppath>
+	        <grouppath>Eccentricity specific</grouppath>
 	        <information>The Diameter of the gap in Pixels</information>
 	        <type>integer</type>
 	        <defaultvalue>20</defaultvalue>
@@ -550,7 +554,7 @@
 	        <enabled>true</enabled>
 	        <name>checkercolor1</name>
 	        <displayname>Color(Checker 1)</displayname>
-	        <grouppath>Eccentricity;Coloring</grouppath>
+	        <grouppath>Eccentricity specific;Coloring</grouppath>
 	        <information>The Color of the first Checker</information>
 	        <type>color</type>
 	        <defaultvalue>#FFFFFF</defaultvalue>
@@ -560,7 +564,7 @@
 	        <enabled>true</enabled>
 	        <name>checkercolor2</name>
 	        <displayname>Color(Checker 2)</displayname>
-	        <grouppath>Eccentricity;Coloring</grouppath>
+	        <grouppath>Eccentricity specific;Coloring</grouppath>
 	        <information>The Color of the second Checker</information>
 	        <type>color</type>
 	        <defaultvalue>#000000</defaultvalue>
@@ -570,7 +574,7 @@
 	        <enabled>true</enabled>
 	        <name>eccentricitycheckamount</name>
 	        <displayname>Number of Checkers</displayname>
-	        <grouppath>Eccentricity</grouppath>
+	        <grouppath>Eccentricity specific</grouppath>
 	        <information>The Number of Checkers inside one Eccentricity Ring</information>
 	        <type>integer</type>
 	        <defaultvalue>20</defaultvalue>
@@ -586,7 +590,7 @@
 	        <enabled>true</enabled>
 	        <name>eccentricityringamount</name>
 	        <displayname>Number of Rings</displayname>
-	        <grouppath>Eccentricity</grouppath>
+	        <grouppath>Eccentricity specific</grouppath>
 	        <information>The Number of Rings inside the Eccentricity Pattern</information>
 	        <type>integer</type>
 	        <defaultvalue>4</defaultvalue>
@@ -602,7 +606,7 @@
 	        <enabled>true</enabled>
 	        <name>eccentricitydirection</name>
 	        <displayname>Direction</displayname>
-	        <grouppath>Eccentricity</grouppath>
+	        <grouppath>Eccentricity specific</grouppath>
 	        <information>The Eccentricity Direction of the Ring</information>
 	        <type>eccentricitydirection</type>
 	        <defaultvalue>1</defaultvalue>
@@ -612,7 +616,7 @@
 	        <enabled>true</enabled>
 	        <name>internaltriggerduration</name>
 	        <displayname>Trigger Duration</displayname>
-	        <grouppath>Eccentricity</grouppath>
+	        <grouppath>Eccentricity specific</grouppath>
 	        <information>The Expected Internal Trigger Duration Time in milliseconds</information>
 	        <type>float</type>
 	        <defaultvalue>2000.0</defaultvalue>
@@ -628,7 +632,7 @@
 	        <enabled>true</enabled>
 	        <name>cycletriggeramount</name>
 	        <displayname>Cycle Triggers</displayname>
-	        <grouppath>Eccentricity</grouppath>
+	        <grouppath>Eccentricity specific</grouppath>
 	        <information>The Amount of Triggers it takes to complete a full Cycle</information>
 	        <type>integer</type>
 	        <defaultvalue>1</defaultvalue>
@@ -644,7 +648,7 @@
 	        <enabled>true</enabled>
 	        <name>flickrfrequency</name>
 	        <displayname>Flicker Frequency</displayname>
-	        <grouppath>Eccentricity</grouppath>
+	        <grouppath>Eccentricity specific</grouppath>
 	        <information>The Frequency of the Checker Color Flickering</information>
 	        <type>float</type>
 	        <defaultvalue>5.0</defaultvalue>
@@ -660,7 +664,7 @@
 	        <enabled>true</enabled>
 	        <name>disablecortmagfac</name>
 	        <displayname>Disabled</displayname>
-	        <grouppath>Eccentricity;Cortical Magnitude</grouppath>
+	        <grouppath>Eccentricity specific;Cortical Magnitude</grouppath>
 	        <information>Disable the Cortical Magnitude Feature</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -670,7 +674,7 @@
 	        <enabled>true</enabled>
 	        <name>corticalmagnitudefactor</name>
 	        <displayname>Factor</displayname>
-	        <grouppath>Eccentricity;Cortical Magnitude</grouppath>
+	        <grouppath>Eccentricity specific;Cortical Magnitude</grouppath>
 	        <information>The Cortical Magnitude Factor</information>
 	        <type>float</type>
 	        <defaultvalue>0.2</defaultvalue>
@@ -695,7 +699,7 @@
 	        <enabled>true</enabled>
 	        <name>outputtriggerframe</name>
 	        <displayname>Enabled</displayname>
-	        <grouppath>Eccentricity;Output</grouppath>
+	        <grouppath>Eccentricity specific;Output</grouppath>
 	        <information>Whether the Output of Generated Stimuli Frames Feature should be enabled</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -705,7 +709,7 @@
 	        <enabled>true</enabled>
 	        <name>outputframeformat</name>
 	        <displayname>Format</displayname>
-	        <grouppath>Eccentricity;Output</grouppath>
+	        <grouppath>Eccentricity specific;Output</grouppath>
 	        <information>The Format of the Generated Stimuli Frame</information>
 	        <type>string</type>
 	        <defaultvalue>DAT</defaultvalue>
@@ -727,7 +731,7 @@
 	        <enabled>true</enabled>
 	        <name>outputframetype</name>
 	        <displayname>Type</displayname>
-	        <grouppath>Eccentricity;Output</grouppath>
+	        <grouppath>Eccentricity specific;Output</grouppath>
 	        <information>The File Type of the Generated Stimuli Frame</information>
 	        <type>string</type>
 	        <defaultvalue>Frame</defaultvalue>
@@ -749,7 +753,7 @@
 	        <enabled>true</enabled>
 	        <name>discretetriggersteps</name>
 	        <displayname>Discrete</displayname>
-	        <grouppath>Eccentricity</grouppath>
+	        <grouppath>Eccentricity specific</grouppath>
 	        <information>Whether the transition between trigger steps should be discrete</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -759,7 +763,7 @@
 	        <enabled>true</enabled>
 	        <name>randomizetriggersteps</name>
 	        <displayname>Enable</displayname>
-	        <grouppath>Eccentricity;Randomisation</grouppath>
+	        <grouppath>Eccentricity specific;Randomisation</grouppath>
 	        <information>Whether the Randomisation of Trigger Steps should be enabled</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -769,7 +773,7 @@
 	        <enabled>true</enabled>
 	        <name>emptytriggersteps</name>
 	        <displayname>Amount</displayname>
-	        <grouppath>Eccentricity;Empty Steps</grouppath>
+	        <grouppath>Eccentricity specific;Empty Steps</grouppath>
 	        <information>How many Empty Trigger Steps one full cycle contains</information>
 	        <type>integer</type>
 	        <defaultvalue>false</defaultvalue>
@@ -785,7 +789,7 @@
 	        <enabled>true</enabled>
 	        <name>randomizetriggerstepsarray</name>
 	        <displayname>Array(predefined)</displayname>
-	        <grouppath>Eccentricity;Randomisation</grouppath>
+	        <grouppath>Eccentricity specific;Randomisation</grouppath>
 	        <information>The pre-defined Array containing the Randomisation Stimuli Frames for each Trigger Step</information>
 	        <type>stringarray</type>
 	        <defaultvalue></defaultvalue>
@@ -804,7 +808,7 @@
 	        <enabled>true</enabled>
 	        <name>emptytriggerstepsarray</name>
 	        <displayname>Array(predefined)</displayname>
-	        <grouppath>Eccentricity;Empty Steps</grouppath>
+	        <grouppath>Eccentricity specific;Empty Steps</grouppath>
 	        <information>The pre-defined Array containing the Empty Stimuli Frames for each Trigger Step</information>
 	        <type>stringarray</type>
 	        <defaultvalue></defaultvalue>
@@ -823,7 +827,7 @@
 	        <enabled>true</enabled>
 	        <name>checkercolor1</name>
 	        <displayname>Color(Checker 1)</displayname>
-	        <grouppath>MovingBar;Coloring</grouppath>
+	        <grouppath>MovingBar specific;Coloring</grouppath>
 	        <information>The Color of the first Checker</information>
 	        <type>color</type>
 	        <defaultvalue>#FFFFFF</defaultvalue>
@@ -833,7 +837,7 @@
 	        <enabled>true</enabled>
 	        <name>checkercolor2</name>
 	        <displayname>Color(Checker 2)</displayname>
-	        <grouppath>MovingBar;Coloring</grouppath>
+	        <grouppath>MovingBar specific;Coloring</grouppath>
 	        <information>The Color of the second Checker</information>
 	        <type>color</type>
 	        <defaultvalue>#000000</defaultvalue>
@@ -843,7 +847,7 @@
 	        <enabled>true</enabled>
 	        <name>movingbarheight</name>
 	        <displayname>Height</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>E.g. if the total bar movement is 640 pixel then the bar width is 640/10.0(=Height) = 64 pixels</information>
 	        <type>float</type>
 	        <defaultvalue>10</defaultvalue>
@@ -859,7 +863,7 @@
 	        <enabled>true</enabled>
 	        <name>movingbarheightcheckamount</name>
 	        <displayname>Number of Checkers</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>The Number of Checkers along the Moving Bar direction (number of rows)</information>
 	        <type>integer</type>
 	        <defaultvalue>4</defaultvalue>
@@ -875,7 +879,7 @@
 	        <enabled>true</enabled>
 	        <name>movingbardirection</name>
 	        <displayname>Direction</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>The Movement Direction of the Bar</information>
 	        <type>movementdirection</type>
 	        <defaultvalue>1</defaultvalue>
@@ -885,7 +889,7 @@
 	        <enabled>true</enabled>
 	        <name>movingbarangle</name>
 	        <displayname>Angle</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>The Movement Angle of the bar, 0 degrees is along the X axis. A larger value turns counterclockwise</information>
 	        <type>float</type>
 	        <defaultvalue>45.0</defaultvalue>
@@ -901,7 +905,7 @@
 	        <enabled>true</enabled>
 	        <name>movingbarcoverage</name>
 	        <displayname>Coverage</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>The active stimulus area coverage of a full bar cycle movement.</information>
 	        <type>float</type>
 	        <defaultvalue>0.5</defaultvalue>
@@ -917,7 +921,7 @@
 	        <enabled>true</enabled>
 	        <name>flickrfrequency</name>
 	        <displayname>Flicker Frequency</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>The Frequency of the Checker Color Flickering</information>
 	        <type>float</type>
 	        <defaultvalue>5.0</defaultvalue>
@@ -933,7 +937,7 @@
 	        <enabled>true</enabled>
 	        <name>internaltriggerduration</name>
 	        <displayname>Trigger Duration</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>The Expected Internal Trigger Duration Time in milliseconds</information>
 	        <type>float</type>
 	        <defaultvalue>2000.0</defaultvalue>
@@ -949,7 +953,7 @@
 	        <enabled>true</enabled>
 	        <name>cycletriggeramount</name>
 	        <displayname>Cycle Triggers</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>The Amount of Triggers it takes to complete a full Cycle</information>
 	        <type>integer</type>
 	        <defaultvalue>1</defaultvalue>
@@ -965,7 +969,7 @@
 	        <enabled>true</enabled>
 	        <name>outputtriggerframe</name>
 	        <displayname>Enabled</displayname>
-	        <grouppath>MovingBar;Output</grouppath>
+	        <grouppath>MovingBar specific;Output</grouppath>
 	        <information>Whether the Output of Generated Stimuli Frames Feature should be enabled</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -975,7 +979,7 @@
 	        <enabled>true</enabled>
 	        <name>outputframeformat</name>
 	        <displayname>Format</displayname>
-	        <grouppath>MovingBar;Output</grouppath>
+	        <grouppath>MovingBar specific;Output</grouppath>
 	        <information>The Format of the Generated Stimuli Frame</information>
 	        <type>string</type>
 	        <defaultvalue>DAT</defaultvalue>
@@ -997,7 +1001,7 @@
 	        <enabled>true</enabled>
 	        <name>outputframetype</name>
 	        <displayname>Type</displayname>
-	        <grouppath>MovingBar;Output</grouppath>
+	        <grouppath>MovingBar specific;Output</grouppath>
 	        <information>The File Type of the Generated Stimuli Frame</information>
 	        <type>string</type>
 	        <defaultvalue>Frame</defaultvalue>
@@ -1019,7 +1023,7 @@
 	        <enabled>true</enabled>
 	        <name>discretetriggersteps</name>
 	        <displayname>Discrete</displayname>
-	        <grouppath>MovingBar</grouppath>
+	        <grouppath>MovingBar specific</grouppath>
 	        <information>Whether the transition between trigger steps should be discrete</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -1029,7 +1033,7 @@
 	        <enabled>true</enabled>
 	        <name>randomizetriggersteps</name>
 	        <displayname>Enable</displayname>
-	        <grouppath>MovingBar;Randomisation</grouppath>
+	        <grouppath>MovingBar specific;Randomisation</grouppath>
 	        <information>Whether the Randomisation of Trigger Steps should be enabled</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -1039,7 +1043,7 @@
 	        <enabled>true</enabled>
 	        <name>emptytriggersteps</name>
 	        <displayname>Amount</displayname>
-	        <grouppath>MovingBar;Empty Steps</grouppath>
+	        <grouppath>MovingBar specific;Empty Steps</grouppath>
 	        <information>How many Empty Trigger Steps one full cycle contains</information>
 	        <type>integer</type>
 	        <defaultvalue>false</defaultvalue>
@@ -1055,7 +1059,7 @@
 	        <enabled>true</enabled>
 	        <name>randomizetriggerstepsarray</name>
 	        <displayname>Array(predefined)</displayname>
-	        <grouppath>MovingBar;Randomisation</grouppath>
+	        <grouppath>MovingBar specific;Randomisation</grouppath>
 	        <information>The pre-defined Array containing the Randomisation Stimuli Frames for each Trigger Step</information>
 	        <type>stringarray</type>
 	        <defaultvalue></defaultvalue>
@@ -1074,7 +1078,7 @@
 	        <enabled>true</enabled>
 	        <name>emptytriggerstepsarray</name>
 	        <displayname>Array(predefined)</displayname>
-	        <grouppath>MovingBar;Empty Steps</grouppath>
+	        <grouppath>MovingBar specific;Empty Steps</grouppath>
 	        <information>The pre-defined Array containing the Empty Stimuli Frames for each Trigger Step</information>
 	        <type>stringarray</type>
 	        <defaultvalue></defaultvalue>
@@ -1093,7 +1097,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotsnrofdots</name>
 	        <displayname>Amount</displayname>
-	        <grouppath>MovingDots;Dots</grouppath>
+	        <grouppath>MovingDots specific;Dots</grouppath>
 	        <information>The number of active visible moving Dots per visible Hemispere</information>
 	        <type>integer</type>
 	        <defaultvalue>1000</defaultvalue>
@@ -1109,7 +1113,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotsdotsize</name>
 	        <displayname>Size</displayname>
-	        <grouppath>MovingDots;Dots</grouppath>
+	        <grouppath>MovingDots specific;Dots</grouppath>
 	        <information>The diameter of a single dot in pixels</information>
 	        <type>integer</type>
 	        <defaultvalue>12</defaultvalue>
@@ -1125,7 +1129,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotscolor</name>
 	        <displayname>Color</displayname>
-	        <grouppath>MovingDots;Dots</grouppath>
+	        <grouppath>MovingDots specific;Dots</grouppath>
 	        <information>The Color of the dots</information>
 	        <type>color</type>
 	        <defaultvalue>#FFFFFF</defaultvalue>
@@ -1135,7 +1139,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotsstationairy</name>
 	        <displayname>Stationairy</displayname>
-	        <grouppath>MovingDots;Dynamics</grouppath>
+	        <grouppath>MovingDots specific;Dynamics</grouppath>
 	        <information>Defines whether the dots should move or hold their initial position</information>
 	        <type>boolean</type>
 	        <defaultvalue>false</defaultvalue>
@@ -1145,7 +1149,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotsminmovespeed</name>
 	        <displayname>Min. Speed)</displayname>
-	        <grouppath>MovingDots;Dynamics</grouppath>
+	        <grouppath>MovingDots specific;Dynamics</grouppath>
 	        <information>The minimal movement speed of the Dots in Pixels/StimuliRefreshRate</information>
 	        <type>float</type>
 	        <defaultvalue>4.0</defaultvalue>
@@ -1170,7 +1174,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotsmaxmovespeed</name>
 	        <displayname>Max. Speed</displayname>
-	        <grouppath>MovingDots;Dynamics</grouppath>
+	        <grouppath>MovingDots specific;Dynamics</grouppath>
 	        <information>The maximal movement speed of the Dots in Pixels/StimuliRefreshRate</information>
 	        <type>float</type>
 	        <defaultvalue>4.0</defaultvalue>
@@ -1195,7 +1199,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotsminmoveangle</name>
 	        <displayname>Min. Angle</displayname>
-	        <grouppath>MovingDots;Dynamics</grouppath>
+	        <grouppath>MovingDots specific;Dynamics</grouppath>
 	        <information>The minimal movement Angle of the Dots in Degrees</information>
 	        <type>integer</type>
 	        <defaultvalue>0</defaultvalue>
@@ -1224,7 +1228,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotsmaxmoveangle</name>
 	        <displayname>Max. Angle</displayname>
-	        <grouppath>MovingDots;Dynamics</grouppath>
+	        <grouppath>MovingDots specific;Dynamics</grouppath>
 	        <information>The maximal movement Angle of the Dots in Degrees</information>
 	        <type>integer</type>
 	        <defaultvalue>359</defaultvalue>
@@ -1253,7 +1257,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotshemifield</name>
 	        <displayname>Active Fields</displayname>
-	        <grouppath>MovingDots;Hemifields</grouppath>
+	        <grouppath>MovingDots specific;Hemifields</grouppath>
 	        <information>Defines which Hemifield(s) are visible within the active stimuli area</information>
 	        <type>string</type>
 	        <defaultvalue>Both</defaultvalue>
@@ -1270,7 +1274,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotspixelfromcenter</name>
 	        <displayname>Offset</displayname>
-	        <grouppath>MovingDots;Hemifields</grouppath>
+	        <grouppath>MovingDots specific;Hemifields</grouppath>
 	        <information>The distance between the Hemifield (left and/or right) and the center X position on the screen in pixels</information>
 	        <type>integer</type>
 	        <defaultvalue>100</defaultvalue>
@@ -1286,7 +1290,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotshemifieldwidth</name>
 	        <displayname>Width</displayname>
-	        <grouppath>MovingDots;Hemifields</grouppath>
+	        <grouppath>MovingDots specific;Hemifields</grouppath>
 	        <information>This defines the Width of one Hemifield in pixels</information>
 	        <type>integer</type>
 	        <defaultvalue>320</defaultvalue>
@@ -1302,7 +1306,7 @@
 	        <enabled>true</enabled>
 	        <name>movingdotshemifieldheight</name>
 	        <displayname>Height</displayname>
-	        <grouppath>MovingDots;Hemifields</grouppath>
+	        <grouppath>MovingDots specific;Hemifields</grouppath>
 	        <information>This defines the Height of one Hemifield in pixels</information>
 	        <type>integer</type>
 	        <defaultvalue>240</defaultvalue>

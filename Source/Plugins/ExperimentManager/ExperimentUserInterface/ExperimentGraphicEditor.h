@@ -36,6 +36,7 @@ class QScrollArea;
 class QTableWidget;
 class QGridLayout;
 class QToolBar;
+class QtProperty;
 class QSplitter;
 class FindDialog;
 class AttributeWidget;
@@ -83,6 +84,7 @@ private slots:
     void removeNode();
     void addDefinition();
     void saveNewData();
+	void saveNewData(const QString &sName, const QString &sValue);
 	void setViewFilter(const TreeFilterSettings &newViewSettings);
 	void updateWindowTitle(const QString sSuffix = QString(""));
 

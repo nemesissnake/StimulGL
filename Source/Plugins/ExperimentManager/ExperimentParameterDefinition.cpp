@@ -116,13 +116,21 @@ bool ExperimentParameterDefinitionContainer::loadFromFile(const QString &sFilePa
         else if(token == QXmlStreamReader::StartElement) 
 		{
 			if(xml.name() == EXPERIMENT_GROUPS_TAG)
+			{
 				continue;
+			}
 			else if(xml.name() == EXPERIMENT_GROUP_TAG)
+			{
 				expGroupDefinitions.append(*(this->parseGroupDefinition(xml)));
+			}
             else if(xml.name() == EXPERIMENT_PARAMETERS_TAG)
+			{
                 continue;
+			}
             else if(xml.name() == EXPERIMENT_PARAMETER_TAG)
+			{
                 expParamDefinitions.append(*(this->parseParameterDefinition(xml)));
+			}
         }
     }
     /* Error handling. */
@@ -178,7 +186,7 @@ ExperimentGroupDefinitionStrc *ExperimentParameterDefinitionContainer::parseGrou
 					if((nDepID < 0) || (tmpGroupDef == NULL))
 						return NULL;
 					ExperimentParameterDefinitionDependencyStrc tmpStruct;
-					tmpStruct.nId = nDepID;
+					tmpStruct.nId = nDepID;					
 					tmpGroupDef->Dependencies.append(tmpStruct);
 				}
 			}
@@ -380,6 +388,30 @@ bool ExperimentParameterDefinitionContainer::addGroupDataToStructure(QXmlStreamR
 				else
 					expGroupDefStrc.Dependencies.last().nDependencyParameterID = -1;
 			}			
+			return true;
+		}
+		else if(elementName == EXPERIMENT_AUTOHIDE_TAG) 
+		{
+			bool bNewValue = false;
+			const QString tmpString = xml.text().trimmed().toString();
+			if(tmpString == BOOL_TRUE_TAG)
+			{
+				bNewValue = true;
+			}
+			else if(tmpString != BOOL_FALSE_TAG)
+			{
+				qDebug() << __FUNCTION__ << "wrong defined boolean value for parameter " << elementName << "(> " << tmpString << ")";
+				return false;
+			}
+			if(bNewValue)
+			{
+				if(expGroupDefStrc.Dependencies.isEmpty())
+				{
+					qDebug() << __FUNCTION__ << "could not define Group Dependency (Doesn't exist!)" << "(> " << tmpString << ")";
+					return false;
+				}
+				expGroupDefStrc.Dependencies.last().bHideWhenInactive = true;
+			}
 			return true;
 		}
 	}

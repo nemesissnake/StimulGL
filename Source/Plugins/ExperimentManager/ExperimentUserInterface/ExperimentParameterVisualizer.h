@@ -38,6 +38,7 @@ class ExperimentParameterVisualizer : public QWidget
 
 signals:
 	void destroyed(QWidget*);
+	void editFinished(const QString&, const QString&);
 
 private:
 	struct propertyContainerItem
@@ -106,6 +107,7 @@ private:
 	QList<propertyDependencyStruct> lPropertyDependencies;
 	QHash<QString, propertyParameterValueDef> lParameterPropertyNamedHash;
 	QHash<QString, int> lEnumeratedParameterPropertyValuesHash;
+	QHash<QtProperty*,const ExperimentParameterDefinitionStrc*> lVariantPropertyDefinitionHash;
 	bool bAutoDepencyParsing;
 
 	//void ExperimentParameterVisualizerDefaultConstruct();
