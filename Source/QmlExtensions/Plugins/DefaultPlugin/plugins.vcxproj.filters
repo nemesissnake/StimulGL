@@ -107,6 +107,21 @@
     <ClCompile Include="OgreCameraNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_OgreLightNode.cpp">
+      <Filter>Generated Files\Debug_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_OgreLightNode.cpp">
+      <Filter>Generated Files\Debug_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_OgreLightNode.cpp">
+      <Filter>Generated Files\Release_Win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_OgreLightNode.cpp">
+      <Filter>Generated Files\Release_x64</Filter>
+    </ClCompile>
+    <ClCompile Include="OgreLightNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="DefaultPlugin.h">
@@ -122,6 +137,9 @@
       <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="OgreCameraNode.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="OgreLightNode.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -1,4 +1,4 @@
-//Copyright (C) 2013  Michael Luehrs
+//Copyright (C) 2014  Michael Luehrs
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify

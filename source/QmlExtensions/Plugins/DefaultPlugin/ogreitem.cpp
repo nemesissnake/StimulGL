@@ -1,5 +1,5 @@
 //DefaultQMLPlugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2014  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -18,7 +18,6 @@
 
 #include "ogreitem.h"
 #include "OgreCameraNode.h"
-
 #include <QtCore/QPropertyAnimation>
 #include <QTimer>
 
@@ -37,7 +36,10 @@ OgreItem::OgreItem(QQuickItem *parent) : QQuickItem(parent), m_timerID(0)
 OgreItem::~OgreItem()
 {
 	if(m_timerID)
+	{
 		killTimer(m_timerID);
+		m_timerID = 0;
+	}
 	lResources.clear();
 	lEntities.clear();
 	lSceneNodes.clear();
@@ -47,14 +49,12 @@ OgreItem::~OgreItem()
 		delete cAmbientSceneColor;
 		cAmbientSceneColor = NULL;
 	}
-	//Ogre::Root::getSingleton().getSingletonPtr()->shutdownPlugins();
-	//Ogre::Root::getSingleton().getSingletonPtr()->shutdown();
+	if(Ogre::Root::getSingletonPtr() != NULL)
+	{
+		Ogre::Root::getSingletonPtr()->shutdown();
+		delete Ogre::Root::getSingletonPtr();
+	}
 }
-
-//void OgreItem::startRenderLoop()
-//{
-//	m_timerID = startTimer(16);
-//}
 
 bool OgreItem::addResourceLocation(const QString &sLocation,const QString &sType)
 {
@@ -96,8 +96,29 @@ bool OgreItem::createLightSource(const QString &sLightName, const float &xPos, c
 	tmpLightSource.xPos = xPos;
 	tmpLightSource.yPos = yPos;
 	tmpLightSource.zPos = zPos;
+	tmpLightSource.bAppended = false;
 	lLightSources.append(tmpLightSource);
 	return true;
+}
+
+QObject *OgreItem::getLightSource(const QString &sLightName)
+{
+	if(m_node)
+	{
+		OgreLightNode *tmpLight = m_node->getLightSource(sLightName);
+		if(tmpLight)
+			return (QObject *)tmpLight;
+	}
+	return NULL;
+}
+
+bool OgreItem::setMaterialName(const QString &sEntityName, const QString &sMaterial)
+{
+	if(m_node)
+	{
+		return m_node->setMaterialName(sEntityName,sMaterial);
+	}
+	return false;
 }
 
 bool OgreItem::setAmbientColor(const int &nRed, const int &nGreen, const int &nBlue, const int &nAlpha)
@@ -201,8 +222,15 @@ QSGNode *OgreItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
 					delete cAmbientSceneColor;
 					cAmbientSceneColor = NULL;
 				}
-				m_node->setLightSources(lLightSources);
-				lLightSources.clear();
+				foreach(sLightSourceStructure lLightSource,lLightSources)
+				{
+					if(lLightSource.bAppended == false)
+					{
+						lLightSource.bAppended = m_node->appendLightSource(lLightSource);
+					}
+				}
+				//m_node->setLightSources(lLightSources);
+				//lLightSources.clear();
 			}
 		}
 		m_node->setQuickWindow(window());

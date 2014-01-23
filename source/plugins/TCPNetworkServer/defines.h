@@ -1,5 +1,5 @@
 //TCPNetworkServer 
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2014  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@
 #define PLUGIN_PRODUCT_VERSION_STRING_MINOR	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
 #define PLUGIN_PRODUCT_VERSION_STRING_REVISION	0   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
 #define PLUGIN_PRODUCT_VERSION_STRING_BUILD	1   //Please do not edit this line manually, see BinaryVersioning.qs (1381317323).
-#define PLUGIN_LEGAL_COPYRIGHT						"Copyright (C) 2013"
+#define PLUGIN_LEGAL_COPYRIGHT						"Copyright (C) 2014"
 #define PLUGIN_AUTHOR_NAME							"Sven Gijsen"
 #define PLUGIN_AUTHOR_EMAIL							"sven.gijsen@maastrichtuniversity.nl"
 #define PLUGIN_COMPANY_NAME							"MBIC, Maastricht Brain Imaging Center"

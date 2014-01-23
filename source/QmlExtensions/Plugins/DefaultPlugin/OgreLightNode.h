@@ -16,8 +16,8 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef OgreCameraNode_H
-#define OgreCameraNode_H
+#ifndef OgreLightNode_H
+#define OgreLightNode_H
 
 #include <QObject>
 #include <QVector3D>
@@ -26,54 +26,50 @@
 namespace Ogre 
 {
 class SceneNode;
-class Camera;
+class Light;
 }
 
-//!  The OgreCameraNode class. 
+//!  The OgreLightNode class. 
 /*!
-  The OgreCameraNode Class implements access to the camera object from the OgreItem class.
+  The OgreLightNode Class implements access to the light object from the OgreItem class.
 */
-class OgreCameraNode : public QObject
+class OgreLightNode : public QObject
 {
     Q_OBJECT
 	//! \brief yaw property.
-	/*!  Use this property to change the camera's yaw property.
+	/*!  Use this property to change the light's yaw property.
     */
     Q_PROPERTY(qreal yaw READ yaw WRITE setYaw)
 	//! \brief pitch property.
-	/*!  Use this property to change the camera's pitch property.
+	/*!  Use this property to change the light's pitch property.
     */
     Q_PROPERTY(qreal pitch READ pitch WRITE setPitch)
-	//! \brief zoom property.
-	/*!  Use this property to change the camera's zoom property.
-    */
-    Q_PROPERTY(qreal zoom READ zoom WRITE setZoom)
 	//! \brief position property.
 	/*!  Use this property to change the camera's position property.
     */
 	Q_PROPERTY(QVector3D position READ position WRITE setPosition)
 public:
-    explicit OgreCameraNode(Ogre::Camera *cam, QObject *parent = 0);
+    explicit OgreLightNode(Ogre::Light *light, QObject *parent = 0);
 
     Ogre::SceneNode *sceneNode() const
     { return m_node; }
-    Ogre::Camera *camera() const
-    { return m_camera; }
+    Ogre::Light *light() const
+    { return m_light; }
 
     qreal yaw() const
     { return m_yaw; }
     qreal pitch() const
     { return m_pitch; }
-    qreal zoom() const
-    { return m_zoom; }
     void setYaw(qreal y)
     { m_yaw = y; updateRotation(); }
     void setPitch(qreal p)
     { m_pitch = p; updateRotation(); }
-    void setZoom(qreal z);
-	QVector3D position() const
-	{ return QVector3D(m_position.x,m_position.y,m_position.z); }
+    
+	QVector3D position() const;	
 	void setPosition(QVector3D p);
+	void setPosition(const float &x, const float &y, const float &z);
+
+	//setType(Ogre::Light::LT_POINT);//LT_DIRECTIONAL);
 
 public slots:
 	//! \brief setAutoTracking slot.
@@ -91,18 +87,17 @@ public slots:
 	 * a point the camera targets in local space of the scene node (instead of the origin of the scene node). Good for fine tuning the look at point.
 	 * @return a boolean value determining whether the function executed successfully.
 	 */	
-	bool setAutoTracking(const bool &bEnable, const QString &sSceneNodeName = "", const QVector3D &vecOffset = QVector3D(0,0,0));
-	
+	//bool setAutoTracking(const bool &bEnable, const QString &sSceneNodeName = "", const QVector3D &vecOffset = QVector3D(0,0,0));
+
 private:
     void updateRotation();
 
     Ogre::SceneNode *m_node;
-    Ogre::Camera *m_camera;
+    Ogre::Light *m_light;
 
     qreal m_yaw;
     qreal m_pitch;
-    qreal m_zoom;
-	Ogre::Vector3 m_position;
+    Ogre::Vector3 m_position;
 };
 
-#endif // OgreCameraNode_H
+#endif // OgreLightNode_H

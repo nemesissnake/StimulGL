@@ -1,5 +1,5 @@
 //_extensionname_ 
-//Copyright (C) 2013  _authorname_
+//Copyright (C) 2014  _authorname_
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@
 #define PLUGIN_PRODUCT_VERSION_STRING_MINOR			0
 #define PLUGIN_PRODUCT_VERSION_STRING_REVISION		0
 #define PLUGIN_PRODUCT_VERSION_STRING_BUILD			1
-#define PLUGIN_LEGAL_COPYRIGHT						"Copyright (C) 2013"
+#define PLUGIN_LEGAL_COPYRIGHT						"Copyright (C) 2014"
 #define PLUGIN_AUTHOR_NAME							"_authorname_"
 #define PLUGIN_AUTHOR_EMAIL							"authoremail goes here"
 #define PLUGIN_COMPANY_NAME							"companyname goes here"

@@ -1,5 +1,5 @@
 //parallelportplugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2014  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ signals:
 		You can use this Signal for receiving a notification when the generate thread changes the port output value.
 		The PortValue parameter(one byte) holds the triggered port value when triggered.
 	*/
-	void GenerateThreadTriggered(short PortValue);
+	void GenerateThreadTriggered(int PortValue);
 	//! The GenerateThreadStarted Signal.
 	/*!
 		You can use this Signal to keep track of when the generate thread starts.
@@ -62,7 +62,7 @@ signals:
 		You can use this Signal for receiving a notification when the capture thread gets triggered by the current port value.
 		The PortValue parameter(one byte) holds the triggered port value when it gets triggered.
 	*/
-	void CaptureThreadTriggered(short PortValue);
+	void CaptureThreadTriggered(int PortValue);
 	//! The CaptureThreadStarted Signal.
 	/*!
 		You can use this Signal to keep track of when the capture thread starts.

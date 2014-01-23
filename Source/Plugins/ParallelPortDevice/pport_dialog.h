@@ -1,5 +1,5 @@
 //parallelportplugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2014  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -99,11 +99,11 @@ private:
 		void on_okButton_clicked();
 		void on_btnReadBIOS_clicked();
 
-		void UpdateCaptureThreadUI(short Value);
+		void UpdateCaptureThreadUI(int Value);
 		void CaptureThreadStarted(QString dateTimeStampText);
 		void CaptureThreadStopped(QString dateTimeStampText);
 
-		void UpdateGenerateThreadUI(short Value);
+		void UpdateGenerateThreadUI(int Value);
 		void GenerateThreadStarted(QString dateTimeStampText);
 		void GenerateThreadStopped(QString dateTimeStampText);
 };

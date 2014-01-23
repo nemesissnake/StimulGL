@@ -1,5 +1,5 @@
 //DefaultQMLPlugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2014  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -30,6 +30,18 @@
 #define STRINGIFY(x) STRINGIFY_(x)
 #define OGRE_PLUGIN_DIR STRINGIFY(OGRE_PLUGIN_VAR)
 
+namespace Ogre {
+	class Root;
+	class Camera;
+	class SceneManager;
+	class RenderTexture;
+	class Viewport;
+	class RenderTarget;
+}
+
+class OgreCameraNode;
+class OgreLightNode;
+
 typedef struct strcOgreResources
 {
 	QString sType;
@@ -55,23 +67,22 @@ typedef struct strcSceneNode
 
 typedef struct strcLightSource
 {
-	Ogre::Light* pLightSource;
+	OgreLightNode* pLightSource;
 	QString sName;
 	float xPos;
 	float yPos;
 	float zPos;
+	bool bAppended;
+	strcLightSource()
+	{
+		pLightSource = NULL;
+		sName = "";
+		xPos = 0.0;
+		yPos = 0.0;
+		zPos = 0.0;
+		bAppended = false;
+	}
 } sLightSourceStructure;
-
-namespace Ogre {
-class Root;
-class Camera;
-class SceneManager;
-class RenderTexture;
-class Viewport;
-class RenderTarget;
-}
-
-class OgreCameraNode;
 
 class OgreNode : public QSGGeometryNode
 {
@@ -99,6 +110,11 @@ public:
 	bool setSceneNodes(const QList<sSceneNodeStructure> lSceneNodes);
 	bool setAmbientLight(const QColor &cColor);
 	bool setLightSources(const QList<sLightSourceStructure> lLightSources);
+	bool appendLightSource(sLightSourceStructure &lLightSource);
+	OgreLightNode *getLightSource(const QString &sLightName);
+
+	public slots:
+		bool setMaterialName(const QString &sEntityName, const QString &sMaterial);
 
 private:
 	bool configureUserSettings();
@@ -109,7 +125,6 @@ private:
 	QList<sLightSourceStructure> lBufferedLightSources;
 	QColor *cAmbientSceneColor;
 
-	//QMutex updateMutex;
     QSGTextureMaterial m_material;
     QSGOpaqueTextureMaterial m_materialO;
     QSGGeometry m_geometry;
@@ -125,7 +140,6 @@ private:
     QSize m_size;
 
     Ogre::Root *m_root;
-	//std::auto_ptr<Ogre::Root> m_root;
     Ogre::Camera *m_camera;
     Ogre::SceneManager *m_sceneManager;
     Ogre::RenderTexture *m_renderTexture;
@@ -134,7 +148,6 @@ private:
     Ogre::RenderWindow *m_window;
 
     GLuint m_ogreFBO;
-
     OgreCameraNode *m_cameraObject;
 
     bool m_initialized;

@@ -1,5 +1,5 @@
 //DefaultQMLPlugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2014  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -86,6 +86,20 @@ public slots:
 	 * @return a boolean value determining whether the function executed successfully.
 	 */
 	bool createLightSource(const QString &sLightName, const float &xPos, const float &yPos, const float &zPos);
+	//! \brief getLightSource slot.
+	/*!  This function returns a pointer to an QObject (OgreLightNode *) containing a specific light source defined by its name.
+	 * @param sLightName a string value that contains the name of the light source
+	 * @return a pointer to an QObject (OgreLightNode *) containing a specific light source, in case of a failure this function return a NULL value.
+	 */
+	QObject *getLightSource(const QString &sLightName);
+	//! \brief setMaterialName slot.
+	/*!  This function sets the material of an entity from the scene.
+	 * @param sEntityName a string value that contains the name of the scene entity
+	 * @param sMaterial a string value that contains the material to use. This name should be the same as the (*.material) file 
+	 * which is present in the same directory as the (*.mesh) file and defines the material with provided material name.
+	 * @return a boolean value determining whether the function executed successfully.
+	 */
+	bool setMaterialName(const QString &sEntityName, const QString &sMaterial);
 	//! \brief setAmbientColor slot.
 	/*!  This function set the ambient color for the 3D scene.
 	 * @param nRed a integer value containing the level of the red component for the ambient color

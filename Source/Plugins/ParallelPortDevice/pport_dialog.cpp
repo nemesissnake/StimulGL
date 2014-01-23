@@ -1,5 +1,5 @@
 //parallelportplugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2014  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -277,7 +277,7 @@ short PPort_Dialog::getCBaseAddress()
 	return nCBaseAddress;
 }
 
-void PPort_Dialog::UpdateCaptureThreadUI(short Value)
+void PPort_Dialog::UpdateCaptureThreadUI(int Value)
 {
 	ui.txtFeedBackTriggVal->setText(QString::number(Value));
 	ui.txt_NrOfFeedBacks->setText(QString::number((ui.txt_NrOfFeedBacks->text().toInt()+1)));
@@ -378,7 +378,7 @@ void PPort_Dialog::on_btnStartCaptureThread_clicked()
 		}
 	}
 	captureThread = new ppCaptureThread(nCBaseAddress,getCBitMask(),getCCaptureMethod(),getCPostLHTiming(),getCPostHLTiming(),this);
-	connect(captureThread, SIGNAL(recieveThreadTriggered(short)), this, SLOT(UpdateCaptureThreadUI(short)));
+	connect(captureThread, SIGNAL(recieveThreadTriggered(int)), this, SLOT(UpdateCaptureThreadUI(int)));
 	connect(captureThread, SIGNAL(recieveThreadStarted(QString)), this, SLOT(CaptureThreadStarted(QString)));
 	connect(captureThread, SIGNAL(recieveThreadStopped(QString)), this, SLOT(CaptureThreadStopped(QString)));
 	captureThread->start();
@@ -519,7 +519,7 @@ short PPort_Dialog::getGBaseAddress()
 	return nGBaseAddress;
 }
 
-void PPort_Dialog::UpdateGenerateThreadUI(short Value)
+void PPort_Dialog::UpdateGenerateThreadUI(int Value)
 {
 	ui.txtFeedBackGenVal->setText(QString::number(Value));
 	ui.txt_GenNrOfFeedBacks->setText(QString::number((ui.txt_GenNrOfFeedBacks->text().toInt()+1)));
@@ -641,7 +641,7 @@ void PPort_Dialog::on_btnStartGenerateThread_clicked()
 		}
 	}
 	generateThread = new ppGenerateThread(nGBaseAddress,(int)getGGenerationMethod(),getGBitMaskValue(),getGBitActiveValue(),getGBitInActiveValue(),getGActivePulseTime(),getGRepetitionTime(),this);
-	connect(generateThread, SIGNAL(generateThreadTriggered(short)), this, SLOT(UpdateGenerateThreadUI(short)));
+	connect(generateThread, SIGNAL(generateThreadTriggered(int)), this, SLOT(UpdateGenerateThreadUI(int)));
 	connect(generateThread, SIGNAL(generateThreadStarted(QString)), this, SLOT(GenerateThreadStarted(QString)));
 	connect(generateThread, SIGNAL(generateThreadStopped(QString)), this, SLOT(GenerateThreadStopped(QString)));	
 	generateThread->start();

@@ -414,7 +414,7 @@ StimulGL_Information.prototype.GetComponentExtensionInterfaceVersionByIndexes = 
 }
 
 StimulGL_Information.prototype.GetMainAppCopyrightString = function ()
-{ return 'Copyright (C) 2013'; }
+{ return 'Copyright (C) 2014'; }
 
 StimulGL_Information.prototype.GetMainAppCompanyName = function ()
 {	return 'MBIC, Maastricht Brain Imaging Center'; }

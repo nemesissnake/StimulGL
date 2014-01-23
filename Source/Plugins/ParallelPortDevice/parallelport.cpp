@@ -1,5 +1,5 @@
 //parallelportplugin
-//Copyright (C) 2013  Sven Gijsen
+//Copyright (C) 2014  Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -218,7 +218,7 @@ bool ParallelPort::StartGenerateThread(const short baseAddress,const short metho
 
 	generateThread = new ppGenerateThread(baseAddress,GenMethod,outputMask,activeValue,inActiveValue,activePulseTime,repetitionTime,this);
 		
-	connect(generateThread, SIGNAL(generateThreadTriggered(short)), this, SIGNAL(GenerateThreadTriggered(short)));
+	connect(generateThread, SIGNAL(generateThreadTriggered(int)), this, SIGNAL(GenerateThreadTriggered(int)));
 	connect(generateThread, SIGNAL(generateThreadStarted(QString)), this, SIGNAL(GenerateThreadStarted(QString)));
 	connect(generateThread, SIGNAL(generateThreadStopped(QString)), this, SIGNAL(GenerateThreadStopped(QString)));
 	generateThread->start();
@@ -253,7 +253,7 @@ bool ParallelPort::StartCaptureThread(const short baseAddress, const short mask,
 
 	captureThread = new ppCaptureThread(baseAddress,mask,CapDecMethod,postLHDelay,postHLDelay,this);
 
-	connect(captureThread, SIGNAL(recieveThreadTriggered(short)), this, SIGNAL(CaptureThreadTriggered(short)));
+	connect(captureThread, SIGNAL(recieveThreadTriggered(int)), this, SIGNAL(CaptureThreadTriggered(int)));
 	connect(captureThread, SIGNAL(recieveThreadStarted(QString)), this, SIGNAL(CaptureThreadStarted(QString)));
 	connect(captureThread, SIGNAL(recieveThreadStopped(QString)), this, SIGNAL(CaptureThreadStopped(QString)));
 	captureThread->start();
