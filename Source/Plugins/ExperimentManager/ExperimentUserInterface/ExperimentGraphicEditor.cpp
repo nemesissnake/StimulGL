@@ -77,8 +77,9 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	tmpExpStruct = NULL;
 	expStructVisualizer = NULL;
 	tmpExpObjectParamDefs = NULL;
+	//rootItem = NULL;
 	
-	currentViewSettings.bSkipComments = false;
+	currentViewSettings.bSkipComments = true;
 	currentViewSettings.bSkipEmptyAttributes = false;
 	
 	//this->setAttribute( Qt::WA_DeleteOnClose );
@@ -105,7 +106,10 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 	if(tblWidgetView)
 		delete tblWidgetView;
 	if(scrollArea)
+	{
+		scrollArea->takeWidget();//Important, otherwise the singleton widgets get deleted...
 		delete scrollArea;
+	}
 	if(horSplitter)
 		delete horSplitter;
 	if(menuFile)
@@ -131,7 +135,9 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 	if(tmpExpStruct)
 		delete tmpExpStruct;
 	if(tmpExpObjectParamDefs)
-		tmpExpObjectParamDefs = NULL;	
+		tmpExpObjectParamDefs = NULL;
+	//if(rootItem)
+	//	delete rootItem;
 }
 
 void ExperimentGraphicEditor::setExperimentManager(ExperimentManager *pExpManager)
@@ -343,8 +349,8 @@ void ExperimentGraphicEditor::newFile()
 
 		pExpTreeModel = &loadedExpTreeModel;
 		connect(pExpTreeModel, SIGNAL(modelModified()), this, SLOT(setNewModel()));
-		ExperimentTreeItem *rootItem = new ExperimentTreeItem("[Root node]");
-		pExpTreeModel->setItem(0, rootItem);
+		//rootItem = new ExperimentTreeItem("[Root node]");
+		//pExpTreeModel->setItem(0, rootItem);
 		setupFilterModel();
 	}
 }
@@ -460,74 +466,359 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 		for (int i = 0; i < item->rowCount(); i++)
 		{
 			child = item->child(i);
-			if (!child->hasChildren())
+			if(item->parent()->getName().toLower() == DEFINES_TAG)
 			{
-				gridLayout->addWidget(new QLabel(child->getName(), dynamicGraphicWidget),i,0);
-				QString defValue;
-				if (child->getType().toString().toLower() == "enum" || child->getType().toString().toLower() == "enum_text" || child->getType().toString().toLower() == "list")
+				if(i==0)
 				{
-					QComboBox *cbList = new QComboBox(dynamicGraphicWidget);
-					cbList->addItem("<Default>");
-					cbList->addItems(child->getAvailableValuesList());
-					QString value = "<Default>";
-					if (child->getValue() != "")
-						value = child->getValue();
-					defValue = child->getDefaultValue().toString();
-					cbList->setCurrentIndex(cbList->findText(value));
-					cbList->setToolTip(child->getDescription().toString());
-					gridLayout->addWidget(cbList,i,1);
-					connect(cbList, SIGNAL(currentIndexChanged(int)), this, SLOT(saveNewData()));
-				}
-				else if (child->getType().toString().toLower() == "bool" || child->getType().toString().toLower() == "boolean")
-				{
-					QComboBox *cbBool = new QComboBox(dynamicGraphicWidget);
-					QStringList items;
-					items.append("<Default>");
-					items.append("TRUE");
-					items.append("FALSE");
-					cbBool->addItems(items);
-					QString strValue = "<Default>";
-					if (child->getValue() != "")
+					if(item->getName().toLower() == EXPERIMENT_TAG)
 					{
-						bool value = false;
-						value = QVariant(child->getValue()).toBool();
-						if (value)
-							strValue = "TRUE";
+						QString sParamCollName = EXPERIMENT_TAG;
+						if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+						{
+							tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+						}
 						else
-							strValue = "FALSE";
+						{
+							ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+							tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+							if(tmpParametersWidget == NULL)
+							{
+								qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+							}
+							else
+							{
+								staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+							}								
+						}
+						//Set the values
+						int nChildCount = item->childCount();
+						QString sTmpString = "";
+						QString sValue = "";
+						for (int j=0;j<nChildCount;j++)
+						{							
+							if(item->child(j)->getName().toLower() == NAME_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(NAME_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == DEBUGMODE_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(DEBUGMODE_TAG,sTmpString);
+							}
+						}
 					}
-					defValue = child->getDefaultValue().toString();
-					if (defValue == "1")
-						defValue = "TRUE";
-					else
-						defValue = "FALSE";
-					cbBool->setCurrentIndex(cbBool->findText(strValue));
-					cbBool->setToolTip(child->getDescription().toString());
-					gridLayout->addWidget(cbBool,i,1);
-					connect(cbBool, SIGNAL(currentIndexChanged(int)), this, SLOT(saveNewData()));
 				}
-				else
-				{
-					QLineEdit *lineEdit = new QLineEdit("<Default>",dynamicGraphicWidget);
-					lineEdit->setToolTip(child->getDescription().toString());
-					QString value = child->getValue();
-					if (value != "")
-						lineEdit->setText(value);
-					defValue = child->getDefaultValue().toString();
-					connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(saveNewData()));
-					gridLayout->addWidget(lineEdit,i,1);
-				}
-				if (defValue.size() > 0)
-				{
-					defValue = "(Default=" + defValue + ")";
-					QLabel *labelDefault = new QLabel(defValue);
-					gridLayout->addWidget(labelDefault,i,2);
-				}
-				QLabel *labelID = new QLabel(child->getUID());
-				labelID->setVisible(false);
-				gridLayout->addWidget(labelID,i,3);
 			}
-			else//it has children...
+			else if(item->parent()->getName().toLower() == DECLARATIONS_TAG)
+			{
+				if(i==0)
+				{
+					if (item->getName().toLower() == OBJECT_TAG)
+					{
+						QString sParamCollName = DECLARATIONS_OBJECT_TAG;//OBJECT_TAG;
+						if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+						{
+							tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+						}
+						else
+						{
+							ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+							tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+							if(tmpParametersWidget == NULL)
+							{
+								qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+							}
+							else
+							{
+								staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+							}								
+						}
+						//Set the values
+						int nChildCount = item->childCount();
+						QString sTmpString = "";
+						QString sValue = "";
+						for (int j=0;j<nChildCount;j++)
+						{							
+							if(item->child(j)->getName().toLower() == NAME_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(NAME_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == CLASS_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(CLASS_TAG,sTmpString);
+							}
+						}
+					}
+				}
+			}
+			else if(item->parent()->getName().toLower() == CONNECTIONS_TAG)
+			{
+				if(i==0)
+				{
+					if (item->getName().toLower() == OBJECT_TAG)
+					{
+						QString sParamCollName = CONNECTIONS_OBJECT_TAG;
+						if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+						{
+							tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+						}
+						else
+						{
+							ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+							tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+							if(tmpParametersWidget == NULL)
+							{
+								qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+							}
+							else
+							{
+								staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+							}								
+						}
+						//Set the values
+						int nChildCount = item->childCount();
+						QString sTmpString = "";
+						QString sValue = "";
+						for (int j=0;j<nChildCount;j++)
+						{							
+							if(item->child(j)->getName().toLower() == CONNECTIONS_SIGNATURE_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(CONNECTIONS_SIGNATURE_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == CONNECTIONS_TYPE_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(CONNECTIONS_TYPE_TAG,sTmpString);
+							}
+						}
+					}
+				}
+			}
+			else if(item->parent()->getName().toLower() == INITIALIZATIONS_TAG)
+			{
+				if(i==0)
+				{
+					if (item->getName().toLower() == OBJECT_TAG)
+					{
+						QString sParamCollName = INITIALIZATIONS_OBJECT_TAG;
+						if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+						{
+							tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+						}
+						else
+						{
+							ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+							tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+							if(tmpParametersWidget == NULL)
+							{
+								qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+							}
+							else
+							{
+								staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+							}								
+						}
+						//Set the values
+						int nChildCount = item->childCount();
+						QString sTmpString = "";
+						QString sValue = "";
+						for (int j=0;j<nChildCount;j++)
+						{							
+							if(item->child(j)->getName().toLower() == INIT_FINIT_SIGNATURE_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(INIT_FINIT_SIGNATURE_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == INIT_FINIT_TYPE_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(INIT_FINIT_TYPE_TAG,sTmpString);
+							}
+						}
+					}
+				}
+			}
+			else if(item->parent()->getName().toLower() == BLOCKTRIALS_TAG)
+			{
+				if(i==0)
+				{
+					if (item->getName().toLower() == BLOCK_TAG)
+					{
+						QString sParamCollName = BLOCK_TAG;
+						if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+						{
+							tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+						}
+						else
+						{
+							ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+							tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+							if(tmpParametersWidget == NULL)
+							{
+								qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+							}
+							else
+							{
+								staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+							}								
+						}
+						//Set the values
+						int nChildCount = item->childCount();
+						QString sTmpString = "";
+						QString sValue = "";
+						for (int j=0;j<nChildCount;j++)
+						{							
+							if(item->child(j)->getName().toLower() == NAME_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(NAME_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == BLOCKNUMBER_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(BLOCKNUMBER_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == TRIALAMOUNT_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(TRIALAMOUNT_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == INTERNALTRIGGERAMOUNT_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(INTERNALTRIGGERAMOUNT_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == EXTERNALTRIGGERAMOUNT_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(EXTERNALTRIGGERAMOUNT_TAG,sTmpString);
+							}
+						}
+					}
+				}
+			}
+			else if(item->parent()->getName().toLower() == LOOPS_TAG)
+			{
+				if(i==0)
+				{
+					if (item->getName().toLower() == LOOP_TAG)
+					{
+						QString sParamCollName = LOOP_TAG;
+						if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+						{
+							tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+						}
+						else
+						{
+							ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+							tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+							if(tmpParametersWidget == NULL)
+							{
+								qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+							}
+							else
+							{
+								staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+							}								
+						}
+						//Set the values
+						int nChildCount = item->childCount();
+						QString sTmpString = "";
+						QString sValue = "";
+						for (int j=0;j<nChildCount;j++)
+						{							
+							if(item->child(j)->getName().toLower() == NAME_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(NAME_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == LOOP_NUMBER_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(LOOP_NUMBER_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == LOOP_AMOUNT_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(LOOP_AMOUNT_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == LOOP_TARGETBLOCKID_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(LOOP_TARGETBLOCKID_TAG,sTmpString);
+							}
+						}
+					}
+				}
+			}
+			else if(item->parent()->getName().toLower() == FINALIZATIONS_TAG)
+			{
+				if(i==0)
+				{
+					if (item->getName().toLower() == OBJECT_TAG)
+					{
+						QString sParamCollName = FINALIZATIONS_OBJECT_TAG;
+						if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+						{
+							tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+						}
+						else
+						{
+							ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+							tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+							if(tmpParametersWidget == NULL)
+							{
+								qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+							}
+							else
+							{
+								staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+							}								
+						}
+						//Set the values
+						int nChildCount = item->childCount();
+						QString sTmpString = "";
+						QString sValue = "";
+						for (int j=0;j<nChildCount;j++)
+						{							
+							if(item->child(j)->getName().toLower() == INIT_FINIT_SIGNATURE_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(INIT_FINIT_SIGNATURE_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == INIT_FINIT_TYPE_TAG)
+							{
+								sTmpString = item->child(j)->getValue();
+								if(sTmpString.isEmpty() == false)
+									tmpParametersWidget->setParameter(INIT_FINIT_TYPE_TAG,sTmpString);
+							}
+						}
+					}
+				}
+			}
+			else if(child->hasChildren())
 			{
 				if((item->getName().toLower() == BLOCKTRIALS_TAG) && (i==0))
 				{						
@@ -550,7 +841,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 								//int nRows = gridLayout->rowCount();
 								//int nColumns = gridLayout->columnCount();
 								//gridLayout->addWidget(expStructVisualizer,0,1);
-								
+
 								if(horSplitter->count() > TABLEVIEWINDEX)
 									expStructVisualizer->resizeStructureView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
 								bool bResult = expStructVisualizer->parseExperimentStructure(tmpExpStruct);								
@@ -573,9 +864,95 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 					{
 						if(child->hasChildren())
 						{
-							if(i==0)
+							if((item->parent() != NULL) && (item->parent()->parent() != NULL))// && (item->parent()->parent()->getName().toLower() == BLOCK_TAG))
 							{
-								QString sParamCollName = RETINOTOPYMAPPER_NAME;
+								if(i==0)
+								{
+									if(item->parent()->getName().toLower() == OBJECT_TAG)
+									{
+										ExperimentStructuresNameSpace::strcExperimentObject tmpExperimentObject;
+										tmpExperimentObject = getDefinedExperimentObjectInfo(item->parent());
+										if(tmpExperimentObject.nID >= 0)
+										{
+											QString sParamCollName = "";
+											if(item->parent()->parent()->getName().toLower() == BLOCK_TAG)
+											{
+												sParamCollName = tmpExperimentObject.sClass;//Case sensitive!!;
+											}
+											else if(item->parent()->parent()->getName().toLower() == INITIALIZATIONS_TAG)
+											{
+												sParamCollName = ""; 
+											}
+											if(sParamCollName.isEmpty() == false)
+											{
+												if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+												{
+													tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+												}
+												else
+												{
+													ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+													tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+													if(tmpParametersWidget == NULL)
+													{
+														qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+													}
+													else
+													{
+														staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+													}								
+												}
+											}
+										}									
+									}
+								}
+								if(tmpParametersWidget)
+								{
+									//Set the values
+									int nChildCount = child->childCount();
+									QString sName = "";
+									QString sValue = "";
+									for (int j=0;j<nChildCount;j++)
+									{							
+										if(item->child(i)->child(j)->getName().toLower() == NAME_TAG)
+										{
+											sName = item->child(i)->child(j)->getValue();
+										}
+										else if(item->child(i)->child(j)->getName().toLower() == VALUE_TAG)
+										{
+											sValue = item->child(i)->child(j)->getValue();
+										}
+										if((sName.isEmpty() || sValue.isEmpty()) == false)
+										{
+											//bool bResult = 
+											tmpParametersWidget->setParameter(sName,sValue);
+										}
+									}
+								}								
+							}
+						}
+					}
+				}
+			}
+			else//unknown and no children items...
+			{
+				if(item->getName().toLower() == PARAMETER_TAG)
+				{
+					if((item->parent()) && (item->parent()->parent()) && (item->parent()->parent()->parent())) 
+					{
+						if(i==0)
+						{
+							QString sParamCollName = "";
+							if (item->parent()->parent()->parent()->getName() == INITIALIZATIONS_TAG)
+							{
+								sParamCollName = INITIALIZATIONS_PARAMETER_TAG;
+							}
+							else if(item->parent()->parent()->parent()->getName() == BLOCK_TAG)
+							{
+								sParamCollName = BLOCK_PARAMETER_TAG;
+							}
+							if(sParamCollName.isEmpty() == false)
+							{
 								if(staticGraphicWidgetsHashTable.contains(sParamCollName))
 								{
 									tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
@@ -594,28 +971,79 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 									}								
 								}
 							}
-							//Set the values
-							int nChildCount = child->childCount();
-							QString sName = "";
-							QString sValue = "";
-							for (int j=0;j<nChildCount;j++)
-							{							
-								if(item->child(i)->child(j)->getName().toLower() == NAME_TAG)
-								{
-									sName = item->child(i)->child(j)->getValue();
-								}
-								else if(item->child(i)->child(j)->getName().toLower() == VALUE_TAG)
-								{
-									sValue = item->child(i)->child(j)->getValue();
-								}
-								if((sName.isEmpty() || sValue.isEmpty()) == false)
-								{
-									//bool bResult = 
-										tmpParametersWidget->setParameter(sName,sValue);
-								}
-							}
+						}
+						if(tmpParametersWidget)
+						{
+							tmpParametersWidget->setParameter(child->getName().toLower(),child->getValue());
 						}
 					}
+				}
+				else
+				{
+					gridLayout->addWidget(new QLabel(child->getName(), dynamicGraphicWidget),i,0);
+					QString defValue;
+					if (child->getType().toString().toLower() == "enum" || child->getType().toString().toLower() == "enum_text" || child->getType().toString().toLower() == "list")
+					{
+						QComboBox *cbList = new QComboBox(dynamicGraphicWidget);
+						cbList->addItem("<Default>");
+						cbList->addItems(child->getAvailableValuesList());
+						QString value = "<Default>";
+						if (child->getValue() != "")
+							value = child->getValue();
+						defValue = child->getDefaultValue().toString();
+						cbList->setCurrentIndex(cbList->findText(value));
+						cbList->setToolTip(child->getDescription().toString());
+						gridLayout->addWidget(cbList,i,1);
+						connect(cbList, SIGNAL(currentIndexChanged(int)), this, SLOT(saveNewData()));
+					}
+					else if (child->getType().toString().toLower() == "bool" || child->getType().toString().toLower() == "boolean")
+					{
+						QComboBox *cbBool = new QComboBox(dynamicGraphicWidget);
+						QStringList items;
+						items.append("<Default>");
+						items.append("TRUE");
+						items.append("FALSE");
+						cbBool->addItems(items);
+						QString strValue = "<Default>";
+						if (child->getValue() != "")
+						{
+							bool value = false;
+							value = QVariant(child->getValue()).toBool();
+							if (value)
+								strValue = "TRUE";
+							else
+								strValue = "FALSE";
+						}
+						defValue = child->getDefaultValue().toString();
+						if (defValue == "1")
+							defValue = "TRUE";
+						else
+							defValue = "FALSE";
+						cbBool->setCurrentIndex(cbBool->findText(strValue));
+						cbBool->setToolTip(child->getDescription().toString());
+						gridLayout->addWidget(cbBool,i,1);
+						connect(cbBool, SIGNAL(currentIndexChanged(int)), this, SLOT(saveNewData()));
+					}
+					else
+					{
+						QLineEdit *lineEdit = new QLineEdit("<Default>",dynamicGraphicWidget);
+						lineEdit->setToolTip(child->getDescription().toString());
+						QString value = child->getValue();
+						if (value != "")
+							lineEdit->setText(value);
+						defValue = child->getDefaultValue().toString();
+						connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(saveNewData()));
+						gridLayout->addWidget(lineEdit,i,1);
+					}
+					if (defValue.size() > 0)
+					{
+						defValue = "(Default=" + defValue + ")";
+						QLabel *labelDefault = new QLabel(defValue);
+						gridLayout->addWidget(labelDefault,i,2);
+					}
+					QLabel *labelID = new QLabel(child->getUID());
+					labelID->setVisible(false);
+					gridLayout->addWidget(labelID,i,3);
 				}
 			}
 		}
@@ -638,6 +1066,63 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 		scrollArea->takeWidget();
 		scrollArea->setWidget(dynamicGraphicWidget);		
 	}
+}
+
+ExperimentStructuresNameSpace::strcExperimentObject ExperimentGraphicEditor::getDefinedExperimentObjectInfo(ExperimentTreeItem *objItem)
+{
+	ExperimentStructuresNameSpace::strcExperimentObject tmpExperimentObject;
+	if(objItem)
+	{
+		QMap<QString, TreeItemDefinition> mapTreeItemDefinition = objItem->getDefinitions();
+		if(mapTreeItemDefinition.contains(ID_TAG))
+		{
+			int nSearchObjectID = mapTreeItemDefinition.value(ID_TAG).value.toInt();
+			QDomNodeList tmpExperimentObjectDomNodeList;
+			QStringList strList;
+			strList.clear();
+			strList.append(ROOT_TAG);
+			strList.append(DECLARATIONS_TAG); 
+			strList.append(OBJECT_TAG);
+			if (pExpTreeModel->getDocumentElements(strList,tmpExperimentObjectDomNodeList) >= 0)
+			{
+				int nNrOfObjects = tmpExperimentObjectDomNodeList.count();
+				if (nNrOfObjects>0)
+				{
+					QDomNode tmpNode;
+					QDomElement tmpElement;
+					QString tmpString;
+					int nObjectID = -1;
+					for(int i=0;i<nNrOfObjects;i++)
+					{
+						tmpNode = tmpExperimentObjectDomNodeList.at(i);
+						if (tmpNode.isElement()) 
+						{
+							tmpElement = tmpNode.toElement();
+							if(!tmpElement.hasAttribute(ID_TAG))
+								break;
+							tmpString = tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+							if (tmpString.isEmpty() == false)
+							{
+								nObjectID = tmpString.toInt();
+								if(nObjectID == nSearchObjectID)
+								{
+									tmpExperimentObject.nID = nObjectID;
+									tmpElement = tmpNode.firstChildElement(NAME_TAG);
+									if(tmpElement.tagName() == NAME_TAG)
+										tmpExperimentObject.sName = tmpElement.text();
+									tmpElement = tmpNode.firstChildElement(CLASS_TAG);
+									if(tmpElement.tagName() == CLASS_TAG)
+										tmpExperimentObject.sClass = tmpElement.text();
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}	
+	return tmpExperimentObject;
 }
 
 void ExperimentGraphicEditor::fillTableView(const QString &textToFind, const QStringList &filters)

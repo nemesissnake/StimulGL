@@ -39,6 +39,12 @@ struct ExperimentParameterDefinitionCollection
 	}
 };
 
+struct ExperimentControlDefinitionLocationInfo
+{
+	QString sPathToDefFile;
+	QString sName;
+};
+
 class ExperimentParameterWidgets : public QObject
 {
 	Q_OBJECT

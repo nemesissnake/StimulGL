@@ -76,6 +76,19 @@ namespace ExperimentStructuresNameSpace
 		int CurrentBlock_InternalTrigger;		//!<  The current Internal Trigger Number from the current Block (with ID=strcExperimentStructureState::CurrentBlock_BlockID).
 		int CurrentBlock_ExternalTrigger;		//!<  The current External Trigger Number from the current Block (with ID=strcExperimentStructureState::CurrentBlock_BlockID).
 	} ExperimentStructureState;
+
+	struct strcExperimentObject
+	{
+		int nID;
+		QString sName;
+		QString sClass;
+		strcExperimentObject()
+		{
+			nID = -1;
+			sName = "";
+			sClass = "";
+		}
+	};
 }
 
 //!  The cLoopStructure class. 

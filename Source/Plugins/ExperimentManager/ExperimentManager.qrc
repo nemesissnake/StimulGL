@@ -9,5 +9,14 @@
         <file>resources/Downwards.png</file>
         <file>resources/Increase.png</file>
         <file>resources/Upwards.png</file>
+        <file>resources/ExperimentNode.xdef</file>
+        <file>resources/ConnectionsObjectNode.xdef</file>
+        <file>resources/DeclarationsObjectNode.xdef</file>
+        <file>resources/InitializationsObjectNode.xdef</file>
+        <file>resources/FinalizationsObjectNode.xdef</file>
+        <file>resources/BlockLoopNode.xdef</file>
+        <file>resources/BlockNode.xdef</file>
+        <file>resources/BlockParameterNode.xdef</file>
+        <file>resources/InitializationsParameterNode.xdef</file>
     </qresource>
 </RCC>

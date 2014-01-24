@@ -178,7 +178,23 @@ namespace ExperimentManagerNameSpace
 	//#define MIN_SCREEN_UPDATE_TIME				10
 	//#define MAX_SCREEN_UPDATE_TIME				16.6667f
 
-	#define RETINOTOPYMAPPER_PARAMDEF_PATH			":/resources/RetinotopyMapper.xdef"
+	#define RETINOTOPYMAPPER_PARAMDEF_PATH			":/resources/" RETINOTOPYMAPPER_NAME ".xdef"
+	#define EXPERIMENT_PARAMDEF_PATH				":/resources/ExperimentNode.xdef"
+	#define DECLARATIONS_OBJECT_TAG					DECLARATIONS_TAG "_" OBJECT_TAG
+	#define DECLARATIONS_OBJECT_PARAMDEF_PATH		":/resources/DeclarationsObjectNode.xdef"
+	#define INITIALIZATIONS_OBJECT_TAG				INITIALIZATIONS_TAG "_" OBJECT_TAG
+	#define INITIALIZATIONS_OBJECT_PARAMDEF_PATH	":/resources/InitializationsObjectNode.xdef"
+	#define FINALIZATIONS_OBJECT_TAG				FINALIZATIONS_TAG "_" OBJECT_TAG
+	#define FINALIZATIONS_OBJECT_PARAMDEF_PATH		":/resources/FinalizationsObjectNode.xdef"
+	#define CONNECTIONS_OBJECT_TAG					CONNECTIONS_TAG "_" OBJECT_TAG
+	#define CONNECTIONS_OBJECT_PARAMDEF_PATH		":/resources/ConnectionsObjectNode.xdef"
+	#define BLOCK_OBJECT_PARAMDEF_PATH				":/resources/BlockNode.xdef"
+	#define LOOP_OBJECT_PARAMDEF_PATH				":/resources/BlockLoopNode.xdef"
+	#define INITIALIZATIONS_PARAMETER_TAG			INITIALIZATIONS_TAG "_" PARAMETER_TAG
+	#define INITIALIZATIONS_PARAMETER_PARAMDEF_PATH	":/resources/InitializationsParameterNode.xdef"
+	#define BLOCK_PARAMETER_TAG						BLOCK_TAG "_" PARAMETER_TAG
+	#define BLOCK_PARAMETER_PARAMDEF_PATH			":/resources/BlockParameterNode.xdef"
+
 
 	#define DEFAULT_OUTPUTFILE				"Out.txt"
 	#define ARGB_FORMAT_HEADER				0xCAFE1234
@@ -193,7 +209,7 @@ namespace ExperimentManagerNameSpace
 	#define ACTIONS_TAG						"actions"
 	#define LOOPS_TAG						"loops"
 	#define LOOP_TAG						"loop"
-	#define LOOP_NUMBER						"loop_number"	
+	#define LOOP_NUMBER_TAG					"loop_number"	
 	#define LOOP_AMOUNT_TAG					"nr_of_loops"
 	#define LOOP_TARGETBLOCKID_TAG			"target_block"
 	#define BLOCKTRIALS_TAG					"blocks"

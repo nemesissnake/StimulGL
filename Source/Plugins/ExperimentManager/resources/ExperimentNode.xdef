@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<definitions>
+	<parameters>
+	
+	    <parameter id="0">
+	        <enabled>true</enabled>
+	        <name>name</name>
+	        <displayname>Experiment name</displayname>
+	        <grouppath></grouppath>
+	        <information>The name of the experiment</information>
+	        <type>string</type>
+	        <defaultvalue>enter the name here...</defaultvalue>	      	
+	    </parameter>	       
+	    
+	    <parameter id="1">
+	        <enabled>true</enabled>
+	        <name>debugmode</name>
+	        <displayname>Debug mode</displayname>
+	        <grouppath></grouppath>
+	        <information>Whether the Debug mode is enabled</information>
+	        <type>boolean</type>
+	        <defaultvalue>false</defaultvalue>
+	    </parameter>
+	    
+	</parameters>
+</definitions>	

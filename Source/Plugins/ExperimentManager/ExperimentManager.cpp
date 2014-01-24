@@ -2088,7 +2088,7 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 											if(!tmpLoopElementParams.isNull())//Is it defined?
 											{
 												sTempLoopName = tmpLoopElementParams.text();//Copy the LoopName
-												tmpLoopElementParams = tmpElement.firstChildElement(LOOP_NUMBER);
+												tmpLoopElementParams = tmpElement.firstChildElement(LOOP_NUMBER_TAG);
 												if(!tmpLoopElementParams.isNull())//Is it defined?
 												{
 													nTempLoopNumber = tmpLoopElementParams.text().toInt();//Copy the LoopNumber

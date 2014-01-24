@@ -25,6 +25,7 @@
 
 #include <QWidget>
 #include <QModelIndex>
+#include "ExperimentStructures.h"
 #include "ExperimentTreeModel.h"
 #include "ExperimentGraphicEditor_Global.h"
 
@@ -96,6 +97,7 @@ private:
 	void setupMenuAndActions();
 	void setupLayout();
 	void setupFilterModel();
+	ExperimentStructuresNameSpace::strcExperimentObject getDefinedExperimentObjectInfo(ExperimentTreeItem *objItem);
 
 	QTreeView *treeView;
 	QToolBar *toolBar;
@@ -126,6 +128,8 @@ private:
 	QMenu *menuEdit;
 	QToolButton *buttonFile;
 	QToolButton *buttonEdit;
+
+	//ExperimentTreeItem *rootItem;
 
 	TreeFilterSettings currentViewSettings;
 	QModelIndex selectedIndex;
