@@ -62,7 +62,9 @@ void QGVEdge::paint(QPainter * painter, const QStyleOptionGraphicsItem * option,
 	Q_UNUSED(option);
 
     painter->save();
-    if(isSelected())
+	if(this->getAttribute("penwidth").isEmpty() == false)
+		_pen.setWidth(this->getAttribute("penwidth").toInt());
+	if(isSelected())
     {
         QPen tpen(_pen);
         tpen.setColor(_pen.color().darker(120));
@@ -71,10 +73,12 @@ void QGVEdge::paint(QPainter * painter, const QStyleOptionGraphicsItem * option,
     }
     else
 	{
-        painter->setPen(_pen);
+		painter->setPen(_pen);
 	}
     painter->drawPath(_path);
     
+/*
+
     QRectF rectControl = _path.controlPointRect();
 	QRectF rectHead = _head_arrow.boundingRect();
 	QRectF rectTail = _path.boundingRect();
@@ -157,7 +161,19 @@ void QGVEdge::paint(QPainter * painter, const QStyleOptionGraphicsItem * option,
 			//painter->drawRect(_label_rect);
 		}		
 	}
-	painter->drawText(_label_rect, Qt::AlignCenter, _label);
+
+*/
+
+	QFont serifFont("Courier", 15, QFont::Bold);//"Courier" is fixed and should not be changed!
+	if(getAttribute("labelfontsize").isEmpty() == false)
+	{
+		serifFont.setPointSize(getAttribute("labelfontsize").toInt());
+	}	
+	painter->setFont(serifFont);
+	QFontMetrics fm(serifFont);
+	_label_rect.setSize(fm.size(Qt::TextSingleLine,_label));
+	painter->drawText(_label_rect, Qt::AlignLeft, _label);
+	//painter->drawText(Qt::AlignCenter, _label);
 	painter->restore();
 	painter->setBrush(QBrush(_pen.color(), Qt::SolidPattern));
     painter->drawPolygon(_head_arrow);

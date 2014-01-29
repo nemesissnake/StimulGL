@@ -122,8 +122,10 @@ private:
 
 	QGVScene *_scene;
 	expSceneItemStrc expSceneItems;
+	cExperimentStructure *parsedExpStruct;
 	int nWidgetMargin;
 	qreal dGraphViewScale;
+	bool bDrawVertical; //Otherwise horizontal
 };
 
 #endif // EXPERIMENTSTRUCTUREVISUALIZER_H

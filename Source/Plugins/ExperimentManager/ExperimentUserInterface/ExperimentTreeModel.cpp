@@ -128,106 +128,128 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 {
 	ExperimentTreeItem *m_parent = itemFromIndex(parentIndex);
 
-	if (m_parent != NULL)
+	if ((m_parent != NULL) && (sName.isEmpty() == false))
 	{
-		int totalChilds = m_parent->childCount();
+		int totalChilds;
 		QString sTempString1;
 		QString sTempString2;
 		int nValueIndex;
-		int nHighestIDNumber=-1;
-		bool bParamFound = false;
+		int nHighestIDNumber;
+		bool bParamFound;
 		bool bDoBreak = false;
 		TreeItemDefinition tmpTreeItemDef;
 		QMap<QString,TreeItemDefinition> m_definitions;
+		QStringList sRelativeNames = sName.split("/");
 
-		for (int j=0;j<totalChilds;j++)
+		while(bDoBreak == false)
 		{
-			if(m_parent->getName() == EXPERIMENT_PARAMETERS_TAG)
+			totalChilds = m_parent->childCount();
+			nHighestIDNumber = -1;
+			bParamFound = false;
+			bDoBreak = false;
+			for (int j=0;j<totalChilds;j++)
 			{
-				if(m_parent->child(j)->getName() == EXPERIMENT_PARAMETER_TAG)
+				if(m_parent->getName() == EXPERIMENT_PARAMETERS_TAG)
 				{
-					if(m_parent->child(j)->hasChildren())
+					if(m_parent->child(j)->getName() == EXPERIMENT_PARAMETER_TAG)
 					{
-						m_definitions = m_parent->child(j)->getDefinitions();
-						QMapIterator<QString, TreeItemDefinition> it(m_definitions);
-						while (it.hasNext()) 
+						if(m_parent->child(j)->hasChildren())
 						{
-							it.next();
-							if(it.key().toLower() == EXPERIMENT_ID_TAG)
+							m_definitions = m_parent->child(j)->getDefinitions();
+							QMapIterator<QString, TreeItemDefinition> it(m_definitions);
+							while (it.hasNext()) 
 							{
-								if(it.value().value.toInt() > nHighestIDNumber)
+								it.next();
+								if(it.key().toLower() == EXPERIMENT_ID_TAG)
 								{
-									nHighestIDNumber = it.value().value.toInt();
-								}
-								break;
-							}
-						}
-						sTempString1 = ""; 
-						sTempString2 = "";
-						nValueIndex = -1;
-						for(int i=0;i<m_parent->child(j)->childCount();i++)
-						{
-							if(m_parent->child(j)->child(i)->getName() == EXPERIMENT_NAME_TAG)
-							{
-								if (sName.compare(m_parent->child(j)->child(i)->getValue(), Qt::CaseInsensitive) == 0)
-								{
-									sTempString1 = m_parent->child(j)->child(i)->getValue();
-								}
-								else
-								{
-									continue;	
-								}							
-							}
-							else if(m_parent->child(j)->child(i)->getName() == EXPERIMENT_VALUE_TAG)
-							{
-								sTempString2 = m_parent->child(j)->child(i)->getValue();
-								nValueIndex = i;
-							}
-							if((nValueIndex != -1) && (sTempString1.isEmpty() == false))
-							{
-								if (sName.compare(sTempString1, Qt::CaseInsensitive) == 0)
-								{
-									m_parent->child(j)->child(nValueIndex)->setValue(sValue);
-									ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j)->child(nValueIndex));
-									m_parent->child(j)->removeRow(nValueIndex);
-									m_parent->child(j)->insertRow(nValueIndex, item);								
-									sTempString1 = ""; 
-									sTempString2 = "";
-									nValueIndex = -1;
-									bParamFound = true;
-									//We break because then only the first parameter would be changed. 
-									//In a non-unique situation this would not be compatible, so you need to comment the below 2 lines.
-									bDoBreak = true;
+									if(it.value().value.toInt() > nHighestIDNumber)
+									{
+										nHighestIDNumber = it.value().value.toInt();
+									}
 									break;
 								}
 							}
-						}					
+							sTempString1 = ""; 
+							sTempString2 = "";
+							nValueIndex = -1;
+							for(int i=0;i<m_parent->child(j)->childCount();i++)
+							{
+								if(m_parent->child(j)->child(i)->getName() == EXPERIMENT_NAME_TAG)
+								{
+									if (sRelativeNames[0].compare(m_parent->child(j)->child(i)->getValue(), Qt::CaseInsensitive) == 0)
+									{
+										sTempString1 = m_parent->child(j)->child(i)->getValue();
+									}
+									else
+									{
+										continue;	
+									}							
+								}
+								else if(m_parent->child(j)->child(i)->getName() == EXPERIMENT_VALUE_TAG)
+								{
+									sTempString2 = m_parent->child(j)->child(i)->getValue();
+									nValueIndex = i;
+								}
+								if((nValueIndex != -1) && (sTempString1.isEmpty() == false))
+								{
+									if (sRelativeNames[0].compare(sTempString1, Qt::CaseInsensitive) == 0)
+									{
+										m_parent->child(j)->child(nValueIndex)->setValue(sValue);
+										ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j)->child(nValueIndex));
+										m_parent->child(j)->removeRow(nValueIndex);
+										m_parent->child(j)->insertRow(nValueIndex, item);								
+										sTempString1 = ""; 
+										sTempString2 = "";
+										nValueIndex = -1;
+										bParamFound = true;
+										//We break because then only the first parameter would be changed. 
+										//In a non-unique situation this would not be compatible, so you need to comment the below 2 lines.
+										bDoBreak = true;
+										break;
+									}
+								}
+							}					
+						}
 					}
+					else
+					{
+						continue;
+					}
+					if(bDoBreak)
+						break;
 				}
 				else
 				{
-					continue;
+					if (sRelativeNames[0].compare(m_parent->child(j)->getName(), Qt::CaseInsensitive) == 0)
+					{
+						if(sRelativeNames.count() > 1)
+						{
+							m_parent = m_parent->child(j);
+							sRelativeNames.removeFirst();
+							bDoBreak = false;
+							break;							
+						}
+						else
+						{
+							m_parent->child(j)->setValue(sValue);
+							bParamFound = true;
+							bDoBreak = true;
+							break;
+						}
+					}
+					else
+					{
+						continue;	
+					}
+					if(bDoBreak)
+						break;
 				}
-				if(bDoBreak)
-					break;
-			}
-			else
-			{
-				if (sName.compare(m_parent->child(j)->getName(), Qt::CaseInsensitive) == 0)
+				if(j == (totalChilds-1))//last one?
 				{
-					m_parent->child(j)->setValue(sValue);
-					bParamFound = true;
 					bDoBreak = true;
-					break;
 				}
-				else
-				{
-					continue;	
-				}
-				if(bDoBreak)
-					break;
 			}
-		}
+		}		
 		if(bParamFound == false)
 		{
 			if(m_parent->getName() == EXPERIMENT_PARAMETERS_TAG)
@@ -242,7 +264,7 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 				m_definitions.insert(QString(EXPERIMENT_ID_TAG).toUpper(), tmpTreeItemDefinition);
 				item->setDefinitions(m_definitions);
 				//Append the name
-				ExperimentTreeItem *subNameItem = new ExperimentTreeItem(EXPERIMENT_NAME_TAG, sName);
+				ExperimentTreeItem *subNameItem = new ExperimentTreeItem(EXPERIMENT_NAME_TAG, sRelativeNames[0]);
 				item->appendRow(subNameItem);			
 				//Append the value
 				subNameItem = new ExperimentTreeItem(EXPERIMENT_VALUE_TAG, sValue);

@@ -30,5 +30,32 @@
 	        <defaultvalue></defaultvalue>
 	    </parameter>
 	    
+	    <parameter id="2">
+	        <enabled>true</enabled>
+	        <name>target/type</name>
+	        <displayname>Type</displayname>
+	        <grouppath>Target</grouppath>
+	        <information>The type of the connection source</information>
+	        <type>string</type>
+	        <defaultvalue>Signal</defaultvalue>	 
+	      	<restriction>
+	      		<regularexpression>
+	      			<pattern></pattern>
+	      			<casesensitive>false</casesensitive>
+	      		</regularexpression>
+						<allowed>signal;slot;member;property;enumerator</allowed>
+	      	</restriction>	             	
+	    </parameter>	       
+	    
+	    <parameter id="3">
+	        <enabled>true</enabled>
+	        <name>target/signature</name>
+	        <displayname>Signature</displayname>
+	        <grouppath>Target</grouppath>
+	        <information>The signature of the connection source</information>
+	        <type>string</type>
+	        <defaultvalue></defaultvalue>
+	    </parameter>	    
+	    
 	</parameters>
 </definitions>

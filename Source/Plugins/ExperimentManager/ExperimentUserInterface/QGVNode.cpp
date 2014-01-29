@@ -70,12 +70,27 @@ void QGVNode::paint(QPainter * painter, const QStyleOptionGraphicsItem * option,
     if(_icon.isNull())
     {
 		//QString tmpString = QGVNode::label();
-        painter->drawText(rect, Qt::AlignLeft , QGVNode::label());
+		QFont serifFont("Courier", 15, QFont::Bold);//"Courier" is fixed and should not be changed!
+		if(getAttribute("labelfontsize").isEmpty() == false)
+		{
+			serifFont.setPointSize(getAttribute("labelfontsize").toInt());
+		}	
+		painter->setFont(serifFont);
+
+		QFontMetrics fm(serifFont);
+		int charPixelsWidth = fm.width("s");//Courier is in mono-space, so let's see how much space a single character takes...
+		int nMaxChars = rect.width()/charPixelsWidth;
+		QString tmpLabelText = QGVNode::label();
+		if(tmpLabelText.size() > nMaxChars)
+		{
+			if(nMaxChars > 2)
+				tmpLabelText = tmpLabelText.left(nMaxChars-2) + "..";
+		}
+        painter->drawText(rect, Qt::AlignHCenter, tmpLabelText);
     }
     else
     {
         painter->drawText(rect.adjusted(0,0,0, -rect.height()*2/3), Qt::AlignCenter , QGVNode::label());
-
         const QRectF img_rect = rect.adjusted(0, rect.height()/3,0, 0);
         QImage img = _icon.scaled(img_rect.size().toSize(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
         painter->drawImage(img_rect.topLeft() + QPointF((img_rect.width() - img.rect().width())/2, 0), img);

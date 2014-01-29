@@ -38,8 +38,10 @@ ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : 
 	buttonEdit = NULL;
 	graphViewLayout = NULL;
 	_scene = NULL;
+	parsedExpStruct = NULL;
 	nWidgetMargin = 45;
 	dGraphViewScale = 0.9;//fill till 90%
+	bDrawVertical = true;
 
 	ui = new Ui::ExperimentStructureVisualizer();
 	ui->setupUi(this);
@@ -75,6 +77,7 @@ ExperimentStructureVisualizer::~ExperimentStructureVisualizer()
 
 void ExperimentStructureVisualizer::resetExpSceneItemsCollection(expSceneItemStrc &tmpExpSceneItems)
 {
+	parsedExpStruct = NULL;
 	tmpExpSceneItems.sExperimentName = "<undefined>";
 	tmpExpSceneItems.gvStartExperimentNode = NULL;
 	tmpExpSceneItems.gvEndExperimentNode = NULL;	
@@ -150,7 +153,7 @@ void ExperimentStructureVisualizer::setupMenuAndActions()
 
 void ExperimentStructureVisualizer::Test()
 {
-	resizeStructureView(ui->graphicsView->size().width(),ui->graphicsView->size().height());
+	//resizeStructureView(ui->graphicsView->size().width(),ui->graphicsView->size().height());
 	//int test = ui->graphicsView->maximumWidth();
 	//drawGraph();	
 }
@@ -178,10 +181,11 @@ void ExperimentStructureVisualizer::setupLayout()
 }
 
 void ExperimentStructureVisualizer::resizeStructureView(const int &nWidth, const int &nHeight)
-{	
+{
 	if(ui->graphicsView)
 	{
 		ui->graphicsView->setFixedSize(nWidth-nWidgetMargin,nHeight-nWidgetMargin);
+		//ui->graphicsView->setFixedSize(500,500);
 	}
 }
 
@@ -229,38 +233,61 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 		//Configure scene attributes
 		_scene->setGraphAttribute("label", "Experiment Structure");
 		_scene->setGraphAttribute("splines", "spline");//"polyline");//"spline");//"line");//"ortho");
-		_scene->setGraphAttribute("rankdir", "LR");
+		if(bDrawVertical)
+			_scene->setGraphAttribute("rankdir", "TB");
+		else
+			_scene->setGraphAttribute("rankdir", "LR");
 		//_scene->setGraphAttribute("concentrate", "true"); //Error !
 		_scene->setGraphAttribute("nodesep", "0.2");
-
+		
 		_scene->setNodeAttribute("shape", "box");
 		//_scene->setNodeAttribute("orientation", "0");
 		_scene->setNodeAttribute("style", "filled");
 		_scene->setNodeAttribute("fillcolor", "lightgrey");
 		_scene->setNodeAttribute("height", "1.2");
+		_scene->setNodeAttribute("width", "5.0");
+		_scene->setNodeAttribute("fixedsize", "true");
 
-		_scene->setNodeAttribute("labelfontname", "Times-Bold");
-		_scene->setNodeAttribute("labelfontsize", "6");
-		_scene->setNodeAttribute("labelfontcolor", "red");
+		_scene->setNodeAttribute("labelfontname", "Courier");//fixed, do not change here!
+		_scene->setNodeAttribute("labelfontsize", "15");
+		_scene->setNodeAttribute("labelfontcolor", "blue");
 
 		_scene->setEdgeAttribute("minlen", "3");
 		//_scene->setEdgeAttribute("dir", "both");
+		_scene->setEdgeAttribute("penwidth", "5");
+		//_scene->setEdgeAttribute("lwidth", "5");
+		_scene->setEdgeAttribute("labelfontsize", "15");
 
 
 		//START AND END EXPERIMENT//
-		expSceneItems.gvStartExperimentNode = _scene->addNode("Start of\n experiment");
+		expSceneItems.gvStartExperimentNode = _scene->addNode("Start");
 		expSceneItems.gvStartExperimentNode->setAttribute("shape", "hexagon");
-		expSceneItems.gvEndExperimentNode = _scene->addNode("End of\n experiment");
+		expSceneItems.gvStartExperimentNode->setAttribute("labelfontcolor", "green");
+		expSceneItems.gvStartExperimentNode->setAttribute("labelfontsize", "25");
+		expSceneItems.gvStartExperimentNode->setAttribute("tooltip", "Start of the experiment");
+		expSceneItems.gvEndExperimentNode = _scene->addNode("\nEnd");
 		expSceneItems.gvEndExperimentNode->setAttribute("shape", "hexagon");
+		expSceneItems.gvEndExperimentNode->setAttribute("labelfontcolor", "red");
+		expSceneItems.gvEndExperimentNode->setAttribute("labelfontsize", "25");
+		expSceneItems.gvEndExperimentNode->setAttribute("tooltip", "End of the experiment");
 
 		//BLOCKS//
 		if(expSceneItems.lBlocks.isEmpty() == false)
 		{
+			QString sTmpTooltip;
 			for (int i=0;i<expSceneItems.lBlocks.count();i++)
 			{
 				expSceneItems.lBlocks[i].gvNode = _scene->addNode(QString("%1 %2").arg(expSceneItems.lBlocks[i].sName).arg(expSceneItems.lBlocks[i].nNumber));
+				cBlockStructure *tmpBlockStruct = parsedExpStruct->getBlockPointerByID(expSceneItems.lBlocks[i].nId);
+				if (tmpBlockStruct)
+				{
+					sTmpTooltip = "Trials: " + QString::number(tmpBlockStruct->getNumberOfTrials());
+					sTmpTooltip = sTmpTooltip + "\nInt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfInternalTriggers());
+					sTmpTooltip = sTmpTooltip + "\nExt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfExternalTriggers());
+				}				
+				expSceneItems.lBlocks[i].gvNode->setAttribute("tooltip", sTmpTooltip);
 				if(i==0)
-					_scene->setRootNode(expSceneItems.lBlocks[i].gvNode);
+					_scene->setRootNode(expSceneItems.lBlocks[i].gvNode);				
 			}
 		}
 		else
@@ -337,10 +364,14 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 			}
 		}
 		//Layout scene
-		_scene->applyLayout();
-				
+		_scene->applyLayout();			
+
 		QRectF currentSceneRect = _scene->itemsBoundingRect();
-		qreal dScaleFactor = ((ui->graphicsView->size().width()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.width();
+		qreal dScaleFactor;
+		if(bDrawVertical)
+			dScaleFactor = ((ui->graphicsView->size().height()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.height();
+		else
+			dScaleFactor = ((ui->graphicsView->size().width()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.width();
 		ui->graphicsView->resetTransform();
 		ui->graphicsView->scale(dScaleFactor, dScaleFactor);
 		ui->graphicsView->centerOn(currentSceneRect.center());
@@ -480,6 +511,7 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 			}
 		}
 	}
+	parsedExpStruct = ExpStruct;
 	return drawGraph();
 }
 

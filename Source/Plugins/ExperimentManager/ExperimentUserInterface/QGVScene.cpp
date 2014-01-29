@@ -249,7 +249,8 @@ void QGVScene::applyLayout()
     textlabel_t *xlabel = GD_label(_graph);
     if(xlabel)
     {
-        QGraphicsTextItem *item = addText(xlabel->text);
+		QFont tmpFont("Courier", 15, QFont::Bold);
+        QGraphicsTextItem *item = addText(xlabel->text,tmpFont);
         item->setPos(QGVCore::centerToOrigin(QGVCore::toPoint(xlabel->pos, QGVCore::graphHeight(_graph)), xlabel->dimen.x, -4));
     }
 

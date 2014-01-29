@@ -172,8 +172,21 @@ cLoopStructure *cBlockStructure::resetToFirstFreeLoopPointer()
 		for(int i=0;i<pSharedData->lLoops.count();i++)
 		{
 			nCount = pSharedData->lLoops.at(i)->getLoopCounter();
-			if((nCount >= 0) || (nCount==ExperimentStructuresNameSpace::LCE_UNUSED))
+			if(nCount >= 0)
+			{
 				return pSharedData->lLoops[i];
+			}
+			else if(nCount==ExperimentStructuresNameSpace::LCE_UNUSED)
+			{
+				if(pSharedData->lLoops.at(i)->getNumberOfLoops() > 0)
+				{
+					return pSharedData->lLoops[i];
+				}
+				else
+				{
+					pSharedData->lLoops.at(i)->finalizeCurrentLoopCounter();
+				}
+			}
 		}
 	}
 	return NULL;

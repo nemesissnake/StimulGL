@@ -57,9 +57,9 @@ Attributes only apply to readonly non user data, like the ID
     <actions>
         <blocks>
             <block ID="0">
-                <name>ALL_UNIVERSAL_PARAMETERS_BLOCK</name>
+                <name>BLOCK XYZ</name>
                 <block_number>0</block_number>
-                <nr_of_trials>1</nr_of_trials>
+                <nr_of_trials>3</nr_of_trials>
                 <nr_of_internal_triggers>2</nr_of_internal_triggers>
                 <nr_of_external_triggers>1</nr_of_external_triggers>
                 <object ID="1">

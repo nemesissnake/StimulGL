@@ -452,6 +452,10 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 		delete dynamicGraphicWidget;
 		dynamicGraphicWidget = NULL;
 	}
+	if (item->parent() == NULL)
+	{
+		return;
+	}
 	if (item->hasChildren())
 	{
 		dynamicGraphicWidget = new QWidget();
@@ -599,6 +603,27 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
 									tmpParametersWidget->setParameter(CONNECTIONS_TYPE_TAG,sTmpString);
+							}
+							else if(item->child(j)->getName().toLower() == CONNECTIONS_TARGET_TAG)
+							{
+								if(item->child(j)->hasChildren())
+								{
+									for (int k=0;k<item->child(j)->childCount();k++)
+									{
+										if(item->child(j)->child(k)->getName().toLower() == CONNECTIONS_SIGNATURE_TAG)
+										{
+											sTmpString = item->child(j)->child(k)->getValue();
+											if(sTmpString.isEmpty() == false)
+												tmpParametersWidget->setParameter(CONNECTIONS_TARGET_TAG "/" CONNECTIONS_SIGNATURE_TAG,sTmpString);
+										}
+										else if(item->child(j)->child(k)->getName().toLower() == CONNECTIONS_TYPE_TAG)
+										{
+											sTmpString = item->child(j)->child(k)->getValue();
+											if(sTmpString.isEmpty() == false)
+												tmpParametersWidget->setParameter(CONNECTIONS_TARGET_TAG "/" CONNECTIONS_TYPE_TAG,sTmpString);
+										}
+									}
+								}
 							}
 						}
 					}
