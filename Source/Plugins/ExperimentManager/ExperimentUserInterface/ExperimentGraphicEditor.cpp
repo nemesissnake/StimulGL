@@ -44,6 +44,7 @@
 #include "ExperimentParameterVisualizer.h"
 #include "ExperimentParameterDefinition.h"
 #include "ExperimentParameterWidgets.h"
+#include "ExperimentBlockParameterView.h"
 
 ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(parent)//, ui(new Ui::ExperimentGraphicEditor)
 {
@@ -76,6 +77,7 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	expManager = NULL;
 	tmpExpStruct = NULL;
 	expStructVisualizer = NULL;
+	expBlockParamView = NULL;
 	tmpExpObjectParamDefs = NULL;
 	//rootItem = NULL;
 	
@@ -444,6 +446,7 @@ void ExperimentGraphicEditor::setNewModel()
 
 void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 {
+	bool bShowTreeView = false;
 	selectedIndex = index;
 	QModelIndex originalIndex = dynamic_cast<TreeFilterProxyModel*>(treeView->model())->mapToSource(index);
 	ExperimentTreeItem *item = pExpTreeModel->itemFromIndex(originalIndex);
@@ -849,34 +852,66 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 				{						
 					if(pExpTreeModel)
 					{
-						QDomNodeList tmpList;
+						QDomNodeList tmpDomNodeList;
 						if(tmpExpStruct)
 							delete tmpExpStruct;
 						tmpExpStruct = new cExperimentStructure();
 
-						if(expStructVisualizer == NULL)
-							expStructVisualizer = new ExperimentStructureVisualizer();//dynamicGraphicWidget);
-						if(expStructVisualizer)
+						if(bShowTreeView)
 						{
-							bool bResult = connect(expStructVisualizer, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
-							bResult = connect(this, SIGNAL(onTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeStructureView(int, int)));
-							bResult = expManager->createExperimentStructure(tmpList, pExpTreeModel,tmpExpStruct);
-							if(bResult)
+							if(expStructVisualizer == NULL)
+								expStructVisualizer = new ExperimentStructureVisualizer();//dynamicGraphicWidget);
+							if(expStructVisualizer)
 							{
-								//int nRows = gridLayout->rowCount();
-								//int nColumns = gridLayout->columnCount();
-								//gridLayout->addWidget(expStructVisualizer,0,1);
-
-								if(horSplitter->count() > TABLEVIEWINDEX)
-									expStructVisualizer->resizeStructureView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
-								bool bResult = expStructVisualizer->parseExperimentStructure(tmpExpStruct);								
+								bool bResult = connect(expStructVisualizer, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
+								bResult = connect(this, SIGNAL(onTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeStructureView(int, int)));
+								bResult = expManager->createExperimentStructure(tmpDomNodeList, pExpTreeModel,tmpExpStruct);
 								if(bResult)
 								{
-									//expStructVisualizer->setLayout(gridLayout);
-									scrollArea->takeWidget();
-									scrollArea->setWidget(expStructVisualizer);
-									expStructVisualizer->showMaximized();
-									return;
+									//int nRows = gridLayout->rowCount();
+									//int nColumns = gridLayout->columnCount();
+									//gridLayout->addWidget(expStructVisualizer,0,1);
+
+									if(horSplitter->count() > TABLEVIEWINDEX)
+										expStructVisualizer->resizeStructureView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
+									bResult = expStructVisualizer->parseExperimentStructure(tmpExpStruct);								
+									if(bResult)
+									{
+										//expStructVisualizer->setLayout(gridLayout);
+										scrollArea->takeWidget();
+										scrollArea->setWidget(expStructVisualizer);
+										expStructVisualizer->showMaximized();
+										return;
+									}
+								}
+							}
+						}		
+						else
+						{
+							if(expBlockParamView == NULL)
+								expBlockParamView = new ExperimentBlockParameterView();
+							if(expBlockParamView)
+							{
+								bool bResult = connect(expBlockParamView, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
+								bResult = connect(this, SIGNAL(onTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeView(int, int)));
+								bResult = expManager->createExperimentStructure(tmpDomNodeList, pExpTreeModel, tmpExpStruct);
+								if(bResult)
+								{
+									if(horSplitter->count() > TABLEVIEWINDEX)
+										expBlockParamView->resizeView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
+									bResult = expBlockParamView->parseExperimentStructure(tmpExpStruct);
+									if(bResult)
+									{
+										bResult = expBlockParamView->parseExperimentBlockParameters(tmpDomNodeList);
+										if(bResult)
+										{
+											//expStructVisualizer->setLayout(gridLayout);
+											scrollArea->takeWidget();
+											scrollArea->setWidget((QWidget*)expBlockParamView);
+											expBlockParamView->showMaximized();
+											return;
+										}
+									}
 								}
 							}
 						}
@@ -1304,4 +1339,8 @@ void ExperimentGraphicEditor::childWidgetDestroyed(QWidget* pWidget)
 	{
 		expStructVisualizer = NULL;
 	}	
+	else if(pWidget == expBlockParamView)
+	{
+		expBlockParamView = NULL;
+	}
 }

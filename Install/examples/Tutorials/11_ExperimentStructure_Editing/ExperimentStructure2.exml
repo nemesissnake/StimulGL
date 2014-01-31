@@ -400,7 +400,7 @@ Attributes only apply to readonly non user data, like the ID
                     </loop>
                 </loops>
             </block>
-            <block ID="4">
+            <block ID="77">
                 <name>MOVINGDOTS_PARAMETERS_BLOCK</name>
                 <block_number>4</block_number>
                 <nr_of_trials>1</nr_of_trials>

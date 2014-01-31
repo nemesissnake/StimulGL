@@ -49,6 +49,7 @@ class ExperimentStructureVisualizer;
 class cExperimentStructure;
 class ExperimentParameterDefinitionContainer;
 class ExperimentParameterVisualizer;
+class ExperimentBlockParameterView;
 
 class ExperimentGraphicEditor : public QWidget
 {
@@ -136,6 +137,7 @@ private:
 
 	ExperimentManager *expManager;
 	ExperimentStructureVisualizer *expStructVisualizer;
+	ExperimentBlockParameterView *expBlockParamView;
 	cExperimentStructure *tmpExpStruct; 
 	ExperimentParameterDefinitionContainer *tmpExpObjectParamDefs;
 	QHash<QString, ExperimentParameterVisualizer *> staticGraphicWidgetsHashTable;
