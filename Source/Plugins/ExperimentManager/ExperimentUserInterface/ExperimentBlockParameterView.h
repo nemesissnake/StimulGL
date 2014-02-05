@@ -20,13 +20,17 @@
 #define EXPERIMENTBLOCKPARAMETERVIEW_H
 
 #include <QTableWidgetItem>
+#include "ExperimentStructures.h"
 
-#define BLOCKPARAMVIEW_BLOCKNUMBER_HEADER			"Number"
-#define BLOCKPARAMVIEW_BLOCKNAME_HEADER				"Name"
-#define BLOCKPARAMVIEW_BLOCKTRIALS_HEADER			"Trials"
-#define BLOCKPARAMVIEW_BLOCKINTTRIGGERS_HEADER		"Int. Triggers"
-#define BLOCKPARAMVIEW_BLOCKEXTTRIGGERS_HEADER		"Ext. Triggers"
+#define BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER		";"
+#define BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT		4
+//#define BLOCKPARAMVIEW_BLOCKNUMBER_COLUMNINDEX		0
+#define BLOCKPARAMVIEW_BLOCKNAME_COLUMNINDEX		0
+#define BLOCKPARAMVIEW_BLOCKTRIALS_COLUMNINDEX		1
+#define BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX		2
+#define BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX		3
 
+class ExperimentParameterDefinitionContainer;
 class cExperimentStructure;
 class QDomNodeList;
 
@@ -43,12 +47,17 @@ public:
 
 	bool parseExperimentStructure(cExperimentStructure *ExpStruct);
 	bool parseExperimentBlockParameters(const QDomNodeList &tmpDomNodeList);
+	bool setExperimentObjects(const QList<ExperimentStructuresNameSpace::strcExperimentObject> &lExperimentObjects);
 
 public slots:
 	void resizeView(const int &nWidth, const int &nHeight);
 
 private slots:
 	void viewEdited(const int &nRow, const int &nColumn);
+
+protected:
+	void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+	void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
 
 private:
 	void configureEditHandling(const bool &bEnable);
@@ -77,14 +86,31 @@ private:
 		}
 	};
 
+	struct strcExperimentObjectInfo
+	{
+		ExperimentStructuresNameSpace::strcExperimentObject ObjectGlobalInfo;
+		ExperimentParameterDefinitionContainer *pObjectParamDefContainer;
+		strcExperimentObjectInfo()
+		{
+			pObjectParamDefContainer = NULL;
+		}
+	};
+
 	cExperimentStructure *parsedExpStruct;
 	QStringList lColumnHeaders;	
+	QStringList lVerticalHeaders;	
 	bool bEditHandlingEnabled;
 	QMutex mutexEditHandlingEnabled;
 
+	QHash<int, strcExperimentObjectInfo> hashObjectIdExperimentObjectInfo;
 	QHash<QString, QList<strcParameterBlockChanges>> hashExpParamBlockChanges;
 	QHash<int, int> hashBlockIdRowIndex;
+	QHash<int, int> hashRowIndexBlockId;
+	QHash<int, QString> hashColumnIndexObjectIDParamName;
 	QHash<QString, strcColumnInfo> hashObjectParameterColumnIndex;
 };
 
 #endif // EXPERIMENTBLOCKPARAMETERVIEW_H
+
+
+//already present check of parameter in manager!!!!!!!!!!!!!!!!!!!!!fdrfgdfgdfg

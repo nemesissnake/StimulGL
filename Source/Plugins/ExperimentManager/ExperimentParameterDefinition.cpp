@@ -43,7 +43,7 @@ ExperimentParameterDefinitionContainer::~ExperimentParameterDefinitionContainer(
 	}	
 }
 
-int ExperimentParameterDefinitionContainer::getFirstParametrID(const QString &sName)
+int ExperimentParameterDefinitionContainer::getFirstParameterID(const QString &sName)
 {
 	if(expParamDefinitions.isEmpty())
 		return -1;

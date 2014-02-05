@@ -160,6 +160,26 @@ ExperimentParameterVisualizer *ExperimentParameterWidgets::getExperimentParamete
 	return NULL;
 }
 
+QWidget *ExperimentParameterWidgets::getExperimentParameterWidgetSubControl(const QString &sCollectionName, const QString &sParameterName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier)
+{
+	ExperimentParameterVisualizer *tmpParamVis = getExperimentParameterWidget(sCollectionName);
+	if(tmpParamVis)
+	{
+		return tmpParamVis->getParameterEditWidget(sParameterName, sDerivedPrefixName, sReturnUniquePropertyIdentifier);
+	}
+	return NULL;
+}
+
+bool ExperimentParameterWidgets::setWidgetParameter(const QString &sUniquePropertyIdentifier, const QString &sCollectionName, const QString &sParameterValue, const bool &bSetModified)
+{
+	ExperimentParameterVisualizer *tmpParamVis = getExperimentParameterWidget(sCollectionName);
+	if(tmpParamVis)
+	{
+		return tmpParamVis->setWidgetParameter(sUniquePropertyIdentifier, sParameterValue, bSetModified);
+	}
+	return NULL;
+}
+
 ExperimentParameterDefinitionContainer *ExperimentParameterWidgets::getExperimentParameterDefinition(const QString &sCollectionName)
 {
 	if(lExperimentParameterDefinitions->isEmpty())

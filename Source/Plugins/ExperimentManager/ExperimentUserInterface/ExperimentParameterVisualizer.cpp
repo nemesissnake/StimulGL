@@ -373,6 +373,24 @@ bool ExperimentParameterVisualizer::setParameter(const QString &sName, const QSt
 	return true;
 }
 
+QWidget *ExperimentParameterVisualizer::getParameterEditWidget(const QString &sName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier)
+{
+	if(variantExtensionFactory)
+	{
+		return variantExtensionFactory->getEditorWidget(lVariantPropertyManager,lParameterPropertyNamedHash[sName].vProperty,sDerivedPrefixName,this, sReturnUniquePropertyIdentifier);
+	}
+	return NULL;
+}
+
+bool ExperimentParameterVisualizer::setWidgetParameter(const QString &sUniquePropertyIdentifier, const QString &sValue, const bool &bSetModified)
+{
+	if(variantExtensionFactory)
+	{
+		return variantExtensionFactory->setPropertyValue(lVariantPropertyManager, sUniquePropertyIdentifier, sValue, bSetModified);
+	}
+	return false;
+}
+
 bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue)
 {
 	if(expParamDef == NULL)

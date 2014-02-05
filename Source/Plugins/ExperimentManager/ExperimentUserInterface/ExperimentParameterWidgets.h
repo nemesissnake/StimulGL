@@ -77,6 +77,9 @@ public:
 	}
 
 	ExperimentParameterVisualizer *getExperimentParameterWidget(const QString &sCollectionName);
+	QWidget *getExperimentParameterWidgetSubControl(const QString &sCollectionName, const QString &sParameterName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier);
+	bool setWidgetParameter(const QString &sUniquePropertyIdentifier, const QString &sCollectionName, const QString &sParameterValue, const bool &bSetModified);
+	ExperimentParameterDefinitionContainer *getExperimentParameterDefinition(const QString &sCollectionName);
 
 private:
 	ExperimentParameterWidgets();
@@ -90,8 +93,7 @@ private:
 
 
 	void fetchExperimentParameterDefinitions();
-	void createExperimentParameterWidgets();
-	ExperimentParameterDefinitionContainer *getExperimentParameterDefinition(const QString &sCollectionName);
+	void createExperimentParameterWidgets();	
 
 	QList<ExperimentParameterDefinitionCollection> *lExperimentParameterDefinitions;
 };

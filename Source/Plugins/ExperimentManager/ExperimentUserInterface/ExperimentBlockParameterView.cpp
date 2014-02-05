@@ -17,9 +17,11 @@
 //
 
 #include "ExperimentBlockParameterView.h"
+#include "ExperimentParameterWidgets.h"
 #include "../ExperimentStructures.h"
 #include "../Global.h"
 #include <QDomNode>
+#include <QComboBox>
 
 ExperimentBlockParameterView::ExperimentBlockParameterView(QWidget *parent) : QTableWidget(parent)
 {
@@ -41,13 +43,35 @@ void ExperimentBlockParameterView::initTableSetup()
 {
 	this->clear();
 	lColumnHeaders.clear();
-	lColumnHeaders.append(BLOCKPARAMVIEW_BLOCKNUMBER_HEADER);
-	lColumnHeaders.append(BLOCKPARAMVIEW_BLOCKNAME_HEADER);
-	lColumnHeaders.append(BLOCKPARAMVIEW_BLOCKTRIALS_HEADER);
-	lColumnHeaders.append(BLOCKPARAMVIEW_BLOCKINTTRIGGERS_HEADER);
-	lColumnHeaders.append(BLOCKPARAMVIEW_BLOCKEXTTRIGGERS_HEADER);
+	lVerticalHeaders.clear();
+
+	ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+	ExperimentParameterDefinitionContainer *tmpDefs = expParamWidgets->getExperimentParameterDefinition(BLOCK_TAG);
+	int nParamID;
+	for (int i=0;i<BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT;i++)
+	{
+		//if(i==BLOCKPARAMVIEW_BLOCKNUMBER_COLUMNINDEX)
+		//	nParamID = tmpDefs->getFirstParameterID(BLOCKNUMBER_TAG);
+		//else 
+		if(i==BLOCKPARAMVIEW_BLOCKNAME_COLUMNINDEX)
+			nParamID = tmpDefs->getFirstParameterID(NAME_TAG);
+		else if(i==BLOCKPARAMVIEW_BLOCKTRIALS_COLUMNINDEX)
+			nParamID = tmpDefs->getFirstParameterID(TRIALAMOUNT_TAG);
+		else if(i==BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX)
+			nParamID = tmpDefs->getFirstParameterID(INTERNALTRIGGERAMOUNT_TAG);
+		else if(i==BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX)
+			nParamID = tmpDefs->getFirstParameterID(EXTERNALTRIGGERAMOUNT_TAG);
+		if(nParamID >= 0)
+		{
+			lColumnHeaders.append(tmpDefs->getParameterDefinition(nParamID)->sDisplayName);
+		}
+		else
+		{
+			lColumnHeaders.append("<unknown header>");
+		}
+	}
 	this->setColumnCount(lColumnHeaders.count());
-	this->setHorizontalHeaderLabels(lColumnHeaders);
+	this->setHorizontalHeaderLabels(lColumnHeaders);	
 }
 
 void ExperimentBlockParameterView::resizeView(const int &nWidth, const int &nHeight)
@@ -66,27 +90,31 @@ bool ExperimentBlockParameterView::parseExperimentStructure(cExperimentStructure
 	QString sExpName = ExpStruct->getExperimentName();
 	QTableWidgetItem *tmpItem;
 	configureEditHandling(false);
-	hashBlockIdRowIndex.clear();	
+	hashBlockIdRowIndex.clear();
+	hashRowIndexBlockId.clear();
 	for (int i=0;i<nExpBlockCount;i++)
 	{
 		tmpBlock = NULL;
 		tmpBlock = ExpStruct->getNextClosestBlockNumberByFromNumber(nNextSearchBlockNumber);
 		if(tmpBlock) 
 		{
-			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getBlockNumber()));
-			this->setItem(i, lColumnHeaders.indexOf(BLOCKPARAMVIEW_BLOCKNUMBER_HEADER), tmpItem);
+			lVerticalHeaders.append(tr("%1").arg(tmpBlock->getBlockNumber()));
+			//tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getBlockNumber()));
+			//this->setItem(i, BLOCKPARAMVIEW_BLOCKNUMBER_COLUMNINDEX, tmpItem);
 			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getBlockName()));
-			this->setItem(i, lColumnHeaders.indexOf(BLOCKPARAMVIEW_BLOCKNAME_HEADER), tmpItem);
+			this->setItem(i, BLOCKPARAMVIEW_BLOCKNAME_COLUMNINDEX, tmpItem);
 			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getNumberOfTrials()));
-			this->setItem(i, lColumnHeaders.indexOf(BLOCKPARAMVIEW_BLOCKTRIALS_HEADER), tmpItem);
+			this->setItem(i, BLOCKPARAMVIEW_BLOCKTRIALS_COLUMNINDEX, tmpItem);
 			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getNumberOfInternalTriggers()));
-			this->setItem(i, lColumnHeaders.indexOf(BLOCKPARAMVIEW_BLOCKINTTRIGGERS_HEADER), tmpItem);
+			this->setItem(i, BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX, tmpItem);
 			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getNumberOfExternalTriggers()));
-			this->setItem(i, lColumnHeaders.indexOf(BLOCKPARAMVIEW_BLOCKEXTTRIGGERS_HEADER), tmpItem);
+			this->setItem(i, BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX, tmpItem);
 			hashBlockIdRowIndex[tmpBlock->getBlockID()] = i;
+			hashRowIndexBlockId[i] = tmpBlock->getBlockID();
 			nNextSearchBlockNumber = tmpBlock->getBlockNumber() + 1;
 		}
 	}
+	this->setVerticalHeaderLabels(lVerticalHeaders);
 	parsedExpStruct = ExpStruct;
 	this->resizeColumnsToContents();
 	configureEditHandling(true);	
@@ -96,8 +124,9 @@ bool ExperimentBlockParameterView::parseExperimentStructure(cExperimentStructure
 bool ExperimentBlockParameterView::parseExperimentBlockParameters(const QDomNodeList &tmpDomNodeList)
 {
 	int nBlockCount = tmpDomNodeList.count();
+	configureEditHandling(false);
 	if(nBlockCount>0)
-	{
+	{		
 		QDomNode tmpNode;
 		QDomNamedNodeMap tmpNodeMap;
 		for (int i=0;i<nBlockCount;i++) //for each block
@@ -154,7 +183,7 @@ bool ExperimentBlockParameterView::parseExperimentBlockParameters(const QDomNode
 															//expandExperimentBlockParameterValue(tmpValue);
 															paramBlockChanges.nBlockID = nBlockID;
 
-															QString uniqueObjParamIdentifier = tr("%1_%2").arg(nObjectID).arg(sParamName);															
+															QString uniqueObjParamIdentifier = tr("%1%2%3").arg(nObjectID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(sParamName);
 															if(hashExpParamBlockChanges.contains(uniqueObjParamIdentifier))
 															{
 																hashExpParamBlockChanges[uniqueObjParamIdentifier].append(paramBlockChanges);
@@ -188,12 +217,38 @@ bool ExperimentBlockParameterView::parseExperimentBlockParameters(const QDomNode
 			}
 		}
 	}
-	return appendExperimentBlockParameterChanges();
+	bool bResult = appendExperimentBlockParameterChanges();
+	configureEditHandling(true);
+	return bResult;
+}
+
+bool ExperimentBlockParameterView::setExperimentObjects(const QList<ExperimentStructuresNameSpace::strcExperimentObject> &lExperimentObjects) 
+{
+	hashObjectIdExperimentObjectInfo.clear();
+	if(lExperimentObjects.isEmpty() == false)
+	{
+		ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+		for(int i=0;i<lExperimentObjects.count();i++)
+		{
+			strcExperimentObjectInfo tmpObjectInfo;
+			tmpObjectInfo.ObjectGlobalInfo = lExperimentObjects[i];
+			tmpObjectInfo.pObjectParamDefContainer = expParamWidgets->getExperimentParameterDefinition(lExperimentObjects[i].sClass);
+			hashObjectIdExperimentObjectInfo[lExperimentObjects[i].nID] = tmpObjectInfo;			
+		}
+		strcExperimentObjectInfo tmpObjectInfo;
+		tmpObjectInfo.ObjectGlobalInfo.nID = -1;
+		tmpObjectInfo.ObjectGlobalInfo.sClass = BLOCK_TAG;
+		tmpObjectInfo.ObjectGlobalInfo.sName = "<undefined>";
+		tmpObjectInfo.pObjectParamDefContainer = expParamWidgets->getExperimentParameterDefinition(tmpObjectInfo.ObjectGlobalInfo.sClass);
+		hashObjectIdExperimentObjectInfo[tmpObjectInfo.ObjectGlobalInfo.nID] = tmpObjectInfo;
+	}
+	return true;
 }
 
 bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 {
 	hashObjectParameterColumnIndex.clear();
+	hashColumnIndexObjectIDParamName.clear();
 	if(hashExpParamBlockChanges.count() > 0)
 	{		
 		int nParamCounter=0;
@@ -202,17 +257,47 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 		QString sObjectIDParamName;
 		QStringList lObjectIDParamName;
 		QTableWidgetItem *tmpItem = NULL;
+		int nColumnIndex;
+		ExperimentParameterDefinitionContainer *pTempObjectParamDefContainer;
+
+
+		strcColumnInfo tmpColumnInfo;
+		QString sObjectParamIdentifier;
+		for (int i=0; i<BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT; i++)
+		{
+			if(i==BLOCKPARAMVIEW_BLOCKNAME_COLUMNINDEX)
+				sObjectParamIdentifier = tr("%1%2%3").arg(-1).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(NAME_TAG);
+			else if(i==BLOCKPARAMVIEW_BLOCKTRIALS_COLUMNINDEX)
+				sObjectParamIdentifier = tr("%1%2%3").arg(-1).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(TRIALAMOUNT_TAG);
+			else if(i==BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX)
+				sObjectParamIdentifier = tr("%1%2%3").arg(-1).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(INTERNALTRIGGERAMOUNT_TAG);
+			else if(i==BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX)
+				sObjectParamIdentifier = tr("%1%2%3").arg(-1).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(EXTERNALTRIGGERAMOUNT_TAG);
+			tmpColumnInfo.sHeader = lColumnHeaders.at(i);
+			tmpColumnInfo.nColumnIndex = i;
+			hashObjectParameterColumnIndex[sObjectParamIdentifier] = tmpColumnInfo;
+			hashColumnIndexObjectIDParamName[tmpColumnInfo.nColumnIndex] = sObjectParamIdentifier;
+		}
+	
 		foreach(QList<strcParameterBlockChanges> tmpParamBlockChangesList,hashExpParamBlockChanges)
 		{
 			foreach(strcParameterBlockChanges tmpParamBlockChanges,tmpParamBlockChangesList)
 			{
 				sObjectIDParamName = hashExpParamBlockChanges.keys().at(nParamCounter);
-				lObjectIDParamName = sObjectIDParamName.split("_");
-				if(lObjectIDParamName.count() == 2)
+				lObjectIDParamName = sObjectIDParamName.split(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER);
+				if(lObjectIDParamName.count() > 1)
 				{
 					nObjectID = lObjectIDParamName.at(0).toInt();
-					sParamName = lObjectIDParamName.at(1);				
-					int nColumnIndex;
+					pTempObjectParamDefContainer = hashObjectIdExperimentObjectInfo[nObjectID].pObjectParamDefContainer;
+					if(pTempObjectParamDefContainer)
+					{
+						int nParamID = pTempObjectParamDefContainer->getFirstParameterID(lObjectIDParamName.at(1));
+						sParamName = pTempObjectParamDefContainer->getParameterDefinition(nParamID)->sDisplayName;
+					}
+					else
+					{
+						sParamName = lObjectIDParamName.at(1);
+					}
 					if(hashObjectParameterColumnIndex.contains(sObjectIDParamName))
 					{
 						nColumnIndex = hashObjectParameterColumnIndex[sObjectIDParamName].nColumnIndex;
@@ -225,12 +310,31 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 						tmpColumnInfo.sHeader = sParamName;
 						tmpColumnInfo.nColumnIndex = lColumnHeaders.count()-1;
 						hashObjectParameterColumnIndex[sObjectIDParamName] = tmpColumnInfo;
+						hashColumnIndexObjectIDParamName[tmpColumnInfo.nColumnIndex] = sObjectIDParamName;
 						nColumnIndex = tmpColumnInfo.nColumnIndex;
 					}
 					if(hashBlockIdRowIndex.contains(tmpParamBlockChanges.nBlockID))
 					{						
 						tmpItem = new QTableWidgetItem(tr("%1").arg(tmpParamBlockChanges.sValue));
 						this->setItem(hashBlockIdRowIndex[tmpParamBlockChanges.nBlockID], nColumnIndex, tmpItem);
+						
+						/*
+						int nRowIndex = hashBlockIdRowIndex[tmpParamBlockChanges.nBlockID];
+						//removeCellWidget(previous.row(), previous.column());
+						QStringList tmpObjectIDParamNameList = hashColumnIndexObjectIDParamName[nColumnIndex].split(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER);
+						if(tmpObjectIDParamNameList.count() > 1)
+						{
+							expParamWidgets = ExperimentParameterWidgets::instance();
+							//QString tmpParamName = tmpObjectIDParamNameList.at(1);
+							int tmpInt = tmpObjectIDParamNameList.at(0).toInt();
+							//QString tmpStr = hashObjectIdExperimentObjectInfo[tmpInt].sClass;//like RETINOTOPYMAPPER_NAME
+							if(tmpInt<hashObjectIdExperimentObjectInfo.count())
+							{
+								QWidget *tmpWidget = expParamWidgets->getExperimentParameterWidgetSubControl(hashObjectIdExperimentObjectInfo[tmpInt].sClass, tmpObjectIDParamNameList.at(1), QString::number(hashRowIndexBlockId[nRowIndex]));		
+								setCellWidget(nRowIndex, nColumnIndex, tmpWidget);	
+							}
+						}
+						*/
 					}
 				}
 			}
@@ -244,19 +348,59 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 void ExperimentBlockParameterView::configureEditHandling(const bool &bEnable) 
 {
 	mutexEditHandlingEnabled.lock();
-	bool bResult;
 	if(bEnable && (bEditHandlingEnabled==false))
 	{
-		bEditHandlingEnabled = connect(this, SIGNAL(cellChanged(int, int)), this, SLOT(viewEdited(int, int)));
+		bEditHandlingEnabled = connect(this, SIGNAL(cellChanged(int, int)), this, SLOT(viewEdited(int, int)));		
 	}
 	else if((bEnable==false) && bEditHandlingEnabled)
 	{
-		bEditHandlingEnabled = !(disconnect(this, SIGNAL(cellChanged(int, int)), this, SLOT(viewEdited(int, int))));
+		bEditHandlingEnabled = !(disconnect(this, SIGNAL(cellChanged(int, int)), this, SLOT(viewEdited(int, int))));		
 	}
 	mutexEditHandlingEnabled.unlock();
 }
 
 void ExperimentBlockParameterView::viewEdited(const int &nRow, const int &nColumn)
 {
+	Q_UNUSED(nRow);
+	Q_UNUSED(nColumn);
+}
 
+void ExperimentBlockParameterView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+	Q_UNUSED(current);
+	removeCellWidget(previous.row(), previous.column());
+}
+
+void ExperimentBlockParameterView::selectionChanged(const QItemSelection & selected, const QItemSelection & deselected)
+{
+	QModelIndexList tmpModelIndexList = this->selectedIndexes();
+	if(tmpModelIndexList.count()==1)
+	{
+		QStringList tmpObjectIDParamNameList = hashColumnIndexObjectIDParamName[tmpModelIndexList.at(0).column()].split(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER);
+		if(tmpObjectIDParamNameList.count() > 1)
+		{
+			ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+			//QString tmpParamName = tmpObjectIDParamNameList.at(1);
+			int tmpInt = tmpObjectIDParamNameList.at(0).toInt();
+			//QString tmpStr = hashObjectIdExperimentObjectInfo[tmpInt].sClass;//like RETINOTOPYMAPPER_NAME
+			if((tmpInt<hashObjectIdExperimentObjectInfo.count()) || (tmpInt==-1))
+			{
+				QString sDerivedPrefixName = QString::number(hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.nID) + ":" + QString::number(hashRowIndexBlockId[tmpModelIndexList.at(0).row()]);
+				QString sUniqueGeneratedPropertyIdentifier = "";
+				QWidget *tmpWidget = expParamWidgets->getExperimentParameterWidgetSubControl(hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass, tmpObjectIDParamNameList.at(1), sDerivedPrefixName, sUniqueGeneratedPropertyIdentifier);		
+				if(tmpWidget)
+				{	
+					configureEditHandling(false);
+					setCellWidget(tmpModelIndexList.at(0).row(), tmpModelIndexList.at(0).column(), tmpWidget);
+					QTableWidgetItem *tmpItem = item(tmpModelIndexList.at(0).row(), tmpModelIndexList.at(0).column());
+					if(tmpItem)
+						expParamWidgets->setWidgetParameter(sUniqueGeneratedPropertyIdentifier, hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass, tmpItem->text(), false);
+					else
+						expParamWidgets->setWidgetParameter(sUniqueGeneratedPropertyIdentifier, hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass, "", false);
+					configureEditHandling(true);
+				}
+			}
+		}
+	}
+	return QAbstractItemView::selectionChanged(selected,deselected);
 }

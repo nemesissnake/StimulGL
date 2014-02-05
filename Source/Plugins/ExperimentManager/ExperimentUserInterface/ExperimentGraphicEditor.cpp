@@ -81,6 +81,7 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	tmpExpObjectParamDefs = NULL;
 	//rootItem = NULL;
 	
+	bShowTreeView = false;
 	currentViewSettings.bSkipComments = true;
 	currentViewSettings.bSkipEmptyAttributes = false;
 	
@@ -222,7 +223,6 @@ void ExperimentGraphicEditor::configureActions(bool bCreate)
 			actionAdd_Attribute = NULL;
 		}
 	}
-
 }
 
 void ExperimentGraphicEditor::setupExperimentTreeView()
@@ -446,7 +446,6 @@ void ExperimentGraphicEditor::setNewModel()
 
 void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 {
-	bool bShowTreeView = false;
 	selectedIndex = index;
 	QModelIndex originalIndex = dynamic_cast<TreeFilterProxyModel*>(treeView->model())->mapToSource(index);
 	ExperimentTreeItem *item = pExpTreeModel->itemFromIndex(originalIndex);
@@ -858,7 +857,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 						tmpExpStruct = new cExperimentStructure();
 
 						if(bShowTreeView)
-						{
+						{ 
 							if(expStructVisualizer == NULL)
 								expStructVisualizer = new ExperimentStructureVisualizer();//dynamicGraphicWidget);
 							if(expStructVisualizer)
@@ -884,10 +883,13 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 										return;
 									}
 								}
-							}
+							}							
 						}		
 						else
 						{
+							QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
+							tmpExperimentObjectList = getDefinedExperimentObjectInfoList(NULL);
+
 							if(expBlockParamView == NULL)
 								expBlockParamView = new ExperimentBlockParameterView();
 							if(expBlockParamView)
@@ -902,14 +904,18 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 									bResult = expBlockParamView->parseExperimentStructure(tmpExpStruct);
 									if(bResult)
 									{
-										bResult = expBlockParamView->parseExperimentBlockParameters(tmpDomNodeList);
+										bResult = expBlockParamView->setExperimentObjects(tmpExperimentObjectList);
 										if(bResult)
 										{
-											//expStructVisualizer->setLayout(gridLayout);
-											scrollArea->takeWidget();
-											scrollArea->setWidget((QWidget*)expBlockParamView);
-											expBlockParamView->showMaximized();
-											return;
+											bResult = bResult && expBlockParamView->parseExperimentBlockParameters(tmpDomNodeList);
+											if(bResult)
+											{
+												//expStructVisualizer->setLayout(gridLayout);
+												scrollArea->takeWidget();
+												scrollArea->setWidget((QWidget*)expBlockParamView);
+												expBlockParamView->showMaximized();
+												return;
+											}
 										}
 									}
 								}
@@ -930,40 +936,43 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 								{
 									if(item->parent()->getName().toLower() == OBJECT_TAG)
 									{
-										ExperimentStructuresNameSpace::strcExperimentObject tmpExperimentObject;
-										tmpExperimentObject = getDefinedExperimentObjectInfo(item->parent());
-										if(tmpExperimentObject.nID >= 0)
+										QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
+										tmpExperimentObjectList = getDefinedExperimentObjectInfoList(item->parent());
+										if(tmpExperimentObjectList.isEmpty() == false)
 										{
-											QString sParamCollName = "";
-											if(item->parent()->parent()->getName().toLower() == BLOCK_TAG)
+											if(tmpExperimentObjectList.at(0).nID >= 0)
 											{
-												sParamCollName = tmpExperimentObject.sClass;//Case sensitive!!;
-											}
-											else if(item->parent()->parent()->getName().toLower() == INITIALIZATIONS_TAG)
-											{
-												sParamCollName = ""; 
-											}
-											if(sParamCollName.isEmpty() == false)
-											{
-												if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+												QString sParamCollName = "";
+												if(item->parent()->parent()->getName().toLower() == BLOCK_TAG)
 												{
-													tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+													sParamCollName = tmpExperimentObjectList.at(0).sClass;//Case sensitive!!;
 												}
-												else
+												else if(item->parent()->parent()->getName().toLower() == INITIALIZATIONS_TAG)
 												{
-													ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
-													tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
-													if(tmpParametersWidget == NULL)
+													sParamCollName = ""; 
+												}
+												if(sParamCollName.isEmpty() == false)
+												{
+													if(staticGraphicWidgetsHashTable.contains(sParamCollName))
 													{
-														qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+														tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
 													}
 													else
 													{
-														staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
-													}								
+														ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+														tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+														if(tmpParametersWidget == NULL)
+														{
+															qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+														}
+														else
+														{
+															staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+														}								
+													}
 												}
 											}
-										}									
+										}
 									}
 								}
 								if(tmpParametersWidget)
@@ -1128,61 +1137,69 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 	}
 }
 
-ExperimentStructuresNameSpace::strcExperimentObject ExperimentGraphicEditor::getDefinedExperimentObjectInfo(ExperimentTreeItem *objItem)
+QList<ExperimentStructuresNameSpace::strcExperimentObject> ExperimentGraphicEditor::getDefinedExperimentObjectInfoList(ExperimentTreeItem *objItem)
 {
-	ExperimentStructuresNameSpace::strcExperimentObject tmpExperimentObject;
+	//If objItem is NULL then all the objects are returned!
+
+	QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
+	int nSearchObjectID = -1;
 	if(objItem)
 	{
 		QMap<QString, TreeItemDefinition> mapTreeItemDefinition = objItem->getDefinitions();
 		if(mapTreeItemDefinition.contains(ID_TAG))
 		{
-			int nSearchObjectID = mapTreeItemDefinition.value(ID_TAG).value.toInt();
-			QDomNodeList tmpExperimentObjectDomNodeList;
-			QStringList strList;
-			strList.clear();
-			strList.append(ROOT_TAG);
-			strList.append(DECLARATIONS_TAG); 
-			strList.append(OBJECT_TAG);
-			if (pExpTreeModel->getDocumentElements(strList,tmpExperimentObjectDomNodeList) >= 0)
+			nSearchObjectID = mapTreeItemDefinition.value(ID_TAG).value.toInt();
+		}
+		else
+		{
+			return tmpExperimentObjectList;
+		}
+	}
+	ExperimentStructuresNameSpace::strcExperimentObject tmpExperimentObject;
+	QDomNodeList tmpExperimentObjectDomNodeList;
+	QStringList strList;
+	strList.clear();
+	strList.append(ROOT_TAG);
+	strList.append(DECLARATIONS_TAG); 
+	strList.append(OBJECT_TAG);
+	if (pExpTreeModel->getDocumentElements(strList,tmpExperimentObjectDomNodeList) >= 0)
+	{
+		int nNrOfObjects = tmpExperimentObjectDomNodeList.count();
+		if (nNrOfObjects>0)
+		{
+			QDomNode tmpNode;
+			QDomElement tmpElement;
+			QString tmpString;
+			int nObjectID = -1;
+			for(int i=0;i<nNrOfObjects;i++)
 			{
-				int nNrOfObjects = tmpExperimentObjectDomNodeList.count();
-				if (nNrOfObjects>0)
+				tmpNode = tmpExperimentObjectDomNodeList.at(i);
+				if (tmpNode.isElement()) 
 				{
-					QDomNode tmpNode;
-					QDomElement tmpElement;
-					QString tmpString;
-					int nObjectID = -1;
-					for(int i=0;i<nNrOfObjects;i++)
+					tmpElement = tmpNode.toElement();
+					if(!tmpElement.hasAttribute(ID_TAG))
+						break;
+					tmpString = tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					if (tmpString.isEmpty() == false)
 					{
-						tmpNode = tmpExperimentObjectDomNodeList.at(i);
-						if (tmpNode.isElement()) 
+						nObjectID = tmpString.toInt();
+						if((nObjectID == nSearchObjectID) || (objItem == NULL))
 						{
-							tmpElement = tmpNode.toElement();
-							if(!tmpElement.hasAttribute(ID_TAG))
-								break;
-							tmpString = tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
-							if (tmpString.isEmpty() == false)
-							{
-								nObjectID = tmpString.toInt();
-								if(nObjectID == nSearchObjectID)
-								{
-									tmpExperimentObject.nID = nObjectID;
-									tmpElement = tmpNode.firstChildElement(NAME_TAG);
-									if(tmpElement.tagName() == NAME_TAG)
-										tmpExperimentObject.sName = tmpElement.text();
-									tmpElement = tmpNode.firstChildElement(CLASS_TAG);
-									if(tmpElement.tagName() == CLASS_TAG)
-										tmpExperimentObject.sClass = tmpElement.text();
-									break;
-								}
-							}
+							tmpExperimentObject.nID = nObjectID;
+							tmpElement = tmpNode.firstChildElement(NAME_TAG);
+							if(tmpElement.tagName() == NAME_TAG)
+								tmpExperimentObject.sName = tmpElement.text();
+							tmpElement = tmpNode.firstChildElement(CLASS_TAG);
+							if(tmpElement.tagName() == CLASS_TAG)
+								tmpExperimentObject.sClass = tmpElement.text();
+							tmpExperimentObjectList.append(tmpExperimentObject);
 						}
 					}
 				}
 			}
 		}
-	}	
-	return tmpExperimentObject;
+	}
+	return tmpExperimentObjectList;
 }
 
 void ExperimentGraphicEditor::fillTableView(const QString &textToFind, const QStringList &filters)

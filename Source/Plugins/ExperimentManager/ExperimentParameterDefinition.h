@@ -187,7 +187,7 @@ public:
 	~ExperimentParameterDefinitionContainer();
 	
 	bool loadFromFile(const QString &sFilePath);//const QUrl &SFileUrl);
-	int getFirstParametrID(const QString &sName);
+	int getFirstParameterID(const QString &sName);
 	bool getParameterIDList(const QString &sName, QList<int> &sList);
 	QString getParameterName(const int &nId);
 	ExperimentParameterDefinitionStrc *getParameterDefinition(const int &nId);

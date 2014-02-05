@@ -27,6 +27,7 @@
 #include <QDialogButtonBox>
 
 #define EXPERIMENT_PARAMETER_ARRAYSEP_CHAR		","
+#define EXPERIMENT_PARAMETER_DERIVED_CHAR		"_"
 
 class StringArrayPropertyType{};
 Q_DECLARE_METATYPE(StringArrayPropertyType)
@@ -234,6 +235,9 @@ class VariantExtensionPropertyFactory :	public QtVariantEditorFactory
 public:
 	VariantExtensionPropertyFactory(QObject *parent = NULL) : QtVariantEditorFactory(parent){};
 	~VariantExtensionPropertyFactory(){};
+
+	QWidget *getEditorWidget(QtVariantPropertyManager *manager, QtVariantProperty *vProperty, const QString &sDerivedPrefixName, QWidget *parent, QString &sReturnUniquePropertyIdentifier);
+	bool setPropertyValue(QtVariantPropertyManager *manager, const QString &sUniquePropertyIdentifier, const QString &sValue, const bool &bSetModified = true);
 
 private slots:
 	void slotSetValue(const QString &val);

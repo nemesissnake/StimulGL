@@ -383,6 +383,75 @@ void VariantExtensionPropertyFactory::slotEditorDestroyed(QObject *obj)
 	Q_UNUSED(obj);
 }
 
+bool VariantExtensionPropertyFactory::setPropertyValue(QtVariantPropertyManager *manager, const QString &sUniquePropertyIdentifier, const QString &sValue, const bool &bSetModified)
+{
+	if(manager)
+	{
+		QSet<QtProperty*> setProperties = manager->properties();
+		QSet<QtProperty*>::const_iterator it;
+		for (it = setProperties.cbegin(); it != setProperties.cend(); ++it)
+		{				
+			if((*it)->propertyId() == sUniquePropertyIdentifier)
+			{
+				manager->setValue((*it),sValue);
+				(*it)->setModified(bSetModified);
+				return true;
+			}			
+		}
+	}
+	return false;
+}
+
+QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManager *manager, QtVariantProperty *vProperty, const QString &sDerivedPrefixName, QWidget *parent, QString &sReturnUniquePropertyIdentifier)
+{
+	sReturnUniquePropertyIdentifier = "";
+	if(vProperty)
+	{		
+		if(manager)
+		{
+			QtVariantProperty *varProperty = NULL;
+			QSet<QtProperty*> setProperties = manager->properties();
+			QSet<QtProperty*>::const_iterator it;
+			for (it = setProperties.cbegin(); it != setProperties.cend(); ++it)//setProperties.find(vProperty)
+			{				
+				//QString tmpTest = (*it)->propertyId();
+				if((sDerivedPrefixName.isEmpty()))
+				{
+					if((*it)->propertyId() == vProperty->propertyId())
+					{
+						varProperty = vProperty;
+						break;
+					}
+				}
+				else if((*it)->propertyId().startsWith(sDerivedPrefixName))
+				{
+					if((*it)->propertyId().endsWith(vProperty->propertyId()))
+					{
+						varProperty = vProperty;
+						break;
+					}
+				}
+			}
+			if(varProperty == NULL)
+			{
+				varProperty = manager->addProperty(vProperty->propertyType(),vProperty->propertyName()); 
+				varProperty->setValue(vProperty->value());
+				varProperty->setPropertyId(sDerivedPrefixName + EXPERIMENT_PARAMETER_DERIVED_CHAR + vProperty->propertyId());				
+				varProperty->setAttribute(QLatin1String("enumNames"), vProperty->attributeValue(QLatin1String("enumNames")).toStringList());
+				varProperty->setAttribute(QLatin1String("minimum"), vProperty->attributeValue(QLatin1String("minimum")));
+				varProperty->setAttribute(QLatin1String("maximum"), vProperty->attributeValue(QLatin1String("maximum")));
+				varProperty->setToolTip(vProperty->toolTip());
+				varProperty->setWhatsThis(vProperty->whatsThis());
+				varProperty->setStatusTip(vProperty->statusTip());
+			}
+			sReturnUniquePropertyIdentifier = varProperty->propertyId();
+			QWidget *tmpWidget = createEditor(manager,varProperty,parent);
+			return tmpWidget;
+		}
+	}
+	return NULL;
+}
+
 QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager *manager, QtProperty *property, QWidget *parent)
 {
 	if (manager->propertyType(property) == VariantExtensionPropertyManager::rotationDirectionTypeId()) 

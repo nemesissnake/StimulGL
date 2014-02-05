@@ -65,7 +65,7 @@ public:
 public slots:
 	void setExperimentManager(ExperimentManager *pExpManager);
 	bool setExperimentTreeModel(ExperimentTreeModel *expModel = NULL);
-	
+		
 //protected slots:
 //	void closeEvent(QCloseEvent *event);
 //	void resizeEvent(QResizeEvent * event);
@@ -98,7 +98,9 @@ private:
 	void setupMenuAndActions();
 	void setupLayout();
 	void setupFilterModel();
-	ExperimentStructuresNameSpace::strcExperimentObject getDefinedExperimentObjectInfo(ExperimentTreeItem *objItem);
+	QList<ExperimentStructuresNameSpace::strcExperimentObject> getDefinedExperimentObjectInfoList(ExperimentTreeItem *objItem);
+
+	bool bShowTreeView;
 
 	QTreeView *treeView;
 	QToolBar *toolBar;
