@@ -53,11 +53,13 @@ public slots:
 	void resizeView(const int &nWidth, const int &nHeight);
 
 private slots:
-	void viewEdited(const int &nRow, const int &nColumn);
+	void cellItemChanged(const int &nRow, const int &nColumn);
+	void cellItemEditFinished(const QString&sParamName, const QString&sNewValue);
+	//void widgetItemChanged(QWidget *pWidget, const QString &sNewValue);	
 
 protected:
 	void currentChanged(const QModelIndex &current, const QModelIndex &previous);
-	void selectionChanged(const QItemSelection & selected, const QItemSelection & deselected);
+	void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
 	void configureEditHandling(const bool &bEnable);
@@ -111,6 +113,3 @@ private:
 };
 
 #endif // EXPERIMENTBLOCKPARAMETERVIEW_H
-
-
-//already present check of parameter in manager!!!!!!!!!!!!!!!!!!!!!fdrfgdfgdfg

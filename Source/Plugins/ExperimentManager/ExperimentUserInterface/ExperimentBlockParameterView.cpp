@@ -233,7 +233,7 @@ bool ExperimentBlockParameterView::setExperimentObjects(const QList<ExperimentSt
 			strcExperimentObjectInfo tmpObjectInfo;
 			tmpObjectInfo.ObjectGlobalInfo = lExperimentObjects[i];
 			tmpObjectInfo.pObjectParamDefContainer = expParamWidgets->getExperimentParameterDefinition(lExperimentObjects[i].sClass);
-			hashObjectIdExperimentObjectInfo[lExperimentObjects[i].nID] = tmpObjectInfo;			
+			hashObjectIdExperimentObjectInfo[lExperimentObjects[i].nID] = tmpObjectInfo;
 		}
 		strcExperimentObjectInfo tmpObjectInfo;
 		tmpObjectInfo.ObjectGlobalInfo.nID = -1;
@@ -350,19 +350,14 @@ void ExperimentBlockParameterView::configureEditHandling(const bool &bEnable)
 	mutexEditHandlingEnabled.lock();
 	if(bEnable && (bEditHandlingEnabled==false))
 	{
-		bEditHandlingEnabled = connect(this, SIGNAL(cellChanged(int, int)), this, SLOT(viewEdited(int, int)));		
+		bEditHandlingEnabled = connect(this, SIGNAL(cellChanged(int, int)), this, SLOT(cellItemChanged(int, int)),Qt::UniqueConnection);	
+		//bEditHandlingEnabled = bEditHandlingEnabled && connect(ExperimentParameterWidgets::instance(), SIGNAL(ParameterWidgetChanged(QWidget*, const QString&)), this, SLOT(widgetItemChanged(QWidget*, const QString&)),Qt::UniqueConnection);
 	}
 	else if((bEnable==false) && bEditHandlingEnabled)
 	{
-		bEditHandlingEnabled = !(disconnect(this, SIGNAL(cellChanged(int, int)), this, SLOT(viewEdited(int, int))));		
+		bEditHandlingEnabled = !((disconnect(this, SIGNAL(cellChanged(int, int)), this, SLOT(cellItemChanged(int, int)))));// && (disconnect(ExperimentParameterWidgets::instance(), SIGNAL(ParameterWidgetChanged(QWidget*, const QString&)), this, SLOT(widgetItemChanged(QWidget*, const QString&)))));		
 	}
 	mutexEditHandlingEnabled.unlock();
-}
-
-void ExperimentBlockParameterView::viewEdited(const int &nRow, const int &nColumn)
-{
-	Q_UNUSED(nRow);
-	Q_UNUSED(nColumn);
 }
 
 void ExperimentBlockParameterView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
@@ -391,16 +386,47 @@ void ExperimentBlockParameterView::selectionChanged(const QItemSelection & selec
 				if(tmpWidget)
 				{	
 					configureEditHandling(false);
+					tmpWidget->setAutoFillBackground(true);
 					setCellWidget(tmpModelIndexList.at(0).row(), tmpModelIndexList.at(0).column(), tmpWidget);
 					QTableWidgetItem *tmpItem = item(tmpModelIndexList.at(0).row(), tmpModelIndexList.at(0).column());
 					if(tmpItem)
+					{
 						expParamWidgets->setWidgetParameter(sUniqueGeneratedPropertyIdentifier, hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass, tmpItem->text(), false);
+					}
 					else
+					{
 						expParamWidgets->setWidgetParameter(sUniqueGeneratedPropertyIdentifier, hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass, "", false);
+					}
+					
+					ExperimentParameterVisualizer* tmpVisualizer = expParamWidgets->getExperimentParameterWidget(hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass);
+					connect((QObject*)tmpVisualizer, SIGNAL(editFinished(const QString&, const QString&)), this, SLOT(cellItemEditFinished(const QString&, const QString&)),Qt::ConnectionType(Qt::UniqueConnection | Qt::DirectConnection));
 					configureEditHandling(true);
 				}
 			}
 		}
 	}
-	return QAbstractItemView::selectionChanged(selected,deselected);
+	QAbstractItemView::selectionChanged(selected,deselected);
+}
+
+//void ExperimentBlockParameterView::widgetItemChanged(QWidget *pWidget, const QString &sNewValue)
+//{
+//	if(cellWidget(currentRow(),currentColumn()) == pWidget)
+//	{
+//		this->setItem(currentRow(),currentColumn(),new QTableWidgetItem(sNewValue));
+//	}
+//}
+
+void ExperimentBlockParameterView::cellItemEditFinished(const QString& sParamName, const QString& sNewValue)
+{
+	Q_UNUSED(sParamName);
+	if(bEditHandlingEnabled)
+	{
+		this->setItem(currentRow(),currentColumn(),new QTableWidgetItem(sNewValue));
+	}
+}
+
+void ExperimentBlockParameterView::cellItemChanged(const int &nRow, const int &nColumn)
+{
+	Q_UNUSED(nRow);
+	Q_UNUSED(nColumn);
 }

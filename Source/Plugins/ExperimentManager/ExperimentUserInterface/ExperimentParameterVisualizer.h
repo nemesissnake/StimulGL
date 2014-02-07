@@ -32,6 +32,8 @@
 
 namespace Ui {class ExperimentParameterVisualizer;};
 
+#define EXPPARAMVIS_ENUM_SPEC_DIVIDER	"_"
+
 class ExperimentParameterVisualizer : public QWidget
 {
 	Q_OBJECT
@@ -92,6 +94,9 @@ public:
 
 	QWidget *getParameterEditWidget(const QString &sName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier);
 	bool setWidgetParameter(const QString &sUniquePropertyIdentifier, const QString &sValue, const bool &bSetModified = true);
+	VariantExtensionPropertyFactory *getVariantPropertyFactory() {return variantExtensionFactory;};
+	bool getEnumeratedParameterPropertyValue(const QString &sFullEnumValuName, int &nEnumValue);
+	bool getEnumeratedParameterPropertyValue(QtProperty *pProperty, const QString &sEnumString, int &nEnumValue);
 
 public slots:
 	void resizeParameterView(const int &nWidth, const int &nHeight);
@@ -116,6 +121,8 @@ private:
 	//void ExperimentParameterVisualizerDefaultConstruct();
 	bool addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList, QString &sSandPath = QString(""));
 	void deleteSubGroupProperties(QList<propertyContainerItem> *pRootGroupPropertyItemList);
+
+	bool registerDerivedParameterProperty(const propertyParameterValueDef &baseVPropertyDef, QtVariantProperty *derivedProperty, QString &sUniqueDerivedPropertyIdentifier);
 };
 
 #endif // EXPERIMENTPARAMETERVISUALIZER_H

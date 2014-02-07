@@ -49,6 +49,9 @@ class ExperimentParameterWidgets : public QObject
 {
 	Q_OBJECT
 
+signals:
+	void ParameterWidgetChanged(QWidget *, const QString&);
+
 public:
 	static ExperimentParameterWidgets* instance()
 	{

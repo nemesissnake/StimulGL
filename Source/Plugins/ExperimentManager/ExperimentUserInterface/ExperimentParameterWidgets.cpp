@@ -120,23 +120,22 @@ void ExperimentParameterWidgets::createExperimentParameterWidgets()
 		{
 			itParamDefs->wWidget = new ExperimentParameterVisualizer();			
 			itParamDefs->wWidget->addGroupProperties(itParamDefs->cExperimentParameterDefinition->getGroupDefinitions());
-			
-			//connect(itParamDefs->wWidget, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
-			//connect(this, SIGNAL(onTableViewRedrawned(int, int)), itParamDefs->wWidget, SLOT(resizeParameterView(int, int)));
-			
+									
 			QList<ExperimentParameterDefinitionStrc> *tmpExpParamDefList = itParamDefs->cExperimentParameterDefinition->getParameterDefinitions();
-			if(tmpExpParamDefList == NULL)
-				continue;
-			for (QList<ExperimentParameterDefinitionStrc>::const_iterator itParamDef=tmpExpParamDefList->cbegin();itParamDef!=tmpExpParamDefList->cend();++itParamDef)
+			if(tmpExpParamDefList)
 			{
-				if(itParamDef->bEnabled)
+				for (QList<ExperimentParameterDefinitionStrc>::const_iterator itParamDef=tmpExpParamDefList->cbegin();itParamDef!=tmpExpParamDefList->cend();++itParamDef)
 				{
-					if(itParamDefs->wWidget->addParameterProperty(&(*itParamDef),itParamDef->sDefaultValue) == false)
+					if(itParamDef->bEnabled)
 					{
-						QMessageLogger::qDebug() << __FUNCTION__ << "Could not add parameter property: " << itParamDef->sName;
+						if(itParamDefs->wWidget->addParameterProperty(&(*itParamDef),itParamDef->sDefaultValue) == false)
+						{
+							QMessageLogger::qDebug() << __FUNCTION__ << "Could not add parameter property: " << itParamDef->sName;
+						}
 					}
 				}
 			}
+			//bResult = connect(itParamDefs->wWidget->getVariantPropertyFactory(), SIGNAL(PropertyWidgetChanged(QWidget*, const QString&)), this, SIGNAL(ParameterWidgetChanged(QWidget*, const QString&)),Qt::UniqueConnection);
 		}
 	}
 }

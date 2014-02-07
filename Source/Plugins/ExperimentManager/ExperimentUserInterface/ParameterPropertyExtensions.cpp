@@ -17,6 +17,7 @@
 //
 
 #include "ParameterPropertyExtensions.h"
+#include "ExperimentParameterVisualizer.h"
 
 QMap<int, QString> RotationDirectionPropertyWidget::mRotationDirection;
 QMap<int, RotationDirectionPropertyWidget::RotationDirectionEnum> RotationDirectionPropertyWidget::indexToEnumHash;
@@ -256,7 +257,7 @@ void EccentricityDirectionPropertyWidget::setValue(const QString &sText)
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
-VariantExtensionPropertyManager::VariantExtensionPropertyManager(QObject *parent) : QtVariantPropertyManager(parent)
+VariantExtensionPropertyManager::VariantExtensionPropertyManager(ExperimentParameterVisualizer *parentParamVisualizer) : QtVariantPropertyManager((QObject*)parentParamVisualizer), parentParameterVisualizer(parentParamVisualizer)
 {
 }
 
@@ -279,7 +280,7 @@ bool VariantExtensionPropertyManager::hasCustomPropertyType(const QtProperty *pr
 		(propertyType(property) == (QVariant::Type) VariantExtensionPropertyManager::stringArrayTypeId()) )
 		return true;
 	return false;
-};
+}
 
 bool VariantExtensionPropertyManager::isManagedCustomPropertyType(const QtProperty *property) const
 {
@@ -290,14 +291,14 @@ bool VariantExtensionPropertyManager::isManagedCustomPropertyType(const QtProper
 		return false;
 	}
 	return false;
-};
+}
 
 QVariant VariantExtensionPropertyManager::value(const QtProperty *property) const
 {
 	if (isManagedCustomPropertyType(property))
 		return theValues[property].value;
 	return QtVariantPropertyManager::value(property);
-};
+}
 
 void VariantExtensionPropertyManager::setValue(QtProperty *property, const QVariant &val)
 {
@@ -334,8 +335,36 @@ void VariantExtensionPropertyManager::setValue(QtProperty *property, const QVari
 		emit valueChanged(property, data.value);
 		return;
 	}
+	else if(propertyType(property) == (QVariant::Type) QtVariantPropertyManager::enumTypeId())
+	{
+		if(val.type() == QVariant::String)//This special case we need to perform a type conversion
+		{
+			if(parentParameterVisualizer)
+			{
+				int nEnumValue;
+				if(parentParameterVisualizer->getEnumeratedParameterPropertyValue(property,val.toString().toLower(),nEnumValue))
+				{				
+					return QtVariantPropertyManager::setValue(property, nEnumValue);
+				}
+			}
+		}
+	}
+	//else if(propertyType(property) == (QVariant::Type) QtVariantPropertyManager::bool)
+	//{
+	//	if(val.type() == QVariant::String)//This special case we need to perform a type conversion
+	//	{
+	//		if(val == "true")
+	//		{
+	//			return QtVariantPropertyManager::setValue(property, "True");
+	//		}
+	//		else if(val == "false")
+	//		{
+	//			return QtVariantPropertyManager::setValue(property, "False");
+	//		}
+	//	}
+	//}
 	return QtVariantPropertyManager::setValue(property, val);
-};
+}
 
 QString VariantExtensionPropertyManager::valueText(const QtProperty *property) const
 {
@@ -362,22 +391,6 @@ void VariantExtensionPropertyManager::uninitializeProperty(QtProperty *property)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void VariantExtensionPropertyFactory::slotSetValue(const QString &val)
-{
-	QObject *sendObj = sender();
-	if(sendObj->isWidgetType())
-	{
-		QWidget *sendWidget = qobject_cast<QWidget *>(sendObj);
-		QtProperty *property = editorToProperty[sendWidget];
-		if(property)
-		{
-			this->propertyManager(property)->setValue(property,val);
-			return;
-		}
-	}
-	return;
-}
-
 void VariantExtensionPropertyFactory::slotEditorDestroyed(QObject *obj)
 {
 	Q_UNUSED(obj);
@@ -402,9 +415,10 @@ bool VariantExtensionPropertyFactory::setPropertyValue(QtVariantPropertyManager 
 	return false;
 }
 
-QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManager *manager, QtVariantProperty *vProperty, const QString &sDerivedPrefixName, QWidget *parent, QString &sReturnUniquePropertyIdentifier)
+QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManager *manager, QtVariantProperty *vProperty, const QString &sDerivedPrefixName, QWidget *parent, QString &sReturnUniquePropertyIdentifier, QtVariantProperty *&pDerivedVariantProperty)
 {
 	sReturnUniquePropertyIdentifier = "";
+	pDerivedVariantProperty = NULL;
 	if(vProperty)
 	{		
 		if(manager)
@@ -433,16 +447,18 @@ QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManag
 				}
 			}
 			if(varProperty == NULL)
-			{
+			{				
 				varProperty = manager->addProperty(vProperty->propertyType(),vProperty->propertyName()); 
-				varProperty->setValue(vProperty->value());
-				varProperty->setPropertyId(sDerivedPrefixName + EXPERIMENT_PARAMETER_DERIVED_CHAR + vProperty->propertyId());				
+				//varProperty->setValue(vProperty->value());
+				varProperty->setPropertyId(sDerivedPrefixName + EXPERIMENT_PARAMETER_DERIVED_CHAR + vProperty->propertyId());	
 				varProperty->setAttribute(QLatin1String("enumNames"), vProperty->attributeValue(QLatin1String("enumNames")).toStringList());
 				varProperty->setAttribute(QLatin1String("minimum"), vProperty->attributeValue(QLatin1String("minimum")));
 				varProperty->setAttribute(QLatin1String("maximum"), vProperty->attributeValue(QLatin1String("maximum")));
 				varProperty->setToolTip(vProperty->toolTip());
 				varProperty->setWhatsThis(vProperty->whatsThis());
 				varProperty->setStatusTip(vProperty->statusTip());
+
+				pDerivedVariantProperty = varProperty;
 			}
 			sReturnUniquePropertyIdentifier = varProperty->propertyId();
 			QWidget *tmpWidget = createEditor(manager,varProperty,parent);
@@ -454,15 +470,15 @@ QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManag
 
 QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager *manager, QtProperty *property, QWidget *parent)
 {
+	bool bResult;
 	if (manager->propertyType(property) == VariantExtensionPropertyManager::rotationDirectionTypeId()) 
 	{
 		RotationDirectionPropertyWidget *editor = new RotationDirectionPropertyWidget(parent);
 		editor->setValue(manager->value(property).toString());
 		createdEditors[property].append(editor);
 		editorToProperty[editor] = property;
-		//bResult = connect(editor, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
-		connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
-		connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
+		bResult = connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotCustomPropertyChanged(const QString &)));
+		bResult = connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
 		return editor;
 	}
 	else if (manager->propertyType(property) == VariantExtensionPropertyManager::movementDirectionTypeId()) 
@@ -471,9 +487,8 @@ QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager 
 		editor->setValue(manager->value(property).toString());
 		createdEditors[property].append(editor);
 		editorToProperty[editor] = property;
-		//bResult = connect(editor, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
-		connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
-		connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
+		bResult = connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotCustomPropertyChanged(const QString &)));
+		bResult = connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
 		return editor;
 	}
 	else if (manager->propertyType(property) == VariantExtensionPropertyManager::eccentricityDirectionTypeId()) 
@@ -482,9 +497,8 @@ QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager 
 		editor->setValue(manager->value(property).toString());
 		createdEditors[property].append(editor);
 		editorToProperty[editor] = property;
-		//bResult = connect(editor, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
-		connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
-		connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
+		bResult = connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotCustomPropertyChanged(const QString &)));
+		bResult = connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
 		return editor;
 	}
 	else if (manager->propertyType(property) == VariantExtensionPropertyManager::stringArrayTypeId()) 
@@ -492,11 +506,51 @@ QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager 
 		StringArrayPropertyWidget *editor = new StringArrayPropertyWidget(parent);
 		createdEditors[property].append(editor);
 		editorToProperty[editor] = property;
-		connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotSetValue(const QString &)));
+		bResult = connect(editor, SIGNAL(PropertyWidgetChanged(const QString&)), this, SLOT(slotCustomPropertyChanged(const QString &)));
 		editor->setSeperator(EXPERIMENT_PARAMETER_ARRAYSEP_CHAR);
 		editor->setText(manager->value(property).toString());
-		connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
+		bResult = connect(editor, SIGNAL(destroyed(QObject *)), this, SLOT(slotEditorDestroyed(QObject *)));
 		return editor;
 	}
-	return QtVariantEditorFactory::createEditor(manager,property,parent);
+	else
+	{
+		QWidget* tmpWidget = QtVariantEditorFactory::createEditor(manager,property,parent);
+		if(tmpWidget)
+		{
+			createdEditors[property].append(tmpWidget);
+			editorToProperty[tmpWidget] = property;
+			//bResult = connect(manager, SIGNAL(valueChanged(QtProperty*,const QVariant&)), this, SLOT(slotNonCustomPropertyChanged(QtProperty*,const QVariant&)), Qt::UniqueConnection);
+		}
+		return tmpWidget;
+	}
 }
+
+void VariantExtensionPropertyFactory::slotCustomPropertyChanged(const QString &val)
+{
+	QObject *sendObj = sender();
+	if(sendObj->isWidgetType())
+	{
+		QWidget *sendWidget = qobject_cast<QWidget *>(sendObj);
+		QtProperty *property = editorToProperty[sendWidget];
+		if(property)
+		{
+			this->propertyManager(property)->setValue(property,val);
+			//emit PropertyWidgetChanged(sendWidget,val);
+			return;
+		}
+	}
+	return;
+}
+
+//void VariantExtensionPropertyFactory::slotNonCustomPropertyChanged(QtProperty *property, const QVariant &value)
+//{
+//	if(property)
+//	{
+//		QList<QWidget *> sendWidgetList = createdEditors[property];
+//		foreach(QWidget *sendWidget, sendWidgetList)
+//		{
+//			QVariant::Type tmpType = value.type();
+//			emit PropertyWidgetChanged(sendWidget,value.toString());
+//		}			
+//	}
+//}

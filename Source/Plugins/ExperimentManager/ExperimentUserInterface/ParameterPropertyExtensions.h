@@ -156,16 +156,14 @@ private:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+class ExperimentParameterVisualizer;
 class VariantExtensionPropertyManager :	public QtVariantPropertyManager
 {
 	Q_OBJECT
 
-signals:
-	void filterChanged(QtProperty *, const QString &);
-
 public:
 
-	VariantExtensionPropertyManager(QObject *parent = NULL);
+	VariantExtensionPropertyManager(ExperimentParameterVisualizer *parentParamVisualizer = NULL);
 	~VariantExtensionPropertyManager();
 
 	static int rotationDirectionTypeId()
@@ -190,27 +188,8 @@ public:
 	bool isManagedCustomPropertyType(const QtProperty *property) const;
 	QVariant value(const QtProperty *property) const;
 
-	//QString filter(const QtProperty *property) const
-	//{
-	//	QString a = "";
-	//	if(isManagedCustomPropertyType(property))
-	//	{
-	//		a = "";
-	//	}		
-	//	return a;
-	//};
-
 public slots:
 	void setValue(QtProperty *property, const QVariant &val);
-
-	//void setFilter(QtProperty *property, const QString &filter)
-	//{
-	//	if(isManagedCustomPropertyType(property))
-	//	{
-	//		QString a = "";
-	//	}			
-	//	return;
-	//};
 
 protected:
 	QString valueText(const QtProperty *property) const;
@@ -221,9 +200,9 @@ private:
 	struct Data 
 	{
 		QString value;
-		//QString filter;
 	};
 	QMap<const QtProperty *, Data> theValues;
+	ExperimentParameterVisualizer *parentParameterVisualizer;
 };
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -232,16 +211,20 @@ class VariantExtensionPropertyFactory :	public QtVariantEditorFactory
 {
 	Q_OBJECT
 
+//signals:
+//	void PropertyWidgetChanged(QWidget *, const QString&);
+
 public:
 	VariantExtensionPropertyFactory(QObject *parent = NULL) : QtVariantEditorFactory(parent){};
 	~VariantExtensionPropertyFactory(){};
 
-	QWidget *getEditorWidget(QtVariantPropertyManager *manager, QtVariantProperty *vProperty, const QString &sDerivedPrefixName, QWidget *parent, QString &sReturnUniquePropertyIdentifier);
+	QWidget *getEditorWidget(QtVariantPropertyManager *manager, QtVariantProperty *vProperty, const QString &sDerivedPrefixName, QWidget *parent, QString &sReturnUniquePropertyIdentifier, QtVariantProperty *&pDerivedVariantProperty);
 	bool setPropertyValue(QtVariantPropertyManager *manager, const QString &sUniquePropertyIdentifier, const QString &sValue, const bool &bSetModified = true);
 
 private slots:
-	void slotSetValue(const QString &val);
+	void slotCustomPropertyChanged(const QString &val);
 	void slotEditorDestroyed(QObject *obj);
+	//void slotNonCustomPropertyChanged(QtProperty *property, const QVariant &value);
 
 private:
 	QMap<QtProperty *, QList<QWidget *>> createdEditors;
