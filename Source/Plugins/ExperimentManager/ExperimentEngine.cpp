@@ -359,7 +359,7 @@ void ExperimentEngine::initBlockTrial()
 		bool bHasCurrentBlock = false;
 		cBlockStructure tmpBlock = pExperimentManager->getExperimentStructure()->getCurrentBlock(bHasCurrentBlock);
 		if(bHasCurrentBlock)
-			pExperimentManager->fetchExperimentBlockParamsFromDomNodeList(tmpBlock.getBlockNumber(),nObjectID);
+			pExperimentManager->fetchExperimentBlockParamsFromTreeItemList(tmpBlock.getBlockNumber(),nObjectID);
 		else
 			qDebug() << __FUNCTION__ << "::Could not create a Block Parameter List, no current block!";
 	}

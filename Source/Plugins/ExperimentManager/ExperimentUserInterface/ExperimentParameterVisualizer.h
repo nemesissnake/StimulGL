@@ -40,7 +40,9 @@ class ExperimentParameterVisualizer : public QWidget
 
 signals:
 	void destroyed(QWidget*);
-	void editFinished(const QString&, const QString&);
+	//void editFinished(const QString&, const QString&);
+	void rootItemEditFinished(const QString&, const QString&);
+	void derivedItemEditFinished(const QString&, const QString&);
 
 private:
 	struct propertyContainerItem
@@ -86,13 +88,15 @@ public:
 	~ExperimentParameterVisualizer();
 
 	bool addParameterProperty(const ExperimentParameterDefinitionStrc *expParamDef, const QVariant &vValue);
-	bool setParameter(const QString &sName, const QString &sValue, const bool &bSetModified = true);
+	bool configurePropertyEditSignaling(const bool &bEnable);
+	bool hasPropertyEditSignaling() {return bPropertyEditSignaling;};
+	bool setParameter(const QString &sName, const QString &sValue, const bool &bSetModified = true, const bool &bIsInitializing = false);
 	bool addGroupProperties(const QList<ExperimentGroupDefinitionStrc> *expParamDef);
 	bool parseDependencies(QtVariantProperty *variantProperty = NULL);
 	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef);
 	void setAutoDepencyParsing(bool bEnable);
 
-	QWidget *getParameterEditWidget(const QString &sName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier);
+	QWidget *getParameterEditWidget(const QString &sName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier, const QVariant &vValue, const bool &bDoInitWithValue);
 	bool setWidgetParameter(const QString &sUniquePropertyIdentifier, const QString &sValue, const bool &bSetModified = true);
 	VariantExtensionPropertyFactory *getVariantPropertyFactory() {return variantExtensionFactory;};
 	bool getEnumeratedParameterPropertyValue(const QString &sFullEnumValuName, int &nEnumValue);
@@ -103,6 +107,7 @@ public slots:
 
 private slots:
 	void propertyValueChanged(QtProperty *property, const QVariant &value);
+	void itemEditedHandler(const QString &sParamName, const QString &sNewValue);
 
 private:
 	Ui::ExperimentParameterVisualizer *ui;
@@ -117,6 +122,7 @@ private:
 	QHash<QString, int> lEnumeratedParameterPropertyValuesHash;
 	QHash<QtProperty*,const ExperimentParameterDefinitionStrc*> lVariantPropertyDefinitionHash;
 	bool bAutoDepencyParsing;
+	bool bPropertyEditSignaling;
 
 	//void ExperimentParameterVisualizerDefaultConstruct();
 	bool addPropertyToSubGroup(const QString &sPropertyGroupNames, QtVariantProperty *item1, QList<propertyContainerItem> *pRootGroupPropertyItemList, QString &sSandPath = QString(""));

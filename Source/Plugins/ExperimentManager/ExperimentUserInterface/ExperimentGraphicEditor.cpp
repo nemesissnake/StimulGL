@@ -336,11 +336,9 @@ void ExperimentGraphicEditor::newFile()
 		if (confirm == QMessageBox::Cancel)
 			createNew = false;
 	}
-
 	if (createNew)
 	{
 		closeFile();
-
 		action_Save->setEnabled(true);
 		action_Close_File->setEnabled(true);
 		actionAdd_Attribute->setEnabled(true);
@@ -348,7 +346,6 @@ void ExperimentGraphicEditor::newFile()
 		actionAdd_Subnode->setEnabled(true);
 		action_Remove_Node->setEnabled(true);
 		actionFind->setEnabled(true);
-
 		pExpTreeModel = &loadedExpTreeModel;
 		connect(pExpTreeModel, SIGNAL(modelModified()), this, SLOT(setNewModel()));
 		//rootItem = new ExperimentTreeItem("[Root node]");
@@ -506,13 +503,13 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(NAME_TAG,sTmpString);
+									tmpParametersWidget->setParameter(NAME_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == DEBUGMODE_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(DEBUGMODE_TAG,sTmpString);
+									tmpParametersWidget->setParameter(DEBUGMODE_TAG,sTmpString,true,true);
 							}
 						}
 					}
@@ -552,13 +549,13 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(NAME_TAG,sTmpString);
+									tmpParametersWidget->setParameter(NAME_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == CLASS_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(CLASS_TAG,sTmpString);
+									tmpParametersWidget->setParameter(CLASS_TAG,sTmpString,true,true);
 							}
 						}
 					}
@@ -598,13 +595,13 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(CONNECTIONS_SIGNATURE_TAG,sTmpString);
+									tmpParametersWidget->setParameter(CONNECTIONS_SIGNATURE_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == CONNECTIONS_TYPE_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(CONNECTIONS_TYPE_TAG,sTmpString);
+									tmpParametersWidget->setParameter(CONNECTIONS_TYPE_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == CONNECTIONS_TARGET_TAG)
 							{
@@ -616,13 +613,13 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 										{
 											sTmpString = item->child(j)->child(k)->getValue();
 											if(sTmpString.isEmpty() == false)
-												tmpParametersWidget->setParameter(CONNECTIONS_TARGET_TAG "/" CONNECTIONS_SIGNATURE_TAG,sTmpString);
+												tmpParametersWidget->setParameter(CONNECTIONS_TARGET_TAG "/" CONNECTIONS_SIGNATURE_TAG,sTmpString,true,true);
 										}
 										else if(item->child(j)->child(k)->getName().toLower() == CONNECTIONS_TYPE_TAG)
 										{
 											sTmpString = item->child(j)->child(k)->getValue();
 											if(sTmpString.isEmpty() == false)
-												tmpParametersWidget->setParameter(CONNECTIONS_TARGET_TAG "/" CONNECTIONS_TYPE_TAG,sTmpString);
+												tmpParametersWidget->setParameter(CONNECTIONS_TARGET_TAG "/" CONNECTIONS_TYPE_TAG,sTmpString,true,true);
 										}
 									}
 								}
@@ -665,13 +662,13 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(INIT_FINIT_SIGNATURE_TAG,sTmpString);
+									tmpParametersWidget->setParameter(INIT_FINIT_SIGNATURE_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == INIT_FINIT_TYPE_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(INIT_FINIT_TYPE_TAG,sTmpString);
+									tmpParametersWidget->setParameter(INIT_FINIT_TYPE_TAG,sTmpString,true,true);
 							}
 						}
 					}
@@ -711,31 +708,31 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(NAME_TAG,sTmpString);
+									tmpParametersWidget->setParameter(NAME_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == BLOCKNUMBER_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(BLOCKNUMBER_TAG,sTmpString);
+									tmpParametersWidget->setParameter(BLOCKNUMBER_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == TRIALAMOUNT_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(TRIALAMOUNT_TAG,sTmpString);
+									tmpParametersWidget->setParameter(TRIALAMOUNT_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == INTERNALTRIGGERAMOUNT_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(INTERNALTRIGGERAMOUNT_TAG,sTmpString);
+									tmpParametersWidget->setParameter(INTERNALTRIGGERAMOUNT_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == EXTERNALTRIGGERAMOUNT_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(EXTERNALTRIGGERAMOUNT_TAG,sTmpString);
+									tmpParametersWidget->setParameter(EXTERNALTRIGGERAMOUNT_TAG,sTmpString,true,true);
 							}
 						}
 					}
@@ -775,25 +772,25 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(NAME_TAG,sTmpString);
+									tmpParametersWidget->setParameter(NAME_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == LOOP_NUMBER_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(LOOP_NUMBER_TAG,sTmpString);
+									tmpParametersWidget->setParameter(LOOP_NUMBER_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == LOOP_AMOUNT_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(LOOP_AMOUNT_TAG,sTmpString);
+									tmpParametersWidget->setParameter(LOOP_AMOUNT_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == LOOP_TARGETBLOCKID_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(LOOP_TARGETBLOCKID_TAG,sTmpString);
+									tmpParametersWidget->setParameter(LOOP_TARGETBLOCKID_TAG,sTmpString,true,true);
 							}
 						}
 					}
@@ -833,13 +830,13 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(INIT_FINIT_SIGNATURE_TAG,sTmpString);
+									tmpParametersWidget->setParameter(INIT_FINIT_SIGNATURE_TAG,sTmpString,true,true);
 							}
 							else if(item->child(j)->getName().toLower() == INIT_FINIT_TYPE_TAG)
 							{
 								sTmpString = item->child(j)->getValue();
 								if(sTmpString.isEmpty() == false)
-									tmpParametersWidget->setParameter(INIT_FINIT_TYPE_TAG,sTmpString);
+									tmpParametersWidget->setParameter(INIT_FINIT_TYPE_TAG,sTmpString,true,true);
 							}
 						}
 					}
@@ -851,10 +848,10 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 				{						
 					if(pExpTreeModel)
 					{
-						QDomNodeList tmpDomNodeList;
 						if(tmpExpStruct)
 							delete tmpExpStruct;
 						tmpExpStruct = new cExperimentStructure();
+						QList<ExperimentTreeItem*> tmpExpTreeItemList;
 
 						if(bShowTreeView)
 						{ 
@@ -864,7 +861,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							{
 								bool bResult = connect(expStructVisualizer, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
 								bResult = connect(this, SIGNAL(onTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeStructureView(int, int)));
-								bResult = expManager->createExperimentStructure(tmpDomNodeList, pExpTreeModel,tmpExpStruct);
+								bResult = expManager->createExperimentStructure(tmpExpTreeItemList, pExpTreeModel,tmpExpStruct);
 								if(bResult)
 								{
 									//int nRows = gridLayout->rowCount();
@@ -891,12 +888,15 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							tmpExperimentObjectList = getDefinedExperimentObjectInfoList(NULL);
 
 							if(expBlockParamView == NULL)
+							{	
 								expBlockParamView = new ExperimentBlockParameterView();
+								connect(expBlockParamView, SIGNAL(onItemEditFinished(int,int,QString,QString)), this, SLOT(saveNewData(int,int,QString,QString)), Qt::DirectConnection);
+							}
 							if(expBlockParamView)
 							{
 								bool bResult = connect(expBlockParamView, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
 								bResult = connect(this, SIGNAL(onTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeView(int, int)));
-								bResult = expManager->createExperimentStructure(tmpDomNodeList, pExpTreeModel, tmpExpStruct);
+								bResult = expManager->createExperimentStructure(tmpExpTreeItemList, pExpTreeModel, tmpExpStruct);
 								if(bResult)
 								{
 									if(horSplitter->count() > TABLEVIEWINDEX)
@@ -907,7 +907,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 										bResult = expBlockParamView->setExperimentObjects(tmpExperimentObjectList);
 										if(bResult)
 										{
-											bResult = bResult && expBlockParamView->parseExperimentBlockParameters(tmpDomNodeList);
+											bResult = bResult && expBlockParamView->parseExperimentBlockParameters(tmpExpTreeItemList);
 											if(bResult)
 											{
 												//expStructVisualizer->setLayout(gridLayout);
@@ -994,7 +994,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 										if((sName.isEmpty() || sValue.isEmpty()) == false)
 										{
 											//bool bResult = 
-											tmpParametersWidget->setParameter(sName,sValue);
+											tmpParametersWidget->setParameter(sName,sValue,true,true);
 										}
 									}
 								}								
@@ -1043,7 +1043,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 						}
 						if(tmpParametersWidget)
 						{
-							tmpParametersWidget->setParameter(child->getName().toLower(),child->getValue());
+							tmpParametersWidget->setParameter(child->getName().toLower(),child->getValue(),true,true);
 						}
 					}
 				}
@@ -1128,7 +1128,8 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 			tmpParametersWidget->setAutoDepencyParsing(true);
 			scrollArea->takeWidget();
 			scrollArea->setWidget(tmpParametersWidget);
-			connect(tmpParametersWidget, SIGNAL(editFinished(const QString&, const QString&)), this, SLOT(saveNewData(const QString&, const QString&)),Qt::UniqueConnection);
+			bool bResult = connect(tmpParametersWidget, SIGNAL(rootItemEditFinished(const QString&, const QString&)), this, SLOT(saveNewData(const QString&, const QString&)),Qt::UniqueConnection);
+			bResult = bResult;
 			return;
 		}
 		dynamicGraphicWidget->setLayout(gridLayout);
@@ -1140,7 +1141,6 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 QList<ExperimentStructuresNameSpace::strcExperimentObject> ExperimentGraphicEditor::getDefinedExperimentObjectInfoList(ExperimentTreeItem *objItem)
 {
 	//If objItem is NULL then all the objects are returned!
-
 	QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
 	int nSearchObjectID = -1;
 	if(objItem)
@@ -1156,42 +1156,44 @@ QList<ExperimentStructuresNameSpace::strcExperimentObject> ExperimentGraphicEdit
 		}
 	}
 	ExperimentStructuresNameSpace::strcExperimentObject tmpExperimentObject;
-	QDomNodeList tmpExperimentObjectDomNodeList;
+	QList<ExperimentTreeItem*> tmpExpTreeItemList;
 	QStringList strList;
 	strList.clear();
 	strList.append(ROOT_TAG);
 	strList.append(DECLARATIONS_TAG); 
 	strList.append(OBJECT_TAG);
-	if (pExpTreeModel->getDocumentElements(strList,tmpExperimentObjectDomNodeList) >= 0)
+	if (pExpTreeModel->getTreeElements(strList,tmpExpTreeItemList) >= 0)
 	{
-		int nNrOfObjects = tmpExperimentObjectDomNodeList.count();
+		int nNrOfObjects = tmpExpTreeItemList.count();
 		if (nNrOfObjects>0)
 		{
-			QDomNode tmpNode;
-			QDomElement tmpElement;
+			ExperimentTreeItem *pExpTreeItem;
+			QMap<QString, TreeItemDefinition> tTmpTreeItemDefs;
 			QString tmpString;
 			int nObjectID = -1;
 			for(int i=0;i<nNrOfObjects;i++)
 			{
-				tmpNode = tmpExperimentObjectDomNodeList.at(i);
-				if (tmpNode.isElement()) 
+				pExpTreeItem = tmpExpTreeItemList.at(i);
+				if (pExpTreeItem) 
 				{
-					tmpElement = tmpNode.toElement();
-					if(!tmpElement.hasAttribute(ID_TAG))
+					tTmpTreeItemDefs = pExpTreeItem->getDefinitions();
+					if(!tTmpTreeItemDefs.contains(ID_TAG))
 						break;
-					tmpString = tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					tmpString = tTmpTreeItemDefs[ID_TAG].value.toString();//Correct ObjectID?
 					if (tmpString.isEmpty() == false)
 					{
 						nObjectID = tmpString.toInt();
 						if((nObjectID == nSearchObjectID) || (objItem == NULL))
 						{
 							tmpExperimentObject.nID = nObjectID;
-							tmpElement = tmpNode.firstChildElement(NAME_TAG);
-							if(tmpElement.tagName() == NAME_TAG)
-								tmpExperimentObject.sName = tmpElement.text();
-							tmpElement = tmpNode.firstChildElement(CLASS_TAG);
-							if(tmpElement.tagName() == CLASS_TAG)
-								tmpExperimentObject.sClass = tmpElement.text();
+							pExpTreeItem = tmpExpTreeItemList.at(i)->firstChild(NAME_TAG);
+							//if(tmpElement.tagName() == NAME_TAG)
+							if(pExpTreeItem)
+								tmpExperimentObject.sName = pExpTreeItem->getValue();
+							pExpTreeItem = tmpExpTreeItemList.at(i)->firstChild(CLASS_TAG);
+							//if(tmpElement.tagName() == CLASS_TAG)
+							if(pExpTreeItem)
+								tmpExperimentObject.sClass =pExpTreeItem->getValue();
 							tmpExperimentObjectList.append(tmpExperimentObject);
 						}
 					}
@@ -1327,6 +1329,91 @@ void ExperimentGraphicEditor::saveNewData(const QString &sName, const QString &s
 {
 	QModelIndex sourceIndex = filterModel->mapToSource(treeView->selectionModel()->currentIndex());
 	pExpTreeModel->saveNewData(sName, sValue, sourceIndex);	
+}
+
+bool ExperimentGraphicEditor::saveNewData(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue)
+{
+	if(pExpTreeModel)
+	{
+		QStringList sFilterList;
+		TreeItemDefinition tmpTreeItemDef;
+		int nTempBlockID;
+		int nTempObjectID;
+		sFilterList << EXPERIMENTTREEMODEL_FILTER_TAGS;
+
+		QList<ExperimentTreeItem*> list1 = pExpTreeModel->getFilteredItemList(ACTIONS_TAG, sFilterList);
+		foreach (ExperimentTreeItem* tmpItem1 ,list1)
+		{
+			QList<ExperimentTreeItem*> list2 = pExpTreeModel->getFilteredItemList(BLOCKTRIALS_TAG, sFilterList, tmpItem1);
+			foreach (ExperimentTreeItem* tmpItem2 ,list2)
+			{
+				QList<ExperimentTreeItem*> list3 = pExpTreeModel->getFilteredItemList(BLOCK_TAG, sFilterList, tmpItem2);
+				foreach (ExperimentTreeItem* tmpItem3 ,list3)
+				{
+					if(tmpItem3->getDefinitions().contains(ID_TAG))
+					{
+						nTempBlockID = tmpItem3->getDefinition(ID_TAG).value.toInt();
+						if(nTempBlockID == nBlockID)//Correct Block ID?
+						{
+							QList<ExperimentTreeItem*> list4 = pExpTreeModel->getFilteredItemList(OBJECT_TAG, sFilterList, tmpItem3);
+							foreach (ExperimentTreeItem* tmpItem4 ,list4)
+							{
+								if(tmpItem4->getDefinitions().contains(ID_TAG))
+								{
+									nTempObjectID = tmpItem4->getDefinition(ID_TAG).value.toInt();
+									if(nTempObjectID == nObjectID)//Correct Object ID?
+									{
+										QList<ExperimentTreeItem*> list5 = pExpTreeModel->getFilteredItemList(PARAMETERS_TAG, sFilterList, tmpItem4);
+										foreach (ExperimentTreeItem* tmpItem5 ,list5)
+										{
+											pExpTreeModel->saveNewData(sParamName,sParamValue,QModelIndex(),tmpItem5);
+											//selectedIndex = filterModel->mapToSource(treeView->selectionModel()->currentIndex());
+											//setNewModel();
+											return true;
+											/*
+											QList<ExperimentTreeItem*> list6 = pExpTreeModel->getFilteredItemList(PARAMETER_TAG, sFilterList, tmpItem5);
+											foreach (ExperimentTreeItem* tmpItem6 ,list6)
+											{
+												bParamFound = false;												
+												sTempParamValueTreeItem = NULL;
+												int nValueIndex = -1;
+												for (int i=0;i<tmpItem6->childCount();i++)
+												{
+													if(tmpItem6->child(i)->getName().toLower() == NAME_TAG)
+													{
+														if(tmpItem6->child(i)->getValue().toLower() == sParamName)
+															bParamFound = true;
+													}
+													else if(tmpItem6->child(i)->getName().toLower() == VALUE_TAG)
+													{
+														sTempParamValueTreeItem = tmpItem6->child(i);
+														nValueIndex = i;
+													}
+													if(bParamFound && sTempParamValueTreeItem)
+													{
+														sTempParamValueTreeItem->setValue(sParamValue);
+														//ExperimentTreeItem *item = new ExperimentTreeItem(sTempParamValueTreeItem);
+														//ExperimentTreeItem *itemParent = sTempParamValueTreeItem->parent();
+														//itemParent->removeRow(nValueIndex);
+														//itemParent->insertRow(nValueIndex,item);
+														return true;
+													}
+												}
+											}*/
+										}
+										return false;
+									}
+								}
+							}
+							return false;
+						}
+						continue;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 void ExperimentGraphicEditor::setViewFilter(const TreeFilterSettings &newViewSettings)

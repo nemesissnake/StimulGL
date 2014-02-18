@@ -18,6 +18,7 @@
 
 #include "FindDialog.h"
 #include "ui_FindDialog.h"
+#include "ExperimentTreeModel.h"
 
 FindDialog::FindDialog(QWidget *parent) : QWidget(parent), ui(new Ui::FindDialog)
 {
@@ -39,13 +40,13 @@ void FindDialog::findSlot()
     QStringList filters;
 
     if (ui->cbTags->isChecked())
-        filters.append("TAGS");
+        filters.append(EXPERIMENTTREEMODEL_FILTER_TAGS);
     if (ui->cbValues->isChecked())
-        filters.append("VALUES");
+        filters.append(EXPERIMENTTREEMODEL_FILTER_VALUES);
     if (ui->cbAttributes->isChecked())
-        filters.append("ATTRIBUTES");
+        filters.append(EXPERIMENTTREEMODEL_FILTER_ATTRIBUTES);
     if (ui->cbCaseSensitive->isChecked())
-        filters.append("CASE_SENSITIVE");
+        filters.append(EXPERIMENTTREEMODEL_FILTER_CASE_SENSITIVE);
 
     emit findSignal(ui->LEFind->text(), filters);
 

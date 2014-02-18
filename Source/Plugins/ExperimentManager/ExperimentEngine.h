@@ -26,8 +26,6 @@
 
 using namespace ExperimentManagerNameSpace;
 
-class QDomNodeList;
-
 //!  The ExperimentEngine class. 
 /*!
   The ExperimentEngine class can be derived from to create custom classes that can again be used in combination with the ExperimentManager for presenting visual or other kind of stimuli.

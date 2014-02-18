@@ -21,7 +21,9 @@
 
 #include <QTableWidgetItem>
 #include "ExperimentStructures.h"
+#include "ExperimentParameterDefinition.h"
 
+#define BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID			-1
 #define BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER		";"
 #define BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT		4
 //#define BLOCKPARAMVIEW_BLOCKNUMBER_COLUMNINDEX		0
@@ -30,9 +32,8 @@
 #define BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX		2
 #define BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX		3
 
-class ExperimentParameterDefinitionContainer;
+class ExperimentTreeItem;
 class cExperimentStructure;
-class QDomNodeList;
 
 class ExperimentBlockParameterView : public QTableWidget
 {
@@ -40,13 +41,14 @@ class ExperimentBlockParameterView : public QTableWidget
 
 signals:
 	void destroyed(QWidget*);
+	void onItemEditFinished(int nBlockID, int nObjectID, QString sParamName, QString sParamValue);
 
 public:
 	ExperimentBlockParameterView(QWidget *parent = NULL);
 	~ExperimentBlockParameterView();
 
 	bool parseExperimentStructure(cExperimentStructure *ExpStruct);
-	bool parseExperimentBlockParameters(const QDomNodeList &tmpDomNodeList);
+	bool parseExperimentBlockParameters(const QList<ExperimentTreeItem*> &tmpExpTreeItemList);
 	bool setExperimentObjects(const QList<ExperimentStructuresNameSpace::strcExperimentObject> &lExperimentObjects);
 
 public slots:
@@ -65,6 +67,7 @@ private:
 	void configureEditHandling(const bool &bEnable);
 	bool appendExperimentBlockParameterChanges();
 	void initTableSetup();
+	QVariant resolveParameterValueType(const QVariant &vInput, const ExperimentParameterTypeName &sType, const bool &bToView) const;
 
 	struct strcParameterBlockChanges
 	{
@@ -80,11 +83,15 @@ private:
 	struct strcColumnInfo
 	{
 		int nColumnIndex;
+		int nObjectID;
 		QString sHeader;
+		ExperimentParameterDefinitionStrc *strcParamDef;
 		strcColumnInfo()
 		{
 			nColumnIndex = -1;
+			nObjectID = -1;
 			sHeader = "";
+			strcParamDef = NULL;
 		}
 	};
 
@@ -110,6 +117,8 @@ private:
 	QHash<int, int> hashRowIndexBlockId;
 	QHash<int, QString> hashColumnIndexObjectIDParamName;
 	QHash<QString, strcColumnInfo> hashObjectParameterColumnIndex;
+	QColor cChangedParameter;
+	QColor cInheritedParameter;
 };
 
 #endif // EXPERIMENTBLOCKPARAMETERVIEW_H

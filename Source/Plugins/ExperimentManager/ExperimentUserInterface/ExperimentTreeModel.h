@@ -21,10 +21,13 @@
 
 #include <QStandardItemModel>
 #include <QDomDocument>
-//#include "ExperimentTreeFilterProxyModel.h"
 #include "ExperimentGraphicEditor_Global.h"
 
-class QDomNode;
+#define EXPERIMENTTREEMODEL_FILTER_TAGS				"TAGS"
+#define EXPERIMENTTREEMODEL_FILTER_VALUES			"VALUES"
+#define EXPERIMENTTREEMODEL_FILTER_ATTRIBUTES		"ATTRIBUTES"
+#define EXPERIMENTTREEMODEL_FILTER_CASE_SENSITIVE	"CASE_SENSITIVE"
+
 class QXmlStreamWriter;
 class ExperimentTreeItem;
 
@@ -41,23 +44,28 @@ class ExperimentTreeModel : public QStandardItemModel
 
         ExperimentTreeItem *getRootItem() const { return rootItem; }
         bool write(const QString &fileName);
-        QList<ExperimentTreeItem*> getFilteredItemList(const QString &textToFind, const QStringList &filters);
+        QList<ExperimentTreeItem*> getFilteredItemList(const QString &textToFind, const QStringList &filters, ExperimentTreeItem *expTreeItem = NULL);
         QModelIndex getIndexByUID(const QString &uuid);
-        ExperimentTreeItem * itemFromIndex(const QModelIndex &index) const;
+        ExperimentTreeItem *itemFromIndex(const QModelIndex &index) const;
 
 		bool read(QByteArray &byteArrayContent);
 		bool reset();
-		int getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList);
+		//int getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList);
+		int getTreeElements(const QStringList &sElementTagName, QList<ExperimentTreeItem *> &lFoundTreeItems, ExperimentTreeItem *pSearchRootItem = NULL);
+		static int getStaticTreeElements(const QStringList &sElementTagName, QList<ExperimentTreeItem *> &lFoundTreeItems, ExperimentTreeItem *pSearchRootItem);
+		
+		void test();
 
     public slots:
         void saveNewData(QWidget *widgetContainer, const QModelIndex &parentIndex);
-		void saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex);
+		void saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex, ExperimentTreeItem *pParametersSection = NULL);
 
     private:
 		void recursiveRead(QDomNode dNode, ExperimentTreeItem *item);
         void recursiveWrite(QXmlStreamWriter &xml, ExperimentTreeItem *item);
-        void recursiveSearch(const QString &textToFind, const QStringList &filters, ExperimentTreeItem *item, QList<ExperimentTreeItem *> &list);
-        void recursiveUidSearch(const QString &uuid, ExperimentTreeItem *item, bool found, QModelIndex &index);
+        static void recursiveSearch(const QString &textToFind, const QStringList &filters, ExperimentTreeItem *item, QList<ExperimentTreeItem *> &list);
+        static void recursiveMultiSearch(const QString &textToFind, const QStringList &filters, QList<ExperimentTreeItem *> items, QList<ExperimentTreeItem*> &list);
+		void recursiveUidSearch(const QString &uuid, ExperimentTreeItem *item, bool found, QModelIndex &index);
 		bool fillModel();
 
 		QDomDocument *doc;

@@ -636,7 +636,7 @@ cBlockStructure* cExperimentStructure::getNextClosestBlockNumberByFromNumber(con
 	//First try the expected location
 	if(pSharedData->lBlocks.size()>startBlockNumber)
 	{
-		if (pSharedData->lBlocks.at(startBlockNumber)->getBlockID() == startBlockNumber)
+		if (pSharedData->lBlocks.at(startBlockNumber)->getBlockNumber() == startBlockNumber)
 		{
 			return pSharedData->lBlocks[startBlockNumber];
 		}

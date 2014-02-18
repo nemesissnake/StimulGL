@@ -56,7 +56,7 @@ class ExperimentGraphicEditor : public QWidget
     Q_OBJECT
 
 signals:
-	void onTableViewRedrawned(int nNewWidth, int nNewHeight);
+	void onTableViewRedrawned(int nNewWidth, int nNewHeight);	
         
 public:
     explicit ExperimentGraphicEditor(QWidget *parent = 0);
@@ -65,6 +65,7 @@ public:
 public slots:
 	void setExperimentManager(ExperimentManager *pExpManager);
 	bool setExperimentTreeModel(ExperimentTreeModel *expModel = NULL);
+	bool saveNewData(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue);
 		
 //protected slots:
 //	void closeEvent(QCloseEvent *event);
@@ -99,6 +100,7 @@ private:
 	void setupLayout();
 	void setupFilterModel();
 	QList<ExperimentStructuresNameSpace::strcExperimentObject> getDefinedExperimentObjectInfoList(ExperimentTreeItem *objItem);
+	//bool setModelParameterValue(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue);
 
 	bool bShowTreeView;
 
@@ -132,15 +134,13 @@ private:
 	QToolButton *buttonFile;
 	QToolButton *buttonEdit;
 
-	//ExperimentTreeItem *rootItem;
-
 	TreeFilterSettings currentViewSettings;
 	QModelIndex selectedIndex;
 
 	ExperimentManager *expManager;
 	ExperimentStructureVisualizer *expStructVisualizer;
 	ExperimentBlockParameterView *expBlockParamView;
-	cExperimentStructure *tmpExpStruct; 
+	cExperimentStructure *tmpExpStruct;					//Only temporarily use!
 	ExperimentParameterDefinitionContainer *tmpExpObjectParamDefs;
 	QHash<QString, ExperimentParameterVisualizer *> staticGraphicWidgetsHashTable;
 };

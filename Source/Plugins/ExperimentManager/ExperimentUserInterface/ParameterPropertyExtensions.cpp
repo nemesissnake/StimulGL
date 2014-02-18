@@ -415,7 +415,7 @@ bool VariantExtensionPropertyFactory::setPropertyValue(QtVariantPropertyManager 
 	return false;
 }
 
-QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManager *manager, QtVariantProperty *vProperty, const QString &sDerivedPrefixName, QWidget *parent, QString &sReturnUniquePropertyIdentifier, QtVariantProperty *&pDerivedVariantProperty)
+QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManager *manager, QtVariantProperty *vProperty, const QString &sDerivedPrefixName, QWidget *parent, QString &sReturnUniquePropertyIdentifier, QtVariantProperty *&pDerivedVariantProperty, const QVariant &vValue, const bool &bDoInitWithValue)
 {
 	sReturnUniquePropertyIdentifier = "";
 	pDerivedVariantProperty = NULL;
@@ -449,7 +449,6 @@ QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManag
 			if(varProperty == NULL)
 			{				
 				varProperty = manager->addProperty(vProperty->propertyType(),vProperty->propertyName()); 
-				//varProperty->setValue(vProperty->value());
 				varProperty->setPropertyId(sDerivedPrefixName + EXPERIMENT_PARAMETER_DERIVED_CHAR + vProperty->propertyId());	
 				varProperty->setAttribute(QLatin1String("enumNames"), vProperty->attributeValue(QLatin1String("enumNames")).toStringList());
 				varProperty->setAttribute(QLatin1String("minimum"), vProperty->attributeValue(QLatin1String("minimum")));
@@ -457,8 +456,18 @@ QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManag
 				varProperty->setToolTip(vProperty->toolTip());
 				varProperty->setWhatsThis(vProperty->whatsThis());
 				varProperty->setStatusTip(vProperty->statusTip());
-
 				pDerivedVariantProperty = varProperty;
+			}
+			else
+			{
+				QVariant vTemp = varProperty->value();
+				QString sTemp = vTemp.toString();
+				vTemp=vTemp;
+			}
+			if(bDoInitWithValue)
+			{
+				varProperty->setValue(vValue);
+				varProperty->setModified(true);
 			}
 			sReturnUniquePropertyIdentifier = varProperty->propertyId();
 			QWidget *tmpWidget = createEditor(manager,varProperty,parent);

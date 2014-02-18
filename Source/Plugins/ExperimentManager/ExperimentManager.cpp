@@ -27,6 +27,7 @@
 #include "TriggerTimer.h"
 #include "RetinotopyMapper.h"
 #include "QML2Viewer.h"
+#include "ExperimentTreeItem.h"
 #include "ExperimentUserInterface/ExperimentGraphicEditor.h"
 #include "ExperimentUserInterFace/ExperimentParameterWidgets.h"
 
@@ -955,7 +956,7 @@ bool ExperimentManager::prePassiveParseExperiment()
 		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
 	}
-	if (!createExperimentStructure(ExperimentBlockTrialsDomNodeList,currentExperimentTree,cExperimentBlockTrialStructure))
+	if (!createExperimentStructure(ExperimentBlockTrialsTreeItemList,currentExperimentTree,cExperimentBlockTrialStructure))
 	{
 		changeCurrentExperimentState(ExperimentManager_Loaded);
 		return false;
@@ -964,7 +965,7 @@ bool ExperimentManager::prePassiveParseExperiment()
 	return true;
 }
 
-bool ExperimentManager::createExperimentStructure(QDomNodeList &blockTrialDomNodeLst, ExperimentTreeModel *expTreeModel, cExperimentStructure* cExpBlockTrialStruct)
+bool ExperimentManager::createExperimentStructure(QList<ExperimentTreeItem*> &lExpTreeItems, ExperimentTreeModel *expTreeModel, cExperimentStructure* cExpBlockTrialStruct)
 {
 	if ((expTreeModel == NULL) || (cExpBlockTrialStruct == NULL))
 	{
@@ -977,9 +978,10 @@ bool ExperimentManager::createExperimentStructure(QDomNodeList &blockTrialDomNod
 	strList.append(ACTIONS_TAG);
 	strList.append(BLOCKTRIALS_TAG);
 	strList.append(BLOCK_TAG);
-	if (expTreeModel->getDocumentElements(strList,blockTrialDomNodeLst) >= 0)
+
+	if(currentExperimentTree->getTreeElements(strList, lExpTreeItems) > 0)
 	{
-		if(createExperimentStructureFromDomNodeList(blockTrialDomNodeLst, cExpBlockTrialStruct))
+		if(createExperimentStructureFromTreeItemList(lExpTreeItems, cExpBlockTrialStruct))		
 		{
 			if(cExpBlockTrialStruct->prepareExperiment() == false)
 				qDebug() << __FUNCTION__ << "::Could not prepare Experiment Structure!";
@@ -1016,39 +1018,41 @@ bool ExperimentManager::configureExperiment()
 	QStringList strList;
 	strList.append(ROOT_TAG);
 	strList.append(DEFINES_TAG);
-	strList.append(EXPERIMENT_TAG);
-	QDomNodeList tmpList;
+	strList.append(EXPERIMENT_TAG);	
 	
-	if (currentExperimentTree->getDocumentElements(strList,tmpList) >= 0)
+	QList<ExperimentTreeItem*> lExpTreeItems;
+	if(currentExperimentTree->getTreeElements(strList, lExpTreeItems) > 0)
 	{
-		int nNrOfObjects = tmpList.count();
+		int nNrOfObjects = lExpTreeItems.count();
 		if (nNrOfObjects>0)
 		{
-			QDomNode tmpNode;
-			QDomElement tmpElement;
+			ExperimentTreeItem* tmpTreeItem;
+			ExperimentTreeItem* tmpTreeSubItem;
+			QMap<QString, TreeItemDefinition> tTmpTreeItemDefs;
 			QString tmpString = "";
+			//QVariant tmpVariant;
 
-			tmpNode = tmpList.at(0);//We'll only use the first one by now and ignore the rest
-			if (tmpNode.isElement()) 
+			tmpTreeItem = lExpTreeItems.at(0);//We'll only use the first one by now and ignore the rest			
+			if (tmpTreeItem->hasChildren()) 
 			{
-				tmpElement = tmpNode.toElement();
-				if(tmpElement.hasAttribute(ID_TAG))
+				tTmpTreeItemDefs = tmpTreeItem->getDefinitions();
+				if(tTmpTreeItemDefs.contains(ID_TAG))
 				{
-					tmpString = tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
-					if (!tmpString.isEmpty())
+					tmpString = tTmpTreeItemDefs[ID_TAG].value.toString();
+					if (!tmpString.isEmpty())//Correct ObjectID?
 						cExperimentBlockTrialStructure->setExperimentID(tmpString.toInt());
 				}
 
-				tmpElement = tmpNode.firstChildElement(NAME_TAG);
-				tmpString = tmpElement.text();
+				tmpTreeSubItem = tmpTreeItem->firstChild(NAME_TAG);//tmpNode.firstChildElement(NAME_TAG);
+				tmpString = tmpTreeSubItem->getValue();
 				if (!tmpString.isEmpty())
 					cExperimentBlockTrialStructure->setExperimentName(tmpString);
 
-				tmpElement = tmpNode.firstChildElement(DEBUGMODE_TAG);
-				tmpString = tmpElement.text();
-				expandExperimentBlockParameterValue(tmpString);
+				tmpTreeSubItem = tmpTreeItem->firstChild(DEBUGMODE_TAG);
+				tmpString = tmpTreeSubItem->getValue();				
 				if (!tmpString.isEmpty())
 				{
+					expandExperimentBlockParameterValue(tmpString);
 					if (tmpString == BOOL_TRUE_TAG)
 						cExperimentBlockTrialStructure->setExperimentDebugMode(true);
 					else
@@ -1201,38 +1205,43 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 	else
 		strList.append(INITIALIZATIONS_TAG);
 	strList.append(OBJECT_TAG);
-	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList) >= 0)
+
+	QList<ExperimentTreeItem*> lExpTreeItems;
+	if(currentExperimentTree->getTreeElements(strList, lExpTreeItems) > 0)
 	{
-		int nNrOfObjects = ExperimentObjectDomNodeList.count();
+		int nNrOfObjects = ExperimentObjectTreeItemList.count();
 		if (nNrOfObjects>0)
 		{
-			QDomNode tmpNode;
-			QDomElement tmpElement;
-			QDomNodeList tmpObjectNodeList;
 			QString tmpString;
-
 			int nObjectID = -1;
 			int nParameterID = -1;
 			QObject *pSourceObject = NULL;
 			QString sType = "";
 			QString sSignature = "";
+			QString tmpNameString = "";
+			QString tmpMemberString = "";
+			int nParameterCount;
 			QList<QString> sParameterNames;
 			QList<QString> sParameterValues;
 			QList<QString> sParameterTypes;
+			ExperimentTreeItem* pExpTreeItem;
+			QStringList lInitParametersSearchPath;
+			lInitParametersSearchPath << PARAMETER_TAG;
+			QMap<QString, TreeItemDefinition> tTmpTreeItemDefs;
 
 			for(int i=0;i<nNrOfObjects;i++)
 			{
 				sParameterNames.clear();
 				sParameterTypes.clear();
 				sParameterValues.clear();
-				tmpNode = ExperimentObjectDomNodeList.at(i);
-				if (tmpNode.isElement()) 
+				pExpTreeItem = ExperimentObjectTreeItemList.at(i);
+				if (pExpTreeItem) 
 				{
+					tTmpTreeItemDefs = pExpTreeItem->getDefinitions();
 					tmpString = "";
-					tmpElement = tmpNode.toElement();
-					if(!tmpElement.hasAttribute(ID_TAG))
+					if(tTmpTreeItemDefs.contains(ID_TAG))
 						break;
-					tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					tmpString = tTmpTreeItemDefs[ID_TAG].value.toString();//Correct ObjectID?
 					if (tmpString.isEmpty())
 						break;
 					nObjectID = tmpString.toInt();
@@ -1242,16 +1251,20 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 					if (pSourceObject == NULL)
 						continue;
 
-					tmpElement = tmpNode.firstChildElement(INIT_FINIT_TYPE_TAG);
-					tmpString = tmpElement.text();
+					pExpTreeItem = ExperimentObjectTreeItemList.at(i)->firstChild(INIT_FINIT_TYPE_TAG);
+					if(pExpTreeItem==NULL)
+						break;
+					tmpString = pExpTreeItem->getValue();
 					if (tmpString.isEmpty())
 						break;
 					if (!(tmpString == INIT_FINIT_TYPE_SLOT_TAG))
 						break;
 					sType = tmpString;
 
-					tmpElement = tmpNode.firstChildElement(INIT_FINIT_SIGNATURE_TAG);
-					tmpString = tmpElement.text();
+					pExpTreeItem = ExperimentObjectTreeItemList.at(i)->firstChild(INIT_FINIT_SIGNATURE_TAG);
+					if(pExpTreeItem==NULL)
+						break;
+					tmpString = pExpTreeItem->getValue();
 					if (tmpString.isEmpty())
 						break;
 					sSignature = tmpString;
@@ -1259,46 +1272,47 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 					const QMetaObject* sourceMetaObject = NULL;
 					sourceMetaObject = pSourceObject->metaObject();
 
-					tmpElement = tmpNode.firstChildElement(PARAMETERS_TAG);
-					if(tmpElement.isElement())
+					pExpTreeItem = ExperimentObjectTreeItemList.at(i)->firstChild(PARAMETERS_TAG);
+					if(pExpTreeItem==NULL)
 					{
-						tmpObjectNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
-						int nParameterCount = tmpObjectNodeList.count();
-						if (nParameterCount>0)
+						QList<ExperimentTreeItem*> tmpInitParameterTreeItemList;
+						nParameterCount = ExperimentTreeModel::getStaticTreeElements(lInitParametersSearchPath, tmpInitParameterTreeItemList, pExpTreeItem);
+						if(nParameterCount > 0)
 						{
 							for (int j=0;j<nParameterCount;j++)//For each parameter
 							{
 								tmpString = "";
-								tmpNode = tmpObjectNodeList.at(j);
-								tmpElement = tmpNode.toElement();
-								if(!tmpElement.hasAttribute(ID_TAG))
+								pExpTreeItem = tmpInitParameterTreeItemList.at(j);
+								tTmpTreeItemDefs = pExpTreeItem->getDefinitions();
+
+								if(!tTmpTreeItemDefs.contains(ID_TAG))
 									continue;
-								tmpString =tmpElement.attribute(ID_TAG,"");//Correct ParameterID?
+								tmpString = tTmpTreeItemDefs[ID_TAG].value.toString();//Correct ParameterID?
 								if (tmpString.isEmpty())
 									continue;
 								nParameterID = tmpString.toInt();
 								if (!(nParameterID >= 0))
 									continue;
 
-								tmpElement = tmpNode.firstChildElement(NAME_TAG);
-								tmpString = tmpElement.text();
-								if (tmpString.isEmpty())
+								pExpTreeItem = tmpInitParameterTreeItemList.at(j)->firstChild(NAME_TAG);
+								tmpNameString = pExpTreeItem->getValue();
+								if (tmpNameString.isEmpty())
 									continue;
 
-								tmpElement = tmpNode.firstChildElement(MEMBER_TYPE_TAG);
-								tmpString = tmpElement.text();
-								if (tmpString.isEmpty())
+								pExpTreeItem = tmpInitParameterTreeItemList.at(j)->firstChild(MEMBER_TYPE_TAG);
+								tmpMemberString = pExpTreeItem->getValue();
+								if (tmpMemberString.isEmpty())
 									continue;
 
-								tmpElement = tmpNode.firstChildElement(VALUE_TAG);
-								tmpString = tmpElement.text();
+								pExpTreeItem = tmpInitParameterTreeItemList.at(j)->firstChild(VALUE_TAG);
+								tmpString = pExpTreeItem->getValue();
 								if (tmpString.isEmpty())
 									continue;
 								expandExperimentBlockParameterValue(tmpString);
 
 								sParameterValues.append(tmpString);
-								sParameterNames.append(tmpNode.firstChildElement(NAME_TAG).text());
-								sParameterTypes.append(tmpNode.firstChildElement(MEMBER_TYPE_TAG).text());
+								sParameterNames.append(tmpNameString);
+								sParameterTypes.append(tmpMemberString);
 							}// end of parameter loop
 							int nArgCount = sParameterNames.count();						
 							QByteArray normType;
@@ -1587,16 +1601,14 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 	strList.append(ROOT_TAG);
 	strList.append(CONNECTIONS_TAG);
 	strList.append(OBJECT_TAG);
-	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList) >= 0)
+	if (currentExperimentTree->getTreeElements(strList,ExperimentObjectTreeItemList) > 0)
 	{
-		int nNrOfObjects = ExperimentObjectDomNodeList.count();
+		int nNrOfObjects = ExperimentObjectTreeItemList.count();
 		if (nNrOfObjects > 0)
 		{
-			QDomNode tmpNode;
-			QDomElement tmpElement;
-			QDomNodeList tmpObjectNodeList;
+			ExperimentTreeItem* pExpTreeItem;
+			QMap<QString, TreeItemDefinition> tTmpTreeItemDefs;
 			QString tmpString;
-
 			int nSourceObjectID = -1;
 			int nTargetObjectID = -1;
 			QString sSourceType = "";
@@ -1605,17 +1617,20 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 			QString sTargetSignature = "";
 			QObject *pSourceObject = NULL;
 			QObject *pTargetObject = NULL;
+			QStringList lConnectionTargetSearchPath;
+			int nTargetCount;
+			lConnectionTargetSearchPath << CONNECTIONS_TARGET_TAG;
 
 			for(int i=0;i<nNrOfObjects;i++)
 			{
-				tmpNode = ExperimentObjectDomNodeList.at(i);
-				if (tmpNode.isElement()) 
+				pExpTreeItem = ExperimentObjectTreeItemList.at(i);
+				if (pExpTreeItem) 
 				{
 					tmpString = "";
-					tmpElement = tmpNode.toElement();
-					if(!tmpElement.hasAttribute(ID_TAG))
+					tTmpTreeItemDefs = pExpTreeItem->getDefinitions();
+					if(tTmpTreeItemDefs.contains(ID_TAG) == false)
 						break;
-					tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					tmpString = tTmpTreeItemDefs[ID_TAG].value.toString();//Correct ObjectID?
 					if (tmpString.isEmpty())
 						break;
 					nSourceObjectID = tmpString.toInt();
@@ -1625,34 +1640,32 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 					if (pSourceObject == NULL)
 						continue;
 
-					tmpElement = tmpNode.firstChildElement(CONNECTIONS_TYPE_TAG);
-					tmpString = tmpElement.text();
+					pExpTreeItem = ExperimentObjectTreeItemList.at(i)->firstChild(CONNECTIONS_TYPE_TAG);
+					tmpString = pExpTreeItem->getValue();
 					if (tmpString.isEmpty())
 						break;
 					if (!(tmpString == CONNECTIONS_TYPE_SIGNAL_TAG))
 						break;
 					sSourceType = tmpString;
 
-					tmpElement = tmpNode.firstChildElement(CONNECTIONS_SIGNATURE_TAG);
-					tmpString = tmpElement.text();
+					pExpTreeItem = ExperimentObjectTreeItemList.at(i)->firstChild(CONNECTIONS_SIGNATURE_TAG);
+					tmpString = pExpTreeItem->getValue();
 					if (tmpString.isEmpty())
 						break;
 					sSourceSignature = tmpString;
-
-
-
-					tmpObjectNodeList = tmpNode.toElement().elementsByTagName(CONNECTIONS_TARGET_TAG);//Retrieve all the targets
-					int nTargetCount = tmpObjectNodeList.count();
-					if (nTargetCount>0)
+					
+					QList<ExperimentTreeItem*> tmpConnectionTargetTreeItemList;
+					nTargetCount = ExperimentTreeModel::getStaticTreeElements(lConnectionTargetSearchPath, tmpConnectionTargetTreeItemList, ExperimentObjectTreeItemList.at(i));
+					if(nTargetCount > 0)
 					{
 						for (int j=0;j<nTargetCount;j++)//For each object
 						{
 							tmpString = "";
-							tmpNode = tmpObjectNodeList.at(j);
-							tmpElement = tmpNode.toElement();
-							if(!tmpElement.hasAttribute(ID_TAG))
+							pExpTreeItem = tmpConnectionTargetTreeItemList.at(j);
+							tTmpTreeItemDefs = pExpTreeItem->getDefinitions();
+							if(!tTmpTreeItemDefs.contains(ID_TAG))
 								continue;
-							tmpString =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+							tmpString = tTmpTreeItemDefs[ID_TAG].value.toString();//Correct ObjectID?
 							if (tmpString.isEmpty())
 								continue;
 							nTargetObjectID = tmpString.toInt();
@@ -1662,16 +1675,16 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 							if (pTargetObject == NULL)
 								continue;
 
-							tmpElement = tmpNode.firstChildElement(CONNECTIONS_TYPE_TAG);
-							tmpString = tmpElement.text();
+							pExpTreeItem = tmpConnectionTargetTreeItemList.at(j)->firstChild(CONNECTIONS_TYPE_TAG);
+							tmpString = pExpTreeItem->getValue();
 							if (tmpString.isEmpty())
 								continue;
 							if (!((tmpString == CONNECTIONS_TYPE_SIGNAL_TAG) || (tmpString == CONNECTIONS_TYPE_SLOT_TAG)))
 								continue;
 							sTargetType = tmpString;
 
-							tmpElement = tmpNode.firstChildElement(CONNECTIONS_SIGNATURE_TAG);
-							tmpString = tmpElement.text();
+							pExpTreeItem = tmpConnectionTargetTreeItemList.at(j)->firstChild(CONNECTIONS_SIGNATURE_TAG);
+							tmpString = pExpTreeItem->getValue();
 							if (tmpString.isEmpty())
 								continue;
 							sTargetSignature = tmpString;
@@ -1802,7 +1815,7 @@ tParsedParameterList *ExperimentManager::getObjectBlockParamListById(int nID)
 	return NULL;
 }
 
-bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID)
+bool ExperimentManager::fetchExperimentBlockParamsFromTreeItemList(const int &nBlockNumber, const int &nObjectID)
 {
 	//bool bHasCurrentBlock = false;
 	if (nObjectID >= 0)
@@ -1814,7 +1827,7 @@ bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBl
 			{
 				if (lExperimentObjectList[i].nObjectID == nObjectID)
 				{
-					if(createExperimentBlockParamsFromDomNodeList(nBlockNumber,nObjectID,&ExperimentBlockTrialsDomNodeList,lExperimentObjectList[i].ExpBlockParams) < 0)
+					if(createExperimentBlockParamsFromTreeItemList(nBlockNumber,nObjectID,&ExperimentBlockTrialsTreeItemList,lExperimentObjectList[i].ExpBlockParams) < 0)
 					{
 						qDebug() << __FUNCTION__ << "::Could not create a Block Parameter List!";
 						return false;
@@ -1841,7 +1854,186 @@ bool ExperimentManager::fetchExperimentBlockParamsFromDomNodeList(const int &nBl
 	return false;
 }
 
-int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst, tParsedParameterList *hParams)
+int ExperimentManager::createExperimentBlockParamsFromTreeItemList(const int &nBlockNumber, const int &nObjectID, QList<ExperimentTreeItem*> *pExpBlockTrialsTreeItems, tParsedParameterList *hParams)
+{
+	if (hParams == NULL)
+		return -1;
+	if(pExpBlockTrialsTreeItems == NULL)
+		return -1;
+	if(hParams->count() == 0)
+		return -1;
+	if(nObjectID < 0)
+		return -1;
+	if(nBlockNumber < 0)
+		return -1;
+	if (pExpBlockTrialsTreeItems->isEmpty())
+		return -1;
+
+	//Set all the parameter bHasChanged attributes too false again
+	QList<ParsedParameterDefinition> tmpStrValueList = hParams->values();//The order is guaranteed to be the same as that used by keys()!
+	QList<QString> tmpStrKeyList = hParams->keys();//The order is guaranteed to be the same as that used by values()!
+	for(int i=0;i<tmpStrKeyList.count();i++)
+	{
+		tmpStrValueList[i].bHasChanged = false;
+		hParams->insert(tmpStrKeyList[i], tmpStrValueList[i]);
+	}
+
+	//The below code seems not to work due to the iterator...
+	//
+	//
+	////Set all the parameter bHasChanged attributes too false again
+	//tParsedParameterList::const_iterator iterPPL = hParams->constBegin();
+	//while (iterPPL != hParams->constEnd()) 
+	//{
+	//	tmpParDef = iterPPL.value();
+	//	tmpString = iterPPL.key();
+	//	tmpParDef.bHasChanged = false;
+	//	//cout << iterPPL.key() << ": " << iterPPL.value() << endl;
+	//	 hParams->insert(tmpString, tmpParDef);
+	//	++iterPPL;
+	//}
+
+	//if(cExperimentBlockTrialStructure == NULL)
+	//	return -1;
+	//int nBlockCount = cExperimentBlockTrialStructure->getBlockCount();
+	int nBlockCount = pExpBlockTrialsTreeItems->count();
+	if (nBlockCount <= nBlockNumber)
+		return -1;
+	//if (nBlockCount != pExpBlockTrialsDomNodeLst->count())
+	//	return -1;
+
+
+	ParsedParameterDefinition tmpParDef;
+	QString tmpString;
+	QString tmpValue;
+	QStringList lObjectSearchPath;
+	QStringList lParameterSearchPath;
+	QStringList lCustomParameterSearchPath;
+	lObjectSearchPath << OBJECT_TAG;
+	lParameterSearchPath << OBJECT_TAG << PARAMETERS_TAG << PARAMETER_TAG;
+	lCustomParameterSearchPath << OBJECT_TAG << CUSTOM_PARAMETERS_TAG << PARAMETER_TAG;
+
+	ExperimentTreeItem* tmpTreeItem;
+
+	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
+	{
+		if(pExpBlockTrialsTreeItems->at(i)->hasChildren())
+		{
+			tmpTreeItem = pExpBlockTrialsTreeItems->at(i)->firstChild(BLOCKNUMBER_TAG);
+			if(tmpTreeItem)//Is there a block_number defined?
+			{
+				if (nBlockNumber == tmpTreeItem->getValue().toInt())//Correct block number?
+				{
+					QList<ExperimentTreeItem*> tmpBlockTreeItemList;
+					int nObjectListCount = ExperimentTreeModel::getStaticTreeElements(lObjectSearchPath, tmpBlockTreeItemList, pExpBlockTrialsTreeItems->at(i));
+					if(nObjectListCount > 0)
+					{
+						QMap<QString, TreeItemDefinition> tTmpTreeObjectItemDefs;
+						ExperimentTreeItem* pSubTreeItem;
+						for (int j=0;j<nObjectListCount;j++)//For each object
+						{
+							tTmpTreeObjectItemDefs = tmpBlockTreeItemList.at(j)->getDefinitions();
+							if(tTmpTreeObjectItemDefs.contains(ID_TAG))
+							{
+								if(nObjectID == tTmpTreeObjectItemDefs[ID_TAG].value.toInt())//Correct ObjectID?
+								{
+									int nResult = 0;
+									pSubTreeItem = tmpBlockTreeItemList.at(j)->firstChild(PARAMETERS_TAG);
+									if(pSubTreeItem)
+									{										
+										QList<ExperimentTreeItem*> tmpBlockParameterTreeItemList;
+										int nParameterListCount = ExperimentTreeModel::getStaticTreeElements(lParameterSearchPath, tmpBlockParameterTreeItemList, tmpBlockTreeItemList.at(j));
+										if(nParameterListCount > 0)
+										{
+											for (int k=0;k<nParameterListCount;k++)//For each parameter
+											{
+												pSubTreeItem = tmpBlockParameterTreeItemList.at(k)->firstChild(NAME_TAG);
+												if(pSubTreeItem)
+												{
+													tmpString = pSubTreeItem->getValue().toLower();
+													if (hParams->contains(tmpString))//Is the Parameter available in the predefined plugin list?
+													{
+														pSubTreeItem = tmpBlockParameterTreeItemList.at(k)->firstChild(VALUE_TAG);
+														if(pSubTreeItem)
+														{
+															tmpValue = pSubTreeItem->getValue();
+															expandExperimentBlockParameterValue(tmpValue);
+															tmpParDef.sValue = tmpValue;
+															tmpParDef.bHasChanged = true;
+															hParams->insert(tmpString,tmpParDef);
+															nResult++;
+														}
+													}
+												}
+											}
+										}
+									}
+
+									//////////////////////////////////////////////////////////////////////////
+									//Let's parse the custom parameters
+									//////////////////////////////////////////////////////////////////////////
+
+									pSubTreeItem = tmpBlockTreeItemList.at(j)->firstChild(CUSTOM_PARAMETERS_TAG);
+									if(pSubTreeItem)
+									{
+										QList<ExperimentTreeItem*> tmpBlockCustomParameterTreeItemList;
+										int nCustomParameterListCount = ExperimentTreeModel::getStaticTreeElements(lCustomParameterSearchPath, tmpBlockCustomParameterTreeItemList, tmpBlockTreeItemList.at(j));
+										if (nCustomParameterListCount>0)
+										{
+											for (int k=0;k<nCustomParameterListCount;k++)//For each parameter
+											{
+												pSubTreeItem = tmpBlockCustomParameterTreeItemList.at(k)->firstChild(NAME_TAG);
+												if(pSubTreeItem)
+												{
+													tmpString = pSubTreeItem->getValue().toLower();
+													//if (hParams->contains(tmpString) == false)//Is the Parameter available in the predefined plugin list?
+													//{
+													//	qDebug() << __FUNCTION__ << "::creating a custom predefined EXML parameter: " << tmpString << "!";
+													//}
+													pSubTreeItem = tmpBlockCustomParameterTreeItemList.at(k)->firstChild(VALUE_TAG);
+													if(pSubTreeItem)
+													{
+														tmpValue = pSubTreeItem->getValue();
+														expandExperimentBlockParameterValue(tmpValue);
+														tmpParDef.sValue = tmpValue;
+														tmpParDef.bHasChanged = true;
+														tmpParDef.bIsCustom = true;
+														hParams->insert(tmpString,tmpParDef);
+														nResult++;
+													}
+												}
+											}
+										}											
+									}
+									return nResult;
+								}
+							}
+							else
+							{
+								return -1;//No ID tag
+							}
+						}//end object-for loop
+					}
+					else
+					{
+						return -1;//No Objects defined		
+					}
+				}
+				else
+				{
+					continue;//Search next block
+				}
+			}
+			else
+			{
+				continue;//Search next block
+			}
+		}
+	}//end block-for loop
+	return -1;
+}
+
+/*int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst, tParsedParameterList *hParams)
 {
 	if (hParams == NULL)
 		return -1;
@@ -2008,9 +2200,137 @@ int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBl
 		}
 	}//end block-for loop
 	return -1;
+}*/
+
+bool ExperimentManager::createExperimentStructureFromTreeItemList(const QList<ExperimentTreeItem*> &ExpBlockTrialsTreeItems, cExperimentStructure *expStruct)
+{
+	int nNrOfBlockTrials = ExpBlockTrialsTreeItems.count();
+	expStruct->resetExperiment();
+	cBlockStructure *tmpBlock = NULL;
+	cLoopStructure *tmpLoop = NULL;
+	ExperimentTreeItem *tmpTreeItem = NULL;
+	bool bUpdateSucceeded = false;
+	QMap<QString, TreeItemDefinition> tTmpTreeItemDefs;
+	int nTemp;
+	QString sTemp;
+
+	for (int i=0;i<nNrOfBlockTrials;i++)
+	{
+		bUpdateSucceeded = false;
+		if(ExpBlockTrialsTreeItems.at(i)->hasChildren())
+		{
+			tmpTreeItem = ExpBlockTrialsTreeItems.at(i);
+			tTmpTreeItemDefs = tmpTreeItem->getDefinitions();
+			if(tTmpTreeItemDefs.contains(ID_TAG))
+			{
+				tmpBlock = new cBlockStructure();
+				tmpBlock->setBlockID(tTmpTreeItemDefs[ID_TAG].value.toInt());//Copy the BlockID
+				tmpTreeItem = ExpBlockTrialsTreeItems.at(i)->firstChild(BLOCKNUMBER_TAG);
+				if(tmpTreeItem)//Is there a block_number defined?
+				{
+					tmpBlock->setBlockNumber(tmpTreeItem->getValue().toInt());//Copy the BlockNumber
+					if (tmpBlock->getBlockNumber()>=0)
+					{
+						tmpTreeItem = ExpBlockTrialsTreeItems.at(i)->firstChild(TRIALAMOUNT_TAG);
+						if(tmpTreeItem)//Is there a TrialAmount defined?
+							tmpBlock->setNumberOfTrials(tmpTreeItem->getValue().toInt());//Copy the TrialAmount
+						else
+							tmpBlock->setNumberOfTrials(1);//Default if not defined
+						tmpTreeItem = ExpBlockTrialsTreeItems.at(i)->firstChild(INTERNALTRIGGERAMOUNT_TAG);
+						if(tmpTreeItem)//Is there a TriggerAmount defined?
+						{							
+							sTemp = tmpTreeItem->getValue();
+							if (!sTemp.isEmpty())
+							{
+								nTemp = sTemp.toInt();
+								if (nTemp > 0)
+									tmpBlock->setNumberOfInternalTriggers(nTemp);
+							}
+						}
+						tmpTreeItem = ExpBlockTrialsTreeItems.at(i)->firstChild(EXTERNALTRIGGERAMOUNT_TAG);
+						if(tmpTreeItem)//Is there a SubTriggerAmount defined?
+						{
+							sTemp = tmpTreeItem->getValue();
+							if (!sTemp.isEmpty())
+							{
+								nTemp = sTemp.toInt();
+								if (nTemp > 0)
+									tmpBlock->setNumberOfExternalTriggers(nTemp);
+							}
+						}
+						tmpTreeItem = ExpBlockTrialsTreeItems.at(i)->firstChild(NAME_TAG);
+						if(tmpTreeItem)//Is there a Name defined?
+							tmpBlock->setBlockName(tmpTreeItem->getValue());//Copy the Name
+						//Are there any loops defined?
+						ExperimentTreeItem *tmpLoopItem = ExpBlockTrialsTreeItems.at(i)->firstChild(LOOPS_TAG);
+						if(tmpLoopItem)
+						{
+							if(tmpLoopItem->childCount() > 0)
+							{
+								int nTempLoopID = 0;
+								QString sTempLoopName = "";
+								int nTempLoopNumber = 0;
+								int nTempLoopCount = 0;
+								int nTempLoopTargetBlockID = 0;
+								ExperimentTreeItem *tmpLoopTreeItemParams = NULL;
+								bool bLoopParseResult = true;
+
+								tmpTreeItem = tmpLoopItem->firstChild(LOOP_TAG);
+								while(tmpTreeItem)
+								{
+									tTmpTreeItemDefs = tmpTreeItem->getDefinitions();
+									if(tTmpTreeItemDefs.contains(ID_TAG))
+									{
+										if (tmpTreeItem->getName() == LOOP_TAG) 
+										{
+											bLoopParseResult = false;
+											nTempLoopID = tTmpTreeItemDefs[ID_TAG].value.toInt();//Copy the LoopID
+											tmpLoopTreeItemParams = tmpTreeItem->firstChild(NAME_TAG);
+											if(tmpLoopTreeItemParams)//Is it defined?
+											{
+												sTempLoopName = tmpLoopTreeItemParams->getValue();//Copy the LoopName
+												tmpLoopTreeItemParams = tmpTreeItem->firstChild(LOOP_NUMBER_TAG);
+												if(tmpLoopTreeItemParams)//Is it defined?
+												{
+													nTempLoopNumber = tmpLoopTreeItemParams->getValue().toInt();//Copy the LoopNumber
+													tmpLoopTreeItemParams = tmpTreeItem->firstChild(LOOP_AMOUNT_TAG);
+													if(tmpLoopTreeItemParams)//Is it defined?
+													{
+														nTempLoopCount = tmpLoopTreeItemParams->getValue().toInt();//Copy the LoopNumber
+														tmpLoopTreeItemParams = tmpTreeItem->firstChild(LOOP_TARGETBLOCKID_TAG);
+														if(tmpLoopTreeItemParams)//Is it defined?
+														{
+															nTempLoopTargetBlockID = tmpLoopTreeItemParams->getValue().toInt();//Copy the LoopNumber
+															tmpLoop = new cLoopStructure(nTempLoopID,nTempLoopNumber,nTempLoopTargetBlockID,sTempLoopName,nTempLoopCount);
+															bLoopParseResult = tmpBlock->insertLoop(tmpLoop);////&cLoopStructure(nTempLoopID,nTempLoopNumber,nTempLoopTargetBlockID,sTempLoopName,nTempLoopCount));//tmpLoop);
+														}
+													}
+												}
+											}
+										} 
+										if(bLoopParseResult == false)
+											qDebug() << __FUNCTION__ << "::Could not parse loop structure, false declared loop!";
+										tmpTreeItem = tmpTreeItem->nextSiblingTreeItem();
+									}
+								}
+							}
+						}
+						expStruct->insertBlock(tmpBlock);//Here we should make a copy to reserve and keep the memory space
+						bUpdateSucceeded = true;
+					}
+				}
+			}
+		}
+		if(!bUpdateSucceeded)
+		{
+			expStruct->resetExperiment();
+			return false;
+		}
+	}
+	return true;
 }
 
-bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst, cExperimentStructure *expStruct)
+/*bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst, cExperimentStructure *expStruct)
 {
 	int nNrOfBlockTrials = ExpBlockTrialsDomNodeLst.count();
 	expStruct->resetExperiment();
@@ -2135,7 +2455,7 @@ bool ExperimentManager::createExperimentStructureFromDomNodeList(const QDomNodeL
 	//if(tmpLoop)
 		//delete tmpLoop;
 	return true;
-}
+}*/
 
 bool ExperimentManager::createExperimentObjects()
 {
@@ -2150,38 +2470,40 @@ bool ExperimentManager::createExperimentObjects()
 	strList.append(ROOT_TAG);
 	strList.append(DECLARATIONS_TAG);
 	strList.append(OBJECT_TAG);
-	if (currentExperimentTree->getDocumentElements(strList,ExperimentObjectDomNodeList)>=0)
+	if (currentExperimentTree->getTreeElements(strList,ExperimentObjectTreeItemList)>=0)
 	{
-		int nNrOfObjects = ExperimentObjectDomNodeList.count();
+		int nNrOfObjects = ExperimentObjectTreeItemList.count();
 		if (nNrOfObjects > 0)
 		{
-			QDomNode tmpNode;
-			QDomElement tmpElement;
-			QString tmpString;
+			ExperimentTreeItem *pExpTreeItem;
+			QMap<QString, TreeItemDefinition> tTmpTreeItemDefs;
+			//QString tmpString;
 			for(int i=0;i<nNrOfObjects;i++)
 			{
-				tmpNode = ExperimentObjectDomNodeList.at(i);
-				if (tmpNode.isElement()) 
+				pExpTreeItem = ExperimentObjectTreeItemList.at(i);
+				if (pExpTreeItem) 
 				{
 					QString tmpString1 = "";
-					tmpElement = tmpNode.toElement();
-					if(!tmpElement.hasAttribute(ID_TAG))
+					tTmpTreeItemDefs = pExpTreeItem->getDefinitions();
+					if(!tTmpTreeItemDefs.contains(ID_TAG))
 						break;
-					tmpString1 =tmpElement.attribute(ID_TAG,"");//Correct ObjectID?
+					tmpString1 = tTmpTreeItemDefs[ID_TAG].value.toString();//Correct ObjectID?
 					if (tmpString1.isEmpty())
 						break;
 					//tmpElement = tmpNode.firstChildElement(tmpString);
 					int nID = tmpString1.toInt();//tmpElement.text().toInt();
 					if (!(nID >= 0))
 						break;
-					tmpString = CLASS_TAG;
-					tmpElement = tmpNode.firstChildElement(tmpString);
-					QString sClass = tmpElement.text();
+					pExpTreeItem = ExperimentObjectTreeItemList.at(i)->firstChild(CLASS_TAG);
+					if(pExpTreeItem == NULL)
+						break;
+					QString sClass = pExpTreeItem->getValue();
 					if (sClass.isEmpty())
 						break;
-					tmpString = NAME_TAG;
-					tmpElement = tmpNode.firstChildElement(tmpString);
-					QString sName = tmpElement.text();
+					pExpTreeItem = ExperimentObjectTreeItemList.at(i)->firstChild(NAME_TAG);
+					QString sName = "";
+					if(pExpTreeItem)
+						sName = pExpTreeItem->getValue();
 					//if (sName.isEmpty())
 					//	break;
 	

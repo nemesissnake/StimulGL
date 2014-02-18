@@ -124,9 +124,13 @@ void ExperimentTreeModel::recursiveRead(QDomNode dNode, ExperimentTreeItem *item
     while (!dNode.isNull());
 }
 
-void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex)
+void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex, ExperimentTreeItem *pParametersSection)
 {
-	ExperimentTreeItem *m_parent = itemFromIndex(parentIndex);
+	ExperimentTreeItem *m_parent;
+	if(pParametersSection == NULL)
+		m_parent = itemFromIndex(parentIndex);
+	else
+		m_parent = pParametersSection;
 
 	if ((m_parent != NULL) && (sName.isEmpty() == false))
 	{
@@ -195,9 +199,9 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 									if (sRelativeNames[0].compare(sTempString1, Qt::CaseInsensitive) == 0)
 									{
 										m_parent->child(j)->child(nValueIndex)->setValue(sValue);
-										ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j)->child(nValueIndex));
-										m_parent->child(j)->removeRow(nValueIndex);
-										m_parent->child(j)->insertRow(nValueIndex, item);								
+										//ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j)->child(nValueIndex));
+										//m_parent->child(j)->removeRow(nValueIndex);
+										//m_parent->child(j)->insertRow(nValueIndex, item);								
 										sTempString1 = ""; 
 										sTempString2 = "";
 										nValueIndex = -1;
@@ -205,6 +209,7 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 										//We break because then only the first parameter would be changed. 
 										//In a non-unique situation this would not be compatible, so you need to comment the below 2 lines.
 										bDoBreak = true;
+										test();
 										break;
 									}
 								}
@@ -213,6 +218,10 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 					}
 					else
 					{
+						if(j == (totalChilds-1))//last one?
+						{
+							bDoBreak = true;
+						}
 						continue;
 					}
 					if(bDoBreak)
@@ -239,6 +248,10 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 					}
 					else
 					{
+						if(j == (totalChilds-1))//last one?
+						{
+							bDoBreak = true;
+						}
 						continue;	
 					}
 					if(bDoBreak)
@@ -332,6 +345,32 @@ void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelInde
 	}
 }
 
+void ExperimentTreeModel::test()
+{
+
+	return;
+
+	QString fileName = "D:\\Sven.Gijsen\\Projects\\StimulGL\\Install\\examples\\Tutorials\\11_ExperimentStructure_Editing\\tempDoc.exml";
+	if(write(fileName))
+	{
+		if(reset())
+		{
+			QFile expFile(fileName);
+			if (expFile.open(QFile::ReadOnly | QFile::Text)) 
+			{
+				QString tmpString = expFile.readAll();			
+				expFile.close();
+				bool bResult = read(tmpString.toLatin1());
+				bResult = bResult;
+			}
+			else
+			{
+				qDebug() << __FUNCTION__ << "Could not open the file " << fileName;
+			}
+		}
+	}
+}
+
 bool ExperimentTreeModel::write(const QString &fileName)
 {
     QFile file(fileName);
@@ -398,10 +437,14 @@ void ExperimentTreeModel::recursiveWrite(QXmlStreamWriter &xml, ExperimentTreeIt
     }
 }
 
-QList<ExperimentTreeItem*> ExperimentTreeModel::getFilteredItemList(const QString &textToFind, const QStringList &filters)
+QList<ExperimentTreeItem*> ExperimentTreeModel::getFilteredItemList(const QString &textToFind, const QStringList &filters, ExperimentTreeItem *expTreeItem)
 {
     QList<ExperimentTreeItem*> list;
-    recursiveSearch(textToFind, filters, rootItem, list);
+	if(expTreeItem == NULL)
+	{
+		expTreeItem = rootItem;
+	}
+	recursiveSearch(textToFind, filters, expTreeItem, list);
     return list;
 }
 
@@ -411,16 +454,16 @@ void ExperimentTreeModel::recursiveSearch(const QString &textToFind, const QStri
     QString itValue = item->getValue();
     QString text = textToFind;
 
-    if (!filters.contains("CASE_SENSITIVE"))
+    if (!filters.contains(EXPERIMENTTREEMODEL_FILTER_CASE_SENSITIVE))
     {
         text = textToFind.toLower();
         itName = itName.toLower();
         itValue = itValue.toLower();
     }
 
-    if ((itName == text && filters.contains("TAGS")) ||
-        (itValue == text && filters.contains("VALUES")) ||
-        (item->getDefinition(textToFind).value.toString().size() > 0 && filters.contains("ATTRIBUTES")))
+    if ((itName == text && filters.contains(EXPERIMENTTREEMODEL_FILTER_TAGS)) ||
+        (itValue == text && filters.contains(EXPERIMENTTREEMODEL_FILTER_VALUES)) ||
+        (item->getDefinition(textToFind).value.toString().size() > 0 && filters.contains(EXPERIMENTTREEMODEL_FILTER_ATTRIBUTES)))
     {
         list.append(item);
     }
@@ -433,9 +476,7 @@ QModelIndex ExperimentTreeModel::getIndexByUID(const QString &uuid)
 {
     QModelIndex index;
     bool found = false;
-
     recursiveUidSearch(uuid, rootItem, found, index);
-
     return index;
 }
 
@@ -451,12 +492,66 @@ void ExperimentTreeModel::recursiveUidSearch(const QString &uuid, ExperimentTree
             recursiveUidSearch(uuid, item->child(i), found, index);
 }
 
-ExperimentTreeItem * ExperimentTreeModel::itemFromIndex(const QModelIndex &index) const
+ExperimentTreeItem *ExperimentTreeModel::itemFromIndex(const QModelIndex &index) const
 {
     return dynamic_cast<ExperimentTreeItem*>(QStandardItemModel::itemFromIndex(index));
 }
 
-int ExperimentTreeModel::getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList)
+int ExperimentTreeModel::getTreeElements(const QStringList &sElementTagName, QList<ExperimentTreeItem *> &lFoundTreeItems, ExperimentTreeItem *pSearchRootItem)
+{
+	if(doc == NULL)
+		return -1;
+
+	if(pSearchRootItem)
+		return getStaticTreeElements(sElementTagName,lFoundTreeItems,pSearchRootItem);
+	else
+		return getStaticTreeElements(sElementTagName,lFoundTreeItems,rootItem);
+}
+
+int ExperimentTreeModel::getStaticTreeElements(const QStringList &sElementTagName, QList<ExperimentTreeItem *> &lFoundTreeItems, ExperimentTreeItem *pSearchRootItem)
+{
+	if(pSearchRootItem == NULL)
+		return -1;
+	int nDepth = sElementTagName.count();
+	if(nDepth<=0)
+		return 0;
+
+	QStringList sTreeFilter;
+	sTreeFilter << EXPERIMENTTREEMODEL_FILTER_TAGS;
+	QList<ExperimentTreeItem *> currentStartSearchItems;
+	currentStartSearchItems << pSearchRootItem;
+
+	for (int i=0;i<nDepth;i++)
+	{
+		recursiveMultiSearch(sElementTagName.at(i), sTreeFilter, currentStartSearchItems, lFoundTreeItems);
+		if(i==(nDepth-1))
+			return lFoundTreeItems.count();
+
+		if(lFoundTreeItems.isEmpty() == false)
+		{
+			currentStartSearchItems = lFoundTreeItems;
+			lFoundTreeItems.clear();
+		}
+		else
+		{
+			return 0;
+		}
+	}	
+	return 0;
+}
+
+void ExperimentTreeModel::recursiveMultiSearch(const QString &textToFind, const QStringList &filters, QList<ExperimentTreeItem *> items, QList<ExperimentTreeItem*> &list)
+{
+	if(items.isEmpty())
+		return;
+	QList<ExperimentTreeItem *> resultingItemList;
+	for (int i = 0;i<items.count(); i++)
+	{
+		recursiveSearch(textToFind,filters,items.at(i),list);
+	}
+}
+
+/*int ExperimentTreeModel::getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList)
 {
 	if(doc == NULL)
 		return -1;
@@ -481,19 +576,7 @@ int ExperimentTreeModel::getDocumentElements(const QStringList &sElementTagName,
 		}
 	}
 	return ResultDomNodeList.count();		
-}
-
-//bool ExperimentTreeModel::read(QByteArray &byteArrayContent)
-//{
-//	bool bRetval = false;
-//	QBuffer buffer(&byteArrayContent);
-//	if(buffer.open(QIODevice::ReadOnly))
-//	{
-//		bRetval = read(&buffer);
-//		buffer.close();
-//	}
-//	return bRetval;
-//}
+}*/
 
 bool ExperimentTreeModel::reset()
 {
@@ -583,178 +666,5 @@ bool ExperimentTreeModel::read(QByteArray &byteArrayContent)
 			return false;
 		}
 	}
-	//Version available and compatible!
-	//clear();//Clears the tree widget by removing all of its items and selections.
-	//disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), this, SLOT(updateDomElement(QTreeWidgetItem*,int)));
-
-	/*
-
-	//Search and parse the "declarations" Elements
-	QDomElement child;
-	child = root->firstChildElement(DECLARATIONS_TAG);
-	if (!child.isNull())
-	{
-		QTreeWidgetItem *item = createItem(child, NULL);
-		item->setFlags(item->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEditable));//(item->flags() | Qt::ItemIsEditable);
-		item->setIcon(0, folderIcon);
-		item->setText(0, DECLARATIONS_TAG);
-		//bool folded = (child.attribute(FOLDED_TAG) != BOOL_NO_TAG);
-		setItemExpanded(item, true);//!folded);
-		while (!child.isNull()) 
-		{
-			parseRootElement(child,EXML_Declarations,item);
-			child = child.nextSiblingElement(DECLARATIONS_TAG);
-		}
-	}
-
-	//Search and parse the "actions" Elements
-	child = root->firstChildElement(ACTIONS_TAG);
-	if (!child.isNull())
-	{
-		QTreeWidgetItem *item = createItem(child, NULL);
-		item->setFlags(item->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEditable));//(item->flags() | Qt::ItemIsEditable);
-		item->setIcon(0, folderIcon);
-		item->setText(0, ACTIONS_TAG);
-		//bool folded = (child.attribute(FOLDED_TAG) != BOOL_NO_TAG);
-		setItemExpanded(item, true);//!folded);
-		while (!child.isNull()) 
-		{
-			parseRootElement(child,EXML_Actions,item);
-			child = child.nextSiblingElement(ACTIONS_TAG);
-		}
-	}
-	*/
-
-	//connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), this, SLOT(updateDomElement(QTreeWidgetItem*,int)));
 	return fillModel();
 }
-
-//bool ExperimentTreeModel::read(QIODevice *device)
-//{
-//	QString errorStr;
-//	int errorLine;
-//	int errorColumn;
-//	//Perform a global XML standard parse test
-//	if (!doc->setContent(device, true, &errorStr, &errorLine, &errorColumn))
-//	{
-//		//QMessageBox::information(window(), tr(MODULE_NAME),
-//		//	tr("Parse error at line %1, column %2:\n%3")
-//		//	.arg(errorLine)
-//		//	.arg(errorColumn)
-//		//	.arg(errorStr));
-//		qDebug() << tr("Parse error at line %1, column %2:\n%3").arg(errorLine).arg(errorColumn).arg(errorStr);
-//		return false;
-//	}
-//	//First we search for the Root Tag
-//	//QDomElement root = doc->documentElement();
-//	if (root->tagName() != ROOT_TAG) 
-//	{
-//		//QMessageBox::information(window(), tr(MODULE_NAME), tr("The file is not an EXML file."));
-//		qDebug() << tr("The file is not an EXML file.");
-//		return false;
-//	} 
-//	else//Found!
-//	{
-//		if (root->hasAttribute(VERSION_TAG))//Check whether we have a version tag defined
-//		{	
-//			QString strCurrentVersion = root->attribute(VERSION_TAG);
-//			QString strMinimalVersion = QString::number(nXMLCurrentClassVersion.major) + "." + QString::number(nXMLCurrentClassVersion.minor) + "." + QString::number(nXMLCurrentClassVersion.version) + "." + QString::number(nXMLCurrentClassVersion.build);
-//			QStringList lVersion = strCurrentVersion.split(".");
-//			nXMLDocumentVersion.major = lVersion[0].toInt();
-//			nXMLDocumentVersion.minor = lVersion[1].toInt();
-//			nXMLDocumentVersion.version = lVersion[2].toInt();
-//			nXMLDocumentVersion.build = lVersion[3].toInt();
-//			
-//			/*
-//			//Is the documents version compatible with this class?
-//			if(!MainAppInfo::isCompatibleVersion(strMinimalVersion,strCurrentVersion))
-//			{
-//				//QMessageBox::information(window(), tr(MODULE_NAME), tr("The defined EXML file is not compatible from EXML version %1.%2.%3.%4")
-//				//	.arg(nXMLCurrentClassVersion.major)
-//				//	.arg(nXMLCurrentClassVersion.minor)
-//				//	.arg(nXMLCurrentClassVersion.version)
-//				//	.arg(nXMLCurrentClassVersion.build));
-//				qDebug() << tr("The defined EXML file is not compatible from EXML version %1.%2.%3.%4").arg(nXMLCurrentClassVersion.major).arg(nXMLCurrentClassVersion.minor).arg(nXMLCurrentClassVersion.version).arg(nXMLCurrentClassVersion.build);
-//				return false;
-//			}
-//			*/
-//
-//		}
-//		else
-//		{
-//			//QMessageBox::information(window(), tr(MODULE_NAME), tr("The EXML file version could not be determined."));
-//			qDebug() << tr("The EXML file version could not be determined.");
-//			return false;
-//		}
-//	}
-//	//Version available and compatible!
-//	clear();//Clears the tree widget by removing all of its items and selections.
-//	//disconnect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), this, SLOT(updateDomElement(QTreeWidgetItem*,int)));
-//
-//	/*
-//
-//	//Search and parse the "declarations" Elements
-//	QDomElement child;
-//	child = root->firstChildElement(DECLARATIONS_TAG);
-//	if (!child.isNull())
-//	{
-//		QTreeWidgetItem *item = createItem(child, NULL);
-//		item->setFlags(item->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEditable));//(item->flags() | Qt::ItemIsEditable);
-//		item->setIcon(0, folderIcon);
-//		item->setText(0, DECLARATIONS_TAG);
-//		//bool folded = (child.attribute(FOLDED_TAG) != BOOL_NO_TAG);
-//		setItemExpanded(item, true);//!folded);
-//		while (!child.isNull()) 
-//		{
-//			parseRootElement(child,EXML_Declarations,item);
-//			child = child.nextSiblingElement(DECLARATIONS_TAG);
-//		}
-//	}
-//
-//	//Search and parse the "actions" Elements
-//	child = root->firstChildElement(ACTIONS_TAG);
-//	if (!child.isNull())
-//	{
-//		QTreeWidgetItem *item = createItem(child, NULL);
-//		item->setFlags(item->flags() & ~(Qt::ItemIsSelectable | Qt::ItemIsEditable));//(item->flags() | Qt::ItemIsEditable);
-//		item->setIcon(0, folderIcon);
-//		item->setText(0, ACTIONS_TAG);
-//		//bool folded = (child.attribute(FOLDED_TAG) != BOOL_NO_TAG);
-//		setItemExpanded(item, true);//!folded);
-//		while (!child.isNull()) 
-//		{
-//			parseRootElement(child,EXML_Actions,item);
-//			child = child.nextSiblingElement(ACTIONS_TAG);
-//		}
-//	}
-//	*/
-//
-//	//connect(this, SIGNAL(itemChanged(QTreeWidgetItem*,int)), this, SLOT(updateDomElement(QTreeWidgetItem*,int)));
-//	return true;
-//}
-
-//bool ExperimentTreeModel::write(QIODevice *device)
-//{
-//	return false;
-	
-	//const int IndentSize = 4;
-
-	//QTextStream out(device);
-	//QString a;
-	//QTextStream tempstr(&a);
-	//domDocument.save(tempstr, IndentSize);
-	//tempstr.flush();
-
-	//QTextStream out(device);
-	//doc.save(out, IndentSize);
-	//out.flush();
-
-	//QString test = tempstr.readAll();
-
-	//return true;
-//}
-
-//bool ExperimentTreeModel::show(QString sType)
-//{
-//	return true;
-//}

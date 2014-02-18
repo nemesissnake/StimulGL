@@ -26,7 +26,6 @@
 #include <QtScript/QScriptable>
 #include <QGraphicsView>
 #include <QGLWidget>
-#include <QDomNodeList>
 #include <QDesktopWidget>
 #include <QApplication>
 #include "Global.h"
@@ -46,6 +45,7 @@
 using namespace ExperimentManagerNameSpace;
 
 class cExperimentStructure;
+class ExperimentTreeItem;
 class ExperimentGraphicEditor;
 class ExperimentTreeModel;
 class ExperimentParameterWidgets;
@@ -112,7 +112,7 @@ public:
 
 	void cleanupSingletons();
 	bool cleanupExperiment();
-	bool fetchExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID);
+	bool fetchExperimentBlockParamsFromTreeItemList(const int &nBlockNumber, const int &nObjectID);
 	tParsedParameterList *getObjectBlockParamListById(int nID);
 	bool setExperimentObjectBlockParameterStructure(const int nObjectID, tParsedParameterList *expBlockTrialStruct);
 	bool getScriptContextValue(const QString &sScriptContextStatement, QVariant &sScriptContextReturnValue);
@@ -120,7 +120,7 @@ public:
 	bool getExperimentObjectScriptValue(const int &nObjectID,const QString &sKeyName,QScriptValue &sScriptValue);
 	bool setExperimentObjectFromScriptValue(const int &nObjectID,const QString &sKeyName,const QScriptValue &sScriptValue);
 
-	bool createExperimentStructure(QDomNodeList &blockTrialDomNodeLst, ExperimentTreeModel *expTreeModel = NULL, cExperimentStructure* cExpBlockTrialStruct = NULL);
+	bool createExperimentStructure(QList<ExperimentTreeItem*> &lExpTreeItems, ExperimentTreeModel *expTreeModel = NULL, cExperimentStructure* cExpBlockTrialStruct = NULL);
 
 	template< typename T > T* getExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
 	{
@@ -382,8 +382,10 @@ private:
 	bool prePassiveParseExperiment();
 	bool configureExperiment();
 	bool createExperimentObjects();
-	bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst, cExperimentStructure *expStruct);
-	int createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
+	//bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst, cExperimentStructure *expStruct);
+	bool createExperimentStructureFromTreeItemList(const QList<ExperimentTreeItem*> &ExpBlockTrialsTreeItems, cExperimentStructure *expStruct);
+	//int createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
+	int createExperimentBlockParamsFromTreeItemList(const int &nBlockNumber, const int &nObjectID, QList<ExperimentTreeItem*> *pExpBlockTrialsTreeItems = NULL, tParsedParameterList *hParams = NULL);
 	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);
 	bool initializeExperiment(bool bFinalize = false);
 	bool finalizeExperimentObjects();
@@ -398,8 +400,8 @@ private:
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
 	
 	ExperimentParameterWidgets *expParamWidgets;
-	QDomNodeList ExperimentObjectDomNodeList;
-	QDomNodeList ExperimentBlockTrialsDomNodeList;
+	QList<ExperimentTreeItem*> ExperimentObjectTreeItemList;
+	QList<ExperimentTreeItem*> ExperimentBlockTrialsTreeItemList;
 	cExperimentStructure *cExperimentBlockTrialStructure;
 	QList<objectElement> lExperimentObjectList;
 	ExperimentTreeModel *currentExperimentTree;

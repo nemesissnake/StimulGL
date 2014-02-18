@@ -50,9 +50,11 @@ class ExperimentTreeItem : public QStandardItem
         QVariant getType() const;
         QVariant getDescription() const;
         QVariant getDefaultValue() const;
-		ExperimentTreeItem * child(int row) const { return dynamic_cast<ExperimentTreeItem*>(QStandardItem::child(row,0)); }
+		ExperimentTreeItem *child(int row) const { return dynamic_cast<ExperimentTreeItem*>(QStandardItem::child(row,0)); }
+		ExperimentTreeItem *firstChild(const QString &sName);
         int childCount() const { return rowCount(); }
-        ExperimentTreeItem * parent() const { return dynamic_cast<ExperimentTreeItem*>(QStandardItem::parent()); }
+        ExperimentTreeItem *parent() const { return dynamic_cast<ExperimentTreeItem*>(QStandardItem::parent()); }
+		ExperimentTreeItem *nextSiblingTreeItem();
         int row() const { return QStandardItem::row(); }
 
     private:

@@ -116,9 +116,28 @@ int ExperimentTreeItem::getDefinitionsCount()
 	return m_definitions.size(); 
 }
 
-//bool TreeItem::existDefinition(const QString &defName) const
-//{
-//	if (m_definitions.key(defName) != "")
-//		return true;
-//   return false;
-//}
+ExperimentTreeItem *ExperimentTreeItem::firstChild(const QString &sName)
+{
+	if(rowCount() <= 0)
+		return NULL;
+	QStandardItem *tmpItem;
+	int nRowCount = QStandardItem::rowCount();
+	for(int i=0;i<nRowCount;i++)
+	{
+		if(QStandardItem::child(i,0)->text().compare(sName,Qt::CaseInsensitive) == 0)
+		{
+			return dynamic_cast<ExperimentTreeItem*>(QStandardItem::child(i,0));
+		}
+	}
+	return NULL;
+}
+
+ExperimentTreeItem *ExperimentTreeItem::nextSiblingTreeItem()
+{
+	int nRequestedRow = QStandardItem::row() + 1;
+	if(QStandardItem::parent()->rowCount() > nRequestedRow)
+	{
+		return dynamic_cast<ExperimentTreeItem*>(QStandardItem::parent()->child(nRequestedRow,0));
+	}
+	return NULL;
+}

@@ -135,6 +135,9 @@ void ExperimentParameterWidgets::createExperimentParameterWidgets()
 					}
 				}
 			}
+
+			itParamDefs->wWidget->configurePropertyEditSignaling(true);
+
 			//bResult = connect(itParamDefs->wWidget->getVariantPropertyFactory(), SIGNAL(PropertyWidgetChanged(QWidget*, const QString&)), this, SIGNAL(ParameterWidgetChanged(QWidget*, const QString&)),Qt::UniqueConnection);
 		}
 	}
@@ -155,16 +158,6 @@ ExperimentParameterVisualizer *ExperimentParameterWidgets::getExperimentParamete
 			}
 			return NULL;
 		}		
-	}
-	return NULL;
-}
-
-QWidget *ExperimentParameterWidgets::getExperimentParameterWidgetSubControl(const QString &sCollectionName, const QString &sParameterName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier)
-{
-	ExperimentParameterVisualizer *tmpParamVis = getExperimentParameterWidget(sCollectionName);
-	if(tmpParamVis)
-	{
-		return tmpParamVis->getParameterEditWidget(sParameterName, sDerivedPrefixName, sReturnUniquePropertyIdentifier);
 	}
 	return NULL;
 }
