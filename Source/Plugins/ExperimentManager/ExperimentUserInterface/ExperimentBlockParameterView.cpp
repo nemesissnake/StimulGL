@@ -553,7 +553,40 @@ void ExperimentBlockParameterView::cellItemEditFinished(const QString& sParamNam
 		int nBlockID = hashRowIndexBlockId[nRow];
 		emit onItemEditFinished(nBlockID,nObjectID,sParamName,sNewValue);
 		QTableWidgetItem *tmpItem = new QTableWidgetItem(tr("%1").arg(resolveParameterValueType(sNewValue, hashObjectParameterColumnIndex[hashColumnIndexObjectIDParamName[nColumn]].strcParamDef->eType, true).toString()));
-		this->setItem(nRow,nColumn, tmpItem);
+		tmpItem->setTextColor(cChangedParameter);
+		this->setItem(nRow,nColumn, tmpItem);	
+
+		//Fill-in remaining default and buffered Parameter values. We can expect here that the Block Numbers are ordered!
+		//int nColumnCount = columnCount();
+		if(nColumn > BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT)
+		{
+		//	int nRowCount = rowCount();
+		//	ExperimentParameterDefinitionStrc *tmpExpParDefStruct = NULL;
+		//	QString sLatestValue;
+		//	for (int c=(BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT);c<nColumnCount;c++)
+		//	{
+		//		sLatestValue = "";
+		//		for (int r=0;r<nRowCount;r++)
+		//		{
+		//			if(item(r,c) == NULL)
+		//			{
+		//				if(r==0)
+		//				{
+		//					tmpExpParDefStruct = hashObjectParameterColumnIndex[hashColumnIndexObjectIDParamName[c]].strcParamDef;
+		//					if(tmpExpParDefStruct)
+		//						sLatestValue = tmpExpParDefStruct->sDefaultValue;
+		//				}
+		//				tmpItem = new QTableWidgetItem(sLatestValue);
+		//				tmpItem->setTextColor(cInheritedParameter);
+		//				this->setItem(r,c,tmpItem);
+		//			}
+		//			else
+		//			{
+		//				sLatestValue = item(r,c)->text();
+		//			}
+		//		}
+		//	}
+		}
 	}
 }
 

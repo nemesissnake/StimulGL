@@ -409,6 +409,7 @@ bool ExperimentParameterVisualizer::registerDerivedParameterProperty(const prope
 	propertyParameterValueDef tmpParamValueDef;
 	tmpParamValueDef.vType = baseVPropertyDef.vType;
 	tmpParamValueDef.vProperty = derivedProperty;
+	tmpParamValueDef.bIsDerived = true;
 	lParameterPropertyNamedHash.insertMulti(sUniqueDerivedPropertyIdentifier,tmpParamValueDef);
 	const ExperimentParameterDefinitionStrc *tmpExpParStruct = lVariantPropertyDefinitionHash[baseVPropertyDef.vProperty];
 	lVariantPropertyDefinitionHash.insertMulti(derivedProperty,tmpExpParStruct);
@@ -529,6 +530,7 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 	propertyParameterValueDef tmpParamValueDef;
 	tmpParamValueDef.vType = varType;
 	tmpParamValueDef.vProperty = tmpVariantProperty;
+	tmpParamValueDef.bIsDerived = false;
 	lParameterPropertyNamedHash.insertMulti(expParamDef->sName,tmpParamValueDef);
 	lVariantPropertyDefinitionHash.insertMulti(tmpVariantProperty,expParamDef);
 
@@ -637,16 +639,30 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 	return parseDependencies();
 }
 
-void ExperimentParameterVisualizer::itemEditedHandler(const QString &sParamName, const QString &sNewValue)
+void ExperimentParameterVisualizer::itemEditedHandler(const QString &sParamName, const QString &sNewValue, const bool &bIsDerivedProperty)
 {
-	emit rootItemEditFinished(sParamName,sNewValue);
-	emit derivedItemEditFinished(sParamName, sNewValue);
+	if(bIsDerivedProperty)
+		emit derivedItemEditFinished(sParamName, sNewValue);
+	else
+		emit rootItemEditFinished(sParamName,sNewValue);
 }
 
 void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, const QVariant &value)
 {
 	Q_UNUSED(value);
-	if(bAutoDepencyParsing)
+
+	bool bIsDerivedProperty = false;
+	QList<propertyParameterValueDef> tmpParamValueDefList = lParameterPropertyNamedHash.values(property->propertyId());
+	if(tmpParamValueDefList.count() > 0)
+	{
+		bIsDerivedProperty = tmpParamValueDefList.at(0).bIsDerived;
+	}
+	//else if(tmpParamValueDefList.count() <> 1)
+	//{
+	//	qDebug() << __FUNCTION__ << "Could not retrieve a single unique property definition (Derived setting), number of results = " << QString::number(tmpParamValueDefList.count());
+	//}
+
+	if(bAutoDepencyParsing && (bIsDerivedProperty==false))
 		parseDependencies((QtVariantProperty*) property);
 	QList<const ExperimentParameterDefinitionStrc*> lParamDefs = lVariantPropertyDefinitionHash.values(property);
 	foreach(const ExperimentParameterDefinitionStrc* paramDef, lParamDefs)
@@ -657,14 +673,14 @@ void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, c
 		{
 			if(paramDef->Restriction.lAllowedValues.isEmpty() == true)
 			{				
-				itemEditedHandler(QString(paramDef->sName), value.toString());
+				itemEditedHandler(QString(paramDef->sName), value.toString(), bIsDerivedProperty);
 			}
 			else
 			{
 				int nIndex = value.toInt();
 				if(paramDef->Restriction.lAllowedValues.count() > nIndex)
 				{
-					itemEditedHandler(QString(paramDef->sName), paramDef->Restriction.lAllowedValues.at(nIndex));
+					itemEditedHandler(QString(paramDef->sName), paramDef->Restriction.lAllowedValues.at(nIndex), bIsDerivedProperty);
 				}
 				else
 				{
@@ -674,39 +690,39 @@ void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, c
 		}
 		else if(paramDef->eType == Experiment_ParameterType_StringArray)
 		{
-			itemEditedHandler(QString(paramDef->sName), value.toString());
+			itemEditedHandler(QString(paramDef->sName), value.toString(), bIsDerivedProperty);
 		}
 		else if(paramDef->eType == Experiment_ParameterType_Color)
 		{
-			itemEditedHandler(QString(paramDef->sName), value.toString());
+			itemEditedHandler(QString(paramDef->sName), value.toString(), bIsDerivedProperty);
 		}
 		else if(paramDef->eType == Experiment_ParameterType_Integer)
 		{
-			itemEditedHandler(QString(paramDef->sName), value.toString());
+			itemEditedHandler(QString(paramDef->sName), value.toString(), bIsDerivedProperty);
 		}
 		else if(paramDef->eType == Experiment_ParameterType_Float)
 		{
-			itemEditedHandler(QString(paramDef->sName), value.toString());
+			itemEditedHandler(QString(paramDef->sName), value.toString(), bIsDerivedProperty);
 		}
 		else if(paramDef->eType == Experiment_ParameterType_Double)
 		{
-			itemEditedHandler(QString(paramDef->sName), value.toString());
+			itemEditedHandler(QString(paramDef->sName), value.toString(), bIsDerivedProperty);
 		}
 		else if(paramDef->eType == Experiment_ParameterType_Boolean)
 		{
-			itemEditedHandler(QString(paramDef->sName), value.toString());
+			itemEditedHandler(QString(paramDef->sName), value.toString(), bIsDerivedProperty);
 		}
 		else if(paramDef->eType == Experiment_ParameterType_RotationDirection)
 		{
-			itemEditedHandler(QString(paramDef->sName), QString::number((int)RotationDirectionPropertyWidget::rotationDirectionEnum(value.toString())));
+			itemEditedHandler(QString(paramDef->sName), QString::number((int)RotationDirectionPropertyWidget::rotationDirectionEnum(value.toString())), bIsDerivedProperty);
 		}
 		else if(paramDef->eType == Experiment_ParameterType_MovementDirection)
 		{
-			itemEditedHandler(QString(paramDef->sName), QString::number((int)MovementDirectionPropertyWidget::movementDirectionEnum(value.toString())));
+			itemEditedHandler(QString(paramDef->sName), QString::number((int)MovementDirectionPropertyWidget::movementDirectionEnum(value.toString())), bIsDerivedProperty);
 		}
 		else if(paramDef->eType == Experiment_ParameterType_EccentricityDirection)
 		{
-			itemEditedHandler(QString(paramDef->sName), QString::number((int)EccentricityDirectionPropertyWidget::eccentricityDirectionEnum(value.toString())));
+			itemEditedHandler(QString(paramDef->sName), QString::number((int)EccentricityDirectionPropertyWidget::eccentricityDirectionEnum(value.toString())), bIsDerivedProperty);
 		}
 		else
 		{

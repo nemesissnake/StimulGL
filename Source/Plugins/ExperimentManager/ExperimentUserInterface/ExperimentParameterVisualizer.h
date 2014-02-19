@@ -75,10 +75,12 @@ private:
 	{
 		QtVariantProperty* vProperty;
 		QVariant::Type vType;
+		bool bIsDerived;
 		propertyParameterValueDef()
 		{
 			vProperty = NULL;
 			vType = QVariant::Invalid;
+			bIsDerived = false;
 		}
 	};
 
@@ -107,7 +109,7 @@ public slots:
 
 private slots:
 	void propertyValueChanged(QtProperty *property, const QVariant &value);
-	void itemEditedHandler(const QString &sParamName, const QString &sNewValue);
+	void itemEditedHandler(const QString &sParamName, const QString &sNewValue, const bool &bIsDerivedProperty);
 
 private:
 	Ui::ExperimentParameterVisualizer *ui;

@@ -54,7 +54,7 @@ class ExperimentTreeModel : public QStandardItemModel
 		int getTreeElements(const QStringList &sElementTagName, QList<ExperimentTreeItem *> &lFoundTreeItems, ExperimentTreeItem *pSearchRootItem = NULL);
 		static int getStaticTreeElements(const QStringList &sElementTagName, QList<ExperimentTreeItem *> &lFoundTreeItems, ExperimentTreeItem *pSearchRootItem);
 		
-		void test();
+		//void test();
 
     public slots:
         void saveNewData(QWidget *widgetContainer, const QModelIndex &parentIndex);

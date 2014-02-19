@@ -86,6 +86,7 @@ private slots:
     void insertSubnode();
     void removeNode();
     void addDefinition();
+	void toggleBlocksView();
     void saveNewData();
 	void saveNewData(const QString &sName, const QString &sValue);
 	void setViewFilter(const TreeFilterSettings &newViewSettings);
@@ -129,10 +130,13 @@ private:
 	QAction *actionAdd_Subnode;
 	QAction *action_Remove_Node;
 	QAction *actionAdd_Attribute;
+	QAction *actionToggleBlocksView;
 	QMenu *menuFile;
 	QMenu *menuEdit;
+	QMenu *menuView;
 	QToolButton *buttonFile;
 	QToolButton *buttonEdit;
+	QToolButton *buttonView;
 
 	TreeFilterSettings currentViewSettings;
 	QModelIndex selectedIndex;

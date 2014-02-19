@@ -70,8 +70,11 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	actionAdd_Subnode = NULL;
 	action_Remove_Node = NULL;
 	actionAdd_Attribute = NULL;
+	actionToggleBlocksView = NULL;
 	menuFile = NULL;
 	menuEdit = NULL;
+	menuView = NULL;
+	buttonView = NULL;
 	buttonFile = NULL;
 	buttonEdit = NULL;
 	expManager = NULL;
@@ -119,6 +122,10 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 		delete menuFile;
 	if(menuEdit)
 		delete menuEdit;
+	if(menuView)
+		delete menuView;
+	if(buttonView)
+		delete buttonView;
 	if(buttonFile)
 		delete buttonFile;
 	if(buttonEdit)
@@ -169,6 +176,7 @@ void ExperimentGraphicEditor::configureActions(bool bCreate)
 		actionAdd_Subnode = new QAction("Add sub-Node", this);
 		action_Remove_Node = new QAction("Remove Node", this);
 		actionAdd_Attribute = new QAction("Add Node Attribute", this);
+		actionToggleBlocksView = new QAction("Toggle Blocks View", this);
 	}
 	else
 	{
@@ -221,6 +229,11 @@ void ExperimentGraphicEditor::configureActions(bool bCreate)
 		{
 			delete actionAdd_Attribute;
 			actionAdd_Attribute = NULL;
+		}
+		if(actionToggleBlocksView)
+		{
+			delete actionToggleBlocksView;
+			actionToggleBlocksView = NULL;
 		}
 	}
 }
@@ -285,7 +298,7 @@ void ExperimentGraphicEditor::setupMenuAndActions()
 	buttonEdit=new QToolButton(this);
 	buttonEdit->setText("Edit ");
 	buttonEdit->setPopupMode(QToolButton::InstantPopup);
-	menuEdit = new QMenu();//FileButton
+	menuEdit = new QMenu();//EditButton
 	menuEdit->addAction(actionFind);
 	menuEdit->addAction(actionAdd_Node);
 	menuEdit->addAction(actionAdd_Subnode);
@@ -293,6 +306,14 @@ void ExperimentGraphicEditor::setupMenuAndActions()
 	menuEdit->addAction(actionAdd_Attribute);
 	buttonEdit->setMenu(menuEdit);
 	toolBar->addWidget(buttonEdit);
+	//View menu///
+	buttonView = new QToolButton(this);
+	buttonView->setText("View ");
+	buttonView->setPopupMode(QToolButton::InstantPopup);
+	menuView = new QMenu();//ViewButton
+	menuView->addAction(actionToggleBlocksView);
+	buttonView->setMenu(menuView);
+	toolBar->addWidget(buttonView);
 	
 	connect(actionNew_File, SIGNAL(triggered()), this, SLOT(newFile()));
 	connect(action_Open_File, SIGNAL(triggered()), this, SLOT(openFile()));
@@ -304,6 +325,7 @@ void ExperimentGraphicEditor::setupMenuAndActions()
 	connect(actionAdd_Subnode, SIGNAL(triggered()), this, SLOT(insertSubnode()));
 	connect(action_Remove_Node, SIGNAL(triggered()), this, SLOT(removeNode()));
 	connect(actionAdd_Attribute, SIGNAL(triggered()), this, SLOT(addDefinition()));
+	connect(actionToggleBlocksView, SIGNAL(triggered()), this, SLOT(toggleBlocksView()));
 }
 
 void ExperimentGraphicEditor::setupLayout()
@@ -346,6 +368,7 @@ void ExperimentGraphicEditor::newFile()
 		actionAdd_Subnode->setEnabled(true);
 		action_Remove_Node->setEnabled(true);
 		actionFind->setEnabled(true);
+		actionToggleBlocksView->setEnabled(true);
 		pExpTreeModel = &loadedExpTreeModel;
 		connect(pExpTreeModel, SIGNAL(modelModified()), this, SLOT(setNewModel()));
 		//rootItem = new ExperimentTreeItem("[Root node]");
@@ -371,7 +394,8 @@ void ExperimentGraphicEditor::openFile()
 			actionAdd_Node->setEnabled(true);
 			actionAdd_Subnode->setEnabled(true);
 			action_Remove_Node->setEnabled(true);
-			actionFind->setEnabled(true);			
+			actionFind->setEnabled(true);	
+			actionToggleBlocksView->setEnabled(true);
 			
 			QString tmpString = expFile.readAll();			
 			expFile.close();
@@ -412,6 +436,7 @@ void ExperimentGraphicEditor::closeFile()
 	actionAdd_Subnode->setDisabled(true);
 	action_Remove_Node->setDisabled(true);
 	actionFind->setDisabled(true);
+	actionToggleBlocksView->setDisabled(true);
 	updateWindowTitle();
 }
 
@@ -1302,6 +1327,11 @@ void ExperimentGraphicEditor::removeNode()
 		if (originalIndex.isValid())
 			pExpTreeModel->removeRow(originalIndex.row(), originalIndex.parent());
 	}
+}
+
+void ExperimentGraphicEditor::toggleBlocksView()
+{
+	bShowTreeView = !bShowTreeView;
 }
 
 void ExperimentGraphicEditor::addDefinition()

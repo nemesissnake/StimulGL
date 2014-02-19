@@ -209,7 +209,6 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 										//We break because then only the first parameter would be changed. 
 										//In a non-unique situation this would not be compatible, so you need to comment the below 2 lines.
 										bDoBreak = true;
-										test();
 										break;
 									}
 								}
@@ -345,31 +344,31 @@ void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelInde
 	}
 }
 
-void ExperimentTreeModel::test()
-{
-
-	return;
-
-	QString fileName = "D:\\Sven.Gijsen\\Projects\\StimulGL\\Install\\examples\\Tutorials\\11_ExperimentStructure_Editing\\tempDoc.exml";
-	if(write(fileName))
-	{
-		if(reset())
-		{
-			QFile expFile(fileName);
-			if (expFile.open(QFile::ReadOnly | QFile::Text)) 
-			{
-				QString tmpString = expFile.readAll();			
-				expFile.close();
-				bool bResult = read(tmpString.toLatin1());
-				bResult = bResult;
-			}
-			else
-			{
-				qDebug() << __FUNCTION__ << "Could not open the file " << fileName;
-			}
-		}
-	}
-}
+//void ExperimentTreeModel::test()
+//{
+//
+//	return;
+//
+//	QString fileName = "D:\\Sven.Gijsen\\Projects\\StimulGL\\Install\\examples\\Tutorials\\11_ExperimentStructure_Editing\\tempDoc.exml";
+//	if(write(fileName))
+//	{
+//		if(reset())
+//		{
+//			QFile expFile(fileName);
+//			if (expFile.open(QFile::ReadOnly | QFile::Text)) 
+//			{
+//				QString tmpString = expFile.readAll();			
+//				expFile.close();
+//				bool bResult = read(tmpString.toLatin1());
+//				bResult = bResult;
+//			}
+//			else
+//			{
+//				qDebug() << __FUNCTION__ << "Could not open the file " << fileName;
+//			}
+//		}
+//	}
+//}
 
 bool ExperimentTreeModel::write(const QString &fileName)
 {
