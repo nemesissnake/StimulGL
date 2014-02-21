@@ -652,7 +652,8 @@ void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, c
 	Q_UNUSED(value);
 
 	bool bIsDerivedProperty = false;
-	QList<propertyParameterValueDef> tmpParamValueDefList = lParameterPropertyNamedHash.values(property->propertyId());
+	QString sPropertyID = property->propertyId();
+	QList<propertyParameterValueDef> tmpParamValueDefList = lParameterPropertyNamedHash.values(sPropertyID);
 	if(tmpParamValueDefList.count() > 0)
 	{
 		bIsDerivedProperty = tmpParamValueDefList.at(0).bIsDerived;

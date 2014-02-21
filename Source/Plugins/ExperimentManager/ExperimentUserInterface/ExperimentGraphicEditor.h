@@ -65,7 +65,6 @@ public:
 public slots:
 	void setExperimentManager(ExperimentManager *pExpManager);
 	bool setExperimentTreeModel(ExperimentTreeModel *expModel = NULL);
-	bool saveNewData(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue);
 		
 //protected slots:
 //	void closeEvent(QCloseEvent *event);
@@ -100,7 +99,6 @@ private:
 	void setupMenuAndActions();
 	void setupLayout();
 	void setupFilterModel();
-	QList<ExperimentStructuresNameSpace::strcExperimentObject> getDefinedExperimentObjectInfoList(ExperimentTreeItem *objItem);
 	//bool setModelParameterValue(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue);
 
 	bool bShowTreeView;

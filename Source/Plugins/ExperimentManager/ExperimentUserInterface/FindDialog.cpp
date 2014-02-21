@@ -23,7 +23,6 @@
 FindDialog::FindDialog(QWidget *parent) : QWidget(parent), ui(new Ui::FindDialog)
 {
     setAttribute(Qt::WA_DeleteOnClose);
-
     ui->setupUi(this);
     connect(ui->findButton, SIGNAL(clicked()), this, SLOT(findSlot()));
     connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(close()));

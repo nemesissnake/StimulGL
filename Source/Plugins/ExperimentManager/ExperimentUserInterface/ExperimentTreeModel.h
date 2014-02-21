@@ -22,7 +22,9 @@
 #include <QStandardItemModel>
 #include <QDomDocument>
 #include "ExperimentGraphicEditor_Global.h"
+#include "ExperimentStructures.h"
 
+#define EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID		-1
 #define EXPERIMENTTREEMODEL_FILTER_TAGS				"TAGS"
 #define EXPERIMENTTREEMODEL_FILTER_VALUES			"VALUES"
 #define EXPERIMENTTREEMODEL_FILTER_ATTRIBUTES		"ATTRIBUTES"
@@ -53,12 +55,14 @@ class ExperimentTreeModel : public QStandardItemModel
 		//int getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList);
 		int getTreeElements(const QStringList &sElementTagName, QList<ExperimentTreeItem *> &lFoundTreeItems, ExperimentTreeItem *pSearchRootItem = NULL);
 		static int getStaticTreeElements(const QStringList &sElementTagName, QList<ExperimentTreeItem *> &lFoundTreeItems, ExperimentTreeItem *pSearchRootItem);
-		
-		//void test();
+		QList<ExperimentStructuresNameSpace::strcExperimentObject> getDefinedExperimentObjectInfoList(ExperimentTreeItem *objItem);
+
+		bool removeExperimentBlocks(const QList<int> &lBlockIDs);
 
     public slots:
         void saveNewData(QWidget *widgetContainer, const QModelIndex &parentIndex);
 		void saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex, ExperimentTreeItem *pParametersSection = NULL);
+		bool saveNewData(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue);
 
     private:
 		void recursiveRead(QDomNode dNode, ExperimentTreeItem *item);
@@ -67,6 +71,8 @@ class ExperimentTreeModel : public QStandardItemModel
         static void recursiveMultiSearch(const QString &textToFind, const QStringList &filters, QList<ExperimentTreeItem *> items, QList<ExperimentTreeItem*> &list);
 		void recursiveUidSearch(const QString &uuid, ExperimentTreeItem *item, bool found, QModelIndex &index);
 		bool fillModel();
+
+		ExperimentTreeItem* getExperimentBlockTreeItem(const int &nBlockID);
 
 		QDomDocument *doc;
 		QDomElement *root;

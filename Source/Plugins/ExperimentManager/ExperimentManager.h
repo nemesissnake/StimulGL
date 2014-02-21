@@ -120,7 +120,7 @@ public:
 	bool getExperimentObjectScriptValue(const int &nObjectID,const QString &sKeyName,QScriptValue &sScriptValue);
 	bool setExperimentObjectFromScriptValue(const int &nObjectID,const QString &sKeyName,const QScriptValue &sScriptValue);
 
-	bool createExperimentStructure(QList<ExperimentTreeItem*> &lExpTreeItems, ExperimentTreeModel *expTreeModel = NULL, cExperimentStructure* cExpBlockTrialStruct = NULL);
+	static bool createExperimentStructure(QList<ExperimentTreeItem*> &lExpTreeItems, ExperimentTreeModel *expTreeModel = NULL, cExperimentStructure* cExpBlockTrialStruct = NULL);
 
 	template< typename T > T* getExperimentObjectVariabelePointer(const int &nObjectID,const QString &sKeyName)
 	{
@@ -383,7 +383,7 @@ private:
 	bool configureExperiment();
 	bool createExperimentObjects();
 	//bool createExperimentStructureFromDomNodeList(const QDomNodeList &ExpBlockTrialsDomNodeLst, cExperimentStructure *expStruct);
-	bool createExperimentStructureFromTreeItemList(const QList<ExperimentTreeItem*> &ExpBlockTrialsTreeItems, cExperimentStructure *expStruct);
+	static bool createExperimentStructureFromTreeItemList(const QList<ExperimentTreeItem*> &ExpBlockTrialsTreeItems, cExperimentStructure *expStruct);
 	//int createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst = NULL, tParsedParameterList *hParams = NULL);
 	int createExperimentBlockParamsFromTreeItemList(const int &nBlockNumber, const int &nObjectID, QList<ExperimentTreeItem*> *pExpBlockTrialsTreeItems = NULL, tParsedParameterList *hParams = NULL);
 	bool connectExperimentObjects(bool bDisconnect = false, int nObjectID = -1);

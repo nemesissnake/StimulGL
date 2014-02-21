@@ -979,7 +979,7 @@ bool ExperimentManager::createExperimentStructure(QList<ExperimentTreeItem*> &lE
 	strList.append(BLOCKTRIALS_TAG);
 	strList.append(BLOCK_TAG);
 
-	if(currentExperimentTree->getTreeElements(strList, lExpTreeItems) > 0)
+	if(ExperimentTreeModel::getStaticTreeElements(strList, lExpTreeItems,expTreeModel->getRootItem()) > 0)
 	{
 		if(createExperimentStructureFromTreeItemList(lExpTreeItems, cExpBlockTrialStruct))		
 		{

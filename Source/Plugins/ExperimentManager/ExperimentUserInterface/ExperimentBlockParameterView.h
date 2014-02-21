@@ -23,7 +23,6 @@
 #include "ExperimentStructures.h"
 #include "ExperimentParameterDefinition.h"
 
-#define BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID			-1
 #define BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER		";"
 #define BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT		4
 //#define BLOCKPARAMVIEW_BLOCKNUMBER_COLUMNINDEX		0
@@ -32,6 +31,7 @@
 #define BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX		2
 #define BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX		3
 
+class ExperimentTreeModel;
 class ExperimentTreeItem;
 class cExperimentStructure;
 
@@ -41,10 +41,10 @@ class ExperimentBlockParameterView : public QTableWidget
 
 signals:
 	void destroyed(QWidget*);
-	void onItemEditFinished(int nBlockID, int nObjectID, QString sParamName, QString sParamValue);
+	//void onItemEditFinished(int nBlockID, int nObjectID, QString sParamName, QString sParamValue);
 
 public:
-	ExperimentBlockParameterView(QWidget *parent = NULL);
+	ExperimentBlockParameterView(QWidget *parent = NULL, ExperimentTreeModel *pExperimentTreeModel = NULL);
 	~ExperimentBlockParameterView();
 
 	bool parseExperimentStructure(cExperimentStructure *ExpStruct);
@@ -58,6 +58,8 @@ private slots:
 	void cellItemChanged(const int &nRow, const int &nColumn);
 	void cellItemEditFinished(const QString&sParamName, const QString&sNewValue);
 	//void widgetItemChanged(QWidget *pWidget, const QString &sNewValue);	
+	void showContextMenu(const QPoint& pos);
+	void reparseModel();
 
 protected:
 	void currentChanged(const QModelIndex &current, const QModelIndex &previous);
@@ -105,6 +107,7 @@ private:
 		}
 	};
 
+	ExperimentTreeModel *pExpTreeModel;
 	cExperimentStructure *parsedExpStruct;
 	QStringList lColumnHeaders;	
 	QStringList lVerticalHeaders;	

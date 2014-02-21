@@ -547,7 +547,7 @@ private:
 	bool prepareStartBlock();
 	int getBlockIndexByID(const int &nBlockID) const;
 	int getCurrentBlockIndex() const;
-
+	
 	QSharedDataPointer<cExperimentStructure_SharedData> pSharedData;
 };
 

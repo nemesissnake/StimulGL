@@ -20,18 +20,133 @@
 #include "ExperimentParameterWidgets.h"
 #include "ParameterPropertyExtensions.h"
 #include "ExperimentParameterVisualizer.h"
-#include "../ExperimentStructures.h"
+#include "../ExperimentManager.h"
+//#include "../ExperimentStructures.h"
 #include "../Global.h"
 #include "ExperimentTreeItem.h"
 #include "ExperimentTreeModel.h"
+#include <QMenu>
 
-ExperimentBlockParameterView::ExperimentBlockParameterView(QWidget *parent) : QTableWidget(parent)
+ExperimentBlockParameterView::ExperimentBlockParameterView(QWidget *parent, ExperimentTreeModel *pExperimentTreeModel) : QTableWidget(parent), pExpTreeModel(pExperimentTreeModel)
 {
 	parsedExpStruct = NULL;
 	bEditHandlingEnabled = false;
 	cChangedParameter.setNamedColor("red");
 	cInheritedParameter.setNamedColor("grey");
 	configureEditHandling(true);
+	setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+	if(pExpTreeModel)
+	{
+		connect(pExpTreeModel, SIGNAL(modelModified()), this, SLOT(reparseModel()));
+		reparseModel();
+	}
+}
+
+void ExperimentBlockParameterView::reparseModel()
+{
+	cExperimentStructure *tmpExpStructure = new cExperimentStructure();
+	QList<ExperimentTreeItem*> tmpFoundExpTreeItemList;
+	bool bResult = ExperimentManager::createExperimentStructure(tmpFoundExpTreeItemList,pExpTreeModel,tmpExpStructure);
+	if(bResult)
+	{
+		bResult = bResult && parseExperimentStructure(tmpExpStructure);
+		if(bResult)
+		{
+			QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
+			tmpExperimentObjectList = pExpTreeModel->getDefinedExperimentObjectInfoList(NULL);
+			bResult = bResult && setExperimentObjects(tmpExperimentObjectList);
+			if(bResult)
+			{
+				bResult = bResult && parseExperimentBlockParameters(tmpFoundExpTreeItemList);
+			}
+		}
+	}
+}
+
+void ExperimentBlockParameterView::showContextMenu(const QPoint& pos)
+{
+	QPoint globalPos = this->mapToGlobal(pos);
+	QModelIndex mIndex = this->indexAt(pos);
+	QModelIndexList mSelectedIndexes = selectedIndexes();
+	//QList<QTableWidgetSelectionRange> lWidgetSelectionRanges = selectedRanges();
+	QMenu mContexMenu;
+	QAction* selectedItemAction;
+	QAction* addBlockAction;
+	QAction* removeBlockAction;
+	QAction* removeBlocksAction;
+	//int nRow = mIndex.row();
+	//int nColumn = mIndex.column();
+	int nSelectionCount = mSelectedIndexes.count();
+	//bool bMultipleColumnsSelected = false;
+	//bool bMultipleRowsSelected = false;
+	QSet<int> bUsedColumnsInSelectionRanges;
+	QSet<int> bUsedRowsInSelectionRanges;
+
+	for(int i=0;i<nSelectionCount;i++)
+	{
+		bUsedColumnsInSelectionRanges.insert(mSelectedIndexes.at(i).column());
+		bUsedRowsInSelectionRanges.insert(mSelectedIndexes.at(i).row());
+	}
+	
+	//foreach(QTableWidgetSelectionRange tmpWidgetSelectionRange,lWidgetSelectionRanges)
+	//{
+	//	if(tmpWidgetSelectionRange.columnCount() > 1)
+	//	{
+	//		bMultipleColumnsSelected = true;
+	//		break;
+	//	}
+	//	else
+	//	{
+	//		if(nColumn != tmpWidgetSelectionRange.leftColumn())
+	//		{
+	//			bMultipleColumnsSelected = true;
+	//			break;
+	//		}
+	//	}
+	//}
+	//foreach(QTableWidgetSelectionRange tmpWidgetSelectionRange,lWidgetSelectionRanges)
+	//{
+	//	if(tmpWidgetSelectionRange.rowCount() > 1)
+	//	{
+	//		bMultipleRowsSelected = true;
+	//		break;
+	//	}
+	//	else
+	//	{
+	//		if(nRow != tmpWidgetSelectionRange.topRow())
+	//		{
+	//			bMultipleRowsSelected = true;
+	//			break;
+	//		}
+	//	}
+	//}
+	
+	addBlockAction = mContexMenu.addAction("Add Block");
+	if(bUsedRowsInSelectionRanges.count() == 1)
+		removeBlockAction = mContexMenu.addAction("Remove Selected Block");
+	else if(bUsedRowsInSelectionRanges.count() > 1)
+		removeBlocksAction = mContexMenu.addAction("Remove Multiple Selected Blocks");
+
+	selectedItemAction = mContexMenu.exec(globalPos);
+	if (selectedItemAction)
+	{
+		if(selectedItemAction == addBlockAction)
+		{
+			if(pExpTreeModel)
+			{
+				//pExpTreeModel->
+			}
+		}
+		else if((selectedItemAction == removeBlockAction) || (selectedItemAction == removeBlocksAction))
+		{
+			if(pExpTreeModel)
+			{
+				bool bResult = pExpTreeModel->removeExperimentBlocks(bUsedRowsInSelectionRanges.toList());
+				bResult = bResult;
+			}
+		}
+	}
 }
 
 ExperimentBlockParameterView::~ExperimentBlockParameterView()
@@ -104,12 +219,16 @@ bool ExperimentBlockParameterView::parseExperimentStructure(cExperimentStructure
 			//tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getBlockNumber()));
 			//this->setItem(i, BLOCKPARAMVIEW_BLOCKNUMBER_COLUMNINDEX, tmpItem);
 			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getBlockName()));
+			tmpItem->setTextColor(cChangedParameter);
 			this->setItem(i, BLOCKPARAMVIEW_BLOCKNAME_COLUMNINDEX, tmpItem);
 			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getNumberOfTrials()));
+			tmpItem->setTextColor(cChangedParameter);
 			this->setItem(i, BLOCKPARAMVIEW_BLOCKTRIALS_COLUMNINDEX, tmpItem);
 			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getNumberOfInternalTriggers()));
+			tmpItem->setTextColor(cChangedParameter);
 			this->setItem(i, BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX, tmpItem);
 			tmpItem = new QTableWidgetItem(tr("%1").arg(tmpBlock->getNumberOfExternalTriggers()));
+			tmpItem->setTextColor(cChangedParameter);
 			this->setItem(i, BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX, tmpItem);
 			hashBlockIdRowIndex[tmpBlock->getBlockID()] = i;
 			hashRowIndexBlockId[i] = tmpBlock->getBlockID();
@@ -245,7 +364,7 @@ bool ExperimentBlockParameterView::setExperimentObjects(const QList<ExperimentSt
 			hashObjectIdExperimentObjectInfo[lExperimentObjects[i].nID] = tmpObjectInfo;
 		}
 		strcExperimentObjectInfo tmpObjectInfo;
-		tmpObjectInfo.ObjectGlobalInfo.nID = BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID;
+		tmpObjectInfo.ObjectGlobalInfo.nID = EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID;
 		tmpObjectInfo.ObjectGlobalInfo.sClass = BLOCK_TAG;
 		tmpObjectInfo.ObjectGlobalInfo.sName = "<undefined>";
 		tmpObjectInfo.pObjectParamDefContainer = expParamWidgets->getExperimentParameterDefinition(tmpObjectInfo.ObjectGlobalInfo.sClass);
@@ -273,21 +392,21 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 		strcColumnInfo tmpColumnInfo;
 		QString sObjectParamIdentifier;
 		int nParamID;
-		pTempObjectParamDefContainer = hashObjectIdExperimentObjectInfo[BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID].pObjectParamDefContainer;
+		pTempObjectParamDefContainer = hashObjectIdExperimentObjectInfo[EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID].pObjectParamDefContainer;
 		for (int i=0; i<BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT; i++)
 		{
 			if(i==BLOCKPARAMVIEW_BLOCKNAME_COLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(NAME_TAG);
+				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(NAME_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKTRIALS_COLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(TRIALAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(TRIALAMOUNT_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(INTERNALTRIGGERAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(INTERNALTRIGGERAMOUNT_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(EXTERNALTRIGGERAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER).arg(EXTERNALTRIGGERAMOUNT_TAG);
 			
 			tmpColumnInfo.sHeader = lColumnHeaders.at(i);
 			tmpColumnInfo.nColumnIndex = i;
-			tmpColumnInfo.nObjectID = BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID;
+			tmpColumnInfo.nObjectID = EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID;
 			if(pTempObjectParamDefContainer)
 			{
 				nParamID = pTempObjectParamDefContainer->getFirstParameterID(NAME_TAG);
@@ -369,7 +488,7 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 						{
 							tmpExpParDefStruct = hashObjectParameterColumnIndex[hashColumnIndexObjectIDParamName[c]].strcParamDef;
 							if(tmpExpParDefStruct)
-								sLatestValue = tmpExpParDefStruct->sDefaultValue;
+								sLatestValue = resolveParameterValueType(tmpExpParDefStruct->sDefaultValue,tmpExpParDefStruct->eType,true).toString();
 						}
 						tmpItem = new QTableWidgetItem(sLatestValue);
 						tmpItem->setTextColor(cInheritedParameter);
@@ -477,7 +596,7 @@ void ExperimentBlockParameterView::selectionChanged(const QItemSelection & selec
 			//QString tmpParamName = tmpObjectIDParamNameList.at(1);
 			int tmpInt = tmpObjectIDParamNameList.at(0).toInt();
 			//QString tmpStr = hashObjectIdExperimentObjectInfo[tmpInt].sClass;//like RETINOTOPYMAPPER_NAME
-			if((tmpInt<hashObjectIdExperimentObjectInfo.count()) || (tmpInt==BLOCKPARAMVIEW_BLOCKOBJECT_INDEXID))
+			if((tmpInt<hashObjectIdExperimentObjectInfo.count()) || (tmpInt==EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID))
 			{
 				QString sDerivedPrefixName = QString::number(hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.nID) + ":" + QString::number(hashRowIndexBlockId[tmpModelIndexList.at(0).row()]);
 				QString sUniqueGeneratedPropertyIdentifier = "";
@@ -551,41 +670,33 @@ void ExperimentBlockParameterView::cellItemEditFinished(const QString& sParamNam
 		int nColumn = currentColumn();
 		int nObjectID = hashObjectParameterColumnIndex[hashColumnIndexObjectIDParamName[nColumn]].nObjectID;
 		int nBlockID = hashRowIndexBlockId[nRow];
-		emit onItemEditFinished(nBlockID,nObjectID,sParamName,sNewValue);
-		QTableWidgetItem *tmpItem = new QTableWidgetItem(tr("%1").arg(resolveParameterValueType(sNewValue, hashObjectParameterColumnIndex[hashColumnIndexObjectIDParamName[nColumn]].strcParamDef->eType, true).toString()));
+		if(pExpTreeModel)
+			pExpTreeModel->saveNewData(nBlockID,nObjectID,sParamName,sNewValue);
+		//emit onItemEditFinished(nBlockID,nObjectID,sParamName,sNewValue);
+		QString sNewResolvedValue = resolveParameterValueType(sNewValue, hashObjectParameterColumnIndex[hashColumnIndexObjectIDParamName[nColumn]].strcParamDef->eType, true).toString();
+		QTableWidgetItem *tmpItem = new QTableWidgetItem(tr("%1").arg(sNewResolvedValue));
 		tmpItem->setTextColor(cChangedParameter);
 		this->setItem(nRow,nColumn, tmpItem);	
 
 		//Fill-in remaining default and buffered Parameter values. We can expect here that the Block Numbers are ordered!
-		//int nColumnCount = columnCount();
-		if(nColumn > BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT)
+		int nRowCount = rowCount();
+		if((nColumn >= BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT) && (nRow < (nRowCount-1)))
 		{
-		//	int nRowCount = rowCount();
-		//	ExperimentParameterDefinitionStrc *tmpExpParDefStruct = NULL;
-		//	QString sLatestValue;
-		//	for (int c=(BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT);c<nColumnCount;c++)
-		//	{
-		//		sLatestValue = "";
-		//		for (int r=0;r<nRowCount;r++)
-		//		{
-		//			if(item(r,c) == NULL)
-		//			{
-		//				if(r==0)
-		//				{
-		//					tmpExpParDefStruct = hashObjectParameterColumnIndex[hashColumnIndexObjectIDParamName[c]].strcParamDef;
-		//					if(tmpExpParDefStruct)
-		//						sLatestValue = tmpExpParDefStruct->sDefaultValue;
-		//				}
-		//				tmpItem = new QTableWidgetItem(sLatestValue);
-		//				tmpItem->setTextColor(cInheritedParameter);
-		//				this->setItem(r,c,tmpItem);
-		//			}
-		//			else
-		//			{
-		//				sLatestValue = item(r,c)->text();
-		//			}
-		//		}
-		//	}
+			QString sLatestValue = sNewResolvedValue;
+			for (int r=nRow+1;r<nRowCount;r++)
+			{
+				if(item(r,nColumn)->textColor() == cInheritedParameter)
+				{
+					tmpItem = new QTableWidgetItem(sLatestValue);
+					tmpItem->setTextColor(cInheritedParameter);
+					this->setItem(r,nColumn,tmpItem);
+				}
+				else
+				{
+					//sLatestValue = item(r,nColumn)->text();
+					break;
+				}
+			}
 		}
 	}
 }

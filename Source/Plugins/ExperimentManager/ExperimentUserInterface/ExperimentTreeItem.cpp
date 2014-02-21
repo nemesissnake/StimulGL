@@ -120,7 +120,6 @@ ExperimentTreeItem *ExperimentTreeItem::firstChild(const QString &sName)
 {
 	if(rowCount() <= 0)
 		return NULL;
-	QStandardItem *tmpItem;
 	int nRowCount = QStandardItem::rowCount();
 	for(int i=0;i<nRowCount;i++)
 	{

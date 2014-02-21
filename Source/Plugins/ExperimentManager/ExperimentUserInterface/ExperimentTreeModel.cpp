@@ -124,6 +124,119 @@ void ExperimentTreeModel::recursiveRead(QDomNode dNode, ExperimentTreeItem *item
     while (!dNode.isNull());
 }
 
+bool ExperimentTreeModel::saveNewData(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue)
+{
+	QStringList sFilterList;
+	TreeItemDefinition tmpTreeItemDef;
+	int nTempObjectID;
+	sFilterList << EXPERIMENTTREEMODEL_FILTER_TAGS;
+
+	if(nObjectID >= 0)
+	{
+		ExperimentTreeItem* tmpItem3 = getExperimentBlockTreeItem(nBlockID);
+		if(tmpItem3)
+		{
+			QList<ExperimentTreeItem*> list4 = getFilteredItemList(OBJECT_TAG, sFilterList, tmpItem3);
+			foreach (ExperimentTreeItem* tmpItem4 ,list4)
+			{
+				if(tmpItem4->getDefinitions().contains(ID_TAG))
+				{
+					nTempObjectID = tmpItem4->getDefinition(ID_TAG).value.toInt();
+					if(nTempObjectID == nObjectID)//Correct Object ID?
+					{
+						QList<ExperimentTreeItem*> list5 = getFilteredItemList(PARAMETERS_TAG, sFilterList, tmpItem4);
+						foreach (ExperimentTreeItem* tmpItem5 ,list5)
+						{
+							this->saveNewData(sParamName,sParamValue,QModelIndex(),tmpItem5);
+							return true;
+						}
+						return false;
+					}
+				}
+			}
+			return false;
+		}
+	}
+	else if(nObjectID == EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID)
+	{
+		ExperimentTreeItem* tmpItem1 = getExperimentBlockTreeItem(nBlockID);
+		if(tmpItem1)
+		{
+			if (tmpItem1->hasChildren())
+			{
+				for (int i=0;i<tmpItem1->rowCount(); i++)
+				{
+					if(tmpItem1->child(i)->getName().toLower() == sParamName)
+					{
+						tmpItem1->child(i)->setValue(sParamValue);
+						return true;
+					}
+				}
+			}
+		}
+	}	
+	return false;
+}
+
+bool ExperimentTreeModel::removeExperimentBlocks(const QList<int> &lBlockIDs)
+{
+	ExperimentTreeItem* tmpExpTreeItem;
+	QModelIndex tmpModelIndex;
+	bool bResult = false;
+	foreach(int nBlockId, lBlockIDs)
+	{
+		if(nBlockId >= 0)
+		{
+			tmpExpTreeItem = getExperimentBlockTreeItem(nBlockId);
+			if(tmpExpTreeItem)
+			{
+				tmpModelIndex = indexFromItem(tmpExpTreeItem);
+				if(removeRow(tmpModelIndex.row(),tmpModelIndex.parent()))
+				{
+					bResult = true;
+				}
+				else
+				{
+					bResult = false;
+					break;
+				}
+			}
+		}		
+	}
+	if(bResult)
+		emit modelModified();
+	return bResult;
+}
+
+ExperimentTreeItem* ExperimentTreeModel::getExperimentBlockTreeItem(const int &nBlockID)
+{
+	QStringList sFilterList;
+	int nTempBlockID;
+
+	sFilterList << EXPERIMENTTREEMODEL_FILTER_TAGS;
+	QList<ExperimentTreeItem*> list1 = getFilteredItemList(ACTIONS_TAG, sFilterList);
+	foreach (ExperimentTreeItem* tmpItem1 ,list1)
+	{
+		QList<ExperimentTreeItem*> list2 = getFilteredItemList(BLOCKTRIALS_TAG, sFilterList, tmpItem1);
+		foreach (ExperimentTreeItem* tmpItem2 ,list2)
+		{
+			QList<ExperimentTreeItem*> list3 = getFilteredItemList(BLOCK_TAG, sFilterList, tmpItem2);
+			foreach (ExperimentTreeItem* tmpItem3 ,list3)
+			{
+				if(tmpItem3->getDefinitions().contains(ID_TAG))
+				{
+					nTempBlockID = tmpItem3->getDefinition(ID_TAG).value.toInt();
+					if(nTempBlockID == nBlockID)//Correct Block ID?
+					{						
+						return tmpItem3;
+					}
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
 void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex, ExperimentTreeItem *pParametersSection)
 {
 	ExperimentTreeItem *m_parent;
@@ -318,9 +431,11 @@ void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelInde
 							{
 								QLineEdit *lineEdit = qobject_cast<QLineEdit*>(widgetItem2->widget());
 								QComboBox *comboBox = qobject_cast<QComboBox*>(widgetItem2->widget());
-								if (lineEdit)
+								if(lineEdit)
+								{
 									m_parent->child(j)->setValue(lineEdit->text());
-								else if (comboBox)
+								}
+								else if(comboBox)
 								{
 									QString valAux = "";
 									if (comboBox->currentText() == "TRUE")
@@ -330,10 +445,12 @@ void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelInde
 
 									m_parent->child(j)->setValue(valAux);
 								}
-
-								ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j));
-								m_parent->removeRow(j);
-								m_parent->insertRow(j, item);
+								else
+								{
+									ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j));
+									m_parent->removeRow(j);
+									m_parent->insertRow(j, item);
+								}
 							}
 						}
 					}
@@ -343,32 +460,6 @@ void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelInde
 		emit modelModified();
 	}
 }
-
-//void ExperimentTreeModel::test()
-//{
-//
-//	return;
-//
-//	QString fileName = "D:\\Sven.Gijsen\\Projects\\StimulGL\\Install\\examples\\Tutorials\\11_ExperimentStructure_Editing\\tempDoc.exml";
-//	if(write(fileName))
-//	{
-//		if(reset())
-//		{
-//			QFile expFile(fileName);
-//			if (expFile.open(QFile::ReadOnly | QFile::Text)) 
-//			{
-//				QString tmpString = expFile.readAll();			
-//				expFile.close();
-//				bool bResult = read(tmpString.toLatin1());
-//				bResult = bResult;
-//			}
-//			else
-//			{
-//				qDebug() << __FUNCTION__ << "Could not open the file " << fileName;
-//			}
-//		}
-//	}
-//}
 
 bool ExperimentTreeModel::write(const QString &fileName)
 {
@@ -537,6 +628,72 @@ int ExperimentTreeModel::getStaticTreeElements(const QStringList &sElementTagNam
 		}
 	}	
 	return 0;
+}
+
+QList<ExperimentStructuresNameSpace::strcExperimentObject> ExperimentTreeModel::getDefinedExperimentObjectInfoList(ExperimentTreeItem *objItem)
+{
+	//If objItem is NULL then all the objects are returned!
+	QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
+	int nSearchObjectID = -1;
+	if(objItem)
+	{
+		QMap<QString, TreeItemDefinition> mapTreeItemDefinition = objItem->getDefinitions();
+		if(mapTreeItemDefinition.contains(ID_TAG))
+		{
+			nSearchObjectID = mapTreeItemDefinition.value(ID_TAG).value.toInt();
+		}
+		else
+		{
+			return tmpExperimentObjectList;
+		}
+	}
+	ExperimentStructuresNameSpace::strcExperimentObject tmpExperimentObject;
+	QList<ExperimentTreeItem*> tmpExpTreeItemList;
+	QStringList strList;
+	strList.clear();
+	strList.append(ROOT_TAG);
+	strList.append(DECLARATIONS_TAG); 
+	strList.append(OBJECT_TAG);
+	if (this->getTreeElements(strList,tmpExpTreeItemList) >= 0)
+	{
+		int nNrOfObjects = tmpExpTreeItemList.count();
+		if (nNrOfObjects>0)
+		{
+			ExperimentTreeItem *pExpTreeItem;
+			QMap<QString, TreeItemDefinition> tTmpTreeItemDefs;
+			QString tmpString;
+			int nObjectID = -1;
+			for(int i=0;i<nNrOfObjects;i++)
+			{
+				pExpTreeItem = tmpExpTreeItemList.at(i);
+				if (pExpTreeItem) 
+				{
+					tTmpTreeItemDefs = pExpTreeItem->getDefinitions();
+					if(!tTmpTreeItemDefs.contains(ID_TAG))
+						break;
+					tmpString = tTmpTreeItemDefs[ID_TAG].value.toString();//Correct ObjectID?
+					if (tmpString.isEmpty() == false)
+					{
+						nObjectID = tmpString.toInt();
+						if((nObjectID == nSearchObjectID) || (objItem == NULL))
+						{
+							tmpExperimentObject.nID = nObjectID;
+							pExpTreeItem = tmpExpTreeItemList.at(i)->firstChild(NAME_TAG);
+							//if(tmpElement.tagName() == NAME_TAG)
+							if(pExpTreeItem)
+								tmpExperimentObject.sName = pExpTreeItem->getValue();
+							pExpTreeItem = tmpExpTreeItemList.at(i)->firstChild(CLASS_TAG);
+							//if(tmpElement.tagName() == CLASS_TAG)
+							if(pExpTreeItem)
+								tmpExperimentObject.sClass =pExpTreeItem->getValue();
+							tmpExperimentObjectList.append(tmpExperimentObject);
+						}
+					}
+				}
+			}
+		}
+	}
+	return tmpExperimentObjectList;
 }
 
 void ExperimentTreeModel::recursiveMultiSearch(const QString &textToFind, const QStringList &filters, QList<ExperimentTreeItem *> items, QList<ExperimentTreeItem*> &list)

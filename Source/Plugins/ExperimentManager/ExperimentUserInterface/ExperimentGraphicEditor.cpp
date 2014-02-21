@@ -135,7 +135,7 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 	if(pExpTreeModel)
 		pExpTreeModel = NULL;
 	if(findDlg)
-		delete findDlg;
+		findDlg = NULL;//Attribute Qt::WA_DeleteOnClose is activated!
 	if(filterModel)
 		delete filterModel;
 	if(mainLayout)
@@ -909,41 +909,18 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 						}		
 						else
 						{
-							QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
-							tmpExperimentObjectList = getDefinedExperimentObjectInfoList(NULL);
-
 							if(expBlockParamView == NULL)
-							{	
-								expBlockParamView = new ExperimentBlockParameterView();
-								connect(expBlockParamView, SIGNAL(onItemEditFinished(int,int,QString,QString)), this, SLOT(saveNewData(int,int,QString,QString)), Qt::DirectConnection);
-							}
+								expBlockParamView = new ExperimentBlockParameterView(NULL, pExpTreeModel);								
 							if(expBlockParamView)
 							{
 								bool bResult = connect(expBlockParamView, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
 								bResult = connect(this, SIGNAL(onTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeView(int, int)));
-								bResult = expManager->createExperimentStructure(tmpExpTreeItemList, pExpTreeModel, tmpExpStruct);
-								if(bResult)
-								{
-									if(horSplitter->count() > TABLEVIEWINDEX)
-										expBlockParamView->resizeView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
-									bResult = expBlockParamView->parseExperimentStructure(tmpExpStruct);
-									if(bResult)
-									{
-										bResult = expBlockParamView->setExperimentObjects(tmpExperimentObjectList);
-										if(bResult)
-										{
-											bResult = bResult && expBlockParamView->parseExperimentBlockParameters(tmpExpTreeItemList);
-											if(bResult)
-											{
-												//expStructVisualizer->setLayout(gridLayout);
-												scrollArea->takeWidget();
-												scrollArea->setWidget((QWidget*)expBlockParamView);
-												expBlockParamView->showMaximized();
-												return;
-											}
-										}
-									}
-								}
+								if(horSplitter->count() > TABLEVIEWINDEX)
+									expBlockParamView->resizeView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
+								scrollArea->takeWidget();
+								scrollArea->setWidget((QWidget*)expBlockParamView);
+								expBlockParamView->showMaximized();
+								return;							
 							}
 						}
 					}
@@ -955,75 +932,78 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 					{
 						if(child->hasChildren())
 						{
-							if((item->parent() != NULL) && (item->parent()->parent() != NULL))// && (item->parent()->parent()->getName().toLower() == BLOCK_TAG))
+							if(pExpTreeModel)
 							{
-								if(i==0)
+								if((item->parent() != NULL) && (item->parent()->parent() != NULL))// && (item->parent()->parent()->getName().toLower() == BLOCK_TAG))
 								{
-									if(item->parent()->getName().toLower() == OBJECT_TAG)
+									if(i==0)
 									{
-										QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
-										tmpExperimentObjectList = getDefinedExperimentObjectInfoList(item->parent());
-										if(tmpExperimentObjectList.isEmpty() == false)
+										if(item->parent()->getName().toLower() == OBJECT_TAG)
 										{
-											if(tmpExperimentObjectList.at(0).nID >= 0)
+											QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
+											tmpExperimentObjectList = pExpTreeModel->getDefinedExperimentObjectInfoList(item->parent());
+											if(tmpExperimentObjectList.isEmpty() == false)
 											{
-												QString sParamCollName = "";
-												if(item->parent()->parent()->getName().toLower() == BLOCK_TAG)
+												if(tmpExperimentObjectList.at(0).nID >= 0)
 												{
-													sParamCollName = tmpExperimentObjectList.at(0).sClass;//Case sensitive!!;
-												}
-												else if(item->parent()->parent()->getName().toLower() == INITIALIZATIONS_TAG)
-												{
-													sParamCollName = ""; 
-												}
-												if(sParamCollName.isEmpty() == false)
-												{
-													if(staticGraphicWidgetsHashTable.contains(sParamCollName))
+													QString sParamCollName = "";
+													if(item->parent()->parent()->getName().toLower() == BLOCK_TAG)
 													{
-														tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
+														sParamCollName = tmpExperimentObjectList.at(0).sClass;//Case sensitive!!;
 													}
-													else
+													else if(item->parent()->parent()->getName().toLower() == INITIALIZATIONS_TAG)
 													{
-														ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
-														tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
-														if(tmpParametersWidget == NULL)
+														sParamCollName = ""; 
+													}
+													if(sParamCollName.isEmpty() == false)
+													{
+														if(staticGraphicWidgetsHashTable.contains(sParamCollName))
 														{
-															qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+															tmpParametersWidget = staticGraphicWidgetsHashTable.value(sParamCollName);
 														}
 														else
 														{
-															staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
-														}								
+															ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
+															tmpParametersWidget = expParamWidgets->getExperimentParameterWidget(sParamCollName);
+															if(tmpParametersWidget == NULL)
+															{
+																qDebug() << __FUNCTION__ << "Could not fetch parameter collection widget named " << sParamCollName;
+															}
+															else
+															{
+																staticGraphicWidgetsHashTable.insert(sParamCollName,tmpParametersWidget);
+															}								
+														}
 													}
 												}
 											}
 										}
 									}
+									if(tmpParametersWidget)
+									{
+										//Set the values
+										int nChildCount = child->childCount();
+										QString sName = "";
+										QString sValue = "";
+										for (int j=0;j<nChildCount;j++)
+										{							
+											if(item->child(i)->child(j)->getName().toLower() == NAME_TAG)
+											{
+												sName = item->child(i)->child(j)->getValue();
+											}
+											else if(item->child(i)->child(j)->getName().toLower() == VALUE_TAG)
+											{
+												sValue = item->child(i)->child(j)->getValue();
+											}
+											if((sName.isEmpty() || sValue.isEmpty()) == false)
+											{
+												//bool bResult = 
+												tmpParametersWidget->setParameter(sName,sValue,true,true);
+											}
+										}
+									}								
 								}
-								if(tmpParametersWidget)
-								{
-									//Set the values
-									int nChildCount = child->childCount();
-									QString sName = "";
-									QString sValue = "";
-									for (int j=0;j<nChildCount;j++)
-									{							
-										if(item->child(i)->child(j)->getName().toLower() == NAME_TAG)
-										{
-											sName = item->child(i)->child(j)->getValue();
-										}
-										else if(item->child(i)->child(j)->getName().toLower() == VALUE_TAG)
-										{
-											sValue = item->child(i)->child(j)->getValue();
-										}
-										if((sName.isEmpty() || sValue.isEmpty()) == false)
-										{
-											//bool bResult = 
-											tmpParametersWidget->setParameter(sName,sValue,true,true);
-										}
-									}
-								}								
-							}
+							}							
 						}
 					}
 				}
@@ -1163,72 +1143,6 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 	}
 }
 
-QList<ExperimentStructuresNameSpace::strcExperimentObject> ExperimentGraphicEditor::getDefinedExperimentObjectInfoList(ExperimentTreeItem *objItem)
-{
-	//If objItem is NULL then all the objects are returned!
-	QList<ExperimentStructuresNameSpace::strcExperimentObject> tmpExperimentObjectList;
-	int nSearchObjectID = -1;
-	if(objItem)
-	{
-		QMap<QString, TreeItemDefinition> mapTreeItemDefinition = objItem->getDefinitions();
-		if(mapTreeItemDefinition.contains(ID_TAG))
-		{
-			nSearchObjectID = mapTreeItemDefinition.value(ID_TAG).value.toInt();
-		}
-		else
-		{
-			return tmpExperimentObjectList;
-		}
-	}
-	ExperimentStructuresNameSpace::strcExperimentObject tmpExperimentObject;
-	QList<ExperimentTreeItem*> tmpExpTreeItemList;
-	QStringList strList;
-	strList.clear();
-	strList.append(ROOT_TAG);
-	strList.append(DECLARATIONS_TAG); 
-	strList.append(OBJECT_TAG);
-	if (pExpTreeModel->getTreeElements(strList,tmpExpTreeItemList) >= 0)
-	{
-		int nNrOfObjects = tmpExpTreeItemList.count();
-		if (nNrOfObjects>0)
-		{
-			ExperimentTreeItem *pExpTreeItem;
-			QMap<QString, TreeItemDefinition> tTmpTreeItemDefs;
-			QString tmpString;
-			int nObjectID = -1;
-			for(int i=0;i<nNrOfObjects;i++)
-			{
-				pExpTreeItem = tmpExpTreeItemList.at(i);
-				if (pExpTreeItem) 
-				{
-					tTmpTreeItemDefs = pExpTreeItem->getDefinitions();
-					if(!tTmpTreeItemDefs.contains(ID_TAG))
-						break;
-					tmpString = tTmpTreeItemDefs[ID_TAG].value.toString();//Correct ObjectID?
-					if (tmpString.isEmpty() == false)
-					{
-						nObjectID = tmpString.toInt();
-						if((nObjectID == nSearchObjectID) || (objItem == NULL))
-						{
-							tmpExperimentObject.nID = nObjectID;
-							pExpTreeItem = tmpExpTreeItemList.at(i)->firstChild(NAME_TAG);
-							//if(tmpElement.tagName() == NAME_TAG)
-							if(pExpTreeItem)
-								tmpExperimentObject.sName = pExpTreeItem->getValue();
-							pExpTreeItem = tmpExpTreeItemList.at(i)->firstChild(CLASS_TAG);
-							//if(tmpElement.tagName() == CLASS_TAG)
-							if(pExpTreeItem)
-								tmpExperimentObject.sClass =pExpTreeItem->getValue();
-							tmpExperimentObjectList.append(tmpExperimentObject);
-						}
-					}
-				}
-			}
-		}
-	}
-	return tmpExperimentObjectList;
-}
-
 void ExperimentGraphicEditor::fillTableView(const QString &textToFind, const QStringList &filters)
 {
 	if (pExpTreeModel)
@@ -1361,91 +1275,6 @@ void ExperimentGraphicEditor::saveNewData(const QString &sName, const QString &s
 	pExpTreeModel->saveNewData(sName, sValue, sourceIndex);	
 }
 
-bool ExperimentGraphicEditor::saveNewData(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue)
-{
-	if(pExpTreeModel)
-	{
-		QStringList sFilterList;
-		TreeItemDefinition tmpTreeItemDef;
-		int nTempBlockID;
-		int nTempObjectID;
-		sFilterList << EXPERIMENTTREEMODEL_FILTER_TAGS;
-
-		QList<ExperimentTreeItem*> list1 = pExpTreeModel->getFilteredItemList(ACTIONS_TAG, sFilterList);
-		foreach (ExperimentTreeItem* tmpItem1 ,list1)
-		{
-			QList<ExperimentTreeItem*> list2 = pExpTreeModel->getFilteredItemList(BLOCKTRIALS_TAG, sFilterList, tmpItem1);
-			foreach (ExperimentTreeItem* tmpItem2 ,list2)
-			{
-				QList<ExperimentTreeItem*> list3 = pExpTreeModel->getFilteredItemList(BLOCK_TAG, sFilterList, tmpItem2);
-				foreach (ExperimentTreeItem* tmpItem3 ,list3)
-				{
-					if(tmpItem3->getDefinitions().contains(ID_TAG))
-					{
-						nTempBlockID = tmpItem3->getDefinition(ID_TAG).value.toInt();
-						if(nTempBlockID == nBlockID)//Correct Block ID?
-						{
-							QList<ExperimentTreeItem*> list4 = pExpTreeModel->getFilteredItemList(OBJECT_TAG, sFilterList, tmpItem3);
-							foreach (ExperimentTreeItem* tmpItem4 ,list4)
-							{
-								if(tmpItem4->getDefinitions().contains(ID_TAG))
-								{
-									nTempObjectID = tmpItem4->getDefinition(ID_TAG).value.toInt();
-									if(nTempObjectID == nObjectID)//Correct Object ID?
-									{
-										QList<ExperimentTreeItem*> list5 = pExpTreeModel->getFilteredItemList(PARAMETERS_TAG, sFilterList, tmpItem4);
-										foreach (ExperimentTreeItem* tmpItem5 ,list5)
-										{
-											pExpTreeModel->saveNewData(sParamName,sParamValue,QModelIndex(),tmpItem5);
-											//selectedIndex = filterModel->mapToSource(treeView->selectionModel()->currentIndex());
-											//setNewModel();
-											return true;
-											/*
-											QList<ExperimentTreeItem*> list6 = pExpTreeModel->getFilteredItemList(PARAMETER_TAG, sFilterList, tmpItem5);
-											foreach (ExperimentTreeItem* tmpItem6 ,list6)
-											{
-												bParamFound = false;												
-												sTempParamValueTreeItem = NULL;
-												int nValueIndex = -1;
-												for (int i=0;i<tmpItem6->childCount();i++)
-												{
-													if(tmpItem6->child(i)->getName().toLower() == NAME_TAG)
-													{
-														if(tmpItem6->child(i)->getValue().toLower() == sParamName)
-															bParamFound = true;
-													}
-													else if(tmpItem6->child(i)->getName().toLower() == VALUE_TAG)
-													{
-														sTempParamValueTreeItem = tmpItem6->child(i);
-														nValueIndex = i;
-													}
-													if(bParamFound && sTempParamValueTreeItem)
-													{
-														sTempParamValueTreeItem->setValue(sParamValue);
-														//ExperimentTreeItem *item = new ExperimentTreeItem(sTempParamValueTreeItem);
-														//ExperimentTreeItem *itemParent = sTempParamValueTreeItem->parent();
-														//itemParent->removeRow(nValueIndex);
-														//itemParent->insertRow(nValueIndex,item);
-														return true;
-													}
-												}
-											}*/
-										}
-										return false;
-									}
-								}
-							}
-							return false;
-						}
-						continue;
-					}
-				}
-			}
-		}
-	}
-	return false;
-}
-
 void ExperimentGraphicEditor::setViewFilter(const TreeFilterSettings &newViewSettings)
 {
 	currentViewSettings = newViewSettings;
@@ -1458,12 +1287,6 @@ bool ExperimentGraphicEditor::setExperimentTreeModel(ExperimentTreeModel *expMod
 	loadedExpTreeModel.reset();
 	pExpTreeModel = expModel;
 	setNewModel();
-
-	//connect(pExpTreeModel, SIGNAL(modelModified()), this, SLOT(setNewModel()));
-	//ExperimentTreeItem *rootItem = new ExperimentTreeItem("[Root node]");
-	//pExpTreeModel->setItem(0, rootItem);
-	//setupFilterModel();
-
 	return true;
 }
 

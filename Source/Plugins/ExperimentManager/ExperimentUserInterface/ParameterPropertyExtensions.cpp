@@ -441,7 +441,7 @@ QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManag
 				{
 					if((*it)->propertyId().endsWith(vProperty->propertyId()))
 					{
-						varProperty = vProperty;
+						varProperty = (QtVariantProperty *)(*it);
 						break;
 					}
 				}
@@ -457,12 +457,6 @@ QWidget *VariantExtensionPropertyFactory::getEditorWidget(QtVariantPropertyManag
 				varProperty->setWhatsThis(vProperty->whatsThis());
 				varProperty->setStatusTip(vProperty->statusTip());
 				pDerivedVariantProperty = varProperty;
-			}
-			else
-			{
-				QVariant vTemp = varProperty->value();
-				QString sTemp = vTemp.toString();
-				vTemp=vTemp;
 			}
 			if(bDoInitWithValue)
 			{
