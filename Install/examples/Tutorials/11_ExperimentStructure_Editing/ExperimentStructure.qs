@@ -135,13 +135,13 @@ Dialog.prototype.changeExperiment = function()
 Dialog.prototype.showExperimentTree = function()
 {
 	Log("showExperimentTree()");
-	Log(ExperimentManagerObj.Test("abc"));
+	//Log(ExperimentManagerObj.Test("abc"));
 	//bool ExperimentManager::loadExperiment(QString strSource, bool bViewEditTree, bool bIsFile)
 	//ExperimentManagerObj.runExperiment(); //Try to run the experiment
-	//if(!ExperimentManagerObj.showVisualExperimentEditor(cExperimentStructure_Object)) //cExperimentStructure_Object1
-	//{
-	//	Log("~~Failed to show the Experiment Structure");
-	//}	
+	if(!ExperimentManagerObj.showVisualExperimentEditor(cExperimentStructure_Object)) //cExperimentStructure_Object1
+	{
+		Log("~~Failed to show the Experiment Structure");
+	}	
 //	LogState(cExperimentStructure_Object.getCurrentExperimentState());	
 }
 

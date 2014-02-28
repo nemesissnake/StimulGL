@@ -36,6 +36,8 @@
 #include "scifinddialog.h"
 #include "mainappinfo.h"
 
+#define WARNING_DOCCHANGEDSAVEFILE_STRING	"The document has been modified.\nDo you want to save your changes?"
+
 class DocumentManager : public QObject
 {
 	Q_OBJECT
@@ -51,6 +53,23 @@ public:
 	DocumentManager(QObject *parent);
 	~DocumentManager();
 
+	struct strDocManagerDocument
+	{
+		QString sFileName;
+		GlobalApplicationInformation::DocType dDocType;
+		QWidget * pWidget;
+		QMdiSubWindow * pMDISubWin;
+		bool bIsModified;
+		strDocManagerDocument()
+		{
+			sFileName = "";
+			dDocType = GlobalApplicationInformation::DOCTYPE_UNDEFINED;
+			pWidget = NULL;
+			pMDISubWin = NULL;
+			bIsModified = false;
+		}
+	};
+
 	struct strcPluginDocHandlerInfo
 	{
 		QStringList strDocHandlerInfoList;
@@ -61,7 +80,7 @@ public:
 	QWidget *getDocHandler(QMdiSubWindow *subWindow);
 	int count(void);
 	//CustomQsciScintilla *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension);
-	QWidget *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension);
+	QWidget *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath = "");
 	bool remove(QMdiSubWindow *subWindow);
 	bool setSubWindow(int DocIndex, QMdiSubWindow *subWindow);
 	bool loadFile(int DocIndex, const QString &fileName);
@@ -88,21 +107,15 @@ public:
 	int addAdditionalApiEntry(const QString &entry); 
 
 public slots:
-	void signalDocManagerOutput(QString strText2Output) {emit DocumentManagerOutput(strText2Output);};
+	void signalDocManagerOutput(QString strText2Output) {emit DocumentManagerOutput(strText2Output);};	
 
 private:
-	int DocCount;
 	DocFindFlags lastFlags_;
 	QSignalMapper *DocModifiedMapper;
 	QSignalMapper *NrOfLinesChangedMapper;
-	QStringList ChildrenFileNames;
 	QString strFileExtensionList;
 	strcPluginDocHandlerInfo pluginDocHandlerStore;	
-	QList<GlobalApplicationInformation::DocType> ChildrenDocTypes;
-	//QList<CustomQsciScintilla *> QScintillaChildren;
-	QList<QWidget *> QWidgetChildren;
-	QList<QMdiSubWindow *> SubWindowChildren;
-	QList<bool> ChildrenModification;
+	QList<strDocManagerDocument> lChildDocuments;
 	QStringList additionalApiEntries;
 
 	void setFileName(int DocIndex, QString fileName);
@@ -114,6 +127,8 @@ private slots:
 	void documentWasModified(QWidget *subWindow);
 	void updateLineNumbers(QWidget *tmpSci);
 	void onMarginClicked (int margin, int line, Qt::KeyboardModifiers state);
+	void configureDocumentModifiedSetting(const QString &sCanoFilePath, const bool &bIsModified);
+	void processDocumentClosing(const QString &sCanoFilePath, const bool &bAutoSaveChanges);
 	//void updateLineNumbers(void);
 };
 

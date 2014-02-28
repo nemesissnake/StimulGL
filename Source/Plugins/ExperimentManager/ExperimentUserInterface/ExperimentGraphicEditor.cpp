@@ -82,23 +82,22 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	expStructVisualizer = NULL;
 	expBlockParamView = NULL;
 	tmpExpObjectParamDefs = NULL;
-	//rootItem = NULL;
 	
 	bShowTreeView = false;
 	currentViewSettings.bSkipComments = true;
 	currentViewSettings.bSkipEmptyAttributes = false;
-	
-	//this->setAttribute( Qt::WA_DeleteOnClose );
-	//connect( widget, SIGNAL(destroyed(QObject*)), this, SLOT(widgetDestroyed(QObject*)) );
+
 	configureActions(true);
 	setupExperimentTreeView();
 	setupMenuAndActions();
 	setupLayout();
-	updateWindowTitle();
+	setNewFileName("");
 }
 
 ExperimentGraphicEditor::~ExperimentGraphicEditor()
 {
+	emit IsClosing(sCurrentCanonFilePath, false);
+	emit IsDestructing(this);
 	configureActions(false);
 	staticGraphicWidgetsHashTable.clear();
 	if(gridLayout)
@@ -146,19 +145,11 @@ ExperimentGraphicEditor::~ExperimentGraphicEditor()
 		delete tmpExpStruct;
 	if(tmpExpObjectParamDefs)
 		tmpExpObjectParamDefs = NULL;
-	//if(rootItem)
-	//	delete rootItem;
 }
 
 void ExperimentGraphicEditor::setExperimentManager(ExperimentManager *pExpManager)
 {
 	expManager = pExpManager;
-}
-
-void ExperimentGraphicEditor::updateWindowTitle(const QString sSuffix)
-{
-	QString title = APP_NAME " " VERSION;
-	setWindowTitle(title);
 }
 
 void ExperimentGraphicEditor::configureActions(bool bCreate)
@@ -274,7 +265,7 @@ void ExperimentGraphicEditor::tableViewResized(int pos, int index)
 	Q_UNUSED(index);
 	if(horSplitter->count() > TABLEVIEWINDEX)
 	{
-		emit onTableViewRedrawned(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
+		emit OnTableViewRedrawned(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
 	}
 }
 
@@ -437,16 +428,21 @@ void ExperimentGraphicEditor::closeFile()
 	action_Remove_Node->setDisabled(true);
 	actionFind->setDisabled(true);
 	actionToggleBlocksView->setDisabled(true);
-	updateWindowTitle();
 }
 
-void ExperimentGraphicEditor::saveFile()
+void ExperimentGraphicEditor::saveFile(const QString &sFilePath)
 {
-	QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("Experiment Files (*.exml);;XML Files (*.xml)"));
+	QString fileName;
+	if(sFilePath.isEmpty())
+		fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("Experiment Files (*.exml);;XML Files (*.xml)"));
+	else
+		fileName = sFilePath;
 	if (fileName.isEmpty() == false)
 	{
+		fileName = QDir(fileName).canonicalPath();
 		pExpTreeModel->write(fileName);
-		updateWindowTitle(" - " + fileName);
+		setNewFileName(fileName);
+		emit ContentHasChanged(fileName,true);
 	}
 }
 
@@ -885,7 +881,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							if(expStructVisualizer)
 							{
 								bool bResult = connect(expStructVisualizer, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
-								bResult = connect(this, SIGNAL(onTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeStructureView(int, int)));
+								bResult = connect(this, SIGNAL(OnTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeStructureView(int, int)));
 								bResult = expManager->createExperimentStructure(tmpExpTreeItemList, pExpTreeModel,tmpExpStruct);
 								if(bResult)
 								{
@@ -914,7 +910,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 							if(expBlockParamView)
 							{
 								bool bResult = connect(expBlockParamView, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
-								bResult = connect(this, SIGNAL(onTableViewRedrawned(int, int)), expStructVisualizer, SLOT(resizeView(int, int)));
+								bResult = connect(this, SIGNAL(OnTableViewRedrawned(int, int)), expBlockParamView, SLOT(resizeView(int, int)));
 								if(horSplitter->count() > TABLEVIEWINDEX)
 									expBlockParamView->resizeView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
 								scrollArea->takeWidget();
@@ -1124,7 +1120,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 		if(tmpParametersWidget)
 		{
 			connect(tmpParametersWidget, SIGNAL(destroyed(QWidget*)), this, SLOT(childWidgetDestroyed(QWidget*)));
-			connect(this, SIGNAL(onTableViewRedrawned(int, int)), tmpParametersWidget, SLOT(resizeParameterView(int, int)));
+			connect(this, SIGNAL(OnTableViewRedrawned(int, int)), tmpParametersWidget, SLOT(resizeParameterView(int, int)));
 			gridLayout->addWidget(tmpParametersWidget,0,0);
 			if(horSplitter->count() > TABLEVIEWINDEX)
 				tmpParametersWidget->resizeParameterView(horSplitter->sizes().at(TABLEVIEWINDEX),horSplitter->childAt(TABLEVIEWINDEX,0)->size().height());
@@ -1282,12 +1278,24 @@ void ExperimentGraphicEditor::setViewFilter(const TreeFilterSettings &newViewSet
 		filterModel->setTreeFilterSettings(currentViewSettings);
 }
 
-bool ExperimentGraphicEditor::setExperimentTreeModel(ExperimentTreeModel *expModel)
+bool ExperimentGraphicEditor::setExperimentTreeModel(ExperimentTreeModel *expModel, const QString &sExpTreeModelCanonFilePath)
 {
-	loadedExpTreeModel.reset();
-	pExpTreeModel = expModel;
-	setNewModel();
+	if(expModel != pExpTreeModel)
+	{
+		loadedExpTreeModel.reset();
+		if(pExpTreeModel)
+			disconnect(pExpTreeModel, SIGNAL(modelModified()), this, SLOT(treeModelChanged()));
+		connect(expModel, SIGNAL(modelModified()), this, SLOT(treeModelChanged()));
+		pExpTreeModel = expModel;
+		setNewModel();
+	}
+	setNewFileName(sExpTreeModelCanonFilePath);
 	return true;
+}
+
+void ExperimentGraphicEditor::treeModelChanged()
+{
+	emit ContentHasChanged(sCurrentCanonFilePath,true);
 }
 
 void ExperimentGraphicEditor::childWidgetDestroyed(QWidget* pWidget)

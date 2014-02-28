@@ -26,7 +26,6 @@
 DocumentManager::DocumentManager(QObject *parent)
 	: QObject(parent)
 {
-	DocCount = 0;
 	DocModifiedMapper = NULL;
 	NrOfLinesChangedMapper = NULL;
 	DocModifiedMapper = new QSignalMapper(this);
@@ -41,39 +40,43 @@ DocumentManager::~DocumentManager()
 		delete NrOfLinesChangedMapper;
 }
 
-QWidget *DocumentManager::getDocHandler(const int &DocIndex)
+QWidget *DocumentManager::getDocHandler(const int &nDocIndex)
 {
-	if (DocCount > 0)
+	if (lChildDocuments.count() > nDocIndex)
 	{
-		return QWidgetChildren.at(DocIndex);
+		return lChildDocuments.at(nDocIndex).pMDISubWin;
 	}
 	else
 	{
-		return 0;
+		return NULL;
 	}
 }
 
 QWidget *DocumentManager::getDocHandler(QMdiSubWindow *subWindow)
 {
-	int i;
-	for (i=0;i<DocCount;i++)
+	if(lChildDocuments.isEmpty() == false)
 	{
-		if (SubWindowChildren.at(i) == subWindow)
+		for (int i=0;i<lChildDocuments.count();i++)
 		{
-			return QWidgetChildren.at(i);
+			if (lChildDocuments.at(i).pMDISubWin == subWindow)
+			{
+				return lChildDocuments.at(i).pMDISubWin;
+			}
 		}
 	}
-	return 0;
+	return NULL;
 }
 
 GlobalApplicationInformation::DocType DocumentManager::getDocType(QMdiSubWindow *subWindow)
-{
-	int i;
-	for (i=0;i<DocCount;i++)
+{	
+	if(lChildDocuments.isEmpty() == false)
 	{
-		if (SubWindowChildren.at(i) == subWindow)
+		for (int i=0;i<lChildDocuments.count();i++)
 		{
-			return ChildrenDocTypes.at(i);
+			if (lChildDocuments.at(i).pMDISubWin == subWindow)
+			{
+				return lChildDocuments.at(i).dDocType;
+			}
 		}
 	}
 	return GlobalApplicationInformation::DOCTYPE_UNDEFINED;
@@ -81,25 +84,27 @@ GlobalApplicationInformation::DocType DocumentManager::getDocType(QMdiSubWindow 
 
 QString DocumentManager::getFileName(int DocIndex, bool bFileNameOnly)
 {
-	if (bFileNameOnly)
+	if(lChildDocuments.count() > DocIndex)
 	{
-		QFileInfo fInfo(ChildrenFileNames.at(DocIndex));
-		return fInfo.fileName();
+		if (bFileNameOnly)
+			return QFileInfo(lChildDocuments.at(DocIndex).sFileName).fileName();	
+		return lChildDocuments.at(DocIndex).sFileName;
 	}
-	return ChildrenFileNames.at(DocIndex); 
+	return "";	 
 }
 
 QString DocumentManager::getFilePath(QMdiSubWindow *subWindow)
 {
-	int i;
-	for (i=0;i<DocCount;i++)
+	if(lChildDocuments.isEmpty()==false)
 	{
-		if (SubWindowChildren.at(i) == subWindow)
+		for (int i=0;i<lChildDocuments.count();i++)
 		{
-			if (ChildrenFileNames.at(i).isEmpty())
+			if (lChildDocuments.at(i).pMDISubWin == subWindow)
+			{
+				if (lChildDocuments.at(i).sFileName.isEmpty())
 					return "";
-			QFileInfo fInfo(ChildrenFileNames.at(i));
-			return fInfo.absolutePath();
+				return QFileInfo(lChildDocuments.at(i).sFileName).absolutePath();
+			}
 		}
 	}
 	return "";
@@ -107,17 +112,16 @@ QString DocumentManager::getFilePath(QMdiSubWindow *subWindow)
 
 QString DocumentManager::getFileName(QMdiSubWindow *subWindow, bool bFileNameOnly)
 {
-	int i;
-	for (i=0;i<DocCount;i++)
+	if(lChildDocuments.isEmpty() == false)
 	{
-		if (SubWindowChildren.at(i) == subWindow)
+		for (int i=0;i<lChildDocuments.count();i++)
 		{
-			if (bFileNameOnly)
+			if (lChildDocuments.at(i).pMDISubWin == subWindow)
 			{
-				QFileInfo fInfo(ChildrenFileNames.at(i));
-				return fInfo.fileName();
+				if (bFileNameOnly)
+					return QFileInfo(lChildDocuments.at(i).sFileName).fileName();
+				return lChildDocuments.at(i).sFileName;
 			}
-			return ChildrenFileNames.at(i);
 		}
 	}
 	return "";
@@ -127,11 +131,14 @@ int DocumentManager::getDocIndex(QMdiSubWindow *subWindow)
 {
 	if(subWindow == NULL)
 		return -1;
-	for (int i=0;i<DocCount;i++)
+	if(lChildDocuments.isEmpty() == false)
 	{
-		if (SubWindowChildren.at(i) == subWindow)
+		for (int i=0;i<lChildDocuments.count();i++)
 		{
-			return i;
+			if (lChildDocuments.at(i).pMDISubWin == subWindow)
+			{
+				return i;
+			}
 		}
 	}
 	return -1;
@@ -139,7 +146,7 @@ int DocumentManager::getDocIndex(QMdiSubWindow *subWindow)
 
 int DocumentManager::count(void)
 {
-	return DocCount;
+	return lChildDocuments.count();
 }
 
 GlobalApplicationInformation::DocType DocumentManager::getDocType(const QString strExtension)
@@ -344,12 +351,13 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Glob
 	return false;
 }
 
-QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension)
+QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath)
 {
 	GlobalApplicationInformation::DocTypeStyle sDocStyle = GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;
 	QObject* pluginObject = NULL;
 	QWidget* editorObject = NULL;
 	QString sAPIFileName = "";
+	strDocManagerDocument tmpChildDoc;
 	bool bResult = false;
 
 	if(docType == GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED)
@@ -379,7 +387,7 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 							}
 							if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR_FULL)) == -1))//Is the slot present?
 							{
-								bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR),Qt::DirectConnection, Q_RETURN_ARG(QWidget *,editorObject), Q_ARG(QString,strExtension.toLower()));
+								bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR),Qt::DirectConnection, Q_RETURN_ARG(QWidget *,editorObject), Q_ARG(QString,strExtension.toLower()), Q_ARG(QString,strCanonicalFilePath));
 							}	
 							break;
 						}
@@ -478,7 +486,7 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 				break;
 			}
 		}
-		QWidgetChildren.append(custQsci);
+		tmpChildDoc.pWidget = custQsci;
 		editorObject = qobject_cast<QWidget*>(custQsci);
 		//DocIndex = DocCount;
 		//DocCount++;
@@ -486,13 +494,13 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 	}
 	else
 	{
-		QWidgetChildren.append(NULL);
+		tmpChildDoc.pWidget = editorObject;
 	}
-	ChildrenDocTypes.append(docType);
-	ChildrenFileNames.append("");
-	ChildrenModification.append(false);
-	DocIndex = DocCount;
-	DocCount++;
+	tmpChildDoc.dDocType = docType;
+	tmpChildDoc.sFileName = "";
+	tmpChildDoc.bIsModified = false;
+	DocIndex = lChildDocuments.count();
+	lChildDocuments.append(tmpChildDoc);
 	return editorObject;
 }
 
@@ -532,24 +540,35 @@ void DocumentManager::updateLineNumbers(QWidget *tmpSci)
 
 bool DocumentManager::setSubWindow(int DocIndex, QMdiSubWindow *subWindow)
 {
-	if (SubWindowChildren.count() > DocIndex)
+	if (lChildDocuments.count() > DocIndex)
 	{
-		SubWindowChildren.replace(DocIndex,subWindow);
+		lChildDocuments[DocIndex].pMDISubWin = subWindow;
 	}
-	else if (SubWindowChildren.count() == DocIndex)
+	else if (lChildDocuments.count() == DocIndex)
 	{
-		SubWindowChildren.append(subWindow);
+		strDocManagerDocument tmpDoc;
+		tmpDoc.pMDISubWin = subWindow;
+		lChildDocuments.append(tmpDoc);		
 	}
 	else 
 	{
 		return false;
 	}
-	DocModifiedMapper->setMapping(QWidgetChildren.at(DocIndex), SubWindowChildren.at(DocIndex));
-	bool bResult = false;
-	bResult = connect(QWidgetChildren.at(DocIndex), SIGNAL(textChanged()),	DocModifiedMapper, SLOT(map()));
+	bool bResult = false;	
+	if(lChildDocuments.count() > DocIndex)
+	{
+		if(lChildDocuments.at(DocIndex).pWidget)
+		{
+			if (lChildDocuments.at(DocIndex).pWidget->metaObject()->indexOfSignal(lChildDocuments.at(DocIndex).pWidget->metaObject()->normalizedSignature("textChanged()")) != -1)//Is the signal present?
+			{
+				bResult = connect(lChildDocuments.at(DocIndex).pWidget, SIGNAL(textChanged()),	DocModifiedMapper, SLOT(map()));
+				DocModifiedMapper->setMapping(lChildDocuments.at(DocIndex).pWidget, lChildDocuments.at(DocIndex).pMDISubWin);
+			}
+		}
+	}	
 	bResult = connect(DocModifiedMapper, SIGNAL(mapped(QWidget *)), this, SLOT(documentWasModified(QWidget *)));
 
-	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(lChildDocuments.at(DocIndex).pWidget);
 	if(tmpCustomQsciScintilla)
 		tmpCustomQsciScintilla->setManagerObject(this,subWindow);
 	return true;
@@ -561,7 +580,7 @@ bool DocumentManager::loadFile(int DocIndex, const QString &fileName)
 	if(file.exists() == false)
 		return false;
 	
-	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(lChildDocuments.at(DocIndex).pWidget);
 	bool bRetval = false;
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	if(tmpCustomQsciScintilla)
@@ -585,9 +604,19 @@ bool DocumentManager::loadFile(int DocIndex, const QString &fileName)
 			{							
 				if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_LOADADDFILE_FULL)) == -1))//Is the slot present?
 				{
-					bool bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_LOADADDFILE),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetval), Q_ARG(QString,fileName));
-					if(bResult==false)
-						bRetval = false;
+					QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_LOADADDFILE),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetval), Q_ARG(QString,fileName));
+				}
+				if(bRetval)
+				{
+					int nSignalIndex = pluginObject->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(FUNC_PLUGIN_DOCUMENTHASCHANGED_FULL));
+					int nSlotIndex = this->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_STIMULGL_CONFDOCMODSETTING_FULL));
+					if ((nSignalIndex >= 0) && (nSlotIndex >= 0))//Is the signal&slot present?
+						QMetaObject::connect(pluginObject,nSignalIndex,this,nSlotIndex,Qt::DirectConnection);
+
+					nSignalIndex = pluginObject->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(FUNC_PLUGIN_DOCUMENTISCLOSING_FULL));
+					nSlotIndex = this->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_STIMULGL_PROCDOCCLOSING_FULL));
+					if ((nSignalIndex >= 0) && (nSlotIndex >= 0))//Is the signal&slot present?
+						QMetaObject::connect(pluginObject,nSignalIndex,this,nSlotIndex,Qt::DirectConnection);
 				}
 			}
 		}
@@ -604,20 +633,66 @@ void DocumentManager::documentWasModified(QWidget *subWindow)
 	int tmpIndex = getDocIndex(tmpSubWindow);    
 	if (tmpIndex >= 0)
 	{
-		if (ChildrenModification.at(tmpIndex) == false)
+		if (lChildDocuments.at(tmpIndex).bIsModified == false)
 		{
 			setModFlagAndTitle(tmpIndex,true);
 		}
 	}
 }
 
+void DocumentManager::configureDocumentModifiedSetting(const QString &sCanoFilePath, const bool &bIsModified)
+{
+	if(sCanoFilePath.isEmpty() == false)
+	{
+		int tmpIndex = getDocIndex(sCanoFilePath);    
+		if (tmpIndex >= 0)
+		{
+			if (lChildDocuments.at(tmpIndex).bIsModified != bIsModified)
+			{
+				setModFlagAndTitle(tmpIndex,bIsModified);
+			}
+		}
+	}
+}
+
+void DocumentManager::processDocumentClosing(const QString &sCanoFilePath, const bool &bAutoSaveChanges)
+{
+	bool bResult = false;
+	if(sCanoFilePath.isEmpty() == false)
+	{
+		int tmpIndex = getDocIndex(sCanoFilePath);    
+		if (tmpIndex >= 0)
+		{
+			if(lChildDocuments.at(tmpIndex).sFileName != sCanoFilePath)//file target changed?
+				lChildDocuments[tmpIndex].sFileName = sCanoFilePath;
+			bResult = maybeSave(lChildDocuments.at(tmpIndex).pMDISubWin,bAutoSaveChanges);
+			//if(bResult)
+			//{
+				if(pluginDocHandlerStore.pluginObject.at(tmpIndex))
+				{
+					QObject *pluginObject = pluginDocHandlerStore.pluginObject.at(tmpIndex);
+					if(pluginObject)
+					{							
+						if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_REMOVEADDFILE_FULL)) == -1))//Is the slot present?
+						{
+							bool bRetval;
+							QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_REMOVEADDFILE),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetval), Q_ARG(QString,sCanoFilePath));
+						}						
+					}
+				//}
+				remove(lChildDocuments.at(tmpIndex).pMDISubWin);
+			}
+		}
+	}
+}
+
 int DocumentManager::getDocIndex(const QString &DocName)
 {
-	if(!(DocName==""))
+	if(!(DocName=="") && (lChildDocuments.isEmpty()==false))
 	{
-		for (int i=0;i<DocCount;i++)
+		for (int i=0;i<lChildDocuments.count();i++)
 		{
-			if (ChildrenFileNames.at(i) == DocName)
+			if (lChildDocuments.at(i).sFileName == DocName)
 			{
 				return i;
 			}
@@ -628,34 +703,43 @@ int DocumentManager::getDocIndex(const QString &DocName)
 
 void DocumentManager::setModFlagAndTitle(const int &DocIndex,bool hasChanges)
 {
-	ChildrenModification.replace(DocIndex,hasChanges);
-
-	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
-	if(tmpCustomQsciScintilla)
-		tmpCustomQsciScintilla->setModified(hasChanges);
-
-	QString tmpTitle = ChildrenFileNames.at(DocIndex);
-	if (tmpTitle != "")
+	if(lChildDocuments.isEmpty())
+		return;
+	if(lChildDocuments.count() > DocIndex)
 	{
-		if (hasChanges)
+		lChildDocuments[DocIndex].bIsModified = hasChanges;
+		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(lChildDocuments.at(DocIndex).pWidget);
+		if(tmpCustomQsciScintilla)
+			tmpCustomQsciScintilla->setModified(hasChanges);
+
+		QString tmpTitle = lChildDocuments.at(DocIndex).sFileName;
+		if (tmpTitle.isEmpty() == false)
 		{
-			QWidgetChildren.at(DocIndex)->setWindowTitle(tmpTitle + "*");
+			if (hasChanges)
+			{
+				lChildDocuments.at(DocIndex).pWidget->setWindowTitle(tmpTitle + "*");
+			}
+			else
+			{
+				//if(tmpCustomQsciScintilla)
+				lChildDocuments.at(DocIndex).pWidget->setWindowTitle(tmpTitle);
+			}		
 		}
-		else
-		{
-			if(tmpCustomQsciScintilla)
-				QWidgetChildren.at(DocIndex)->setWindowTitle(tmpTitle);
-		}		
 	}
 }
 
 void DocumentManager::setFileName(int DocIndex, QString fileName)
 {
-	QFileInfo fileInformation(fileName);
-	fileName = 	fileInformation.canonicalFilePath();
-	ChildrenFileNames.replace(DocIndex,fileName);
-	setModFlagAndTitle(DocIndex,false);
-	//QWidgetChildren.at(DocIndex)->setWindowTitle(fileName);	
+	if(lChildDocuments.isEmpty())
+		return;
+	if(lChildDocuments.count()> DocIndex)
+	{
+		QFileInfo fileInformation(fileName);
+		fileName = 	fileInformation.canonicalFilePath();
+		lChildDocuments[DocIndex].sFileName = fileName;
+		setModFlagAndTitle(DocIndex,false);
+		//QWidgetChildren.at(DocIndex)->setWindowTitle(fileName);	
+	}
 }
 
 bool DocumentManager::appendKnownFileExtensionList(QString strFileExtLst)
@@ -736,16 +820,25 @@ bool DocumentManager::saveFile(int DocIndex, QString fileName, bool *bReparseDoc
 		return false;
 	}
 
-	QTextStream out(&file);
 	QApplication::setOverrideCursor(Qt::WaitCursor);
-
-	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(DocIndex));
+	
+	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(lChildDocuments.at(DocIndex).pWidget);
 	if(tmpCustomQsciScintilla)
 	{
+		QTextStream out(&file);
 		out << tmpCustomQsciScintilla->text();
 		tmpCustomQsciScintilla->setModified(false);
 	}
+	else if(lChildDocuments.at(DocIndex).pWidget)
+	{
+		if (!(lChildDocuments.at(DocIndex).pWidget->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_WIDGET_SAVEFILE_FULL)) == -1))//Is the slot present?
+		{
+			QMetaObject::invokeMethod(lChildDocuments.at(DocIndex).pWidget,QMetaObject::normalizedSignature(FUNC_PLUGIN_WIDGET_SAVEFILE),Qt::DirectConnection, Q_ARG(QString,fileName));
+		}
+	}
+	
 	QApplication::restoreOverrideCursor();
+	
 	setFileName(DocIndex,fileName);
 
 	if(bReparseDocumentContentNeeded != NULL)
@@ -753,7 +846,7 @@ bool DocumentManager::saveFile(int DocIndex, QString fileName, bool *bReparseDoc
 		QFileInfo fileInformation(fileName);
 		QString strNewExtension = fileInformation.completeSuffix();
 		GlobalApplicationInformation::DocType newDocType = getDocType(strNewExtension);
-		if(ChildrenDocTypes.at(DocIndex) != newDocType)
+		if(lChildDocuments.at(DocIndex).dDocType != newDocType)
 		{
 			*bReparseDocumentContentNeeded = true;
 		}
@@ -774,38 +867,79 @@ bool DocumentManager::saveFile(QMdiSubWindow *subWindow, QString fileName, bool 
 
 bool DocumentManager::maybeSave(QMdiSubWindow *subWindow, bool bAutoSaveChanges)
 {
-	int i;
-	if(subWindow == 0)
+	if(subWindow == NULL)
 	{
 		return true;
 	}
 	else
 	{
-		for (i=0;i<DocCount;i++)
+		if(lChildDocuments.isEmpty())
+			return true;
+		for (int i=0;i<lChildDocuments.count();i++)
 		{
-			if (SubWindowChildren.at(i) == subWindow)
+			if (lChildDocuments.at(i).pMDISubWin == subWindow)
 			{
-				CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(i));
+				CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(lChildDocuments.at(i).pWidget);
 				if (tmpCustomQsciScintilla)
 				{
-					if (tmpCustomQsciScintilla->isModified()) {
+					if (tmpCustomQsciScintilla->isModified()) 
+					{
 						if(!bAutoSaveChanges)
 						{
-							int ret = QMessageBox::warning(0, ChildrenFileNames.at(i),
-								tr("The document has been modified.\n"
-								"Do you want to save your changes?"),
+							int ret = QMessageBox::warning(0, lChildDocuments.at(i).sFileName,
+								tr(WARNING_DOCCHANGEDSAVEFILE_STRING),
 								QMessageBox::Yes | QMessageBox::Default,
 								QMessageBox::No,
 								QMessageBox::Cancel | QMessageBox::Escape);
 							if (ret == QMessageBox::Yes)
+							{
 								return saveFile(i);
+							}
 							else if (ret == QMessageBox::Cancel)
+							{
 								return false;
+							}
 						}
 						else
 						{
 							return saveFile(i);
 						}
+					}
+					return true;
+				}
+				else if(lChildDocuments.at(i).pWidget)//this is coming from a plug-ins document handler..
+				{
+					if(lChildDocuments.at(i).bIsModified)
+					{
+						bool bDoSave = false;
+						if(!bAutoSaveChanges)
+						{
+							int ret = QMessageBox::warning(0, lChildDocuments.at(i).sFileName,
+								tr(WARNING_DOCCHANGEDSAVEFILE_STRING),
+								QMessageBox::Yes | QMessageBox::Default,
+								QMessageBox::No,
+								QMessageBox::Cancel | QMessageBox::Escape);
+							if (ret == QMessageBox::Yes)
+							{
+								bDoSave = true;
+							}
+							else if (ret == QMessageBox::Cancel)
+							{
+								return false;
+							}
+						}
+						else
+						{
+							bDoSave = true;
+						}
+						if(bDoSave)
+						{
+							int nSlotIndex = lChildDocuments.at(i).pWidget->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_WIDGET_SAVEFILE_FULL));
+							if (nSlotIndex >= 0)//Is the slot present?
+								QMetaObject::invokeMethod(lChildDocuments.at(i).pWidget,FUNC_PLUGIN_WIDGET_SAVEFILE,Qt::DirectConnection,Q_ARG(QString, lChildDocuments.at(i).sFileName));
+							return true;
+						}
+
 					}
 					return true;
 				}
@@ -817,18 +951,15 @@ bool DocumentManager::maybeSave(QMdiSubWindow *subWindow, bool bAutoSaveChanges)
 
 bool DocumentManager::remove(QMdiSubWindow *subWindow)
 {
-	int i;
- 	for (i=0;i<DocCount;i++)
+	if(lChildDocuments.isEmpty() == false)
 	{
-		if (SubWindowChildren.at(i) == subWindow)
+		for (int i=0;i<lChildDocuments.count();i++)
 		{
-			ChildrenFileNames.removeAt(i);
-			ChildrenDocTypes.removeAt(i);
-			QWidgetChildren.removeAt(i);
-			SubWindowChildren.removeAt(i);
-			ChildrenModification.removeAt(i);
-			DocCount --;
-			return true;
+			if (lChildDocuments.at(i).pMDISubWin == subWindow)
+			{
+				lChildDocuments.removeAt(i);
+				return true;
+			}
 		}
 	}
 	return false;
@@ -836,12 +967,15 @@ bool DocumentManager::remove(QMdiSubWindow *subWindow)
 
 void DocumentManager::setAllUnmodified()
 {
-	CustomQsciScintilla *tmpCustomQsciScintilla;
-	for (int i=0;i<DocCount;i++)
+	if(lChildDocuments.isEmpty() == false)
 	{
-		tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(QWidgetChildren.at(i));
-		if (tmpCustomQsciScintilla)
-			tmpCustomQsciScintilla->setModified(false);
+		CustomQsciScintilla *tmpCustomQsciScintilla;
+		for (int i=0;i<lChildDocuments.count();i++)
+		{
+			tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(lChildDocuments.at(i).pWidget);
+			if (tmpCustomQsciScintilla)
+				tmpCustomQsciScintilla->setModified(false);
+		}
 	}
 }
 

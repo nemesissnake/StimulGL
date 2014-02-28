@@ -119,6 +119,7 @@ public:
 	bool expandExperimentBlockParameterValue(QString &sValue);
 	bool getExperimentObjectScriptValue(const int &nObjectID,const QString &sKeyName,QScriptValue &sScriptValue);
 	bool setExperimentObjectFromScriptValue(const int &nObjectID,const QString &sKeyName,const QScriptValue &sScriptValue);
+	QWidget *getVisualExperimentEditor();
 
 	static bool createExperimentStructure(QList<ExperimentTreeItem*> &lExpTreeItems, ExperimentTreeModel *expTreeModel = NULL, cExperimentStructure* cExpBlockTrialStruct = NULL);
 
@@ -357,14 +358,15 @@ public slots:
 	 *  @param expStruct a cExperimentStructure that should be set as the new in-memory Experiment Structure.
 	 *  @return a boolean value determining whether this function executed successfully.
 	 */	
-	bool setExperimentStructure(cExperimentStructure *expStruct = NULL);
-	/*! \brief Shows a Experiment Structure in a Experiment Graph Editor UI.
+	bool setExperimentStructure(cExperimentStructure *expStruct);
+	/*! \brief Shows the Experiment in a Visual Experiment Editor UI.
 	 *
-	 *  This function shows a dialog containing the Experiment Graph Editor containing the provided Experiment Structure, if the provided ExperimentStructure parameter is NULL than the current in-memory Experiment Structure is used instead.
-	 *  @param ExpStruct a cExperimentStructure to be edited by the Experiment Graph Editor, make it NULL to automatically use the current in-memory Experiment Structure.
+	 *  This function shows the Experiment in a Visual Experiment Editor UI, if the provided ExperimentTreeModel is NULL than the current in-memory Experiment is parsed by the editor.
+	 *  @param expTreeModel a ExperimentTreeModel to be edited by the Visual Experiment Editor UI, make it NULL to automatically use the current in-memory Experiment.
+	 *  @param sExpTreeModelCanonFilePath a string holding a canonical path referring to a file that should be used by default for saving changes to. 
 	 *  @return a boolean value determining whether this function executed successfully.
 	 */	
-	//bool showVisualExperimentEditor(cExperimentStructure *ExpStruct = NULL);
+	bool showVisualExperimentEditor(ExperimentTreeModel *expTreeModel = NULL, const QString &sExpTreeModelCanonFilePath = "");
 
 #ifndef QT_NO_DEBUG
 	QString Test(const QString &sInput = "");
@@ -372,6 +374,7 @@ public slots:
 
 private slots:
 	void changeExperimentSubObjectState(ExperimentSubObjectState nState);
+	void visualExperimentEditorDestroyed(ExperimentGraphicEditor *pExpGraphEditor);
 
 private:
 	void DefaultConstruct();
@@ -398,7 +401,7 @@ private:
 	void changeCurrentExperimentState(ExperimentState expCurrState);
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
-	
+		
 	ExperimentParameterWidgets *expParamWidgets;
 	QList<ExperimentTreeItem*> ExperimentObjectTreeItemList;
 	QList<ExperimentTreeItem*> ExperimentBlockTrialsTreeItemList;

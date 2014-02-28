@@ -541,7 +541,7 @@ private:
 	QAction* integratePlugin(QObject *plugin, PluginCollection *collection);
 	void setupToolBars();
 	void setRenderer();
-	void newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension = "");
+	void newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension = "", const QString &strCanonicalFilePath = "");
 	//void setupSyntaxHighlighting(MdiChild *childWindow,MDIDocumentType tempFileType);
 	void parseRemainingGlobalSettings();
 	bool configureDebugger();

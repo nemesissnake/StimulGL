@@ -110,6 +110,15 @@ ExperimentManagerPlugin::~ExperimentManagerPlugin()
 		delete Qml2ViewerObject;
 		Qml2ViewerObject = NULL;
 	}
+	foreach(ExperimentManager *ExpMngrObject, mapExpMngrUI)
+	{
+		if(ExpMngrObject)
+		{
+			delete ExpMngrObject;
+			ExpMngrObject = NULL;	
+		}
+	}
+	mapExpMngrUI.clear();
 }
 
 bool ExperimentManagerPlugin::ConfigureScriptEngine(QScriptEngine &engine)
@@ -209,7 +218,8 @@ bool ExperimentManagerPlugin::ShowGUI()
 	ExperimentManagerDiagObject->setWindowTitle(strPluginInformation);
 	returnVal = ExperimentManagerDiagObject->exec();
 
-	switch (returnVal) {
+	switch (returnVal) 
+	{
 	case QMessageBox::Save:
 	   // Save was clicked
 	   break;
@@ -274,8 +284,7 @@ QObject *ExperimentManagerPlugin::GetScriptMetaObject(int nIndex)
 	case 10:
 		if(ExperimentTimerObject == NULL)
 			ExperimentTimerObject = new ExperimentTimer();
-		return (QObject *)ExperimentTimerObject->metaObject();		
-
+		return (QObject *)ExperimentTimerObject->metaObject();
 	default:
 		return NULL;
 	}
@@ -285,7 +294,11 @@ bool ExperimentManagerPlugin::ExperimentManagerEXMLDocumentHandler(const QString
 {
 	GlobalApplicationInformation::DocContentInfoStructure docStruct;
 	docStruct.strDocContent = docContent;
-	docStruct.bIsFile = false;
+	QFile fileCheck(docContent);
+	if(fileCheck.exists())
+		docStruct.bIsFile = true;
+	else
+		docStruct.bIsFile = false;
 	docStruct.strDocHomeDir = strHomePath;
 	docStruct.strDocExtension = PLUGIN_EXMLDOC_EXTENSION;
 	return ExecuteContent(docStruct);
@@ -303,10 +316,19 @@ bool ExperimentManagerPlugin::ExperimentManagerQMLDocumentHandler(const QString 
 
 bool ExperimentManagerPlugin::ExecuteContent(const GlobalApplicationInformation::DocContentInfoStructure &docStruct)
 {
-	if(ExperimentManagerDiagObject)
+	if((docStruct.bIsFile == true) && (mapExpMngrUI.contains(docStruct.strDocContent)))
 	{
-		ExperimentManagerDiagObject->setContentToExecute(docStruct);
-		return ExperimentManagerDiagObject->executeActiveDocument();
+		ExperimentManager *tmpManager = mapExpMngrUI[docStruct.strDocContent];
+		if(tmpManager)
+			return tmpManager->runExperiment();
+	}
+	else if(docStruct.bIsFile == false)//In case of text-editing
+	{
+		if(ExperimentManagerDiagObject)
+		{
+			ExperimentManagerDiagObject->setContentToExecute(docStruct);
+			return ExperimentManagerDiagObject->executeActiveDocument();
+		}
 	}
 	return false;
 }
@@ -337,14 +359,28 @@ QString ExperimentManagerPlugin::GetAdditionalFileTypeApiName(QString strExtensi
 	return "";
 }
 
-QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtension)
+QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath)
 {
-	return NULL;
 	if(strExtension.toLower() == "exml")
 	{
-		if(ExperimentManagerObject == NULL)
-			ExperimentManagerObject = new ExperimentManager(this);
-		return NULL;//ExperimentManagerObject->getVisualExperimentEditor();
+		ExperimentManager *tmpManager;
+		if(strCanonicalFilePath.isEmpty())
+		{
+			tmpManager = ExperimentManagerObject;
+		}
+		else
+		{			
+			if(mapExpMngrUI.contains(strCanonicalFilePath))
+			{
+				tmpManager = mapExpMngrUI[strCanonicalFilePath];
+			}
+			else
+			{
+				tmpManager = new ExperimentManager(this);
+				mapExpMngrUI.insert(strCanonicalFilePath,tmpManager);
+			}			
+		}
+		return tmpManager->getVisualExperimentEditor();
 	} 
 	else if(strExtension.toLower() == "qml")
 	{
@@ -355,20 +391,48 @@ QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtensi
 
 bool ExperimentManagerPlugin::LoadAdditionalFile(QString strFilePath)
 {
-	if(ExperimentManagerObject == NULL)
-		ExperimentManagerObject = new ExperimentManager(this);
-	if(ExperimentManagerObject->loadExperiment(strFilePath,true))
+	ExperimentManager *tmpManager;
+	QDir tmpDir(strFilePath);
+	QString tmpString = tmpDir.canonicalPath();
+	if(mapExpMngrUI.contains(tmpString))
 	{
-		return NULL;//ExperimentManagerObject->showVisualExperimentEditor();
+		tmpManager = mapExpMngrUI[tmpString];
 	}
 	else
 	{
-		qDebug() << __FUNCTION__ << "::Error: Could not load the document (" << strFilePath << ")!";
+		tmpManager = new ExperimentManager(this);
+		mapExpMngrUI.insert(tmpString,tmpManager);
+	}
+
+	//if(ExperimentManagerObject == NULL)
+	//	ExperimentManagerObject = new ExperimentManager(this);
+	if(tmpManager->loadExperiment(tmpString,true))
+	{		
+		QWidget* tmpWidget = tmpManager->getVisualExperimentEditor();
+		if(tmpWidget)
+		{
+			connect(tmpWidget, SIGNAL(ContentHasChanged(QString,bool)), this, SIGNAL(DocumentHasChanged(QString,bool)));
+			connect(tmpWidget, SIGNAL(IsClosing(QString,bool)), this, SIGNAL(DocumentIsClosing(QString,bool)));			
+			return tmpManager->showVisualExperimentEditor(NULL,tmpString);
+		}
+	}
+	else
+	{
+		qDebug() << __FUNCTION__ << "::Error: Could not load the document (" << tmpString << ")!";
 	}
 	return false;
 }
 
-bool ExperimentManagerPlugin::SaveAdditionalFile(QString strFilePath)
+//bool ExperimentManagerPlugin::SaveAdditionalFile(QString strFilePath)//Should be implemented by the widget
+//{
+//	return true;
+//}
+
+bool ExperimentManagerPlugin::RemoveAdditionalFile(QString strFilePath)
 {
+	if(mapExpMngrUI.contains(strFilePath))
+	{
+		mapExpMngrUI.remove(strFilePath);
+	}
 	return true;
 }

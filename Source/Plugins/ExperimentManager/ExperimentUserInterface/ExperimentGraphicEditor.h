@@ -56,16 +56,23 @@ class ExperimentGraphicEditor : public QWidget
     Q_OBJECT
 
 signals:
-	void onTableViewRedrawned(int nNewWidth, int nNewHeight);	
+	void OnTableViewRedrawned(int nNewWidth, int nNewHeight);
+	void CopyAvailable(bool bCopyAvailable);
+	void IsDestructing(ExperimentGraphicEditor *pExpGraphEditor);
+	void IsClosing(QString sCanoFilePath, bool bShouldAutoSaveChanges);
+	void ContentHasChanged(QString sCanoFilePath, bool bHasChanged);
         
 public:
     explicit ExperimentGraphicEditor(QWidget *parent = 0);
     ~ExperimentGraphicEditor();
+
+	void setNewFileName(const QString &sExpTreeModelCanonFilePath = "") {sCurrentCanonFilePath = sExpTreeModelCanonFilePath;};
         
 public slots:
 	void setExperimentManager(ExperimentManager *pExpManager);
-	bool setExperimentTreeModel(ExperimentTreeModel *expModel = NULL);
-		
+	bool setExperimentTreeModel(ExperimentTreeModel *expModel = NULL, const QString &sExpTreeModelCanonFilePath = "");
+	void saveFile(const QString &sFilePath = "");
+
 //protected slots:
 //	void closeEvent(QCloseEvent *event);
 //	void resizeEvent(QResizeEvent * event);
@@ -74,7 +81,6 @@ private slots:
     void newFile();
 	void openFile();
 	void closeFile();
-	void saveFile();
 	void showInfo(const QModelIndex &index);
 	void fillTableView(const QString &textToFind, const QStringList &filters);
 	void tableViewResized(int pos, int index);
@@ -89,8 +95,8 @@ private slots:
     void saveNewData();
 	void saveNewData(const QString &sName, const QString &sValue);
 	void setViewFilter(const TreeFilterSettings &newViewSettings);
-	void updateWindowTitle(const QString sSuffix = QString(""));
-
+	//void updateWindowTitle(const QString sSuffix = QString(""));
+	void treeModelChanged();
 	void childWidgetDestroyed(QWidget* pWidget);
 
 private:
@@ -140,6 +146,7 @@ private:
 	QModelIndex selectedIndex;
 
 	ExperimentManager *expManager;
+	QString sCurrentCanonFilePath;
 	ExperimentStructureVisualizer *expStructVisualizer;
 	ExperimentBlockParameterView *expBlockParamView;
 	cExperimentStructure *tmpExpStruct;					//Only temporarily use!

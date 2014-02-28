@@ -26,6 +26,7 @@
 #include <QtWidgets>
 #include <QString>
 #include <Qlibrary>
+#include <QMap>
 
 #include "../../StimulGL/plugininterface.h"
 #include "ExperimentManager_dialog.h"
@@ -45,7 +46,8 @@ class ExperimentManagerPlugin : public QObject, ExtensionInterface
     Q_INTERFACES(ExtensionInterface)
 
 signals:
-	void FileHasBeenChanged(bool bHasChanged);
+	void DocumentHasChanged(QString sCanoFilePath, bool bHasChanged);
+	void DocumentIsClosing(QString sCanoFilePath, bool bShouldAutoSaveChanges);
 
 public:
 	ExperimentManagerPlugin(QObject *parent = 0);
@@ -57,6 +59,7 @@ public:
 private:	
 	bool ExecuteContent(const GlobalApplicationInformation::DocContentInfoStructure &docStruct);
 	
+	QMap<QString, ExperimentManager*> mapExpMngrUI;
 	ExperimentManager *ExperimentManagerObject; 
 	ExperimentManager_Dialog *ExperimentManagerDiagObject;
 	TriggerTimer *TriggerTimerObject;
@@ -80,9 +83,9 @@ public slots:
 	QObject *GetScriptMetaObject(int nIndex);
 	int GetAdditionalFileTypeStyle(QString strExtension);
 	QString GetAdditionalFileTypeApiName(QString strExtension);
-	QWidget *GetAdditionalFileTypeEditor(QString strExtension);
+	QWidget *GetAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath);
 	bool LoadAdditionalFile(QString strFilePath);
-	bool SaveAdditionalFile(QString strFilePath);
+	//bool SaveAdditionalFile(QString strFilePath);
+	bool RemoveAdditionalFile(QString strFilePath);
 };
-
 #endif//ExperimentManagerPLUGIN_H

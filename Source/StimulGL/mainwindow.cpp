@@ -2208,7 +2208,13 @@ void MainWindow::executeActiveDocument()
 			QString strDocumentContent = "";
 			CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentActiveWindow));
 			if (tmpCustomQsciScintilla)
+			{
 				strDocumentContent = tmpCustomQsciScintilla->text();
+			}
+			else
+			{
+				strDocumentContent = strFileName;
+			}
 			QString strExtension = QFileInfo(DocManager->getFileName(currentActiveWindow)).completeSuffix();
 			QString strDocHandlerSlotName = "";
 			QObject* pluginObject = DocManager->getKnownDocumentFileHandlerInformation(DocManager->getKnownDocumentFileHandlerIndex(strExtension),strDocHandlerSlotName);
@@ -2475,7 +2481,7 @@ bool MainWindow::parseFile(const QFile &file)
 	fileExtension = fileInfo.suffix();
 	GlobalApplicationInformation::DocType tempDocType = DocManager->getDocType(fileExtension);
 	int DocIndex;
-	newDocument(tempDocType,DocIndex,fileExtension);
+	newDocument(tempDocType,DocIndex,fileExtension, fileInfo.canonicalFilePath());
 
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	if (DocManager->loadFile(DocIndex,file.fileName()))
@@ -2633,17 +2639,22 @@ void MainWindow::newFile()
 	statusBar()->showMessage(tr("New File created"), 2000);
 }
 
-void MainWindow::newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension)
+void MainWindow::newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath)
 {
 	DocIndex = 0;
 	//QsciScintilla *newChild = qobject_cast<QsciScintilla *>(DocManager->add(docType,DocIndex,strExtension));
-	QWidget *newChild = DocManager->add(docType,DocIndex,strExtension);
+	QWidget *newChild = DocManager->add(docType,DocIndex,strExtension,strCanonicalFilePath);
 	QMdiSubWindow *subWindow = mdiArea->addSubWindow(newChild);
 	subWindow->setAttribute(Qt::WA_DeleteOnClose);
 	DocManager->setSubWindow(DocIndex,subWindow);
-	connect(newChild, SIGNAL(copyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
-	connect(newChild, SIGNAL(copyAvailable(bool)),	copyAction, SLOT(setEnabled(bool)));
-	connect(newChild, SIGNAL(cursorPositionChanged(int, int)), this, SLOT(CursorPositionChanged(int, int)));
+
+	if(newChild->metaObject()->indexOfSignal(newChild->metaObject()->normalizedSignature(FUNC_PLUGIN_COPYAVAILABLE_FULL))>0)
+	{
+		connect(newChild, SIGNAL(CopyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
+		connect(newChild, SIGNAL(CopyAvailable(bool)),	copyAction, SLOT(setEnabled(bool)));
+	}
+	if(newChild->metaObject()->indexOfSignal(newChild->metaObject()->normalizedSignature(FUNC_PLUGIN_CURSORPOSCHANGED_FULL))>0)
+		connect(newChild, SIGNAL(CursorPositionChanged(int, int)), this, SLOT(CursorPositionChanged(int, int)));
 	newChild->showMaximized();
 }
 

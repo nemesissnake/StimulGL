@@ -111,15 +111,6 @@ QScriptValue ExperimentManager::ctor__experimentStateEnum(QScriptContext *contex
 
 QString ExperimentManager::Test(const QString &sInput)
 {
-	//if(currentScriptEngine)
-	//{
-	//if(ExpGraphicEditor == NULL)
-	ExpGraphicEditor = new ExperimentGraphicEditor();
-	ExpGraphicEditor->setExperimentManager(this);
-	if(currentExperimentTree)
-		ExpGraphicEditor->setExperimentTreeModel(currentExperimentTree);
-	ExpGraphicEditor->showMaximized();
-	//}
 	return sInput;
 }
 #endif
@@ -1093,76 +1084,49 @@ void ExperimentManager::setExperimentOutputFilePostString(const QString &sPostSt
 	sExperimentOutputDataPostString = sPostString;
 }
 
-//VisualExperimentEditor *ExperimentManager::getVisualExperimentEditor()
-//{
-//	if(visExpEditor == NULL)
-//		visExpEditor = new VisualExperimentEditor();
-//	return visExpEditor;
-//}
+QWidget *ExperimentManager::getVisualExperimentEditor()
+{
+	if(ExpGraphicEditor == NULL)
+	{
+		ExpGraphicEditor = new ExperimentGraphicEditor();
+		connect(ExpGraphicEditor, SIGNAL(IsDestructing(ExperimentGraphicEditor*)), this, SLOT(visualExperimentEditorDestroyed(ExperimentGraphicEditor*))); 
+	}	
+	if(currentExperimentTree)
+		ExpGraphicEditor->setExperimentTreeModel(currentExperimentTree, "");
+	return ExpGraphicEditor;
+}
 
-//bool ExperimentManager::showVisualExperimentEditor(cExperimentStructure *ExpStruct)
-//{
-//	if(ExpStruct == NULL)
-//	{
-//		if(cExperimentBlockTrialStructure == NULL)
-//		{
-//			//if(loadExperiment("",true) == false)
-//			//	return false;
-//			if (!prePassiveParseExperiment())
-//				return false;
-//		}
-//		ExpStruct = cExperimentBlockTrialStructure;
-//	}
-//	if(visExpEditor == NULL)
-//		visExpEditor = new VisualExperimentEditor();
-//	bool bParseResult = visExpEditor->parseExperimentStructure(ExpStruct);
-//	if(bParseResult)
-//		visExpEditor->showMaximized();
-//	return bParseResult;
-//
-//	//QGraphicsScene *gScene = new QGraphicsScene();
-//	//QGraphicsView *gView = new QGraphicsView();//(gScene);
-//	//QGridLayout *layout = new QGridLayout();
-//
-//	////gScene->addText("Hello, world!");	
-//	//gView->setScene(gScene);
-//	//gView->setRenderHint(QPainter::Antialiasing);
-//	////    gView.backgroundBrush = new QBrush(new QPixmap("images/cheese.png"));
-//	////    gView.cacheMode = new QGraphicsView.CacheMode(QGraphicsView.CacheBackground);
-//	////	  gView->dragMode = QGraphicsView.ScrollHandDrag;
-//	////    gView.viewportUpdateMode = QGraphicsView.FullViewportUpdate;	
-//	////layout->addWidget(gView, 0, 0);
-//	////gView->setLayout(layout);
-//	//gView->setContextMenuPolicy(Qt::CustomContextMenu);
-//	//gView->setWindowTitle("Experiment Graph Editor");
-//	//gView->resize(400, 300);
-//	//// ui->graphicsView->setDragMode(QGraphicsView::ScrollHandDrag);
-//
-//	////ExperimentGraphBlock *b = new ExperimentGraphBlock(NULL, gScene);
-//	////b->addPort("Block Action DoSomething", false, ExperimentGraphPort::NamePort);
-//	////b->addPort("0: Block 1", false, ExperimentGraphPort::TypePort);
-//	////b->addInputPort("input");
-//	////b->addOutputPort("output");
-//	////b = b->clone();
-//	////b->setPos(150, 0);
-//	////b = b->clone();
-//	////b->setPos(150, 150);
-//
-//	//ExperimentGraphEditor *expGraphEditor = new ExperimentGraphEditor(this);
-//	//expGraphEditor->install(gScene,gView);
-//	//if(expGraphEditor->parseExperimentStructure(ExpStruct))
-//	//{
-//	//	//connect(ui->action_Save, SIGNAL(triggered()), this, SLOT(saveFile()));
-//	//	//connect(ui->action_Load, SIGNAL(triggered()), this, SLOT(loadFile()));
-//	//	//connect(ui->action_Quit, SIGNAL(triggered()), qApp, SLOT(quit()));
-//	//	//ui->toolBar->addAction("Add block", this, SLOT(addBlock()));
-//	//	gView->showMaximized();
-//	//	//delete gScene;
-//	//	//delete gView;
-//	//	//delete layout;
-//	//}
-//	//return true;
-//}
+void ExperimentManager::visualExperimentEditorDestroyed(ExperimentGraphicEditor *pExpGraphEditor)
+{
+	if(ExpGraphicEditor == pExpGraphEditor)
+		ExpGraphicEditor = NULL;
+}
+
+bool ExperimentManager::showVisualExperimentEditor(ExperimentTreeModel *expTreeModel, const QString &sExpTreeModelCanonFilePath)
+{
+	if(expTreeModel == NULL)
+	{
+		if(currentExperimentTree == NULL)
+		{
+			if(loadExperiment(sExpTreeModelCanonFilePath,true) == false)
+				return false;
+			if (!prePassiveParseExperiment())
+				return false;
+		}
+		expTreeModel = currentExperimentTree;
+	}
+	if(ExpGraphicEditor == NULL)
+	{
+		ExpGraphicEditor = new ExperimentGraphicEditor();
+		connect(ExpGraphicEditor, SIGNAL(IsDestructing(ExperimentGraphicEditor*)), this, SLOT(visualExperimentEditorDestroyed(ExperimentGraphicEditor*))); 
+		ExpGraphicEditor->setExperimentManager(this);
+	}
+	bool bParseResult = ExpGraphicEditor->setExperimentTreeModel(expTreeModel,sExpTreeModelCanonFilePath);
+
+	if(bParseResult)
+		ExpGraphicEditor->showMaximized();
+	return bParseResult;
+}
 
 cExperimentStructure *ExperimentManager::getExperimentStructure() 
 {
@@ -1171,19 +1135,14 @@ cExperimentStructure *ExperimentManager::getExperimentStructure()
 
 bool ExperimentManager::setExperimentStructure(cExperimentStructure *expStruct) 
 {
-	if(cExperimentBlockTrialStructure)
-	{
+	//if(cExperimentBlockTrialStructure)
+	//{
 		//delete cExperimentBlockTrialStructure;
 		//cExperimentBlockTrialStructure = NULL;
-	}
+	//}
 	cExperimentBlockTrialStructure = expStruct;//new cExperimentStructure(expStruct);
 	return true;
 }
-
-//QObject* ExperimentManager::getExperimentStructure() 
-//{
-//	return cExperimentBlockTrialStructure;
-//}
 
 bool ExperimentManager::finalizeExperimentObjects()
 {
@@ -1893,15 +1852,9 @@ int ExperimentManager::createExperimentBlockParamsFromTreeItemList(const int &nB
 	//	++iterPPL;
 	//}
 
-	//if(cExperimentBlockTrialStructure == NULL)
-	//	return -1;
-	//int nBlockCount = cExperimentBlockTrialStructure->getBlockCount();
 	int nBlockCount = pExpBlockTrialsTreeItems->count();
 	if (nBlockCount <= nBlockNumber)
 		return -1;
-	//if (nBlockCount != pExpBlockTrialsDomNodeLst->count())
-	//	return -1;
-
 
 	ParsedParameterDefinition tmpParDef;
 	QString tmpString;
@@ -2032,175 +1985,6 @@ int ExperimentManager::createExperimentBlockParamsFromTreeItemList(const int &nB
 	}//end block-for loop
 	return -1;
 }
-
-/*int ExperimentManager::createExperimentBlockParamsFromDomNodeList(const int &nBlockNumber, const int &nObjectID, QDomNodeList *pExpBlockTrialsDomNodeLst, tParsedParameterList *hParams)
-{
-	if (hParams == NULL)
-		return -1;
-	if(pExpBlockTrialsDomNodeLst == NULL)
-		return -1;
-	if(hParams->count() == 0)
-		return -1;
-	if(nObjectID < 0)
-		return -1;
-	if(nBlockNumber < 0)
-		return -1;
-	if (pExpBlockTrialsDomNodeLst->isEmpty())
-		return -1;
-
-	//Set all the parameter bHasChanged attributes too false again
-	QList<ParsedParameterDefinition> tmpStrValueList = hParams->values();//The order is guaranteed to be the same as that used by keys()!
-	QList<QString> tmpStrKeyList = hParams->keys();//The order is guaranteed to be the same as that used by values()!
-	for(int i=0;i<tmpStrKeyList.count();i++)
-	{
-		tmpStrValueList[i].bHasChanged = false;
-		hParams->insert(tmpStrKeyList[i], tmpStrValueList[i]);
-	}
-
-	//The below code seems not to work due to the iterator...
-	//
-	//
-	////Set all the parameter bHasChanged attributes too false again
-	//tParsedParameterList::const_iterator iterPPL = hParams->constBegin();
-	//while (iterPPL != hParams->constEnd()) 
-	//{
-	//	tmpParDef = iterPPL.value();
-	//	tmpString = iterPPL.key();
-	//	tmpParDef.bHasChanged = false;
-	//	//cout << iterPPL.key() << ": " << iterPPL.value() << endl;
-	//	 hParams->insert(tmpString, tmpParDef);
-	//	++iterPPL;
-	//}
-	
-	//if(cExperimentBlockTrialStructure == NULL)
-	//	return -1;
-	//int nBlockCount = cExperimentBlockTrialStructure->getBlockCount();
-	int nBlockCount = pExpBlockTrialsDomNodeLst->count();
-	if (nBlockCount <= nBlockNumber)
-		return -1;
-	//if (nBlockCount != pExpBlockTrialsDomNodeLst->count())
-	//	return -1;
-	
-	QDomElement tmpElement;
-	QDomNode tmpNode;
-	ParsedParameterDefinition tmpParDef;
-	QString tmpString;
-	QString tmpValue;
-
-	for(int i=0;i<nBlockCount;i++)//Loop through the blocks
-	{
-		if(pExpBlockTrialsDomNodeLst->at(i).hasChildNodes())
-		{
-			tmpElement = pExpBlockTrialsDomNodeLst->at(i).firstChildElement(BLOCKNUMBER_TAG);
-			if(!tmpElement.isNull())//Is there a block_number defined?
-			{
-				if (nBlockNumber == tmpElement.text().toInt())//Correct block number?
-				{
-					QDomNodeList tmpObjectNodeList = pExpBlockTrialsDomNodeLst->at(i).toElement().elementsByTagName(OBJECT_TAG);//Retrieve all the objects
-					int nObjectListCount = tmpObjectNodeList.count();
-					if (nObjectListCount>0)
-					{
-						for (int j=0;j<nObjectListCount;j++)//For each object
-						{
-							if(tmpObjectNodeList.item(j).toElement().hasAttribute(ID_TAG))
-							{
-								if(nObjectID == tmpObjectNodeList.item(j).toElement().attribute(ID_TAG,"").toInt())//Correct ObjectID?
-								{
-									int nResult = 0;
-									if(tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG).isElement())
-									{
-										tmpElement = tmpObjectNodeList.item(j).firstChildElement(PARAMETERS_TAG);
-										QDomNodeList tmpParameterNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
-										int nParameterListCount = tmpParameterNodeList.count();
-										if (nParameterListCount>0)
-										{
-											for (int k=0;k<nParameterListCount;k++)//For each parameter
-											{
-												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
-												if(!tmpElement.isNull())
-												{
-													tmpString = tmpElement.text().toLower();
-													if (hParams->contains(tmpString))//Is the Parameter available in the predefined plugin list?
-													{
-														tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
-														if(!tmpElement.isNull())
-														{
-															tmpValue = tmpElement.text();
-															expandExperimentBlockParameterValue(tmpValue);
-															tmpParDef.sValue = tmpValue;
-															tmpParDef.bHasChanged = true;
-															hParams->insert(tmpString,tmpParDef);
-															nResult++;
-														}
-													}
-												}
-											}
-										}
-									}
-										
-									//////////////////////////////////////////////////////////////////////////
-									//Let's parse the custom parameters
-									//////////////////////////////////////////////////////////////////////////
-
-									if(tmpObjectNodeList.item(j).firstChildElement(CUSTOM_PARAMETERS_TAG).isElement())
-									{
-										tmpElement = tmpObjectNodeList.item(j).firstChildElement(CUSTOM_PARAMETERS_TAG);
-										QDomNodeList tmpParameterNodeList = tmpElement.elementsByTagName(PARAMETER_TAG);//Retrieve all the parameters
-										int nParameterListCount = tmpParameterNodeList.count();
-										if (nParameterListCount>0)
-										{
-											for (int k=0;k<nParameterListCount;k++)//For each parameter
-											{
-												tmpElement = tmpParameterNodeList.item(k).firstChildElement(NAME_TAG);
-												if(!tmpElement.isNull())
-												{
-													tmpString = tmpElement.text().toLower();
-													//if (hParams->contains(tmpString) == false)//Is the Parameter available in the predefined plugin list?
-													//{
-													//	qDebug() << __FUNCTION__ << "::creating a custom predefined EXML parameter: " << tmpString << "!";
-													//}
-													tmpElement = tmpParameterNodeList.item(k).firstChildElement(VALUE_TAG);
-													if(!tmpElement.isNull())
-													{
-														tmpValue = tmpElement.text();
-														expandExperimentBlockParameterValue(tmpValue);
-														tmpParDef.sValue = tmpValue;
-														tmpParDef.bHasChanged = true;
-														tmpParDef.bIsCustom = true;
-														hParams->insert(tmpString,tmpParDef);
-														nResult++;
-													}
-												}
-											}
-										}											
-									}
-									return nResult;
-								}
-							}
-							else
-							{
-								return -1;//No ID tag
-							}
-						}//end object-for loop
-					}
-					else
-					{
-						return -1;//No Objects defined		
-					}
-				}
-				else
-				{
-					continue;//Search next block
-				}
-			}
-			else
-			{
-				continue;//Search next block
-			}
-		}
-	}//end block-for loop
-	return -1;
-}*/
 
 bool ExperimentManager::createExperimentStructureFromTreeItemList(const QList<ExperimentTreeItem*> &ExpBlockTrialsTreeItems, cExperimentStructure *expStruct)
 {

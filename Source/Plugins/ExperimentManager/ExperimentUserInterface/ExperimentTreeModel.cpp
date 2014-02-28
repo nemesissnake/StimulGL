@@ -169,6 +169,7 @@ bool ExperimentTreeModel::saveNewData(const int &nBlockID, const int &nObjectID,
 					if(tmpItem1->child(i)->getName().toLower() == sParamName)
 					{
 						tmpItem1->child(i)->setValue(sParamValue);
+						emit modelModified();
 						return true;
 					}
 				}
@@ -245,6 +246,8 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 	else
 		m_parent = pParametersSection;
 
+	bool bModelChanged = false;
+
 	if ((m_parent != NULL) && (sName.isEmpty() == false))
 	{
 		int totalChilds;
@@ -312,6 +315,7 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 									if (sRelativeNames[0].compare(sTempString1, Qt::CaseInsensitive) == 0)
 									{
 										m_parent->child(j)->child(nValueIndex)->setValue(sValue);
+										bModelChanged = true;
 										//ExperimentTreeItem *item = new ExperimentTreeItem(m_parent->child(j)->child(nValueIndex));
 										//m_parent->child(j)->removeRow(nValueIndex);
 										//m_parent->child(j)->insertRow(nValueIndex, item);								
@@ -353,6 +357,7 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 						else
 						{
 							m_parent->child(j)->setValue(sValue);
+							bModelChanged = true;
 							bParamFound = true;
 							bDoBreak = true;
 							break;
@@ -394,9 +399,12 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 				//Append the value
 				subNameItem = new ExperimentTreeItem(EXPERIMENT_VALUE_TAG, sValue);
 				item->appendRow(subNameItem);
+				bModelChanged = true;
 			}
 		}
 	}
+	if(bModelChanged)
+		emit modelModified();
 }
 
 void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelIndex &parentIndex)
@@ -408,6 +416,7 @@ void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelInde
 	{
 		int totalChilds = m_parent->childCount();
 		QGridLayout *gridLayout = dynamic_cast<QGridLayout*>(widgetContainer->layout());
+		bool bModelChanged = false;
 
 		if(gridLayout == NULL)
 		{
@@ -442,7 +451,6 @@ void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelInde
 										valAux = "1";
 									else if (comboBox->currentText() == "FALSE")
 										valAux = "0";
-
 									m_parent->child(j)->setValue(valAux);
 								}
 								else
@@ -451,13 +459,17 @@ void ExperimentTreeModel::saveNewData(QWidget *widgetContainer, const QModelInde
 									m_parent->removeRow(j);
 									m_parent->insertRow(j, item);
 								}
+								bModelChanged = true;
 							}
 						}
 					}
 				}
 			}
 		}
-		emit modelModified();
+		if (bModelChanged)
+		{
+			emit modelModified();
+		}
 	}
 }
 
@@ -706,33 +718,6 @@ void ExperimentTreeModel::recursiveMultiSearch(const QString &textToFind, const 
 		recursiveSearch(textToFind,filters,items.at(i),list);
 	}
 }
-
-/*int ExperimentTreeModel::getDocumentElements(const QStringList &sElementTagName,QDomNodeList &ResultDomNodeList)
-{
-	if(doc == NULL)
-		return -1;
-	int nDepth = sElementTagName.count();
-	if(nDepth<=0)
-		return -1;
-
-	QDomElement tmpElem;
-	for (int i=0;i<nDepth;i++)
-	{
-		if (i==(nDepth-1))//last one?
-		{
-			ResultDomNodeList = tmpElem.elementsByTagName(sElementTagName[i]);//Return all the elements from this level
-		}
-		else if(i==0)//first one
-		{
-			tmpElem = doc->firstChildElement(sElementTagName[i]);//Only first one for now!
-		}
-		else
-		{
-			tmpElem = tmpElem.firstChildElement(sElementTagName[i]);//Only first one for now!
-		}
-	}
-	return ResultDomNodeList.count();		
-}*/
 
 bool ExperimentTreeModel::reset()
 {
