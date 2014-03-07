@@ -179,6 +179,44 @@ bool ExperimentTreeModel::saveNewData(const int &nBlockID, const int &nObjectID,
 	return false;
 }
 
+bool ExperimentTreeModel::addExperimentBlock()
+{
+	ExperimentTreeItem* tmpExpTreeItem;
+	QModelIndex tmpModelIndex;
+	bool bResult = false;
+	tmpExpTreeItem = addExperimentBlockTreeItem();
+	if(tmpExpTreeItem)
+	{
+		bResult = true;
+	}
+	return bResult;
+}
+
+bool ExperimentTreeModel::removeExperimentParameters(const QList<ExperimentTreeModel::strcParameterSpecifier> lstParameterSpecifiers)
+{
+	ExperimentTreeItem* tmpExpTreeItem;
+	QModelIndex tmpModelIndex;
+	bool bResult = false;
+	foreach(ExperimentTreeModel::strcParameterSpecifier sTempParamSpec, lstParameterSpecifiers)
+	{
+		if(sTempParamSpec.nBlockID >= 0)
+		{
+			tmpExpTreeItem = getExperimentParameterTreeItem(sTempParamSpec.nBlockID,sTempParamSpec.nObjectID,sTempParamSpec.sParamName);
+			if(tmpExpTreeItem)
+			{
+				tmpModelIndex = indexFromItem(tmpExpTreeItem);
+				if(removeRow(tmpModelIndex.row(),tmpModelIndex.parent()))
+					bResult = true;
+				else
+					return false;
+			}
+		}
+	}
+	if(bResult)
+		emit modelModified();
+	return bResult;
+}
+
 bool ExperimentTreeModel::removeExperimentBlocks(const QList<int> &lBlockIDs)
 {
 	ExperimentTreeItem* tmpExpTreeItem;
@@ -207,6 +245,64 @@ bool ExperimentTreeModel::removeExperimentBlocks(const QList<int> &lBlockIDs)
 	if(bResult)
 		emit modelModified();
 	return bResult;
+}
+
+ExperimentTreeItem* ExperimentTreeModel::getExperimentParameterTreeItem(const int &nBlockID, const int &nObjectID, const QString &sParamName)
+{
+	QStringList sFilterList;
+	ExperimentTreeItem *tempExpTreeItem;
+	int nTempBlockID;
+	int nTempObjectID;
+
+	sFilterList << EXPERIMENTTREEMODEL_FILTER_TAGS;
+	QList<ExperimentTreeItem*> list1 = getFilteredItemList(ACTIONS_TAG, sFilterList);
+	foreach (ExperimentTreeItem* tmpItem1 ,list1)
+	{
+		QList<ExperimentTreeItem*> list2 = getFilteredItemList(BLOCKTRIALS_TAG, sFilterList, tmpItem1);
+		foreach (ExperimentTreeItem* tmpItem2 ,list2)
+		{
+			QList<ExperimentTreeItem*> list3 = getFilteredItemList(BLOCK_TAG, sFilterList, tmpItem2);
+			foreach (ExperimentTreeItem* tmpItem3 ,list3)
+			{
+				if(tmpItem3->getDefinitions().contains(ID_TAG))
+				{
+					nTempBlockID = tmpItem3->getDefinition(ID_TAG).value.toInt();
+					if(nTempBlockID == nBlockID)//Correct Block ID?
+					{	
+						QList<ExperimentTreeItem*> list4 = getFilteredItemList(OBJECT_TAG, sFilterList, tmpItem3);
+						foreach (ExperimentTreeItem* tmpItem4 ,list4)
+						{
+							if(tmpItem4->getDefinitions().contains(ID_TAG))
+							{
+								nTempObjectID = tmpItem4->getDefinition(ID_TAG).value.toInt();
+								if(nTempObjectID == nObjectID)//Correct Object ID?
+								{
+									QList<ExperimentTreeItem*> list5 = getFilteredItemList(PARAMETER_TAG, sFilterList, tmpItem4);
+									foreach (ExperimentTreeItem* tmpItem5 ,list5)
+									{
+										if(tmpItem5->hasChildren())
+										{
+											tempExpTreeItem = tmpItem5->firstChild(NAME_TAG);
+											if(tempExpTreeItem)
+											{
+												if(tempExpTreeItem->getValue().toLower() == sParamName)
+												{
+													return tempExpTreeItem->parent();
+												}
+											}
+										}
+									}
+									break;
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+	return NULL;
 }
 
 ExperimentTreeItem* ExperimentTreeModel::getExperimentBlockTreeItem(const int &nBlockID)
@@ -238,6 +334,170 @@ ExperimentTreeItem* ExperimentTreeModel::getExperimentBlockTreeItem(const int &n
 	return NULL;
 }
 
+bool ExperimentTreeModel::moveExperimentBlocks(const QList<int> &lBlockIDsToMove, const int &nBlockIDToSwitch, const int &nBlockNumberChangeDirection)
+{
+	QStringList sFilterList;
+	int nTempBlockID;
+	int nBlockNumberToSwitch = -1;
+	QList<ExperimentTreeItem*> lstActions;
+	QList<ExperimentTreeItem*> lstBlockTrials;
+	QList<ExperimentTreeItem*> lstBlocks;
+	QMap<int,int> mapNewBlockNumbers;//BlockNumber, BlockID	//QMap items are ordered by key -> BlockNumber!
+	QList<int> lstNewOrderedBlockIDList;
+
+	sFilterList << EXPERIMENTTREEMODEL_FILTER_TAGS;
+	lstActions = getFilteredItemList(ACTIONS_TAG, sFilterList);
+	foreach (ExperimentTreeItem* tmpItem1 ,lstActions)
+	{
+		lstBlockTrials = getFilteredItemList(BLOCKTRIALS_TAG, sFilterList, tmpItem1);
+		foreach (ExperimentTreeItem* tmpItem2 ,lstBlockTrials)
+		{
+			lstBlocks = getFilteredItemList(BLOCK_TAG, sFilterList, tmpItem2);
+			foreach (ExperimentTreeItem* tmpItem3 ,lstBlocks)
+			{
+				if(tmpItem3->getDefinitions().contains(ID_TAG))
+				{
+					nTempBlockID = tmpItem3->getDefinition(ID_TAG).value.toInt();
+					if(nTempBlockID >= 0)
+					{
+						if (tmpItem3->hasChildren())
+						{
+							for (int i=0;i<tmpItem3->rowCount();i++)
+							{
+								if(tmpItem3->child(i)->getName().toLower() == BLOCKNUMBER_TAG)
+								{
+									int nTempBlockNumber = tmpItem3->child(i)->getValue().toInt();
+									mapNewBlockNumbers.insert(tmpItem3->child(i)->getValue().toInt(),nTempBlockID);
+									if(nTempBlockID == nBlockIDToSwitch)
+										nBlockNumberToSwitch = nTempBlockNumber;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	if(mapNewBlockNumbers.isEmpty())
+		return false;
+	bool bBlockIDsInjected = false;
+	foreach(nTempBlockID, mapNewBlockNumbers)
+	{
+		if(nTempBlockID == nBlockIDToSwitch)
+		{
+			if(bBlockIDsInjected == false)
+			{
+				if(nBlockNumberChangeDirection == -1)
+				{
+					lstNewOrderedBlockIDList.append(lBlockIDsToMove);
+					lstNewOrderedBlockIDList.append(nBlockIDToSwitch);
+				}
+				else if(nBlockNumberChangeDirection == 1)
+				{
+					lstNewOrderedBlockIDList.append(nBlockIDToSwitch);
+					lstNewOrderedBlockIDList.append(lBlockIDsToMove);
+				}
+				bBlockIDsInjected = true;
+			}
+		}
+		else if(lstNewOrderedBlockIDList.contains(nTempBlockID) == false)
+		{
+			lstNewOrderedBlockIDList.append(nTempBlockID);
+		}
+	}
+	if(bBlockIDsInjected == false)
+		return false;
+
+	bool bRetVal = false;
+	int nNewBlockNumberCounter = 0;
+	ExperimentTreeItem* tmpExpItem;
+	foreach(nTempBlockID, lstNewOrderedBlockIDList)
+	{
+		tmpExpItem = getExperimentBlockTreeItem(nTempBlockID);
+		if (tmpExpItem->hasChildren())
+		{
+			for (int i=0;i<tmpExpItem->rowCount();i++)
+			{
+				if(tmpExpItem->child(i)->getName().toLower() == BLOCKNUMBER_TAG)
+				{
+					tmpExpItem->child(i)->setValue(QString::number(nNewBlockNumberCounter));
+					nNewBlockNumberCounter++;
+					bRetVal = true;
+					break;
+				}
+			}
+		}
+	}
+	if(bRetVal)
+		emit modelModified();
+	return bRetVal;
+}
+
+ExperimentTreeItem* ExperimentTreeModel::addExperimentBlockTreeItem()
+{
+	QStringList sFilterList;
+	int nTempBlockID;
+	int nLatestFoundBlockID = -1;
+	int nHighestFoundBlockNumber = -1;
+	int nFoundBlockNumber = -1;
+	QList<ExperimentTreeItem*> lstActions;
+	QList<ExperimentTreeItem*> lstBlockTrials;
+	QList<ExperimentTreeItem*> lstBlocks;
+
+
+	sFilterList << EXPERIMENTTREEMODEL_FILTER_TAGS;
+	lstActions = getFilteredItemList(ACTIONS_TAG, sFilterList);
+	foreach (ExperimentTreeItem* tmpItem1 ,lstActions)
+	{
+		lstBlockTrials = getFilteredItemList(BLOCKTRIALS_TAG, sFilterList, tmpItem1);
+		foreach (ExperimentTreeItem* tmpItem2 ,lstBlockTrials)
+		{
+			lstBlocks = getFilteredItemList(BLOCK_TAG, sFilterList, tmpItem2);
+			foreach (ExperimentTreeItem* tmpItem3 ,lstBlocks)
+			{
+				if(tmpItem3->getDefinitions().contains(ID_TAG))
+				{
+					nTempBlockID = tmpItem3->getDefinition(ID_TAG).value.toInt();
+					if(nTempBlockID >= 0)
+					{
+						if (tmpItem3->hasChildren())
+						{
+							for (int i=0;i<tmpItem3->rowCount(); i++)
+							{
+								if(tmpItem3->child(i)->getName().toLower() == BLOCKNUMBER_TAG)
+								{
+									nFoundBlockNumber = tmpItem3->child(i)->getValue().toInt();
+									if(nFoundBlockNumber > nHighestFoundBlockNumber)//Highest Block Number?
+									{
+										nHighestFoundBlockNumber = nFoundBlockNumber;
+										nLatestFoundBlockID = nTempBlockID;
+									}
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if(lstBlockTrials.count() != 1)
+		return NULL;
+	ExperimentTreeItem* tmpItemBlockTrials = lstBlockTrials.at(0);
+	ExperimentTreeItem* tmpNewBlockItem = new ExperimentTreeItem(BLOCK_TAG);
+	tmpNewBlockItem->addDefinition(ID_TAG,QString::number(nLatestFoundBlockID+1),TreeItemType_Attribute);
+	tmpNewBlockItem->appendRow(new ExperimentTreeItem(NAME_TAG,"_noname_"));
+	tmpNewBlockItem->appendRow(new ExperimentTreeItem(BLOCKNUMBER_TAG,QString::number(nHighestFoundBlockNumber+1)));
+	tmpNewBlockItem->appendRow(new ExperimentTreeItem(TRIALAMOUNT_TAG,"1"));
+	tmpNewBlockItem->appendRow(new ExperimentTreeItem(INTERNALTRIGGERAMOUNT_TAG,"1"));
+	tmpNewBlockItem->appendRow(new ExperimentTreeItem(EXTERNALTRIGGERAMOUNT_TAG,"1"));
+	tmpItemBlockTrials->insertRow(tmpItemBlockTrials->rowCount(),tmpNewBlockItem);
+	emit modelModified();
+	return tmpNewBlockItem;
+}
+
 void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValue, const QModelIndex &parentIndex, ExperimentTreeItem *pParametersSection)
 {
 	ExperimentTreeItem *m_parent;
@@ -267,6 +527,8 @@ void ExperimentTreeModel::saveNewData(const QString &sName, const QString &sValu
 			nHighestIDNumber = -1;
 			bParamFound = false;
 			bDoBreak = false;
+			if(totalChilds == 0)
+				bDoBreak = true;
 			for (int j=0;j<totalChilds;j++)
 			{
 				if(m_parent->getName() == EXPERIMENT_PARAMETERS_TAG)

@@ -92,6 +92,23 @@ void ExperimentManager::DefaultConstruct()
 ExperimentManager::~ExperimentManager()
 {
 	cleanupExperiment();
+	currentExperimentFile.clear();
+	currentValidationFile.clear();
+	if(ExpGraphicEditor)
+	{
+		delete ExpGraphicEditor;
+		ExpGraphicEditor = NULL;
+	}
+	if (currentExperimentTree)
+	{
+		delete currentExperimentTree;
+		currentExperimentTree = NULL;
+	}
+	if(cExperimentBlockTrialStructure)
+	{
+		delete cExperimentBlockTrialStructure;
+		cExperimentBlockTrialStructure = NULL;
+	}
 }
 
 QScriptValue ExperimentManager::ctor__experimentStateEnum(QScriptContext *context, QScriptEngine *engine)
@@ -486,13 +503,17 @@ void ExperimentManager::changeCurrentExperimentState(ExperimentState expCurrStat
 
 bool ExperimentManager::validateExperiment()
 {
-	if (!currentExperimentTree)
+	if (currentExperimentTree == NULL)
 	{
-		if((loadExperiment("") == false) || (!currentExperimentTree))
+		if((loadExperiment("") == false) || (currentExperimentTree == NULL))
 		{
 			qDebug() << __FUNCTION__ << "::No Experiment loaded!";
 			return false;
 		}
+	}
+	else if(getCurrExperimentState() == ExperimentManager_Constructed)
+	{
+		changeCurrentExperimentState(ExperimentManager_Loaded);
 	}
 	if (currentExperimentFile.isEmpty())
 	{
@@ -562,6 +583,9 @@ bool ExperimentManager::runExperiment()
 	QThread::currentThread()->setPriority(QThread::HighPriority);  
 	// QThread::TimeCriticalPriority);
 #endif
+
+	if(getCurrExperimentState() == ExperimentManager_Stopped)
+		changeCurrentExperimentState(ExperimentManager_Constructed);
 
 	if(!prePassiveParseExperiment())
 	{
@@ -668,36 +692,6 @@ bool ExperimentManager::WriteAndCloseExperimentOutputData(const QString &postFil
 bool ExperimentManager::cleanupExperiment()
 {
 	cleanupExperimentObjects();
-	currentExperimentFile.clear();
-	currentValidationFile.clear();
-	//if(visExpEditor)
-	//{
-	//	visExpEditor->close();
-	//	delete visExpEditor;
-	//	visExpEditor = NULL;
-
-	//}
-	//if(expStructVisualizer)
-	//{
-	//	expStructVisualizer->close();
-	//	delete expStructVisualizer;
-	//	expStructVisualizer = NULL;
-	//}
-	if (currentExperimentTree)
-	{
-		delete currentExperimentTree;
-		currentExperimentTree = NULL;
-	}
-	if(cExperimentBlockTrialStructure)
-	{
-		delete cExperimentBlockTrialStructure;
-		cExperimentBlockTrialStructure = NULL;
-	}
-	if(ExpGraphicEditor)
-	{
-		delete ExpGraphicEditor;
-		ExpGraphicEditor = NULL;
-	}
 	return true;
 }
 

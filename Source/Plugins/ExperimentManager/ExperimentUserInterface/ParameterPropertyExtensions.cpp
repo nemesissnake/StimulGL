@@ -521,8 +521,8 @@ QWidget *VariantExtensionPropertyFactory::createEditor(QtVariantPropertyManager 
 		if(tmpWidget)
 		{
 			createdEditors[property].append(tmpWidget);
-			editorToProperty[tmpWidget] = property;
-			//bResult = connect(manager, SIGNAL(valueChanged(QtProperty*,const QVariant&)), this, SLOT(slotNonCustomPropertyChanged(QtProperty*,const QVariant&)), Qt::UniqueConnection);
+			editorToProperty[tmpWidget] = property;		
+			//Do not do this, too much triggers... also when initializing --> bool bResult = connect(manager, SIGNAL(propertyChanged(QtProperty*)), this, SLOT(slotNonCustomPropertyChanged(QtProperty*)), Qt::UniqueConnection);
 		}
 		return tmpWidget;
 	}
@@ -545,15 +545,10 @@ void VariantExtensionPropertyFactory::slotCustomPropertyChanged(const QString &v
 	return;
 }
 
-//void VariantExtensionPropertyFactory::slotNonCustomPropertyChanged(QtProperty *property, const QVariant &value)
+//void VariantExtensionPropertyFactory::slotNonCustomPropertyChanged(QtProperty *property)//, const QVariant &value)
 //{
 //	if(property)
 //	{
-//		QList<QWidget *> sendWidgetList = createdEditors[property];
-//		foreach(QWidget *sendWidget, sendWidgetList)
-//		{
-//			QVariant::Type tmpType = value.type();
-//			emit PropertyWidgetChanged(sendWidget,value.toString());
-//		}			
+//		
 //	}
 //}

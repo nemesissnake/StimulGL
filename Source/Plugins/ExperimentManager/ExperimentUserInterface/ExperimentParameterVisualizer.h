@@ -97,6 +97,7 @@ public:
 	bool parseDependencies(QtVariantProperty *variantProperty = NULL);
 	bool addDependency(QtVariantProperty *variantProperty, const ExperimentParameterDefinitionDependencyStrc &dependencyParamDef);
 	void setAutoDepencyParsing(bool bEnable);
+	bool resetParameterModifiedFlags(const bool &bOnlyNonDerivedParameters = true);
 
 	QWidget *getParameterEditWidget(const QString &sName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier, const QVariant &vValue, const bool &bDoInitWithValue);
 	bool setWidgetParameter(const QString &sUniquePropertyIdentifier, const QString &sValue, const bool &bSetModified = true);

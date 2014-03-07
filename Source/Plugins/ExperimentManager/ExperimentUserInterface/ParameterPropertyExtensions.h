@@ -224,7 +224,7 @@ public:
 private slots:
 	void slotCustomPropertyChanged(const QString &val);
 	void slotEditorDestroyed(QObject *obj);
-	//void slotNonCustomPropertyChanged(QtProperty *property, const QVariant &value);
+	//void slotNonCustomPropertyChanged(QtProperty *property);//, const QVariant &value);
 
 private:
 	QMap<QtProperty *, QList<QWidget *>> createdEditors;

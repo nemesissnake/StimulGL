@@ -50,6 +50,7 @@
 #define EXPERIMENT_PATTERN_TAG					"pattern"
 #define EXPERIMENT_CASESENSITIVE_TAG			"casesensitive"
 #define EXPERIMENT_LISTSEP_CHAR					";"
+#define EXPERIMENT_PARAM_GROUPSEP_CHAR			";"
 
 enum ExperimentDefinitionSection
 {

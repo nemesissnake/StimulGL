@@ -122,7 +122,7 @@ bool ExperimentParameterVisualizer::addPropertyToSubGroup(const QString &sProper
 				}
 				else
 				{
-					sSandPath = sSandPath + tmpPropGroups.first() + ";";
+					sSandPath = sSandPath + tmpPropGroups.first() + EXPERIMENT_PARAM_GROUPSEP_CHAR;
 					tmpPropGroups.removeFirst();
 					if(pRootGroupPropertyItemList->at(j).pSubItems == NULL)
 						(*pRootGroupPropertyItemList)[j].pSubItems = new QList<propertyContainerItem>;
@@ -167,10 +167,7 @@ bool ExperimentParameterVisualizer::addGroupProperties(const QList<ExperimentGro
 	if(expParamDef->isEmpty())
 		return false;
 	if(lVariantPropertyManager == NULL)
-	{
 		lVariantPropertyManager = new VariantExtensionPropertyManager(this);
-		//connect(lVariantPropertyManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(propertyValueChanged(QtProperty *, const QVariant &)),Qt::UniqueConnection);
-	}
 	if(groupManager == NULL)
 		groupManager = new QtGroupPropertyManager(this);	
 
@@ -283,6 +280,18 @@ bool ExperimentParameterVisualizer::getEnumeratedParameterPropertyValue(const QS
 		return true;
 	}
 	return false;
+}
+
+bool ExperimentParameterVisualizer::resetParameterModifiedFlags(const bool &bOnlyNonDerivedParameters)
+{	
+	foreach (propertyParameterValueDef tmpPropParamValDef,lParameterPropertyNamedHash)
+	{
+		if((bOnlyNonDerivedParameters && (tmpPropParamValDef.bIsDerived == false)) || (bOnlyNonDerivedParameters==false))
+		{
+			tmpPropParamValDef.vProperty->setModified(false);
+		}		
+	}
+	return true;
 }
 
 bool ExperimentParameterVisualizer::setParameter(const QString &sName, const QString &sValue, const bool &bSetModified, const bool &bIsInitializing)
@@ -468,10 +477,7 @@ bool ExperimentParameterVisualizer::addParameterProperty(const ExperimentParamet
 	bool bDoEnumeratedList = false;
 
 	if(lVariantPropertyManager == NULL)
-	{
-		lVariantPropertyManager = new VariantExtensionPropertyManager(this);
-		//connect(lVariantPropertyManager, SIGNAL(valueChanged(QtProperty *, const QVariant &)), this, SLOT(propertyValueChanged(QtProperty *, const QVariant &)), Qt::UniqueConnection);
-	}
+		lVariantPropertyManager = new VariantExtensionPropertyManager(this);		
 
 	QVariant::Type varType;
 	if(expParamDef->eType == Experiment_ParameterType_Color)
@@ -650,7 +656,6 @@ void ExperimentParameterVisualizer::itemEditedHandler(const QString &sParamName,
 void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, const QVariant &value)
 {
 	Q_UNUSED(value);
-
 	bool bIsDerivedProperty = false;
 	QString sPropertyID = property->propertyId();
 	QList<propertyParameterValueDef> tmpParamValueDefList = lParameterPropertyNamedHash.values(sPropertyID);
@@ -662,6 +667,8 @@ void ExperimentParameterVisualizer::propertyValueChanged(QtProperty *property, c
 	//{
 	//	qDebug() << __FUNCTION__ << "Could not retrieve a single unique property definition (Derived setting), number of results = " << QString::number(tmpParamValueDefList.count());
 	//}
+
+	property->setModified(true);
 
 	if(bAutoDepencyParsing && (bIsDerivedProperty==false))
 		parseDependencies((QtVariantProperty*) property);

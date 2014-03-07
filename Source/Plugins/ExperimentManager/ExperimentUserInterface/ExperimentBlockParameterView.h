@@ -23,13 +23,13 @@
 #include "ExperimentStructures.h"
 #include "ExperimentParameterDefinition.h"
 
-#define BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER		";"
-#define BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT		4
-//#define BLOCKPARAMVIEW_BLOCKNUMBER_COLUMNINDEX		0
-#define BLOCKPARAMVIEW_BLOCKNAME_COLUMNINDEX		0
-#define BLOCKPARAMVIEW_BLOCKTRIALS_COLUMNINDEX		1
-#define BLOCKPARAMVIEW_BLOCKINTTRGS_COLUMNINDEX		2
-#define BLOCKPARAMVIEW_BLOCKEXTTRGS_COLUMNINDEX		3
+#define BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER			";"
+#define BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT			4
+//#define BLOCKPARAMVIEW_BLOCKNUMBER_ROWORCOLUMNINDEX	0
+#define BLOCKPARAMVIEW_BLOCKNAME_ROWORCOLUMNINDEX		0
+#define BLOCKPARAMVIEW_BLOCKTRIALS_ROWORCOLUMNINDEX		1
+#define BLOCKPARAMVIEW_BLOCKINTTRGS_ROWORCOLUMNINDEX	2
+#define BLOCKPARAMVIEW_BLOCKEXTTRGS_ROWORCOLUMNINDEX	3
 
 class ExperimentTreeModel;
 class ExperimentTreeItem;
@@ -41,7 +41,6 @@ class ExperimentBlockParameterView : public QTableWidget
 
 signals:
 	void destroyed(QWidget*);
-	//void onItemEditFinished(int nBlockID, int nObjectID, QString sParamName, QString sParamValue);
 
 public:
 	ExperimentBlockParameterView(QWidget *parent = NULL, ExperimentTreeModel *pExperimentTreeModel = NULL);
@@ -55,15 +54,14 @@ public slots:
 	void resizeView(const int &nWidth, const int &nHeight);
 
 private slots:
-	void cellItemChanged(const int &nRow, const int &nColumn);
 	void cellItemEditFinished(const QString&sParamName, const QString&sNewValue);
-	//void widgetItemChanged(QWidget *pWidget, const QString &sNewValue);	
 	void showContextMenu(const QPoint& pos);
+	void cellOpenedForEdit(const int &nRow, const int &nColumn);
+	void checkReparseModel();
 	void reparseModel();
-
+	
 protected:
 	void currentChanged(const QModelIndex &current, const QModelIndex &previous);
-	void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
 	void configureEditHandling(const bool &bEnable);
@@ -82,15 +80,15 @@ private:
 		}
 	};
 
-	struct strcColumnInfo
+	struct strcRowOrColumnInfo
 	{
-		int nColumnIndex;
+		int nRowOrColumnIndex;
 		int nObjectID;
 		QString sHeader;
 		ExperimentParameterDefinitionStrc *strcParamDef;
-		strcColumnInfo()
+		strcRowOrColumnInfo()
 		{
-			nColumnIndex = -1;
+			nRowOrColumnIndex = -1;
 			nObjectID = -1;
 			sHeader = "";
 			strcParamDef = NULL;
@@ -110,16 +108,18 @@ private:
 	ExperimentTreeModel *pExpTreeModel;
 	cExperimentStructure *parsedExpStruct;
 	QStringList lColumnHeaders;	
-	QStringList lVerticalHeaders;	
+	QStringList lRowHeaders;	
+	bool bVerticalViewEnabled;
 	bool bEditHandlingEnabled;
 	QMutex mutexEditHandlingEnabled;
+	bool bDoReparseModel;	
 
 	QHash<int, strcExperimentObjectInfo> hashObjectIdExperimentObjectInfo;
 	QHash<QString, QList<strcParameterBlockChanges>> hashExpParamBlockChanges;
-	QHash<int, int> hashBlockIdRowIndex;
-	QHash<int, int> hashRowIndexBlockId;
-	QHash<int, QString> hashColumnIndexObjectIDParamName;
-	QHash<QString, strcColumnInfo> hashObjectParameterColumnIndex;
+	QHash<int, int> hashBlockIdRowOrColumnIndex;
+	QHash<int, int> hashRowOrColumnIndexBlockId;
+	QHash<int, QString> hashRowOrColumnIndexObjectIDParamName;
+	QHash<QString, strcRowOrColumnInfo> hashObjectParameterRowOrColumnIndex;
 	QColor cChangedParameter;
 	QColor cInheritedParameter;
 };
