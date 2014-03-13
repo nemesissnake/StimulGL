@@ -184,7 +184,7 @@ GlobalApplicationInformation::DocType DocumentManager::getDocType(const QString 
 	{
 		return GlobalApplicationInformation::DOCTYPE_HTML;
 	}
-	else if(getKnownDocumentFileHandlerIndex(tmpExt) >= 0)
+	else if(isKnownDocumentFileHandlerIndex(tmpExt))
 	{
 		return GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED;
 	}
@@ -354,6 +354,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Glob
 QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath)
 {
 	GlobalApplicationInformation::DocTypeStyle sDocStyle = GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;
+	strcPluginHandlerInterface *pParsedPluginHandlerInterface = NULL;
 	QObject* pluginObject = NULL;
 	QWidget* editorObject = NULL;
 	QString sAPIFileName = "";
@@ -362,38 +363,30 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 
 	if(docType == GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED)
 	{
-		if(pluginDocHandlerStore.strDocHandlerInfoList.isEmpty() == false)
+		if(lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList.isEmpty() == false)
 		{
-			for (int i=0;i<pluginDocHandlerStore.strDocHandlerInfoList.count();i++)
+			int nTmpRetVal;
+			if(lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList.contains(strExtension.toLower()))
 			{
-				if(pluginDocHandlerStore.strDocHandlerInfoList.at(i).split("|",QString::SkipEmptyParts).at(0).toLower() == strExtension.toLower())
+				pParsedPluginHandlerInterface = &lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[strExtension.toLower()];
+				pluginObject = pParsedPluginHandlerInterface->pPluginObject;
+				if(pluginObject)
 				{
-					if(pluginDocHandlerStore.pluginObject.at(i))
+					if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE_FULL)) == -1))//Is the slot present?
 					{
-						pluginObject = pluginDocHandlerStore.pluginObject.at(i);
-						if(pluginObject)
-						{							
-							if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE_FULL)) == -1))//Is the slot present?
-							{
-
-								int nTmpRetVal = 0;
-								bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nTmpRetVal), Q_ARG(QString,strExtension.toLower()));				
-								if(bResult)
-									sDocStyle = (GlobalApplicationInformation::DocTypeStyle)nTmpRetVal;						
-							}
-							if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME_FULL)) == -1))//Is the slot present?
-							{
-								bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME),Qt::DirectConnection, Q_RETURN_ARG(QString,sAPIFileName), Q_ARG(QString,strExtension.toLower()));		
-							}
-							if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR_FULL)) == -1))//Is the slot present?
-							{
-								bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR),Qt::DirectConnection, Q_RETURN_ARG(QWidget *,editorObject), Q_ARG(QString,strExtension.toLower()), Q_ARG(QString,strCanonicalFilePath));
-							}	
-							break;
-						}
-						break;
+						nTmpRetVal = 0;
+						bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nTmpRetVal), Q_ARG(QString,strExtension.toLower()));				
+						if(bResult)
+							sDocStyle = (GlobalApplicationInformation::DocTypeStyle)nTmpRetVal;						
 					}
-					break;
+					if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME_FULL)) == -1))//Is the slot present?
+					{
+						bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME),Qt::DirectConnection, Q_RETURN_ARG(QString,sAPIFileName), Q_ARG(QString,strExtension.toLower()));		
+					}
+					if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR_FULL)) == -1))//Is the slot present?
+					{
+						bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR),Qt::DirectConnection, Q_RETURN_ARG(QWidget *,editorObject), Q_ARG(QString,strExtension.toLower()), Q_ARG(QString,strCanonicalFilePath));
+					}	
 				}
 			}
 		}
@@ -488,9 +481,6 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 		}
 		tmpChildDoc.pWidget = custQsci;
 		editorObject = qobject_cast<QWidget*>(custQsci);
-		//DocIndex = DocCount;
-		//DocCount++;
-		//return custQsci;
 	}
 	else
 	{
@@ -499,6 +489,7 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 	tmpChildDoc.dDocType = docType;
 	tmpChildDoc.sFileName = "";
 	tmpChildDoc.bIsModified = false;
+	tmpChildDoc.pPluginHandlerInterface = pParsedPluginHandlerInterface;
 	DocIndex = lChildDocuments.count();
 	lChildDocuments.append(tmpChildDoc);
 	return editorObject;
@@ -579,6 +570,8 @@ bool DocumentManager::loadFile(int DocIndex, const QString &fileName)
 	QFile file(fileName);
 	if(file.exists() == false)
 		return false;
+	if(lChildDocuments.count()<=DocIndex)
+		return false;
 	
 	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(lChildDocuments.at(DocIndex).pWidget);
 	bool bRetval = false;
@@ -597,9 +590,9 @@ bool DocumentManager::loadFile(int DocIndex, const QString &fileName)
 	}
 	else
 	{
-		if(pluginDocHandlerStore.pluginObject.at(DocIndex))
+		if(lChildDocuments.at(DocIndex).pPluginHandlerInterface)
 		{
-			QObject *pluginObject = pluginDocHandlerStore.pluginObject.at(DocIndex);
+			QObject *pluginObject = lChildDocuments.at(DocIndex).pPluginHandlerInterface->pPluginObject;
 			if(pluginObject)
 			{							
 				if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_LOADADDFILE_FULL)) == -1))//Is the slot present?
@@ -668,9 +661,9 @@ void DocumentManager::processDocumentClosing(const QString &sCanoFilePath, const
 			bResult = maybeSave(lChildDocuments.at(tmpIndex).pMDISubWin,bAutoSaveChanges);
 			//if(bResult)
 			//{
-				if(pluginDocHandlerStore.pluginObject.at(tmpIndex))
+				if(lChildDocuments.at(tmpIndex).pPluginHandlerInterface)
 				{
-					QObject *pluginObject = pluginDocHandlerStore.pluginObject.at(tmpIndex);
+					QObject *pluginObject = lChildDocuments.at(tmpIndex).pPluginHandlerInterface->pPluginObject;
 					if(pluginObject)
 					{							
 						if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_REMOVEADDFILE_FULL)) == -1))//Is the slot present?
@@ -679,9 +672,9 @@ void DocumentManager::processDocumentClosing(const QString &sCanoFilePath, const
 							QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_REMOVEADDFILE),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetval), Q_ARG(QString,sCanoFilePath));
 						}						
 					}
-				//}
+				}
 				remove(lChildDocuments.at(tmpIndex).pMDISubWin);
-			}
+			//}			
 		}
 	}
 }
@@ -752,49 +745,60 @@ bool DocumentManager::appendKnownDocumentFileHandlerList(const QString &strDocHa
 {
 	if(pluginObject)
 	{
-		if(pluginDocHandlerStore.strDocHandlerInfoList.contains(strDocHandlerInfo) == false)
+		QStringList tmpList = strDocHandlerInfo.split(DOCUMENT_HANDLERS_SLOT_SPLITTER_CHAR,QString::KeepEmptyParts);
+		int nSlotCount = tmpList.count()-1;
+		if(nSlotCount < 1)
+			return false;
+		QString sKey = tmpList.at(0).toLower();
+				
+		for (int x=0;x<nSlotCount;x++)
 		{
-			pluginDocHandlerStore.strDocHandlerInfoList.append(strDocHandlerInfo);
-			pluginDocHandlerStore.pluginObject.append(pluginObject);
-			return true;
+			if((x==0)&&(lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList.contains(sKey) == false))
+			{
+				strcPluginHandlerInterface tmpPluginHandlerInterface;
+				lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList.insert(sKey,tmpPluginHandlerInterface);
+				lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[sKey].pPluginObject = pluginObject;
+			}
+			if(x==PLUGINHANDLER_SLOT_EXECUTE)
+			{
+
+				lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[sKey].sExecuteHandlerSlotSignature = tmpList.at(1);
+				lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[sKey].pPluginHandlerExecuteObject = pluginObject;
+			}
+			else if(x==PLUGINHANDLER_SLOT_NEWFILE)
+			{
+				lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[sKey].sNewFileHandlerSlotSignature = tmpList.at(2);
+				lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[sKey].pPluginHandlerNewFileObject = pluginObject;
+			}			
 		}
+		return true;
 	}
 	return false;
 }
 
-QObject *DocumentManager::getKnownDocumentFileHandlerInformation(const int &nIndex, QString &strDocHndlrName)
+QObject *DocumentManager::getKnownDocumentFileHandlerObject(const QString &strExtension, QString &strDocHndlrName, const PluginHandlerSlotType &eHandlerSlotType)
 {
 	//See below function!
-	if (pluginDocHandlerStore.strDocHandlerInfoList.count() > nIndex)
+	if (isKnownDocumentFileHandlerIndex(strExtension))
 	{
-		QStringList tmpList = pluginDocHandlerStore.strDocHandlerInfoList.at(nIndex).split("|",QString::SkipEmptyParts);
-		if (tmpList.count() > 1)
+		if(eHandlerSlotType == PLUGINHANDLER_SLOT_EXECUTE)
 		{
-			strDocHndlrName = tmpList.at(1);
-			return pluginDocHandlerStore.pluginObject.at(nIndex);
+			strDocHndlrName = lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[strExtension.toLower()].sExecuteHandlerSlotSignature;
+			return lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[strExtension.toLower()].pPluginHandlerExecuteObject;			
+		}
+		else if(eHandlerSlotType == PLUGINHANDLER_SLOT_NEWFILE)
+		{
+			strDocHndlrName = lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[strExtension.toLower()].sNewFileHandlerSlotSignature;
+			return lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[strExtension.toLower()].pPluginHandlerNewFileObject;
 		}
 	}
+	strDocHndlrName = "";
 	return NULL;
 }
 
-int DocumentManager::getKnownDocumentFileHandlerIndex(const QString &strExtension)
+bool DocumentManager::isKnownDocumentFileHandlerIndex(const QString &strExtension)
 {
-	//See above function!
-	int nCount = pluginDocHandlerStore.strDocHandlerInfoList.count();
-	if (nCount > 0)
-	{
-		QStringList tmpList;
-		for (int i=0;i<nCount;i++)
-		{
-			tmpList = pluginDocHandlerStore.strDocHandlerInfoList.at(i).split("|",QString::SkipEmptyParts);
-			if (tmpList.count() > 0)
-			{
-				if(tmpList.at(0) == strExtension)
-					return i;
-			}
-		}
-	}
-	return -1;
+	return (lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList.contains(strExtension.toLower()));
 }
 
 bool DocumentManager::saveFile(int DocIndex, QString fileName, bool *bReparseDocumentContentNeeded)

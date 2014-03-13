@@ -202,7 +202,7 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_SHOWFIXPOINT,showFixationPoint);
 		fixationSize = 8;
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_FIXSIZE,fixationSize);
-		stimHeigthPixelAmount = rectScreenRes.height();
+		stimHeigthPixelAmount = 480;//rectScreenRes.height();
 		insertExpObjectParameter(getObjectID(),GLWIDGET_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
 		stimWidthPixelAmount = stimHeigthPixelAmount;
 		insertExpObjectParameter(getObjectID(),GLWIDGET_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);

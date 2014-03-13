@@ -23,17 +23,23 @@
 #include "ExperimentStructures.h"
 #include "ExperimentParameterDefinition.h"
 
-#define BLOCKPARAMVIEW_BLOCKIDPARAM_SPLITTER			";"
+#define BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER				";"
+#define BLOCKPARAMVIEW_UNIQUEPARAM_OBJECTID_INDEX		0
+#define BLOCKPARAMVIEW_UNIQUEPARAM_PARAMID_HEX_INDEX	1
+#define BLOCKPARAMVIEW_UNIQUEPARAM_PARAMNAME_INDEX		2
 #define BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT			4
 //#define BLOCKPARAMVIEW_BLOCKNUMBER_ROWORCOLUMNINDEX	0
 #define BLOCKPARAMVIEW_BLOCKNAME_ROWORCOLUMNINDEX		0
 #define BLOCKPARAMVIEW_BLOCKTRIALS_ROWORCOLUMNINDEX		1
 #define BLOCKPARAMVIEW_BLOCKINTTRGS_ROWORCOLUMNINDEX	2
 #define BLOCKPARAMVIEW_BLOCKEXTTRGS_ROWORCOLUMNINDEX	3
+#define BLOCKPARAMVIEW_BLOCKPARAMS_PREHEADERSTRING		"Block"
+#define BLOCKPARAMVIEW_BLOCKNUMBER_HEADERSTRING			"Block Nr. "
 
 class ExperimentTreeModel;
 class ExperimentTreeItem;
 class cExperimentStructure;
+class ObjectParameterDialog;
 
 class ExperimentBlockParameterView : public QTableWidget
 {
@@ -99,12 +105,15 @@ private:
 	{
 		ExperimentStructuresNameSpace::strcExperimentObject ObjectGlobalInfo;
 		ExperimentParameterDefinitionContainer *pObjectParamDefContainer;
+		QString sObjectName;
 		strcExperimentObjectInfo()
 		{
 			pObjectParamDefContainer = NULL;
+			sObjectName = "<undefined>";
 		}
 	};
 
+	ObjectParameterDialog *pObjectParameterDialog;
 	ExperimentTreeModel *pExpTreeModel;
 	cExperimentStructure *parsedExpStruct;
 	QStringList lColumnHeaders;	
@@ -113,9 +122,10 @@ private:
 	bool bEditHandlingEnabled;
 	QMutex mutexEditHandlingEnabled;
 	bool bDoReparseModel;	
+	bool bCellOpenedForEdit;
 
 	QHash<int, strcExperimentObjectInfo> hashObjectIdExperimentObjectInfo;
-	QHash<QString, QList<strcParameterBlockChanges>> hashExpParamBlockChanges;
+	QMap<QString, QList<strcParameterBlockChanges>> mapUniqueParamIDExpParamBlockChanges;
 	QHash<int, int> hashBlockIdRowOrColumnIndex;
 	QHash<int, int> hashRowOrColumnIndexBlockId;
 	QHash<int, QString> hashRowOrColumnIndexObjectIDParamName;

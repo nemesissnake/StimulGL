@@ -419,10 +419,10 @@ void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyT
 		QString qmlMainFilePath = "";
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_MAINFILEPATH,qmlMainFilePath);
-		stimHeigthPixelAmount = rectScreenRes.height();
+		stimHeigthPixelAmount = 480;//rectScreenRes.height();
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
-		stimWidthPixelAmount = rectScreenRes.width();
+		stimWidthPixelAmount = stimHeigthPixelAmount;//rectScreenRes.width();
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
 	} 

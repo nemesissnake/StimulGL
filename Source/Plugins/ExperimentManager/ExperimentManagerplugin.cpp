@@ -308,7 +308,11 @@ bool ExperimentManagerPlugin::ExperimentManagerQMLDocumentHandler(const QString 
 {
 	GlobalApplicationInformation::DocContentInfoStructure docStruct;
 	docStruct.strDocContent = docContent;
-	docStruct.bIsFile = false;
+	QFile fileCheck(docContent);
+	if(fileCheck.exists())
+		docStruct.bIsFile = true;
+	else
+		docStruct.bIsFile = false;
 	docStruct.strDocHomeDir = strHomePath;
 	docStruct.strDocExtension = PLUGIN_QMLDOC_EXTENSION;
 	return ExecuteContent(docStruct);
@@ -322,7 +326,7 @@ bool ExperimentManagerPlugin::ExecuteContent(const GlobalApplicationInformation:
 		if(tmpManager)
 			return tmpManager->runExperiment();
 	}
-	else if(docStruct.bIsFile == false)//In case of text-editing
+	else //if(docStruct.bIsFile == false)//In case of text-editing
 	{
 		if(ExperimentManagerDiagObject)
 		{
@@ -330,6 +334,7 @@ bool ExperimentManagerPlugin::ExecuteContent(const GlobalApplicationInformation:
 			return ExperimentManagerDiagObject->executeActiveDocument();
 		}
 	}
+
 	return false;
 }
 

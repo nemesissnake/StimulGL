@@ -98,9 +98,12 @@ void ExperimentParameterWidgets::fetchExperimentParameterDefinitions()
 	tmpExpContrDefLoc.sPathToDefFile = BLOCK_PARAMETER_PARAMDEF_PATH;
 	sExpContrDefLocLst.append(tmpExpContrDefLoc);
 
+	tmpExpContrDefLoc.sName = QML2VIEWER_NAME;
+	tmpExpContrDefLoc.sPathToDefFile = QML2VIEWER_PARAMDEF_PATH;
+	sExpContrDefLocLst.append(tmpExpContrDefLoc);
+
 	foreach(tmpExpContrDefLoc, sExpContrDefLocLst)
 	{
-		//QString fileString = RETINOTOPYMAPPER_PARAMDEF_PATH;
 		ExperimentParameterDefinitionCollection tmpParDefCollection;
 		tmpParDefCollection.sCollectionName = tmpExpContrDefLoc.sName;
 		tmpParDefCollection.cExperimentParameterDefinition = new ExperimentParameterDefinitionContainer();

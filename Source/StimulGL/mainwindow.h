@@ -548,7 +548,7 @@ private:
 	bool configurePluginScriptEngine(const int nIndex);
 	void writeMainWindowSettings();
 	bool checkPluginCompatibility(QObject *plugin);
-	bool parsePluginDefinedFileExtensions(QObject *plugin);
+	void parsePluginDefinedFileExtensions(QObject *plugin);
     bool popPluginIntoMenu(QObject *plugin);
 	bool parseFile(const QFile &file);
 	void setCurrentFile(const QString &fileName);

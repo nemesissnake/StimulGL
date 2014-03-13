@@ -179,6 +179,7 @@ namespace ExperimentManagerNameSpace
 	//#define MAX_SCREEN_UPDATE_TIME				16.6667f
 
 	#define RETINOTOPYMAPPER_PARAMDEF_PATH			":/resources/" RETINOTOPYMAPPER_NAME ".xdef"
+	#define QML2VIEWER_PARAMDEF_PATH				":/resources/" QML2VIEWER_NAME ".xdef"
 	#define EXPERIMENT_PARAMDEF_PATH				":/resources/ExperimentNode.xdef"
 	#define DECLARATIONS_OBJECT_TAG					DECLARATIONS_TAG "_" OBJECT_TAG
 	#define DECLARATIONS_OBJECT_PARAMDEF_PATH		":/resources/DeclarationsObjectNode.xdef"

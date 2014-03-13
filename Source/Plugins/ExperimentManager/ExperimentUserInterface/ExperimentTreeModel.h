@@ -48,15 +48,18 @@ class ExperimentTreeModel : public QStandardItemModel
 		{
 			int nBlockID;
 			int nObjectID;
+			QString sParamHexID;
 			QString sParamName;
 			strcParameterSpecifier()
 			{
 				nBlockID = -1;
 				nObjectID = -1;
 				sParamName = "";
+				sParamHexID = "";
 			}
 		};
 
+		//QVariant data(const QModelIndex & index, int role = Qt::DisplayRole ) const;
         ExperimentTreeItem *getRootItem() const { return rootItem; }
         bool write(const QString &fileName);
         QList<ExperimentTreeItem*> getFilteredItemList(const QString &textToFind, const QStringList &filters, ExperimentTreeItem *expTreeItem = NULL);
@@ -72,7 +75,7 @@ class ExperimentTreeModel : public QStandardItemModel
 
 		bool removeExperimentBlocks(const QList<int> &lBlockIDs);
 		bool moveExperimentBlocks(const QList<int> &lBlockIDsToMove, const int &nBlockIDToSwitch, const int &nBlockNumberChangeDirection);
-		bool addExperimentBlock();
+		bool addExperimentBlocks(const int &nAmount = 1);
 		bool removeExperimentParameters(const QList<ExperimentTreeModel::strcParameterSpecifier> lstParameterSpecifiers);
 
     public slots:
@@ -90,7 +93,7 @@ class ExperimentTreeModel : public QStandardItemModel
 
 		ExperimentTreeItem* getExperimentBlockTreeItem(const int &nBlockID);
 		ExperimentTreeItem* getExperimentParameterTreeItem(const int &nBlockID, const int &nObjectID, const QString &sParamName);
-		ExperimentTreeItem* addExperimentBlockTreeItem();
+		ExperimentTreeItem* addExperimentBlockTreeItems(const int &nAmount = 1);
 
 		QDomDocument *doc;
 		QDomElement *root;

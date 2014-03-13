@@ -1836,23 +1836,28 @@ bool MainWindow::checkPluginCompatibility(QObject *plugin)
 	return bRetval;
 }
 
-bool MainWindow::parsePluginDefinedFileExtensions(QObject *plugin)
+void MainWindow::parsePluginDefinedFileExtensions(QObject *plugin)
 {
 	QStringList lstExtensions;
+	QStringList tmpList;
 	bool bRetval = false;
+	int i;
 
 	DeviceInterface *iDevice = qobject_cast<DeviceInterface *>(plugin);
 	if (iDevice) 
+	{
 		lstExtensions = iDevice->GetAdditionalFileSlotHandlers();
+	}
 
 	ExtensionInterface *iExtension = qobject_cast<ExtensionInterface *>(plugin);
 	if (iExtension) 
+	{
 		lstExtensions = iExtension->GetAdditionalFileSlotHandlers();
+	}
 
 	if(lstExtensions.isEmpty() == false)
-	{
-		QStringList tmpList;
-		for (int i=0;i<lstExtensions.count();i++)
+	{		
+		for (i=0;i<lstExtensions.count();i++)
 		{
 			tmpList = lstExtensions.at(i).split("|",QString::SkipEmptyParts);
 			tmpNewActionMapping.clear();
@@ -1864,8 +1869,7 @@ bool MainWindow::parsePluginDefinedFileExtensions(QObject *plugin)
 			fileNewMenu->addAction(lNewPluginFileAction.last());
 			bRetval = true;
 		}
-	}
-	return bRetval;
+	}	
 }
 
 bool MainWindow::popPluginIntoMenu(QObject *plugin)
@@ -2217,7 +2221,7 @@ void MainWindow::executeActiveDocument()
 			}
 			QString strExtension = QFileInfo(DocManager->getFileName(currentActiveWindow)).completeSuffix();
 			QString strDocHandlerSlotName = "";
-			QObject* pluginObject = DocManager->getKnownDocumentFileHandlerInformation(DocManager->getKnownDocumentFileHandlerIndex(strExtension),strDocHandlerSlotName);
+			QObject* pluginObject = DocManager->getKnownDocumentFileHandlerObject(strExtension,strDocHandlerSlotName,DocumentManager::PLUGINHANDLER_SLOT_EXECUTE);
 			
 			if(pluginObject)
 			{
@@ -2228,14 +2232,6 @@ void MainWindow::executeActiveDocument()
 					bool bRetVal = false;
 					QString shortSignature = strDocHandlerSlotName.left(strDocHandlerSlotName.indexOf("("));
 					bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(shortSignature.toLatin1()),Qt::DirectConnection, Q_RETURN_ARG(bool,bRetVal), Q_ARG(QString,strDocumentContent), Q_ARG(QString,getActiveDocumentFileLocation()));				
-					//if(bResult)
-					//{
-					//	break;
-					//}
-					//else
-					//{
-					//	break;
-					//}
 				}
 			}
 			return;

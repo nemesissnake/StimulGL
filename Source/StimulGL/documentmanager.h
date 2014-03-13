@@ -36,7 +36,8 @@
 #include "scifinddialog.h"
 #include "mainappinfo.h"
 
-#define WARNING_DOCCHANGEDSAVEFILE_STRING	"The document has been modified.\nDo you want to save your changes?"
+#define WARNING_DOCCHANGEDSAVEFILE_STRING		"The document has been modified.\nDo you want to save your changes?"
+#define DOCUMENT_HANDLERS_SLOT_SPLITTER_CHAR	"|"
 
 class DocumentManager : public QObject
 {
@@ -53,12 +54,41 @@ public:
 	DocumentManager(QObject *parent);
 	~DocumentManager();
 
+	enum PluginHandlerSlotType
+	{
+		PLUGINHANDLER_SLOT_EXECUTE		= 0,
+		PLUGINHANDLER_SLOT_NEWFILE		= 1
+	};
+
+	struct strcPluginHandlerInterface
+	{
+		QString sExecuteHandlerSlotSignature;
+		QObject *pPluginHandlerExecuteObject;
+		QString sNewFileHandlerSlotSignature;
+		QObject *pPluginHandlerNewFileObject;
+		QObject *pPluginObject;
+		strcPluginHandlerInterface()
+		{
+			sExecuteHandlerSlotSignature = "";
+			sNewFileHandlerSlotSignature = "";
+			pPluginHandlerExecuteObject = NULL;
+			pPluginHandlerNewFileObject = NULL;
+			pPluginObject = NULL;
+		}
+	};
+
+	struct strcPluginDocHandlerInterfaceCollection
+	{
+		QHash<QString, strcPluginHandlerInterface> hDocHandlerList; //FileExtension/HandlerSlots
+	};  
+
 	struct strDocManagerDocument
 	{
 		QString sFileName;
 		GlobalApplicationInformation::DocType dDocType;
 		QWidget * pWidget;
 		QMdiSubWindow * pMDISubWin;
+		strcPluginHandlerInterface *pPluginHandlerInterface;
 		bool bIsModified;
 		strDocManagerDocument()
 		{
@@ -66,20 +96,14 @@ public:
 			dDocType = GlobalApplicationInformation::DOCTYPE_UNDEFINED;
 			pWidget = NULL;
 			pMDISubWin = NULL;
+			pPluginHandlerInterface = NULL;
 			bIsModified = false;
 		}
 	};
 
-	struct strcPluginDocHandlerInfo
-	{
-		QStringList strDocHandlerInfoList;
-		QList<QObject *> pluginObject;
-	};  
-
 	QWidget *getDocHandler(const int &DocIndex);
 	QWidget *getDocHandler(QMdiSubWindow *subWindow);
 	int count(void);
-	//CustomQsciScintilla *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension);
 	QWidget *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath = "");
 	bool remove(QMdiSubWindow *subWindow);
 	bool setSubWindow(int DocIndex, QMdiSubWindow *subWindow);
@@ -102,8 +126,8 @@ public:
 	bool appendKnownFileExtensionList(QString strFileExtLst);
 	QString getKnownFileExtensionList() {return strFileExtensionList;};
 	bool appendKnownDocumentFileHandlerList(const QString &strDocHandlerInfo, QObject *pluginObject);
-	int getKnownDocumentFileHandlerIndex(const QString &strExtension);
-	QObject *getKnownDocumentFileHandlerInformation(const int &nIndex, QString &strDocHndlrName);
+	bool isKnownDocumentFileHandlerIndex(const QString &strExtension);
+	QObject *getKnownDocumentFileHandlerObject(const QString &strExtension, QString &strDocHndlrName, const PluginHandlerSlotType &eHandlerSlotType);
 	int addAdditionalApiEntry(const QString &entry); 
 
 public slots:
@@ -114,7 +138,7 @@ private:
 	QSignalMapper *DocModifiedMapper;
 	QSignalMapper *NrOfLinesChangedMapper;
 	QString strFileExtensionList;
-	strcPluginDocHandlerInfo pluginDocHandlerStore;	
+	strcPluginDocHandlerInterfaceCollection lPluginDefinedPreLoadedHandlerInterfaces;	
 	QList<strDocManagerDocument> lChildDocuments;
 	QStringList additionalApiEntries;
 

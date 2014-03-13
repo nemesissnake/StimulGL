@@ -1160,7 +1160,8 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 	strList.append(OBJECT_TAG);
 
 	QList<ExperimentTreeItem*> lExpTreeItems;
-	if(currentExperimentTree->getTreeElements(strList, lExpTreeItems) > 0)
+	int nNumberOfDefinedInitializations = currentExperimentTree->getTreeElements(strList, lExpTreeItems);
+	if(nNumberOfDefinedInitializations > 0)
 	{
 		int nNrOfObjects = ExperimentObjectTreeItemList.count();
 		if (nNrOfObjects>0)
@@ -1495,6 +1496,10 @@ bool ExperimentManager::initializeExperiment(bool bFinalize)
 				}
 			}
 		}
+		return true;
+	}
+	else if(nNumberOfDefinedInitializations == 0)//this can be correct, there are no object initializations defined...
+	{
 		return true;
 	}
 	return false;

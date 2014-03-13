@@ -18,5 +18,6 @@
         <file>resources/BlockNode.xdef</file>
         <file>resources/BlockParameterNode.xdef</file>
         <file>resources/InitializationsParameterNode.xdef</file>
+        <file>resources/QML2Viewer.xdef</file>
     </qresource>
 </RCC>

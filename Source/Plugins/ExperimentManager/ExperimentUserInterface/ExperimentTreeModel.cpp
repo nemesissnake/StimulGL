@@ -47,6 +47,13 @@ ExperimentTreeModel::~ExperimentTreeModel()
 	reset();
 }
 
+//QVariant ExperimentTreeModel::data(const QModelIndex &index, int role) const
+//{
+//	if (role == Qt::TextAlignmentRole) 
+//		return Qt::AlignRight;
+//	return QStandardItemModel::data(index, role);
+//}
+
 bool ExperimentTreeModel::fillModel()
 {
 	if(doc->isNull() || root->isNull() || rootItem == NULL)
@@ -179,12 +186,12 @@ bool ExperimentTreeModel::saveNewData(const int &nBlockID, const int &nObjectID,
 	return false;
 }
 
-bool ExperimentTreeModel::addExperimentBlock()
+bool ExperimentTreeModel::addExperimentBlocks(const int &nAmount)
 {
 	ExperimentTreeItem* tmpExpTreeItem;
 	QModelIndex tmpModelIndex;
 	bool bResult = false;
-	tmpExpTreeItem = addExperimentBlockTreeItem();
+	tmpExpTreeItem = addExperimentBlockTreeItems(nAmount);
 	if(tmpExpTreeItem)
 	{
 		bResult = true;
@@ -434,8 +441,11 @@ bool ExperimentTreeModel::moveExperimentBlocks(const QList<int> &lBlockIDsToMove
 	return bRetVal;
 }
 
-ExperimentTreeItem* ExperimentTreeModel::addExperimentBlockTreeItem()
+ExperimentTreeItem* ExperimentTreeModel::addExperimentBlockTreeItems(const int &nAmount)
 {
+	if(nAmount < 1)
+		return NULL;
+
 	QStringList sFilterList;
 	int nTempBlockID;
 	int nLatestFoundBlockID = -1;
@@ -444,7 +454,6 @@ ExperimentTreeItem* ExperimentTreeModel::addExperimentBlockTreeItem()
 	QList<ExperimentTreeItem*> lstActions;
 	QList<ExperimentTreeItem*> lstBlockTrials;
 	QList<ExperimentTreeItem*> lstBlocks;
-
 
 	sFilterList << EXPERIMENTTREEMODEL_FILTER_TAGS;
 	lstActions = getFilteredItemList(ACTIONS_TAG, sFilterList);
@@ -486,14 +495,19 @@ ExperimentTreeItem* ExperimentTreeModel::addExperimentBlockTreeItem()
 	if(lstBlockTrials.count() != 1)
 		return NULL;
 	ExperimentTreeItem* tmpItemBlockTrials = lstBlockTrials.at(0);
-	ExperimentTreeItem* tmpNewBlockItem = new ExperimentTreeItem(BLOCK_TAG);
-	tmpNewBlockItem->addDefinition(ID_TAG,QString::number(nLatestFoundBlockID+1),TreeItemType_Attribute);
-	tmpNewBlockItem->appendRow(new ExperimentTreeItem(NAME_TAG,"_noname_"));
-	tmpNewBlockItem->appendRow(new ExperimentTreeItem(BLOCKNUMBER_TAG,QString::number(nHighestFoundBlockNumber+1)));
-	tmpNewBlockItem->appendRow(new ExperimentTreeItem(TRIALAMOUNT_TAG,"1"));
-	tmpNewBlockItem->appendRow(new ExperimentTreeItem(INTERNALTRIGGERAMOUNT_TAG,"1"));
-	tmpNewBlockItem->appendRow(new ExperimentTreeItem(EXTERNALTRIGGERAMOUNT_TAG,"1"));
-	tmpItemBlockTrials->insertRow(tmpItemBlockTrials->rowCount(),tmpNewBlockItem);
+	ExperimentTreeItem* tmpNewBlockItem = NULL;
+
+	for (int nNewBlockCounter=0;nNewBlockCounter<nAmount;nNewBlockCounter++)
+	{
+		ExperimentTreeItem* tmpNewBlockItem = new ExperimentTreeItem(BLOCK_TAG);
+		tmpNewBlockItem->addDefinition(ID_TAG,QString::number(nLatestFoundBlockID+1+nNewBlockCounter),TreeItemType_Attribute);
+		tmpNewBlockItem->appendRow(new ExperimentTreeItem(NAME_TAG,"_noname_"));
+		tmpNewBlockItem->appendRow(new ExperimentTreeItem(BLOCKNUMBER_TAG,QString::number(nHighestFoundBlockNumber+1+nNewBlockCounter)));
+		tmpNewBlockItem->appendRow(new ExperimentTreeItem(TRIALAMOUNT_TAG,"1"));
+		tmpNewBlockItem->appendRow(new ExperimentTreeItem(INTERNALTRIGGERAMOUNT_TAG,"1"));
+		tmpNewBlockItem->appendRow(new ExperimentTreeItem(EXTERNALTRIGGERAMOUNT_TAG,"1"));
+		tmpItemBlockTrials->insertRow(tmpItemBlockTrials->rowCount(),tmpNewBlockItem);
+	}
 	emit modelModified();
 	return tmpNewBlockItem;
 }

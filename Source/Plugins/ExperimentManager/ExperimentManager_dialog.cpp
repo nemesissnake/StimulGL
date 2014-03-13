@@ -208,13 +208,23 @@ bool ExperimentManager_Dialog::executeActiveDocument()
 			{
 				fileSource = QFileDialog::getOpenFileName(NULL, tr("Open a Experiment file"), MainAppInfo::appExampleDirPath(), tr("Experiment Files (*.exml);;Any file (*)"));
 			}
+			fileSource = docContentStructToRun.strDocContent;
 			if (fileSource.isEmpty())
 				return false;
 			QFile file(fileSource);
 			if (!file.exists())
 				return false;
+			if(file.open(QIODevice::ReadOnly))
+			{
+				fileSource = file.readAll();
+				file.close();
+			}
+			else
+			{
+				return false;
+			}
 			QFileInfo fi(file);
-			QDir::setCurrent(fi.canonicalPath());
+			QDir::setCurrent(fi.canonicalPath());	
 		}
 		else
 		{
@@ -241,6 +251,7 @@ bool ExperimentManager_Dialog::executeActiveDocument()
 			{
 				fileSource = QFileDialog::getOpenFileName(NULL, tr("Open a QtQuick File"), MainAppInfo::appExampleDirPath(), tr("QtQuick Files (*.qml);;Any file (*)"));
 			}
+			fileSource = docContentStructToRun.strDocContent;
 			if (fileSource.isEmpty())
 				return false;
 			QFile file(fileSource);
@@ -249,16 +260,15 @@ bool ExperimentManager_Dialog::executeActiveDocument()
 
 			if(file.open(QIODevice::ReadOnly))
 			{
-				docContentStructToRun.strDocContent = file.readAll();
+				fileSource = file.readAll();
+				file.close();
 			}
 			else
 			{
 				return false;
 			}
-			file.close();
-
 			QFileInfo fi(file);
-			QDir::setCurrent(fi.canonicalPath());
+			QDir::setCurrent(fi.canonicalPath());			
 		}
 		else
 		{
@@ -274,13 +284,7 @@ bool ExperimentManager_Dialog::executeActiveDocument()
 			tmpRegExp.setCaseSensitivity(Qt::CaseInsensitive);
 			tmpRegExp.setPattern("import QtQuick 1.");
 
-			QString tmpSourceContent;
-			if(docContentStructToRun.bIsFile)
-				tmpSourceContent = docContentStructToRun.strDocContent;
-			else 
-				tmpSourceContent = fileSource;
-
-			if(tmpSourceContent.contains(tmpRegExp))
+			if(fileSource.contains(tmpRegExp))
 			{
 				qWarning() << __FUNCTION__ << "::QtQuick version 1.* is not supported anymore, please update the *.qml document to QtQuick version 2.* or later!";
 				return false;
@@ -288,7 +292,7 @@ bool ExperimentManager_Dialog::executeActiveDocument()
 			else
 			{
 				tmpRegExp.setPattern("import QtQuick 2.");
-				if(tmpSourceContent.contains(tmpRegExp))
+				if(fileSource.contains(tmpRegExp))
 				{
 					if(Qml2ViewerObject)
 					{
@@ -298,7 +302,7 @@ bool ExperimentManager_Dialog::executeActiveDocument()
 					}
 					Qml2ViewerObject = new QML2Viewer(this);
 					connectSignalSlots(false);
-					if(Qml2ViewerObject->executeQML2Document(fileSource,docContentStructToRun.bIsFile))
+					if(Qml2ViewerObject->executeQML2Document(docContentStructToRun.strDocContent,docContentStructToRun.bIsFile))
 					{
 						Qml2ViewerObject->startObject();
 						return true;
