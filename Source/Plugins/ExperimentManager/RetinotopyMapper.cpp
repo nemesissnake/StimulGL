@@ -123,7 +123,8 @@ void RetinotopyMapper::initialize()
 	experimentManager = NULL;
 	bNoChangesSinceLastFrame = false;
 	//getObjectID() = -1;
-	rectScreenRes = QApplication::desktop()->screenGeometry();
+	sActiveStimScreen = NULL;
+	rectScreenRes = QGuiApplication::primaryScreen()->geometry();	
 	firstBlockTrialPaintFrame = false;	
 	//lastTriggerNumber = -1;
 	flickrSwitch = 0;
@@ -202,11 +203,11 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_SHOWFIXPOINT,showFixationPoint);
 		fixationSize = 8;
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_FIXSIZE,fixationSize);
-		stimHeigthPixelAmount = 480;//rectScreenRes.height();
+		stimHeigthPixelAmount = 480;
 		insertExpObjectParameter(getObjectID(),GLWIDGET_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
 		stimWidthPixelAmount = stimHeigthPixelAmount;
 		insertExpObjectParameter(getObjectID(),GLWIDGET_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
-		rStimuliScreenArea = QRect((int)(rectScreenRes.width()-stimWidthPixelAmount)/2,(int)(rectScreenRes.height()-stimHeigthPixelAmount)/2,stimWidthPixelAmount,stimHeigthPixelAmount);
+		adjustStimScreenArea();
 		cycleTriggerAmount = 1;
 		if(experimentManager)
 		{
@@ -298,8 +299,7 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 		showFixationPoint = paramStringToBool(pParDef.sValue);
 		stimHeigthPixelAmount = getExpObjectBlockParameter(getObjectID(),GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount)).sValue.toFloat();
 		stimWidthPixelAmount = getExpObjectBlockParameter(getObjectID(),GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount)).sValue.toFloat();
-		rStimuliScreenArea = QRect((int)(rectScreenRes.width()-stimWidthPixelAmount)/2,(int)(rectScreenRes.height()-stimHeigthPixelAmount)/2,stimWidthPixelAmount,stimHeigthPixelAmount);
-
+		adjustStimScreenArea();
 		fixationSize = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_FIXSIZE,QString::number(fixationSize)).sValue.toInt();
 		
 		pParDef = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_CYCLE_TRIGGER_AMOUNT,QString::number(cycleTriggerAmount));
@@ -437,6 +437,11 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 	bNoChangesSinceLastFrame = false;
 }
 
+void RetinotopyMapper::adjustStimScreenArea()
+{
+	rStimuliScreenArea = QRect((int)(rectScreenRes.width()-stimWidthPixelAmount)/2,(int)(rectScreenRes.height()-stimHeigthPixelAmount)/2,stimWidthPixelAmount,stimHeigthPixelAmount);
+}
+
 bool RetinotopyMapper::startObject()
 {
 	//lastTriggerNumber = -1;
@@ -455,7 +460,21 @@ bool RetinotopyMapper::startObject()
 	//qDebug() << format.hasAlpha();
 	retinoMapperWindow->setFormat(format);
 	retinoMapperWindow->setSurfaceType(QSurface::OpenGLSurface);	
-	retinoMapperWindow->setAnimating(true);
+	retinoMapperWindow->setAnimating(true);	
+	if(sActiveStimScreen == NULL)
+	{
+		sActiveStimScreen = retinoMapperWindow->grabScreenUnderMouseCursor();
+		if(sActiveStimScreen)
+		{
+			rectScreenRes = sActiveStimScreen->geometry();
+			adjustStimScreenArea();
+			retinoMapperWindow->setScreen(sActiveStimScreen);
+		}
+	}
+	else
+	{
+		retinoMapperWindow->setScreen(sActiveStimScreen);
+	}	
 	retinoMapperWindow->showFullScreen();
 	QRect tmpRect = retinoMapperWindow->geometry();
 	tmpRect.setHeight(tmpRect.height()+1);//To prevent flickering, (bug, on some systems), doesn't make a change since drawing starts upper left corner.
@@ -572,6 +591,12 @@ bool RetinotopyMapper::setExperimentManager(ExperimentManager *expManager)
 	if(experimentManager!=expManager)
 	{
 		experimentManager = expManager;
+		if(expManager)
+		{
+			sActiveStimScreen = expManager->getActiveStimuliOutputScreen();
+			if(sActiveStimScreen)
+				rectScreenRes = sActiveStimScreen->geometry();
+		}
 		ExperimentEngine::setExperimentManager(expManager);//Important!
 	}
 	return true;

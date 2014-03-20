@@ -256,7 +256,6 @@ bool ExperimentParameterVisualizer::addGroupProperties(const QList<ExperimentGro
 	return true;
 }
 
-
 bool ExperimentParameterVisualizer::getEnumeratedParameterPropertyValue(QtProperty *pProperty, const QString &sEnumString, int &nEnumValue)
 {
 	const ExperimentParameterDefinitionStrc *tmpExpParamStruct = lVariantPropertyDefinitionHash[pProperty];
@@ -422,21 +421,19 @@ bool ExperimentParameterVisualizer::registerDerivedParameterProperty(const prope
 	lParameterPropertyNamedHash.insertMulti(sUniqueDerivedPropertyIdentifier,tmpParamValueDef);
 	const ExperimentParameterDefinitionStrc *tmpExpParStruct = lVariantPropertyDefinitionHash[baseVPropertyDef.vProperty];
 	lVariantPropertyDefinitionHash.insertMulti(derivedProperty,tmpExpParStruct);
-	//lVariantPropertyDefinitionHash.insertMulti(derivedProperty,lVariantPropertyDefinitionHash[baseVPropertyDef.vProperty]);
-
-	/*
+	
 	if(tmpExpParStruct->Dependencies.isEmpty() == false)
 	{
-		for (QList<ExperimentParameterDefinitionDependencyStrc>::const_iterator it=tmpExpParStruct->Dependencies.cbegin();it!=expParamDef->Dependencies.cend();++it)
+		for (QList<ExperimentParameterDefinitionDependencyStrc>::const_iterator it=tmpExpParStruct->Dependencies.cbegin();it!=tmpExpParStruct->Dependencies.cend();++it)
 		{
 			addDependency(derivedProperty,(*it));
 		}
 	}
-	if(bAutoDepencyParsing == false)
-		return true;
+	//if(bAutoDepencyParsing == false)
+	//	return true;
 	return parseDependencies();
-	*/
-	return true;
+	
+	//return true;
 }
 
 bool ExperimentParameterVisualizer::setWidgetParameter(const QString &sUniquePropertyIdentifier, const QString &sValue, const bool &bSetModified)

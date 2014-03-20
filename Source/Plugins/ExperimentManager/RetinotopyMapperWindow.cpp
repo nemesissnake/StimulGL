@@ -50,6 +50,19 @@ RetinotopyMapperWindow::~RetinotopyMapperWindow()
 	}
 }
 
+QScreen *RetinotopyMapperWindow::grabScreenUnderMouseCursor()
+{
+	QPoint pCurrMouseCursorPos = this->mapFromGlobal(QCursor::pos());
+	int nScreenNumber = QApplication::desktop()->screenNumber(pCurrMouseCursorPos);
+	if(nScreenNumber>=0)
+	{
+		QList<QScreen*> lAvailableScreens = QGuiApplication::screens();
+		if(lAvailableScreens.count() > nScreenNumber)
+			return lAvailableScreens.at(nScreenNumber);
+	}
+	return QGuiApplication::primaryScreen();
+}
+
 void RetinotopyMapperWindow::initialize()
 {
 
@@ -402,6 +415,7 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 		//	pExperimentManager->logExperimentObjectData(nObjectID,0,__FUNCTION__,"","Painting the initial widget","Step 3");
 		imgPainter.setPen(Qt::NoPen);
 		imgPainter.setBrush(Qt::white);
+		//QRect rViewPort = imgPainter.viewport();
 		imgPainter.setWindow ( textPathRect.x() - nBorder , textPathRect.y() - (parentRetinotopyMapper->rStimuliScreenArea.height()/2) , textPathRect.width() + (nBorder*2) , parentRetinotopyMapper->rStimuliScreenArea.height());//translate text rect to rect window button
 		imgPainter.drawPath(textPath);
 		//if(isDebugMode() && pExperimentManager)

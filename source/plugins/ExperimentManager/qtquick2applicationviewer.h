@@ -36,6 +36,8 @@ public:
     explicit QtQuick2ApplicationViewer(QObject *parent = NULL);
     virtual ~QtQuick2ApplicationViewer();
 
+	QScreen *grabScreenUnderMouseCursor();
+
     void setMainQmlFile(const QString &file);
     void addImportPath(const QString &path);
 	int registerDefaultCustomQMLTypes();

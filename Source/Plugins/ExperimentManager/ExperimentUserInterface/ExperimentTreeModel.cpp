@@ -23,7 +23,6 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include "ExperimentTreeModel.h"
-#include "ExperimentTreeItem.h"
 #include "ExperimentParameterDefinition.h"
 
 ExperimentTreeModel::ExperimentTreeModel(QObject *parent) : QStandardItemModel(parent)

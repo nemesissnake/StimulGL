@@ -50,6 +50,8 @@ public:
 	~QML2Viewer();
 	QML2Viewer(const QML2Viewer& other){Q_UNUSED(other);};//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 	static QScriptValue ctor_QML2Viewer(QScriptContext* context, QScriptEngine* engine);
+
+	QScreen *grabScreenUnderMouseCursor();
 	
 public slots:
 
@@ -146,6 +148,7 @@ private:
 	void qml2EventRoutine(QString strContent = "");
 	void deleteQML2ViewerWindow();
 
+	QScreen *sActiveStimScreen;
 	ExperimentManager *experimentManager;
 	cExperimentStructure *currentExperimentStructure;
 	QFile tmpFile;

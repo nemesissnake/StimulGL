@@ -32,7 +32,7 @@
 
 namespace Ui {class ExperimentParameterVisualizer;};
 
-#define EXPPARAMVIS_ENUM_SPEC_DIVIDER	"_"
+#define EXPPARAMVIS_ENUM_SPEC_DIVIDER					"_"
 
 class ExperimentParameterVisualizer : public QWidget
 {

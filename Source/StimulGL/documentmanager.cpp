@@ -44,7 +44,7 @@ QWidget *DocumentManager::getDocHandler(const int &nDocIndex)
 {
 	if (lChildDocuments.count() > nDocIndex)
 	{
-		return lChildDocuments.at(nDocIndex).pMDISubWin;
+		return lChildDocuments.at(nDocIndex).pWidget;
 	}
 	else
 	{
@@ -60,7 +60,7 @@ QWidget *DocumentManager::getDocHandler(QMdiSubWindow *subWindow)
 		{
 			if (lChildDocuments.at(i).pMDISubWin == subWindow)
 			{
-				return lChildDocuments.at(i).pMDISubWin;
+				return lChildDocuments.at(i).pWidget;
 			}
 		}
 	}

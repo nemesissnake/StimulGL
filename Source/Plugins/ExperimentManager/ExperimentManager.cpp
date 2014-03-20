@@ -79,6 +79,7 @@ void ExperimentManager::DefaultConstruct()
 	expDataLogger = NULL;
 	ExpGraphicEditor = NULL;
 	expParamWidgets = NULL;
+	sConfiguredActiveScreen = NULL;
 	RegisterMetaTypes();
 	expParamWidgets = ExperimentParameterWidgets::instance();
 	changeCurrentExperimentState(ExperimentManager_Constructed);
@@ -1094,6 +1095,79 @@ void ExperimentManager::visualExperimentEditorDestroyed(ExperimentGraphicEditor 
 {
 	if(ExpGraphicEditor == pExpGraphEditor)
 		ExpGraphicEditor = NULL;
+}
+
+QScreen* ExperimentManager::getActiveStimuliOutputScreen()
+{
+	//if(sConfiguredActiveScreen == NULL)
+	//{
+	//	sConfiguredActiveScreen = QGuiApplication::primaryScreen();
+	//}
+	return sConfiguredActiveScreen;
+}
+
+bool ExperimentManager::setActiveStimuliOutputScreen(int nScreenNumber)
+{
+	if(nScreenNumber >= 0)
+	{
+		if(nScreenNumber < QGuiApplication::screens().count())
+		{
+			sConfiguredActiveScreen = QGuiApplication::screens().at(nScreenNumber);
+			return true;
+		}
+	}
+	return false;
+}
+
+QString ExperimentManager::getAvailableScreensInformation()
+{
+	QString sGatheredInfo = "";
+	sGatheredInfo = sGatheredInfo + "\n" + "Number of screens:" + QString::number(QGuiApplication::screens().size()) + "\n";
+	sGatheredInfo = sGatheredInfo + "\n" + "Primary screen:" + QString(QGuiApplication::primaryScreen()->name());
+	foreach (QScreen *screen, QGuiApplication::screens()) 
+	{
+		sGatheredInfo = sGatheredInfo + "\n" + "Information for screen:" + screen->name();
+		sGatheredInfo = sGatheredInfo + "\n" + "  Available geometry: x=" + QString::number(screen->availableGeometry().x()) + " y=" + QString::number(screen->availableGeometry().y()) + ", " + QString::number(screen->availableGeometry().width()) + "x" + QString::number(screen->availableGeometry().height());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Available size:" + QString::number(screen->availableSize().width()) + "x" + QString::number(screen->availableSize().height());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Available virtual geometry: x=" + QString::number(screen->availableVirtualGeometry().x()) + " y=" + QString::number(screen->availableVirtualGeometry().y()) + ", " + QString::number(screen->availableVirtualGeometry().width()) + "x" + QString::number(screen->availableVirtualGeometry().height());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Available virtual size:" + QString::number(screen->availableVirtualSize().width()) + "x" + QString::number(screen->availableVirtualSize().height());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Depth:" + QString::number(screen->depth()) + "bits";
+		sGatheredInfo = sGatheredInfo + "\n" + "  Geometry: x=" + QString::number(screen->geometry().x()) + " y=" + QString::number(screen->geometry().y()) + ", " + QString::number(screen->geometry().width()) + "x" + QString::number(screen->geometry().height());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Logical DPI:" + QString::number(screen->logicalDotsPerInch());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Logical DPI X:" + QString::number(screen->logicalDotsPerInchX());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Logical DPI Y:" + QString::number(screen->logicalDotsPerInchY());
+
+		switch (screen->orientation()) 
+		{
+			case Qt::PrimaryOrientation           : sGatheredInfo = sGatheredInfo + "\n" + "  Orientation:" + "Primary";
+			case Qt::LandscapeOrientation         : sGatheredInfo = sGatheredInfo + "\n" + "  Orientation:" + "Landscape";
+			case Qt::PortraitOrientation          : sGatheredInfo = sGatheredInfo + "\n" + "  Orientation:" + "Portrait";
+			case Qt::InvertedLandscapeOrientation : sGatheredInfo = sGatheredInfo + "\n" + "  Orientation:" + "Inverted landscape";
+			case Qt::InvertedPortraitOrientation  : sGatheredInfo = sGatheredInfo + "\n" + "  Orientation:" + "Inverted portrait";
+			default                               : sGatheredInfo = sGatheredInfo + "\n" + "  Orientation:" + "Unknown";
+		}
+
+		sGatheredInfo = sGatheredInfo + "\n" + "  Physical DPI:" + QString::number(screen->physicalDotsPerInch());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Physical DPI X:" + QString::number(screen->physicalDotsPerInchX());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Physical DPI Y:" + QString::number(screen->physicalDotsPerInchY());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Physical size:" + QString::number(screen->physicalSize().width()) + "x" + QString::number(screen->physicalSize().height()) + "mm";
+
+		switch (screen->primaryOrientation()) 
+		{
+			case Qt::PrimaryOrientation           : sGatheredInfo = sGatheredInfo + "\n" + "  Primary orientation:" + "Primary";
+			case Qt::LandscapeOrientation         : sGatheredInfo = sGatheredInfo + "\n" + "  Primary orientation:" + "Landscape";
+			case Qt::PortraitOrientation          : sGatheredInfo = sGatheredInfo + "\n" + "  Primary orientation:" + "Portrait";
+			case Qt::InvertedLandscapeOrientation : sGatheredInfo = sGatheredInfo + "\n" + "  Primary orientation:" + "Inverted landscape";
+			case Qt::InvertedPortraitOrientation  : sGatheredInfo = sGatheredInfo + "\n" + "  Primary orientation:" + "Inverted portrait";
+			default                               : sGatheredInfo = sGatheredInfo + "\n" + "  Primary orientation:" + "Unknown";
+		}
+
+		sGatheredInfo = sGatheredInfo + "\n" + "  Refresh rate:" + QString::number(screen->refreshRate()) + "Hz";
+		sGatheredInfo = sGatheredInfo + "\n" + "  Size:" + QString::number(screen->size().width()) + "x" + QString::number(screen->size().height());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Virtual geometry: x=" + QString::number(screen->virtualGeometry().x()) + " y=" + QString::number(screen->virtualGeometry().y()) + ", " + QString::number(screen->virtualGeometry().width()) + "x" + QString::number(screen->virtualGeometry().height());
+		sGatheredInfo = sGatheredInfo + "\n" + "  Virtual size:" + QString::number(screen->virtualSize().width()) + "x" + QString::number(screen->virtualSize().height()) + "\n";
+	}
+	return sGatheredInfo;
 }
 
 bool ExperimentManager::showVisualExperimentEditor(ExperimentTreeModel *expTreeModel, const QString &sExpTreeModelCanonFilePath)

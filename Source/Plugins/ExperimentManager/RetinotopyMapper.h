@@ -156,6 +156,7 @@ private:
 	void initializeMovingDotsStructures();
 	QString booleanToParamString(bool bValue);
 	bool paramStringToBool(QString sValue);
+	void adjustStimScreenArea();
 
 	QScriptValue *customScriptHandlerFunction;
 	RetinotopyMapperWindow *retinoMapperWindow;
@@ -191,6 +192,7 @@ private:
 	QStringList randomizeTriggerStepsArray;
 	bool bNoChangesSinceLastFrame;
 	ExperimentManager *experimentManager;
+	QScreen *sActiveStimScreen;
 
 	QColor movingDotsColor;
 	QColor cCheckerColor1;

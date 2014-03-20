@@ -31,6 +31,8 @@ public:
 	RetinotopyMapperWindow(RetinotopyMapper *parent = NULL);
 	~RetinotopyMapperWindow();
 
+	QScreen *grabScreenUnderMouseCursor();
+
 	void initialize();
 	//void render();
 	void render(QPainter *stimuliPainter);

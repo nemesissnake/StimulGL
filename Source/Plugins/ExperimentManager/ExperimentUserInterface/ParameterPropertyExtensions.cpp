@@ -300,6 +300,64 @@ QVariant VariantExtensionPropertyManager::value(const QtProperty *property) cons
 	return QtVariantPropertyManager::value(property);
 }
 
+QVariant VariantExtensionPropertyManager::resolveParameterValueType(const QVariant &vInput, const ExperimentParameterTypeName &sType, const bool &bToView)
+{
+	if(bToView)
+	{
+		if(sType == Experiment_ParameterType_Boolean)
+		{
+			if(vInput.toString().contains("true",Qt::CaseInsensitive))
+				return "True";
+			else if(vInput.toString().contains("false",Qt::CaseInsensitive))
+				return "False";
+		}
+		else if(sType == Experiment_ParameterType_RotationDirection)
+		{
+			return RotationDirectionPropertyWidget::rotationDirectionString((RotationDirectionPropertyWidget::RotationDirectionEnum)vInput.toInt());
+		}
+		else if(sType == Experiment_ParameterType_EccentricityDirection)
+		{
+			return EccentricityDirectionPropertyWidget::eccentricityDirectionString((EccentricityDirectionPropertyWidget::EccentricityDirectionEnum)vInput.toInt());
+		}
+		else if(sType == Experiment_ParameterType_MovementDirection)
+		{
+			return MovementDirectionPropertyWidget::movementDirectionString((MovementDirectionPropertyWidget::MovementDirectionEnum)vInput.toInt());
+		}
+		else
+		{
+			return vInput;
+		}
+		//Experiment_ParameterType_Unknown
+		//Experiment_ParameterType_String
+		//Experiment_ParameterType_StringArray
+		//Experiment_ParameterType_Color
+		//Experiment_ParameterType_Integer
+		//Experiment_ParameterType_Float
+		//Experiment_ParameterType_Double
+	}
+	else
+	{
+		//if(sType == Experiment_ParameterType_Boolean)
+		if(sType == Experiment_ParameterType_RotationDirection)
+		{
+			return (int)RotationDirectionPropertyWidget::rotationDirectionEnum(vInput.toString());
+		}
+		else if(sType == Experiment_ParameterType_EccentricityDirection)
+		{
+			return (int)EccentricityDirectionPropertyWidget::eccentricityDirectionEnum(vInput.toString());
+		}
+		else if(sType == Experiment_ParameterType_MovementDirection)
+		{
+			return (int)MovementDirectionPropertyWidget::movementDirectionEnum(vInput.toString());
+		}
+		else
+		{
+			return vInput;
+		}
+	}
+	return NULL;
+}
+
 void VariantExtensionPropertyManager::setValue(QtProperty *property, const QVariant &val)
 {
 	if(isManagedCustomPropertyType(property)) 

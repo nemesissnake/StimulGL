@@ -786,8 +786,14 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 {
 	Q_UNUSED(subWindow);
 	QMdiSubWindow *currentSub = activeMdiChild();
-	CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
-	bool hasMdiChild = ((DocManager->count() > 0) && (currentSub != 0));
+	CustomQsciScintilla *tmpCustomQsciScintilla = NULL;
+	bool hasMdiChild = false;
+	if(DocManager->count() > 0)
+	{
+		tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
+		if(currentSub)
+			hasMdiChild = true;
+	}
 	if((tmpCustomQsciScintilla) || (hasMdiChild == false))
 	{
 		StatusLinesLabel->setHidden(!hasMdiChild);
@@ -832,9 +838,13 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 		separatorAct->setVisible(hasMdiChild);
 
 		bool hasSelection = false;
-		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
-		if(tmpCustomQsciScintilla)
-			hasSelection = (hasMdiChild && (tmpCustomQsciScintilla->hasSelectedText()));
+		CustomQsciScintilla *tmpCustomQsciScintilla = NULL;
+		if(DocManager->count() > 0)
+		{
+			tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
+			if(tmpCustomQsciScintilla)
+				hasSelection = (hasMdiChild && (tmpCustomQsciScintilla->hasSelectedText()));
+		}
 
 		cutAction->setEnabled(hasSelection);
 		copyAction->setEnabled(hasSelection);
@@ -2826,27 +2836,28 @@ void MainWindow::updateMarkersMenu()
 			markersMenu->removeAction(markersMenu->actions().at(i));
 		}
 		markersMenu->clear();
-
-		CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
-
 		markersMenu->addAction(addRemMarkerAction);
 		markersMenu->addAction(nextMarkerAction);
 		markersMenu->addAction(prevMarkerAction);
 		markersMenu->addAction(remAllMarkerAction);
 
-		if ( tmpSci && !tmpSci==0 ) 
+		if(DocManager->count()>0)
 		{
-			QList<int> list = tmpSci->markers();
-			if ( !list.isEmpty() ) {
-				markersMenu->addSeparator();
-				//foreach (int line, list) 
-				for (int i = 0; i < list.size(); ++i)
-				{
-					QString lineStr = tmpSci->getLine(list.at(i)).simplified();
-					if ( lineStr.length() > 40 )
-						lineStr = lineStr.left(40) + " ...";
-					QAction *action  = markersMenu->addAction(QString("%1: %2").arg(list.at(i) + 1).arg(lineStr), this, SLOT(gotoMarker()));
-					action->setShortcut(QString("Ctrl+Alt+") + QString::number(i+1));
+			CustomQsciScintilla *tmpSci = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(activeMdiChild()));
+			if ( tmpSci && !tmpSci==0 ) 
+			{
+				QList<int> list = tmpSci->markers();
+				if ( !list.isEmpty() ) {
+					markersMenu->addSeparator();
+					//foreach (int line, list) 
+					for (int i = 0; i < list.size(); ++i)
+					{
+						QString lineStr = tmpSci->getLine(list.at(i)).simplified();
+						if ( lineStr.length() > 40 )
+							lineStr = lineStr.left(40) + " ...";
+						QAction *action  = markersMenu->addAction(QString("%1: %2").arg(list.at(i) + 1).arg(lineStr), this, SLOT(gotoMarker()));
+						action->setShortcut(QString("Ctrl+Alt+") + QString::number(i+1));
+					}
 				}
 			}
 		}

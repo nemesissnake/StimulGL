@@ -23,10 +23,6 @@
 #include "ExperimentStructures.h"
 #include "ExperimentParameterDefinition.h"
 
-#define BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER				";"
-#define BLOCKPARAMVIEW_UNIQUEPARAM_OBJECTID_INDEX		0
-#define BLOCKPARAMVIEW_UNIQUEPARAM_PARAMID_HEX_INDEX	1
-#define BLOCKPARAMVIEW_UNIQUEPARAM_PARAMNAME_INDEX		2
 #define BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT			4
 //#define BLOCKPARAMVIEW_BLOCKNUMBER_ROWORCOLUMNINDEX	0
 #define BLOCKPARAMVIEW_BLOCKNAME_ROWORCOLUMNINDEX		0
@@ -73,7 +69,6 @@ private:
 	void configureEditHandling(const bool &bEnable);
 	bool appendExperimentBlockParameterChanges();
 	void initTableSetup();
-	QVariant resolveParameterValueType(const QVariant &vInput, const ExperimentParameterTypeName &sType, const bool &bToView) const;
 
 	struct strcParameterBlockChanges
 	{

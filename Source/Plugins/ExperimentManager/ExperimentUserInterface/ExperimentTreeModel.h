@@ -23,6 +23,7 @@
 #include <QDomDocument>
 #include "ExperimentGraphicEditor_Global.h"
 #include "ExperimentStructures.h"
+#include "ExperimentTreeItem.h"
 
 #define EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID		-1
 #define EXPERIMENTTREEMODEL_FILTER_TAGS				"TAGS"

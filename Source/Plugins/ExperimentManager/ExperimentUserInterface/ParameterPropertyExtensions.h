@@ -25,6 +25,7 @@
 #include <QDialog>
 #include <QPlainTextEdit>
 #include <QDialogButtonBox>
+#include "ExperimentParameterDefinition.h"
 
 #define EXPERIMENT_PARAMETER_ARRAYSEP_CHAR		","
 #define EXPERIMENT_PARAMETER_DERIVED_CHAR		"_"
@@ -190,6 +191,7 @@ public:
 
 public slots:
 	void setValue(QtProperty *property, const QVariant &val);
+	static QVariant resolveParameterValueType(const QVariant &vInput, const ExperimentParameterTypeName &sType, const bool &bToView);
 
 protected:
 	QString valueText(const QtProperty *property) const;

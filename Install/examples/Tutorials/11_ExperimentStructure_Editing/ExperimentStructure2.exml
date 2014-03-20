@@ -74,7 +74,7 @@ Attributes only apply to readonly non user data, like the ID
                         </parameter>
                         <parameter ID="2">
                             <name>ShowFixPoint</name>
-                            <value>false</value>
+                            <value>true</value>
                         </parameter>
                         <parameter ID="3">
                             <name>FixationSize</name>
@@ -82,7 +82,7 @@ Attributes only apply to readonly non user data, like the ID
                         </parameter>
                         <parameter ID="4">
                             <name>FixationColor</name>
-                            <value>#FF1122</value>
+                            <value>#21fcff</value>
                         </parameter>
                         <parameter ID="5">
                             <name>BackGroundColor</name>
@@ -90,11 +90,11 @@ Attributes only apply to readonly non user data, like the ID
                         </parameter>
                         <parameter ID="6">
                             <name>StimulusWidthSpan</name>
-                            <value>123</value>
+                            <value>600</value>
                         </parameter>
                         <parameter ID="7">
                             <name>StimulusHeightSpan</name>
-                            <value>456</value>
+                            <value>600</value>
                         </parameter>
                         <parameter ID="8">
                             <name>AntiAliasing</name>

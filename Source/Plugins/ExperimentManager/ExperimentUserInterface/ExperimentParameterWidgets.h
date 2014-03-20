@@ -25,6 +25,11 @@
 
 class ExperimentParameterVisualizer;
 
+#define EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER				";"
+#define EXPPARAMWIDGETS_UNIQUEPARAM_OBJECTID_INDEX			0
+#define EXPPARAMWIDGETS_UNIQUEPARAM_PARAMID_HEX_INDEX		1
+#define EXPPARAMWIDGETS_UNIQUEPARAM_PARAMNAME_INDEX			2
+
 struct ExperimentParameterDefinitionCollection
 {
 	ExperimentParameterDefinitionContainer *cExperimentParameterDefinition;
@@ -83,6 +88,7 @@ public:
 	//QWidget *getExperimentParameterWidgetSubControl(const QString &sCollectionName, const QString &sParameterName, const QString &sDerivedPrefixName, QString &sReturnUniquePropertyIdentifier, const QVariant &vValue, const bool &bDoInitWithValue);
 	bool setWidgetParameter(const QString &sUniquePropertyIdentifier, const QString &sCollectionName, const QString &sParameterValue, const bool &bSetModified);
 	ExperimentParameterDefinitionContainer *getExperimentParameterDefinition(const QString &sCollectionName);
+	static QString getUniqueParameterIndentifier(const int &nObjectID, const int &nParamID, const QString &sParamName);
 
 private:
 	ExperimentParameterWidgets();

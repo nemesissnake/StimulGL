@@ -186,3 +186,8 @@ ExperimentParameterDefinitionContainer *ExperimentParameterWidgets::getExperimen
 	}	
 	return NULL;
 }
+
+QString ExperimentParameterWidgets::getUniqueParameterIndentifier(const int &nObjectID, const int &nParamID, const QString &sParamName)
+{
+	return tr("%1%2%3%4%5").arg(nObjectID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(QString(QString(nParamID).toLatin1().toHex())).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(sParamName);
+}

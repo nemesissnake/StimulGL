@@ -19,6 +19,8 @@
 #include "qtquick2applicationviewer.h"
 
 #include <QCoreApplication>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QDir>
 #include <QtQml>
 #include "defines.h"
@@ -68,6 +70,19 @@ QtQuick2ApplicationViewer::~QtQuick2ApplicationViewer()
     delete d;
 	if(qml2InterfaceObject)
 		delete qml2InterfaceObject;
+}
+
+QScreen *QtQuick2ApplicationViewer::grabScreenUnderMouseCursor()
+{
+	QPoint pCurrMouseCursorPos = this->mapFromGlobal(QCursor::pos());
+	int nScreenNumber = QApplication::desktop()->screenNumber(pCurrMouseCursorPos);
+	if(nScreenNumber>=0)
+	{
+		QList<QScreen*> lAvailableScreens = QGuiApplication::screens();
+		if(lAvailableScreens.count() > nScreenNumber)
+			return lAvailableScreens.at(nScreenNumber);
+	}
+	return QGuiApplication::primaryScreen();
 }
 
 int QtQuick2ApplicationViewer::registerDefaultCustomQMLTypes()

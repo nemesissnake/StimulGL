@@ -20,8 +20,12 @@
 #define ObjectParameterDialog_H
 
 #include <QDialog>
+#include "ExperimentTreeModel.h"
+#include "ExperimentParameterDefinition.h"
+
 namespace Ui {class ObjectParameterDialog;};
 
+class ExperimentParameterVisualizer;
 class ObjectParameterDialog : public QDialog
 {
 	Q_OBJECT
@@ -33,11 +37,51 @@ public:
 	ObjectParameterDialog(QWidget *parent = NULL);
 	~ObjectParameterDialog();
 
+	bool parseExperimentTreeModel(ExperimentTreeModel *pExperimentTreeModel);
+
 private slots:
-	void applyChanges();
+	void parameterTypeChanged();
+	void updateParameter();
+	void resetParameter();
+	void selectedObjectChanged(int nIndex);
+	void selectedBlockChanged(int nIndex);
+	void selectedParameterChanged(int nIndex);
+	void derivedItemEditFinished(const QString& sParamName, const QString& sNewValue);
 
 private:
+	bool parseParameters(const int &nObjectID, const int &nBlockID, const bool &bIsCustom = false);
+	void clearAllParsedStructures();
+
 	Ui::ObjectParameterDialog *ui;
+
+	struct strcParameterDefinition 
+	{
+		bool bIsChanged;
+		QString sFullDisplayName;
+		QString sValue;
+		ExperimentParameterDefinitionStrc ParamDef;
+
+		strcParameterDefinition()
+		{
+			bIsChanged = false;
+			sFullDisplayName = "";
+			sValue = "";
+		}
+	};
+
+	bool bIsParsing;
+	QWidget *pParameterEditWidget;
+
+	QHash<int, int> hObjectControlIndexToObjectID;
+	QHash<int, int> hBlockControlIndexToBlockID;
+	ExperimentParameterVisualizer *expParamVizualizer;
+	ExperimentTreeModel *pCurrentExpTree;
+	cExperimentStructure *pCurrentExpStructure;
+	QList<ExperimentStructuresNameSpace::strcExperimentObject> lCurrentExpObjects;
+	QList<ExperimentTreeItem*> lCurrentExpTreeItems;
+	QMap<QString,strcParameterDefinition> mapUniqueHexParamIDToParamDef;
+	QHash<int,QString> hashParamControlIndexToUniqueHexParamID;
+	QHash<QString,int> hashParamNameToParamID;
 };
 
 #endif // ObjectParameterDialog_H

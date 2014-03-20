@@ -28,6 +28,7 @@
 #include <QGLWidget>
 #include <QDesktopWidget>
 #include <QApplication>
+#include <QScreen>
 #include "Global.h"
 #include "defines.h"
 #include "./../../StimulGL/mainappinfo.h"
@@ -367,6 +368,27 @@ public slots:
 	 *  @return a boolean value determining whether this function executed successfully.
 	 */	
 	bool showVisualExperimentEditor(ExperimentTreeModel *expTreeModel = NULL, const QString &sExpTreeModelCanonFilePath = "");
+	/*! \brief Returns a QScreen object representing the active Stimuli Output Screen.
+	 *
+	 *  This function returns a pointer to an QScreen object representing the active configured Stimuli Output Screen.
+	 *  @return a pointer to an QScreen object.
+	 */		
+	QScreen* getActiveStimuliOutputScreen();
+	/*! \brief Sets a Screen referred by it's Screen Number as the current active Stimuli Output Screen.
+	 *
+	 *  This function sets a Screen referred by it's Screen Number as the current active Stimuli Output Screen.
+	 *  @param nScreenNumber a integer value representing the Screen Number that should be set as the current active Stimuli Output Screen.
+	 *  @return a boolean value determining whether this function executed successfully.
+	 */	
+	bool setActiveStimuliOutputScreen(int nScreenNumber);
+	/*! \brief Returns various Screen information from all available screens.
+	 *
+	 *  This function returns various Screen information from all available screens.
+	 *  @return a string containing the various Screen information from all the available screens.
+	 */	
+	static QString getAvailableScreensInformation();
+
+
 
 #ifndef QT_NO_DEBUG
 	QString Test(const QString &sInput = "");
@@ -416,6 +438,7 @@ private:
 	QByteArray currentValidationFile;
 
 	QObject *parentObject;
+	QScreen *sConfiguredActiveScreen;
 	QScriptEngine *currentScriptEngine;
 	bool m_RunFullScreen;
 	QString m_ExpFileName;

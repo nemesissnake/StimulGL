@@ -138,7 +138,8 @@ void QML2Viewer::initialize()
 	experimentManager = NULL;
 	currentExperimentStructure = NULL;
 	nQML2ViewerID = -1;
-	rectScreenRes = QApplication::desktop()->screenGeometry();
+	sActiveStimScreen = NULL;
+	rectScreenRes = QGuiApplication::primaryScreen()->geometry();	
 	quick2ViewerWindow = NULL;
 	rootObject = NULL;
 	imgLstModel = NULL;
@@ -237,6 +238,19 @@ QScriptValue QML2Viewer::getWindow()
 
 bool QML2Viewer::startObject()
 {	
+	if(sActiveStimScreen == NULL)
+	{
+		sActiveStimScreen = quick2ViewerWindow->grabScreenUnderMouseCursor();
+		if(sActiveStimScreen)
+		{
+			rectScreenRes = sActiveStimScreen->geometry();
+			quick2ViewerWindow->setScreen(sActiveStimScreen);
+		}
+	}
+	else
+	{
+		quick2ViewerWindow->setScreen(sActiveStimScreen);
+	}	
 	quick2ViewerWindow->showFullScreen();//Fastest uncomment this
 	return true;
 }
@@ -419,10 +433,10 @@ void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyT
 		QString qmlMainFilePath = "";
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_MAINFILEPATH,qmlMainFilePath);
-		stimHeigthPixelAmount = 480;//rectScreenRes.height();
+		stimHeigthPixelAmount = 480;
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
-		stimWidthPixelAmount = stimHeigthPixelAmount;//rectScreenRes.width();
+		stimWidthPixelAmount = stimHeigthPixelAmount;
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
 	} 
@@ -570,6 +584,12 @@ bool QML2Viewer::setExperimentManager(ExperimentManager *expManager)
 	if(experimentManager!=expManager)
 	{
 		experimentManager = expManager;
+		if(expManager)
+		{
+			sActiveStimScreen = expManager->getActiveStimuliOutputScreen();
+			if(sActiveStimScreen)
+				rectScreenRes = sActiveStimScreen->geometry();
+		}
 		ExperimentEngine::setExperimentManager(expManager);//Important!
 	}
 	return true;

@@ -198,7 +198,7 @@ void ExperimentBlockParameterView::showContextMenu(const QPoint& pos)
 			removeBlocksAction = mBlocksMenu->addAction("Remove Multiple Selected");
 	}
 
-	addParametersAction = mParametersMenu->addAction("Add Parameter(s)");
+	//addParametersAction = mParametersMenu->addAction("Configure Parameter(s)");
 	if(lstDefinedParamIndexesInSelectionRanges.isEmpty() == false)
 	{		
 		if (lstDefinedParamIndexesInSelectionRanges.count() == 1)
@@ -263,7 +263,8 @@ void ExperimentBlockParameterView::showContextMenu(const QPoint& pos)
 		else if(selectedItemAction == addParametersAction)
 		{
 			pObjectParameterDialog = new ObjectParameterDialog();
-			pObjectParameterDialog->exec();
+			if(pObjectParameterDialog->parseExperimentTreeModel(pExpTreeModel))
+				pObjectParameterDialog->exec();
 		}
 		else if(selectedItemAction == resetParametersAction)
 		{
@@ -284,13 +285,13 @@ void ExperimentBlockParameterView::showContextMenu(const QPoint& pos)
 					nBlockID = hashRowOrColumnIndexBlockId[tmpModelIndex.row()];
 					sBlockParamName = hashRowOrColumnIndexObjectIDParamName[tmpModelIndex.column()];
 				}
-				sSplittedBlockParamName = sBlockParamName.split(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER,QString::SkipEmptyParts);
+				sSplittedBlockParamName = sBlockParamName.split(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER,QString::SkipEmptyParts);
 				if(sSplittedBlockParamName.count() > 2)
 				{
 					tmpParameterSpecifier.nBlockID = nBlockID;
-					tmpParameterSpecifier.nObjectID = sSplittedBlockParamName.at(BLOCKPARAMVIEW_UNIQUEPARAM_OBJECTID_INDEX).toInt();
-					tmpParameterSpecifier.sParamHexID = sSplittedBlockParamName.at(BLOCKPARAMVIEW_UNIQUEPARAM_PARAMID_HEX_INDEX);
-					tmpParameterSpecifier.sParamName = sSplittedBlockParamName.at(BLOCKPARAMVIEW_UNIQUEPARAM_PARAMNAME_INDEX);
+					tmpParameterSpecifier.nObjectID = sSplittedBlockParamName.at(EXPPARAMWIDGETS_UNIQUEPARAM_OBJECTID_INDEX).toInt();
+					tmpParameterSpecifier.sParamHexID = sSplittedBlockParamName.at(EXPPARAMWIDGETS_UNIQUEPARAM_PARAMID_HEX_INDEX);
+					tmpParameterSpecifier.sParamName = sSplittedBlockParamName.at(EXPPARAMWIDGETS_UNIQUEPARAM_PARAMNAME_INDEX);
 					lstParameterSpecifiers.append(tmpParameterSpecifier);					
 				}
 			}
@@ -529,9 +530,9 @@ bool ExperimentBlockParameterView::parseExperimentBlockParameters(const QList<Ex
 									paramBlockChanges.sValue = pTmpExpTreeItem->getValue();
 									//expandExperimentBlockParameterValue(tmpValue);
 									paramBlockChanges.nBlockID = nBlockID;
-									//fix ordering check 2 loop, see line below
-									tmpString = QString(hashObjectIdExperimentObjectInfo[nObjectID].pObjectParamDefContainer->getParameterDefinition(hashObjectIdExperimentObjectInfo[nObjectID].pObjectParamDefContainer->getFirstParameterID(sParamName.toLower()))->nId).toLatin1().toHex();
-									uniqueObjParamIdentifier = tr("%1%2%3%4%5").arg(nObjectID).arg(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER).arg(tmpString).arg(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER).arg(sParamName);
+									//tmpString = QString(hashObjectIdExperimentObjectInfo[nObjectID].pObjectParamDefContainer->getParameterDefinition(hashObjectIdExperimentObjectInfo[nObjectID].pObjectParamDefContainer->getFirstParameterID(sParamName.toLower()))->nId).toLatin1().toHex();
+									//uniqueObjParamIdentifier = tr("%1%2%3%4%5").arg(nObjectID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(tmpString).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(sParamName);
+									uniqueObjParamIdentifier = ExperimentParameterWidgets::getUniqueParameterIndentifier(nObjectID,nParameterID,sParamName);
 									if(mapUniqueParamIDExpParamBlockChanges.contains(uniqueObjParamIdentifier))
 									{
 										mapUniqueParamIDExpParamBlockChanges[uniqueObjParamIdentifier].append(paramBlockChanges);
@@ -603,13 +604,13 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 		for (int i=0; i<BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT; i++)
 		{
 			if(i==BLOCKPARAMVIEW_BLOCKNAME_ROWORCOLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER).arg(NAME_TAG);
+				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(NAME_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKTRIALS_ROWORCOLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER).arg(TRIALAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(TRIALAMOUNT_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKINTTRGS_ROWORCOLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER).arg(INTERNALTRIGGERAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(INTERNALTRIGGERAMOUNT_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKEXTTRGS_ROWORCOLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER).arg(EXTERNALTRIGGERAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(EXTERNALTRIGGERAMOUNT_TAG);
 			
 			if(bVerticalViewEnabled)
 				tmpColumnInfo.sHeader = lRowHeaders.at(i);
@@ -633,14 +634,14 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 			foreach(strcParameterBlockChanges tmpParamBlockChanges,tmpParamBlockChangesList)//For each Parameter change (per block)
 			{
 				sObjectIDGroupDefParamName = mapUniqueParamIDExpParamBlockChanges.keys().at(nParamCounter);
-				lObjectIDGroupDefParamName = sObjectIDGroupDefParamName.split(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER,QString::KeepEmptyParts);
+				lObjectIDGroupDefParamName = sObjectIDGroupDefParamName.split(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER,QString::KeepEmptyParts);
 				if(lObjectIDGroupDefParamName.count() > 2)
 				{
-					nObjectID = lObjectIDGroupDefParamName.at(BLOCKPARAMVIEW_UNIQUEPARAM_OBJECTID_INDEX).toInt();
+					nObjectID = lObjectIDGroupDefParamName.at(EXPPARAMWIDGETS_UNIQUEPARAM_OBJECTID_INDEX).toInt();
 					pTempObjectParamDefContainer = hashObjectIdExperimentObjectInfo[nObjectID].pObjectParamDefContainer;
 					if(pTempObjectParamDefContainer)
 					{
-						nParamID = pTempObjectParamDefContainer->getFirstParameterID(lObjectIDGroupDefParamName.at(BLOCKPARAMVIEW_UNIQUEPARAM_PARAMNAME_INDEX));
+						nParamID = pTempObjectParamDefContainer->getFirstParameterID(lObjectIDGroupDefParamName.at(EXPPARAMWIDGETS_UNIQUEPARAM_PARAMNAME_INDEX));
 						sParamName = hashObjectIdExperimentObjectInfo[nObjectID].sObjectName + ":\n";
 						if(pTempObjectParamDefContainer->getParameterDefinition(nParamID)->sGroupPath.isEmpty())
 						{
@@ -654,7 +655,7 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 					}
 					else
 					{
-						sParamName = lObjectIDGroupDefParamName.at(BLOCKPARAMVIEW_UNIQUEPARAM_PARAMNAME_INDEX);
+						sParamName = lObjectIDGroupDefParamName.at(EXPPARAMWIDGETS_UNIQUEPARAM_PARAMNAME_INDEX);
 					}
 					if(hashObjectParameterRowOrColumnIndex.contains(sObjectIDGroupDefParamName))
 					{
@@ -700,7 +701,7 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 						{
 							tmpItem = tmpItem->clone();
 						}
-						tmpItem->setText(tr("%1").arg(resolveParameterValueType(tmpParamBlockChanges.sValue, hashObjectParameterRowOrColumnIndex[sObjectIDGroupDefParamName].strcParamDef->eType, true).toString()));
+						tmpItem->setText(tr("%1").arg(VariantExtensionPropertyManager::resolveParameterValueType(tmpParamBlockChanges.sValue, hashObjectParameterRowOrColumnIndex[sObjectIDGroupDefParamName].strcParamDef->eType, true).toString()));
 						
 						if(bVerticalViewEnabled)
 							this->setItem(nRowOrColumnIndex, hashBlockIdRowOrColumnIndex[tmpParamBlockChanges.nBlockID], tmpItem);	
@@ -759,7 +760,7 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 						{
 							tmpExpParDefStruct = hashObjectParameterRowOrColumnIndex[hashRowOrColumnIndexObjectIDParamName[nOut]].strcParamDef;
 							if(tmpExpParDefStruct)
-								sLatestValue = resolveParameterValueType(tmpExpParDefStruct->sDefaultValue,tmpExpParDefStruct->eType,true).toString();
+								sLatestValue = VariantExtensionPropertyManager::resolveParameterValueType(tmpExpParDefStruct->sDefaultValue,tmpExpParDefStruct->eType,true).toString();
 						}
 						if(tmpItem == NULL)
 						{
@@ -783,64 +784,6 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 		}
 	}
 	return true;
-}
-
-QVariant ExperimentBlockParameterView::resolveParameterValueType(const QVariant &vInput, const ExperimentParameterTypeName &sType, const bool &bToView) const
-{
-	if(bToView)
-	{
-		if(sType == Experiment_ParameterType_Boolean)
-		{
-			if(vInput.toString().contains("true",Qt::CaseInsensitive))
-				return "True";
-			else if(vInput.toString().contains("false",Qt::CaseInsensitive))
-				return "False";
-		}
-		else if(sType == Experiment_ParameterType_RotationDirection)
-		{
-			return RotationDirectionPropertyWidget::rotationDirectionString((RotationDirectionPropertyWidget::RotationDirectionEnum)vInput.toInt());
-		}
-		else if(sType == Experiment_ParameterType_EccentricityDirection)
-		{
-			return EccentricityDirectionPropertyWidget::eccentricityDirectionString((EccentricityDirectionPropertyWidget::EccentricityDirectionEnum)vInput.toInt());
-		}
-		else if(sType == Experiment_ParameterType_MovementDirection)
-		{
-			return MovementDirectionPropertyWidget::movementDirectionString((MovementDirectionPropertyWidget::MovementDirectionEnum)vInput.toInt());
-		}
-		else
-		{
-			return vInput;
-		}
-		//Experiment_ParameterType_Unknown
-		//Experiment_ParameterType_String
-		//Experiment_ParameterType_StringArray
-		//Experiment_ParameterType_Color
-		//Experiment_ParameterType_Integer
-		//Experiment_ParameterType_Float
-		//Experiment_ParameterType_Double
-	}
-	else
-	{
-		//if(sType == Experiment_ParameterType_Boolean)
-		if(sType == Experiment_ParameterType_RotationDirection)
-		{
-			return (int)RotationDirectionPropertyWidget::rotationDirectionEnum(vInput.toString());
-		}
-		else if(sType == Experiment_ParameterType_EccentricityDirection)
-		{
-			return (int)EccentricityDirectionPropertyWidget::eccentricityDirectionEnum(vInput.toString());
-		}
-		else if(sType == Experiment_ParameterType_MovementDirection)
-		{
-			return (int)MovementDirectionPropertyWidget::movementDirectionEnum(vInput.toString());
-		}
-		else
-		{
-			return vInput;
-		}
-	}
-	return NULL;
 }
 
 void ExperimentBlockParameterView::configureEditHandling(const bool &bEnable) 
@@ -872,13 +815,13 @@ void ExperimentBlockParameterView::cellOpenedForEdit(const int &nRow, const int 
 	{
 		QStringList tmpObjectIDParamNameList;
 		if(bVerticalViewEnabled)
-			tmpObjectIDParamNameList = hashRowOrColumnIndexObjectIDParamName[tmpModelIndexList.at(0).row()].split(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER);
+			tmpObjectIDParamNameList = hashRowOrColumnIndexObjectIDParamName[tmpModelIndexList.at(0).row()].split(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER);
 		else
-			tmpObjectIDParamNameList = hashRowOrColumnIndexObjectIDParamName[tmpModelIndexList.at(0).column()].split(BLOCKPARAMVIEW_UNIQUEPARAM_SPLITTER);
+			tmpObjectIDParamNameList = hashRowOrColumnIndexObjectIDParamName[tmpModelIndexList.at(0).column()].split(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER);
 		if(tmpObjectIDParamNameList.count() > 1)
 		{
 			ExperimentParameterWidgets *expParamWidgets = ExperimentParameterWidgets::instance();
-			int tmpInt = tmpObjectIDParamNameList.at(BLOCKPARAMVIEW_UNIQUEPARAM_OBJECTID_INDEX).toInt();
+			int tmpInt = tmpObjectIDParamNameList.at(EXPPARAMWIDGETS_UNIQUEPARAM_OBJECTID_INDEX).toInt();
 			if((tmpInt<hashObjectIdExperimentObjectInfo.count()) || (tmpInt==EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID))
 			{
 				QString sDerivedPrefixName;
@@ -900,7 +843,7 @@ void ExperimentBlockParameterView::cellOpenedForEdit(const int &nRow, const int 
 						tmpDef = hashObjectParameterRowOrColumnIndex[hashRowOrColumnIndexObjectIDParamName[tmpModelIndexList.at(0).column()]].strcParamDef;
 					if(tmpDef)
 					{
-						vResolvedParameterValue = resolveParameterValueType(tmpItem->text(),tmpDef->eType,false);
+						vResolvedParameterValue = VariantExtensionPropertyManager::resolveParameterValueType(tmpItem->text(),tmpDef->eType,false);
 					}
 					else
 					{
@@ -917,7 +860,7 @@ void ExperimentBlockParameterView::cellOpenedForEdit(const int &nRow, const int 
 					bool bTempPropertyEditSignaling = tmpParamVis->hasPropertyEditSignaling();
 					if(bTempPropertyEditSignaling)
 						tmpParamVis->configurePropertyEditSignaling(false);
-					tmpWidget = tmpParamVis->getParameterEditWidget(tmpObjectIDParamNameList.at(BLOCKPARAMVIEW_UNIQUEPARAM_PARAMNAME_INDEX), sDerivedPrefixName, sUniqueGeneratedPropertyIdentifier, vResolvedParameterValue, bDoValueInit);
+					tmpWidget = tmpParamVis->getParameterEditWidget(tmpObjectIDParamNameList.at(EXPPARAMWIDGETS_UNIQUEPARAM_PARAMNAME_INDEX), sDerivedPrefixName, sUniqueGeneratedPropertyIdentifier, vResolvedParameterValue, bDoValueInit);
 
 					if(tmpWidget)
 					{					
@@ -941,7 +884,7 @@ void ExperimentBlockParameterView::cellOpenedForEdit(const int &nRow, const int 
 							ExperimentParameterDefinitionStrc *tmpDef = hashObjectParameterRowOrColumnIndex[hashRowOrColumnIndexObjectIDParamName[nIndex2]].strcParamDef;
 							if(tmpDef)
 							{
-								expParamWidgets->setWidgetParameter(sUniqueGeneratedPropertyIdentifier, hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass, resolveParameterValueType(tmpItem->text(),tmpDef->eType,false).toString(), true);
+								expParamWidgets->setWidgetParameter(sUniqueGeneratedPropertyIdentifier, hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass, VariantExtensionPropertyManager::resolveParameterValueType(tmpItem->text(),tmpDef->eType,false).toString(), true);
 							}						
 						}					
 						ExperimentParameterVisualizer* tmpVisualizer = expParamWidgets->getExperimentParameterWidget(hashObjectIdExperimentObjectInfo[tmpInt].ObjectGlobalInfo.sClass);
@@ -985,7 +928,7 @@ void ExperimentBlockParameterView::cellItemEditFinished(const QString& sParamNam
 			pExpTreeModel->saveNewData(nBlockID,nObjectID,sParamName,sNewValue);
 			bDoReparseModel = true;
 		}
-		QString sNewResolvedValue = resolveParameterValueType(sNewValue, hashObjectParameterRowOrColumnIndex[hashRowOrColumnIndexObjectIDParamName[nIndex2]].strcParamDef->eType, true).toString();
+		QString sNewResolvedValue = VariantExtensionPropertyManager::resolveParameterValueType(sNewValue, hashObjectParameterRowOrColumnIndex[hashRowOrColumnIndexObjectIDParamName[nIndex2]].strcParamDef->eType, true).toString();
 		QTableWidgetItem *tmpItem = new QTableWidgetItem(tr("%1").arg(sNewResolvedValue));
 		tmpItem->setTextColor(cChangedParameter);
 		tmpItem->setTextAlignment(Qt::AlignCenter);
