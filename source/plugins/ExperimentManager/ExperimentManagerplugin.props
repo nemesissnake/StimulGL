@@ -10,8 +10,8 @@
     <QTDIR Condition="'$(Platform)' == 'Win32'">C:\Qt\5.1.0\win32</QTDIR>
     <QTDIR Condition="'$(Platform)' == 'x64'">C:\Qt\5.1.0\x64</QTDIR>
     <AGNER>C:\Qt\Agner</AGNER>
-    <GRAPHVIZ>C:\Qt\Graphviz2.34</GRAPHVIZ>
-    <QTPROPERTYBROWSER>C:\Qt\CTK\QtPropertyBrowser</QTPROPERTYBROWSER>    
+    <QTPROPERTYBROWSER>C:\Qt\CTK\QtPropertyBrowser</QTPROPERTYBROWSER>
+    <OGDF>C:\Qt\ogdf.v2012.07</OGDF>    
   </PropertyGroup>
   
   <Choose>
@@ -39,11 +39,11 @@
     <BuildMacro Include="AGNER">
       <Value>$(AGNER)</Value>
     </BuildMacro>
-    <BuildMacro Include="GRAPHVIZ">
-      <Value>$(GRAPHVIZ)</Value>
-    </BuildMacro>
     <BuildMacro Include="QTPROPERTYBROWSER">
       <Value>$(QTPROPERTYBROWSER)</Value>
-    </BuildMacro>      
+    </BuildMacro>
+    <BuildMacro Include="OGDF">
+      <Value>$(OGDF)</Value>
+    </BuildMacro>     
   </ItemGroup>
 </Project>

@@ -20,7 +20,15 @@
 #define EXPERIMENTSTRUCTUREVISUALIZER_H
 
 #include <QWidget>
-#include "QGVScene.h"
+#include <QGraphicsScene>
+#include <OGDF/basic/Graph.h>
+#include <OGDF/basic/Graph_d.h>
+#include <OGDF/basic/graph_generators.h>
+#include <ogdf/basic/GraphAttributes.h>
+#include <ogdf/layered/DfsAcyclicSubgraph.h>
+#include <ogdf/tree/TreeLayout.h>
+
+using namespace ogdf;
 
 class QMenu;
 class QToolBar;
@@ -48,8 +56,8 @@ public slots:
 	void resizeStructureView(const int &nWidth, const int &nHeight);
 
 private slots:
-	void nodeContextMenu(QGVNode* node);
-	void nodeDoubleClick(QGVNode* node);
+	//void nodeContextMenu(QGVNode* node);
+	//void nodeDoubleClick(QGVNode* node);
 	void Test();
 
 //protected:
@@ -59,20 +67,13 @@ private slots:
 private:
 	Ui::ExperimentStructureVisualizer *ui;
 
-	//enum AutoConnType
-	//{
-	//	AutoConnType_BlockToBlock	= 0,
-	//	AutoConnType_StartToBlock	= 1,
-	//	AutoConnType_BlockToEnd		= 2
-	//};
-
 	struct expLoopItemStrc 
 	{
 		QString sName;
 		int nId;
 		int nNumber;
 		int nNumberOfLoops;
-		QGVEdge *gvEdge;
+		ogdf::edge *gvEdge;
 		int nSourceBlockId;
 		int nTargetBlockId;
 	};	
@@ -82,13 +83,12 @@ private:
 		QString sName;
 		int nId;
 		int nNumber;
-		QGVNode *gvNode;
+		ogdf::node *gvNode;
 	};
 
 	struct expAutoConnItemStrc
 	{
-		QGVEdge *gvEdge;
-		//AutoConnType tConnType;
+		ogdf::edge gvEdge;
 		int nSourceBlockId;
 		int nTargetBlockId;
 	};
@@ -99,8 +99,8 @@ private:
 		QList<expBlockItemStrc> lBlocks;
 		QList<expLoopItemStrc> lLoops;
 		QList<expAutoConnItemStrc> lAutoConns;
-		QGVNode *gvStartExperimentNode;
-		QGVNode *gvEndExperimentNode;
+		ogdf::node gvStartExperimentNode;
+		ogdf::node gvEndExperimentNode;
 	};
 
 	bool drawGraph(const QString &sDotContent = "");
@@ -109,7 +109,7 @@ private:
 	void createScene();
 	void setupLayout();
 	void resetExpSceneItemsCollection(expSceneItemStrc &tmpExpSceneItems);
-	QGVNode *getGVNodePointer(const int &nBlockID);
+	ogdf::node *getGVNodePointer(const int &nBlockID);
 
 	QAction *action_Quit;
 	QAction *action_Test;
@@ -119,9 +119,10 @@ private:
 	QToolButton *buttonFile;
 	QToolButton *buttonEdit;
 	QVBoxLayout *graphViewLayout;
-
-	QGVScene *_scene;
+	ogdf::Graph graph;
 	expSceneItemStrc expSceneItems;
+	QGraphicsScene *gScene;
+	GraphAttributes *gAttr;
 	cExperimentStructure *parsedExpStruct;
 	int nWidgetMargin;
 	qreal dGraphViewScale;

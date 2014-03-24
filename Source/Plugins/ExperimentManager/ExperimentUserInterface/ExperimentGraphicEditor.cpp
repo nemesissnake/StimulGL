@@ -83,7 +83,7 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	expBlockParamView = NULL;
 	tmpExpObjectParamDefs = NULL;
 	
-	bShowTreeView = false;
+	bShowTreeView = true;
 	currentViewSettings.bSkipComments = true;
 	currentViewSettings.bSkipEmptyAttributes = false;
 

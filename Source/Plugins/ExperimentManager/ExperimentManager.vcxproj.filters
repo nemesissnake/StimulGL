@@ -536,21 +536,6 @@
     <ClCompile Include="ExperimentUserInterface\QGraphicsViewEc.cpp">
       <Filter>Source Files\ExperimentUserInterface</Filter>
     </ClCompile>
-    <ClCompile Include="ExperimentUserInterface\QGVCore.cpp">
-      <Filter>Source Files\ExperimentUserInterface</Filter>
-    </ClCompile>
-    <ClCompile Include="ExperimentUserInterface\QGVEdge.cpp">
-      <Filter>Source Files\ExperimentUserInterface</Filter>
-    </ClCompile>
-    <ClCompile Include="ExperimentUserInterface\QGVNode.cpp">
-      <Filter>Source Files\ExperimentUserInterface</Filter>
-    </ClCompile>
-    <ClCompile Include="ExperimentUserInterface\QGVScene.cpp">
-      <Filter>Source Files\ExperimentUserInterface</Filter>
-    </ClCompile>
-    <ClCompile Include="ExperimentUserInterface\QGVSubGraph.cpp">
-      <Filter>Source Files\ExperimentUserInterface</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_AttributeWidget.cpp">
       <Filter>Generated Files\Debug_Win32</Filter>
     </ClCompile>
@@ -675,24 +660,6 @@
       <Filter>Generated Files\Template_Win32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_QGraphicsViewEc.cpp">
-      <Filter>Generated Files\Template_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_QGVScene.cpp">
-      <Filter>Generated Files\Debug_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Debug\Moc\moc_QGVScene.cpp">
-      <Filter>Generated Files\Debug_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Release\Moc\moc_QGVScene.cpp">
-      <Filter>Generated Files\Release_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Release\Moc\moc_QGVScene.cpp">
-      <Filter>Generated Files\Release_x64</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Template\Moc\moc_QGVScene.cpp">
-      <Filter>Generated Files\Template_Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Build_MSVC\Qt\x64\Template\Moc\moc_QGVScene.cpp">
       <Filter>Generated Files\Template_x64</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Build_MSVC\Qt\Win32\Debug\Moc\moc_ExperimentParameterVisualizer.cpp">
@@ -832,18 +799,6 @@
     <ClInclude Include="ExperimentUserInterface\ExperimentTreeItem.h">
       <Filter>Header Files\ExperimentUserInterface</Filter>
     </ClInclude>
-    <ClInclude Include="ExperimentUserInterface\QGVCore.h">
-      <Filter>Header Files\ExperimentUserInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="ExperimentUserInterface\QGVEdge.h">
-      <Filter>Header Files\ExperimentUserInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="ExperimentUserInterface\QGVNode.h">
-      <Filter>Header Files\ExperimentUserInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="ExperimentUserInterface\QGVSubGraph.h">
-      <Filter>Header Files\ExperimentUserInterface</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_AttributeWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -961,9 +916,6 @@
       <Filter>Header Files\ExperimentUserInterface</Filter>
     </CustomBuild>
     <CustomBuild Include="ExperimentUserInterface\QGraphicsViewEc.h">
-      <Filter>Header Files\ExperimentUserInterface</Filter>
-    </CustomBuild>
-    <CustomBuild Include="ExperimentUserInterface\QGVScene.h">
       <Filter>Header Files\ExperimentUserInterface</Filter>
     </CustomBuild>
     <CustomBuild Include="ExperimentUserInterface\AttributeWidget.ui">
