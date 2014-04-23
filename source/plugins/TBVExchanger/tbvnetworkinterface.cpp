@@ -1,4 +1,4 @@
-//Copyright (C) 2014  Michael Luehrs
+//Copyright (C) 2014  Michael Luehrs, Brain Innovation B.V.
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -17,55 +17,45 @@
 
 #include "tbvnetworkinterface.h"
 
-TBVNetworkInterface::TBVNetworkInterface() : QThread()
+TBVNetworkInterface::TBVNetworkInterface(bool autoConnect, bool autoReconnect)
+    : QThread()
 {
-	udpSocket = NULL;
-	iIpAddress = "";
-	iPort = 0;
 	tcpSocket = new QTcpSocket();
 	tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
 	tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
 	rTcpSocket = new QTcpSocket();
-	rTcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-	rTcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
+	tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+	tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
 	blockSize = 0;
+	terminateReconnect = false;
+	terminateReciever = false;
+	manualDisconnect = false;
+	udpAutoConnect = autoConnect;
+	reConnect = autoReconnect;
+
 	connect(rTcpSocket,SIGNAL(readyRead()),this,SLOT(readExecuteStep()));
-	connect(rTcpSocket,SIGNAL(connected()),this,SLOT(connectionEstablished()));
+	connect(tcpSocket,SIGNAL(connected()),this,SLOT(connectionEstablished()));
 	connect(rTcpSocket,SIGNAL(disconnected()),this,SLOT(connectionLost()));
 	connect(tcpSocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(writeError(QAbstractSocket::SocketError)));
 
 	querryQueue = new QQueue<QString>;
-}
 
-bool TBVNetworkInterface::setAutoConnection(bool bActivate)
-{
-	if(bActivate)
-	{
-		if(udpSocket == NULL)
-		{
-			udpSocket = new QUdpSocket();
-			udpSocket->bind(55555, QUdpSocket::ShareAddress);
-		}
+	udpSocket = new QUdpSocket();
+    udpSocket->bind(55555,QAbstractSocket::ShareAddress);
+
+	if(udpAutoConnect)
 		connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
-		return true;
-	}
-	else
-	{
-		if(udpSocket)
-		{
-			disconnect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
-			delete udpSocket;
-			udpSocket = NULL;
-		}
-		return false;
-	}
+
 
 }
 
 TBVNetworkInterface::~TBVNetworkInterface()
 {
+	terminateReconnect = true;
+	terminateReciever = true;
+
 	if(tcpSocket)
 	{
 		delete tcpSocket;
@@ -88,6 +78,12 @@ TBVNetworkInterface::~TBVNetworkInterface()
 	}
 }
 
+
+bool TBVNetworkInterface::isConnected()
+{
+	return tcpSocket->state()==QAbstractSocket::ConnectedState;
+}
+
 void TBVNetworkInterface::processPendingDatagrams()
 {
     while (udpSocket->hasPendingDatagrams()) {
@@ -97,54 +93,76 @@ void TBVNetworkInterface::processPendingDatagrams()
 		quint16 *tbvPort = new quint16();
 		udpSocket->readDatagram(datagram.data(),datagram.size(),tbvServer,tbvPort);
 
+		int port = tr(datagram.data()).remove("Turbo-BrainVoyager Broadcast: ").toInt();
+
+
 		if(tr(datagram.data()).contains(tr("Turbo-BrainVoyager Broadcast")))
-			connectToServer(tbvServer->toString().toLatin1().data(),55555);
+		{
+			if(!connectToServer(tbvServer->toString().toLatin1().data(),port))
+			{
+				udpSocket->close();
+				writeError(tcpSocket->error());
+			}
+			else
+			{
+				reConnect = false;
+			}
+			return;
+		}
     }
 }
 
 void TBVNetworkInterface::connectionEstablished()
 {
-	if(udpSocket)
-		udpSocket->close();
-	emit connected();
+	udpSocket->close();
+	emit connected(ipAddressString,iPort);
 }
 
 void TBVNetworkInterface::connectionLost()
 {
 	emit disconnected();
-	if(udpSocket)
+	if(manualDisconnect)
+		return;
+	if(reConnect)
+		tryToReconnect();
+	else if(udpAutoConnect)
 		udpSocket->bind(55555, QUdpSocket::ShareAddress);
-	for(int i=0;i<5;i++)
-	{
-		if(connectToServer(iIpAddress,iPort))
-			return;
-	}
-
-
 }
 
-bool TBVNetworkInterface::connectToServer(char *ipAddress,quint16 port)
+void TBVNetworkInterface::tryToReconnect()
 {
-	if(tcpSocket)
+	QTime *timer = new QTime();
+	emit connecting();
+	while (!terminateReconnect && !connectToServer(ipAddressString.toUtf8().data(),iPort))
 	{
-		iIpAddress = ipAddress;
-		iPort = port;
-		tcpSocket->connectToHost(tr(ipAddress),port);
-		if(!tcpSocket->waitForConnected(3000))
-			return false;
-		sendStreamDefinition("Request Socket",tcpSocket);
-
-		msleep(500);
-		rTcpSocket->connectToHost(tr(ipAddress),port);
-		if(!rTcpSocket->waitForConnected(3000))
+		timer->restart();
+		while(timer->elapsed()<2000)
 		{
-			tcpSocket->close();
-			return false;
+			QCoreApplication::processEvents();
+			msleep(1);
 		}
-		sendStreamDefinition("Execute Socket",rTcpSocket);	
-		return true;
 	}
-	return false;
+}
+bool TBVNetworkInterface::connectToServer(char *ipAddress,qint64 port)
+{
+	manualDisconnect = false;
+	ipAddressString = ipAddress;
+	iPort = port;
+	tcpSocket->connectToHost(tr(ipAddress),port);
+	if(!tcpSocket->waitForConnected(2000))
+		return false;
+	sendStreamDefinition("Request Socket",tcpSocket);
+
+	msleep(500);
+	rTcpSocket->connectToHost(tr(ipAddress),port);
+	if(!rTcpSocket->waitForConnected(2000))
+	{
+		tcpSocket->close();
+		return false;
+	}
+	sendStreamDefinition("Execute Socket",rTcpSocket);
+	
+	return true;
 }
 
 
@@ -176,23 +194,41 @@ bool TBVNetworkInterface::sendStreamDefinition(char *definition,QTcpSocket *dSoc
 }
 
 bool TBVNetworkInterface::disconnectFromServer()
+{	
+	manualDisconnect = true;
+	udpSocket->close();
+	tcpSocket->close();
+	rTcpSocket->close();
+	return true;
+}
+
+bool TBVNetworkInterface::setAutoConnection(bool setting)
 {
-	if(tcpSocket)
+	if(setting)
 	{
-		tcpSocket->disconnectFromHost();
-		return tcpSocket->waitForDisconnected();
+		if(udpSocket == NULL)
+			udpSocket = new QUdpSocket();
+
+		udpSocket->bind(55555, QUdpSocket::ShareAddress);
+		connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
+		return true;
 	}
 	else
 	{
+		if(udpSocket)
+		{
+			disconnect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
+			udpSocket->close();
+			delete udpSocket;
+			udpSocket = NULL;
+		}
 		return false;
 	}
-	
 }
-
 
 void TBVNetworkInterface::readExecuteStep()
 {
-	while(true)
+	while(!terminateReciever)
 	{
 		QDataStream in(rTcpSocket);
 		in.setVersion(QDataStream::Qt_4_0);
@@ -212,6 +248,7 @@ void TBVNetworkInterface::readExecuteStep()
 
 		blockSize = 0;
 		char *rcvChar;
+		int timepoint;
 		in >> rcvChar;
 
 		if(!rcvChar)
@@ -224,17 +261,20 @@ void TBVNetworkInterface::readExecuteStep()
 		else
 		if(strcmp(rcvChar , "PreStepCalled") == 0)
 		{
-			emit executePreStep();
+			in >> timepoint;
+			emit executePreStep(timepoint);
 		}
 		else
 		if(strcmp(rcvChar , "PostStepCalled") == 0)
 		{
-			emit executePostStep();	
+			in >> timepoint;
+			emit executePostStep(timepoint);	
 		}
 		else
 		if(strcmp(rcvChar , "PostRunCalled") == 0)
 		{
-			emit executePostRun();
+			in >> timepoint;
+			emit executePostRun(timepoint);
 		}
 		else
 		while (!rTcpSocket->atEnd()) 
@@ -275,86 +315,80 @@ int	TBVNetworkInterface::tGetExpectedNrOfTimePoints()
 }
 QList<int> TBVNetworkInterface::tGetDimsOfFunctionalData()
 {
-    QList<int> tempList;
-    tempList<<0<<0<<0<<0;
-
+	int dim_x,dim_y,dim_z;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetDimsOfFunctionalData"));
 	doRequest.sendData("tGetDimsOfFunctionalData");
 	QString status = doRequest.getReply();
-	
+	QList<int> dimsofFunctionalData;
 	if(!status.isEmpty())
 	{
-        return tempList;
+		return dimsofFunctionalData;
 	}
-    doRequest.getDataOfByteArray(tempList[0]);
-    doRequest.getDataOfByteArray(tempList[1]);
-    doRequest.getDataOfByteArray(tempList[2]);
-    tempList[3] = 1;
-    return tempList;
+	doRequest.getDataOfByteArray(dim_x);
+	doRequest.getDataOfByteArray(dim_y);
+	doRequest.getDataOfByteArray(dim_z);
+
+	
+	dimsofFunctionalData.append(dim_x);
+	dimsofFunctionalData.append(dim_y);
+	dimsofFunctionalData.append(dim_z);
+	return dimsofFunctionalData;
 }
 QString TBVNetworkInterface::tGetProjectName()
 {
-    QString cProjectName;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetProjectName"));
 	doRequest.sendData("tGetProjectName");
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-        return cProjectName;
+		return "";
 	}
 	char *ProjectName;
-    doRequest.getDataOfByteArray(ProjectName);
-    cProjectName = tr(ProjectName);
-    return cProjectName;
+	doRequest.getDataOfByteArray(ProjectName);
+	return QString(ProjectName);
 }
 QString TBVNetworkInterface::tGetWatchFolder()
 {
-    QString cWatchFolder;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetWatchFolder"));
 	doRequest.sendData("tGetWatchFolder");
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-        return cWatchFolder;
+		return "";
 	}
 	char *WatchFolder;
 	doRequest.getDataOfByteArray(WatchFolder);
-    cWatchFolder = tr(WatchFolder);
-    return cWatchFolder;
+	return QString(WatchFolder);
 }
 QString TBVNetworkInterface::tGetTargetFolder()
 {
-    QString cTargetFolder;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetTargetFolder"));
 	doRequest.sendData("tGetTargetFolder");
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-        return cTargetFolder;
+		return "";
 	}
 	char *TargetFolder;
 	doRequest.getDataOfByteArray(TargetFolder);
-    cTargetFolder = tr(TargetFolder);
-    return cTargetFolder;
+	return QString(TargetFolder);
 }
 QString TBVNetworkInterface::tGetFeedbackFolder()
 {
-    QString cFeedbackFolder;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetFeedbackFolder"));
 	doRequest.sendData("tGetFeedbackFolder");
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-        return cFeedbackFolder;
+		return "";
 	}
 	char *FeedbackFolder;
 	doRequest.getDataOfByteArray(FeedbackFolder);
-    cFeedbackFolder = tr(FeedbackFolder);
-    return cFeedbackFolder;
+	return QString(FeedbackFolder);
 }
 
 //TBV Protocol, DM, GLM Functions:
@@ -467,7 +501,38 @@ float TBVNetworkInterface::tGetMeanOfROI(int roi)
 	
 	if(!status.isEmpty())
 	{
+		return -1;
+	}
+	float MeanOfROI;
+	doRequest.getDataOfByteArray(MeanOfROI);
+	return MeanOfROI;
+}
+float* TBVNetworkInterface::tGetExistingMeansOfROI(int roi, int toTimePoint)
+{	
+	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetExistingMeansOfROI"));
+	doRequest.sendData("tGetExistingMeansOfROI",roi,toTimePoint);
+	QString status = doRequest.getReply();
+
+	if(!status.isEmpty())
+	{
 		return 0;
+	}
+
+	AllMeansOfROI.resize(toTimePoint);
+	doRequest.getDataOfByteArray((char *)AllMeansOfROI.data(),toTimePoint*sizeof(float));
+
+	return AllMeansOfROI.data();
+
+}
+float TBVNetworkInterface::tGetMeanOfROIAtTimePoint(int roi,int timepoint)
+{	
+	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetMeanOfROIAtTimePoint"));
+	doRequest.sendData("tGetMeanOfROIAtTimePoint",roi,timepoint);
+	QString status = doRequest.getReply();
+
+	if(!status.isEmpty())
+	{
+		return -2;
 	}
 	float MeanOfROI;
 	doRequest.getDataOfByteArray(MeanOfROI);
@@ -504,29 +569,28 @@ float TBVNetworkInterface::tGetBetaOfROI(int roi,int beta)
 }
 QList<int> TBVNetworkInterface::tGetCoordsOfVoxelOfROI(int roi, int voxel)
 {
-    QList<int> tempList;
-    tempList<<0<<0<<0<<0;
-
+	int x,y,z;
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetCoordsOfVoxelOfROI"));
 	doRequest.sendData("tGetCoordsOfVoxelOfROI",roi,voxel);
 	QString status = doRequest.getReply();
-	
+	QList<int> coords;
 	if(!status.isEmpty())
 	{
-        return tempList;
+		coords.append(0);
+		return coords;
 	}
-
-    doRequest.getDataOfByteArray(tempList[0]);
-    doRequest.getDataOfByteArray(tempList[1]);
-    doRequest.getDataOfByteArray(tempList[2]);
-    tempList[3] = 1;
-    return tempList;
+	
+	doRequest.getDataOfByteArray(x);
+	doRequest.getDataOfByteArray(y);
+	doRequest.getDataOfByteArray(z);
+	coords.append(x);
+	coords.append(y);
+	coords.append(z);
+	coords.append(1);
+	return coords;
 }
-
 QList<int> TBVNetworkInterface::tGetAllCoordsOfVoxelsOfROI(int roi)
 {
-    QList<int> tempList;
-    tempList<<0;
 	int NrOfVoxelsOfROI = tGetNrOfVoxelsOfROI(roi);
 
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetAllCoordsOfVoxelsOfROI"));
@@ -535,42 +599,41 @@ QList<int> TBVNetworkInterface::tGetAllCoordsOfVoxelsOfROI(int roi)
 	
 	if(!status.isEmpty())
 	{
-        return tempList;
+		CoordsOfVoxelsOfROI.append(0);
+		return CoordsOfVoxelsOfROI.toList();
 	}
+
+	
 	CoordsOfVoxelsOfROI.resize(NrOfVoxelsOfROI*3);
 
 	doRequest.getDataOfByteArray((char *)CoordsOfVoxelsOfROI.data(),NrOfVoxelsOfROI*3*sizeof(int));
+	CoordsOfVoxelsOfROI.append(1);
 
-    tempList = CoordsOfVoxelsOfROI.toList();
-    tempList.append(1);
-
-    return tempList;
+	return CoordsOfVoxelsOfROI.toList();
 }
 
 
 //TBV Volume Data Access Functions
 float TBVNetworkInterface::tGetValueOfVoxelAtTime(int x, int y, int z, int timepoint)
 {
-
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetValueOfVoxelAtTime"));
 	doRequest.sendData("tGetValueOfVoxelAtTime",x,y,z,timepoint);
 	QString status = doRequest.getReply();
 
 	if(!status.isEmpty())
 	{
-        return false;
+		return false;
 	}
 	float ValueOfVoxelAtTime;
 	doRequest.getDataOfByteArray(ValueOfVoxelAtTime);
 	return ValueOfVoxelAtTime;
 }
-QList<short int> TBVNetworkInterface::tGetTimeCourseData(int timepoint)
+QList<short> TBVNetworkInterface::tGetTimeCourseData(int timepoint)
 {
-    QList<short int> tempList;
-	tempList<<0;
+	int dim_xyz;
+	QList<int> dimsOfFunctionalData = tGetDimsOfFunctionalData();
 
-    QList<int> temperList = tGetDimsOfFunctionalData();
-    int dim_xyz = temperList.at(0) * temperList.at(1) * temperList.at(2);
+	dim_xyz = dimsOfFunctionalData.at(0) * dimsOfFunctionalData.at(1) * dimsOfFunctionalData.at(2);
 		
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetTimeCourseData"));
 	doRequest.sendData("tGetTimeCourseData", timepoint);
@@ -578,22 +641,21 @@ QList<short int> TBVNetworkInterface::tGetTimeCourseData(int timepoint)
 	
 	if(!status.isEmpty())
 	{
-        return tempList;
+		TimeCourseData.append(0);
+		return TimeCourseData.toList();
 	}
-
+	
 	TimeCourseData.resize(dim_xyz);
 	doRequest.getDataOfByteArray((char *)TimeCourseData.data(),dim_xyz*sizeof(short int));
-    tempList = TimeCourseData.toList();
-    tempList.append((1));
-    return tempList;
+	TimeCourseData.append(1);
+	return TimeCourseData.toList();
 }
-QList<short int> TBVNetworkInterface::tGetRawTimeCourseData(int timepoint)
+QList<short> TBVNetworkInterface::tGetRawTimeCourseData(int timepoint)
 {
-    QList<short int> tempList;
-    tempList<<0;
+	int dim_xyz;
+	QList<int> dimsOfFunctionalData = tGetDimsOfFunctionalData();
 
-    QList<int> temperList = tGetDimsOfFunctionalData();
-    int dim_xyz = temperList.at(0) * temperList.at(1) * temperList.at(2);
+	dim_xyz = dimsOfFunctionalData.at(0) * dimsOfFunctionalData.at(1) * dimsOfFunctionalData.at(2);
 
 	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetRawTimeCourseData"));
 	doRequest.sendData("tGetRawTimeCourseData", timepoint);
@@ -601,15 +663,13 @@ QList<short int> TBVNetworkInterface::tGetRawTimeCourseData(int timepoint)
 	
 	if(!status.isEmpty())
 	{
-        return tempList;
+		RawTimeCourseData.append(0);
+		return RawTimeCourseData.toList();
 	}
-
 	RawTimeCourseData.resize(dim_xyz);
 	doRequest.getDataOfByteArray((char *)RawTimeCourseData.data(),dim_xyz*sizeof(short int));
-
-    tempList = RawTimeCourseData.toList();
-    tempList.append(1);
-    return tempList;
+	RawTimeCourseData.append(1);
+	return RawTimeCourseData.toList();
 }
 double TBVNetworkInterface::tGetBetaOfVoxel(int beta, int x, int y, int z)
 {
@@ -627,11 +687,9 @@ double TBVNetworkInterface::tGetBetaOfVoxel(int beta, int x, int y, int z)
 }
 QList<double> TBVNetworkInterface::tGetBetaMaps()
 {
-    QList<double> tempList;
-    tempList<<0;
-
-    QList<int> temperList = tGetDimsOfFunctionalData();
-    int dim_xyz = temperList.at(0) * temperList.at(1) * temperList.at(2);
+	int dim_xyz;
+	QList<int> dimsOfFunctionalData = tGetDimsOfFunctionalData();
+	dim_xyz = dimsOfFunctionalData.at(0) * dimsOfFunctionalData.at(1) * dimsOfFunctionalData.at(2);
 
 	int n_predictors_current = tGetCurrentNrOfPredictors();
 	
@@ -641,14 +699,13 @@ QList<double> TBVNetworkInterface::tGetBetaMaps()
 	
 	if(!status.isEmpty())
 	{
-        return tempList;
+		BetaMaps.append(0);
+		return BetaMaps.toList();
 	}
-
 	BetaMaps.resize(n_predictors_current*dim_xyz);
 	doRequest.getDataOfByteArray((char *)BetaMaps.data(), n_predictors_current*dim_xyz*8*sizeof(unsigned char));
-    tempList = BetaMaps.toList();
-    tempList.append(1);
-    return tempList;
+	BetaMaps.append(1);
+	return BetaMaps.toList();
 }
 float TBVNetworkInterface::tGetMapValueOfVoxel(int map, int x, int y, int z)
 {
@@ -666,11 +723,9 @@ float TBVNetworkInterface::tGetMapValueOfVoxel(int map, int x, int y, int z)
 }
 QList<float> TBVNetworkInterface::tGetContrastMaps()
 {
-    QList<float> tempList;
-    tempList.append(0);
-
-    QList<int> temperList = tGetDimsOfFunctionalData();
-    int dim_xyz = temperList.at(0) * temperList.at(1) * temperList.at(2);
+	int dim_xyz;
+	QList<int> dimsOfFunctionalData = tGetDimsOfFunctionalData();
+	dim_xyz = dimsOfFunctionalData.at(0) * dimsOfFunctionalData.at(1) * dimsOfFunctionalData.at(2);
 
 	int n_contrast_maps = tGetNrOfContrasts();
 	
@@ -680,13 +735,50 @@ QList<float> TBVNetworkInterface::tGetContrastMaps()
 	
 	if(!status.isEmpty())
 	{
-        return tempList;
+		ContrastMaps.append(0);
+		return ContrastMaps.toList();
 	}
 	ContrastMaps.resize(n_contrast_maps*dim_xyz*sizeof(float));
 	doRequest.getDataOfByteArray((char *)ContrastMaps.data(), n_contrast_maps*dim_xyz*4*sizeof(unsigned char));
-    tempList = ContrastMaps.toList();
-    tempList.append(1);
-    return tempList;
+	ContrastMaps.append(1);
+	return ContrastMaps.toList();
+}
+int TBVNetworkInterface::tGetNumberOfClasses()
+{	
+	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetNumberOfClasses"));
+	doRequest.sendData("tGetNumberOfClasses");
+	QString status = doRequest.getReply();
+
+	if(!status.isEmpty())
+	{
+		return -1;
+	}
+	int NumberOfClasses;
+	doRequest.getDataOfByteArray(NumberOfClasses);
+	return NumberOfClasses;
+}
+QList<float> TBVNetworkInterface::tGetCurrentClassifierOutput()
+{
+	int n_classes = tGetNumberOfClasses();
+
+	TBV_Server_Request doRequest(tcpSocket,querryQueue,tr("tGetCurrentClassifierOutput"));
+	doRequest.sendData("tGetCurrentClassifierOutput");
+	QString status = doRequest.getReply();
+
+	if(!status.isEmpty())
+	{
+		ClassifierOutput.append(0);
+		return ClassifierOutput.toList();
+	}	
+	int winner_class;
+	doRequest.getDataOfByteArray(winner_class);
+
+	int n_class_comparisons = n_classes * (n_classes - 1) / 2;
+	ClassifierOutput.resize(n_class_comparisons);
+	doRequest.getDataOfByteArray((char *)ClassifierOutput.data(), n_class_comparisons*sizeof(float));
+	ClassifierOutput.append(winner_class);
+	ClassifierOutput.append(1);
+	return ClassifierOutput.toList();
 }
 
 void TBVNetworkInterface::writeError(QAbstractSocket::SocketError Error)
@@ -702,7 +794,7 @@ void TBVNetworkInterface::writeError(QAbstractSocket::SocketError Error)
          emit connectionError(tr("The connection was refused by the peer. Make sure the server is running, and check that the host name and port settings are correct."));
          break;
      default:
-         emit connectionError(tr("The following error occurred: %1.").arg(tcpSocket->errorString()));
+         emit connectionError(tr("The following error occurred: %1. \nCheck the firewall settings!").arg(tcpSocket->errorString()));
      }
 
  }

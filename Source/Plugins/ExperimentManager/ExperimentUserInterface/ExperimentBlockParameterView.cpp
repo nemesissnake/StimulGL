@@ -198,7 +198,7 @@ void ExperimentBlockParameterView::showContextMenu(const QPoint& pos)
 			removeBlocksAction = mBlocksMenu->addAction("Remove Multiple Selected");
 	}
 
-	//addParametersAction = mParametersMenu->addAction("Configure Parameter(s)");
+	addParametersAction = mParametersMenu->addAction("Configure Parameter(s)");
 	if(lstDefinedParamIndexesInSelectionRanges.isEmpty() == false)
 	{		
 		if (lstDefinedParamIndexesInSelectionRanges.count() == 1)
@@ -604,13 +604,13 @@ bool ExperimentBlockParameterView::appendExperimentBlockParameterChanges()
 		for (int i=0; i<BLOCKPARAMVIEW_DEFAULTBLOCKHEADER_COUNT; i++)
 		{
 			if(i==BLOCKPARAMVIEW_BLOCKNAME_ROWORCOLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(NAME_TAG);
+				sObjectParamIdentifier = tr("%1%2%3%4%5").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg("00").arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(NAME_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKTRIALS_ROWORCOLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(TRIALAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3%4%5").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg("01").arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(TRIALAMOUNT_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKINTTRGS_ROWORCOLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(INTERNALTRIGGERAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3%4%5").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg("02").arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(INTERNALTRIGGERAMOUNT_TAG);
 			else if(i==BLOCKPARAMVIEW_BLOCKEXTTRGS_ROWORCOLUMNINDEX)
-				sObjectParamIdentifier = tr("%1%2%3").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(EXTERNALTRIGGERAMOUNT_TAG);
+				sObjectParamIdentifier = tr("%1%2%3%4%5").arg(EXPERIMENTTREEMODEL_BLOCKOBJECT_INDEXID).arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg("03").arg(EXPPARAMWIDGETS_UNIQUEPARAM_SPLITTER).arg(EXTERNALTRIGGERAMOUNT_TAG);
 			
 			if(bVerticalViewEnabled)
 				tmpColumnInfo.sHeader = lRowHeaders.at(i);

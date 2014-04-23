@@ -20,15 +20,11 @@
 #define EXPERIMENTSTRUCTUREVISUALIZER_H
 
 #include <QWidget>
-#include <QGraphicsScene>
-#include <OGDF/basic/Graph.h>
-#include <OGDF/basic/Graph_d.h>
-#include <OGDF/basic/graph_generators.h>
-#include <ogdf/basic/GraphAttributes.h>
-#include <ogdf/layered/DfsAcyclicSubgraph.h>
-#include <ogdf/tree/TreeLayout.h>
+#include "ExperimentStructureScene.h"
+#include "ExperimentGraphBlockItem.h"
+#include "ExperimentGraphConnectionItem.h"
 
-using namespace ogdf;
+#define EXPGRAPH_AUTOCONN_DISTANCE		100.0
 
 class QMenu;
 class QToolBar;
@@ -73,7 +69,6 @@ private:
 		int nId;
 		int nNumber;
 		int nNumberOfLoops;
-		ogdf::edge *gvEdge;
 		int nSourceBlockId;
 		int nTargetBlockId;
 	};	
@@ -83,14 +78,29 @@ private:
 		QString sName;
 		int nId;
 		int nNumber;
-		ogdf::node *gvNode;
+		ExperimentGraphBlockItem *gGraphBlockItem;
+		//QGraphicsTextItem *gTextItem;
+		expBlockItemStrc()
+		{
+			sName = "";
+			nId = -1;
+			nNumber = -1;
+			gGraphBlockItem = NULL;
+			//gTextItem = NULL;
+		}
 	};
 
-	struct expAutoConnItemStrc
+	struct expConnItemStrc
 	{
-		ogdf::edge gvEdge;
+		ExperimentGraphConnectionItem *gGraphConnectionItem;
 		int nSourceBlockId;
 		int nTargetBlockId;
+		expConnItemStrc()
+		{
+			gGraphConnectionItem = NULL;
+			nSourceBlockId = -1;
+			nTargetBlockId = -1;
+		}
 	};
 
 	struct expSceneItemStrc 
@@ -98,9 +108,23 @@ private:
 		QString sExperimentName;
 		QList<expBlockItemStrc> lBlocks;
 		QList<expLoopItemStrc> lLoops;
-		QList<expAutoConnItemStrc> lAutoConns;
-		ogdf::node gvStartExperimentNode;
-		ogdf::node gvEndExperimentNode;
+		QList<expConnItemStrc> lAutoConns;
+		ExperimentGraphBlockItem *gStartGraphBlockItem;
+		ExperimentGraphBlockItem *gEndGraphBlockItem;
+		expSceneItemStrc()
+		{
+			gStartGraphBlockItem = NULL;
+			gEndGraphBlockItem = NULL;
+		}
+	};
+
+	struct expParsedLoopDrawing
+	{		
+		QHash<int, QList<int>> hBlockIDTargetLoopBlockIDs;
+		QList<expConnItemStrc> lMasterSideDrawOrderedLoops;
+		QHash<int, int> hBlockIDMasterSideCount;
+		QList<expConnItemStrc> lSlaveSideDrawOrderedLoops;
+		QHash<int, int> hBlockIDSlaveSideCount;
 	};
 
 	bool drawGraph(const QString &sDotContent = "");
@@ -108,9 +132,13 @@ private:
 	void setupMenuAndActions();
 	void createScene();
 	void setupLayout();
-	void resetExpSceneItemsCollection(expSceneItemStrc &tmpExpSceneItems);
-	ogdf::node *getGVNodePointer(const int &nBlockID);
+	void resetExpScene();
+	ExperimentGraphBlockItem *getGraphBlockItemPointer(const int &nBlockID);
+	bool insertLoopInGraphDrawingStruct(const int &nSourceBlockID, const int &nTargetBlockID);
 
+	int nWidgetMargin;
+	qreal dGraphViewScale;
+	bool bDrawVertical; //Otherwise horizontal
 	QAction *action_Quit;
 	QAction *action_Test;
 	QToolBar *toolBar;
@@ -119,14 +147,10 @@ private:
 	QToolButton *buttonFile;
 	QToolButton *buttonEdit;
 	QVBoxLayout *graphViewLayout;
-	ogdf::Graph graph;
-	expSceneItemStrc expSceneItems;
-	QGraphicsScene *gScene;
-	GraphAttributes *gAttr;
+	ExperimentStructureScene *gScene;
 	cExperimentStructure *parsedExpStruct;
-	int nWidgetMargin;
-	qreal dGraphViewScale;
-	bool bDrawVertical; //Otherwise horizontal
+	expSceneItemStrc expSceneItems;
+	expParsedLoopDrawing expLoopDrawing;
 };
 
 #endif // EXPERIMENTSTRUCTUREVISUALIZER_H

@@ -1,5 +1,4 @@
-//TBVExchanger
-//Copyright (C) 2014  Sven Gijsen
+//Copyright (C) 2014  Michael Luehrs, Brain Innovation B.V. and Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -15,7 +14,6 @@
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-
 
 #include "TBVExchanger.h"
 
@@ -35,11 +33,11 @@ QScriptValue TBVExchanger::ctor__extensionname(QScriptContext* context, QScriptE
 	return engine->newQObject(new TBVExchanger(), QScriptEngine::ScriptOwnership);//Now call the below real Object constructor
 } 
 
-TBVExchanger::TBVExchanger(QObject *parent) : QObject(parent)
+TBVExchanger::TBVExchanger(bool autoConnect, bool autoReconnect, QObject *parent) : QObject(parent)
 {
 	currentScriptEngine = NULL;
 	tbvNetwIntFace = NULL;
-	initialize();
+	initialize(autoConnect,autoReconnect);
 }
 
 TBVExchanger::~TBVExchanger()
@@ -71,12 +69,12 @@ bool TBVExchanger::makeThisAvailableInScript(QString strObjectScriptName, QObjec
 	return false;
 }
 
-bool TBVExchanger::initialize()
+bool TBVExchanger::initialize(bool autoConnect, bool autoReconnect)
 {
 	if(tbvNetwIntFace == NULL)
 	{
-		tbvNetwIntFace = new TBVNetworkInterface();
-		//bool bResult = connect(tbvNetwIntFace,SIGNAL(executePreStep()),this,SLOT(executePreStep()));
+		tbvNetwIntFace = new TBVNetworkInterface(autoConnect,autoReconnect);
+		//bool bResult = connect(tbvNetwIntFace,SIGNAL(executePreStep(int)),this,SLOT(executePreStep()));
 		connect(tbvNetwIntFace,&TBVNetworkInterface::executePreStep,this,&TBVExchanger::executePreStep);
 		connect(tbvNetwIntFace,&TBVNetworkInterface::executePostStep,this,&TBVExchanger::executePostStep);
 		connect(tbvNetwIntFace,&TBVNetworkInterface::executePostRun,this,&TBVExchanger::executePostRun);

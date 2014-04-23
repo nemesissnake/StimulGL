@@ -107,7 +107,7 @@ private:
 	void setupFilterModel();
 	//bool setModelParameterValue(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue);
 
-	bool bShowTreeView;
+	bool bShowGraphicalTreeView;
 
 	QTreeView *treeView;
 	QToolBar *toolBar;

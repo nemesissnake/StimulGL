@@ -1,5 +1,4 @@
-//TBVExchanger
-//Copyright (C) 2014  Sven Gijsen and Michael Luehrs
+//Copyright (C) 2014  Michael Luehrs, Brain Innovation B.V. and Sven Gijsen
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -15,7 +14,6 @@
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-
 
 //This file defines the script binding interface, all below function are scriptable except for the destructor
 
@@ -45,17 +43,17 @@ signals:
 	/*!
 	  This signal will be called whenever new data is available in the TBV.
 	*/
-	void executePreStep();
+	void executePreStep(int timePoint);
 	//!  executePostStep signal. 
 	/*!
 	  This signal will be called whenever new data was processed in the TBV.
 	*/
-	void executePostStep();
+	void executePostStep(int timePoint);
 	//!  executePostRun signal. 
 	/*!
 	  This signal will be called when the TBV finished processing the experiment run.
 	*/
-	void executePostRun();
+	void executePostRun(int timePoint);
 	//!  disconnected signal.
 	/*!
 	  This signal will be called when the connection is interrupted.
@@ -73,7 +71,7 @@ signals:
 	void connectionError(QString error);
 
 public:
-	TBVExchanger(QObject *parent = 0);
+	TBVExchanger(bool autoConnect = false, bool autoReconnect = true, QObject *parent = 0);
 	~TBVExchanger();
 	TBVExchanger(const TBVExchanger& other ){Q_UNUSED(other);}//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro
 
@@ -224,6 +222,19 @@ public slots:
 	QList<float> tGetContrastMaps() {return tbvNetwIntFace->tGetContrastMaps();};
 
 
+	//SVM Access Functions
+	//!  tGetNumberOfClasses slot. 
+	/*!
+	Provides the number of classes for which values are provided. In case that the real-time SVM classifier is not used, this function returns -3; in case that the real-time SVM classifier dialog is open but the classifier is not producing incremental output, this function returns -2; if the classifier is working but no output has been generated yet, this function returns 0. You only should use the tGetCurrentClassifierOutput() function (see below) if this function returns a positive value. Based on the returned (positive) value (assigned to e.g. variable n_classes), the size of the array needed for the tGetCurrentClassifierOutput() function can be calculated as the number of pair comparisons n_pairs: n_pairs = n_classes * (n_classes - 1) / 2
+	*/
+	int tGetNumberOfClasses() { return tbvNetwIntFace->tGetNumberOfClasses();};
+	//!  tGetCurrentClassifierOutput slot. 
+	/*!
+	Provides results during real-time SVM classification for the current time point. The function returns an integral value indicating which class is predicted, i.e. which class label has been assigned to the current brain activity pattern. Note that the returned value is 1-based, i.e. if the first class is predicted, value 1 is returned, if the second class is predicted, value 2 is returned and so on. In addition to returning the predicted class, the function also fills a provided float array with detailed classification values. Since the SVM procedure internally finds the predicted class ("winner") by comparing the results obtained for all possible unique pairs of classes, the array needs to be large enough to receive all pairwise classification results (for calculation, see above). In case of a two-class problem, the array will contain only one entry for the pair "1 against 2" or "1-2". For multi-class (> 2) problems, the order of pairs will be starting with all pairs containing class 1 on the left side, then all remaining pairs that have class 2 on the left side and so on. For a 3-class problem, the order would be "1-2", "1-3", "2-3" and for a 4-class problem, the order would be "1-2", "1-3", "1-4", "2-3", "2-4" and "3-4". A positive value for a pair indicates that the class on the left side has "won" whereas a negative value indicates that the class on the right side has "won" the respective pairwise comparison; the size of the value(s) may be used to calculate a continuous value as a feedback signal.
+	As with the tGetNumberOfClasses() function, this function returns value -3 in case that the real-time SVM classifier is not open and -2 in case that the real-time SVM classifier dialog is open but the classifier is not producing incremental output. The function returns value -1 if the SVM dialog is used but no output data is available for the current time point. Only access the provided output_array if the returned value of the function is a positive number. Use the tGetNumberOfClasses() function to retrieve the number of classes from which you can calculate the number of pairs (see above) to determine the necessary size of the array used to receive the pairwise classification values. Consult the SVM Plugin sample code for an example how to use the SVM access functions.  
+	*/
+	QList<float> tGetCurrentClassifierOutput() { return tbvNetwIntFace->tGetCurrentClassifierOutput();};
+
 	//Connection functions
 	//!  connectToServer slot. 
 	/*!
@@ -247,7 +258,7 @@ public slots:
 	bool deactivateAutoConnection();
 
 private:
-	bool initialize();
+	bool initialize(bool autoConnect, bool autoReconnect);
 
 	QScriptEngine* currentScriptEngine;
 	short m_ExampleProperty;

@@ -767,6 +767,15 @@
     <ClCompile Include="ExperimentUserInterface\ObjectParameterDialog.cpp">
       <Filter>Source Files\ExperimentUserInterface</Filter>
     </ClCompile>
+    <ClCompile Include="ExperimentUserInterface\ExperimentGraphBlockItem.cpp">
+      <Filter>Source Files\ExperimentUserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="ExperimentUserInterface\ExperimentGraphConnectionItem.cpp">
+      <Filter>Source Files\ExperimentUserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="ExperimentUserInterface\ExperimentStructureScene.cpp">
+      <Filter>Source Files\ExperimentUserInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -813,6 +822,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Build_MSVC\Qt\$(PlatformName)\$(ConfigurationName)\GeneratedFiles\ui_ObjectParameterDialog.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExperimentUserInterface\ExperimentGraphBlockItem.h">
+      <Filter>Header Files\ExperimentUserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="ExperimentUserInterface\ExperimentGraphConnectionItem.h">
+      <Filter>Header Files\ExperimentUserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="ExperimentUserInterface\ExperimentStructureScene.h">
+      <Filter>Header Files\ExperimentUserInterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

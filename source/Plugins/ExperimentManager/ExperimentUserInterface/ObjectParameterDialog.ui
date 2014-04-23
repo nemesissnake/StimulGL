@@ -159,6 +159,9 @@
     <string>Parameter Selection</string>
    </property>
    <widget class="QRadioButton" name="rdbParamType_1">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>100</x>
@@ -175,6 +178,9 @@
     </property>
    </widget>
    <widget class="QRadioButton" name="rdbParamType_2">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>220</x>

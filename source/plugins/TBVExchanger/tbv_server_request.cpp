@@ -1,4 +1,4 @@
-//Copyright (C) 2014  Michael Luehrs
+//Copyright (C) 2014  Michael Luehrs, Brain Innovation B.V.
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -106,7 +106,7 @@ bool TBV_Server_Request::sendQByteArray(QByteArray dataToSend)
 QString TBV_Server_Request::getReply()
 {
 
-	const int Timeout = 5 * 1000;
+	const int Timeout = 2 * 1000;
 
 	while(true)
 	{

@@ -39,7 +39,6 @@ ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : 
 	buttonEdit = NULL;
 	graphViewLayout = NULL;
 	gScene = NULL;
-	gAttr = NULL;
 	parsedExpStruct = NULL;
 	nWidgetMargin = 45;
 	dGraphViewScale = 0.9;//fill till 90%
@@ -48,7 +47,7 @@ ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : 
 	ui = new Ui::ExperimentStructureVisualizer();
 	ui->setupUi(this);
 
-	resetExpSceneItemsCollection(expSceneItems);
+	resetExpScene();
 	configureActions(true);
 	setupMenuAndActions();
 	createScene();
@@ -73,24 +72,23 @@ ExperimentStructureVisualizer::~ExperimentStructureVisualizer()
 		delete gScene;
 	if(graphViewLayout)
 		delete graphViewLayout;
-	if(gAttr)
-		delete gAttr;
-	resetExpSceneItemsCollection(expSceneItems);
+	resetExpScene();
 	emit destroyed(this);
 }
 
-void ExperimentStructureVisualizer::resetExpSceneItemsCollection(expSceneItemStrc &tmpExpSceneItems)
+void ExperimentStructureVisualizer::resetExpScene()
 {
 	parsedExpStruct = NULL;
-	tmpExpSceneItems.sExperimentName = "<undefined>";
-	//tmpExpSceneItems.gvStartExperimentNode = NULL;
-	//tmpExpSceneItems.gvEndExperimentNode = NULL;	
-	if(tmpExpSceneItems.lLoops.isEmpty() == false)
-		tmpExpSceneItems.lLoops.clear();
-	if(tmpExpSceneItems.lBlocks.isEmpty() == false)
-		tmpExpSceneItems.lBlocks.clear();
-	if(tmpExpSceneItems.lAutoConns.isEmpty() == false)
-		tmpExpSceneItems.lAutoConns.clear();
+	expSceneItems.sExperimentName = "<undefined>";
+	expSceneItems.lLoops.clear();
+	expSceneItems.lBlocks.clear();
+	expSceneItems.lAutoConns.clear();
+
+	expLoopDrawing.hBlockIDMasterSideCount.clear();
+	expLoopDrawing.hBlockIDSlaveSideCount.clear();
+	expLoopDrawing.hBlockIDTargetLoopBlockIDs.clear();
+	expLoopDrawing.lMasterSideDrawOrderedLoops.clear();
+	expLoopDrawing.lSlaveSideDrawOrderedLoops.clear();
 }
 
 void ExperimentStructureVisualizer::configureActions(bool bCreate)
@@ -126,7 +124,7 @@ void ExperimentStructureVisualizer::setupMenuAndActions()
 	menuFile = new QMenu();//FileButton
 	menuFile->addAction(action_Quit);
 	buttonFile->setMenu(menuFile);
-	toolBar->addWidget(buttonFile);
+	toolBar->addWidget(buttonFile);  
 	////Edit menu///
 	buttonEdit=new QToolButton(this);
 	buttonEdit->setText("Edit ");
@@ -150,10 +148,11 @@ void ExperimentStructureVisualizer::Test()
 
 void ExperimentStructureVisualizer::createScene()
 {
-	gScene = new QGraphicsScene(this);
+	gScene = new ExperimentStructureScene(this);
 	//connect(_scene, SIGNAL(nodeContextMenu(QGVNode*)), SLOT(nodeContextMenu(QGVNode*)));
 	//connect(_scene, SIGNAL(nodeDoubleClick(QGVNode*)), SLOT(nodeDoubleClick(QGVNode*)));
 	ui->graphicsView->setScene(gScene);
+	//ui->graphicsView->viewport()->setCursor(Qt::ArrowCursor);
 }
 
 void ExperimentStructureVisualizer::setupLayout()
@@ -172,11 +171,11 @@ void ExperimentStructureVisualizer::setupLayout()
 
 void ExperimentStructureVisualizer::resizeStructureView(const int &nWidth, const int &nHeight)
 {
-	//if(ui->graphicsView)
-	//{
-		//ui->graphicsView->setFixedSize(nWidth-nWidgetMargin,nHeight-nWidgetMargin);
+	if(ui->graphicsView)
+	{
+		ui->graphicsView->setFixedSize(nWidth-nWidgetMargin,nHeight-nWidgetMargin);
 		//ui->graphicsView->setFixedSize(500,500);
-	//}
+	}
 }
 
 bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
@@ -185,52 +184,20 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 		createScene();
 	else
 		gScene->clear();	
+
+	int nCurrentBlockNumber = 0;
+	QRectF nSingleBlockBoundingBox;
+	int nAutoConnDistance = (int)EXPGRAPH_AUTOCONN_DISTANCE;
+	int nBlockDistance;
 	
-	//Configure graph attributes
-	gAttr = new GraphAttributes(graph, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics );	
-
-	/*
-	gScene->setGraphAttribute("label", "Experiment Structure");
-	gScene->setGraphAttribute("splines", "spline");//"polyline");//"spline");//"line");//"ortho");
-	if(bDrawVertical)
-		gScene->setGraphAttribute("rankdir", "TB");
-	else
-		gScene->setGraphAttribute("rankdir", "LR");
-	//gScene->setGraphAttribute("concentrate", "true"); //Error !
-	gScene->setGraphAttribute("nodesep", "0.2");
-
-	gScene->setNodeAttribute("shape", "box");
-	//gScene->setNodeAttribute("orientation", "0");
-	gScene->setNodeAttribute("style", "filled");
-	gScene->setNodeAttribute("fillcolor", "lightgrey");
-	gScene->setNodeAttribute("height", "1.2");
-	gScene->setNodeAttribute("width", "5.0");
-	gScene->setNodeAttribute("fixedsize", "true");
-
-	gScene->setNodeAttribute("labelfontname", "Courier");//fixed, do not change here!
-	gScene->setNodeAttribute("labelfontsize", "15");
-	gScene->setNodeAttribute("labelfontcolor", "blue");
-
-	gScene->setEdgeAttribute("minlen", "3");
-	//gScene->setEdgeAttribute("dir", "both");
-	gScene->setEdgeAttribute("penwidth", "5");
-	//gScene->setEdgeAttribute("lwidth", "5");
-	gScene->setEdgeAttribute("labelfontsize", "15");
-	*/
-
-	//START AND END EXPERIMENT//
-	expSceneItems.gvStartExperimentNode = graph.newNode();//indexing??
-	//expSceneItems.gvStartExperimentNode = gScene->addNode("Start");
-	//expSceneItems.gvStartExperimentNode->setAttribute("shape", "hexagon");
-	//expSceneItems.gvStartExperimentNode->setAttribute("labelfontcolor", "green");
-	//expSceneItems.gvStartExperimentNode->setAttribute("labelfontsize", "25");
-	//expSceneItems.gvStartExperimentNode->setAttribute("tooltip", "Start of the experiment");
-	expSceneItems.gvEndExperimentNode = graph.newNode();//indexing??
-	//expSceneItems.gvEndExperimentNode = gScene->addNode("\nEnd");
-	//expSceneItems.gvEndExperimentNode->setAttribute("shape", "hexagon");
-	//expSceneItems.gvEndExperimentNode->setAttribute("labelfontcolor", "red");
-	//expSceneItems.gvEndExperimentNode->setAttribute("labelfontsize", "25");
-	//expSceneItems.gvEndExperimentNode->setAttribute("tooltip", "End of the experiment");
+	//START EXPERIMENT//
+	expSceneItems.gStartGraphBlockItem = new ExperimentGraphBlockItem();
+	nSingleBlockBoundingBox = expSceneItems.gStartGraphBlockItem->boundingRect();
+	nBlockDistance = nSingleBlockBoundingBox.height() + nAutoConnDistance;
+	expSceneItems.gStartGraphBlockItem->setType(GRAPHBLOCK_TYPE_START);
+	expSceneItems.gStartGraphBlockItem->setPos(0,0);
+	gScene->addItem(expSceneItems.gStartGraphBlockItem);	
+	nCurrentBlockNumber++;
 
 	//BLOCKS//
 	if(expSceneItems.lBlocks.isEmpty() == false)
@@ -238,24 +205,23 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 		QString sTmpTooltip;
 		for (int i=0;i<expSceneItems.lBlocks.count();i++)
 		{
-			//expSceneItems.lBlocks[i].gvNode = gScene->addNode(QString("%1 %2").arg(expSceneItems.lBlocks[i].sName).arg(expSceneItems.lBlocks[i].nNumber));
-			expSceneItems.lBlocks[i].gvNode = new ogdf::node(graph.newNode());
+			sTmpTooltip = "";			
+			//QRectF rectTemp(0,nCurrentBlockNumber*nBlockDistance,nBlockWidth,nBlockHeight);
+			expSceneItems.lBlocks[i].gGraphBlockItem = new ExperimentGraphBlockItem();
+			expSceneItems.lBlocks[i].gGraphBlockItem->setType(GRAPHBLOCK_TYPE_BLOCK);
+			expSceneItems.lBlocks[i].gGraphBlockItem->setCaption(expSceneItems.lBlocks[i].sName);
+			expSceneItems.lBlocks[i].gGraphBlockItem->setPos(0,nCurrentBlockNumber*nBlockDistance);
+			gScene->addItem(expSceneItems.lBlocks[i].gGraphBlockItem);
+			//expSceneItems.lBlocks[i].gTextItem = gScene->addText(expSceneItems.lBlocks[i].sName);
 			cBlockStructure *tmpBlockStruct = parsedExpStruct->getBlockPointerByID(expSceneItems.lBlocks[i].nId);
 			if (tmpBlockStruct)
 			{
 				sTmpTooltip = "Trials: " + QString::number(tmpBlockStruct->getNumberOfTrials());
 				sTmpTooltip = sTmpTooltip + "\nInt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfInternalTriggers());
-				sTmpTooltip = sTmpTooltip + "\nExt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfExternalTriggers());
+				sTmpTooltip = sTmpTooltip + "\nExt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfExternalTriggers());				
 			}
-
-			gAttr->x(*expSceneItems.lBlocks[i].gvNode) = -5*(i+1);
-			gAttr->y(*expSceneItems.lBlocks[i].gvNode) = -20*i;		
-			gAttr->width(*expSceneItems.lBlocks[i].gvNode) = 10*(i+1);
-			gAttr->height(*expSceneItems.lBlocks[i].gvNode) = 15;
-
-			//expSceneItems.lBlocks[i].gvNode->setAttribute("tooltip", sTmpTooltip);
-			//if(i==0)
-			//	gScene->setRootNode(expSceneItems.lBlocks[i].gvNode);
+			expSceneItems.lBlocks[i].gGraphBlockItem->setToolTip(sTmpTooltip);
+			nCurrentBlockNumber++;			
 		}
 	}
 	else
@@ -263,9 +229,16 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 		return false;//no blocks defined...
 	}
 
+	//END EXPERIMENT//
+	expSceneItems.gEndGraphBlockItem = new ExperimentGraphBlockItem();
+	expSceneItems.gEndGraphBlockItem->setType(GRAPHBLOCK_TYPE_END);
+	expSceneItems.gEndGraphBlockItem->setPos(0,(nCurrentBlockNumber*nBlockDistance));
+	gScene->addItem(expSceneItems.gEndGraphBlockItem);
+	nCurrentBlockNumber++;
+
 	//AUTO-CONNECTIONS//
-	ogdf::node *tmpSourceBlock = NULL;
-	ogdf::node *tmpTargetBlock = NULL;
+	ExperimentGraphBlockItem *tmpSourceBlock = NULL;
+	ExperimentGraphBlockItem *tmpTargetBlock = NULL;
 	for (int i=0;i<expSceneItems.lAutoConns.count();i++)
 	{	
 		tmpSourceBlock = NULL;
@@ -274,29 +247,32 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 		{
 			if(expSceneItems.lAutoConns[i].nTargetBlockId >= 0)//Block to Block connection
 			{
-				tmpSourceBlock = getGVNodePointer(expSceneItems.lAutoConns[i].nSourceBlockId);
+				tmpSourceBlock = getGraphBlockItemPointer(expSceneItems.lAutoConns[i].nSourceBlockId);
 				if(tmpSourceBlock)
 				{
-					tmpTargetBlock = getGVNodePointer(expSceneItems.lAutoConns[i].nTargetBlockId);
+					tmpTargetBlock = getGraphBlockItemPointer(expSceneItems.lAutoConns[i].nTargetBlockId);
 					if(tmpTargetBlock)
 					{
-						expSceneItems.lAutoConns[i].gvEdge = graph.newEdge(*tmpSourceBlock, *tmpTargetBlock);
-							//gScene->addEdge(tmpSourceBlock, tmpTargetBlock, "Middle()");
-						//expSceneItems.lAutoConns[i].gvEdge->setAttribute("color", "brown");
-						//expSceneItems.lAutoConns[i].gvEdge->setAttribute("weight", "9999");
+						expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+						expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,nAutoConnDistance));
+						int tmpY = tmpSourceBlock->pos().y() + tmpSourceBlock->boundingRect().bottom();
+						expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(0, tmpY);
+						gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);	
 						continue;
 					}
 				}
 			}
 			else //End of experiment, no target
 			{
-				tmpSourceBlock = getGVNodePointer(expSceneItems.lAutoConns[i].nSourceBlockId);
-				if(tmpSourceBlock)
+				tmpSourceBlock = getGraphBlockItemPointer(expSceneItems.lAutoConns[i].nSourceBlockId);
+				if(tmpSourceBlock && expSceneItems.gEndGraphBlockItem)
 				{
-					expSceneItems.lAutoConns[i].gvEdge = graph.newEdge(*tmpSourceBlock, expSceneItems.gvEndExperimentNode);
-						//..gScene->addEdge(tmpSourceBlock, expSceneItems.gvEndExperimentNode, "End()");
-					//expSceneItems.lAutoConns[i].gvEdge->setAttribute("color", "red");
-					//expSceneItems.lAutoConns[i].gvEdge->setAttribute("weight", "9999");
+					expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+					expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,nAutoConnDistance));
+					int tmpY = tmpSourceBlock->pos().y() + tmpSourceBlock->boundingRect().bottom();
+					//int tmpY = expSceneItems.gEndGraphBlockItem->pos().y() + expSceneItems.gEndGraphBlockItem->boundingRect().top();
+					expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(0, tmpY);
+					gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);
 					continue;
 				}
 			}
@@ -305,13 +281,14 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 		{
 			if(expSceneItems.lAutoConns[i].nTargetBlockId >= 0)//Start of Experiment, no source
 			{
-				tmpTargetBlock = getGVNodePointer(expSceneItems.lAutoConns[i].nTargetBlockId);
-				if(tmpTargetBlock)
+				tmpTargetBlock = getGraphBlockItemPointer(expSceneItems.lAutoConns[i].nTargetBlockId);
+				if(tmpTargetBlock && expSceneItems.gStartGraphBlockItem)
 				{
-					expSceneItems.lAutoConns[i].gvEdge = graph.newEdge(expSceneItems.gvStartExperimentNode, *tmpTargetBlock);
-						//gScene->addEdge(expSceneItems.gvStartExperimentNode, tmpTargetBlock, "Start()");
-					//expSceneItems.lAutoConns[i].gvEdge->setAttribute("color", "green");
-					//expSceneItems.lAutoConns[i].gvEdge->setAttribute("weight", "9999");
+					expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+					expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,nAutoConnDistance));
+					int tmpY = expSceneItems.gStartGraphBlockItem->pos().y() + expSceneItems.gStartGraphBlockItem->boundingRect().bottom();
+					expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(0, tmpY);
+					gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);
 					continue;
 				}
 			}
@@ -324,108 +301,200 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 	//LOOPS//
 	if(expSceneItems.lLoops.isEmpty() == false)
 	{
-		ogdf::node *tmpSourceGVNode = NULL;
-		ogdf::node *tmpTargetGVNode = NULL;
 		for (int i=0;i<expSceneItems.lLoops.count();i++)
 		{
-			tmpSourceGVNode = getGVNodePointer(expSceneItems.lLoops[i].nSourceBlockId);
-			tmpTargetGVNode = getGVNodePointer(expSceneItems.lLoops[i].nTargetBlockId);
-			if((tmpSourceGVNode) && (tmpTargetGVNode))
-				expSceneItems.lLoops[i].gvEdge = new ogdf::edge(graph.newEdge(*tmpSourceGVNode, *tmpTargetGVNode));
-				//gScene->addEdge(tmpSourceGVNode,tmpTargetGVNode,QString("%1 %2").arg(expSceneItems.lLoops[i].sName).arg(expSceneItems.lLoops[i].nNumber));
+			tmpSourceBlock = getGraphBlockItemPointer(expSceneItems.lLoops[i].nSourceBlockId);
+			tmpTargetBlock = getGraphBlockItemPointer(expSceneItems.lLoops[i].nTargetBlockId);
+			if((tmpSourceBlock) && (tmpTargetBlock))
+			{
+				insertLoopInGraphDrawingStruct(expSceneItems.lLoops[i].nSourceBlockId,expSceneItems.lLoops[i].nTargetBlockId);
+			}
 		}
-	}
-	//Layout scene
-	//gScene->applyLayout();			
+
+		expConnItemStrc *tmpexpConnItemStrc;
+		QList<expConnItemStrc> *pLexpConnItemStrc;
+		QPen tmpPen;
+		tmpPen.setColor("#00ff00");
+		tmpPen.setWidth(5);
+		int nLocation = 1;
+		int tmpYSource;
+		int tmpYTarget;
+		int tmpXOffset;
+		for (int j=0;j<2;j++)
+		{
+			if(j==0)
+			{
+				pLexpConnItemStrc = &expLoopDrawing.lMasterSideDrawOrderedLoops;
+				nLocation = 1;
+			}
+			else if(j==1)
+			{
+				pLexpConnItemStrc = &expLoopDrawing.lSlaveSideDrawOrderedLoops;
+				nLocation = -1;
+			}
+
+			for(int i=0;i<pLexpConnItemStrc->count();i++)
+			{
+				tmpexpConnItemStrc = &(*pLexpConnItemStrc)[i];
+				tmpSourceBlock = getGraphBlockItemPointer(tmpexpConnItemStrc->nSourceBlockId);
+				tmpTargetBlock = getGraphBlockItemPointer(tmpexpConnItemStrc->nTargetBlockId);
+				expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+				tmpYSource = tmpSourceBlock->pos().y() - tmpSourceBlock->boundingRect().top();
+				tmpXOffset = ((nLocation * EXPGRAPHCONNITEM_LOOP_START_DISTANCE) + (nLocation * i*EXPGRAPHCONNITEM_LOOP_DISTANCE));
+				expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(tmpXOffset, tmpYSource);
+				tmpYTarget = tmpYSource - (tmpTargetBlock->pos().y() + tmpTargetBlock->boundingRect().top());
+				expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,-tmpYTarget),tmpXOffset);
+				gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);	
+				
+			}
+		}
+	}	
 	
-
-	////////////////////////////////////////////////////////////////////////
-
-	
-	//const int LEN = 11;
-	//for(int i = 1; i<LEN; ++i) 
-	//{
-	//	ogdf::node left = graph.newNode();
-	//	gAttr->x(left) = -5*(i+1);
-	//	gAttr->y(left) = -20*i;		
-	//	gAttr->width(left) = 10*(i+1);
-	//	gAttr->height(left) = 15;
-
-	//	node bottom = graph.newNode();
-	//	gAttr->x(bottom) = 20*(LEN-i);		
-	//	gAttr->y(bottom) = 5*(LEN+1-i);
-	//	gAttr->width(bottom) = 15;
-	//	gAttr->height(bottom) = 10*(LEN+1-i);
-
-	//	edge e = graph.newEdge(left,bottom);
-	//	DPolyline &p = gAttr->bends(e);
-	//	p.pushBack(DPoint(10,-20*i));
-	//	p.pushBack(DPoint(20*(LEN-i),-10));
-	//}
-
-	
-	int nodeWidth = 30;
-	int nodeHeight = 30;
-	int siblingDistance = nodeWidth + nodeHeight;
-	ogdf::TreeLayout treeLayout;
-	treeLayout.siblingDistance(siblingDistance);
-	treeLayout.call(*gAttr);
-
-	int width = gAttr->boundingBox().width(), height = gAttr->boundingBox().height();
-
-	//ui->graphicsView->scene()->setSceneRect(QRect(0, 0, width+nodeWidth, height+nodeHeight));
-	//cout << "Scene dimensions: " << gAttr->boundingBox().width() << " x " << gAttr->boundingBox().height() << endl;
-	
-
 	QRectF currentSceneRect = gScene->itemsBoundingRect();
-	ui->graphicsView->setSceneRect(currentSceneRect);
-	//qreal dScaleFactor;
-	//if(bDrawVertical)
-	//	dScaleFactor = ((ui->graphicsView->size().height()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.height();
-	//else
-	//	dScaleFactor = ((ui->graphicsView->size().width()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.width();
-	//ui->graphicsView->resetTransform();
-	//ui->graphicsView->scale(dScaleFactor, dScaleFactor);
-	ui->graphicsView->centerOn(currentSceneRect.center());
+	currentSceneRect.setWidth(currentSceneRect.width()+nSingleBlockBoundingBox.width());
+	currentSceneRect.setHeight(currentSceneRect.height()+nSingleBlockBoundingBox.height());
+	ui->graphicsView->setSceneRect(currentSceneRect);//QRect(0, 0, nWidth+nodeWidth, nHeight+nodeHeight));//currentSceneRect);
+	qreal dScaleFactor;
+	if(bDrawVertical)
+		dScaleFactor = ((ui->graphicsView->size().height()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.height();
+	else
+		dScaleFactor = ((ui->graphicsView->size().width()-(nWidgetMargin))*dGraphViewScale)/currentSceneRect.width();
+	ui->graphicsView->resetTransform();
+	ui->graphicsView->scale(dScaleFactor, dScaleFactor);
+	ui->graphicsView->centerOn(currentSceneRect.center());//QRect(0, 0, nWidth+nodeWidth, nHeight+nodeHeight).center());//currentSceneRect.center());
 	//ui->graphicsView->centerOn(gScene->itemsBoundingRect().center());
 
-
-	gAttr->setAllWidth(nodeWidth);
-	gAttr->setAllHeight(nodeHeight);
-
-	ogdf::edge e;
-	forall_edges(e,graph)
-	{
-		ogdf::node source = e->source(), target = e->target();
-		int x1 = gAttr->x(source), y1 = gAttr->y(source);
-		int x2 = gAttr->x(target), y2 = gAttr->y(target);
-		QPainterPath p;
-		p.moveTo(x1 + nodeWidth/2, y1 + nodeHeight/2);
-		p.lineTo(x2 + nodeWidth/2, y2 + nodeHeight/2);
-		(void) ui->graphicsView->scene()->addPath(p, QPen(Qt::darkGray), QBrush(Qt::white));
-	}
-
-	ogdf::node n;
-	forall_nodes(n, graph) 
-	{
-		double x = gAttr->x(n);
-		double y = gAttr->y(n);
-		double w = gAttr->width(n);
-		double h = gAttr->height(n);
-		QRectF boundingRect(x, y, w, h);
-		cout << x << " : " << y << " : " << endl;
-		QRadialGradient radialGradient(boundingRect.center(), boundingRect.width());
-		radialGradient.setColorAt(1.0, Qt::lightGray);
-		radialGradient.setColorAt(0.7, QColor(230,230,240));
-		radialGradient.setColorAt(0.0, Qt::white);
-		(void) ui->graphicsView->scene()->addEllipse(boundingRect, QPen(Qt::black), QBrush(QRadialGradient(radialGradient)));
-		//QGraphicsTextItem *text = ui->graphicsView->scene()->addText(QString(gAttr->labelNode(n).cstr()));
-		//text->setPos(x, y);
-	}
-	// clear the graph after it has been displayed
-	graph.clear();
-
 	return true;
+}
+
+bool ExperimentStructureVisualizer::insertLoopInGraphDrawingStruct(const int &nSourceBlockID, const int &nTargetBlockID)
+{
+	expConnItemStrc *tmpExpConnItem=NULL;
+	QList<expConnItemStrc> *lDrawOrderedLoops=NULL;
+	expConnItemStrc appendExpConnItem;
+	bool bFitsInsideResult = false;
+	bool bFitsOverResult = false;
+	bool bFitIndexDetermined = false;
+	bool bFitsAsideResult = false;
+	bool bIsCrossed = false;
+	struct strcLastFit
+	{
+		int nLastFitIndex;
+		int nMin;
+		int nMax;
+		strcLastFit()
+		{
+			nLastFitIndex = -1;
+			nMin = -1;
+			nMax = -1;
+		}
+	};
+	
+	int nCurrentIndex;
+	int nTestMin;
+	int nTestMax;
+	int nParsedMin;
+	int nParsedMax;
+	strcLastFit sLastFit;
+
+	for (int j=0;j<2;j++)
+	{
+		if(bFitIndexDetermined)
+			break;
+		
+		if(j==0)
+			lDrawOrderedLoops = &expLoopDrawing.lMasterSideDrawOrderedLoops;
+		else if(j==1)
+			lDrawOrderedLoops = &expLoopDrawing.lSlaveSideDrawOrderedLoops;
+
+		if(lDrawOrderedLoops->isEmpty())
+		{
+			appendExpConnItem.nSourceBlockId = nSourceBlockID;
+			appendExpConnItem.nTargetBlockId = nTargetBlockID;
+			lDrawOrderedLoops->append(appendExpConnItem);
+			return true;
+		}
+		else
+		{
+			sLastFit.nLastFitIndex = -1;
+			sLastFit.nMin = -1;
+			sLastFit.nMax = -1;
+			bFitsInsideResult = false;
+			bFitsOverResult = false;
+			bFitsAsideResult = false;
+			bIsCrossed = false;
+			nTestMin = qMin(nSourceBlockID,nTargetBlockID);
+			nTestMax = qMax(nSourceBlockID,nTargetBlockID);
+			for(int i=0;i<lDrawOrderedLoops->count();i++)
+			{
+				nCurrentIndex = lDrawOrderedLoops->count()-(i+1);
+				tmpExpConnItem = &((*lDrawOrderedLoops)[nCurrentIndex]);
+				nParsedMin = qMin(tmpExpConnItem->nSourceBlockId, tmpExpConnItem->nTargetBlockId);
+				nParsedMax = qMax(tmpExpConnItem->nSourceBlockId, tmpExpConnItem->nTargetBlockId);
+
+				//Next: Does the Loop fit inside?
+				if((nTestMin>=nParsedMin) && (nTestMin<=nParsedMax) && (nTestMax>=nParsedMin) && (nTestMax<=nParsedMax))
+				{
+					bFitsInsideResult = true;
+					sLastFit.nLastFitIndex = nCurrentIndex;
+					sLastFit.nMin = nParsedMin;
+					sLastFit.nMax = nParsedMax;
+					continue;//Let's see how deep we can go...
+				}
+				else
+				{
+					if(bFitsInsideResult)//Was it already previously fitted inside?
+					{
+						//Next: Does the Loop not cross?
+						if(!(((nTestMin<=nParsedMin) && (nTestMax<nParsedMax)) || ((nTestMin>nParsedMin) && (nTestMax>=nParsedMax))))
+							bFitIndexDetermined = true;
+						else
+							bIsCrossed = true;
+						break;
+					}
+					else
+					{
+						//Next: Does the Loop fit completely over?
+						if((nTestMin<=nParsedMin) && (nTestMax>=nParsedMax))
+						{
+							//Did it not yet fit completely over?
+							if(bFitsOverResult == false)
+							{
+								sLastFit.nLastFitIndex = nCurrentIndex+1;
+								sLastFit.nMin = nParsedMin;
+								sLastFit.nMax = nParsedMax;
+								bFitsOverResult = true;
+							}
+							continue;//Let's check the remaining...
+						}
+						//Next: Does the Loop occur aside parallel?	
+						if(((nTestMin<=nParsedMin) && (nTestMax<=nParsedMin)) || ((nTestMin>=nParsedMax) && (nTestMax>=nParsedMax)))
+						{
+							sLastFit.nLastFitIndex = nCurrentIndex+1;
+							sLastFit.nMin = nParsedMin;
+							sLastFit.nMax = nParsedMax;
+							bFitsAsideResult = true;
+							continue;//Let's check the remaining...
+						}
+						break;
+					}
+				}				
+			}
+		}
+		if((bIsCrossed == false) && (bFitsInsideResult || bFitsOverResult || bFitsAsideResult))
+			bFitIndexDetermined = true;
+	}
+	if(bFitIndexDetermined)
+	{
+		appendExpConnItem.nSourceBlockId = nSourceBlockID;
+		appendExpConnItem.nTargetBlockId = nTargetBlockID;
+		lDrawOrderedLoops->insert(sLastFit.nLastFitIndex,appendExpConnItem);
+		return true;
+	}
+	appendExpConnItem.nSourceBlockId = nSourceBlockID;
+	appendExpConnItem.nTargetBlockId = nTargetBlockID;
+	lDrawOrderedLoops->insert(0,appendExpConnItem);
+	return false;
 }
 
 //void ExperimentStructureVisualizer::nodeContextMenu(QGVNode *node)
@@ -463,7 +532,7 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 
 bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructure *ExpStruct)
 {//Make sure to first call the above install()!
-	resetExpSceneItemsCollection(expSceneItems);
+	resetExpScene();
 
 	int nExpBlockCount = ExpStruct->getBlockCount();
 	cBlockStructure *tmpBlock = NULL;
@@ -473,12 +542,12 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 	expBlockItemStrc tmpBlockItem;
 	expLoopItemStrc tmpLoopItem;
 
-	expAutoConnItemStrc tmpAutoConnItem;
+	expConnItemStrc tmpAutoConnItem;
 
 	expSceneItems.sExperimentName = ExpStruct->getExperimentName();
 	for (int i=0;i<nExpBlockCount;i++)
 	{
-		tmpAutoConnItem.gvEdge = NULL;
+		//tmpAutoConnItem.gvEdge = NULL;
 		tmpAutoConnItem.nSourceBlockId = -1;
 		tmpAutoConnItem.nTargetBlockId = -1;
 
@@ -495,7 +564,7 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 			tmpBlockItem.nId = tmpBlock->getBlockID();
 			tmpBlockItem.nNumber = tmpBlock->getBlockNumber();
 			tmpBlockItem.sName = tmpBlock->getBlockName();
-			tmpBlockItem.gvNode = NULL;
+			//tmpBlockItem.gvNode = NULL;
 			expSceneItems.lBlocks.append(tmpBlockItem);
 		}
 		expSceneItems.lAutoConns.append(tmpAutoConnItem);
@@ -535,7 +604,7 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 						tmpLoopItem.nNumberOfLoops = tmpLoop->getNumberOfLoops();
 						tmpLoopItem.nSourceBlockId = tmpBlock->getBlockID();
 						tmpLoopItem.nTargetBlockId = nTargetBlockID;
-						tmpLoopItem.gvEdge = NULL;						
+						//tmpLoopItem.gvEdge = NULL;						
 						expSceneItems.lLoops.append(tmpLoopItem);
 					}
 				}
@@ -546,13 +615,25 @@ bool ExperimentStructureVisualizer::parseExperimentStructure(cExperimentStructur
 	return drawGraph();
 }
 
-ogdf::node *ExperimentStructureVisualizer::getGVNodePointer(const int &nBlockID)
+//ogdf::node *ExperimentStructureVisualizer::getGraphNodePointer(const int &nBlockID)
+//{
+//	for(int i=0;i<expSceneItems.lBlocks.count();i++)
+//	{
+//		if(expSceneItems.lBlocks[i].nId == nBlockID)
+//		{
+//			return expSceneItems.lBlocks[i].gvNode;
+//		}
+//	}
+//	return NULL;
+//}
+
+ExperimentGraphBlockItem *ExperimentStructureVisualizer::getGraphBlockItemPointer(const int &nBlockID)
 {
 	for(int i=0;i<expSceneItems.lBlocks.count();i++)
 	{
 		if(expSceneItems.lBlocks[i].nId == nBlockID)
 		{
-			return expSceneItems.lBlocks[i].gvNode;
+			return expSceneItems.lBlocks[i].gGraphBlockItem;
 		}
 	}
 	return NULL;

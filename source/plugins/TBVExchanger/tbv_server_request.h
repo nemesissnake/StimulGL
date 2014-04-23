@@ -1,4 +1,4 @@
-//Copyright (C) 2014  Michael Luehrs
+//Copyright (C) 2014  Michael Luehrs, Brain Innovation B.V.
 //
 //This file is part of StimulGL.
 //StimulGL is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ public:
 
 	bool sendData(char *Querry,int value0 = -1, int value1 = -1, int value2 = -1, int value3 = -1);
 	QString getReply();
-	template< typename T> void getDataOfByteArray(T &value);
+	template< typename Turb> void getDataOfByteArray(Turb &value);
 	void getDataOfByteArray(char *data,int size);
 
 private:
@@ -46,9 +46,9 @@ private:
 
 };
 
-template< typename T> void TBV_Server_Request::getDataOfByteArray(T &value)
+template< typename Turb> void TBV_Server_Request::getDataOfByteArray(Turb &value)
 {
-	rcvStream >> value;
+    rcvStream >> value;
 }
 
 

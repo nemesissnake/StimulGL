@@ -83,7 +83,7 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	expBlockParamView = NULL;
 	tmpExpObjectParamDefs = NULL;
 	
-	bShowTreeView = true;
+	bShowGraphicalTreeView = true;
 	currentViewSettings.bSkipComments = true;
 	currentViewSettings.bSkipEmptyAttributes = false;
 
@@ -682,7 +682,7 @@ void ExperimentGraphicEditor::showInfo(const QModelIndex &index)
 				tmpExpStruct = new cExperimentStructure();
 				QList<ExperimentTreeItem*> tmpExpTreeItemList;
 
-				if(bShowTreeView)
+				if(bShowGraphicalTreeView)
 				{ 
 					if(expStructVisualizer == NULL)
 						expStructVisualizer = new ExperimentStructureVisualizer();
@@ -1232,7 +1232,7 @@ void ExperimentGraphicEditor::removeNode()
 
 void ExperimentGraphicEditor::toggleBlocksView()
 {
-	bShowTreeView = !bShowTreeView;
+	bShowGraphicalTreeView = !bShowGraphicalTreeView;
 }
 
 void ExperimentGraphicEditor::addDefinition()
