@@ -339,10 +339,10 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 				tmpSourceBlock = getGraphBlockItemPointer(tmpexpConnItemStrc->nSourceBlockId);
 				tmpTargetBlock = getGraphBlockItemPointer(tmpexpConnItemStrc->nTargetBlockId);
 				expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
-				tmpYSource = tmpSourceBlock->pos().y() - tmpSourceBlock->boundingRect().top();
-				tmpXOffset = ((nLocation * EXPGRAPHCONNITEM_LOOP_START_DISTANCE) + (nLocation * i*EXPGRAPHCONNITEM_LOOP_DISTANCE));
+				tmpYSource = tmpSourceBlock->pos().y() - tmpSourceBlock->boundingRect().top() + EXPGRAPHCONNITEM_LOOP_START_HEIGHT_DISTANCE;
+				tmpXOffset = ((nLocation * EXPGRAPHCONNITEM_LOOP_START_WIDTH_DISTANCE) + (nLocation * i*EXPGRAPHCONNITEM_LOOP_DISTANCE));
 				expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(tmpXOffset, tmpYSource);
-				tmpYTarget = tmpYSource - (tmpTargetBlock->pos().y() + tmpTargetBlock->boundingRect().top());
+				tmpYTarget = tmpYSource - (tmpTargetBlock->pos().y() + tmpTargetBlock->boundingRect().top() - EXPGRAPHCONNITEM_LOOP_START_HEIGHT_DISTANCE);
 				expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,-tmpYTarget),tmpXOffset);
 				gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);	
 				

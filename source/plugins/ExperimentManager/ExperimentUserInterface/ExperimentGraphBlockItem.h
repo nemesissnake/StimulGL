@@ -22,11 +22,12 @@
 #include <QGraphicsRectItem>
 #include <QPainter>
 
-#define EXPGRAPHBLOCKITEM_BLOCK_WIDTH			600
-#define EXPGRAPHBLOCKITEM_BLOCK_HEIGHT			250
-#define EXPGRAPHBLOCKITEM_BLOCK_DISTANCE		50	//Defined by the input and output connectors, not the connection itself!
-#define EXPGRAPHCONNITEM_LOOP_DISTANCE			120
-#define EXPGRAPHCONNITEM_LOOP_START_DISTANCE	500
+#define EXPGRAPHBLOCKITEM_BLOCK_WIDTH					600
+#define EXPGRAPHBLOCKITEM_BLOCK_HEIGHT					250
+#define EXPGRAPHBLOCKITEM_BLOCK_DISTANCE				50	//Defined by the input and output connectors, not the connection itself!
+#define EXPGRAPHCONNITEM_LOOP_DISTANCE					120
+#define EXPGRAPHCONNITEM_LOOP_START_WIDTH_DISTANCE		500
+#define EXPGRAPHCONNITEM_LOOP_START_HEIGHT_DISTANCE		EXPGRAPHCONNITEM_LOOP_DISTANCE / 4
 
 enum ExperimentGraphBlockItemTypeEnum
 {

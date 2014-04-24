@@ -80,15 +80,15 @@ void ExperimentGraphConnectionItem::paint(QPainter *painter, const QStyleOptionG
 	//matrix.scale(fLength,fLength);	
 	polyArrow.clear();
 	pShape = QPainterPath();
+	float fArrLenght = qMin(fLength * 0.4, EXPGRAPHCONNITEM_ARROW_MIN_SIZE);
 
 	if(fPerpendicularLenght != 0.0)
 	{	
 		polyArrow.append(QPointF(fPerpendicularLenght, 0.0));
-		//pShape.addRect(0.0, 0.0, fPerpendicularLenght, 0.0);
+		pShape.addRect(0.0, 0.0, fPerpendicularLenght, 0.0);
 	}
 	polyArrow.append(QPointF( 0.0, 0.0));
 	polyArrow.append(QPointF( 0.0, fLength));
-	float fArrLenght = qMin(fLength * 0.4, EXPGRAPHCONNITEM_ARROW_MIN_SIZE);
 	polyArrow.append(QPointF( fArrLenght/-2, fLength - fArrLenght));
 	polyArrow.append(QPointF( fArrLenght/2, fLength - fArrLenght));
 	polyArrow.append(QPointF( 0.0, fLength));
@@ -99,8 +99,7 @@ void ExperimentGraphConnectionItem::paint(QPainter *painter, const QStyleOptionG
 		polyArrow.append(QPointF( fPerpendicularLenght, fLength));
 		polyArrow.append(QPointF( 0.0, fLength));
 		polyArrow.append(QPointF( 0.0, 0.0));
-		//painter->drawLine(QPointF(0.0,0.0),QPointF(fPerpendicularLenght,0.0));
-		//pShape.addRect(fArrLenght/-2,0.0,fArrLenght,fLength);
+		pShape.addRect(fArrLenght/-2,0.0,fArrLenght,fLength);
 	}
 	QPolygonF polyTriangleHeadAdjusted = matrix.map(polyArrow);
 	//QPainterPath pPath;
@@ -114,8 +113,11 @@ void ExperimentGraphConnectionItem::paint(QPainter *painter, const QStyleOptionG
 	//painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); 
 	pShape = matrix.map(pShape);
 	if(bIsCurrentlyHovered)
+	{
 		painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawRect(rBoundingBox); 
-	
+		painter->setPen(Qt::DotLine); painter->setPen(QColor(0,0,255)); painter->drawPath(pShape);
+	}
+
 	//painter->drawPath(pShape);
 	//painter->rotate(-fAngle);
 }
