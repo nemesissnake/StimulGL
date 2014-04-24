@@ -107,12 +107,10 @@ void ExperimentGraphBlockItem::paint(QPainter *painter, const QStyleOptionGraphi
 		rBoundingBox.setCoords(-nHalfBlockWidth,-nHalfBlockHeight-nHalfBlockDistance,nHalfBlockWidth,nHalfBlockHeight);
 		painter->drawText(rectInnerBlock,Qt::AlignCenter, "END");
 	}
-
-	if(bIsCurrentlyHovered)
-	{
-		painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawRect(rBoundingBox); 
-	}
-		//painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawRect(rBoundingBox);
+	//if(bIsCurrentlyHovered)
+	//{
+	//	painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawRect(rBoundingBox); 
+	//}
 }
 
 void ExperimentGraphBlockItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)

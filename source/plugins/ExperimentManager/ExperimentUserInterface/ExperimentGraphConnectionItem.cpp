@@ -80,12 +80,13 @@ void ExperimentGraphConnectionItem::paint(QPainter *painter, const QStyleOptionG
 	//matrix.scale(fLength,fLength);	
 	polyArrow.clear();
 	pShape = QPainterPath();
+	pShape.setFillRule(Qt::WindingFill);
 	float fArrLenght = qMin(fLength * 0.4, EXPGRAPHCONNITEM_ARROW_MIN_SIZE);
 
 	if(fPerpendicularLenght != 0.0)
 	{	
 		polyArrow.append(QPointF(fPerpendicularLenght, 0.0));
-		pShape.addRect(0.0, 0.0, fPerpendicularLenght, 0.0);
+		pShape.addRect(0.0, fArrLenght/-2, fPerpendicularLenght, fArrLenght);
 	}
 	polyArrow.append(QPointF( 0.0, 0.0));
 	polyArrow.append(QPointF( 0.0, fLength));
@@ -99,14 +100,18 @@ void ExperimentGraphConnectionItem::paint(QPainter *painter, const QStyleOptionG
 		polyArrow.append(QPointF( fPerpendicularLenght, fLength));
 		polyArrow.append(QPointF( 0.0, fLength));
 		polyArrow.append(QPointF( 0.0, 0.0));
-		pShape.addRect(fArrLenght/-2,0.0,fArrLenght,fLength);
+		pShape.addRect(0.0, fLength + fArrLenght/-2, fPerpendicularLenght, fArrLenght);
 	}
 	QPolygonF polyTriangleHeadAdjusted = matrix.map(polyArrow);
-	//QPainterPath pPath;
-	//pShape = QPainterPath();
-	//pShape.addPolygon(polyTriangleHeadAdjusted);
-	rBoundingBox = polyTriangleHeadAdjusted.boundingRect();	//polyTriangleHeadAdjusted	
 	
+	rBoundingBox = polyTriangleHeadAdjusted.boundingRect();	//polyTriangleHeadAdjusted	
+	rBoundingBox.setTop(rBoundingBox.top()-fArrLenght/2);
+	rBoundingBox.setBottom(rBoundingBox.bottom()+fArrLenght/2);
+
+	//here....
+	//pShape = QPainterPath();
+	//pShape.addRect(rBoundingBox);//polyTriangleHeadAdjusted);
+
 	painter->drawPolygon(polyTriangleHeadAdjusted);
 	
 	//pShape.addPolygon(polyTriangleHeadAdjusted);

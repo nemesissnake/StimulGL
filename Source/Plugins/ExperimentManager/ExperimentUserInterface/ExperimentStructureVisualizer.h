@@ -25,6 +25,7 @@
 #include "ExperimentGraphConnectionItem.h"
 
 #define EXPGRAPH_AUTOCONN_DISTANCE		100.0
+#define EXPGRAPH_AUTOCONN_TOOLTIP_TEXT	"Auto-connection"
 
 class QMenu;
 class QToolBar;
@@ -92,11 +93,13 @@ private:
 
 	struct expConnItemStrc
 	{
+		int nLoopId;
 		ExperimentGraphConnectionItem *gGraphConnectionItem;
 		int nSourceBlockId;
 		int nTargetBlockId;
 		expConnItemStrc()
 		{
+			nLoopId = -1;
 			gGraphConnectionItem = NULL;
 			nSourceBlockId = -1;
 			nTargetBlockId = -1;

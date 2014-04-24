@@ -216,7 +216,8 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 			cBlockStructure *tmpBlockStruct = parsedExpStruct->getBlockPointerByID(expSceneItems.lBlocks[i].nId);
 			if (tmpBlockStruct)
 			{
-				sTmpTooltip = "Trials: " + QString::number(tmpBlockStruct->getNumberOfTrials());
+				sTmpTooltip = "Name: " + tmpBlockStruct->getBlockName();
+				sTmpTooltip = sTmpTooltip + "\nTrials: " + QString::number(tmpBlockStruct->getNumberOfTrials());
 				sTmpTooltip = sTmpTooltip + "\nInt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfInternalTriggers());
 				sTmpTooltip = sTmpTooltip + "\nExt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfExternalTriggers());				
 			}
@@ -255,6 +256,7 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 					{
 						expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
 						expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,nAutoConnDistance));
+						expSceneItems.lAutoConns[i].gGraphConnectionItem->setToolTip(EXPGRAPH_AUTOCONN_TOOLTIP_TEXT);
 						int tmpY = tmpSourceBlock->pos().y() + tmpSourceBlock->boundingRect().bottom();
 						expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(0, tmpY);
 						gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);	
@@ -320,6 +322,7 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 		int tmpYSource;
 		int tmpYTarget;
 		int tmpXOffset;
+		QString sTmpTooltip;
 		for (int j=0;j<2;j++)
 		{
 			if(j==0)
@@ -339,13 +342,28 @@ bool ExperimentStructureVisualizer::drawGraph(const QString &sDotContent)
 				tmpSourceBlock = getGraphBlockItemPointer(tmpexpConnItemStrc->nSourceBlockId);
 				tmpTargetBlock = getGraphBlockItemPointer(tmpexpConnItemStrc->nTargetBlockId);
 				expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+
+				cBlockStructure *tmpBlockStruct = parsedExpStruct->getBlockPointerByID(tmpexpConnItemStrc->nSourceBlockId);
+				if(tmpBlockStruct)
+				{
+					cLoopStructure *tmpLoopStruct = tmpBlockStruct->getLoopPointerByID(tmpexpConnItemStrc->nLoopId);
+					if (tmpLoopStruct)
+					{
+
+						sTmpTooltip = "Name: " + tmpBlockStruct->getBlockName();
+						sTmpTooltip = sTmpTooltip + "\nTrials: " + QString::number(tmpBlockStruct->getNumberOfTrials());
+						sTmpTooltip = sTmpTooltip + "\nInt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfInternalTriggers());
+						sTmpTooltip = sTmpTooltip + "\nExt. Triggers: " + QString::number(tmpBlockStruct->getNumberOfExternalTriggers());
+					}
+				}
+
+				expSceneItems.lAutoConns[i].gGraphConnectionItem->setToolTip("Loop");
 				tmpYSource = tmpSourceBlock->pos().y() - tmpSourceBlock->boundingRect().top() + EXPGRAPHCONNITEM_LOOP_START_HEIGHT_DISTANCE;
 				tmpXOffset = ((nLocation * EXPGRAPHCONNITEM_LOOP_START_WIDTH_DISTANCE) + (nLocation * i*EXPGRAPHCONNITEM_LOOP_DISTANCE));
 				expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(tmpXOffset, tmpYSource);
 				tmpYTarget = tmpYSource - (tmpTargetBlock->pos().y() + tmpTargetBlock->boundingRect().top() - EXPGRAPHCONNITEM_LOOP_START_HEIGHT_DISTANCE);
 				expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,-tmpYTarget),tmpXOffset);
-				gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);	
-				
+				gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);				
 			}
 		}
 	}	
@@ -411,6 +429,7 @@ bool ExperimentStructureVisualizer::insertLoopInGraphDrawingStruct(const int &nS
 		{
 			appendExpConnItem.nSourceBlockId = nSourceBlockID;
 			appendExpConnItem.nTargetBlockId = nTargetBlockID;
+			//appendExpConnItem.nLoopId = nLoopId;
 			lDrawOrderedLoops->append(appendExpConnItem);
 			return true;
 		}

@@ -22,7 +22,7 @@
 #include <QGraphicsRectItem>
 #include <QPainter>
 
-#define EXPGRAPHCONNITEM_ARROW_MIN_SIZE		20.0
+#define EXPGRAPHCONNITEM_ARROW_MIN_SIZE		40.0
 
 class ExperimentGraphConnectionItem : public QGraphicsItem
 {
