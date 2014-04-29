@@ -24,19 +24,34 @@
 
 #define EXPGRAPHCONNITEM_ARROW_MIN_SIZE		40.0
 
+enum ExperimentGraphConnItemDrawOrder
+{
+	GRAPHCONN_DRAW_ORDER_UNNESTED_BOTHSIDES		= 0,
+	GRAPHCONN_DRAW_ORDER_NUMBER_MASTERSIDE		= 1,
+	GRAPHCONN_DRAW_ORDER_NUMBER_SLAVESIDE		= 2
+};
+
+enum ExperimentGraphConnectionTypeEnum
+{
+	GRAPHBLOCK_CONN_INPUT			= 0,
+	GRAPHBLOCK_CONN_OUTPUT			= 1
+};
+
 class ExperimentGraphConnectionItem : public QGraphicsItem
 {
 public:
 	ExperimentGraphConnectionItem(QGraphicsItem *parent = NULL);
 
-	QRectF boundingRect() const;
-	QPainterPath shape() const;
-	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 	void setEndPoint(const QPointF &pEnd, const float &fPerpLenght = 0.0);
 
 protected:
-	void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-	void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+	virtual QRectF boundingRect() const;
+	virtual QPainterPath shape() const;
+	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+	virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+	virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 		
 private:
 	QColor pSelectedColor;
@@ -48,9 +63,10 @@ private:
 	QPointF pEndPoint;
 	QLineF pArrowLine;
 	QPolygonF polyArrow;
-	float fLength;
-	float fAngle;
-	float fPerpendicularLenght;
+	QPolygonF polyTriangleHeadAdjusted;
+	//float fLength;
+	//float fAngle;
+	//float fPerpendicularLenght;
 
 	bool bIsCurrentlyHovered;
 };

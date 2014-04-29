@@ -298,7 +298,7 @@ Attributes only apply to readonly non user data, like the ID
                 </object>
                 <loops>
                     <loop ID="2">
-                        <name>Loop_1</name>
+                        <name>Loop_xyz1</name>
                         <loop_number>1</loop_number>
                         <nr_of_loops>1</nr_of_loops>
                         <target_block>0</target_block>
@@ -400,10 +400,10 @@ Attributes only apply to readonly non user data, like the ID
                     </loop>
                     <loop ID="1">
                         <name>Loop_3</name>
-                        <loop_number>1</loop_number>
+                        <loop_number>2</loop_number>
                         <nr_of_loops>1</nr_of_loops>
                         <target_block>2</target_block>
-                    </loop>                    
+                    </loop>                                      
                 </loops>
             </block>
             <block ID="77">
@@ -468,6 +468,26 @@ Attributes only apply to readonly non user data, like the ID
                         </parameter>
                     </parameters>
                 </object>
+                <loops>
+                    <loop ID="21">
+                        <name>Loop_21</name>
+                        <loop_number>2</loop_number>
+                        <nr_of_loops>1</nr_of_loops>
+                        <target_block>0</target_block>
+                    </loop> 
+                    <loop ID="20">
+                        <name>Loop_20</name>
+                        <loop_number>0</loop_number>
+                        <nr_of_loops>1</nr_of_loops>
+                        <target_block>0</target_block>
+                    </loop>   
+                    <loop ID="22">
+                        <name>Loop_22</name>
+                        <loop_number>1</loop_number>
+                        <nr_of_loops>1</nr_of_loops>
+                        <target_block>0</target_block>
+                    </loop>                         
+                </loops>        
             </block>
         </blocks>
     </actions>

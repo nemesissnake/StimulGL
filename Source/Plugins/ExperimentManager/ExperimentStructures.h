@@ -367,6 +367,12 @@ public slots:
 	 * @return a pointer to the next first cLoopStructure structure, if no cLoopStructure is available then this function returns NULL.
 	 */		
 	cLoopStructure* getNextClosestLoopIDByFromID(const int &startLoopID);
+	//! \brief getNextClosestLoopIDByFromLoopNumber slot.
+	/*!  This function returns a pointer to the next first cLoopStructureloop where the Loop Number value is bigger then the provided Loop Number.
+	 * @param startLoopNumber a integer value determining the value for the requested cLoopStructureloop where the Loop Number value is bigger then this value.
+	 * @return a pointer to the next first cLoopStructure structure, if no cLoopStructure is available then this function returns NULL.
+	 */		
+	cLoopStructure* getNextClosestLoopIDByFromLoopNumber(const int &startLoopNumber);
 	//! \brief *  slot.
 	/*!  This function returns a pointer to a cLoopStructure specified by the provided loop ID.
 	 * @param nLoopID a integer value holding the value for the specified loop ID.

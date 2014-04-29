@@ -24,8 +24,9 @@
 #include "ExperimentGraphBlockItem.h"
 #include "ExperimentGraphConnectionItem.h"
 
-#define EXPGRAPH_AUTOCONN_DISTANCE		100.0
-#define EXPGRAPH_AUTOCONN_TOOLTIP_TEXT	"Auto-connection"
+#define EXPGRAPH_AUTOCONN_DISTANCE						100.0
+#define EXPGRAPH_AUTOCONN_ADDITIONAL_LOOP_DISTANCE		EXPGRAPH_AUTOCONN_DISTANCE
+#define EXPGRAPH_AUTOCONN_TOOLTIP_TEXT					"Auto-connection"
 
 class QMenu;
 class QToolBar;
@@ -64,21 +65,13 @@ private slots:
 private:
 	Ui::ExperimentStructureVisualizer *ui;
 
-	struct expLoopItemStrc 
-	{
-		QString sName;
-		int nId;
-		int nNumber;
-		int nNumberOfLoops;
-		int nSourceBlockId;
-		int nTargetBlockId;
-	};	
-
 	struct expBlockItemStrc 
 	{
 		QString sName;
 		int nId;
 		int nNumber;
+		int nNumberOfInputLoops;
+		int nNumberOfOutputLoops;
 		ExperimentGraphBlockItem *gGraphBlockItem;
 		//QGraphicsTextItem *gTextItem;
 		expBlockItemStrc()
@@ -88,21 +81,33 @@ private:
 			nNumber = -1;
 			gGraphBlockItem = NULL;
 			//gTextItem = NULL;
+			nNumberOfInputLoops = 0;
+			nNumberOfOutputLoops = 0;
 		}
 	};
 
 	struct expConnItemStrc
 	{
+		QString sName;
 		int nLoopId;
+		int nLoopNumber;
+		int nNumberOfLoops;
 		ExperimentGraphConnectionItem *gGraphConnectionItem;
 		int nSourceBlockId;
 		int nTargetBlockId;
+		int nSourceDrawIndex;
+		int nTargetDrawIndex;
 		expConnItemStrc()
 		{
+			sName = "";
 			nLoopId = -1;
+			nLoopNumber = -1;
+			nNumberOfLoops = -1;
 			gGraphConnectionItem = NULL;
 			nSourceBlockId = -1;
 			nTargetBlockId = -1;
+			nSourceDrawIndex = 0;
+			nTargetDrawIndex = 0;
 		}
 	};
 
@@ -110,7 +115,7 @@ private:
 	{
 		QString sExperimentName;
 		QList<expBlockItemStrc> lBlocks;
-		QList<expLoopItemStrc> lLoops;
+		QList<expConnItemStrc> lLoops;
 		QList<expConnItemStrc> lAutoConns;
 		ExperimentGraphBlockItem *gStartGraphBlockItem;
 		ExperimentGraphBlockItem *gEndGraphBlockItem;
@@ -130,18 +135,20 @@ private:
 		QHash<int, int> hBlockIDSlaveSideCount;
 	};
 
-	bool drawGraph(const QString &sDotContent = "");
+	bool drawGraph();
 	void configureActions(bool bCreate);
 	void setupMenuAndActions();
 	void createScene();
 	void setupLayout();
 	void resetExpScene();
 	ExperimentGraphBlockItem *getGraphBlockItemPointer(const int &nBlockID);
-	bool insertLoopInGraphDrawingStruct(const int &nSourceBlockID, const int &nTargetBlockID);
+	bool insertLoopInGraphDrawingStruct(const int &nSourceBlockID, const int &nTargetBlockID, const int &nLoopID);
+	int getNumberOfBlockLoops(const int &nBlockID, const ExperimentGraphConnectionTypeEnum &nConnectionType);
 
 	int nWidgetMargin;
 	qreal dGraphViewScale;
 	bool bDrawVertical; //Otherwise horizontal
+	ExperimentGraphConnItemDrawOrder eConnDrawOrder;
 	QAction *action_Quit;
 	QAction *action_Test;
 	QToolBar *toolBar;

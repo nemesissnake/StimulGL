@@ -39,7 +39,7 @@ ExperimentGraphBlockItem::ExperimentGraphBlockItem(QGraphicsItem *parent) : QGra
 
 	bIsCurrentlyHovered = false;
 	//this->setToolTip("ExperimentGraphBlockItem");
-	this->setAcceptHoverEvents(true);
+	setAcceptHoverEvents(true);
 }
 
 void ExperimentGraphBlockItem::setType(const ExperimentGraphBlockItemTypeEnum &eBlockType)

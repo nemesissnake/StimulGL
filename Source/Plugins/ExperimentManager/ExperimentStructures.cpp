@@ -292,6 +292,43 @@ cLoopStructure* cBlockStructure::getNextClosestLoopIDByFromID(const int &startLo
 		return NULL;
 }
 
+cLoopStructure* cBlockStructure::getNextClosestLoopIDByFromLoopNumber(const int &startLoopNumber)
+{
+	//result is an cLoopStructure* with ID=startLoopNumber or first closest higher value
+	if(pSharedData->lLoops.isEmpty())//Are there any loops defined?
+		return NULL;
+	//First try the expected location
+	if(pSharedData->lLoops.size()>startLoopNumber)
+		if (pSharedData->lLoops.at(startLoopNumber)->getLoopID() == startLoopNumber)
+			return pSharedData->lLoops[startLoopNumber];
+	//Now try the other items
+	int closestIndex = -1;
+	int closestLoopNumber = startLoopNumber;//This shouldn't matter
+	int tmpLoopNumber;
+	bool bAcceptAny = true;//Makes sure to accept any valid value from the start of the search
+	for (int i=0;i<pSharedData->lLoops.size();i++) 
+	{
+		tmpLoopNumber = pSharedData->lLoops.at(i)->getLoopNumber();
+		if(tmpLoopNumber == startLoopNumber)
+		{//We found it although it was not at its expected location
+			return pSharedData->lLoops[i];
+		}
+		else if(tmpLoopNumber > startLoopNumber)
+		{//We found a larger block number...
+			if(bAcceptAny || (tmpLoopNumber < closestLoopNumber))//First one or a more closer(thus smaller) number?
+			{
+				closestLoopNumber = tmpLoopNumber;
+				closestIndex = i;
+				bAcceptAny = false;
+			}
+		}
+	}
+	if(closestIndex>=0)//Do we have an closest result?
+		return pSharedData->lLoops[closestIndex];
+	else
+		return NULL;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*! \brief The cLoopStructure constructor.
