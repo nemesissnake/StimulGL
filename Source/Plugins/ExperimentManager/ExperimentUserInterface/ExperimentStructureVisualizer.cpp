@@ -44,6 +44,8 @@ ExperimentStructureVisualizer::ExperimentStructureVisualizer(QWidget *parent) : 
 	dGraphViewScale = 0.9;//fill till 90%
 	bDrawVertical = true;
 	eConnDrawOrder = GRAPHCONN_DRAW_ORDER_NUMBER_MASTERSIDE; //GRAPHCONN_DRAW_ORDER_NUMBER_MASTERSIDE;//GRAPHCONN_DRAW_ORDER_NUMBER_MASTERSIDE; GRAPHCONN_DRAW_ORDER_UNNESTED;
+	pLoopConnections.setColor(QColor("#303030"));
+	pLoopConnections.setWidth(5);
 
 	ui = new Ui::ExperimentStructureVisualizer();
 	ui->setupUi(this);
@@ -268,6 +270,7 @@ bool ExperimentStructureVisualizer::drawGraph()
 					if(tmpTargetBlock)
 					{
 						expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+						expSceneItems.lAutoConns[i].gGraphConnectionItem->setAutoConnectionType(true);
 						expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,nAutoConnDistance));
 						expSceneItems.lAutoConns[i].gGraphConnectionItem->setToolTip(EXPGRAPH_AUTOCONN_TOOLTIP_TEXT);
 						nExtraInputConnDist = (getNumberOfBlockLoops(expSceneItems.lAutoConns[i].nSourceBlockId,GRAPHBLOCK_CONN_OUTPUT) * EXPGRAPH_AUTOCONN_ADDITIONAL_LOOP_DISTANCE);
@@ -275,10 +278,11 @@ bool ExperimentStructureVisualizer::drawGraph()
 						int tmpY = tmpSourceBlock->pos().y() + tmpSourceBlock->boundingRect().bottom();
 						expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(0, tmpY + nExtraInputConnDist);
 						gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);	
+						
 						if(nExtraInputConnDist > 0.0)
-							gScene->addLine(0.0,tmpY,0.0,tmpY + nExtraInputConnDist);
+							gScene->addLine(0.0,tmpY,0.0,tmpY + nExtraInputConnDist,pLoopConnections);
 						if(nExtraOutputConnDist > 0.0)
-							gScene->addLine(0.0,tmpY + nExtraInputConnDist + nAutoConnDistance,0.0,tmpY + nExtraInputConnDist + nAutoConnDistance + nExtraOutputConnDist);
+							gScene->addLine(0.0,tmpY + nExtraInputConnDist + nAutoConnDistance,0.0,tmpY + nExtraInputConnDist + nAutoConnDistance + nExtraOutputConnDist,pLoopConnections);
 						continue;
 					}
 				}
@@ -289,6 +293,7 @@ bool ExperimentStructureVisualizer::drawGraph()
 				if(tmpSourceBlock && expSceneItems.gEndGraphBlockItem)
 				{
 					expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+					expSceneItems.lAutoConns[i].gGraphConnectionItem->setAutoConnectionType(true);
 					expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,nAutoConnDistance));
 					nExtraInputConnDist = (getNumberOfBlockLoops(expSceneItems.lAutoConns[i].nSourceBlockId,GRAPHBLOCK_CONN_OUTPUT) * EXPGRAPH_AUTOCONN_ADDITIONAL_LOOP_DISTANCE);
 					int tmpY = tmpSourceBlock->pos().y() + tmpSourceBlock->boundingRect().bottom();
@@ -296,7 +301,7 @@ bool ExperimentStructureVisualizer::drawGraph()
 					expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(0, tmpY + nExtraInputConnDist);
 					gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);
 					if(nExtraInputConnDist > 0.0)
-						gScene->addLine(0.0,tmpY,0.0,tmpY + nExtraInputConnDist);
+						gScene->addLine(0.0,tmpY,0.0,tmpY + nExtraInputConnDist,pLoopConnections);
 					continue;
 				}
 			}
@@ -309,13 +314,14 @@ bool ExperimentStructureVisualizer::drawGraph()
 				if(tmpTargetBlock && expSceneItems.gStartGraphBlockItem)
 				{
 					expSceneItems.lAutoConns[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+					expSceneItems.lAutoConns[i].gGraphConnectionItem->setAutoConnectionType(true);
 					expSceneItems.lAutoConns[i].gGraphConnectionItem->setEndPoint(QPoint(0,nAutoConnDistance));
 					nExtraOutputConnDist = (getNumberOfBlockLoops(expSceneItems.lAutoConns[i].nTargetBlockId,GRAPHBLOCK_CONN_INPUT) * EXPGRAPH_AUTOCONN_ADDITIONAL_LOOP_DISTANCE);
 					int tmpY = expSceneItems.gStartGraphBlockItem->pos().y() + expSceneItems.gStartGraphBlockItem->boundingRect().bottom();
 					expSceneItems.lAutoConns[i].gGraphConnectionItem->setPos(0, tmpY);
 					gScene->addItem(expSceneItems.lAutoConns[i].gGraphConnectionItem);
 					if(nExtraOutputConnDist > 0.0)
-						gScene->addLine(0.0,tmpY + nAutoConnDistance,0.0,tmpY + nAutoConnDistance + nExtraOutputConnDist);
+						gScene->addLine(0.0,tmpY + nAutoConnDistance,0.0,tmpY + nAutoConnDistance + nExtraOutputConnDist,pLoopConnections);
 					continue;
 				}
 			}
@@ -374,6 +380,7 @@ bool ExperimentStructureVisualizer::drawGraph()
 				tmpSourceBlock = getGraphBlockItemPointer(tmpexpConnItemStrc->nSourceBlockId);
 				tmpTargetBlock = getGraphBlockItemPointer(tmpexpConnItemStrc->nTargetBlockId);
 				expSceneItems.lLoops[i].gGraphConnectionItem = new ExperimentGraphConnectionItem();
+				expSceneItems.lLoops[i].gGraphConnectionItem->setAutoConnectionType(false);
 
 				if(hBlockIDInputConnCount.contains(tmpexpConnItemStrc->nTargetBlockId))
 					nTmpValue = hBlockIDInputConnCount[tmpexpConnItemStrc->nTargetBlockId]+1;
@@ -413,7 +420,7 @@ bool ExperimentStructureVisualizer::drawGraph()
 				expSceneItems.lLoops[i].gGraphConnectionItem->setPos(tmpXOffset, tmpYSource + nCurrentLoopSourceDrawIndexExtraDistance);
 				tmpYTarget = tmpYSource - (tmpTargetBlock->pos().y() + tmpTargetBlock->boundingRect().top() - EXPGRAPHCONNITEM_LOOP_START_HEIGHT_DISTANCE);
 				nCurrentLoopTargetDrawIndexExtraDistance = (EXPGRAPH_AUTOCONN_ADDITIONAL_LOOP_DISTANCE * expSceneItems.lLoops[i].nTargetDrawIndex);				
-				expSceneItems.lLoops[i].gGraphConnectionItem->setEndPoint(QPoint(0,-tmpYTarget - nCurrentLoopTargetDrawIndexExtraDistance - nCurrentLoopSourceDrawIndexExtraDistance));//tmpXOffset);
+				expSceneItems.lLoops[i].gGraphConnectionItem->setEndPoint(QPoint(0,-tmpYTarget - nCurrentLoopTargetDrawIndexExtraDistance - nCurrentLoopSourceDrawIndexExtraDistance), tmpXOffset);
 				gScene->addItem(expSceneItems.lLoops[i].gGraphConnectionItem);				
 			}
 		}

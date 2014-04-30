@@ -22,11 +22,11 @@
 #include <QGraphicsRectItem>
 #include <QPainter>
 
-#define EXPGRAPHBLOCKITEM_BLOCK_WIDTH					1200
+#define EXPGRAPHBLOCKITEM_BLOCK_WIDTH					1500
 #define EXPGRAPHBLOCKITEM_BLOCK_HEIGHT					250
 #define EXPGRAPHBLOCKITEM_BLOCK_DISTANCE				50	//Defined by the input and output connectors, not the connection itself!
-#define EXPGRAPHCONNITEM_LOOP_DISTANCE					250//120
-#define EXPGRAPHCONNITEM_LOOP_START_WIDTH_DISTANCE		750
+#define EXPGRAPHCONNITEM_LOOP_DISTANCE					120
+#define EXPGRAPHCONNITEM_LOOP_START_WIDTH_DISTANCE		(EXPGRAPHBLOCKITEM_BLOCK_WIDTH/2) + EXPGRAPHCONNITEM_LOOP_DISTANCE
 #define EXPGRAPHCONNITEM_LOOP_START_HEIGHT_DISTANCE		EXPGRAPH_AUTOCONN_ADDITIONAL_LOOP_DISTANCE / 2 //EXPGRAPHCONNITEM_LOOP_DISTANCE / 4
 
 enum ExperimentGraphBlockItemTypeEnum
@@ -46,6 +46,7 @@ class ExperimentGraphBlockItem : public QGraphicsItem
 		void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 		void setType(const ExperimentGraphBlockItemTypeEnum &eBlockType);
 		void setCaption(const QString &sName);
+		int type() const;
 
 	protected:
 		void hoverEnterEvent(QGraphicsSceneHoverEvent *event);

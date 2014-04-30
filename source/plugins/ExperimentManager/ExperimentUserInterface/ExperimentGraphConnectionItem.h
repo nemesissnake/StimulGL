@@ -22,7 +22,7 @@
 #include <QGraphicsRectItem>
 #include <QPainter>
 
-#define EXPGRAPHCONNITEM_ARROW_MIN_SIZE		40.0
+#define EXPGRAPHCONNITEM_ARROW_MIN_SIZE		75.0
 
 enum ExperimentGraphConnItemDrawOrder
 {
@@ -39,36 +39,35 @@ enum ExperimentGraphConnectionTypeEnum
 
 class ExperimentGraphConnectionItem : public QGraphicsItem
 {
-public:
-	ExperimentGraphConnectionItem(QGraphicsItem *parent = NULL);
+	public:
+		ExperimentGraphConnectionItem(QGraphicsItem *parent = NULL);
 
-	void setEndPoint(const QPointF &pEnd, const float &fPerpLenght = 0.0);
+		void setEndPoint(const QPointF &pEnd, const float &fPerpLenght = 0.0);
+		void renderGraphItem();
+		int type() const;
+		void setAutoConnectionType(const bool &bIsAutoConnection) {bIsAutoConnectionType = bIsAutoConnection;};
 
-protected:
+	protected:
 
-	virtual QRectF boundingRect() const;
-	virtual QPainterPath shape() const;
-	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+		virtual QRectF boundingRect() const;
+		virtual QPainterPath shape() const;
+		virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-	virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-	virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+		virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+		virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 		
-private:
-	QColor pSelectedColor;
-	QColor pUnselectedColor;
-	QPen pPen;
-	QBrush pBrush;
-	QRectF rBoundingBox;
-	QPainterPath pShape;
-	QPointF pEndPoint;
-	QLineF pArrowLine;
-	QPolygonF polyArrow;
-	QPolygonF polyTriangleHeadAdjusted;
-	//float fLength;
-	//float fAngle;
-	//float fPerpendicularLenght;
-
-	bool bIsCurrentlyHovered;
+	private:
+		QColor pSelectedColor;
+		QColor pUnselectedColor;
+		QPen pPen;
+		QBrush pBrush;
+		QRectF rBoundingBox;
+		QPainterPath pArrowDrawShape;
+		QPainterPath pArrowBoundingShape;
+		QLineF lArrowVectorLine;
+		float fPerpendicularLenght;
+		bool bIsCurrentlyHovered;
+		bool bIsAutoConnectionType;
 };
 
 #endif // EXPERIMENTGRAPHCONNECTIONITEM_H

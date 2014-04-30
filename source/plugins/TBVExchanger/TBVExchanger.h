@@ -162,6 +162,11 @@ public slots:
 	  Returns the mean signal value of the ROI referenced with the "roi" parameter (0-based index). A valid number must be smaller than the value returned by the "tGetNrOfROIs" query. Note that the voxels defining a ROI might change in case that the user selects another region for the same ROI index (replaces the content of the same plot in the GUI). The query should be used in situations when ROIs are not changed, i.e. when a set of ROIs is pre-loaded for a neurofeedback study. For details, see the "ROI Processing" example client.
 	*/
 	float tGetMeanOfROI(int roi) {return tbvNetwIntFace->tGetMeanOfROI(roi);};
+	//!  tGetMeanOfROIAtTimePoint slot. 
+	/*!
+	  Returns the mean signal value of the ROI referenced with the "roi" parameter (0-based index) at a specific point in time. A valid number must be smaller than the value returned by the "tGetNrOfROIs" query. Note that the voxels defining a ROI might change in case that the user selects another region for the same ROI index (replaces the content of the same plot in the GUI). The query should be used in situations when ROIs are not changed, i.e. when a set of ROIs is pre-loaded for a neurofeedback study. For details, see the "ROI Processing" example client.
+	*/
+	float tGetMeanOfROIAtTimePoint(int roi, int timePoint) {return tbvNetwIntFace->tGetMeanOfROIAtTimePoint(roi, timePoint);};
 	//!  tGetNrOfVoxelsOfROI slot. 
 	/*!
 	  Provides the number of voxels of the specified ROI. Note that the returned number might change during real-time processing in case that the user replaces a ROI with another set of voxels. The value of this query is important for accessing information of individual ROI voxels.

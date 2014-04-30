@@ -17,6 +17,7 @@
 //
 
 #include "ExperimentGraphConnectionItem.h"
+#include "ExperimentStructureScene.h"
 #include <QtCore/qmath.h>
 #include <QStyle>
 #include <QStyleOptionGraphicsItem>
@@ -24,45 +25,31 @@
 ExperimentGraphConnectionItem::ExperimentGraphConnectionItem(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
 	bIsCurrentlyHovered = false;
-	pPen.setWidth(5.0);
+	bIsAutoConnectionType = false;
+	pPen.setWidth(10.0);
 	pSelectedColor.setRgb(0,255,0);
 	pUnselectedColor.setRgb(31,6,130);
 	pBrush.setColor(pUnselectedColor);
 	pBrush.setStyle(Qt::SolidPattern);
 	pPen.setColor(pUnselectedColor);
-	pEndPoint.setX(0.0);
-	pEndPoint.setY(1.0);
-	pArrowLine.setP1(QPointF(0.0,0.0));
-	pArrowLine.setP2(pEndPoint);
-	//fAngle = pArrowLine.angle()+90.0;
-	//fLength = pArrowLine.length();
-	//fPerpendicularLenght = 0.0;
-	// Describe a closed arrow pointing downwards; lenght 1.0
-	polyArrow.append(QPointF( 0.0, 0.0));
-	polyArrow.append(QPointF( 0.0, 1.0));
-	polyArrow.append(QPointF(-0.1, 0.8));
-	polyArrow.append(QPointF( 0.1, 0.8));
-	polyArrow.append(QPointF( 0.0, 1.0));
-	rBoundingBox = polyArrow.boundingRect();
-	pShape.addPolygon(polyArrow);
-		
-	//this->setToolTip("ExperimentGraphConnectionItem");
+	lArrowVectorLine.setP1(QPointF(0.0,0.0));
+	lArrowVectorLine.setP2(QPoint(0.0,1.0));
+	fPerpendicularLenght = 0.0;
+	prepareGeometryChange();//Needs to be called before a geometry change which affect the bounding region
+	renderGraphItem();
+	//this->setToolTip("ExperimentGraphConnectionItem");//Done by the owner of this class
 	setAcceptHoverEvents(true);
-
-	setFlag(QGraphicsItem::ItemIsSelectable);
-	setFlag(QGraphicsItem::ItemIsMovable);
+	//setFlag(QGraphicsItem::ItemIsSelectable);
+	//setFlag(QGraphicsItem::ItemIsMovable);
 }
 
 void ExperimentGraphConnectionItem::setEndPoint(const QPointF &pEnd, const float &fPerpLenght)
 {
-	pEndPoint = pEnd;
-	//pArrowLine.setP1(QPointF(0.0,0.0));
-	pArrowLine.setP2(pEndPoint);
-	//fAngle = pArrowLine.angle()+90.0;
-	//fLength = pArrowLine.length();
-	//fPerpendicularLenght = fPerpLenght;
-	rBoundingBox = polyArrow.boundingRect();
-	update(rBoundingBox);
+	lArrowVectorLine.setP1(QPointF(0.0,0.0));
+	lArrowVectorLine.setP2(pEnd);
+	fPerpendicularLenght = fPerpLenght;
+	prepareGeometryChange();//Needs to be called before a geometry change which affect the bounding region
+	renderGraphItem();
 }
 
 QRectF ExperimentGraphConnectionItem::boundingRect() const
@@ -72,80 +59,86 @@ QRectF ExperimentGraphConnectionItem::boundingRect() const
 
 QPainterPath ExperimentGraphConnectionItem::shape() const
 {
-	QPainterPath pLocalShape;
-	////pLocalShape.addPolygon(polyTriangleHeadAdjusted);
-	pLocalShape.addRect(rBoundingBox);
-	return pLocalShape;
-//	return pShape;
+	return pArrowBoundingShape;//pArrowDrawShape;
+}
+
+int ExperimentGraphConnectionItem::type() const
+{
+	if(bIsAutoConnectionType)
+		return ExperimentStructureItemType::TypeAutoConnectionItem;
+	else
+		return ExperimentStructureItemType::TypeLoopConnectionItem;
+}
+
+void ExperimentGraphConnectionItem::renderGraphItem()
+{
+	float fArrLenght = qMin(lArrowVectorLine.length() * 0.4, EXPGRAPHCONNITEM_ARROW_MIN_SIZE);
+	float fHalfArrLenght = fArrLenght / 2;
+	pArrowDrawShape = QPainterPath();
+	pArrowBoundingShape = QPainterPath();
+	QMatrix matrix;
+
+	matrix.rotate(lArrowVectorLine.angle()+90.0);
+	//matrix.scale(pArrowLine.length(),pArrowLine.length());	
+	pArrowDrawShape.setFillRule(Qt::WindingFill);
+	pArrowBoundingShape.setFillRule(Qt::WindingFill);
+	
+	if(fPerpendicularLenght == 0.0)
+	{
+		pArrowDrawShape.lineTo(0.0, lArrowVectorLine.length());
+		//Draw Arrow Head
+		pArrowDrawShape.lineTo(-fHalfArrLenght, lArrowVectorLine.length() - fArrLenght);
+		pArrowDrawShape.lineTo(fHalfArrLenght, lArrowVectorLine.length() - fArrLenght);	
+		pArrowDrawShape.lineTo(0.0, lArrowVectorLine.length());
+		//The Bounding Shape
+		pArrowBoundingShape.addRect(-fHalfArrLenght,0.0,fArrLenght,lArrowVectorLine.length());
+	}
+	else
+	{
+		pArrowDrawShape.moveTo(fPerpendicularLenght, 0.0);
+		pArrowDrawShape.lineTo(fPerpendicularLenght/10.0, 0.0);
+		pArrowDrawShape.quadTo(0.0, 0.0, 0.0, fPerpendicularLenght/10.0);
+		pArrowDrawShape.lineTo(0.0, lArrowVectorLine.length()-(fPerpendicularLenght/10.0));
+		pArrowDrawShape.quadTo(0.0, lArrowVectorLine.length(), fPerpendicularLenght/10.0, lArrowVectorLine.length());
+		pArrowDrawShape.lineTo(fPerpendicularLenght, lArrowVectorLine.length());
+		//Draw Arrow Head
+		pArrowDrawShape.lineTo(fPerpendicularLenght-fArrLenght, lArrowVectorLine.length()-fHalfArrLenght);
+		pArrowDrawShape.lineTo(fPerpendicularLenght-fArrLenght, lArrowVectorLine.length()+fHalfArrLenght);	
+		pArrowDrawShape.lineTo(fPerpendicularLenght, lArrowVectorLine.length());
+		//Return again...		
+		pArrowDrawShape.lineTo(fPerpendicularLenght/10.0, lArrowVectorLine.length());
+		pArrowDrawShape.quadTo(0.0, lArrowVectorLine.length(), 0.0, lArrowVectorLine.length()-(fPerpendicularLenght/10.0));
+		pArrowDrawShape.lineTo(0.0, fPerpendicularLenght/10.0);
+		pArrowDrawShape.quadTo(0.0, 0.0, fPerpendicularLenght/10.0, 0.0);
+		//The Bounding Shape
+		pArrowBoundingShape.addRect(0.0,-fHalfArrLenght,fPerpendicularLenght,fArrLenght);
+		pArrowBoundingShape.addRect(-fHalfArrLenght,0.0,fArrLenght,lArrowVectorLine.length());
+		pArrowBoundingShape.addRect(0.0,lArrowVectorLine.length()-fHalfArrLenght,fPerpendicularLenght,fArrLenght);
+	}
+
+	pArrowDrawShape.closeSubpath();
+	pArrowDrawShape = matrix.map(pArrowDrawShape);	
+	pArrowBoundingShape = matrix.map(pArrowBoundingShape);
+	rBoundingBox = pArrowBoundingShape.boundingRect();//pArrowDrawShape.boundingRect();
 }
 
 void ExperimentGraphConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {	
+	Q_UNUSED(widget);
+	Q_UNUSED(option);
+
+	painter->setRenderHint(QPainter::Antialiasing);
 	painter->setPen(pPen);
 	painter->setBrush(pBrush);
-	//painter->save();
-	//painter->rotate(pArrowLine.angle()+90.0);
-	QMatrix matrix;
-	matrix.rotate(pArrowLine.angle()+90.0);
-	//matrix.scale(pArrowLine.length(),pArrowLine.length());	
-	polyArrow.clear();
-	pShape = QPainterPath();
-	pShape.setFillRule(Qt::WindingFill);
-	float fArrLenght = qMin(pArrowLine.length() * 0.4, EXPGRAPHCONNITEM_ARROW_MIN_SIZE);
-	float fHalfArrLenght = fArrLenght / 2;
-	/*
-	if(fPerpendicularLenght != 0.0)
-	{	
-		polyArrow.append(QPointF(fPerpendicularLenght, 0.0));
-		//pShape.addRect(0.0, fArrLenght/-2, fPerpendicularLenght, fArrLenght);
-	}
-	*/
-
-	polyArrow.append(QPointF( fHalfArrLenght, 0.0));
-	polyArrow.append(QPointF( fHalfArrLenght, pArrowLine.length()));
-	polyArrow.append(QPointF( 0.0, pArrowLine.length() - fArrLenght));
-	polyArrow.append(QPointF( fArrLenght, pArrowLine.length() - fArrLenght));
-	polyArrow.append(QPointF( fHalfArrLenght, pArrowLine.length()));
-	pShape.addRect(0.0,0.0,fArrLenght,pArrowLine.length());
-	
-	/*
-	if(fPerpendicularLenght != 0.0)
-	{
-		polyArrow.append(QPointF( fPerpendicularLenght, pArrowLine.length()));
-		polyArrow.append(QPointF( 0.0, pArrowLine.length()));
-		polyArrow.append(QPointF( 0.0, 0.0));
-		//pShape.addRect(0.0, pArrowLine.length() + fArrLenght/-2, fPerpendicularLenght, fArrLenght);
-	}
-	*/
-	polyTriangleHeadAdjusted = matrix.map(polyArrow);
-	
-	//rBoundingBox = polyTriangleHeadAdjusted.boundingRect();	//polyTriangleHeadAdjusted	
-	//rBoundingBox.setTop(rBoundingBox.top()-fArrLenght/2);
-	//rBoundingBox.setBottom(rBoundingBox.bottom()+fArrLenght/2);
-	//rBoundingBox.setCoords(fArrLenght/-2,0.0,fArrLenght/2,pArrowLine.length());
-	rBoundingBox = polyTriangleHeadAdjusted.boundingRect();
-	rBoundingBox = rBoundingBox.normalized();
-	rBoundingBox.moveTopLeft(0.0);
-	rBoundingBox.setY(0.0);
-
-	//here....
-	//pShape = QPainterPath();
-	//pShape.addRect(rBoundingBox);//polyTriangleHeadAdjusted);
-
-	painter->drawPolygon(polyTriangleHeadAdjusted);
-	
-	//pShape.addPolygon(polyTriangleHeadAdjusted);
-	//painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); 
-	pShape = matrix.map(pShape);
-	//if(bIsCurrentlyHovered)
-	if (option->state & QStyle::State_MouseOver )
-	{
-		painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawRect(rBoundingBox); 
-		//painter->setPen(Qt::DotLine); painter->setPen(QColor(0,0,255)); painter->drawPath(pShape);
-	}
-
-	//painter->drawPath(pShape);
-	//painter->rotate(-1*(pArrowLine.angle()+90.0));
+	painter->setBrush(Qt::NoBrush);
+	//renderGraphItem();
+	painter->drawPath(pArrowDrawShape);
+	//if(bIsCurrentlyHovered) //if (option->state & QStyle::State_MouseOver)	
+	//{
+	//	painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawPath(pArrowBoundingShape);
+	//	painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawRect(rBoundingBox); 
+	//	painter->setPen(Qt::DotLine); painter->setPen(QColor(0,0,255)); painter->drawPath(pShape);
+	//}
 }
 
 void ExperimentGraphConnectionItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -153,7 +146,7 @@ void ExperimentGraphConnectionItem::hoverEnterEvent(QGraphicsSceneHoverEvent *ev
 	bIsCurrentlyHovered = true;
 	pBrush.setColor(pSelectedColor);
 	pPen.setColor(pSelectedColor);
-	update(rBoundingBox);
+	update();
 	QGraphicsItem::hoverEnterEvent(event);
 }
 
@@ -164,6 +157,6 @@ void ExperimentGraphConnectionItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *ev
 	bIsCurrentlyHovered = false;
 	pBrush.setColor(pUnselectedColor);
 	pPen.setColor(pUnselectedColor);
-	update(rBoundingBox);
+	update();
 	QGraphicsItem::hoverLeaveEvent(event);
 }

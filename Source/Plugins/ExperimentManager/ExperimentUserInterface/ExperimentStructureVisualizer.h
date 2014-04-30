@@ -161,6 +161,7 @@ private:
 	cExperimentStructure *parsedExpStruct;
 	expSceneItemStrc expSceneItems;
 	expParsedLoopDrawing expLoopDrawing;
+	QPen pLoopConnections;
 };
 
 #endif // EXPERIMENTSTRUCTUREVISUALIZER_H

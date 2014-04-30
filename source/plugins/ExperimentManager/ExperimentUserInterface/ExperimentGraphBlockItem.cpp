@@ -17,6 +17,7 @@
 //
 
 #include "ExperimentGraphBlockItem.h"
+#include "ExperimentStructureScene.h"
 
 ExperimentGraphBlockItem::ExperimentGraphBlockItem(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
@@ -52,6 +53,11 @@ void ExperimentGraphBlockItem::setCaption(const QString &sName)
 {
 	sCurrentText = sName;
 	update();
+}
+
+int ExperimentGraphBlockItem::type() const
+{
+	return ExperimentStructureItemType::TypeBlockItem;
 }
 
 QPainterPath ExperimentGraphBlockItem::shape() const

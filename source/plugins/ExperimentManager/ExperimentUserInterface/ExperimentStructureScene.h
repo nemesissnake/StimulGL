@@ -20,16 +20,23 @@
 #define EXPERIMENTSTRUCTURESCENE_H
 
 #include <QGraphicsScene>
+#include <QGraphicsItem>
+
+enum ExperimentStructureItemType 
+{ 
+	TypeBlockItem			= QGraphicsItem::UserType + 1,
+	TypeAutoConnectionItem	= QGraphicsItem::UserType + 2,
+	TypeLoopConnectionItem	= QGraphicsItem::UserType + 3 
+};
 
 class ExperimentStructureScene : public QGraphicsScene
 {
+	protected:
+		bool event(QEvent *event);
+		virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent);
 
-protected:
-	bool event(QEvent *event);
-
-public:
-	ExperimentStructureScene(QObject *parent = NULL);
-	
+	public:
+		ExperimentStructureScene(QObject *parent = NULL);	
 };
 
 #endif // EXPERIMENTSTRUCTURESCENE_H

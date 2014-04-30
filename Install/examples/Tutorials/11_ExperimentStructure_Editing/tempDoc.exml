@@ -403,7 +403,7 @@ Attributes only apply to readonly non user data, like the ID
                         <loop_number>2</loop_number>
                         <nr_of_loops>1</nr_of_loops>
                         <target_block>2</target_block>
-                    </loop>                                      
+                    </loop>
                 </loops>
             </block>
             <block ID="77">
@@ -474,20 +474,20 @@ Attributes only apply to readonly non user data, like the ID
                         <loop_number>2</loop_number>
                         <nr_of_loops>1</nr_of_loops>
                         <target_block>0</target_block>
-                    </loop> 
+                    </loop>
                     <loop ID="20">
                         <name>Loop_20</name>
                         <loop_number>0</loop_number>
                         <nr_of_loops>1</nr_of_loops>
                         <target_block>0</target_block>
-                    </loop>   
+                    </loop>
                     <loop ID="22">
                         <name>Loop_22</name>
                         <loop_number>1</loop_number>
                         <nr_of_loops>1</nr_of_loops>
                         <target_block>0</target_block>
-                    </loop>                         
-                </loops>        
+                    </loop>
+                </loops>
             </block>
         </blocks>
     </actions>

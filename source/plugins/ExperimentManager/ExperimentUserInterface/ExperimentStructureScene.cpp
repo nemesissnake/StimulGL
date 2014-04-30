@@ -18,7 +18,11 @@
 
 #include "ExperimentStructureScene.h"
 #include <QEvent>
+#include <QMenu>
+#include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsView>
+#include "ExperimentGraphBlockItem.h"
+#include "ExperimentGraphConnectionItem.h"
 
 ExperimentStructureScene::ExperimentStructureScene(QObject *parent) : QGraphicsScene(parent)
 {
@@ -45,4 +49,53 @@ bool ExperimentStructureScene::event(QEvent *event)
 	
 	//QEvent::GraphicsSceneContextMenu
 	return QGraphicsScene::event(event);
+}
+
+void ExperimentStructureScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent)
+{
+	//QGraphicsItem *item = itemAt(contextMenuEvent->scenePos());
+	QList<QGraphicsItem *> gItemList = selectedItems();
+	QGraphicsItem *gItem = itemAt(contextMenuEvent->scenePos(),QTransform());//const QTransform & deviceTransform)
+
+	if(gItem == NULL)
+		return;
+
+	//ExperimentGraphBlockItem* gBlock = qobject_cast<ExperimentGraphBlockItem*>(gItem);
+	int nType = gItem->type();
+	if(nType > QGraphicsItem::UserType) //Custom Type
+	{		
+		if(nType == ExperimentStructureItemType::TypeBlockItem)//Block
+		{
+			ExperimentGraphBlockItem* gBlock = qgraphicsitem_cast<ExperimentGraphBlockItem*>(gItem);
+			if (gBlock)
+			{
+
+			}
+		}
+		else if(nType == ExperimentStructureItemType::TypeAutoConnectionItem)//Auto-Connection
+		{
+			ExperimentGraphConnectionItem* gAutoConnection = qgraphicsitem_cast<ExperimentGraphConnectionItem*>(gItem);
+			if (gAutoConnection)
+			{
+
+			}
+		}
+		else if(nType == ExperimentStructureItemType::TypeLoopConnectionItem)//Loop-Connection
+		{
+			ExperimentGraphConnectionItem* gLoopConnection = qgraphicsitem_cast<ExperimentGraphConnectionItem*>(gItem);
+			if (gLoopConnection)
+			{
+
+			}
+		}
+
+
+		QMenu menu;
+		QAction *removeAction = menu.addAction("Remove");
+		QAction *markAction = menu.addAction("Mark");
+		QAction *selectedAction = menu.exec(contextMenuEvent->screenPos());//contextMenuEvent->globalPos()// contextMenuEvent->scenePos() is available
+	}
+	return;
+
+	//Event::ignore()
 }
