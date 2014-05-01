@@ -24,14 +24,15 @@
 
 ExperimentGraphConnectionItem::ExperimentGraphConnectionItem(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
-	bIsCurrentlyHovered = false;
+	//bIsCurrentlyHovered = false;
 	bIsAutoConnectionType = false;
 	pPen.setWidth(10.0);
-	pSelectedColor.setRgb(0,255,0);
-	pUnselectedColor.setRgb(31,6,130);
-	pBrush.setColor(pUnselectedColor);
+	cSelectedColor.setRgb(0,255,0);
+	cUnselectedColor.setRgb(31,6,130);
+	cHoveredColor.setRgb(0,0,255);
+	pBrush.setColor(cUnselectedColor);
 	pBrush.setStyle(Qt::SolidPattern);
-	pPen.setColor(pUnselectedColor);
+	pPen.setColor(cUnselectedColor);
 	lArrowVectorLine.setP1(QPointF(0.0,0.0));
 	lArrowVectorLine.setP2(QPoint(0.0,1.0));
 	fPerpendicularLenght = 0.0;
@@ -39,7 +40,7 @@ ExperimentGraphConnectionItem::ExperimentGraphConnectionItem(QGraphicsItem *pare
 	renderGraphItem();
 	//this->setToolTip("ExperimentGraphConnectionItem");//Done by the owner of this class
 	setAcceptHoverEvents(true);
-	//setFlag(QGraphicsItem::ItemIsSelectable);
+	setFlag(QGraphicsItem::ItemIsSelectable);
 	//setFlag(QGraphicsItem::ItemIsMovable);
 }
 
@@ -125,15 +126,29 @@ void ExperimentGraphConnectionItem::renderGraphItem()
 void ExperimentGraphConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {	
 	Q_UNUSED(widget);
-	Q_UNUSED(option);
-
 	painter->setRenderHint(QPainter::Antialiasing);
+	if(option->state & QStyle::State_Selected)
+	{
+		pBrush.setColor(cSelectedColor);
+		pPen.setColor(cSelectedColor);
+	}
+	else if(option->state & QStyle::State_MouseOver)
+	{
+		pBrush.setColor(cHoveredColor);
+		pPen.setColor(cHoveredColor);
+	}
+	else
+	{
+		pBrush.setColor(cUnselectedColor);
+		pPen.setColor(cUnselectedColor);
+	}
 	painter->setPen(pPen);
 	painter->setBrush(pBrush);
-	painter->setBrush(Qt::NoBrush);
 	//renderGraphItem();
 	painter->drawPath(pArrowDrawShape);
-	//if(bIsCurrentlyHovered) //if (option->state & QStyle::State_MouseOver)	
+		
+	//if(bIsCurrentlyHovered) 
+	//if (option->state & QStyle::State_MouseOver)	
 	//{
 	//	painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawPath(pArrowBoundingShape);
 	//	painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawRect(rBoundingBox); 
@@ -143,9 +158,9 @@ void ExperimentGraphConnectionItem::paint(QPainter *painter, const QStyleOptionG
 
 void ExperimentGraphConnectionItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-	bIsCurrentlyHovered = true;
-	pBrush.setColor(pSelectedColor);
-	pPen.setColor(pSelectedColor);
+	//bIsCurrentlyHovered = true;
+	//pBrush.setColor(pSelectedColor);
+	//pPen.setColor(pSelectedColor);
 	update();
 	QGraphicsItem::hoverEnterEvent(event);
 }
@@ -154,9 +169,9 @@ void ExperimentGraphConnectionItem::hoverEnterEvent(QGraphicsSceneHoverEvent *ev
 
 void ExperimentGraphConnectionItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-	bIsCurrentlyHovered = false;
-	pBrush.setColor(pUnselectedColor);
-	pPen.setColor(pUnselectedColor);
+	//bIsCurrentlyHovered = false;
+	//pBrush.setColor(pUnselectedColor);
+	//pPen.setColor(pUnselectedColor);
 	update();
 	QGraphicsItem::hoverLeaveEvent(event);
 }

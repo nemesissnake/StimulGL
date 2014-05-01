@@ -59,7 +59,7 @@ class ExperimentGraphBlockItem : public QGraphicsItem
 		int nHalfBlockHeight;
 		int nBlockDistance;
 		int nHalfBlockDistance;
-		bool bIsCurrentlyHovered;
+		//bool bIsCurrentlyHovered;
 		QString sCurrentText;
 		QPen pPen;
 		QBrush pBrush;
@@ -67,8 +67,9 @@ class ExperimentGraphBlockItem : public QGraphicsItem
 		QPainterPath pShape;
 		ExperimentGraphBlockItemTypeEnum bType;
 		QColor cCaption;
-		QColor cUnselectedFill;
-		QColor cSelectedFill;
+		QColor cSelectedColor;
+		QColor cHoveredColor;
+		QColor cUnselectedColor;
 };
 
 #endif // EXPERIMENTGRAPHBLOCKITEM_H

@@ -57,8 +57,9 @@ class ExperimentGraphConnectionItem : public QGraphicsItem
 		virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 		
 	private:
-		QColor pSelectedColor;
-		QColor pUnselectedColor;
+		QColor cSelectedColor;
+		QColor cHoveredColor;
+		QColor cUnselectedColor;
 		QPen pPen;
 		QBrush pBrush;
 		QRectF rBoundingBox;
@@ -66,7 +67,7 @@ class ExperimentGraphConnectionItem : public QGraphicsItem
 		QPainterPath pArrowBoundingShape;
 		QLineF lArrowVectorLine;
 		float fPerpendicularLenght;
-		bool bIsCurrentlyHovered;
+		//bool bIsCurrentlyHovered;
 		bool bIsAutoConnectionType;
 };
 

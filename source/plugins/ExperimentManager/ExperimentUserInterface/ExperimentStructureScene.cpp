@@ -21,12 +21,12 @@
 #include <QMenu>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QGraphicsView>
+#include <QInputDialog>
 #include "ExperimentGraphBlockItem.h"
 #include "ExperimentGraphConnectionItem.h"
 
 ExperimentStructureScene::ExperimentStructureScene(QObject *parent) : QGraphicsScene(parent)
 {
-
 }
 
 bool ExperimentStructureScene::event(QEvent *event)
@@ -53,49 +53,107 @@ bool ExperimentStructureScene::event(QEvent *event)
 
 void ExperimentStructureScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEvent)
 {
-	//QGraphicsItem *item = itemAt(contextMenuEvent->scenePos());
+	//int nType = -1;
+	QMenu mContexMenu;
+	QMenu* mViewMenu = mContexMenu.addMenu("View");
+	QMenu* mBlocksMenu = mContexMenu.addMenu("Blocks");
+	QMenu* mLoopsMenu = mContexMenu.addMenu("Loops");
+	QAction *selectedItemAction = NULL;
+	QAction *toggleViewAction;
+	QAction *addBlockAction;
+	QAction *addMultipleBlocksAction;
+	QAction *removeBlockAction;
+	QAction *removeBlocksAction;
+
 	QList<QGraphicsItem *> gItemList = selectedItems();
-	QGraphicsItem *gItem = itemAt(contextMenuEvent->scenePos(),QTransform());//const QTransform & deviceTransform)
+	//QGraphicsItem *gItem = itemAt(contextMenuEvent->scenePos(),QTransform());//item at mouse
+	QList<ExperimentGraphBlockItem*> gSelectedBlockItems;
+	QList<ExperimentGraphConnectionItem*> gSelectedAutoConnectionItems;
+	QList<ExperimentGraphConnectionItem*> gSelectedLoopConnectionItems;
 
-	if(gItem == NULL)
-		return;
-
-	//ExperimentGraphBlockItem* gBlock = qobject_cast<ExperimentGraphBlockItem*>(gItem);
-	int nType = gItem->type();
-	if(nType > QGraphicsItem::UserType) //Custom Type
-	{		
-		if(nType == ExperimentStructureItemType::TypeBlockItem)//Block
+	//if(gItem)
+	//if(gItemList.isEmpty() == false)
+	//{
+		foreach(QGraphicsItem *graphItem,gItemList)
 		{
-			ExperimentGraphBlockItem* gBlock = qgraphicsitem_cast<ExperimentGraphBlockItem*>(gItem);
-			if (gBlock)
-			{
-
-			}
-		}
-		else if(nType == ExperimentStructureItemType::TypeAutoConnectionItem)//Auto-Connection
-		{
-			ExperimentGraphConnectionItem* gAutoConnection = qgraphicsitem_cast<ExperimentGraphConnectionItem*>(gItem);
-			if (gAutoConnection)
-			{
-
-			}
-		}
-		else if(nType == ExperimentStructureItemType::TypeLoopConnectionItem)//Loop-Connection
-		{
-			ExperimentGraphConnectionItem* gLoopConnection = qgraphicsitem_cast<ExperimentGraphConnectionItem*>(gItem);
-			if (gLoopConnection)
-			{
-
-			}
+			if(graphItem->type() == ExperimentStructureItemType::TypeBlockItem)
+				gSelectedBlockItems.append(qgraphicsitem_cast<ExperimentGraphBlockItem*>(graphItem));
+			else if(graphItem->type() == ExperimentStructureItemType::TypeAutoConnectionItem)
+				gSelectedAutoConnectionItems.append(qgraphicsitem_cast<ExperimentGraphConnectionItem*>(graphItem));
+			else if(graphItem->type() == ExperimentStructureItemType::TypeLoopConnectionItem)
+				gSelectedLoopConnectionItems.append(qgraphicsitem_cast<ExperimentGraphConnectionItem*>(graphItem));
 		}
 
+		if(gSelectedBlockItems.isEmpty() == false)//Blocks selected?
+		{
+			addBlockAction = mBlocksMenu->addAction("Add New");
+			addMultipleBlocksAction = mBlocksMenu->addAction("Add New(multiple)");
+			//if(bUsedColumnIndexesInSelectionRanges.count() == 1)
+				removeBlockAction = mBlocksMenu->addAction("Remove Selected");
+			//else if(bUsedColumnIndexesInSelectionRanges.count() > 1)
+				removeBlocksAction = mBlocksMenu->addAction("Remove Multiple Selected");
+		}
+		else
+		{
+			mBlocksMenu->setEnabled(false);
+		}
+		
+		if(gSelectedAutoConnectionItems.isEmpty() == false)//Auto-Connections selected?
+		{
 
-		QMenu menu;
-		QAction *removeAction = menu.addAction("Remove");
-		QAction *markAction = menu.addAction("Mark");
-		QAction *selectedAction = menu.exec(contextMenuEvent->screenPos());//contextMenuEvent->globalPos()// contextMenuEvent->scenePos() is available
+		}
+		else
+		{
+			
+		}
+		
+		if(gSelectedLoopConnectionItems.isEmpty() == false)//Loop-Connections selected?
+		{
+			
+		}		
+		else
+		{
+			mLoopsMenu->setEnabled(false);
+		}
+	//}
+	toggleViewAction = mViewMenu->addAction("Toggle Orientation");
+
+	selectedItemAction = mContexMenu.exec(contextMenuEvent->screenPos());//contextMenuEvent->globalPos()// contextMenuEvent->scenePos() is available
+	if (selectedItemAction)
+	{
+		if((selectedItemAction == addBlockAction)||(selectedItemAction == addMultipleBlocksAction))
+		{
+			//if(pExpTreeModel)
+			//{
+				int nBlocksToAdd;
+				if(selectedItemAction == addMultipleBlocksAction)
+				{
+					bool bDialogResult;
+					nBlocksToAdd = QInputDialog::getInt(NULL, tr("How many blocks?"),	tr("Blocks to add:"), 0, 0, 1000, 1, &bDialogResult);
+					if (bDialogResult == false)
+						nBlocksToAdd = 0;
+				}
+				else if(selectedItemAction == addBlockAction)
+				{
+					nBlocksToAdd = 1;
+				}
+				bool bResult = false;
+				if(nBlocksToAdd>0)
+				{
+					//bResult = pExpTreeModel->addExperimentBlocks(nBlocksToAdd);
+				}			
+			//}
+		}
+		else if((selectedItemAction == removeBlockAction) || (selectedItemAction == removeBlocksAction))
+		{
+			bool bResult = false;
+			//if(pExpTreeModel)
+			//	bResult = pExpTreeModel->removeExperimentBlocks(lstUsedBlockIDsInSelectionRanges);
+		}
+		else if(selectedItemAction == toggleViewAction)
+		{
+			//bVerticalViewEnabled = !bVerticalViewEnabled;
+			//reparseModel();
+		}
 	}
-	return;
-
-	//Event::ignore()
 }

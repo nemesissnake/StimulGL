@@ -18,16 +18,18 @@
 
 #include "ExperimentGraphBlockItem.h"
 #include "ExperimentStructureScene.h"
+#include <QStyleOptionGraphicsItem>
 
 ExperimentGraphBlockItem::ExperimentGraphBlockItem(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
 	bType = GRAPHBLOCK_TYPE_BLOCK;
 	pPen.setWidth(2.0);
 	cCaption.setRgb(63,72,204);
-	cUnselectedFill.setRgb(195,195,195);
-	cSelectedFill.setRgb(239,228,176);
+	cUnselectedColor.setRgb(195,195,195);
+	cSelectedColor.setRgb(0,228,0);
+	cHoveredColor.setRgb(239,228,176);
 	pPen.setColor(cCaption);
-	pBrush.setColor(cUnselectedFill);
+	pBrush.setColor(cUnselectedColor);
 	pBrush.setStyle(Qt::SolidPattern);
 
 	nBlockWidth = EXPGRAPHBLOCKITEM_BLOCK_WIDTH;
@@ -38,9 +40,11 @@ ExperimentGraphBlockItem::ExperimentGraphBlockItem(QGraphicsItem *parent) : QGra
 	nHalfBlockDistance = nBlockDistance/2;
 	rBoundingBox.setCoords(-nHalfBlockWidth,-nHalfBlockHeight-nHalfBlockDistance,nHalfBlockWidth,nHalfBlockHeight+nHalfBlockDistance); 
 
-	bIsCurrentlyHovered = false;
+	//bIsCurrentlyHovered = false;
 	//this->setToolTip("ExperimentGraphBlockItem");
 	setAcceptHoverEvents(true);
+	setFlag(QGraphicsItem::ItemIsSelectable);
+	//setFlag(QGraphicsItem::ItemIsMovable);
 }
 
 void ExperimentGraphBlockItem::setType(const ExperimentGraphBlockItemTypeEnum &eBlockType)
@@ -72,6 +76,31 @@ QRectF ExperimentGraphBlockItem::boundingRect() const
 
 void ExperimentGraphBlockItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+	Q_UNUSED(widget);
+	QFont fCurrent("Times");
+
+	painter->setRenderHint(QPainter::Antialiasing);
+	if(option->state & QStyle::State_Selected)
+	{
+		fCurrent.setBold(false);
+		pBrush.setColor(cSelectedColor);
+		pBrush.setColor(cSelectedColor);
+		pPen.setColor(cSelectedColor);
+	}
+	else if(option->state & QStyle::State_MouseOver)
+	{
+		fCurrent.setBold(true);
+		pBrush.setColor(cHoveredColor);
+		pBrush.setColor(cHoveredColor);
+		pPen.setColor(cHoveredColor);
+	}
+	else
+	{
+		fCurrent.setBold(false);
+		pBrush.setColor(cUnselectedColor);
+		pBrush.setColor(cUnselectedColor);
+		pPen.setColor(cUnselectedColor);
+	}
 	painter->setPen(pPen);
 	painter->setBrush(pBrush);
 
@@ -90,13 +119,10 @@ void ExperimentGraphBlockItem::paint(QPainter *painter, const QStyleOptionGraphi
 	}
 	painter->drawPath(pShape);
 
-	QFont fCurrent("Times");
-	if(bIsCurrentlyHovered)
-		fCurrent.setBold(true);
-	else
-		fCurrent.setBold(false);
 	fCurrent.setPointSizeF(rectInnerBlock.height()/4);
 	painter->setFont(fCurrent);
+	pPen.setColor(cCaption);
+	painter->setPen(pPen);
 
 	if(bType == GRAPHBLOCK_TYPE_START)
 	{
@@ -113,16 +139,12 @@ void ExperimentGraphBlockItem::paint(QPainter *painter, const QStyleOptionGraphi
 		rBoundingBox.setCoords(-nHalfBlockWidth,-nHalfBlockHeight-nHalfBlockDistance,nHalfBlockWidth,nHalfBlockHeight);
 		painter->drawText(rectInnerBlock,Qt::AlignCenter, "END");
 	}
-	//if(bIsCurrentlyHovered)
-	//{
-	//	painter->setBrush(Qt::NoBrush); painter->setPen(QColor(255,0,0)); painter->drawRect(rBoundingBox); 
-	//}
 }
 
 void ExperimentGraphBlockItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-	bIsCurrentlyHovered = true;
-	pBrush.setColor(cSelectedFill);
+	//bIsCurrentlyHovered = true;
+	//pBrush.setColor(cSelectedFill);
 	update();
 }
 
@@ -130,7 +152,7 @@ void ExperimentGraphBlockItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 
 void ExperimentGraphBlockItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-	bIsCurrentlyHovered = false;
-	pBrush.setColor(cUnselectedFill);
+	//bIsCurrentlyHovered = false;
+	//pBrush.setColor(cUnselectedFill);
 	update();
 }
