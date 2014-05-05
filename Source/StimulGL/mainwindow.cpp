@@ -680,7 +680,7 @@ void MainWindow::setupScriptEngine()
 	AppScriptEngine->eng->globalObject().setProperty("ExitScript", exitVal);
 
 	QScriptValue AppScriptThisObject = AppScriptEngine->eng->newQObject(this);
-	AppScriptEngine->eng->globalObject().setProperty("StimulGL", AppScriptThisObject);
+	AppScriptEngine->eng->globalObject().setProperty(MAIN_PROGRAM_INTERNAL_NAME, AppScriptThisObject);
 
 #ifdef DEBUG
 	QScriptValue TestFunctionVal = AppScriptEngine->eng->newFunction(myScriptTestFunction);
@@ -2385,6 +2385,7 @@ void MainWindow::activateMainWindow()
 
 void MainWindow::abortScript()
 {
+	AppScriptEngine->prepareObjectForGarbageCleanup(AppScriptEngine->eng->globalObject(),MAIN_PROGRAM_INTERNAL_NAME);
 	AppScriptEngine->eng->collectGarbage();
 }
 

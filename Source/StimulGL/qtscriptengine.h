@@ -47,6 +47,7 @@ public:
 	QMenu *createDebuggerMenu(QWidget *parent = 0);
 	QMainWindow *DebuggerStandardWindow(); 
 	bool ImportScriptExtensions();
+	bool prepareObjectForGarbageCleanup(const QScriptValue &ObjectScriptValue, const QString &sObjectNameTrigger = QString());
 
 protected:
 

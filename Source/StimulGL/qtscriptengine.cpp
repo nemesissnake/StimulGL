@@ -133,6 +133,52 @@ void QTScriptEngine::scriptHasLoaded(qint64 id)
 //	worker->start();
 //}
 
+bool QTScriptEngine::prepareObjectForGarbageCleanup(const QScriptValue &ObjectScriptValue, const QString &sObjectNameTrigger)
+{
+	QScriptValue currentObjectScriptValue = ObjectScriptValue;
+	//QString tmpString;
+	bool bDoCheckFutureValues;
+	if(sObjectNameTrigger.isEmpty())
+		bDoCheckFutureValues = true;
+	else
+		bDoCheckFutureValues = false;
+
+	while (currentObjectScriptValue.isObject())
+	{
+		QScriptValueIterator it(currentObjectScriptValue);
+		while (it.hasNext()) 
+		{
+			it.next();
+			if(bDoCheckFutureValues)
+			{
+				//tmpString = "name: " + it.name();
+				if(currentObjectScriptValue.property(it.name()).isFunction())
+				{
+					if((it.value().toString().contains("[native code]") == false))
+					{
+						//tmpString = "name: " + it.name();
+						//tmpString = tmpString + ",sname: " + it.scriptName();
+						//tmpString = tmpString + ",value: " + it.value().toString();
+						currentObjectScriptValue.setProperty(it.name(), QScriptValue::NullValue);
+					}
+				}
+				else if(currentObjectScriptValue.property(it.name()).isObject())
+				{
+					prepareObjectForGarbageCleanup(currentObjectScriptValue.property(it.name()).prototype(),"");
+					currentObjectScriptValue.setProperty(it.name(), QScriptValue::NullValue);
+				}
+			}
+			else
+			{
+				if(it.name() == MAIN_PROGRAM_INTERNAL_NAME)
+					bDoCheckFutureValues = true;
+			}
+		}
+		currentObjectScriptValue = currentObjectScriptValue.prototype();
+	}
+	return true;
+}
+
 QMainWindow *QTScriptEngine::DebuggerStandardWindow()
 {
 	return debugger->standardWindow();
