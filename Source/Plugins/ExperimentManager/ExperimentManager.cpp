@@ -422,13 +422,42 @@ bool ExperimentManager::saveExperiment(QString strFile)
 	return false;
 }
 
-bool ExperimentManager::loadExperiment(QString strSource, bool bIsFile)
+void ExperimentManager::unloadExperiment()
 {
 	if (currentExperimentTree)
 	{
 		delete currentExperimentTree;
 		currentExperimentTree = NULL;
 	}
+	if(cExperimentBlockTrialStructure)
+	{
+		delete cExperimentBlockTrialStructure;
+		cExperimentBlockTrialStructure = NULL;
+	}
+	currentExperimentFile.clear();
+	currentValidationFile.clear();
+
+	m_ExpFileName = "";
+	m_ExpFolder = "";
+
+	ExperimentObjectTreeItemList.clear();
+	ExperimentBlockTrialsTreeItemList.clear();
+	lExperimentObjectList.clear();
+
+	//m_RunFullScreen = true;
+	//sExperimentOutputDataPostString = "";
+	//expDataLogger = NULL;
+	//ExpGraphicEditor = NULL;
+	//expParamWidgets = NULL;
+	//sConfiguredActiveScreen = NULL;
+	//RegisterMetaTypes();
+	//expParamWidgets = ExperimentParameterWidgets::instance();
+	changeCurrentExperimentState(ExperimentManager_Constructed);
+}
+
+bool ExperimentManager::loadExperiment(QString strSource, bool bIsFile)
+{
+	//unloadExperiment();
 	currentExperimentTree = new ExperimentTreeModel();
 	QFile file;
 	QString fileName = "";
@@ -455,8 +484,6 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bIsFile)
 		}
 		else
 		{
-			currentExperimentFile.clear();
-			currentValidationFile.clear();
 			currentExperimentFile = file.readAll();
 			//QString aa = MainAppInfo::appXsdFilePath() + QString(PLUGIN_EXMLDOC_VALIDATION_NAME);
 			file.close();
@@ -464,8 +491,6 @@ bool ExperimentManager::loadExperiment(QString strSource, bool bIsFile)
 	}
 	else
 	{
-		currentExperimentFile.clear();
-		currentValidationFile.clear();
 		fileName = "";
 		currentExperimentFile = strSource.toLatin1();
 	}
@@ -540,7 +565,8 @@ bool ExperimentManager::validateExperiment()
 	schema.load(currentValidationFile);
 
 	bool errorOccurred = false;
-	if (!schema.isValid()) {
+	if (!schema.isValid()) 
+	{
 		errorOccurred = true;
 	} 
 	else 

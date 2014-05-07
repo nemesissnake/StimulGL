@@ -66,6 +66,7 @@ public slots:
 	virtual int GetAdditionalFileTypeStyle(QString strExtension) {return GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;};//should return a DocTypeStyle
 	virtual QString GetAdditionalFileTypeApiName(QString strExtension) {return "";};
 	virtual QWidget *GetAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath) {return NULL;};
+	virtual bool RemAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath) {return true;};
 	virtual bool LoadAdditionalFile(QString strFilePath) {return false;};
 	//virtual bool SaveAdditionalFile(QString strFilePath) {return false;};//Saving is done by the widget...
 	virtual bool RemoveAdditionalFile(QString strFilePath) {return false;};

@@ -1397,6 +1397,16 @@ void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined
 		//outputWindowList->addItem(text2Write);
 }
 
+void MainWindow::reOpenCurrentFile(const bool &bNativeFileViewer)// See the defined MAIN_PROGRAM_REOPEN_SLOT_NAME
+{
+	//return;
+	if(mdiArea->subWindowList().isEmpty() == false)
+	{
+		bool bResult = closeActiveSubWindow(false);
+		bResult = bResult;
+	}
+}
+
 void MainWindow::clearOutputWindow() 
 {
 	clearDebugger();
@@ -2133,6 +2143,11 @@ QString MainWindow::getActiveDocumentFileLocation()
 	return DocManager->getFilePath(activeMdiChild());
 }
 
+QString MainWindow::getQMLPluginPath()
+{
+	return MainAppInfo::qmlExtensionsPluginDirPath();
+}
+
 QString MainWindow::getApplicationRootDirPath() 
 {
 	return QDir(QCoreApplication::applicationDirPath()).absolutePath();
@@ -2155,7 +2170,8 @@ QString MainWindow::getEnvironmentVariabele(QString strName)
 
 void MainWindow::closeActiveDocument(bool bAutoSaveChanges)
 {
-	closeSubWindow(bAutoSaveChanges);
+	closeActiveSubWindow(bAutoSaveChanges);
+	//closeSubWindow(bAutoSaveChanges);
 }
 
 void MainWindow::executeActiveDocument()
@@ -2971,6 +2987,18 @@ void MainWindow::writeMainWindowSettings()
 	globAppInfo->setRegistryInformation(REGISTRY_DEBUGWINDOWWIDTH, debugLogDock->width(), "int");
 }
 
+bool MainWindow::closeActiveSubWindow(bool bAutoSaveChanges)
+{
+	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
+	if (!DocManager->maybeSave(tmpMdiChildPointer,bAutoSaveChanges)) 
+	{
+		return false;
+	}
+	DocManager->remove(tmpMdiChildPointer);
+	mdiArea->closeActiveSubWindow();
+	return true;
+}
+
 bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 {
 	QAction *action = qobject_cast<QAction *>(sender());
@@ -2989,14 +3017,7 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 	}
 	if (action->data().toString() == "Close")//From menu(Close)
 	{
-		QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
-		if (!DocManager->maybeSave(tmpMdiChildPointer,bAutoSaveChanges)) 
-		{
-			return false;
-		}
-		DocManager->remove(tmpMdiChildPointer);
-		mdiArea->closeActiveSubWindow();
-		return true;
+		return closeActiveSubWindow(bAutoSaveChanges);
 	}
 	else if (action->data().toString() == "CloseAll")//From menu(Close All)
 	{
@@ -3014,14 +3035,7 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 	}
 	else //This must be called from the script?
 	{
-		QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
-		if (!DocManager->maybeSave(tmpMdiChildPointer,bAutoSaveChanges)) 
-		{
-			return false;
-		}
-		DocManager->remove(tmpMdiChildPointer);
-		mdiArea->closeActiveSubWindow();
-		return true;
+		return closeActiveSubWindow(bAutoSaveChanges);
 	}
 	return false;
 }

@@ -71,6 +71,7 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	action_Remove_Node = NULL;
 	actionAdd_Attribute = NULL;
 	actionToggleBlocksView = NULL;
+	actionSwitchToDefaultView = NULL;
 	menuFile = NULL;
 	menuEdit = NULL;
 	menuView = NULL;
@@ -168,6 +169,7 @@ void ExperimentGraphicEditor::configureActions(bool bCreate)
 		action_Remove_Node = new QAction("Remove Node", this);
 		actionAdd_Attribute = new QAction("Add Node Attribute", this);
 		actionToggleBlocksView = new QAction("Toggle Blocks View", this);
+		actionSwitchToDefaultView = new QAction("Switch to default View", this);
 	}
 	else
 	{
@@ -225,6 +227,11 @@ void ExperimentGraphicEditor::configureActions(bool bCreate)
 		{
 			delete actionToggleBlocksView;
 			actionToggleBlocksView = NULL;
+		}
+		if(actionSwitchToDefaultView)
+		{
+			delete actionSwitchToDefaultView;
+			actionSwitchToDefaultView = NULL;
 		}
 	}
 }
@@ -302,6 +309,7 @@ void ExperimentGraphicEditor::setupMenuAndActions()
 	buttonView->setText("View ");
 	buttonView->setPopupMode(QToolButton::InstantPopup);
 	menuView = new QMenu();//ViewButton
+	menuView->addAction(actionSwitchToDefaultView);
 	menuView->addAction(actionToggleBlocksView);
 	buttonView->setMenu(menuView);
 	toolBar->addWidget(buttonView);
@@ -316,6 +324,7 @@ void ExperimentGraphicEditor::setupMenuAndActions()
 	connect(actionAdd_Subnode, SIGNAL(triggered()), this, SLOT(insertSubnode()));
 	connect(action_Remove_Node, SIGNAL(triggered()), this, SLOT(removeNode()));
 	connect(actionAdd_Attribute, SIGNAL(triggered()), this, SLOT(addDefinition()));
+	connect(actionSwitchToDefaultView, SIGNAL(triggered()), this, SLOT(switchToDefaultView()));
 	connect(actionToggleBlocksView, SIGNAL(triggered()), this, SLOT(toggleBlocksView()));
 }
 
@@ -360,6 +369,7 @@ void ExperimentGraphicEditor::newFile()
 		action_Remove_Node->setEnabled(true);
 		actionFind->setEnabled(true);
 		actionToggleBlocksView->setEnabled(true);
+		actionSwitchToDefaultView->setEnabled(true);
 		pExpTreeModel = &loadedExpTreeModel;
 		connect(pExpTreeModel, SIGNAL(modelModified()), this, SLOT(setNewModel()));
 		//rootItem = new ExperimentTreeItem("[Root node]");
@@ -387,6 +397,7 @@ void ExperimentGraphicEditor::openFile()
 			action_Remove_Node->setEnabled(true);
 			actionFind->setEnabled(true);	
 			actionToggleBlocksView->setEnabled(true);
+			actionSwitchToDefaultView->setEnabled(true);
 			
 			QString tmpString = expFile.readAll();			
 			expFile.close();
@@ -428,6 +439,7 @@ void ExperimentGraphicEditor::closeFile()
 	action_Remove_Node->setDisabled(true);
 	actionFind->setDisabled(true);
 	actionToggleBlocksView->setDisabled(true);
+	actionSwitchToDefaultView->setDisabled(true);
 }
 
 void ExperimentGraphicEditor::saveFile(const QString &sFilePath)
@@ -1233,6 +1245,33 @@ void ExperimentGraphicEditor::removeNode()
 void ExperimentGraphicEditor::toggleBlocksView()
 {
 	bShowGraphicalTreeView = !bShowGraphicalTreeView;
+	showInfo(treeView->currentIndex());
+}
+
+void ExperimentGraphicEditor::switchToDefaultView()
+{
+
+	//QString errMessage = __FUNCTION__ + QString(": Could not create temporarily file.");
+	//QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
+	//this->abortExperimentObject();//this seems to work...
+	//return;
+
+	//QWidget* tmpWidget = MainAppInfo::getMainWindow();
+	bool bTextualView = true;
+	//this->deleteLater();
+	bool bAutoSave = false;
+	QString sFilePath = sCurrentCanonFilePath;
+	//QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowReOpenSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(bool, bTextualView));
+	QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), "closeActiveDocument", Qt::DirectConnection, Q_ARG(bool, bAutoSave));
+	QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), "openFiles", Qt::QueuedConnection, Q_ARG(QString, sFilePath));
+	//void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList());
+	//bool closeSubWindow(bool bAutoSaveChanges = false);
+
+	//MainWindow* tmpMainWindow = MainAppInfo::getMainWindow();
+	//tmpWidget->closeActiveDocument();
+
+	int a = 7+1;
+	return;
 }
 
 void ExperimentGraphicEditor::addDefinition()
@@ -1275,7 +1314,9 @@ bool ExperimentGraphicEditor::setExperimentTreeModel(ExperimentTreeModel *expMod
 	{
 		loadedExpTreeModel.reset();
 		if(pExpTreeModel)
+		{
 			disconnect(pExpTreeModel, SIGNAL(modelModified()), this, SLOT(treeModelChanged()));
+		}
 		connect(expModel, SIGNAL(modelModified()), this, SLOT(treeModelChanged()));
 		pExpTreeModel = expModel;
 		setNewModel();

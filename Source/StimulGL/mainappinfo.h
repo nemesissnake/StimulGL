@@ -28,6 +28,9 @@
 #include <fstream>
 
 #include "maindefines.h"
+//#include "mainwindow.h"
+
+//class MainWindow;
 
 class MainAppInfo 
 {
@@ -109,6 +112,7 @@ public:
 
 	static QWidget* getMainWindow()					{return mainWindow;};
 	static QString getMainWindowLogSlotName()		{return MAIN_PROGRAM_LOG_SLOT_NAME;};
+	static QString getMainWindowReOpenSlotName()	{return MAIN_PROGRAM_REOPEN_SLOT_NAME;};
 	static QString getScriptApiClassName()			{return SCRIPT_API_CLASS_NAME_TAG;};
 	
 	static QString getDefaultFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}

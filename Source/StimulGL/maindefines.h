@@ -81,6 +81,7 @@
 //Only edit until here!
 #define SCRIPT_API_CLASS_NAME_TAG						"ScriptAPIClassName"
 #define MAIN_PROGRAM_LOG_SLOT_NAME						"write2OutputWindow"
+#define MAIN_PROGRAM_REOPEN_SLOT_NAME					"reOpenCurrentFile"
 #define METHOD_TYPE_SIGNAL_TAG							"signal"
 #define METHOD_TYPE_SLOT_TAG							"slot"
 #define METHOD_TYPE_MEMBER_TAG							"member"

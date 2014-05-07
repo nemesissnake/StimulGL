@@ -92,6 +92,7 @@ private slots:
     void removeNode();
     void addDefinition();
 	void toggleBlocksView();
+	void switchToDefaultView();
     void saveNewData();
 	void saveNewData(const QString &sName, const QString &sValue);
 	void setViewFilter(const TreeFilterSettings &newViewSettings);
@@ -135,6 +136,7 @@ private:
 	QAction *action_Remove_Node;
 	QAction *actionAdd_Attribute;
 	QAction *actionToggleBlocksView;
+	QAction *actionSwitchToDefaultView;
 	QMenu *menuFile;
 	QMenu *menuEdit;
 	QMenu *menuView;

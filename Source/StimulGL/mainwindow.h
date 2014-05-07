@@ -150,7 +150,7 @@ public slots:
 	 * This function returns the path to the StimulGL QML plugin directory.
 	 * @return a String value holding the path to the StimulGL QML plugin directory.
 	 */
-	QString getQMLPluginPath() {return MainAppInfo::qmlExtensionsPluginDirPath();};
+	QString getQMLPluginPath();
 	/*! \brief Returns the path to the StimulGL Root directory.
 	 *
 	 * This function returns the path to the StimulGL Root directory, where the binary is running in.
@@ -195,6 +195,12 @@ public slots:
 	 * @param text2Write a String value holding the text that should be appended.
 	 */
 	void write2OutputWindow(const QString &text2Write = "");
+	/*! \brief Re-opens the current active document.
+	 *
+	 * This function first closes and re-opens the current active edited document.
+	 * @param bNativeFileViewer a Boolean value determining whether the file should be opened again by the default set file-handler (defined by a plug-in) or by StimulGL directly.
+	 */
+	void reOpenCurrentFile(const bool &bNativeFileViewer = false);
 	/*! \brief Clears the Output Log Window.
 	 *
 	 * This function clears the Output Log Window.
@@ -560,6 +566,7 @@ private:
 	void updateRecentFileList(const QString &fileName);
 	void setDockSize(QDockWidget *dock, int setWidth, int setHeight);
 	bool check4ReParseFile(const QString &sFilename);
+	bool closeActiveSubWindow(bool bAutoSaveChanges = false);
 
 public:
 	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);
