@@ -104,7 +104,7 @@ public:
 	QWidget *getDocHandler(const int &DocIndex);
 	QWidget *getDocHandler(QMdiSubWindow *subWindow);
 	int count(void);
-	QWidget *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath = "");
+	QWidget *add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath = "", const bool &bNativeMainAppView = false);
 	bool remove(QMdiSubWindow *subWindow);
 	bool setSubWindow(int DocIndex, QMdiSubWindow *subWindow);
 	bool loadFile(int DocIndex, const QString &fileName);

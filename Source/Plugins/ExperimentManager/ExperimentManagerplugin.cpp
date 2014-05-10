@@ -394,43 +394,43 @@ QWidget *ExperimentManagerPlugin::GetAdditionalFileTypeEditor(QString strExtensi
 	return NULL;
 }
 
-bool ExperimentManagerPlugin::RemAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath)
-{
-	//return true;
-	if(strExtension.toLower() == "exml")
-	{
-		if(strCanonicalFilePath.isEmpty() == false)
-		{
-			if(mapExpMngrUI.contains(strCanonicalFilePath))
-			{
-				ExperimentManager *tmpManager = mapExpMngrUI[strCanonicalFilePath];
-				if(tmpManager)				
-				{		
-					//tmpManager->unloadExperiment();
-					QWidget* tmpWidget = tmpManager->getVisualExperimentEditor();
-					if(tmpWidget)
-					{
-						disconnect(tmpWidget, SIGNAL(ContentHasChanged(QString,bool)), this, SIGNAL(DocumentHasChanged(QString,bool)));
-						disconnect(tmpWidget, SIGNAL(IsClosing(QString,bool)), this, SIGNAL(DocumentIsClosing(QString,bool)));			
-						//return tmpManager->showVisualExperimentEditor(NULL,tmpString);
-					}
-					delete tmpManager;
-				}
-				//delete mapExpMngrUI[strCanonicalFilePath];
-				mapExpMngrUI.remove(strCanonicalFilePath);
-			}
-			else
-			{
-				return false;
-			}			
-		}
-	} 
-	else if(strExtension.toLower() == "qml")
-	{
-		return true;//not jet implemented
-	}
-	return true;
-}
+//bool ExperimentManagerPlugin::RemAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath)
+//{
+//	//return true;
+//	if(strExtension.toLower() == "exml")
+//	{
+//		if(strCanonicalFilePath.isEmpty() == false)
+//		{
+//			if(mapExpMngrUI.contains(strCanonicalFilePath))
+//			{
+//				ExperimentManager *tmpManager = mapExpMngrUI[strCanonicalFilePath];
+//				if(tmpManager)				
+//				{		
+//					//tmpManager->unloaddrgdExperiment();
+//					QWidget* tmpWidget = tmpManager->getVisualExperimentEditor();
+//					if(tmpWidget)
+//					{
+//						disconnect(tmpWidget, SIGNAL(ContentHasChanged(QString,bool)), this, SIGNAL(DocumentHasChanged(QString,bool)));
+//						disconnect(tmpWidget, SIGNAL(IsClosing(QString,bool)), this, SIGNAL(DocumentIsClosing(QString,bool)));			
+//						//return tmpManager->showVisualExperimentEditor(NULL,tmpString);
+//					}
+//					delete tmpManager;
+//				}
+//				//delete mapExpMngrUI[strCanonicalFilePath];
+//				mapExpMngrUI.remove(strCanonicalFilePath);
+//			}
+//			else
+//			{
+//				return false;
+//			}			
+//		}
+//	} 
+//	else if(strExtension.toLower() == "qml")
+//	{
+//		return true;//not jet implemented
+//	}
+//	return true;
+//}
 
 bool ExperimentManagerPlugin::LoadAdditionalFile(QString strFilePath)
 {

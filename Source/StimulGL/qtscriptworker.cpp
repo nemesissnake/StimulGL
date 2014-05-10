@@ -47,9 +47,6 @@ QTScriptWorker::QTScriptWorker(QObject *parent)
 	eng->setAgent(agent);	
 	connect(agent, SIGNAL(ScriptUnloaded(qint64)), parent, SLOT(scriptHasUnloaded(qint64)));
 	connect(agent, SIGNAL(ScriptLoaded(qint64)), parent, SLOT(scriptHasLoaded(qint64)));
-
-	//connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this, SLOT(updateMenuControls(QMdiSubWindow *)));
-	//eng->setProcessEventsInterval(10);
 }
 
 QTScriptWorker::~QTScriptWorker()

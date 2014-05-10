@@ -84,7 +84,7 @@ public slots:
 	int GetAdditionalFileTypeStyle(QString strExtension);
 	QString GetAdditionalFileTypeApiName(QString strExtension);
 	QWidget *GetAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath);
-	bool RemAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath);
+	//bool RemAdditionalFileTypeEditor(QString strExtension, QString strCanonicalFilePath);
 	bool LoadAdditionalFile(QString strFilePath);
 	//bool SaveAdditionalFile(QString strFilePath);
 	bool RemoveAdditionalFile(QString strFilePath);

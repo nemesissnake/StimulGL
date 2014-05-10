@@ -422,42 +422,8 @@ bool ExperimentManager::saveExperiment(QString strFile)
 	return false;
 }
 
-void ExperimentManager::unloadExperiment()
-{
-	if (currentExperimentTree)
-	{
-		delete currentExperimentTree;
-		currentExperimentTree = NULL;
-	}
-	if(cExperimentBlockTrialStructure)
-	{
-		delete cExperimentBlockTrialStructure;
-		cExperimentBlockTrialStructure = NULL;
-	}
-	currentExperimentFile.clear();
-	currentValidationFile.clear();
-
-	m_ExpFileName = "";
-	m_ExpFolder = "";
-
-	ExperimentObjectTreeItemList.clear();
-	ExperimentBlockTrialsTreeItemList.clear();
-	lExperimentObjectList.clear();
-
-	//m_RunFullScreen = true;
-	//sExperimentOutputDataPostString = "";
-	//expDataLogger = NULL;
-	//ExpGraphicEditor = NULL;
-	//expParamWidgets = NULL;
-	//sConfiguredActiveScreen = NULL;
-	//RegisterMetaTypes();
-	//expParamWidgets = ExperimentParameterWidgets::instance();
-	changeCurrentExperimentState(ExperimentManager_Constructed);
-}
-
 bool ExperimentManager::loadExperiment(QString strSource, bool bIsFile)
 {
-	//unloadExperiment();
 	currentExperimentTree = new ExperimentTreeModel();
 	QFile file;
 	QString fileName = "";

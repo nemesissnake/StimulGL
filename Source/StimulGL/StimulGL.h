@@ -38,8 +38,8 @@
 #define FUNC_PLUGIN_GETADDFILE_API_FILENAME_FULL			FUNC_PLUGIN_GETADDFILE_API_FILENAME "(QString)"
 #define FUNC_PLUGIN_GETADDFILE_TYPEEDITOR					"GetAdditionalFileTypeEditor"
 #define FUNC_PLUGIN_GETADDFILE_TYPEEDITOR_FULL				FUNC_PLUGIN_GETADDFILE_TYPEEDITOR "(QString,QString)"
-#define FUNC_PLUGIN_REMADDFILE_TYPEEDITOR					"RemAdditionalFileTypeEditor"
-#define FUNC_PLUGIN_REMADDFILE_TYPEEDITOR_FULL				FUNC_PLUGIN_REMADDFILE_TYPEEDITOR "(QString,QString)"
+//#define FUNC_PLUGIN_REMADDFILE_TYPEEDITOR					"RemAdditionalFileTypeEditor"
+//#define FUNC_PLUGIN_REMADDFILE_TYPEEDITOR_FULL			FUNC_PLUGIN_REMADDFILE_TYPEEDITOR "(QString,QString)"
 #define FUNC_PLUGIN_LOADADDFILE								"LoadAdditionalFile"
 #define FUNC_PLUGIN_LOADADDFILE_FULL						FUNC_PLUGIN_LOADADDFILE "(QString)"
 //#define FUNC_PLUGIN_SAVEADDFILE							"SaveAdditionalFile"
@@ -55,8 +55,8 @@
 #define FUNC_PLUGIN_DOCUMENTISCLOSING						"DocumentIsClosing"
 #define FUNC_PLUGIN_DOCUMENTISCLOSING_FULL					FUNC_PLUGIN_DOCUMENTISCLOSING "(QString,bool)"
 
-#define FUNC_PLUGIN_COPYAVAILABLE_FULL						"CopyAvailable(bool)"
-#define FUNC_PLUGIN_CURSORPOSCHANGED_FULL					"CursorPositionChanged(int, int)"
+#define FUNC_PLUGIN_COPYAVAILABLE_FULL						"copyAvailable(bool)"				//fixed signal signature, do not change
+#define FUNC_PLUGIN_CURSORPOSCHANGED_FULL					"cursorPositionChanged(int, int)"	//fixed signal signature, do not change
 
 #define FUNC_STIMULGL_CONFDOCMODSETTING						"configureDocumentModifiedSetting"
 #define FUNC_STIMULGL_CONFDOCMODSETTING_FULL				FUNC_STIMULGL_CONFDOCMODSETTING "(QString,bool)"

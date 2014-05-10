@@ -102,8 +102,6 @@ QTScriptEngine::QTScriptEngine(QObject *parent): QObject(parent)
 	qScriptVal.setProperty("importExtension", eng->newFunction(importExtension));
 	globalObject.property("qt").setProperty("script", qScriptVal);
 	setAgent();
-	//connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this, SLOT(updateMenuControls(QMdiSubWindow *)));
-	//eng->setProcessEventsInterval(10);
 }
 
 void QTScriptEngine::setAgent()

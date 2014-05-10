@@ -351,7 +351,7 @@ bool DocumentManager::customizeDocumentStyle(CustomQsciScintilla *custQsci, Glob
 	return false;
 }
 
-QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath)
+QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath, const bool &bNativeMainAppView)
 {
 	GlobalApplicationInformation::DocTypeStyle sDocStyle = GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;
 	strcPluginHandlerInterface *pParsedPluginHandlerInterface = NULL;
@@ -360,6 +360,7 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 	QString sAPIFileName = "";
 	strDocManagerDocument tmpChildDoc;
 	bool bResult = false;
+	bool bConnectResult = false;
 
 	if(docType == GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED)
 	{
@@ -383,10 +384,13 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 					{
 						bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME),Qt::DirectConnection, Q_RETURN_ARG(QString,sAPIFileName), Q_ARG(QString,strExtension.toLower()));		
 					}
-					if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR_FULL)) == -1))//Is the slot present?
+					if(bNativeMainAppView == false)
 					{
-						bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR),Qt::DirectConnection, Q_RETURN_ARG(QWidget *,editorObject), Q_ARG(QString,strExtension.toLower()), Q_ARG(QString,strCanonicalFilePath));
-					}	
+						if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR_FULL)) == -1))//Is the slot present?
+						{
+							bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPEEDITOR),Qt::DirectConnection, Q_RETURN_ARG(QWidget *,editorObject), Q_ARG(QString,strExtension.toLower()), Q_ARG(QString,strCanonicalFilePath));
+						}	
+					}
 				}
 			}
 		}
@@ -414,9 +418,9 @@ QWidget *DocumentManager::add(GlobalApplicationInformation::DocType docType,int 
 		custQsci->setPaper(cPaper);//Here we make the paper background color light Grey instead of White (Better for the subject watching...)
 		NrOfLinesChangedMapper = new QSignalMapper(this);
 		NrOfLinesChangedMapper->setMapping(custQsci, custQsci);//QWidgetChildren.at(DocCount)
-		connect(custQsci, SIGNAL(linesChanged()),NrOfLinesChangedMapper, SLOT (map()));
-		connect(NrOfLinesChangedMapper, SIGNAL(mapped(QWidget *)), this, SLOT(updateLineNumbers(QWidget *)));
-		connect(custQsci, SIGNAL(marginClicked(int, int, Qt::KeyboardModifiers)), SLOT(onMarginClicked(int, int, Qt::KeyboardModifiers)));
+		bConnectResult = connect(custQsci, SIGNAL(linesChanged()),NrOfLinesChangedMapper, SLOT (map()));
+		bConnectResult = bConnectResult && connect(NrOfLinesChangedMapper, SIGNAL(mapped(QWidget *)), this, SLOT(updateLineNumbers(QWidget *)));
+		bConnectResult = bConnectResult && connect(custQsci, SIGNAL(marginClicked(int, int, Qt::KeyboardModifiers)), SLOT(onMarginClicked(int, int, Qt::KeyboardModifiers)));
 
 		switch (docType)
 		{
@@ -604,12 +608,12 @@ bool DocumentManager::loadFile(int DocIndex, const QString &fileName)
 					int nSignalIndex = pluginObject->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(FUNC_PLUGIN_DOCUMENTHASCHANGED_FULL));
 					int nSlotIndex = this->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_STIMULGL_CONFDOCMODSETTING_FULL));
 					if ((nSignalIndex >= 0) && (nSlotIndex >= 0))//Is the signal&slot present?
-						QMetaObject::connect(pluginObject,nSignalIndex,this,nSlotIndex,Qt::DirectConnection);
+						QMetaObject::connect(pluginObject,nSignalIndex,this,nSlotIndex,Qt::ConnectionType(Qt::DirectConnection | Qt::UniqueConnection));
 
 					nSignalIndex = pluginObject->metaObject()->indexOfSignal(QMetaObject::normalizedSignature(FUNC_PLUGIN_DOCUMENTISCLOSING_FULL));
 					nSlotIndex = this->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_STIMULGL_PROCDOCCLOSING_FULL));
 					if ((nSignalIndex >= 0) && (nSlotIndex >= 0))//Is the signal&slot present?
-						QMetaObject::connect(pluginObject,nSignalIndex,this,nSlotIndex,Qt::DirectConnection);
+						QMetaObject::connect(pluginObject,nSignalIndex,this,nSlotIndex,Qt::ConnectionType(Qt::DirectConnection | Qt::UniqueConnection));
 				}
 			}
 		}
@@ -708,6 +712,8 @@ void DocumentManager::setModFlagAndTitle(const int &DocIndex,bool hasChanges)
 		QString tmpTitle = lChildDocuments.at(DocIndex).sFileName;
 		if (tmpTitle.isEmpty() == false)
 		{
+			//lChildDocuments.at(DocIndex).pWidget->setToolTip(tmpTitle);
+			tmpTitle = QFileInfo(tmpTitle).fileName();
 			if (hasChanges)
 			{
 				lChildDocuments.at(DocIndex).pWidget->setWindowTitle(tmpTitle + "*");
@@ -941,6 +947,7 @@ bool DocumentManager::maybeSave(QMdiSubWindow *subWindow, bool bAutoSaveChanges)
 							int nSlotIndex = lChildDocuments.at(i).pWidget->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_WIDGET_SAVEFILE_FULL));
 							if (nSlotIndex >= 0)//Is the slot present?
 								QMetaObject::invokeMethod(lChildDocuments.at(i).pWidget,FUNC_PLUGIN_WIDGET_SAVEFILE,Qt::DirectConnection,Q_ARG(QString, lChildDocuments.at(i).sFileName));
+							//lChildDocuments[i].bIsModified = false; done somewhere else
 							return true;
 						}
 
@@ -961,58 +968,21 @@ bool DocumentManager::remove(QMdiSubWindow *subWindow)
 		{
 			if (lChildDocuments.at(i).pMDISubWin == subWindow)
 			{
-				
-				//GlobalApplicationInformation::DocTypeStyle sDocStyle = GlobalApplicationInformation::DOCTYPE_STYLE_UNDEFINED;
-				//strcPluginHandlerInterface *pParsedPluginHandlerInterface = NULL;
-				//QObject* pluginObject = NULL;
-				//QWidget* editorObject = NULL;
-				//QString sAPIFileName = "";
-				//strDocManagerDocument tmpChildDoc;
-				//bool bResult = false;
-
-				if(lChildDocuments.at(i).dDocType == GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED)
-				{
-					//if(lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList.isEmpty() == false)
-					//{
-					//	int nTmpRetVal;
-					//	if(lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList.contains(lChildDocuments.at(i).pPluginHandlerInterface->pPluginObject    strExtension.toLower()))
-					//	{
-					QObject* pluginObject = NULL;
-					pluginObject = lChildDocuments.at(i).pPluginHandlerInterface->pPluginObject;
-
-							//pParsedPluginHandlerInterface = &lPluginDefinedPreLoadedHandlerInterfaces.hDocHandlerList[strExtension.toLower()];
-							//pluginObject = pParsedPluginHandlerInterface->pPluginObject;
-					if(pluginObject)
-					{
-						/*
-						if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE_FULL)) == -1))//Is the slot present?
-						{
-							nTmpRetVal = 0;
-							bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_TYPESTYLE),Qt::DirectConnection, Q_RETURN_ARG(int,nTmpRetVal), Q_ARG(QString,strExtension.toLower()));				
-							if(bResult)
-								sDocStyle = (GlobalApplicationInformation::DocTypeStyle)nTmpRetVal;						
-						}
-						if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME_FULL)) == -1))//Is the slot present?
-						{
-							bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_GETADDFILE_API_FILENAME),Qt::DirectConnection, Q_RETURN_ARG(QString,sAPIFileName), Q_ARG(QString,strExtension.toLower()));		
-						}
-						*/
-						if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_REMADDFILE_TYPEEDITOR_FULL)) == -1))//Is the slot present?
-						{
-							bool bMetaMethodResult;
-							QFileInfo fi(lChildDocuments.at(i).sFileName);
-							QString strCanonicalFilePath = fi.canonicalFilePath(); //"E:/Projects/Experiments/StimulGL/Michael/TBVNeurofeedback/MotorImagery.exml";
-							QString strExtension = fi.completeSuffix();
-							
-							//lChildDocuments.at(i).pWidget->close();
-							//delete lChildDocuments.at(i).pWidget;
-							//bool bResult = QMetaObject::invokeMethod(pluginObject,QMetaObject::normalizedSignature(FUNC_PLUGIN_REMADDFILE_TYPEEDITOR),Qt::DirectConnection, Q_RETURN_ARG(bool,bMetaMethodResult), Q_ARG(QString,strExtension.toLower()), Q_ARG(QString,strCanonicalFilePath));
-						}						
-					}
-				}
-
-
-
+				//if(lChildDocuments.at(i).dDocType == GlobalApplicationInformation::DOCTYPE_PLUGIN_DEFINED)
+				//{
+				//	QObject* pluginObject = NULL;
+				//	pluginObject = lChildDocuments.at(i).pPluginHandlerInterface->pPluginObject;
+				//	if(pluginObject)
+				//	{
+				//		if (!(pluginObject->metaObject()->indexOfMethod(QMetaObject::normalizedSignature(FUNC_PLUGIN_REMADDFILE_TYPEEDITOR_FULL)) == -1))//Is the slot present?
+				//		{
+				//			bool bMetaMethodResult;
+				//			QFileInfo fi(lChildDocuments.at(i).sFileName);
+				//			QString strCanonicalFilePath = fi.canonicalFilePath(); //"E:/Projects/Experiments/StimulGL/Michael/TBVNeurofeedback/MotorImagery.exml";
+				//			QString strExtension = fi.completeSuffix();
+				//		}						
+				//	}
+				//}
 				lChildDocuments.removeAt(i);
 				return true;
 			}

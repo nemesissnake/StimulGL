@@ -57,7 +57,7 @@ class ExperimentGraphicEditor : public QWidget
 
 signals:
 	void OnTableViewRedrawned(int nNewWidth, int nNewHeight);
-	void CopyAvailable(bool bCopyAvailable);
+	void copyAvailable(bool bCopyAvailable);//this signature is and should stay fixed, do not rename!
 	void IsDestructing(ExperimentGraphicEditor *pExpGraphEditor);
 	void IsClosing(QString sCanoFilePath, bool bShouldAutoSaveChanges);
 	void ContentHasChanged(QString sCanoFilePath, bool bHasChanged);
@@ -71,7 +71,7 @@ public:
 public slots:
 	void setExperimentManager(ExperimentManager *pExpManager);
 	bool setExperimentTreeModel(ExperimentTreeModel *expModel = NULL, const QString &sExpTreeModelCanonFilePath = "");
-	void saveFile(const QString &sFilePath = "");
+	bool saveFile(const QString &sFilePath = "");
 
 //protected slots:
 //	void closeEvent(QCloseEvent *event);
@@ -81,6 +81,7 @@ private slots:
     void newFile();
 	void openFile();
 	void closeFile();
+	void closeDocument();
 	void showInfo(const QModelIndex &index);
 	void fillTableView(const QString &textToFind, const QStringList &filters);
 	void tableViewResized(int pos, int index);
@@ -109,6 +110,8 @@ private:
 	//bool setModelParameterValue(const int &nBlockID, const int &nObjectID, const QString &sParamName, const QString &sParamValue);
 
 	bool bShowGraphicalTreeView;
+
+	//bool bSkipIsClosingSignal;
 
 	QTreeView *treeView;
 	QToolBar *toolBar;

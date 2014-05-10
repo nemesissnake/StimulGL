@@ -31,6 +31,7 @@
 #include <QtGlobal>
 #include <QGLFramebufferObject>
 #include <QDir>
+#include <QTabWidget>
 #include "OutputListDelegate.h"
 
 #include "../Plugins/ParallelPortDevice/parallelport.h"
@@ -100,7 +101,7 @@ bool MainWindow::initialize(GlobalApplicationInformation::MainProgramModeFlags m
 	setupDynamicPlugins();
 	setupHelpMenu();
 	setupToolBars();
-	updateMenuControls(0);
+	updateMenuControls();
 	parseRemainingGlobalSettings();
 	setupContextMenus();
 	if (startUpFiles.count()> 0) { openFiles(NULL,startUpFiles);}
@@ -178,7 +179,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	if(DocManager)
 	{
 		disconnect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
-		disconnect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));	
+		disconnect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChangedHandler(int)));	
 		delete DocManager;
 	}
 	if(globAppInfo)
@@ -354,23 +355,25 @@ bool MainWindow::receiveExchangeMessage(const QString &sMessage)
 	return true;
 }
 
-void MainWindow::DebugcontextMenuEvent(const QPoint &pos)
+void MainWindow::DebugcontextMenuEvent(const QPoint &pos, const QString &sTabName)
 {
+	if(mTabNameToOutputWindowList.contains(sTabName)==false)
+		return;
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	QMenu menu(this);
-	menu.addAction(clearDebuggerAction);
-	menu.addAction(copyDebuggerAction);
-	menu.addAction(saveDebuggerAction);
-	menu.exec(outputWindowList->viewport()->mapToGlobal(pos));
+	menu.addAction(mClearDebuggerAction.value(sTabName));
+	menu.addAction(mCopyDebuggerAction.value(sTabName));
+	menu.addAction(mSaveDebuggerAction.value(sTabName));
+	menu.exec(mTabNameToOutputWindowList[sTabName]->viewport()->mapToGlobal(pos));
 }
 
 void MainWindow::setupContextMenus()
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
-	outputWindowList->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(outputWindowList, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(DebugcontextMenuEvent(QPoint)));
+	mTabNameToOutputWindowList[MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME]->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(mTabNameToOutputWindowList[MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME], &QTextEdit::customContextMenuRequested, [=](const QPoint &arg) {DebugcontextMenuEvent(arg, MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);});
 }
 
 //void MainWindow::registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension)
@@ -413,6 +416,15 @@ void MainWindow::setupMDI()
 	mdiArea = new QMdiArea;
 	mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	mdiArea->setViewMode(QMdiArea::TabbedView);
+		//QMdiArea::SubWindowView	0	Display sub-windows with window frames (default).
+		//QMdiArea::TabbedView		1	Display sub-windows with tabs in a tab bar.
+	mdiArea->setTabsClosable(true);
+	mdiArea->setTabsMovable(true);
+	mdiArea->setTabShape(QTabWidget::Rounded);
+		//QTabWidget::Rounded		0	The tabs are drawn with a rounded look. This is the default shape.
+		//QTabWidget::Triangular	1	The tabs are drawn with a triangular look.
+	mdiArea->setTabPosition(QTabWidget::North);
 	setCentralWidget(mdiArea);
 	connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this, SLOT(updateMenuControls(QMdiSubWindow *)));
 	windowMapper = new QSignalMapper(this);
@@ -427,7 +439,7 @@ void MainWindow::setupDocumentManager()
 	DocManager = new DocumentManager (this);
 	connect(DocManager, SIGNAL(DocumentManagerOutput(QString)), this, SLOT(write2OutputWindow(QString)));
 	DocManager->appendKnownFileExtensionList(MainAppInfo::getDefaultFileExtList());
-	connect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChanged(int)));
+	connect(DocManager, SIGNAL(NrOfLinesChanged(int)), this, SLOT(NumberOfLinesChangedHandler(int)));
 	connect(DocManager, SIGNAL(MarkerToggled(int)), this, SLOT(handleToggledMarker(int)));
 }
 
@@ -511,6 +523,7 @@ QScriptValue myIncludeFunction(QScriptContext *ctx, QScriptEngine *eng)
 
 QScriptValue myPrintFunction(QScriptContext *context, QScriptEngine *engine)
 {
+	Q_UNUSED(engine);
 	QString result;
 	for (int i = 0; i < context->argumentCount(); ++i)
 	{
@@ -519,20 +532,9 @@ QScriptValue myPrintFunction(QScriptContext *context, QScriptEngine *engine)
 		result.append(context->argument(i).toString());
 	}
 	QScriptValue calleeData = context->callee().data();
-	//QListWidget *outputObject = qobject_cast<QListWidget*>(calleeData.toQObject());
-	//outputObject->addItem(result);
 	QTextEdit *outputObject = qobject_cast<QTextEdit*>(calleeData.toQObject());
-	outputObject->setReadOnly(true);
 	outputObject->append(result);
-	return engine->undefinedValue();
-
-	/*outputObject->setItemDelegate(new OutputListDelegate(outputObject));
-	QListWidgetItem *item = new QListWidgetItem();
-	item->setData(Qt::DisplayRole, "Title");
-	item->setData(Qt::UserRole + 1, "Description");
-	outputObject->addItem(item);*/
-
-	return engine->undefinedValue();//outputWindowList
+	return QScriptValue(true);
 }
 
 
@@ -658,7 +660,7 @@ void MainWindow::setupScriptEngine()
 	connect(AppScriptEngine, SIGNAL(ScriptUnloaded(qint64)), this, SLOT(scriptUnloaded(qint64)));
 
 	QScriptValue logVal = AppScriptEngine->eng->newFunction(myPrintFunction);//wrap function to QScriptValue
-	logVal.setData(AppScriptEngine->eng->newQObject(outputWindowList));//this data is not script-accessible, but the newQObject can be retrieved using QScriptContext::callee() 
+	logVal.setData(AppScriptEngine->eng->newQObject(mTabNameToOutputWindowList.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME)));//this data is not script-accessible, but the newQObject can be retrieved using QScriptContext::callee() 
 	AppScriptEngine->eng->globalObject().setProperty("Log", logVal);
 
 	//QScriptValue keypressVal = AppScriptEngine->eng->newFunction(myKeyPressFunction);//wrap function to QScriptValue
@@ -725,14 +727,13 @@ bool MainWindow::restartScriptEngine()
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
-	QMdiSubWindow *tmpSubWindow = activeMdiChild();
 	setupScriptEngine();
 	for (int i=0;i<Plugins->Count()-1;i++)
 	{
 		configurePluginScriptEngine(i);
 	}
 	configureDebugger();
-	updateMenuControls(tmpSubWindow);
+	updateMenuControls();
 	resetContextState();
 	return true;
 }
@@ -798,16 +799,19 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	{
 		StatusLinesLabel->setHidden(!hasMdiChild);
 		StatusPositionLabel->setHidden(!hasMdiChild);
-		StatusNameLabel->setHidden(!hasMdiChild);
+		StatusFilePathLabel->setHidden(!hasMdiChild);
 
 		addRemMarkerAction->setEnabled(hasMdiChild);
 		nextMarkerAction->setEnabled(hasMdiChild);
 		prevMarkerAction->setEnabled(hasMdiChild);
 		remAllMarkerAction->setEnabled(hasMdiChild);
 
-		clearDebuggerAction->setEnabled(true);
-		copyDebuggerAction->setEnabled(true);
-		saveDebuggerAction->setEnabled(true);
+		foreach(QAction* tmpClearAction,mClearDebuggerAction)
+			tmpClearAction->setEnabled(true);
+		foreach(QAction* tmpCopyAction,mCopyDebuggerAction)
+			tmpCopyAction->setEnabled(true);
+		foreach(QAction* tmpSaveAction,mSaveDebuggerAction)
+			tmpSaveAction->setEnabled(true);
 
 		goToLineAction->setEnabled(hasMdiChild);
 		goToMatchingBraceAction->setEnabled(hasMdiChild);
@@ -853,14 +857,17 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	{
 		StatusLinesLabel->setHidden(true);
 		StatusPositionLabel->setHidden(true);
-		StatusNameLabel->setHidden(true);
+		StatusFilePathLabel->setHidden(false);
 		addRemMarkerAction->setEnabled(false);
 		nextMarkerAction->setEnabled(false);
 		prevMarkerAction->setEnabled(false);
 		remAllMarkerAction->setEnabled(false);
-		clearDebuggerAction->setEnabled(true);
-		copyDebuggerAction->setEnabled(true);
-		saveDebuggerAction->setEnabled(true);
+		foreach(QAction* tmpClearAction,mClearDebuggerAction)
+			tmpClearAction->setEnabled(true);
+		foreach(QAction* tmpCopyAction,mClearDebuggerAction)
+			tmpCopyAction->setEnabled(true);
+		foreach(QAction* tmpSaveAction,mClearDebuggerAction)
+			tmpSaveAction->setEnabled(true);
 		goToLineAction->setEnabled(false);
 		goToMatchingBraceAction->setEnabled(false);
 		selToMatchingBraceAction->setEnabled(false);
@@ -893,7 +900,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	}
 	if (hasMdiChild)
 	{
-		QString docTitle = strippedName(DocManager->getFileName(currentSub));
+		QString docFilePath = DocManager->getFileName(currentSub);
+		QString docTitle = strippedName(docFilePath);
 		if (docTitle == "")
 			docTitle = MainAppInfo::UntitledDocName();
 		setWindowTitle(tr("%1 - %2").arg(globAppInfo->getTitle()).arg(docTitle));
@@ -921,8 +929,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 
 		CustomQsciScintilla *tmpCustomQsciScintilla = qobject_cast<CustomQsciScintilla*>(DocManager->getDocHandler(currentSub));
 		if(tmpCustomQsciScintilla)
-			NumberOfLinesChanged(tmpCustomQsciScintilla->lines());
-		StatusNameLabel->setText(QString("%1").arg(docTitle));
+			NumberOfLinesChangedHandler(tmpCustomQsciScintilla->lines());
+		StatusFilePathLabel->setText(QString("%1").arg(docFilePath));
 	}
 	else
 	{
@@ -932,7 +940,7 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 	}
 }
 
-void MainWindow::CursorPositionChanged(int line, int col) 
+void MainWindow::CursorPositionChangedHandler(int line, int col) 
 {
 	StatusPositionLabel->setText(tr("Row: %1, Col: %2").arg(line+1).arg(col+1));
 }
@@ -1088,14 +1096,14 @@ void MainWindow::createDefaultMenus()
 	closeAction->setData("Close");
 	closeAction->setShortcut(tr("Ctrl+Shift+C"));
 	closeAction->setStatusTip(tr("Close the active window"));
-	connect(closeAction, SIGNAL(triggered()), this, SLOT(closeSubWindow()));//mdiArea, SLOT(closeActiveSubWindow()));
+	connect(closeAction, SIGNAL(triggered()), this, SLOT(closeSubWindow()));
 	fileMenu->addAction(closeAction);
 
 	closeAllAction = new QAction(tr("Close A&ll"), this);
 	closeAllAction->setData("CloseAll");
 	closeAllAction->setShortcut(tr("Ctrl+Shift+F4"));
 	closeAllAction->setStatusTip(tr("Close all the windows"));
-	connect(closeAllAction, SIGNAL(triggered()), this, SLOT(closeSubWindow())); //mdiArea, SLOT(closeAllSubWindows()));
+	connect(closeAllAction, SIGNAL(triggered()), this, SLOT(closeSubWindow()));
 	fileMenu->addAction(closeAllAction);
 
 	quitAction = new QAction(tr("E&xit"), this);
@@ -1107,24 +1115,32 @@ void MainWindow::createDefaultMenus()
 
 	editOutputMenu = editMenu->addMenu(tr("&Output Log Pane"));
 
-	copyDebuggerAction = new QAction(QObject::tr("&Copy Selected Text"), 0);
+	signalMapperCopyDebugger = new QSignalMapper(this);
+	mCopyDebuggerAction.insert(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME,new QAction(QObject::tr("&Copy Selected Text"), 0));
 	//copyDebuggerAction->setShortcut(QKeySequence(""));
-	copyDebuggerAction->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
-	connect(copyDebuggerAction, SIGNAL(triggered()), outputWindowList, SLOT(copy()));
-	editOutputMenu->addAction(copyDebuggerAction);
+	mCopyDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME)->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
+	connect(mCopyDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), SIGNAL(triggered()), signalMapperCopyDebugger, SLOT(map()));
+	signalMapperCopyDebugger->setMapping(mCopyDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	editOutputMenu->addAction(mCopyDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME));
+	connect(signalMapperCopyDebugger, SIGNAL(mapped(const QString &)),this, SLOT(copyDebugger(const QString &)));
 
-	clearDebuggerAction = new QAction(QObject::tr("C&lear All Output Item(s)"), 0);
+	signalMapperClearDebugger = new QSignalMapper(this);
+	mClearDebuggerAction.insert(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME,new QAction(QObject::tr("C&lear All Output Item(s)"), 0));
 	//clearDebuggerAction->setShortcut(QKeySequence(""));
-	clearDebuggerAction->setStatusTip(tr("Clear the Debugger Output window."));
-	connect(clearDebuggerAction, SIGNAL(triggered()), this, SLOT(clearDebugger()));
-	editOutputMenu->addAction(clearDebuggerAction);
+	mClearDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME)->setStatusTip(tr("Clear the Debugger Output window."));
+	connect(mClearDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), SIGNAL(triggered()), signalMapperClearDebugger, SLOT(map()));
+	signalMapperClearDebugger->setMapping(mClearDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	editOutputMenu->addAction(mClearDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME));
+	connect(signalMapperClearDebugger, SIGNAL(mapped(const QString &)),this, SLOT(clearDebugger(const QString &)));
 
-
-	saveDebuggerAction = new QAction(QObject::tr("&Save All Output information to a text file..."), 0);
-	//saveDebuggerAction->setShortcut(QKeySequence(""));
-	saveDebuggerAction->setStatusTip(tr("Save the Debugger Output window."));
-	connect(saveDebuggerAction, SIGNAL(triggered()), this, SLOT(saveOutputWindow()));
-	editOutputMenu->addAction(saveDebuggerAction);
+	signalMapperSaveDebugger = new QSignalMapper(this);
+	mSaveDebuggerAction.insert(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME,new QAction(QObject::tr("&Save All Output information to a text file..."), 0));
+	//mSaveDebuggerAction->setShortcut(QKeySequence(""));
+	mSaveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME)->setStatusTip(tr("Save the Debugger Output window."));
+	connect(mSaveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), SIGNAL(triggered()), signalMapperSaveDebugger, SLOT(map()));
+	signalMapperSaveDebugger->setMapping(mSaveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	editOutputMenu->addAction(mSaveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME));
+	connect(signalMapperSaveDebugger, SIGNAL(mapped(const QString &)),this, SLOT(saveDebugger(const QString &)));
 
 	editMenu->addSeparator();
 
@@ -1390,30 +1406,105 @@ void MainWindow::showDocumentation()
 	helpAssistant->showDocumentation("index.html", globAppInfo);
 }
 
-void MainWindow::write2OutputWindow(const QString &text2Write)// See the defined MAIN_PROGRAM_LOG_SLOT_NAME
+void MainWindow::write2OutputWindow(const QString &text2Write, const QString &sTabName)// See the defined MAIN_PROGRAM_LOG_SLOT_NAME
 {
-	if(bMainWindowIsInitialized)
-		outputWindowList->append(text2Write);
-		//outputWindowList->addItem(text2Write);
-}
-
-void MainWindow::reOpenCurrentFile(const bool &bNativeFileViewer)// See the defined MAIN_PROGRAM_REOPEN_SLOT_NAME
-{
-	//return;
-	if(mdiArea->subWindowList().isEmpty() == false)
+	if(mTabNameToOutputWindowList.contains(sTabName))
 	{
-		bool bResult = closeActiveSubWindow(false);
-		bResult = bResult;
+		if(bMainWindowIsInitialized)
+			mTabNameToOutputWindowList[sTabName]->append(text2Write);
 	}
 }
 
-void MainWindow::clearOutputWindow() 
+void MainWindow::reOpenCurrentFile(const QString &strCanonicalFilePath, const bool &bNativeFileViewer)// See the defined MAIN_PROGRAM_REOPEN_SLOT_NAME
 {
-	clearDebugger();
+	QMdiSubWindow *existing = findMdiChild(strCanonicalFilePath);
+	if (existing)
+	{
+		if (DocManager->maybeSave(existing,false))
+		{
+			QApplication::setOverrideCursor(Qt::WaitCursor);
+			mdiArea->setActiveSubWindow(existing);
+			DocManager->setModFlagAndTitle(DocManager->getDocIndex(existing),false);//Trick for a successful closing of document, see next
+			closeActiveDocument();
+			QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), "openFiles", Qt::QueuedConnection, Q_ARG(QString, strCanonicalFilePath), Q_ARG(QStringList, QStringList()), Q_ARG(bool, bNativeFileViewer));
+			QApplication::restoreOverrideCursor();
+		}
+	}
 }
 
-bool MainWindow::saveOutputWindow(const QString &sFilePath, const bool &bOverwrite)
+void MainWindow::clearOutputWindow(const QString &sTabName) 
 {
+	clearDebugger(sTabName);
+}
+
+bool MainWindow::addOutputWindow(const QString &sTabName) 
+{
+	if(mTabNameToOutputWindowList.contains(sTabName))
+		return false;
+	QTextEdit *tmpTextEdit = new QTextEdit();
+	tmpTextEdit->setReadOnly(true);
+	mTabNameToOutputWindowList.insert(sTabName,tmpTextEdit);
+	outputTabWidget->addTab(tmpTextEdit, sTabName);
+	mTabNameToOutputWindowList[sTabName]->setContextMenuPolicy(Qt::CustomContextMenu);
+	mTabNameToConnectionList.insert(sTabName,connect(mTabNameToOutputWindowList[sTabName], &QTextEdit::customContextMenuRequested, [=](const QPoint &arg) {DebugcontextMenuEvent(arg, sTabName);}));
+	
+	mClearDebuggerAction.insert(sTabName,new QAction(QObject::tr("C&lear All Output Item(s)"), 0));
+	//clearDebuggerAction->setShortcut(QKeySequence(""));
+	mClearDebuggerAction.value(sTabName)->setStatusTip(tr("Clear the Debugger Output window."));
+	connect(mClearDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperClearDebugger, SLOT(map()));
+	signalMapperClearDebugger->setMapping(mClearDebuggerAction.value(sTabName), sTabName);
+
+	mCopyDebuggerAction.insert(sTabName,new QAction(QObject::tr("&Copy Selected Text"), 0));
+	//CopyDebuggerAction->setShortcut(QKeySequence(""));
+	mCopyDebuggerAction.value(sTabName)->setStatusTip(tr("Copy the Selected Debugger Output window line(s)."));
+	connect(mCopyDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperCopyDebugger, SLOT(map()));
+	signalMapperCopyDebugger->setMapping(mCopyDebuggerAction.value(sTabName), sTabName);
+
+	mSaveDebuggerAction.insert(sTabName,new QAction(QObject::tr("&Save All Output information to a text file..."), 0));
+	//SaveDebuggerAction->setShortcut(QKeySequence(""));
+	mSaveDebuggerAction.value(sTabName)->setStatusTip(tr("Save the Debugger Output window."));
+	connect(mSaveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperSaveDebugger, SLOT(map()));
+	signalMapperSaveDebugger->setMapping(mSaveDebuggerAction.value(sTabName), sTabName);
+
+	return true;
+}
+
+bool MainWindow::removeOutputWindow(const QString &sTabName)
+{
+	if(sTabName == MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME)
+		return false;
+	//if(mTabNameToOutputWindowList.contains(sTabName) == false)
+	//	return false;
+	int nTabIndex = -1;
+	for(int i=0;i<outputTabWidget->count();i++)
+	{
+		if(outputTabWidget->tabText(i) == sTabName)
+		{
+			nTabIndex = i;
+			break;
+		}
+	}
+	if(nTabIndex >= 0)
+	{
+		if(mTabNameToConnectionList.contains(sTabName))
+			disconnect(mTabNameToConnectionList.value(sTabName));
+		outputTabWidget->removeTab(nTabIndex);
+		mTabNameToOutputWindowList.remove(sTabName);
+
+		disconnect(mClearDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperClearDebugger, SLOT(map()));
+		disconnect(mCopyDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperCopyDebugger, SLOT(map()));
+		disconnect(mSaveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperSaveDebugger, SLOT(map()));
+
+		return true;
+	}
+	mTabNameToOutputWindowList.remove(sTabName);
+	return false;
+}
+
+bool MainWindow::saveOutputWindow(const QString &sFilePath, const bool &bOverwrite, const QString &sTabName)
+{
+	if(mTabNameToOutputWindowList.contains(sTabName) == false)
+		return false;
 	QString fileName;
 	QFile file;
 	if (sFilePath.isEmpty())
@@ -1438,8 +1529,8 @@ bool MainWindow::saveOutputWindow(const QString &sFilePath, const bool &bOverwri
 	}
 	if (file.open(QFile::WriteOnly | QFile::Text)) 
 	{
-		if(outputWindowList->toPlainText() != "")
-			file.write(outputWindowList->toPlainText().toLatin1());
+		if(mTabNameToOutputWindowList[sTabName]->toPlainText() != "")
+			file.write(mTabNameToOutputWindowList[sTabName]->toPlainText().toLatin1());
 		//if(outputWindowList->count() > 0)
 		//{
 			/*for(int i=0;i<outputWindowList->count();i++) 
@@ -1459,37 +1550,29 @@ bool MainWindow::saveOutputWindow(const QString &sFilePath, const bool &bOverwri
 
 }
 
-void MainWindow::clearDebugger()
+void MainWindow::clearDebugger(const QString &sTabName)
 {
-	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
-		qDebug() << "Verbose Mode: " << __FUNCTION__;
-	outputWindowList->clear();
+	if(mTabNameToOutputWindowList.contains(sTabName))
+	{
+		if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+			qDebug() << "Verbose Mode: " << __FUNCTION__;
+		mTabNameToOutputWindowList[sTabName]->clear();
+	}
 }
 
-void MainWindow::copyDebugger()
+void MainWindow::copyDebugger(const QString &sTabName)
 {
-	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
-		qDebug() << "Verbose Mode: " << __FUNCTION__;
-	QList<QPair<QString,int>> lListTextAndRows;
-	QList <QListWidgetItem *> listItems;
-	QString sResult = "";
-	int nRow,i;
-	//listItems = outputWindowList->selectedItems();
-	if(listItems.isEmpty())
-		return;
-	for(i=0;i<listItems.size();i++) 
+	if(mTabNameToOutputWindowList.contains(sTabName))
 	{
-		nRow = 0;//outputWindowList->row(listItems[i]);//0 means false
-		lListTextAndRows.append(qMakePair(listItems[i]->text(),nRow));
+		if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+			qDebug() << "Verbose Mode: " << __FUNCTION__;
+		mTabNameToOutputWindowList[sTabName]->copy();
 	}
-	qSort(lListTextAndRows.begin(), lListTextAndRows.end(), QPairSecondComparer());	
-	for(i=0;i<lListTextAndRows.size();i++) 
-	{
-		sResult.append(lListTextAndRows.at(i).first);
-		if(i<lListTextAndRows.size()-1)
-			sResult.append("\n");
-	}
-	QApplication::clipboard()->setText(sResult);
+}
+
+void MainWindow::saveDebugger(const QString &sTabName)
+{
+	saveOutputWindow("", false,sTabName);
 }
 
 void MainWindow::createDockWindows()
@@ -1498,29 +1581,25 @@ void MainWindow::createDockWindows()
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	debugLogDock = new QDockWidget(tr("Output Log"), this);
 	debugLogDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea);	
-	outputWindowList = new QTextEdit(debugLogDock);
-	outputWindowList->setReadOnly(true);
+	mTabNameToOutputWindowList.insert(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME,new QTextEdit());
+	mTabNameToOutputWindowList[MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME]->setReadOnly(true);
+	outputTabWidget = new QTabWidget();
+	outputTabWidget->addTab(mTabNameToOutputWindowList[MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME],MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
 	//outputWindowList->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	//QString tmpColor = QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	//outputWindowList->setStyleSheet("* { background-color:rgb(" + tmpColor + "); padding: 10px ; color:rgb(136,0,21)}");
-	debugLogDock->setWidget(outputWindowList);
+	//debugLogDock->setWidget(outputWindowList);
+	debugLogDock->setWidget(outputTabWidget);
 	addDockWidget(Qt::BottomDockWidgetArea, debugLogDock);//(Qt::RightDockWidgetArea, debugLogDock);
-
+	//addDockWidget(Qt::BottomDockWidgetArea, testrr);//(Qt::RightDockWidgetArea, debugLogDock);
 	//viewMenu->addAction(debugLogDock->toggleViewAction());
 	//connect(debugList, SIGNAL(currentTextChanged(const QString &)),
 	//	this, SLOT(insertCustomer(const QString &)));
-
-//////////////////////////////////////////////////////////////////////////
-
+	//////////////////////////////////////////////////////////////////////////
 	debuggerDock = new QDockWidget(tr("Debugger"), this);
 	debuggerDock->setAllowedAreas(Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::LeftDockWidgetArea | Qt::BottomDockWidgetArea);
-	
-//	stackWidget = AppScriptEngine->debugger->widget(QScriptEngineDebugger::StackWidget);
-
-
+	//stackWidget = AppScriptEngine->debugger->widget(QScriptEngineDebugger::StackWidget);
 	//debuggerMainWindow = AppScriptEngine->DebuggerStandardWindow();//debugger->standardWindow();
-	
-	
 	//debuggerMainWindow->setWindowFlags(Qt::WindowFlags::)
 	//debuggerMainWindow->showMaximized();
 	//debugList2 = new QListWidget(debuggerDock);
@@ -1528,14 +1607,10 @@ void MainWindow::createDockWindows()
 	//layout->addWidget(debugList2);
 	//layout->addWidget(codeWindow);
 	//layout->addWidget(stackWidget);
-
 	//debuggerDock->setWidget(stackWidget);//codeWindow);//debugList2);
-
 	//stackWidget->setParent(debuggerDock);
 	//debuggerMainWindow->setParent(debuggerDock);
-
 	//debuggerDock->setLayout(layout);
-	
 	//addDockWidget(Qt::BottomDockWidgetArea, debuggerDock);
 	//tabifyDockWidget(
 }
@@ -2168,10 +2243,17 @@ QString MainWindow::getEnvironmentVariabele(QString strName)
 	return QProcessEnvironment::systemEnvironment().value(strName);
 }
 
-void MainWindow::closeActiveDocument(bool bAutoSaveChanges)
+void MainWindow::closeActiveDocument()
 {
-	closeActiveSubWindow(bAutoSaveChanges);
-	//closeSubWindow(bAutoSaveChanges);
+	QMdiSubWindow* activeWin = mdiArea->activeSubWindow();
+	if(activeWin)
+	{
+		mdiArea->closeActiveSubWindow();
+	}
+	else
+	{
+		qWarning() << __FUNCTION__ << "Currently there's no active window to close!";
+	}
 }
 
 void MainWindow::executeActiveDocument()
@@ -2442,7 +2524,7 @@ void MainWindow::setStartupFiles(const QString &path)
 	startUpFiles = path.split(";");
 }
 
-void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesToLoad)
+void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesToLoad, const bool &bViewAsText)
 {
 	QStringList fileNames;
 	//QString fileExtList("QT Script files (*.qs);;"
@@ -2483,7 +2565,10 @@ void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesTo
 				//m_backgroundAction->setEnabled(false);
 				return;
 			}
-			parseFile(file);
+			if(parseFile(file,bViewAsText))
+			{
+				updateMenuControls();
+			}
 			//m_outlineAction->setEnabled(true);
 			//m_backgroundAction->setEnabled(true);
 			//resize(SVGPreviewer->sizeHint() + QSize(80, 80 + menuBar()->height()));
@@ -2491,7 +2576,7 @@ void MainWindow::openFiles(const QString &fileToLoad, const QStringList &filesTo
 	}
 }
 
-bool MainWindow::parseFile(const QFile &file)
+bool MainWindow::parseFile(const QFile &file, const bool &bParseAsText)
 {
 	QMdiSubWindow *existing = findMdiChild(file.fileName());
 	if (existing) {
@@ -2504,7 +2589,7 @@ bool MainWindow::parseFile(const QFile &file)
 	fileExtension = fileInfo.suffix();
 	GlobalApplicationInformation::DocType tempDocType = DocManager->getDocType(fileExtension);
 	int DocIndex;
-	newDocument(tempDocType,DocIndex,fileExtension, fileInfo.canonicalFilePath());
+	newDocument(tempDocType,DocIndex,fileExtension, fileInfo.canonicalFilePath(), bParseAsText);
 
 	QApplication::setOverrideCursor(Qt::WaitCursor);
 	if (DocManager->loadFile(DocIndex,file.fileName()))
@@ -2662,22 +2747,25 @@ void MainWindow::newFile()
 	statusBar()->showMessage(tr("New File created"), 2000);
 }
 
-void MainWindow::newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath)
+void MainWindow::newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension, const QString &strCanonicalFilePath, const bool &bNativeMainAppView)
 {
 	DocIndex = 0;
-	//QsciScintilla *newChild = qobject_cast<QsciScintilla *>(DocManager->add(docType,DocIndex,strExtension));
-	QWidget *newChild = DocManager->add(docType,DocIndex,strExtension,strCanonicalFilePath);
+	QWidget *newChild = DocManager->add(docType,DocIndex,strExtension,strCanonicalFilePath, bNativeMainAppView);
+	//QsciScintilla *newQSCIChild = qobject_cast<QsciScintilla *>(newChild);
+
 	QMdiSubWindow *subWindow = mdiArea->addSubWindow(newChild);
 	subWindow->setAttribute(Qt::WA_DeleteOnClose);
+	//subWindow->setToolTip(strCanonicalFilePath);
 	DocManager->setSubWindow(DocIndex,subWindow);
+	bool bResult = false;
 
 	if(newChild->metaObject()->indexOfSignal(newChild->metaObject()->normalizedSignature(FUNC_PLUGIN_COPYAVAILABLE_FULL))>0)
 	{
-		connect(newChild, SIGNAL(CopyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
-		connect(newChild, SIGNAL(CopyAvailable(bool)),	copyAction, SLOT(setEnabled(bool)));
+		bResult = connect(newChild, SIGNAL(copyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
+		bResult = bResult && connect(newChild, SIGNAL(copyAvailable(bool)),	copyAction, SLOT(setEnabled(bool)));
 	}
 	if(newChild->metaObject()->indexOfSignal(newChild->metaObject()->normalizedSignature(FUNC_PLUGIN_CURSORPOSCHANGED_FULL))>0)
-		connect(newChild, SIGNAL(CursorPositionChanged(int, int)), this, SLOT(CursorPositionChanged(int, int)));
+		bResult = connect(newChild, SIGNAL(cursorPositionChanged(int, int)), this, SLOT(CursorPositionChangedHandler(int, int)));
 	newChild->showMaximized();
 }
 
@@ -2686,17 +2774,17 @@ void MainWindow::setupStatusBar()
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	StatusPositionLabel = new QLabel("");
-	StatusNameLabel = new QLabel("");
+	StatusFilePathLabel = new QLabel("");
 	StatusLinesLabel = new QLabel("");
-	StatusPositionLabel->setToolTip(QObject::tr("Cursor position"));
-	StatusNameLabel->setToolTip(QObject::tr("Document name"));
+	StatusPositionLabel->setToolTip(QObject::tr("Cursor Position"));
+	StatusFilePathLabel->setToolTip(QObject::tr("Document Path"));
 	StatusLinesLabel->setToolTip(QObject::tr("Number of Lines"));
-	this->statusBar()->addPermanentWidget(StatusPositionLabel);
-	this->statusBar()->addPermanentWidget(StatusNameLabel);
+	this->statusBar()->addPermanentWidget(StatusFilePathLabel);
 	this->statusBar()->addPermanentWidget(StatusLinesLabel);
+	this->statusBar()->addPermanentWidget(StatusPositionLabel);
 }
 
-void MainWindow::NumberOfLinesChanged(int nrOfLines)
+void MainWindow::NumberOfLinesChangedHandler(int nrOfLines)
 {
 	StatusLinesLabel->setText(QString("Lines: %1").arg(nrOfLines));
 }
@@ -2763,7 +2851,7 @@ bool MainWindow::check4ReParseFile(const QString &sFilename)
 		QMessageBox::Yes | QMessageBox::No);
 	if (ret == QMessageBox::Yes)
 	{
-		closeActiveDocument(true);
+		closeActiveDocument();
 		openFiles(sFilename);
 		return true;
 	}
@@ -2987,18 +3075,6 @@ void MainWindow::writeMainWindowSettings()
 	globAppInfo->setRegistryInformation(REGISTRY_DEBUGWINDOWWIDTH, debugLogDock->width(), "int");
 }
 
-bool MainWindow::closeActiveSubWindow(bool bAutoSaveChanges)
-{
-	QMdiSubWindow *tmpMdiChildPointer = activeMdiChild();
-	if (!DocManager->maybeSave(tmpMdiChildPointer,bAutoSaveChanges)) 
-	{
-		return false;
-	}
-	DocManager->remove(tmpMdiChildPointer);
-	mdiArea->closeActiveSubWindow();
-	return true;
-}
-
 bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 {
 	QAction *action = qobject_cast<QAction *>(sender());
@@ -3017,7 +3093,7 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 	}
 	if (action->data().toString() == "Close")//From menu(Close)
 	{
-		return closeActiveSubWindow(bAutoSaveChanges);
+		mdiArea->closeActiveSubWindow();
 	}
 	else if (action->data().toString() == "CloseAll")//From menu(Close All)
 	{
@@ -3035,7 +3111,7 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 	}
 	else //This must be called from the script?
 	{
-		return closeActiveSubWindow(bAutoSaveChanges);
+		mdiArea->closeActiveSubWindow();
 	}
 	return false;
 }

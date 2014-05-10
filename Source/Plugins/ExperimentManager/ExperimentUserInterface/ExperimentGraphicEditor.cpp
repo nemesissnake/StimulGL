@@ -83,10 +83,14 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 	expStructVisualizer = NULL;
 	expBlockParamView = NULL;
 	tmpExpObjectParamDefs = NULL;
+
+	//bSkipIsClosingSignal = false;
 	
 	bShowGraphicalTreeView = true;
 	currentViewSettings.bSkipComments = true;
 	currentViewSettings.bSkipEmptyAttributes = false;
+
+	setAttribute(Qt::WA_DeleteOnClose);
 
 	configureActions(true);
 	setupExperimentTreeView();
@@ -97,7 +101,8 @@ ExperimentGraphicEditor::ExperimentGraphicEditor(QWidget *parent) : QWidget(pare
 
 ExperimentGraphicEditor::~ExperimentGraphicEditor()
 {
-	emit IsClosing(sCurrentCanonFilePath, false);
+	//if(bSkipIsClosingSignal == false)
+		emit IsClosing(sCurrentCanonFilePath, false);
 	emit IsDestructing(this);
 	configureActions(false);
 	staticGraphicWidgetsHashTable.clear();
@@ -318,7 +323,7 @@ void ExperimentGraphicEditor::setupMenuAndActions()
 	connect(action_Open_File, SIGNAL(triggered()), this, SLOT(openFile()));
 	connect(action_Save, SIGNAL(triggered()), this, SLOT(saveFile()));
 	connect(action_Close_File, SIGNAL(triggered()), this, SLOT(closeFile()));
-	connect(action_Quit, SIGNAL(triggered()), this, SLOT(close()));
+	connect(action_Quit, SIGNAL(triggered()), this, SLOT(closeDocument()));
 	connect(actionFind, SIGNAL(triggered()), this, SLOT(showFindDialog()));
 	connect(actionAdd_Node, SIGNAL(triggered()), this, SLOT(insertNode()));
 	connect(actionAdd_Subnode, SIGNAL(triggered()), this, SLOT(insertSubnode()));
@@ -414,6 +419,12 @@ void ExperimentGraphicEditor::openFile()
 	}
 }
 
+void ExperimentGraphicEditor::closeDocument()
+{
+	bool bAutoSave = false;
+	QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), "closeActiveDocument", Qt::QueuedConnection);
+}
+
 void ExperimentGraphicEditor::closeFile()
 {
 	//Deleting model && cleaning QTreeView
@@ -442,7 +453,7 @@ void ExperimentGraphicEditor::closeFile()
 	actionSwitchToDefaultView->setDisabled(true);
 }
 
-void ExperimentGraphicEditor::saveFile(const QString &sFilePath)
+bool ExperimentGraphicEditor::saveFile(const QString &sFilePath)
 {
 	QString fileName;
 	if(sFilePath.isEmpty())
@@ -454,8 +465,10 @@ void ExperimentGraphicEditor::saveFile(const QString &sFilePath)
 		fileName = QDir(fileName).canonicalPath();
 		pExpTreeModel->write(fileName);
 		setNewFileName(fileName);
-		emit ContentHasChanged(fileName,true);
+		emit ContentHasChanged(fileName,false);
+		return true;
 	}
+	return false;
 }
 
 void ExperimentGraphicEditor::setNewModel()
@@ -1250,28 +1263,9 @@ void ExperimentGraphicEditor::toggleBlocksView()
 
 void ExperimentGraphicEditor::switchToDefaultView()
 {
-
-	//QString errMessage = __FUNCTION__ + QString(": Could not create temporarily file.");
-	//QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
-	//this->abortExperimentObject();//this seems to work...
-	//return;
-
-	//QWidget* tmpWidget = MainAppInfo::getMainWindow();
-	bool bTextualView = true;
-	//this->deleteLater();
-	bool bAutoSave = false;
+	bool bNativeTextualView = true;
 	QString sFilePath = sCurrentCanonFilePath;
-	//QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowReOpenSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(bool, bTextualView));
-	QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), "closeActiveDocument", Qt::DirectConnection, Q_ARG(bool, bAutoSave));
-	QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), "openFiles", Qt::QueuedConnection, Q_ARG(QString, sFilePath));
-	//void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList());
-	//bool closeSubWindow(bool bAutoSaveChanges = false);
-
-	//MainWindow* tmpMainWindow = MainAppInfo::getMainWindow();
-	//tmpWidget->closeActiveDocument();
-
-	int a = 7+1;
-	return;
+	QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowReOpenSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, sFilePath), Q_ARG(bool, bNativeTextualView));
 }
 
 void ExperimentGraphicEditor::addDefinition()

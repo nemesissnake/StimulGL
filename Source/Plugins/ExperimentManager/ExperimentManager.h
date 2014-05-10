@@ -423,7 +423,6 @@ private:
 	void changeCurrentExperimentState(ExperimentState expCurrState);
 	QObject *getObjectElementById(int nID);
 	ExperimentState getCurrExperimentState() {return experimentCurrentState;}
-	void unloadExperiment();
 		
 	ExperimentParameterWidgets *expParamWidgets;
 	QList<ExperimentTreeItem*> ExperimentObjectTreeItemList;

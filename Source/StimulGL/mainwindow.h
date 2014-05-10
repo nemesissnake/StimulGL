@@ -29,6 +29,8 @@
 #define QT_WIDGETS_LIB
 #endif
 
+#define MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME		"Default"
+
 #include <QString>
 #include <QStringList>
 #include <QDir>
@@ -133,7 +135,7 @@ public slots:
 	 * @param fileToLoad a String containing a single path to a file that should be loaded.
 	 * @param filesToLoad a String Array containing multiple Strings containing the paths to the files that should be loaded.
 	 */
-	void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList());
+	void openFiles(const QString &fileToLoad = QString(), const QStringList &filesToLoad = QStringList(), const bool &bViewAsText = false);
 	/*! \brief Executes the current active document.
 	 *
 	 * This function executes the current active document (file that is opened and active).
@@ -179,9 +181,8 @@ public slots:
 	/*! \brief Closes the current active document.
 	 *
 	 * This function closes the document that is currently opened and active.
-	 * @param bAutoSaveChanges a boolean value determining whether the document should first save unsaved changes or not.
 	 */
-	void closeActiveDocument(bool bAutoSaveChanges = false);
+	void closeActiveDocument();
 	//void debugScript();
 	/*! \brief Initializes the main StimulGL application and the dynamic plugin loading.
 	 *
@@ -193,26 +194,45 @@ public slots:
 	 *
 	 * This function appends a provided String to the Output Log Window.
 	 * @param text2Write a String value holding the text that should be appended.
+	 * @param sTabName a String value holding the name of the tab where the text should be appended, if left empty then the text is automatically send to the first "Default" tab.
 	 */
-	void write2OutputWindow(const QString &text2Write = "");
-	/*! \brief Re-opens the current active document.
+	void write2OutputWindow(const QString &text2Write = "", const QString &sTabName = MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	/*! \brief Re-opens the document.
 	 *
-	 * This function first closes and re-opens the current active edited document.
+	 * This function first closes and re-opens the document.
+	 * @param strCanonicalFilePath a String value containing the canonical file path of the document.
 	 * @param bNativeFileViewer a Boolean value determining whether the file should be opened again by the default set file-handler (defined by a plug-in) or by StimulGL directly.
 	 */
-	void reOpenCurrentFile(const bool &bNativeFileViewer = false);
+	void reOpenCurrentFile(const QString &strCanonicalFilePath, const bool &bNativeFileViewer = false);
 	/*! \brief Clears the Output Log Window.
 	 *
 	 * This function clears the Output Log Window.
+	 * @param sTabName a String value holding the name of the tab that should be cleared, if left empty then the first "Default" tab is automatically cleared.
 	 */
-	void clearOutputWindow();
+	void clearOutputWindow(const QString &sTabName = MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	/*! \brief Add a new tab to the Output Log Window.
+	 *
+	 * This function adds a new tab to the Output Log Window.
+	 * @param sTabName a String value holding the name of the new tab.
+	 * @return a boolean value determining whether the function did insert a new tab successfully.
+	 */
+	bool removeOutputWindow(const QString &sTabName);
+	/*! \brief Removes a named tab from the Output Log Window.
+	 *
+	 * This function removes a named tab from the Output Log Window.
+	 * @param sTabName a String value holding the name of the tab that should be removed.
+	 * @return a boolean value determining whether the function could remove the tab successfully.
+	 */
+	bool addOutputWindow(const QString &sTabName);
 	/*! \brief Saves the Output Log Window.
 	 *
-	 * This function saves the Output Log Window to a text file.
+	 * This function saves the named Output Log Window to a text file.
 	 * @param sFilePath a String value holding the path to the destination file.
 	 * @param bOverwrite a Boolean value determining whether the destination file may be overwritten in case the file already exists.
+	 * @param sTabName a String value holding the name of the tab that should be saved.
+	 * @return a boolean value determining whether the function could remove the tab successfully.
 	 */
-	bool saveOutputWindow(const QString &sFilePath = "", const bool &bOverwrite = false);
+	bool saveOutputWindow(const QString &sFilePath = "", const bool &bOverwrite = false, const QString &sTabName = MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
 	/*! \brief forces the main application event loop to process its events.
 	 *
 	 * This function forces the main application event loop to process its events, see http://qt-project.org/doc/qt-5.1/qtcore/qcoreapplication.html#processEvents.
@@ -351,9 +371,10 @@ private slots:
 	void returnToOldMaxMinSizes();
 	void abortScript();
 	void setupContextMenus();
-	void DebugcontextMenuEvent(const QPoint &pos);
-	void clearDebugger();
-	void copyDebugger();
+	void DebugcontextMenuEvent(const QPoint &pos, const QString &sTabName = MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	void clearDebugger(const QString &sTabName = MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	void copyDebugger(const QString &sTabName = MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	void saveDebugger(const QString &sTabName = MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
 	void setupScriptEngine();
 	bool setupNetworkServer(const QString &sAddress = "" /*=QHostAddress::Any*/, quint16 port = 0);
 	void shutdownNetworkServer();
@@ -381,7 +402,7 @@ private slots:
 	void toUpperCase();
 	void toLowerCase();
 	void print();
-	void updateMenuControls(QMdiSubWindow *subWindow);
+	void updateMenuControls(QMdiSubWindow *subWindow = NULL);
 	void setActiveSubWindow(QWidget *window);
 	void updateWindowMenu();
 	void updateMarkersMenu();
@@ -392,8 +413,8 @@ private slots:
 	void removeAllMarkers();
 	void goToLine();
 	void gotoMarker();
-	void NumberOfLinesChanged(int nrOfLines);
-	void CursorPositionChanged(int line, int col);
+	void NumberOfLinesChangedHandler(int nrOfLines);
+	void CursorPositionChangedHandler(int line, int col);
 	void scriptLoaded(qint64 id);
 	void scriptUnloaded(qint64 id);
 
@@ -433,9 +454,9 @@ private:
 	QAction *newJavaScriptAction;
 	QAction *cutAction;
 	QAction *copyAction;
-	QAction *clearDebuggerAction;
-	QAction *copyDebuggerAction;
-	QAction *saveDebuggerAction;
+	QMap<QString,QAction *> mClearDebuggerAction;
+	QMap<QString,QAction *> mCopyDebuggerAction;
+	QMap<QString,QAction *> mSaveDebuggerAction;
 	QAction *pasteAction;
 	QAction *goToLineAction;
 	QAction *findAction;
@@ -469,7 +490,7 @@ private:
 	QMap<QString, QVariant> tmpNewActionMapping;//Can contain the extension and/or file type.. used for creating a new specific document type
 
 	QLabel *StatusPositionLabel;
-	QLabel *StatusNameLabel;
+	QLabel *StatusFilePathLabel;
 	QLabel *StatusLinesLabel;
 
 	QGraphicsScene *GraphScene;
@@ -514,12 +535,17 @@ private:
 	QDockWidget *debugLogDock;
 	QDockWidget *debuggerDock;
 
-	QTextEdit *outputWindowList;//QListWidget *outputWindowList;
+	QTabWidget *outputTabWidget;
+	QMap<QString, QTextEdit *> mTabNameToOutputWindowList;
+	QMap<QString, QMetaObject::Connection> mTabNameToConnectionList;
 	MainWindow *debuggerMainWindow;
 	
 	DocumentManager *DocManager;
     QMdiArea *mdiArea;
 	QSignalMapper *windowMapper;
+	QSignalMapper *signalMapperClearDebugger;
+	QSignalMapper *signalMapperCopyDebugger;
+	QSignalMapper *signalMapperSaveDebugger;
 	QToolBar *fileToolBar;
 	QToolBar *editToolBar;
 	QToolBar *toolsToolBar;
@@ -547,7 +573,7 @@ private:
 	QAction* integratePlugin(QObject *plugin, PluginCollection *collection);
 	void setupToolBars();
 	void setRenderer();
-	void newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension = "", const QString &strCanonicalFilePath = "");
+	void newDocument(const GlobalApplicationInformation::DocType &docType, int &DocIndex, const QString &strExtension = "", const QString &strCanonicalFilePath = "", const bool &bNativeMainAppView = false);
 	//void setupSyntaxHighlighting(MdiChild *childWindow,MDIDocumentType tempFileType);
 	void parseRemainingGlobalSettings();
 	bool configureDebugger();
@@ -556,7 +582,7 @@ private:
 	bool checkPluginCompatibility(QObject *plugin);
 	void parsePluginDefinedFileExtensions(QObject *plugin);
     bool popPluginIntoMenu(QObject *plugin);
-	bool parseFile(const QFile &file);
+	bool parseFile(const QFile &file, const bool &bParseAsText = false);
 	void setCurrentFile(const QString &fileName);
 	void updateRecentFileActions();
 	QString strippedName(const QString &fullFileName);
@@ -566,7 +592,6 @@ private:
 	void updateRecentFileList(const QString &fileName);
 	void setDockSize(QDockWidget *dock, int setWidth, int setHeight);
 	bool check4ReParseFile(const QString &sFilename);
-	bool closeActiveSubWindow(bool bAutoSaveChanges = false);
 
 public:
 	bool extendAPICallTips(const QMetaObject* metaScriptObject = NULL);
