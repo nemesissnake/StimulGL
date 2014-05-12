@@ -1794,6 +1794,10 @@ bool ExperimentManager::connectExperimentObjects(bool bDisconnect, int nObjectID
 		}
 		return true;
 	}
+	else if (currentExperimentTree->getTreeElements(strList,ExperimentObjectTreeItemList) == 0)
+	{
+		return true;//Just no connections defined, but still valid
+	}
 	return false;
 }
 
