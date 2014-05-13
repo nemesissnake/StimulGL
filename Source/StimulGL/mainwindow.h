@@ -216,7 +216,7 @@ public slots:
 	 * @param sTabName a String value holding the name of the new tab.
 	 * @return a boolean value determining whether the function did insert a new tab successfully.
 	 */
-	bool removeOutputWindow(const QString &sTabName);
+	bool removeOutputWindow(const QString &sTabName = MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
 	/*! \brief Removes a named tab from the Output Log Window.
 	 *
 	 * This function removes a named tab from the Output Log Window.
@@ -457,6 +457,7 @@ private:
 	QMap<QString,QAction *> mClearDebuggerAction;
 	QMap<QString,QAction *> mCopyDebuggerAction;
 	QMap<QString,QAction *> mSaveDebuggerAction;
+	QMap<QString,QAction *> mRemoveDebuggerAction;
 	QAction *pasteAction;
 	QAction *goToLineAction;
 	QAction *findAction;
@@ -546,6 +547,7 @@ private:
 	QSignalMapper *signalMapperClearDebugger;
 	QSignalMapper *signalMapperCopyDebugger;
 	QSignalMapper *signalMapperSaveDebugger;
+	QSignalMapper *signalMapperRemoveDebugger;
 	QToolBar *fileToolBar;
 	QToolBar *editToolBar;
 	QToolBar *toolsToolBar;

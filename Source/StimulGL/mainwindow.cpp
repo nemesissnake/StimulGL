@@ -362,9 +362,14 @@ void MainWindow::DebugcontextMenuEvent(const QPoint &pos, const QString &sTabNam
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
 		qDebug() << "Verbose Mode: " << __FUNCTION__;
 	QMenu menu(this);
-	menu.addAction(mClearDebuggerAction.value(sTabName));
-	menu.addAction(mCopyDebuggerAction.value(sTabName));
-	menu.addAction(mSaveDebuggerAction.value(sTabName));
+	if(mClearDebuggerAction.contains(sTabName))
+		menu.addAction(mClearDebuggerAction.value(sTabName));
+	if(mCopyDebuggerAction.contains(sTabName))
+		menu.addAction(mCopyDebuggerAction.value(sTabName));
+	if(mSaveDebuggerAction.contains(sTabName))
+		menu.addAction(mSaveDebuggerAction.value(sTabName));
+	if(mRemoveDebuggerAction.contains(sTabName))
+		menu.addAction(mRemoveDebuggerAction.value(sTabName));
 	menu.exec(mTabNameToOutputWindowList[sTabName]->viewport()->mapToGlobal(pos));
 }
 
@@ -812,6 +817,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 			tmpCopyAction->setEnabled(true);
 		foreach(QAction* tmpSaveAction,mSaveDebuggerAction)
 			tmpSaveAction->setEnabled(true);
+		foreach(QAction* tmpRemoveAction,mRemoveDebuggerAction)
+			tmpRemoveAction->setEnabled(true);		
 
 		goToLineAction->setEnabled(hasMdiChild);
 		goToMatchingBraceAction->setEnabled(hasMdiChild);
@@ -1142,6 +1149,10 @@ void MainWindow::createDefaultMenus()
 	editOutputMenu->addAction(mSaveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME));
 	connect(signalMapperSaveDebugger, SIGNAL(mapped(const QString &)),this, SLOT(saveDebugger(const QString &)));
 
+	signalMapperRemoveDebugger = new QSignalMapper(this);
+	signalMapperRemoveDebugger->setMapping(mRemoveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	connect(signalMapperRemoveDebugger, SIGNAL(mapped(const QString &)),this, SLOT(removeOutputWindow(const QString &)));
+
 	editMenu->addSeparator();
 
 	cutAction = new QAction(QIcon(":/resources/cut.png"), tr("Cu&t"), this);
@@ -1466,6 +1477,12 @@ bool MainWindow::addOutputWindow(const QString &sTabName)
 	connect(mSaveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperSaveDebugger, SLOT(map()));
 	signalMapperSaveDebugger->setMapping(mSaveDebuggerAction.value(sTabName), sTabName);
 
+	mRemoveDebuggerAction.insert(sTabName,new QAction(QObject::tr("&Delete this tabbed Output window"), 0));
+	//mRemoveDebuggerAction->setShortcut(QKeySequence(""));
+	mRemoveDebuggerAction.value(sTabName)->setStatusTip(tr("Delete the Debugger Output window."));
+	connect(mRemoveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperRemoveDebugger, SLOT(map()));
+	signalMapperRemoveDebugger->setMapping(mRemoveDebuggerAction.value(sTabName), sTabName);
+
 	return true;
 }
 
@@ -1491,9 +1508,14 @@ bool MainWindow::removeOutputWindow(const QString &sTabName)
 		outputTabWidget->removeTab(nTabIndex);
 		mTabNameToOutputWindowList.remove(sTabName);
 
-		disconnect(mClearDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperClearDebugger, SLOT(map()));
-		disconnect(mCopyDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperCopyDebugger, SLOT(map()));
-		disconnect(mSaveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperSaveDebugger, SLOT(map()));
+		if(mClearDebuggerAction.contains(sTabName))
+			disconnect(mClearDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperClearDebugger, SLOT(map()));
+		if(mCopyDebuggerAction.contains(sTabName))
+			disconnect(mCopyDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperCopyDebugger, SLOT(map()));
+		if(mSaveDebuggerAction.contains(sTabName))
+			disconnect(mSaveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperSaveDebugger, SLOT(map()));
+		if(mRemoveDebuggerAction.contains(sTabName))
+			disconnect(mRemoveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperRemoveDebugger, SLOT(map()));
 
 		return true;
 	}
