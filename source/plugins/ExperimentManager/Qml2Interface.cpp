@@ -18,9 +18,15 @@ void Qml2Interface::setmessage(const QString &a)
 		emit messageChanged();
 	}
 }
+
 QString Qml2Interface::message() const 
 {
 	return m_message;
+}
+
+QString Qml2Interface::RootDirectory() const 
+{
+	return MainAppInfo::appDirPath();
 }
 
 QString Qml2Interface::doSomething()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>440</width>
+    <height>310</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,8 +18,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
-     <height>251</height>
+     <width>441</width>
+     <height>261</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -38,8 +38,14 @@
        <x>10</x>
        <y>20</y>
        <width>241</width>
-       <height>19</height>
+       <height>21</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>Do not automatically load QT Script bindings</string>
@@ -55,10 +61,16 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
-       <width>301</width>
-       <height>19</height>
+       <y>50</y>
+       <width>411</width>
+       <height>31</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>Allow multiple instances simultaneously running.</string>
@@ -76,8 +88,8 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
-       <width>281</width>
+       <y>60</y>
+       <width>301</width>
        <height>20</height>
       </rect>
      </property>
@@ -85,10 +97,10 @@
     <widget class="QPushButton" name="btnBrowseForUserDocumentsRootDirectory">
      <property name="geometry">
       <rect>
-       <x>310</x>
-       <y>32</y>
-       <width>75</width>
-       <height>31</height>
+       <x>330</x>
+       <y>50</y>
+       <width>91</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -100,9 +112,15 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>171</width>
-       <height>16</height>
+       <width>261</width>
+       <height>21</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>User Documents Root Directory:</string>
@@ -121,9 +139,15 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>241</width>
-       <height>19</height>
+       <width>361</width>
+       <height>21</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>Open External Debugger on Syntax Error</string>
@@ -142,8 +166,8 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>71</width>
-       <height>16</height>
+       <width>121</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
@@ -153,10 +177,10 @@
     <widget class="QRadioButton" name="rdb_3DRenderer">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>20</y>
-       <width>82</width>
-       <height>19</height>
+       <x>20</x>
+       <y>50</y>
+       <width>91</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
@@ -169,10 +193,10 @@
     <widget class="QRadioButton" name="rdb_3DRenderer_2">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>40</y>
-       <width>82</width>
-       <height>19</height>
+       <x>20</x>
+       <y>80</y>
+       <width>91</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
@@ -182,10 +206,10 @@
     <widget class="QRadioButton" name="rdb_3DRenderer_3">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>60</y>
-       <width>81</width>
-       <height>20</height>
+       <x>20</x>
+       <y>110</y>
+       <width>91</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
@@ -198,15 +222,116 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>200</x>
-       <y>40</y>
-       <width>151</width>
-       <height>19</height>
+       <x>130</x>
+       <y>80</y>
+       <width>281</width>
+       <height>21</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>High Quality Antialiasing</string>
      </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Scripting</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>421</width>
+       <height>201</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Include directories:</string>
+     </property>
+     <widget class="QPushButton" name="pbNewScriptIncludeDir">
+      <property name="geometry">
+       <rect>
+        <x>361</x>
+        <y>30</y>
+        <width>41</width>
+        <height>34</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Browse...</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbScriptIncludeMoveUp">
+      <property name="geometry">
+       <rect>
+        <x>361</x>
+        <y>70</y>
+        <width>41</width>
+        <height>34</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Move Up...</string>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbScriptIncludeMoveDown">
+      <property name="geometry">
+       <rect>
+        <x>361</x>
+        <y>110</y>
+        <width>41</width>
+        <height>34</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Move Down...</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="lwScriptIncludeDirs">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>341</width>
+        <height>161</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pbScriptIncludeDelete">
+      <property name="geometry">
+       <rect>
+        <x>361</x>
+        <y>150</y>
+        <width>41</width>
+        <height>34</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Delete...</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="tab4">
@@ -221,9 +346,15 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>331</width>
-       <height>19</height>
+       <width>381</width>
+       <height>21</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>Enable the External Network Server at startup.</string>
@@ -235,14 +366,20 @@
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>150</y>
-       <width>291</width>
+       <x>20</x>
+       <y>190</y>
+       <width>321</width>
        <height>21</height>
       </rect>
      </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic; color:#ff0000;&quot;&gt;Changes made here require a reboot of StimulGL!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic; color:#ff0000;&quot;&gt;Changes made here require a reboot!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QGroupBox" name="gbNetworkServerSettings">
@@ -252,9 +389,9 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>50</y>
-       <width>361</width>
-       <height>81</height>
+       <y>60</y>
+       <width>411</width>
+       <height>121</height>
       </rect>
      </property>
      <property name="title">
@@ -263,9 +400,9 @@
      <widget class="QLineEdit" name="edtNetworkServerAddress">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>20</y>
-        <width>91</width>
+        <x>100</x>
+        <y>30</y>
+        <width>71</width>
         <height>20</height>
        </rect>
       </property>
@@ -285,8 +422,8 @@
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>50</y>
+        <x>50</x>
+        <y>80</y>
         <width>41</width>
         <height>20</height>
        </rect>
@@ -298,9 +435,9 @@
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>61</width>
+        <x>0</x>
+        <y>30</y>
+        <width>91</width>
         <height>20</height>
        </rect>
       </property>
@@ -311,11 +448,17 @@
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
-        <x>190</x>
-        <y>50</y>
-        <width>161</width>
-        <height>20</height>
+        <x>180</x>
+        <y>80</y>
+        <width>221</width>
+        <height>21</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Enter '0' for auto assignment.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -324,11 +467,17 @@
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
-        <x>190</x>
-        <y>20</y>
-        <width>161</width>
+        <x>180</x>
+        <y>30</y>
+        <width>231</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Leave empty for auto discovery.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -337,9 +486,9 @@
      <widget class="QSpinBox" name="edtNetworkServerPort">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>50</y>
-        <width>91</width>
+        <x>100</x>
+        <y>80</y>
+        <width>71</width>
         <height>22</height>
        </rect>
       </property>
@@ -357,16 +506,25 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>260</y>
-     <width>381</width>
-     <height>33</height>
+     <y>270</y>
+     <width>421</width>
+     <height>36</height>
     </rect>
    </property>
    <layout class="QHBoxLayout">
     <property name="spacing">
      <number>6</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>

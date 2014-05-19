@@ -129,6 +129,21 @@ public slots:
 	 *  See also MainWindow.invokeJavaScriptConfigurationFile().
 	 */
 	void showJavaScriptConfigurationFile();
+	/*! \brief Adds an include path/directory for the script engine to search in for an included file.
+	 *
+	 *  This function adds an include path/directory for the script engine to search in for an included file.
+	 *  Whenever the script "Include()" command cannot be resolved automatically (using the active docments directory) all the included paths appended with this method are then used for resolving the command.
+	 * @param sPath a String containing the path of the path/directory that should be appended to the include script paths.
+	 * @return a boolean value determining whether the function could remove the tab successfully.
+	 */
+	bool addScriptIncludePath(const QString &sPath);
+	/*! \brief Returns an array containing all the appended include paths/directories for the script engine to search in for an included file.
+	 *
+	 *  This function returns an array containing all the appended include paths/directories for the script engine to search in for an included file.
+	 *  See also MainWindow::addScriptIncludePath()
+	 * @return a string array containing the requested paths/directories.
+	 */
+	QStringList getScriptIncludePaths();
 	/*! \brief Opens one or more files.
 	 *
 	 *  This function can open one or more files.
@@ -188,6 +203,7 @@ public slots:
 	 *
 	 * This function Initializes the main StimulGL application and the dynamic plugin loading, this is automatically done during startup.
 	 * @param mainFlags a GlobalApplicationInformation::MainProgramModeFlags value holding the flags used for the initialization.
+	 * @return a boolean value determining whether the function could remove the tab successfully.
 	 */
 	bool initialize(GlobalApplicationInformation::MainProgramModeFlags mainFlags = 0);
 	/*! \brief Appends a text String to the Output Log Window.
@@ -424,7 +440,6 @@ private:
 	QList<QScriptContextStrc> currentScriptEngineContexes;
 	QSize oldDockMaxSize, oldDockMinSize;
 	QString strAdditionalFileExtensions;
-	GlobalApplicationInformation::MainProgramModeFlags StimulGLFlags;
 	GlobalApplicationInformation::ScriptRunMode StimulGLScriptRunMode;
 	NetworkServer *tcpServer;
 	QSplashScreen *MainSplashScreen;
@@ -555,10 +570,9 @@ private:
     QString m_currentPath;
     QStringList pluginFileNames;
 	PluginCollection *Plugins;
-	GlobalApplicationInformation *globAppInfo;
 	GlobalApplicationInformation::MainAppInformationStructure *mainAppInfoStruct;
 
-	enum { MaxRecentFiles = 8 };
+	enum { MaxRecentFiles = 10 };
 	QList<QAction *> recentFileActs;
 
 	void showSplashMessage(const QString message);
@@ -600,6 +614,9 @@ public:
 	void setGlobalApplicationInformationObject(GlobalApplicationInformation *globAppInformation);
 	void RecoverLastScreenWindowSettings();
 	void setStartupFiles(const QString &path = QString());
+
+	static GlobalApplicationInformation::MainProgramModeFlags StimulGLFlags;
+	static GlobalApplicationInformation *globAppInfo;
 
 protected:
 	void closeEvent(QCloseEvent *event);

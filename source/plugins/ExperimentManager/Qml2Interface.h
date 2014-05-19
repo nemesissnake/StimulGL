@@ -4,11 +4,16 @@
 #include <QObject>
 #include <QQmlEngine>
 
+//#include "Global.h"
+//#include "defines.h"
+#include "./../../StimulGL/mainappinfo.h"
+
 // First, define your QObject which provides the functionality.
 class Qml2Interface : public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(QString message READ message WRITE setmessage NOTIFY messageChanged)
+	Q_PROPERTY(QString RootDirectory READ RootDirectory)
 
 signals:
 	void messageChanged();
@@ -19,6 +24,8 @@ public:
 
 	void setmessage(const QString &a); 
 	QString message() const;
+
+	QString RootDirectory() const;
 
 	Q_INVOKABLE QString doSomething();
 

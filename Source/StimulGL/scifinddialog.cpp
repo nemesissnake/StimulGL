@@ -26,7 +26,7 @@
 
 QString sciFindDialog::lastString_ = "";
 QString sciFindDialog::lastReplaceText_ = "";
-bool sciFindDialog::matchCase_ = true;
+bool sciFindDialog::matchCase_ = false;
 bool sciFindDialog::backward_ = false;
 bool sciFindDialog::regExpMode_ = false;
 bool sciFindDialog::wholeWords_ = false;

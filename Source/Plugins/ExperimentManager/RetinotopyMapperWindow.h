@@ -48,6 +48,7 @@ protected:
 
 private:
 	QImage fractalFillCheckeredImage(float fWidth, float fHeigth, float fSize, int nflickr);
+	bool doOutputTriggerFrame(const ExperimentStructuresNameSpace::ExperimentStructureState &tmpExpStrState,const cExperimentStructure &tmpExpStr, const cBlockStructure &tmpBlockStrc, const QPixmap &pix2Output);
 
 	RetinotopyMapper *parentRetinotopyMapper;
 

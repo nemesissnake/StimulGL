@@ -24,6 +24,7 @@
 #include <QResource>
 #include <QBuffer>
 #include <QSharedMemory>
+#include <QDir>
 
 GlobalApplicationInformation::GlobalApplicationInformation(QObject *parent)
 {
@@ -81,6 +82,7 @@ QDataStream &operator<<(QDataStream &out, const GlobalApplicationInformation::Ma
 	out << mainAppInformationStructure.bEnableNetworkServer;
 	out << mainAppInformationStructure.sHostAddress;
 	out << mainAppInformationStructure.nHostPort;
+	out << mainAppInformationStructure.lScriptIncludeDirectories;
 	return out;
 }
 
@@ -100,10 +102,21 @@ QDataStream &operator>>(QDataStream &in, GlobalApplicationInformation::MainAppIn
 	in >> mainAppInformationStructure.bEnableNetworkServer;
 	in >> mainAppInformationStructure.sHostAddress;
 	in >> mainAppInformationStructure.nHostPort;
+	in >> mainAppInformationStructure.lScriptIncludeDirectories;
 	return in;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool GlobalApplicationInformation::addAppScriptIncludePath(const QString &sPath)
+{
+	if(sPath.isEmpty())
+		return false;
+	QString sCanopPath = QDir(sPath).canonicalPath();
+	if(mainAppInformation.lScriptIncludeDirectories.contains(sCanopPath) == false)
+		mainAppInformation.lScriptIncludeDirectories.append(sCanopPath);
+	return true;
+}
 
 void GlobalApplicationInformation::setCompanyName(const QString &sName)
 {
@@ -173,6 +186,8 @@ quint16 GlobalApplicationInformation::getHostPort()
 
 void GlobalApplicationInformation::initAndParseRegistrySettings()
 {
+	QString sMainAppInstallRootPath = QDir(QCoreApplication::applicationDirPath()).absolutePath();
+
 	if (AppRegistrySettings->contains(REGISTRY_DONOTLOADSCRIPTEXTENSION)) 
 	{
 		mainAppInformation.bDoNotLoadScriptBindings = AppRegistrySettings->value(REGISTRY_DONOTLOADSCRIPTEXTENSION).toBool();
@@ -253,6 +268,17 @@ void GlobalApplicationInformation::initAndParseRegistrySettings()
 		mainAppInformation.bAllowMultipleInheritance = false;
 		AppRegistrySettings->setValue(REGISTRY_ALLOWMULTIPLEINHERITANCE, mainAppInformation.bAllowMultipleInheritance);
 	}
+
+	if (AppRegistrySettings->contains(REGISTRY_SCRIPTING_INCLUDEPATHS)) 
+	{
+		mainAppInformation.lScriptIncludeDirectories = AppRegistrySettings->value(REGISTRY_SCRIPTING_INCLUDEPATHS).toStringList();		
+	}
+	else //key doesn't exist, default value here!
+	{
+		mainAppInformation.lScriptIncludeDirectories.append(sMainAppInstallRootPath + "/" + MAIN_PROGRAM_DOC_INCLUDENAME);
+		AppRegistrySettings->setValue(REGISTRY_SCRIPTING_INCLUDEPATHS, mainAppInformation.lScriptIncludeDirectories);
+	}
+
 	AppRegistrySettings->sync();
 }
 

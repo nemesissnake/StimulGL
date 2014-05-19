@@ -49,13 +49,6 @@ QStringList MainAppInfo::getQTScriptBindingList()
 #endif
 }
 
-//QString MainAppInfo::ScriptBindingsDirPath()
-//{
-//	QDir bindingsDir = pluginsDirPath();
-//	bindingsDir.cd("bindings");
-//	return bindingsDir.absolutePath();
-//}
-
 QString MainAppInfo::apiDirPath()
 {
 	QDir pluginsDir = appDebugDirPath();
@@ -185,10 +178,6 @@ bool MainAppInfo::CreateHashTableFromEnumeration(const QString &sTypeName, QHash
 {
 	if(!sTypeName.isEmpty())
 	{
-		//int test = metaObject.enumeratorCount();
-		//QMetaEnum testmetaEnum = metaObject.enumerator(test-1);
-		//QString teststr = testmetaEnum.name();
-
 		QStringList tmpList = sTypeName.split("::",QString::SkipEmptyParts);
 		QString sShortTypeName = tmpList.at(tmpList.count()-1);
 		int enumeratorIndex = metaObject.indexOfEnumerator(sShortTypeName.toLatin1());

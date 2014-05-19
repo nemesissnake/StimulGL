@@ -145,7 +145,7 @@ private slots:
 private:
 	void initialize();
 	void parseExperimentObjectBlockParameters(bool bInit = false, bool bSetOnlyToDefault = false);
-	void qml2EventRoutine(QString strContent = "");
+	bool qml2EventRoutine(QString strContent = "");
 	void deleteQML2ViewerWindow();
 
 	QScreen *sActiveStimScreen;

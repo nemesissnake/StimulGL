@@ -453,228 +453,23 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	}
 	if ((parentRetinotopyMapper->bCreateActivationMap) && (activationPainter.isActive()))
 		activationPainter.end();
+
 	if(imgPainter.isActive())
 		imgPainter.end();
+
 	if (parentRetinotopyMapper->outputTriggerFrame)
 	{
-		if (tmpExpStrState.CurrentBlock_InternalTrigger < nLastOutputTriggerFrameNumber)
-		{
-			nLastOutputTriggerFrameNumber = ExperimentStructuresNameSpace::RA_REINITIALIZE;//tmpExpStrState.CurrentBlock_InternalTrigger;
-		}
-		if (tmpExpStrState.CurrentBlock_InternalTrigger > nLastOutputTriggerFrameNumber)
-		{
-			
-			QString outputDir = MainAppInfo::outputsDirPath();
-			outputDir = outputDir + RETINOMAPPER_OUTPUT_SUBFOLDER;
-			if(QDir(outputDir).exists()==false)
-			{
-				QDir().mkdir(outputDir);
-			}
-			outputDir = outputDir + parentRetinotopyMapper->getLastLoggedObjectStateTime(Experiment_SubObject_Started) + "_" + tmpExpStr.getExperimentName() + "/";
-			if(QDir(outputDir).exists()==false)
-			{
-				QDir().mkdir(outputDir);
-			}
-			QString fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + QString::number(tmpBlockStrc.getBlockNumber()) + QString("_") + QString::number(tmpExpStrState.CurrentBlock_TrialNumber) + QString("_") + QString::number(tmpExpStrState.CurrentBlock_InternalTrigger);
-
-			if(parentRetinotopyMapper->retinoOutputType == RETINOMAPPER_OUTPUTTYPE_FRAME)
-			{
-				if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_PNG)
-				{
-					fileName = fileName + QString(".png");
-					if(outputFile)
-					{
-						if(outputFile->isOpen())
-							outputFile->close();
-						delete outputFile;
-					}
-					outputFile = new QFile(fileName);
-					if (outputFile->open(QIODevice::WriteOnly))
-					{
-						parentRetinotopyMapper->StimulusResultImageFrame.save(outputFile, "PNG");
-						outputFile->close();
-					}
-				} 
-				else if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_DAT)
-				{
-					fileName = fileName + QString(".dat");
-					if(outputFile)
-					{
-						if(outputFile->isOpen())
-							outputFile->close();
-						delete outputFile;
-					}
-					outputFile = new QFile(fileName);					
-					if (outputFile->open(QIODevice::WriteOnly))
-					{
-						QImage imgWrite = parentRetinotopyMapper->StimulusResultImageFrame.toImage().convertToFormat(QImage::Format_ARGB32);
-						QDataStream output(outputFile);
-						quint32 magic = ARGB_FORMAT_HEADER;
-						quint32 width = imgWrite.width();
-						quint32 height = imgWrite.height();
-						output << magic << width << height;
-						for (quint32 y = 0; y < height; ++y) 
-						{
-							QRgb *scanLine = (QRgb *)imgWrite.scanLine(y);
-							for (quint32 x = 0; x < width; ++x)
-							{
-								output << scanLine[x];
-							}
-						}
-						//bool bResult = 
-						//output.status() == QDataStream::Ok;
-						outputFile->close();
-					}
-				}
-				else if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_CDAT)
-				{
-					QImage imgWrite;
-					bool bFirstTime = ((bCDATFileReadyToWrite == false) && (outputFile == NULL));
-					if (bFirstTime)
-					{
-						fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + parentRetinotopyMapper->retinoOutputType + QString(".cdat");//tmpExpStr.getExperimentName()
-						if(outputFile)
-						{
-							if(outputFile->isOpen())
-								outputFile->close();
-							delete outputFile;
-						}
-						outputFile = new QFile(fileName);
-						bCDATFileReadyToWrite = outputFile->open(QIODevice::WriteOnly);
-						if(bCDATFileReadyToWrite)
-						{
-							CDatOutputStream = new QDataStream(outputFile);
-							imgWrite = parentRetinotopyMapper->StimulusResultImageFrame.toImage().convertToFormat(QImage::Format_ARGB32);
-							OutputImageWidth = imgWrite.width();
-							OutputImageHeight = imgWrite.height();
-							OutputImageItemCount = 1;
-							*CDatOutputStream << ARGB_FORMAT_HEADER_CONC << OutputImageItemCount << OutputImageWidth << OutputImageHeight;
-						}
-					}					
-					if (bCDATFileReadyToWrite && outputFile)
-					{
-						if(outputFile->isOpen())
-						{
-							if(bFirstTime == false)
-							{
-								imgWrite = parentRetinotopyMapper->StimulusResultImageFrame.toImage().convertToFormat(QImage::Format_ARGB32);
-								OutputImageItemCount++;
-							}
-							for (quint32 y = 0; y < OutputImageHeight; ++y) 
-							{
-								QRgb *scanLine = (QRgb *)imgWrite.scanLine(y);
-								for (quint32 x = 0; x < OutputImageWidth; ++x)
-								{
-									*CDatOutputStream << scanLine[x];
-								}
-							}
-						}
-					}
-				}
-			}
-			else if(parentRetinotopyMapper->retinoOutputType == RETINOMAPPER_OUTPUTTYPE_MASK)
-			{
-				if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_PNG)
-				{
-					fileName = fileName + QString(".png");
-					if(outputFile)
-					{
-						if(outputFile->isOpen())
-							outputFile->close();
-						delete outputFile;
-					}
-					outputFile = new QFile(fileName);
-					if (outputFile->open(QIODevice::WriteOnly))
-					{
-						parentRetinotopyMapper->StimulusActivationMap.save(outputFile, "PNG");
-						outputFile->close();
-					}
-				} 
-				else if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_DAT)
-				{
-					fileName = fileName + QString(".dat");
-					if(outputFile)
-					{
-						if(outputFile->isOpen())
-							outputFile->close();
-						delete outputFile;
-					}
-					outputFile = new QFile(fileName);
-					if (outputFile->open(QIODevice::WriteOnly))
-					{
-						QImage imgWrite = parentRetinotopyMapper->StimulusActivationMap.toImage().convertToFormat(QImage::Format_ARGB32);
-						QDataStream output(outputFile);
-						quint32 magic = ARGB_FORMAT_HEADER;
-						quint32 width = imgWrite.width();
-						quint32 height = imgWrite.height();
-						output << magic << width << height;
-						for (quint32 y = 0; y < height; ++y) 
-						{
-							QRgb *scanLine = (QRgb *)imgWrite.scanLine(y);
-							for (quint32 x = 0; x < width; ++x)
-							{
-								output << scanLine[x];
-							}
-						}
-						//bool bResult = 
-						//output.status() == QDataStream::Ok;
-						outputFile->close();
-					}
-				}
-
-				else if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_CDAT)
-				{
-					QImage imgWrite;
-					bool bFirstTime = ((bCDATFileReadyToWrite == false) && (outputFile == NULL));
-					if (bFirstTime)
-					{
-						fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + parentRetinotopyMapper->retinoOutputType + QString(".cdat");//tmpExpStr.getExperimentName()
-						if(outputFile)
-						{
-							if(outputFile->isOpen())
-								outputFile->close();
-							delete outputFile;
-						}
-						outputFile = new QFile(fileName);
-						bCDATFileReadyToWrite = outputFile->open(QIODevice::WriteOnly);
-						if(bCDATFileReadyToWrite)
-						{
-							CDatOutputStream = new QDataStream(outputFile);
-							imgWrite = parentRetinotopyMapper->StimulusActivationMap.toImage().convertToFormat(QImage::Format_ARGB32);
-							OutputImageWidth = imgWrite.width();
-							OutputImageHeight = imgWrite.height();
-							OutputImageItemCount = 1;
-							*CDatOutputStream << ARGB_FORMAT_HEADER_CONC << OutputImageItemCount << OutputImageWidth << OutputImageHeight;
-						}
-					}					
-					if (bCDATFileReadyToWrite && outputFile)
-					{
-						if(outputFile->isOpen())
-						{
-							if(bFirstTime == false)
-							{
-								imgWrite = parentRetinotopyMapper->StimulusActivationMap.toImage().convertToFormat(QImage::Format_ARGB32);
-								OutputImageItemCount++;
-							}
-							for (quint32 y = 0; y < OutputImageHeight; ++y) 
-							{
-								QRgb *scanLine = (QRgb *)imgWrite.scanLine(y);
-								for (quint32 x = 0; x < OutputImageWidth; ++x)
-								{
-									*CDatOutputStream << scanLine[x];
-								}
-							}
-						}
-					}
-				}
-			}
-			nLastOutputTriggerFrameNumber = tmpExpStrState.CurrentBlock_InternalTrigger;
-		}
+		if(parentRetinotopyMapper->retinoOutputType == RETINOMAPPER_OUTPUTTYPE_FRAME)
+			doOutputTriggerFrame(tmpExpStrState,tmpExpStr,tmpBlockStrc,parentRetinotopyMapper->StimulusResultImageFrame); 
+		else if(parentRetinotopyMapper->retinoOutputType == RETINOMAPPER_OUTPUTTYPE_MASK)
+			doOutputTriggerFrame(tmpExpStrState,tmpExpStr,tmpBlockStrc,parentRetinotopyMapper->StimulusActivationMap); 
 	}
+
 	stimuliPainter->fillRect(parentRetinotopyMapper->rStimuliScreenArea, parentRetinotopyMapper->brushBackground);
 	stimuliPainter->setPen(parentRetinotopyMapper->textPen);
 	stimuliPainter->setFont(parentRetinotopyMapper->textFont);	
 	stimuliPainter->drawPixmap(parentRetinotopyMapper->rStimuliScreenArea.x(),parentRetinotopyMapper->rStimuliScreenArea.y(),parentRetinotopyMapper->StimulusResultImageFrame);//*parentRetinotopyMapper->StimulusResultImageFrame);
+
 	if (parentRetinotopyMapper->customScriptHandlerFunction && parentRetinotopyMapper->getScriptEngine())
 	{
 		parentRetinotopyMapper->scriptVal1 = parentRetinotopyMapper->getScriptEngine()->toScriptValue<QPainter *>(stimuliPainter);
@@ -743,6 +538,125 @@ void RetinotopyMapperWindow::render(QPainter *stimuliPainter)
 	parentRetinotopyMapper->nextNewBlockEntered = false;
 	if(parentRetinotopyMapper->isDebugMode())
 		parentRetinotopyMapper->experimentManager->logExperimentObjectData(parentRetinotopyMapper->getObjectID(),0,__FUNCTION__,"","Finished painting the object");
+}
+
+bool RetinotopyMapperWindow::doOutputTriggerFrame(const ExperimentStructuresNameSpace::ExperimentStructureState &tmpExpStrState, const cExperimentStructure &tmpExpStr, const cBlockStructure &tmpBlockStrc, const QPixmap &pix2Output)
+{
+	if (tmpExpStrState.CurrentBlock_InternalTrigger < nLastOutputTriggerFrameNumber)
+	{
+		nLastOutputTriggerFrameNumber = ExperimentStructuresNameSpace::RA_REINITIALIZE;//tmpExpStrState.CurrentBlock_InternalTrigger;
+	}
+	if (tmpExpStrState.CurrentBlock_InternalTrigger > nLastOutputTriggerFrameNumber)
+	{
+		QString outputDir = MainAppInfo::outputsDirPath();
+		outputDir = outputDir + RETINOMAPPER_OUTPUT_SUBFOLDER;
+		if(QDir(outputDir).exists()==false)
+		{
+			QDir().mkdir(outputDir);
+		}
+		outputDir = outputDir + parentRetinotopyMapper->getLastLoggedObjectStateTime(Experiment_SubObject_Started) + "_" + tmpExpStr.getExperimentName() + "/";
+		if(QDir(outputDir).exists()==false)
+		{
+			QDir().mkdir(outputDir);
+		}
+		QString fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + QString::number(tmpBlockStrc.getBlockNumber()) + QString("_") + QString::number(tmpExpStrState.CurrentBlock_TrialNumber) + QString("_") + QString::number(tmpExpStrState.CurrentBlock_InternalTrigger);
+
+		if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_PNG)
+		{
+			fileName = fileName + QString(".png");
+			if(outputFile)
+			{
+				if(outputFile->isOpen())
+					outputFile->close();
+				delete outputFile;
+			}
+			outputFile = new QFile(fileName);
+			if (outputFile->open(QIODevice::WriteOnly))
+			{
+				pix2Output.save(outputFile, "PNG");
+				outputFile->close();
+			}
+		} 
+		else if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_DAT)
+		{
+			fileName = fileName + QString(".dat");
+			if(outputFile)
+			{
+				if(outputFile->isOpen())
+					outputFile->close();
+				delete outputFile;
+			}
+			outputFile = new QFile(fileName);					
+			if (outputFile->open(QIODevice::WriteOnly))
+			{
+				QImage imgWrite = pix2Output.toImage().convertToFormat(QImage::Format_ARGB32);
+				QDataStream output(outputFile);
+				quint32 magic = ARGB_FORMAT_HEADER;
+				quint32 width = imgWrite.width();
+				quint32 height = imgWrite.height();
+				output << magic << width << height;
+				for (quint32 y = 0; y < height; ++y) 
+				{
+					QRgb *scanLine = (QRgb *)imgWrite.scanLine(y);
+					for (quint32 x = 0; x < width; ++x)
+					{
+						output << scanLine[x];
+					}
+				}
+				//bool bResult = 
+				//output.status() == QDataStream::Ok;
+				outputFile->close();
+			}
+		}
+		else if (parentRetinotopyMapper->retinoOutputFormat == RETINOMAPPER_OUTPUTFORMAT_CDAT)
+		{
+			QImage imgWrite;
+			bool bFirstTime = ((bCDATFileReadyToWrite == false) && (outputFile == NULL));
+			if (bFirstTime)
+			{
+				fileName = outputDir + QString::number(parentRetinotopyMapper->getObjectID()) + "_" + parentRetinotopyMapper->retinoOutputType + QString(".cdat");//tmpExpStr.getExperimentName()
+				if(outputFile)
+				{
+					if(outputFile->isOpen())
+						outputFile->close();
+					delete outputFile;
+				}
+				outputFile = new QFile(fileName);
+				bCDATFileReadyToWrite = outputFile->open(QIODevice::WriteOnly);
+				if(bCDATFileReadyToWrite)
+				{
+					CDatOutputStream = new QDataStream(outputFile);
+					imgWrite = pix2Output.toImage().convertToFormat(QImage::Format_ARGB32);
+					OutputImageWidth = imgWrite.width();
+					OutputImageHeight = imgWrite.height();
+					OutputImageItemCount = 1;
+					*CDatOutputStream << ARGB_FORMAT_HEADER_CONC << OutputImageItemCount << OutputImageWidth << OutputImageHeight;
+				}
+			}					
+			if (bCDATFileReadyToWrite && outputFile)
+			{
+				if(outputFile->isOpen())
+				{
+					if(bFirstTime == false)
+					{
+						imgWrite = pix2Output.toImage().convertToFormat(QImage::Format_ARGB32);
+						OutputImageItemCount++;
+					}
+					for (quint32 y = 0; y < OutputImageHeight; ++y) 
+					{
+						QRgb *scanLine = (QRgb *)imgWrite.scanLine(y);
+						for (quint32 x = 0; x < OutputImageWidth; ++x)
+						{
+							*CDatOutputStream << scanLine[x];
+						}
+					}
+				}
+			}
+		}
+		nLastOutputTriggerFrameNumber = tmpExpStrState.CurrentBlock_InternalTrigger;
+		return true;
+	}
+	return true;
 }
 
 bool RetinotopyMapperWindow::drawPolar()

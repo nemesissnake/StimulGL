@@ -22,6 +22,7 @@
 
 #include <QCoreApplication>
 #include <QSettings>
+#include <QStringList>
 #include "maindefines.h"
 
 //!  The GlobalApplicationInformation Class. 
@@ -56,8 +57,9 @@ public:
 		bool bAllowMultipleInheritance;
 		bool bEnableNetworkServer;
 		QString sHostAddress;
+		QStringList lScriptIncludeDirectories;
 		quint16 nHostPort;
-		//See also serialization!!!
+		//See also serialization!!! -->  Initialize(), operator>>() and operator<<()
 	} MainAppInformationStructure;
 
 	MainAppInformationStructure getMainAppInformationStructure() {return mainAppInformation;};
@@ -72,7 +74,8 @@ public:
 	QString getInternalName(); 
 	QString getTitle();
 	bool shouldLoadScriptBindings();
-	
+	bool addAppScriptIncludePath(const QString &sPath);
+	QStringList getAppScriptIncludePaths()	{return mainAppInformation.lScriptIncludeDirectories;};
 	bool shouldEnableNetworkServer();
 	QString getHostAddress();
 	quint16 getHostPort();

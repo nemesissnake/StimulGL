@@ -19,12 +19,24 @@
 
 #include "optionpage.h"
 #include <QFileDialog>
+#include <QListWidgetItem>
 
 OptionPage::OptionPage(QWidget *parent, GlobalApplicationInformation *g_AppInfo) : QDialog(parent), glob_AppInfo(g_AppInfo)
 {
 	ui.setupUi(this);
+	this->setWindowTitle(QString(MAIN_PROGRAM_INTERNAL_NAME) + " settings");
 	connect(ui.buttonBox, SIGNAL(accepted()), this, SLOT(validateAndApplySettings()));	
 	connect(ui.buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+	
+	ui.pbNewScriptIncludeDir->setIcon(QIcon(":/resources/browse.png"));
+	ui.pbScriptIncludeMoveUp->setIcon(QIcon(":/resources/up.png"));
+	ui.pbScriptIncludeMoveDown->setIcon(QIcon(":/resources/down.png"));
+	ui.pbScriptIncludeDelete->setIcon(QIcon(":/resources/delete.png"));
+	connect(ui.pbNewScriptIncludeDir, SIGNAL(clicked()), this, SLOT(selectNewScriptIncludeDir()));
+	connect(ui.pbScriptIncludeMoveUp, SIGNAL(clicked()), this, SLOT(currentScriptMoveUp()));
+	connect(ui.pbScriptIncludeMoveDown, SIGNAL(clicked()), this, SLOT(currentScriptMoveDown()));
+	connect(ui.pbScriptIncludeDelete, SIGNAL(clicked()), this, SLOT(currentScriptDelete()));
+	
 	readSettings();	
 }
 OptionPage::~OptionPage()
@@ -112,12 +124,19 @@ void OptionPage::applySettings()
 		glob_AppInfo->setRegistryInformation(REGISTRY_RENDERTYPE, 2, "int");//SvgView::Image);	
 		glob_AppInfo->setRegistryInformation(REGISTRY_HQANTIALIAS, false, "bool");
 	}
+	QStringList lNewIncludePaths;
+	for(int i=0;i<ui.lwScriptIncludeDirs->count();i++)
+	{
+		lNewIncludePaths.append(ui.lwScriptIncludeDirs->item(i)->text());
+	}
+	glob_AppInfo->setRegistryInformation(REGISTRY_SCRIPTING_INCLUDEPATHS,lNewIncludePaths,"stringlist");
 }
 
 void OptionPage::readSettings()
 {
 	bool bTemp;
 	QString sTemp;
+	QStringList lTemp;
 	int nTemp;
 
 	if(glob_AppInfo->checkRegistryInformation(REGISTRY_USERDOCUMENTSROOTDIRECTORY))
@@ -188,7 +207,81 @@ void OptionPage::readSettings()
 		bTemp = glob_AppInfo->getRegistryInformation(REGISTRY_ALLOWMULTIPLEINHERITANCE).toBool();
 		ui.chkAllowMultipleInstances->setCheckState((Qt::CheckState)(bTemp*Qt::Checked));
 	}
+	if(glob_AppInfo->checkRegistryInformation(REGISTRY_SCRIPTING_INCLUDEPATHS))
+	{
+		lTemp = glob_AppInfo->getRegistryInformation(REGISTRY_SCRIPTING_INCLUDEPATHS).toStringList();
+		foreach(QString sTmpString, lTemp)
+		{
+			ui.lwScriptIncludeDirs->addItem(sTmpString);
+			QListWidgetItem *tmpWidgetItem = ui.lwScriptIncludeDirs->item(ui.lwScriptIncludeDirs->count()-1);
+			tmpWidgetItem->setFlags(tmpWidgetItem->flags() | Qt::ItemIsEditable);
+		}
+	}
 }
+
+void OptionPage::selectNewScriptIncludeDir()
+{
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Select Directory"),
+		QCoreApplication::applicationDirPath(),
+		QFileDialog::ShowDirsOnly
+		| QFileDialog::DontResolveSymlinks);
+	if(dir.isEmpty() == false)
+	{
+		ui.lwScriptIncludeDirs->addItem(dir);
+		QListWidgetItem *tmpWidgetItem = ui.lwScriptIncludeDirs->item(ui.lwScriptIncludeDirs->count()-1);
+		tmpWidgetItem->setFlags(tmpWidgetItem->flags() | Qt::ItemIsEditable);
+	}
+}
+
+void OptionPage::currentScriptMoveUp()
+{
+	if(ui.lwScriptIncludeDirs->selectedItems().isEmpty() == false)
+	{
+		int nTmpIndex = -1;
+		foreach(QListWidgetItem *tmpWidgetItem,ui.lwScriptIncludeDirs->selectedItems())
+		{
+			nTmpIndex = ui.lwScriptIncludeDirs->row(tmpWidgetItem);
+			if(nTmpIndex>0)
+			{
+				ui.lwScriptIncludeDirs->insertItem(nTmpIndex-1,ui.lwScriptIncludeDirs->takeItem(nTmpIndex));
+			}
+		}
+		if(nTmpIndex > 0)
+			ui.lwScriptIncludeDirs->item(nTmpIndex-1)->setSelected(true);
+	}
+}
+
+void OptionPage::currentScriptMoveDown()
+{
+	if(ui.lwScriptIncludeDirs->selectedItems().isEmpty() == false)
+	{
+		int nTmpIndex = -1;
+		foreach(QListWidgetItem *tmpWidgetItem,ui.lwScriptIncludeDirs->selectedItems())
+		{
+			nTmpIndex = ui.lwScriptIncludeDirs->row(tmpWidgetItem);
+			if(nTmpIndex<ui.lwScriptIncludeDirs->count()-1)
+			{
+				ui.lwScriptIncludeDirs->insertItem(nTmpIndex+1,ui.lwScriptIncludeDirs->takeItem(nTmpIndex));
+			}
+		}
+		if(nTmpIndex<ui.lwScriptIncludeDirs->count()-1)
+			ui.lwScriptIncludeDirs->item(nTmpIndex+1)->setSelected(true);
+	}
+}
+
+void OptionPage::currentScriptDelete()
+{
+	if(ui.lwScriptIncludeDirs->selectedItems().isEmpty() == false)
+	{
+		int nTmpIndex;
+		foreach(QListWidgetItem *tmpWidgetItem,ui.lwScriptIncludeDirs->selectedItems())
+		{
+			nTmpIndex = ui.lwScriptIncludeDirs->row(tmpWidgetItem);
+			ui.lwScriptIncludeDirs->takeItem(nTmpIndex);
+		}
+	}
+}
+
 
 void OptionPage::on_btnBrowseForUserDocumentsRootDirectory_pressed()
 {

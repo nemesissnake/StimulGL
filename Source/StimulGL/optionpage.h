@@ -47,6 +47,10 @@ private slots:
 	void setUI3DRendererControls(int type);
 	void validateAndApplySettings();
 	void readSettings();
+	void selectNewScriptIncludeDir();
+	void currentScriptMoveUp();
+	void currentScriptMoveDown();
+	void currentScriptDelete();
 
 private:
 	void applySettings();

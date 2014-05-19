@@ -421,7 +421,6 @@ void ExperimentGraphicEditor::openFile()
 
 void ExperimentGraphicEditor::closeDocument()
 {
-	bool bAutoSave = false;
 	QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), "closeActiveDocument", Qt::QueuedConnection);
 }
 

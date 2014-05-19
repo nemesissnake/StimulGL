@@ -28,9 +28,6 @@
 #include <fstream>
 
 #include "maindefines.h"
-//#include "mainwindow.h"
-
-//class MainWindow;
 
 class MainAppInfo 
 {
@@ -79,8 +76,6 @@ public:
 #else
 		pluginsDir.cd("Win32");
 #endif
-		//if(!pluginsDir.exists())
-		//	return appDebugDirPath().absolutePath();
 		return pluginsDir.absolutePath();
 	};
 	static QString outputsDirPath();
@@ -92,34 +87,28 @@ public:
 #else
 		strExtPluginDirPath = strExtPluginDirPath + QString("Win32");
 #endif
-
-		//#ifdef DEBUG
-		//		QString strConfiguration = "/Debug";
-		//#else
-		//		QString strConfiguration = "/Release";
-		//#endif
-
 		if(QDir(strExtPluginDirPath).exists()==false)
 		{
 			QDir().mkdir(strExtPluginDirPath);
 		}
-		else if(QDir(strExtPluginDirPath).exists()) // + strConfiguration).exists())
+		else if(QDir(strExtPluginDirPath).exists())
 		{
-			strExtPluginDirPath = strExtPluginDirPath;// + strConfiguration;
+			strExtPluginDirPath = strExtPluginDirPath;
 		}
 		return QDir(strExtPluginDirPath).absolutePath();
 	};
 
-	static QWidget* getMainWindow()					{return mainWindow;};
-	static QString getMainWindowLogSlotName()		{return MAIN_PROGRAM_LOG_SLOT_NAME;};
-	static QString getMainWindowReOpenSlotName()	{return MAIN_PROGRAM_REOPEN_SLOT_NAME;};
-	static QString getScriptApiClassName()			{return SCRIPT_API_CLASS_NAME_TAG;};
+	static QWidget* getMainWindow()							{return mainWindow;};
+	static QString getMainWindowLogSlotName()				{return MAIN_PROGRAM_LOG_SLOT_NAME;};
+	static QString getMainWindowReOpenSlotName()			{return MAIN_PROGRAM_REOPEN_SLOT_NAME;};
+	static QString getMainWindowScriptIncludePathsName()	{return MAIN_PROGRAM_SCRIPTINCLUDES_NAME;};
+	static QString getScriptApiClassName()					{return SCRIPT_API_CLASS_NAME_TAG;};
 	
-	static QString getDefaultFileExtList()			{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}
+	static QString getDefaultFileExtList()					{return QString (MAIN_PROGRAM_FILESEXTENSION_LIST);}
 	static QStringList getQTScriptBindingList();
 	static QString apiDirPath();
-	static QString UntitledDocName()				{return MAIN_PROGRAM_UNTITLED_NAME;}
-	static QString stdDateTimeFormat()				{return MAIN_PROGRAM_STANDARD_DATETIME_FORMAT;}
+	static QString UntitledDocName()						{return MAIN_PROGRAM_UNTITLED_NAME;}
+	static QString stdDateTimeFormat()						{return MAIN_PROGRAM_STANDARD_DATETIME_FORMAT;}
 
 	static bool isCompatibleVersion(const QString &strMinimalRequiredVersion, const QString &strCurrentVersion);
 

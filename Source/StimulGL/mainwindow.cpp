@@ -38,6 +38,9 @@
 #include "../Plugins/ExperimentManager/ExperimentManager.h"
 #include "../Plugins/KeyBoardDevice/KeyBoardCapture.h"
 
+GlobalApplicationInformation::MainProgramModeFlags MainWindow::StimulGLFlags = GlobalApplicationInformation::Default;
+GlobalApplicationInformation *MainWindow::globAppInfo = NULL;
+
 MainWindow::MainWindow() : DocumentWindow(), SVGPreviewer(new SvgView)
 {
 	Plugins = NULL;
@@ -326,6 +329,20 @@ void MainWindow::showJavaScriptConfigurationFile()
 	globAppInfo->showJavaScriptConfigurationFile();
 }
 
+bool MainWindow::addScriptIncludePath(const QString &sPath)
+{
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
+	return globAppInfo->addAppScriptIncludePath(sPath);
+}
+
+QStringList MainWindow::getScriptIncludePaths()
+{
+	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
+		qDebug() << "Verbose Mode: " << __FUNCTION__;
+	return globAppInfo->getAppScriptIncludePaths();
+}
+
 bool MainWindow::receiveExchangeMessage(const QString &sMessage)
 {
 	if(StimulGLFlags & GlobalApplicationInformation::VerboseMode)
@@ -502,7 +519,24 @@ QScriptValue myIncludeFunction(QScriptContext *ctx, QScriptEngine *eng)
 	QString fileName = ctx->argument(0).toString();
 	QString fileText;
 	QFile file(fileName);
-	if(file.exists())
+	bool bIncludePathUsed = false;
+	QStringList lIncludePaths =  MainWindow::globAppInfo->getAppScriptIncludePaths();
+	if(file.exists()==false)//Not found? Use one of the include paths
+	{
+		foreach(QString tmpStringPath, lIncludePaths)
+		{
+			if((tmpStringPath.endsWith("/") || tmpStringPath.endsWith("\\")) == false)
+				tmpStringPath = tmpStringPath + "/";
+			tmpStringPath = tmpStringPath + fileName;
+			file.setFileName(tmpStringPath);
+			if(file.exists())
+			{
+				bIncludePathUsed = true;
+				break;
+			}
+		}
+	}
+	if(bIncludePathUsed || file.exists())
 	{
 		if ( file.open(QFile::ReadOnly | QFile::Truncate) ) 
 		{       

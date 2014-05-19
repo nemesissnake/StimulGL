@@ -16,5 +16,9 @@
         <file>resources/uncomment.png</file>
         <file>resources/StimulGL.js</file>
         <file>resources/versioning.html</file>
+        <file>resources/browse.png</file>
+        <file>resources/delete.png</file>
+        <file>resources/down.png</file>
+        <file>resources/up.png</file>
     </qresource>
 </RCC>

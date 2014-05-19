@@ -177,6 +177,17 @@ bool QML2Viewer::initObject()
 		quick2ViewerWindow->engine()->addImportPath(extPluginPath);
 		qDebug() << __FUNCTION__ "::Added the QML2 extension Plugin path (" << extPluginPath << ").";
 	}
+
+	QStringList importIncludePaths;
+	QWidget *tmpWidget = MainAppInfo::getMainWindow();
+	if(QMetaObject::invokeMethod(tmpWidget, MainAppInfo::getMainWindowScriptIncludePathsName().toLatin1(), Qt::DirectConnection, Q_RETURN_ARG(QStringList, importIncludePaths)))
+	{
+		foreach(QString tmpString,importIncludePaths)
+		{
+			quick2ViewerWindow->engine()->addImportPath(tmpString);
+			qDebug() << __FUNCTION__ "::Added the StimulGL script Include path (" << tmpString << ").";
+		}
+	}
 	quick2ViewerWindow->registerDefaultCustomQMLTypes();
 	//qmlErrorHandler = new QmlErrorHandler(*qmlViewer,this);
 	parseExperimentObjectBlockParameters(true,false);
@@ -478,7 +489,7 @@ void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyT
 	}
 }
 
-void QML2Viewer::qml2EventRoutine(QString strContent)
+bool QML2Viewer::qml2EventRoutine(QString strContent)
 {
 	QString fileString;
 	bool bEmitSourceChange = false;
@@ -490,9 +501,20 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 		{
 			bExperimentUnlocked = true;
 			if(last_qmlMainFilePath == qmlMainFilePath)
-				return;
+			{
+				if(qmlMainFilePath.isEmpty())
+				{
+					QString errMessage = __FUNCTION__ + QString(":Empty File Path, no valid QML file to run!");
+					QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
+					this->abortExperimentObject();//this seems to work...
+					return false;
+				}
+				return true;
+			}
 			else
+			{
 				last_qmlMainFilePath = qmlMainFilePath;
+			}
 			bEmitSourceChange = true;
 			fileString = QFileInfo(qmlMainFilePath).canonicalFilePath();
 			fileUrl = QUrl::fromLocalFile(fileString);//fileString);
@@ -513,9 +535,20 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 		else
 		{
 			if(last_qmlMainFilePath == qmlMainFilePath)
-				return;
+			{
+				if(qmlMainFilePath.isEmpty())
+				{
+					QString errMessage = __FUNCTION__ + QString(":Empty File Path, no valid QML file to run!");
+					QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
+					this->abortExperimentObject();//this seems to work...
+					return false;
+				}
+				return true;
+			}
 			else
+			{
 				last_qmlMainFilePath = qmlMainFilePath;
+			}
 			bEmitSourceChange = true;
 			fileString = QFileInfo(qmlMainFilePath).canonicalFilePath();
 			fileUrl = QUrl::fromLocalFile(fileString);
@@ -535,7 +568,7 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 				QString errMessage = __FUNCTION__ + QString(": Could not create temporarily file.");
 				QMetaObject::invokeMethod(MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, errMessage));
 				this->abortExperimentObject();//this seems to work...
-				return;
+				return false;
 			}
 		}
 		tmpFile.write(strContent.toLatin1());
@@ -562,11 +595,11 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 				this->abortExperimentObject();
 				if(experimentManager)
 					experimentManager->abortExperiment();
-				return;
+				return false;
 			}
 			if(bEmitSourceChange)
 				emit NewSourceLoaded(fileUrl.toString());
-
+			return true;
 			//qApp->processEvents();
 			//quick2ViewerWindow->setVisible(true);
 			//quick2ViewerWindow->resize(600,600);
@@ -577,6 +610,7 @@ void QML2Viewer::qml2EventRoutine(QString strContent)
 			//quick2ViewerWindow->showFullScreen();
 		//}
 	}
+	return false;
 }
 
 bool QML2Viewer::setExperimentManager(ExperimentManager *expManager)
