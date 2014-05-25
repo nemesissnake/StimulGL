@@ -369,9 +369,9 @@ QString ExperimentManager::getCurrentExperimentState()
 	return experimentStateHash.key(getCurrExperimentState(),UNKNOWNENUMSTRING);
 }
 
-QString ExperimentManager::getCurrentDateTimeStamp()
+QString ExperimentManager::getCurrentDateTimeStamp(const QString &sFormat)
 {
-	return (QDateTime::currentDateTime().toString(MainAppInfo::stdDateTimeFormat()));
+	return (QDateTime::currentDateTime().toString(sFormat));
 }
 
 QString ExperimentManager::getExperimentFileName()

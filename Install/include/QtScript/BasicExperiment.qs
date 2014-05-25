@@ -22,6 +22,7 @@ StimulGL.clearOutputWindow("BasicExperiment");
 	BasicExperiment.nCurrentExperimentState = ExperimentManager.ExperimentState.ExperimentManager_NoState;
 	BasicExperiment.cExperimentStructure_Object = null;	
 	BasicExperiment.nCurrentExperimentStructureState = null;
+	BasicExperiment.cCurrentExperimentBlockStructure = null;
 	BasicExperiment.nStartDateTimeStamp = 0;
 	BasicExperiment.bExperimentFirstTriggerReceived = false;
 	BasicExperiment.nTestModeTriggerDuration = 2000;
@@ -51,8 +52,7 @@ StimulGL.clearOutputWindow("BasicExperiment");
 //////////////////////////	
 	//Local variabeles, name starts with '___' to prevent further usuage outside this scope
 	var ___nLoopCounter;
-	var ___cLoopStructure_Object0;
-	var ___cBlockStructure_Object0;
+	var ___cLoopStructure_Object0;	
 
 /////////////////////////
 //Public Property Functions//
@@ -70,8 +70,8 @@ StimulGL.clearOutputWindow("BasicExperiment");
 			BasicExperiment.CleanupScript();
 		}
 		else
-		{
-			Log("Choosen experiment mode = " + BasicExperiment.sChoosenExperimenMode);
+		{			
+			StimulGL.write2OutputWindow("Choosen experiment mode = " + BasicExperiment.sChoosenExperimenMode, "BasicExperiment");
 			BasicExperiment.ExperimentManagerObj = new ExperimentManager();
 			BasicExperiment.ExperimentManagerObj.ExperimentStateHasChanged.connect(BasicExperiment, BasicExperiment.preExperimentStateChanged);
 			if(BasicExperiment.ExperimentManagerObj.setExperimentFileName(BasicExperiment.sExmlFilePath))
@@ -80,24 +80,36 @@ StimulGL.clearOutputWindow("BasicExperiment");
 			}
 			else
 			{
-				Log("*** Error: Could not locate the experiment file!");
+				StimulGL.write2OutputWindow("*** Error: Could not locate the experiment file!", "BasicExperiment");
 				BasicExperiment.CleanupScript();
 			}
 		}
 	}
 	
+	BasicExperiment.__proto__.CreateArray = function(length)
+	{
+		var arr = new Array(length || 0),
+		i = length;
+		if (arguments.length > 1) 
+		{
+			var args = Array.prototype.slice.call(arguments, 1);
+			while(i--) 
+				arr[length-1 - i] = BasicExperiment.CreateArray.apply(this, args);
+		}
+		return arr;
+	}	
+	
 	BasicExperiment.__proto__.GetCurrentDateTimeStamp = function()
 	{
-		var sCurrentDateTimeStamp = BasicExperiment.ExperimentManagerObj.getCurrentDateTimeStamp();
+		var __nCurrentDateTimeStamp = _.now();
 		if(BasicExperiment.nStartDateTimeStamp == 0)
-			BasicExperiment.nStartDateTimeStamp = parseInt(sCurrentDateTimeStamp);
-		return (parseInt(sCurrentDateTimeStamp) - BasicExperiment.nStartDateTimeStamp);
+			BasicExperiment.nStartDateTimeStamp = __nCurrentDateTimeStamp;
+		return (__nCurrentDateTimeStamp - BasicExperiment.nStartDateTimeStamp);
 	}	
 	
 	BasicExperiment.__proto__.KeyBoardResponseRecieved = function(response)
 	{
 		BasicExperiment.LogFunctionSignature("BasicExperiment","KeyBoardResponseRecieved", arguments, true);
-		var sCurrentDateTimeStamp = BasicExperiment.ExperimentManagerObj.getCurrentDateTimeStamp();
 		StimulGL.write2OutputWindow(BasicExperiment.GetCurrentDateTimeStamp() + ";" + "Keyboard code: " + response, "BasicExperiment");		
 	}	
 	
@@ -130,36 +142,36 @@ StimulGL.clearOutputWindow("BasicExperiment");
 		
 		if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Loaded)
 		{
-			Log(textToShow + "ExperimentManager_Loaded");
+			StimulGL.write2OutputWindow(textToShow + "ExperimentManager_Loaded", "BasicExperiment");
 		}
 		else 	if(currentState == ExperimentManager.ExperimentState.ExperimentManager_PreParsed)
 		{
-			Log(textToShow + "ExperimentManager_PreParsed");
+			StimulGL.write2OutputWindow(textToShow + "ExperimentManager_PreParsed", "BasicExperiment");
 		}
 		else 	if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Configured)
 		{
-			Log(textToShow + "ExperimentManager_Configured");
+			StimulGL.write2OutputWindow(textToShow + "ExperimentManager_Configured", "BasicExperiment");
 		}
 		else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Initialized)
 		{
-			Log(textToShow + "ExperimentManager_Initialized");
+			StimulGL.write2OutputWindow(textToShow + "ExperimentManager_Initialized", "BasicExperiment");
 			//Now all defined objects in the experiment file are constructed and therefore available in this script, so now we can make the connections between constructed the objects.
 		}	
 		else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_IsStarting)
 		{	
-			Log(textToShow + "ExperimentManager_IsStarting");
+			StimulGL.write2OutputWindow(textToShow + "ExperimentManager_IsStarting", "BasicExperiment");
 		}
 		else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Started)
 		{	
-			Log(textToShow + "ExperimentManager_Started");
+			StimulGL.write2OutputWindow(textToShow + "ExperimentManager_Started", "BasicExperiment");
 		}
 		else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_IsStopping)
 		{	
-			Log(textToShow + "ExperimentManager_IsStopping");
+			StimulGL.write2OutputWindow(textToShow + "ExperimentManager_IsStopping", "BasicExperiment");
 		}	
 		else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)
 		{
-			Log(textToShow + "ExperimentManager_Stopped");			
+			StimulGL.write2OutputWindow(textToShow + "ExperimentManager_Stopped", "BasicExperiment");			
 		}
 	}	
 
@@ -266,13 +278,13 @@ StimulGL.clearOutputWindow("BasicExperiment");
 		BasicExperiment.nCurrentExperimentStructureState = BasicExperiment.cExperimentStructure_Object.getCurrentExperimentState();
 		if(BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_BlockID>=0)
 		{
-			___cBlockStructure_Object0 = BasicExperiment.cExperimentStructure_Object.getBlockPointerByID(BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_BlockID);
+			BasicExperiment.cCurrentExperimentBlockStructure = BasicExperiment.cExperimentStructure_Object.getBlockPointerByID(BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_BlockID);
 			if(BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_LoopID>=0)
 			{
-				___cLoopStructure_Object0 = ___cBlockStructure_Object0.getLoopPointerByID(BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_LoopID);
+				___cLoopStructure_Object0 = BasicExperiment.cCurrentExperimentBlockStructure.getLoopPointerByID(BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_LoopID);
 			}
 		}
-		var sCurrentDateTimeStamp = BasicExperiment.ExperimentManagerObj.getCurrentDateTimeStamp();
+		var __nCurrentDateTimeStamp = BasicExperiment.ExperimentManagerObj.getCurrentDateTimeStamp();
 		BasicExperiment.ExternalTriggerRecieved();
 		if(BasicExperiment.bExperimentFirstTriggerReceived == false)
 		{
@@ -284,10 +296,10 @@ StimulGL.clearOutputWindow("BasicExperiment");
 		
 		if(BasicExperiment.nStartDateTimeStamp == 0)
 		{
-			BasicExperiment.nStartDateTimeStamp = parseInt(sCurrentDateTimeStamp);
-			StimulGL.write2OutputWindow("* " + BasicExperiment.nStartDateTimeStamp + ";" + "Experiment Started(First External Trigger)","BasicExperiment");
+			BasicExperiment.nStartDateTimeStamp = __nCurrentDateTimeStamp;
+			StimulGL.write2OutputWindow("* " + BasicExperiment.nStartDateTimeStamp + ";" + "Experiment Started(First External Trigger)", "BasicExperiment");
 		}
-		StimulGL.write2OutputWindow("* " + (parseInt(sCurrentDateTimeStamp) - BasicExperiment.nStartDateTimeStamp) + ";" + "External Trigger Received","BasicExperiment");
+		StimulGL.write2OutputWindow("* " + (__nCurrentDateTimeStamp - BasicExperiment.nStartDateTimeStamp) + ";" + "External Trigger Received", "BasicExperiment");
 	}
 	
 	BasicExperiment.__proto__.preNewInitBlockTrial = function()
@@ -295,9 +307,8 @@ StimulGL.clearOutputWindow("BasicExperiment");
 		BasicExperiment.LogFunctionSignature("BasicExperiment","preNewInitBlockTrial", arguments, true);
 		if(BasicExperiment.nCurrentExperimentState == ExperimentManager.ExperimentState.ExperimentManager_Started)
 		{
-			var sCurrentDateTimeStamp = BasicExperiment.ExperimentManagerObj.getCurrentDateTimeStamp();
 			BasicExperiment.NewInitBlockTrial();
-			StimulGL.write2OutputWindow(BasicExperiment.GetCurrentDateTimeStamp() + ";" + "New Block/Trial Initialization","BasicExperiment");
+			StimulGL.write2OutputWindow(BasicExperiment.GetCurrentDateTimeStamp() + ";" + "New Block/Trial Initialization", "BasicExperiment");
 		}
 	}
 
@@ -306,26 +317,26 @@ StimulGL.clearOutputWindow("BasicExperiment");
 		BasicExperiment.LogFunctionSignature("BasicExperiment","LogExperimentState", arguments, true);
 		
 		___nLoopCounter = -1;
-		Log("-----");
+		StimulGL.write2OutputWindow("-----", "BasicExperiment");
 		if(BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_BlockID >= 0)
 		{
-			Log("CurrentBlock_BlockID:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_BlockID);
-			Log("CurrentBlock_BlockNumber:" + ___cBlockStructure_Object0.getBlockNumber());
-			Log("CurrentBlock_TrialNumber:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_TrialNumber);
-			Log("CurrentBlock_InternalTrigger:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_InternalTrigger);
-			Log("CurrentBlock_ExternalTrigger:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_ExternalTrigger);
-			Log("Experiment_ExternalTrigger:" + BasicExperiment.nCurrentExperimentStructureState.Experiment_ExternalTrigger);		
+			StimulGL.write2OutputWindow("CurrentBlock_BlockID:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_BlockID, "BasicExperiment");
+			StimulGL.write2OutputWindow("CurrentBlock_BlockNumber:" + BasicExperiment.cCurrentExperimentBlockStructure.getBlockNumber(), "BasicExperiment");
+			StimulGL.write2OutputWindow("CurrentBlock_TrialNumber:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_TrialNumber, "BasicExperiment");
+			StimulGL.write2OutputWindow("CurrentBlock_InternalTrigger:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_InternalTrigger, "BasicExperiment");
+			StimulGL.write2OutputWindow("CurrentBlock_ExternalTrigger:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_ExternalTrigger, "BasicExperiment");
+			StimulGL.write2OutputWindow("Experiment_ExternalTrigger:" + BasicExperiment.nCurrentExperimentStructureState.Experiment_ExternalTrigger, "BasicExperiment");		
 			if (BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_LoopID == -4)
 			{
-				Log("CurrentBlock_LoopID: RA_UNDEFINED");
+				StimulGL.write2OutputWindow("CurrentBlock_LoopID: RA_UNDEFINED", "BasicExperiment");
 			}
 			else if (BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_LoopID >= 0)
 			{
-				Log("CurrentBlock_LoopID:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_LoopID);
+				StimulGL.write2OutputWindow("CurrentBlock_LoopID:" + BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_LoopID, "BasicExperiment");
 				___nLoopCounter = ___cLoopStructure_Object0.getLoopCounter();
-				Log("CurrentBlock_LoopCounter0:" + ___nLoopCounter);	
+				StimulGL.write2OutputWindow("CurrentBlock_LoopCounter0:" + ___nLoopCounter, "BasicExperiment");	
 			}
-			Log("-----");
+			StimulGL.write2OutputWindow("-----", "BasicExperiment");
 		}
 	}
 

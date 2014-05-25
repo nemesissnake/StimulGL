@@ -385,8 +385,8 @@ void MainWindow::DebugcontextMenuEvent(const QPoint &pos, const QString &sTabNam
 		menu.addAction(mCopyDebuggerAction.value(sTabName));
 	if(mSaveDebuggerAction.contains(sTabName))
 		menu.addAction(mSaveDebuggerAction.value(sTabName));
-	if(mRemoveDebuggerAction.contains(sTabName))
-		menu.addAction(mRemoveDebuggerAction.value(sTabName));
+	//if(mRemoveDebuggerAction.contains(sTabName))
+	//	menu.addAction(mRemoveDebuggerAction.value(sTabName));
 	menu.exec(mTabNameToOutputWindowList[sTabName]->viewport()->mapToGlobal(pos));
 }
 
@@ -815,6 +815,21 @@ void MainWindow::scriptUnloaded(qint64 id)
     setScriptRunningStatus(GlobalApplicationInformation::Pending);
 }
 
+void MainWindow::outputTabCloseRequest(int nIndex)
+{
+	QString sTabName = mTabNameToOutputWindowList.key((QTextEdit *)outputTabWidget->widget(nIndex),QString(""));
+	if(sTabName.isEmpty())
+		return;
+	if(sTabName == MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME)
+	{
+		clearDebugger(sTabName);
+	}
+	else
+	{
+		removeOutputWindow(sTabName);
+	}
+}
+
 void MainWindow::setActiveSubWindow(QWidget *window)
 {
 	if (!window)
@@ -851,8 +866,8 @@ void MainWindow::updateMenuControls(QMdiSubWindow *subWindow)
 			tmpCopyAction->setEnabled(true);
 		foreach(QAction* tmpSaveAction,mSaveDebuggerAction)
 			tmpSaveAction->setEnabled(true);
-		foreach(QAction* tmpRemoveAction,mRemoveDebuggerAction)
-			tmpRemoveAction->setEnabled(true);		
+		//foreach(QAction* tmpRemoveAction,mRemoveDebuggerAction)
+		//	tmpRemoveAction->setEnabled(true);		
 
 		goToLineAction->setEnabled(hasMdiChild);
 		goToMatchingBraceAction->setEnabled(hasMdiChild);
@@ -1183,9 +1198,9 @@ void MainWindow::createDefaultMenus()
 	editOutputMenu->addAction(mSaveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME));
 	connect(signalMapperSaveDebugger, SIGNAL(mapped(const QString &)),this, SLOT(saveDebugger(const QString &)));
 
-	signalMapperRemoveDebugger = new QSignalMapper(this);
-	signalMapperRemoveDebugger->setMapping(mRemoveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
-	connect(signalMapperRemoveDebugger, SIGNAL(mapped(const QString &)),this, SLOT(removeOutputWindow(const QString &)));
+	//signalMapperRemoveDebugger = new QSignalMapper(this);
+	//signalMapperRemoveDebugger->setMapping(mRemoveDebuggerAction.value(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME), MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	//connect(signalMapperRemoveDebugger, SIGNAL(mapped(const QString &)),this, SLOT(removeOutputWindow(const QString &)));
 
 	editMenu->addSeparator();
 
@@ -1511,11 +1526,13 @@ bool MainWindow::addOutputWindow(const QString &sTabName)
 	connect(mSaveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperSaveDebugger, SLOT(map()));
 	signalMapperSaveDebugger->setMapping(mSaveDebuggerAction.value(sTabName), sTabName);
 
+	/*
 	mRemoveDebuggerAction.insert(sTabName,new QAction(QObject::tr("&Delete this tabbed Output window"), 0));
 	//mRemoveDebuggerAction->setShortcut(QKeySequence(""));
 	mRemoveDebuggerAction.value(sTabName)->setStatusTip(tr("Delete the Debugger Output window."));
 	connect(mRemoveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperRemoveDebugger, SLOT(map()));
 	signalMapperRemoveDebugger->setMapping(mRemoveDebuggerAction.value(sTabName), sTabName);
+	*/
 
 	return true;
 }
@@ -1548,8 +1565,8 @@ bool MainWindow::removeOutputWindow(const QString &sTabName)
 			disconnect(mCopyDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperCopyDebugger, SLOT(map()));
 		if(mSaveDebuggerAction.contains(sTabName))
 			disconnect(mSaveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperSaveDebugger, SLOT(map()));
-		if(mRemoveDebuggerAction.contains(sTabName))
-			disconnect(mRemoveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperRemoveDebugger, SLOT(map()));
+		//if(mRemoveDebuggerAction.contains(sTabName))
+		//	disconnect(mRemoveDebuggerAction.value(sTabName), SIGNAL(triggered()), signalMapperRemoveDebugger, SLOT(map()));
 
 		return true;
 	}
@@ -1640,7 +1657,12 @@ void MainWindow::createDockWindows()
 	mTabNameToOutputWindowList.insert(MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME,new QTextEdit());
 	mTabNameToOutputWindowList[MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME]->setReadOnly(true);
 	outputTabWidget = new QTabWidget();
+	outputTabWidget->setTabsClosable(true);
+	outputTabWidget->setMovable(true);
+	outputTabWidget->setTabShape(QTabWidget::Rounded);
+	outputTabWidget->setTabPosition(QTabWidget::North);
 	outputTabWidget->addTab(mTabNameToOutputWindowList[MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME],MAINWINDOW_DEFAULT_OUTPUTWINDOW_TABNAME);
+	connect(outputTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(outputTabCloseRequest(int)));
 	//outputWindowList->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	//QString tmpColor = QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_RED) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_GREEN) + "," + QString::number(STIMULGL_DEFAULT_WINDOW_BACKGROUND_COLOR_BLUE);
 	//outputWindowList->setStyleSheet("* { background-color:rgb(" + tmpColor + "); padding: 10px ; color:rgb(136,0,21)}");

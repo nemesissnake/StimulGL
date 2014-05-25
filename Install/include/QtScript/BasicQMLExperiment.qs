@@ -67,14 +67,14 @@ BasicExperiment.__proto__.preExperimentStateChanged = _.wrap(BasicExperiment.__p
 	[].shift.apply(args);
 	
 	//ExperimentManager_NoState			= 0, /*!< this state is only internally used by the object while it is constructing, thus not yet fully available and therefore cannot be detected/used in the script environment. */
-	//ExperimentManager_Constructed		= 1, /*!< this state is used to determine whenever the object has been constructed, this state also cannot be detected/used in the script environment. */
+	//ExperimentManager_Constructed			= 1, /*!< this state is used to determine whenever the object has been constructed, this state also cannot be detected/used in the script environment. */
 	//ExperimentManager_Loaded			= 2, /*!< after the Experiment file (*.exml) is successfully loaded (and validated) the ExperimentManager state changes to this state.*/
-	//ExperimentManager_PreParsed		= 3, /*!< when the Experiment could be successfully preparsed (after loading) then the ExperimentManager state changes to this state.*/
-	//ExperimentManager_Configured		= 4, /*!< after the function runExperiment() is called the ExperimentManager (validates if it has not been done before) and configures the experiment, it then changes to this state if the configuration was done.*/
-	//ExperimentManager_Initialized		= 5, /*!< after the Experiment configuration the ExperimentManager tries to initialized and changes the state to this state if this step was successful.*/
-	//ExperimentManager_IsStarting		= 6, /*!< after the Experiment initialization the ExperimentManager is ready to actually start the Experiment but first it changes the state to this state.*/
+	//ExperimentManager_PreParsed			= 3, /*!< when the Experiment could be successfully preparsed (after loading) then the ExperimentManager state changes to this state.*/
+	//ExperimentManager_Configured			= 4, /*!< after the function runExperiment() is called the ExperimentManager (validates if it has not been done before) and configures the experiment, it then changes to this state if the configuration was done.*/
+	//ExperimentManager_Initialized			= 5, /*!< after the Experiment configuration the ExperimentManager tries to initialized and changes the state to this state if this step was successful.*/
+	//ExperimentManager_IsStarting			= 6, /*!< after the Experiment initialization the ExperimentManager is ready to actually start the Experiment but first it changes the state to this state.*/
 	//ExperimentManager_Started			= 7, /*!< after the Experiment is successfully started the ExperimentManager changes to this state.*/
-	//ExperimentManager_IsStopping		= 8, /*!< before the ExperimentManager tries to stop the Experiment it first changes to this state.*/
+	//ExperimentManager_IsStopping			= 8, /*!< before the ExperimentManager tries to stop the Experiment it first changes to this state.*/
 	//ExperimentManager_Stopped			= 9  /*!< after the ExperimentManager could finalize and stop the Experiment it changes to this state.*/
 	
 	//*!Call the below BasicExperiment.LogFunctionSignature method with the args variabele
@@ -86,8 +86,8 @@ BasicExperiment.__proto__.preExperimentStateChanged = _.wrap(BasicExperiment.__p
 	}	
 	
 	//*!Call the original function (wrap method, with more that one arguments) and return
-	var bResult = OriginalFunction.apply(this,args);
-	return bResult;
+	var vResult = OriginalFunction.apply(this,args);
+	return vResult;
 })
 
 //*!This wrapper function can use the compose method because the original function has one or no parameters
@@ -97,7 +97,7 @@ BasicExperiment.__proto__.LogExperimentState = _.compose(BasicExperiment.LogExpe
 	if(BasicExperiment.sChoosenExperimenMode == "Testing_Mode")
 	{	
 		var retVal = BasicExperiment.QMLViewerObject.invokeQml2Method("DebugMode_Functions","updateExperimentState",BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_BlockID,BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_TrialNumber,BasicExperiment.nCurrentExperimentStructureState.CurrentBlock_InternalTrigger);
-		StimulGL.write2OutputWindow("* " + "DebugMode_Functions:updateExperimentState" + " returned: " + retVal + " >>>");	
+		StimulGL.write2OutputWindow("* " + "DebugMode_Functions:updateExperimentState" + " returned: " + retVal + " >>>", "BasicQMLExperiment");	
 	}
 	//*!Return the first argument if there is one defined
 	return;

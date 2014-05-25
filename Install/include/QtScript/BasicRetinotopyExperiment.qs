@@ -45,7 +45,7 @@ BasicExperiment.__proto__.preExperimentStateChanged = _.wrap(BasicExperiment.__p
 	if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Initialized)
 	{
 		//Now all defined objects in the experiment file are constructed and therefore available in this script, so now we can make the connections between constructed the objects.
-		BasicQMLExperiment.RetinotopyMapperObj = RetinoMap_Object_1;
+		BasicExperiment.RetinotopyMapperObj = RetinoMap_Object_1;
 	}	
 	
 	//*!Call the original function (wrap method, with more that one arguments) and return

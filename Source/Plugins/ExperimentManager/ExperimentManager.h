@@ -250,10 +250,11 @@ public slots:
 	void stopExperiment();	
 	/*! \brief Use this function to retrieve the current date/time.
 	 *
-	 *  This function returns the current date/time string formatted as "yyyyMMddHHmmsszzz".
+	 *  This function returns the current date/time string that can be custom formatted.
+	 *  @param sFormat a string value containing the custom Date/Time format, if left empty the value "yyyyMMddHHmmsszzz" is used.
 	 *  @return a string value containing the current date/time string.
 	 */	
-	QString getCurrentDateTimeStamp();
+	static QString getCurrentDateTimeStamp(const QString &sFormat = MainAppInfo::stdDateTimeFormat());
 	/*! \brief Inserts a specified object parameter for the current experiment block.
 	 *
 	 *  Inserts a specified object parameter with an object ID, a parameter name and a parameter value in the current experiment block definitions.

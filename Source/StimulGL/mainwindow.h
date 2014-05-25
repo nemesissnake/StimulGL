@@ -433,6 +433,7 @@ private slots:
 	void CursorPositionChangedHandler(int line, int col);
 	void scriptLoaded(qint64 id);
 	void scriptUnloaded(qint64 id);
+	void outputTabCloseRequest(int nIndex);
 
 private:
 	//void registerFileTypeByDefinition(const QString &DocTypeName, const QString &DocTypeDesc, const QString &DocTypeExtension);
@@ -472,7 +473,7 @@ private:
 	QMap<QString,QAction *> mClearDebuggerAction;
 	QMap<QString,QAction *> mCopyDebuggerAction;
 	QMap<QString,QAction *> mSaveDebuggerAction;
-	QMap<QString,QAction *> mRemoveDebuggerAction;
+	//QMap<QString,QAction *> mRemoveDebuggerAction;
 	QAction *pasteAction;
 	QAction *goToLineAction;
 	QAction *findAction;
@@ -562,7 +563,7 @@ private:
 	QSignalMapper *signalMapperClearDebugger;
 	QSignalMapper *signalMapperCopyDebugger;
 	QSignalMapper *signalMapperSaveDebugger;
-	QSignalMapper *signalMapperRemoveDebugger;
+	//QSignalMapper *signalMapperRemoveDebugger;
 	QToolBar *fileToolBar;
 	QToolBar *editToolBar;
 	QToolBar *toolsToolBar;
