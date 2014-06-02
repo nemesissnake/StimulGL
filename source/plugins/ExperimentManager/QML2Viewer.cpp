@@ -444,10 +444,10 @@ void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyT
 		QString qmlMainFilePath = "";
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_MAINFILEPATH,qmlMainFilePath);
-		stimHeigthPixelAmount = 480;
+		stimHeightPixelAmount = 480;
 		if(!bSetOnlyToDefault)
-			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
-		stimWidthPixelAmount = stimHeigthPixelAmount;
+			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,stimHeightPixelAmount);
+		stimWidthPixelAmount = stimHeightPixelAmount;
 		if(!bSetOnlyToDefault)
 			insertExpObjectParameter(nQML2ViewerID,QML2VIEWER_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
 	} 
@@ -455,10 +455,10 @@ void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyT
 	{
 		ParsedParameterDefinition pParDef;//((pParDef.bIsInitialized) && (pParDef.bHasChanged == false))
 		bParameterChanged = false;
-		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount));
+		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeightPixelAmount));
 		if (pParDef.bHasChanged)
 		{
-			stimHeigthPixelAmount = pParDef.sValue.toInt();
+			stimHeightPixelAmount = pParDef.sValue.toInt();
 			bParameterChanged = true;
 		}
 		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount));
@@ -468,7 +468,7 @@ void QML2Viewer::parseExperimentObjectBlockParameters(bool bInit, bool bSetOnlyT
 			bParameterChanged = true;
 		}
 		//if (bResolutionChanged)
-		//setStimuliResolution(stimWidthPixelAmount,stimHeigthPixelAmount);
+		//setStimuliResolution(stimWidthPixelAmount,stimHeightPixelAmount);
 
 		pParDef = getExpObjectBlockParameter(nQML2ViewerID,QML2VIEWER_BACKGROUNDCOLOR,colorBackground.name());
 		if (pParDef.bHasChanged)

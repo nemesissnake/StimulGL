@@ -203,9 +203,9 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_SHOWFIXPOINT,showFixationPoint);
 		fixationSize = 8;
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_FIXSIZE,fixationSize);
-		stimHeigthPixelAmount = 480;
-		insertExpObjectParameter(getObjectID(),GLWIDGET_HEIGHT_PIXEL_AMOUNT,stimHeigthPixelAmount);
-		stimWidthPixelAmount = stimHeigthPixelAmount;
+		stimHeightPixelAmount = 480;
+		insertExpObjectParameter(getObjectID(),GLWIDGET_HEIGHT_PIXEL_AMOUNT,stimHeightPixelAmount);
+		stimWidthPixelAmount = stimHeightPixelAmount;
 		insertExpObjectParameter(getObjectID(),GLWIDGET_WIDTH_PIXEL_AMOUNT,stimWidthPixelAmount);
 		adjustStimScreenArea();
 		cycleTriggerAmount = 1;
@@ -277,7 +277,7 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 		////insertExpObjectParameter(getObjectID(),RETINOMAPPER_MOVINGDOTS_RETINALPOSITION,movingDotsRetPosition);
 		movingDotsHemiFieldWidth = stimWidthPixelAmount/2;		
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_MOVINGDOTS_HEMIFIELDWIDTH,movingDotsHemiFieldWidth);
-		movingDotsHemiFieldHeight = stimHeigthPixelAmount;		
+		movingDotsHemiFieldHeight = stimHeightPixelAmount;		
 		insertExpObjectParameter(getObjectID(),RETINOMAPPER_MOVINGDOTS_HEMIFIELDHEIGHT,movingDotsHemiFieldHeight);
 	} 
 	else
@@ -297,7 +297,7 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 		currentExpType = pParDef.sValue.toLower();		
 		pParDef = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_SHOWFIXPOINT,booleanToParamString(showFixationPoint));
 		showFixationPoint = paramStringToBool(pParDef.sValue);
-		stimHeigthPixelAmount = getExpObjectBlockParameter(getObjectID(),GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeigthPixelAmount)).sValue.toFloat();
+		stimHeightPixelAmount = getExpObjectBlockParameter(getObjectID(),GLWIDGET_HEIGHT_PIXEL_AMOUNT,QString::number(stimHeightPixelAmount)).sValue.toFloat();
 		stimWidthPixelAmount = getExpObjectBlockParameter(getObjectID(),GLWIDGET_WIDTH_PIXEL_AMOUNT,QString::number(stimWidthPixelAmount)).sValue.toFloat();
 		adjustStimScreenArea();
 		fixationSize = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_FIXSIZE,QString::number(fixationSize)).sValue.toInt();
@@ -405,13 +405,13 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 				movingDotsHemiFieldWidth = pParDef.sValue.toInt();
 			}
 			//Same counts for the next parameter
-			pParDef = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_MOVINGDOTS_HEMIFIELDHEIGHT,QString::number(stimHeigthPixelAmount));
+			pParDef = getExpObjectBlockParameter(getObjectID(),RETINOMAPPER_MOVINGDOTS_HEMIFIELDHEIGHT,QString::number(stimHeightPixelAmount));
 			if ((pParDef.bIsInitialized) && (pParDef.bHasChanged == false))
 			{
 				int tmpBuffer = movingDotsHemiFieldHeight;
-				movingDotsHemiFieldHeight = QString::number(stimHeigthPixelAmount).toInt();
+				movingDotsHemiFieldHeight = QString::number(stimHeightPixelAmount).toInt();
 				if(insertExpObjectParameter(getObjectID(),RETINOMAPPER_MOVINGDOTS_HEMIFIELDHEIGHT,movingDotsHemiFieldHeight,false))
-					movingDotsHemiFieldHeight = QString::number(stimHeigthPixelAmount).toInt();
+					movingDotsHemiFieldHeight = QString::number(stimHeightPixelAmount).toInt();
 				else
 					movingDotsHemiFieldHeight = tmpBuffer;
 			}
@@ -439,7 +439,7 @@ void RetinotopyMapper::parseExperimentObjectBlockParameters(bool bInit)
 
 void RetinotopyMapper::adjustStimScreenArea()
 {
-	rStimuliScreenArea = QRect((int)(rectScreenRes.width()-stimWidthPixelAmount)/2,(int)(rectScreenRes.height()-stimHeigthPixelAmount)/2,stimWidthPixelAmount,stimHeigthPixelAmount);
+	rStimuliScreenArea = QRect((int)(rectScreenRes.width()-stimWidthPixelAmount)/2,(int)(rectScreenRes.height()-stimHeightPixelAmount)/2,stimWidthPixelAmount,stimHeightPixelAmount);
 }
 
 bool RetinotopyMapper::startObject()
@@ -475,6 +475,12 @@ bool RetinotopyMapper::startObject()
 	{
 		retinoMapperWindow->setScreen(sActiveStimScreen);
 	}	
+	if((stimWidthPixelAmount > sActiveStimScreen->size().width()) || (stimHeightPixelAmount > sActiveStimScreen->size().height()))
+	{
+		qWarning() << __FUNCTION__ << "Choosen Stimuli size exceeds active Screen resolution!"; 
+		emit ExperimentEngine::UserWantsToClose();
+	}
+
 	retinoMapperWindow->showFullScreen();
 	QRect tmpRect = retinoMapperWindow->geometry();
 	tmpRect.setHeight(tmpRect.height()+1);//To prevent flickering, (bug, on some systems), doesn't make a change since drawing starts upper left corner.
@@ -496,7 +502,7 @@ bool RetinotopyMapper::initObjectBlockTrial()
 	parseExperimentObjectBlockParameters(false);
 	//Some variable initializations
 	flickrSwitch = 0;
-	StimulusResultImageFrame = QPixmap(stimWidthPixelAmount,stimHeigthPixelAmount);
+	StimulusResultImageFrame = QPixmap(stimWidthPixelAmount,stimHeightPixelAmount);
 	StimulusResultImageFrame.fill();
 	StimulusActivationMap = StimulusResultImageFrame;
 
@@ -530,13 +536,13 @@ void RetinotopyMapper::initializeMovingDotsStructures()
 {
 	if (movingDotsHemifieldPos == RETINOMAPPER_POS_RIGHT)
 	{
-		movingDotsFirstHemiVisibleArea.setP1(QPointF((stimWidthPixelAmount/2)+movingDotsPixelFromCenter, (stimHeigthPixelAmount-movingDotsHemiFieldHeight)/2));
-		movingDotsFirstHemiVisibleArea.setP2(QPointF(stimWidthPixelAmount - ((stimWidthPixelAmount/2)-movingDotsHemiFieldWidth), stimHeigthPixelAmount-(movingDotsPixelFromCenter, (stimHeigthPixelAmount-movingDotsHemiFieldHeight)/2)));
+		movingDotsFirstHemiVisibleArea.setP1(QPointF((stimWidthPixelAmount/2)+movingDotsPixelFromCenter, (stimHeightPixelAmount-movingDotsHemiFieldHeight)/2));
+		movingDotsFirstHemiVisibleArea.setP2(QPointF(stimWidthPixelAmount - ((stimWidthPixelAmount/2)-movingDotsHemiFieldWidth), stimHeightPixelAmount-(movingDotsPixelFromCenter, (stimHeightPixelAmount-movingDotsHemiFieldHeight)/2)));
 	}
 	else//(RETINOMAPPER_POS_LEFT || RETINOMAPPER_POS_BOTH)
 	{
-		movingDotsFirstHemiVisibleArea.setP1(QPointF(((stimWidthPixelAmount/2)-movingDotsHemiFieldWidth), (stimHeigthPixelAmount-movingDotsHemiFieldHeight)/2));
-		movingDotsFirstHemiVisibleArea.setP2(QPointF((stimWidthPixelAmount/2)-movingDotsPixelFromCenter, stimHeigthPixelAmount-movingDotsFirstHemiVisibleArea.p1().y()));
+		movingDotsFirstHemiVisibleArea.setP1(QPointF(((stimWidthPixelAmount/2)-movingDotsHemiFieldWidth), (stimHeightPixelAmount-movingDotsHemiFieldHeight)/2));
+		movingDotsFirstHemiVisibleArea.setP2(QPointF((stimWidthPixelAmount/2)-movingDotsPixelFromCenter, stimHeightPixelAmount-movingDotsFirstHemiVisibleArea.p1().y()));
 	}
 	QPointF tmpPoint;
 	QLineF tmpLine;

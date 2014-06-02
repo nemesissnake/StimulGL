@@ -522,7 +522,7 @@ private:
 
 	QTScriptEngine *AppScriptEngine;
 	GlobalApplicationInformation::ActiveScriptMode AppScriptStatus;
-	//qint64 currentRunningScriptID;	
+	qint64 currentMainRunningScriptID;	
 	QList<qint64> lCurrentRunningScriptIDList;
 
 	QPushButton button;

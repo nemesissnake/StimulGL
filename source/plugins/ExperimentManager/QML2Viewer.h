@@ -161,7 +161,7 @@ private:
 	QRectF rectScreenRes;						//The screen resolution
 	QColor colorBackground;						//The color of the background
 	float stimWidthPixelAmount;					//The amount of visible stimuli pixels(height)
-	float stimHeigthPixelAmount;				//The amount of visible stimuli pixels(width)
+	float stimHeightPixelAmount;				//The amount of visible stimuli pixels(width)
 	bool bParameterChanged;
 	bool bFirstQuickWindowActivation;
 	bool bExperimentUnlocked;

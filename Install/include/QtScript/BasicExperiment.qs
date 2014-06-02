@@ -52,7 +52,8 @@ StimulGL.clearOutputWindow("BasicExperiment");
 //////////////////////////	
 	//Local variabeles, name starts with '___' to prevent further usuage outside this scope
 	var ___nLoopCounter;
-	var ___cLoopStructure_Object0;	
+	var ___cLoopStructure_Object0;
+	var ___nLogFunctionSignatureCounter = 0;
 
 /////////////////////////
 //Public Property Functions//
@@ -180,10 +181,46 @@ StimulGL.clearOutputWindow("BasicExperiment");
 //////////////////////////
 	BasicExperiment.__proto__.CleanupScript = function()
 	{
-		BasicExperiment.LogFunctionSignature("BasicExperiment","CleanupScript", arguments, true);
-		
+		BasicExperiment.LogFunctionSignature("BasicExperiment","CleanupScript(begin)", arguments, true);
+		//Disconnect Signal/Slots
 		BasicExperiment.ConnectDisconnectScriptFunctions(false);
+		//Destruct function definitions
+		BasicExperiment.__proto__.RunExperiment = null;
+		BasicExperiment.__proto__.CreateArray = null;
+		BasicExperiment.__proto__.GetCurrentDateTimeStamp = null;
+		BasicExperiment.__proto__.KeyBoardResponseRecieved = null;
+		BasicExperiment.__proto__.ExternalTriggerRecieved = null;
+		BasicExperiment.__proto__.NewInitBlockTrial = null;
+		BasicExperiment.__proto__.ExperimentStateChanged = null;
+		BasicExperiment.__proto__.CleanupScript = null;
+		BasicExperiment.__proto__.preExperimentStateChanged = null;
+		BasicExperiment.__proto__.LogFunctionSignature = null;
+		BasicExperiment.__proto__.preExternalTriggerRecieved = null;
+		BasicExperiment.__proto__.preNewInitBlockTrial = null;
+		BasicExperiment.__proto__.LogExperimentState = null;
+		BasicExperiment.__proto__.InitExperimentObjects = null;
+		BasicExperiment.__proto__.StartExperimentObjects = null;
+		BasicExperiment.__proto__.StopExperimentObjects = null;
+		BasicExperiment.__proto__.ConnectDisconnectScriptFunctions = null;
+		BasicExperiment.__proto__.DialogGetComboBoxItem = null;
+		//Destruct Allocated Objects
+		BasicExperiment.nCurrentExperimentState = null;
+		BasicExperiment.cExperimentStructure_Object = null;	
+		BasicExperiment.nCurrentExperimentStructureState = null;
+		BasicExperiment.cCurrentExperimentBlockStructure = null;
+		BasicExperiment.arrExperimentModes = null;
+		BasicExperiment.sChoosenExperimenMode = null;
+		BasicExperiment.KeyBoardCaptureObj = null; 
+		BasicExperiment.TriggerTimerObj = null;
+		BasicExperiment.ParallelPortObj = null;	
+		BasicExperiment.ExperimentManagerObj = null;
+		BasicExperiment.KeyBoardCapture_lAllowedKeyCodeList = null;
+		___cLoopStructure_Object0 = null;
+		//Delete underscore library
+		_ = null;
+		//Finally call StimulGL's cleanupScript() function
 		StimulGL.cleanupScript();
+		StimulGL.write2OutputWindow("CleanupScript(finalized)", "BasicExperiment");
 	}
 	
 	BasicExperiment.__proto__.preExperimentStateChanged = function(currentState,sDateTimeStamp)
@@ -240,7 +277,6 @@ StimulGL.clearOutputWindow("BasicExperiment");
 			BasicExperiment.ExperimentManagerObj.ExperimentStateHasChanged.disconnect(BasicExperiment, BasicExperiment.preExperimentStateChanged);
 			BasicExperiment.ExperimentStateChanged(currentState,sDateTimeStamp);
 			BasicExperiment.CleanupScript();
-			return;
 		}
 		BasicExperiment.ExperimentStateChanged(currentState,sDateTimeStamp);
 	}	
@@ -260,7 +296,8 @@ StimulGL.clearOutputWindow("BasicExperiment");
 						sArguments = sArguments + "," + lArguments[nArgCounter];
 				}
 			}
-			StimulGL.write2OutputWindow("- Function " + sOutputTabName + ":" + sFunctionName + "(" + sArguments + ") called.", sOutputTabName);
+			StimulGL.write2OutputWindow("- Function " + sOutputTabName + ":" + sFunctionName + "(" + sArguments + ") called(" + ___nLogFunctionSignatureCounter + ").", sOutputTabName);
+			___nLogFunctionSignatureCounter++;
 		}
 	}
 	
@@ -371,7 +408,7 @@ StimulGL.clearOutputWindow("BasicExperiment");
 		}
 		if(BasicExperiment.ParallelPortCapture_Enabled)
 		{
-			BasicExperiment.ParallelPortObj.StartCaptureThread(BasicExperiment.ParallelPortCapture_Address,BasicExperiment.ParallelPortCapture_Mask,BasicExperiment.ParallelPortCapture_Method,BasicExperiment.ParallelPortCapture_PostLHDelay,BasicExperiment.ParallelPortCapture_PostHLDelay);		
+			BasicExperiment.ParallelPortObj.StartCaptureThread(BasicExperiment.ParallelPortCapture_Address,BasicExperiment.ParallelPortCapture_Mask,BasicExperiment.ParallelPortCapture_Method,BasicExperiment.ParallelPortCapture_PostLHDelay,BasicExperiment.ParallelPortCapture_PostHLDelay);
 		}
 		if(BasicExperiment.MainWindow_AutoDeactivate)
 			StimulGL.enableActiveDocument(false);
@@ -457,3 +494,4 @@ StimulGL.clearOutputWindow("BasicExperiment");
 //////////////////////////////////////////////////////////
 
 //BasicExperiment.RunExperiment();
+//BasicExperiment.CleanupScript();

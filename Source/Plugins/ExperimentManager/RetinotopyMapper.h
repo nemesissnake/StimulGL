@@ -178,7 +178,7 @@ private:
 	int cycleTriggerAmount;						//The total block duration in amount of triggers
 	int triggerDurationMsec;					//The duration of one trigger in mSec
 	float stimWidthPixelAmount;					//The amount of visible stimuli pixels(height)
-	float stimHeigthPixelAmount;				//The amount of visible stimuli pixels(width)
+	float stimHeightPixelAmount;				//The amount of visible stimuli pixels(width)
 	QColor fixationColor;						//The color of the fixation dot/cross
 	int fixationSize;							//The width of the fixation dot/cross
 	bool showFixationPoint;						//Should we show an fixation point?

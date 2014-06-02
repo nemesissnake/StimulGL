@@ -83,7 +83,11 @@ BasicExperiment.__proto__.preExperimentStateChanged = _.wrap(BasicExperiment.__p
 	{
 		//Now all defined objects in the experiment file are constructed and therefore available in this script, so now we can make the connections between constructed the objects.
 		BasicExperiment.QMLViewerObject = QML2Viewer_Object_1;	
-	}	
+	}
+	else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)
+	{
+		BasicExperiment.QMLViewerObject = null;
+	}
 	
 	//*!Call the original function (wrap method, with more that one arguments) and return
 	var vResult = OriginalFunction.apply(this,args);
@@ -109,7 +113,6 @@ BasicExperiment.__proto__.StartExperimentObjects = _.compose(BasicExperiment.Sta
 	if(BasicExperiment.sChoosenExperimenMode == "Testing_Mode")
 	{
 		BasicExperiment.TriggerTimerObj.timeout.connect(BasicExperiment.QMLViewerObject, BasicExperiment.QMLViewerObject.incrementExternalTrigger);
-		//BasicExperiment.TriggerTimerObj.startTimer(BasicExperiment.nTestModeTriggerDuration);
 	}
 	if(BasicExperiment.ParallelPortCapture_Enabled)
 	{				

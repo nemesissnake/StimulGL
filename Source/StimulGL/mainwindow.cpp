@@ -694,7 +694,7 @@ void MainWindow::setupScriptEngine()
 		}
 	}
 	lCurrentRunningScriptIDList.clear();
-	//currentRunningScriptID = 0;
+	currentMainRunningScriptID = 0;
 	connect(AppScriptEngine, SIGNAL(ScriptLoaded(qint64)), this, SLOT(scriptLoaded(qint64)));
 	connect(AppScriptEngine, SIGNAL(ScriptUnloaded(qint64)), this, SLOT(scriptUnloaded(qint64)));
 
@@ -798,6 +798,8 @@ bool MainWindow::emulateKeyPress(QWindow *pWindow, const int keyCode, const QStr
 void MainWindow::scriptLoaded(qint64 id)
 {
 	lCurrentRunningScriptIDList.append(id);
+	if(AppScriptStatus != GlobalApplicationInformation::Executing)
+		currentMainRunningScriptID = id;
     setScriptRunningStatus(GlobalApplicationInformation::Executing);
 }
 
@@ -809,10 +811,14 @@ void MainWindow::scriptUnloaded(qint64 id)
 		lCurrentRunningScriptIDList.removeAt(nIndex);
 	}
 	if(lCurrentRunningScriptIDList.isEmpty())
+	{
 		resetContextState();
+		setScriptRunningStatus(GlobalApplicationInformation::Pending);
+	}
 	else
+	{
 		resetContextState(id);
-    setScriptRunningStatus(GlobalApplicationInformation::Pending);
+	}
 }
 
 void MainWindow::outputTabCloseRequest(int nIndex)
@@ -2270,6 +2276,7 @@ void MainWindow::setScriptRunningStatus(GlobalApplicationInformation::ActiveScri
 //			debugScriptAction->setEnabled(false);
 			abortDocumentAction->setEnabled(false);
 			restartScriptEngineAction->setEnabled(false);
+			currentMainRunningScriptID = 0;
 			break; 
 		}	
 	case GlobalApplicationInformation::Pending:
@@ -2278,6 +2285,7 @@ void MainWindow::setScriptRunningStatus(GlobalApplicationInformation::ActiveScri
 //			debugScriptAction->setEnabled(true);
 			abortDocumentAction->setEnabled(false);
 			restartScriptEngineAction->setEnabled(false);
+			currentMainRunningScriptID = 0;
 			break; 
 		}	
 	case GlobalApplicationInformation::Stopping:
@@ -2286,6 +2294,7 @@ void MainWindow::setScriptRunningStatus(GlobalApplicationInformation::ActiveScri
 //			debugScriptAction->setEnabled(false);
 			abortDocumentAction->setEnabled(true);
 			restartScriptEngineAction->setEnabled(true);
+			currentMainRunningScriptID = 0;
 			break; 
 		}	
 	}
@@ -2323,7 +2332,7 @@ QString MainWindow::getEnvironmentVariabele(QString strName)
 
 void MainWindow::closeActiveDocument()
 {
-	QMdiSubWindow* activeWin = mdiArea->activeSubWindow();
+	QMdiSubWindow* activeWin = activeMdiChild();
 	if(activeWin)
 	{
 		mdiArea->closeActiveSubWindow();
@@ -2563,6 +2572,14 @@ void MainWindow::abortScript()
 {
 	AppScriptEngine->prepareObjectForGarbageCleanup(AppScriptEngine->eng->globalObject(),MAIN_PROGRAM_INTERNAL_NAME);
 	AppScriptEngine->eng->collectGarbage();
+	if((lCurrentRunningScriptIDList.count() == 1) && (currentMainRunningScriptID>0))
+	{
+		if(lCurrentRunningScriptIDList[0]!=currentMainRunningScriptID)
+		{
+			lCurrentRunningScriptIDList.clear();
+			setScriptRunningStatus(GlobalApplicationInformation::Pending);
+		}
+	}
 }
 
 void MainWindow::openOptionsDialog()
@@ -3196,11 +3213,15 @@ bool MainWindow::closeSubWindow(bool bAutoSaveChanges)
 
 QString MainWindow::activeMdiChildFilePath()
 {
-	return mdiArea->activeSubWindow()->windowFilePath();
+	return activeMdiChild()->windowFilePath();
 }
 
 QMdiSubWindow *MainWindow::activeMdiChild()
 {
+	if(mdiArea->activeSubWindow()==NULL)
+	{
+		return mdiArea->activeSubWindow();
+	}
 	return mdiArea->activeSubWindow();
 }
 

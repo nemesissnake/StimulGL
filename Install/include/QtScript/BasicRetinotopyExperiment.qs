@@ -46,10 +46,14 @@ BasicExperiment.__proto__.preExperimentStateChanged = _.wrap(BasicExperiment.__p
 	{
 		//Now all defined objects in the experiment file are constructed and therefore available in this script, so now we can make the connections between constructed the objects.
 		BasicExperiment.RetinotopyMapperObj = RetinoMap_Object_1;
-	}	
+	}
+	else if(currentState == ExperimentManager.ExperimentState.ExperimentManager_Stopped)
+	{
+		BasicExperiment.RetinotopyMapperObj = null;
+	}
 	
 	//*!Call the original function (wrap method, with more that one arguments) and return
-	var bResult = OriginalFunction.apply(this,args);
+	var bResult = OriginalFunction.apply(this,args);	
 	return bResult;
 })
 
@@ -59,7 +63,6 @@ BasicExperiment.__proto__.StartExperimentObjects = _.compose(BasicExperiment.Sta
 	if(BasicExperiment.sChoosenExperimenMode == "Testing_Mode")
 	{
 		BasicExperiment.TriggerTimerObj.timeout.connect(BasicExperiment.RetinotopyMapperObj, BasicExperiment.RetinotopyMapperObj.incrementExternalTrigger);
-		//BasicExperiment.TriggerTimerObj.startTimer(BasicExperiment.nTestModeTriggerDuration);
 	}
 	if(BasicExperiment.ParallelPortCapture_Enabled)
 	{
