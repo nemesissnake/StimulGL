@@ -28,12 +28,14 @@ TBVNetworkInterface::TBVNetworkInterface(bool autoConnect, bool autoReconnect)
 	tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
 	tcpSocket->setSocketOption(QAbstractSocket::KeepAliveOption, 1);
 
+	nDefaultPort = (quint16)55555;
 	blockSize = 0;
 	terminateReconnect = false;
 	terminateReciever = false;
 	manualDisconnect = false;
 	udpAutoConnect = autoConnect;
 	reConnect = autoReconnect;
+	udpSocket = NULL;
 
 	connect(rTcpSocket,SIGNAL(readyRead()),this,SLOT(readExecuteStep()));
 	connect(tcpSocket,SIGNAL(connected()),this,SLOT(connectionEstablished()));
@@ -41,14 +43,9 @@ TBVNetworkInterface::TBVNetworkInterface(bool autoConnect, bool autoReconnect)
 	connect(tcpSocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(writeError(QAbstractSocket::SocketError)));
 
 	querryQueue = new QQueue<QString>;
-
-	udpSocket = new QUdpSocket();
-    udpSocket->bind(55555,QAbstractSocket::ShareAddress);
-
+		
 	if(udpAutoConnect)
-		connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
-
-
+		setAutoConnection(true);
 }
 
 TBVNetworkInterface::~TBVNetworkInterface()
@@ -126,7 +123,7 @@ void TBVNetworkInterface::connectionLost()
 	if(reConnect)
 		tryToReconnect();
 	else if(udpAutoConnect)
-		udpSocket->bind(55555, QUdpSocket::ShareAddress);
+		setAutoConnection(true);
 }
 
 void TBVNetworkInterface::tryToReconnect()
@@ -209,9 +206,9 @@ bool TBVNetworkInterface::setAutoConnection(bool setting)
 		if(udpSocket == NULL)
 			udpSocket = new QUdpSocket();
 
-		udpSocket->bind(55555, QUdpSocket::ShareAddress);
-		connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
-		return true;
+		bool bBindResult = udpSocket->bind(nDefaultPort, QUdpSocket::ShareAddress);
+		bool bConnectResult = connect(udpSocket, SIGNAL(readyRead()),this, SLOT(processPendingDatagrams()));
+		return bConnectResult && bBindResult;
 	}
 	else
 	{

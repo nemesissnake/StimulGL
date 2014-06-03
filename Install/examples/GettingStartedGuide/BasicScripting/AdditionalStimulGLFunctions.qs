@@ -19,11 +19,16 @@ Log("User: " + result + " is currently logged on this system.");
 Beep();//This function plays a default beep sound
 Pause(500);//This function Pauses for 500 milliseconds before it proceeds (Important, this blocks all script context execution! Therefore only for testing purpose.)
 Beep();
+
 var sTextToOutput = "You can also make use of the StimulGL.write2OutputWindow() function \
-to write to the Log Output Pane";
-													
+to write to the (Default) Log Output Window";
 StimulGL.write2OutputWindow(sTextToOutput);
 Log(sTextToOutput);//This is the same as the above function 
+//Create a new tabbular named Output Window
+StimulGL.addOutputWindow("Window Name");
+StimulGL.write2OutputWindow(sTextToOutput + " and write to a specific named window.", "Window Name");
+//StimulGL.clearOutputWindow("Window Name");
+//StimulGL.removeOutputWindow("Window Name");
 
 Log("\tTAB is inserted first");//This appends an TAB (\t) and some text to the Log Output Pane
 Log("\n\n\n");//This appends some empty lines (\n) to the Log Output Pane

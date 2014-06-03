@@ -60,6 +60,7 @@ public:
 	bool setAutoConnection(bool setting);
 
 private:
+	quint16 nDefaultPort;
 	QUdpSocket *udpSocket;
 	QTcpSocket *tcpSocket;
 	QTcpSocket *rTcpSocket;

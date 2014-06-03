@@ -19,8 +19,8 @@ Rectangle
 		width: 200; height: 50 				//The text size
 		text: "Hello world" 				//The text string to show
 		font.bold: true 					//The text bold style
-        font.pixelSize: 20 				//The text pixel size
-        renderType: Text.NativeRendering		//The text renderType, with some graphic cards the default OpenGL text rendering gives terrible results, therefore it's set to native (software) rendering, try to comment this line...
+		font.pixelSize: 20 				//The text pixel size
+		renderType: Text.NativeRendering		//The text renderType, with some graphic cards the default OpenGL text rendering gives terrible results, therefore it's set to native (software) rendering, try to comment this line...
 	}
 
 	Rectangle //A rectangle item

@@ -15,7 +15,7 @@ function ScriptCleanupFunction()//Perform a successfull garbage collection
 	ScriptCleanupFunction=null;
 	//Write something to the Log Output Pane so we know that this Function executed successfully.
 	Log("Finished script cleanup, ready for garbage collection!");
-	StimulGL.cleanupScript();
+	//StimulGL.cleanupScript();
 }
 
 function getCharacter(position)
