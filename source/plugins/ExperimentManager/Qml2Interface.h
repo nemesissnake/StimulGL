@@ -28,6 +28,7 @@ public:
 	QString RootDirectory() const;
 
 	Q_INVOKABLE QString doSomething();
+	Q_INVOKABLE void Log(const QString &sMessage);
 
 private:
 	QString m_message;

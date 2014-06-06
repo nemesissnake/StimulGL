@@ -1,4 +1,5 @@
 #include "Qml2Interface.h"
+#include <QMetaObject>
 
 Qml2Interface::Qml2Interface(QObject *parent) : QObject(parent), m_message("")
 {
@@ -33,4 +34,9 @@ QString Qml2Interface::doSomething()
 { 
 	setmessage("something"); 
 	return m_message; 
+}
+
+void Qml2Interface::Log(const QString &sMessage)
+{
+	QMetaObject::invokeMethod((QObject*)MainAppInfo::getMainWindow(), MainAppInfo::getMainWindowLogSlotName().toLatin1(), Qt::DirectConnection, Q_ARG(QString, sMessage));
 }
