@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">ExperimentManager script class
-   &#160;<span id="projectnumber">2.1.0.0</span>
+   &#160;<span id="projectnumber">2.2.0.0</span>
    </div>
    <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
@@ -45,7 +45,7 @@
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//ExperimentManagerplugin</span>
-<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2013  Sven Gijsen</span>
+<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2014  Sven Gijsen</span>
 <a name="l00003"></a>00003 <span class="comment">//</span>
 <a name="l00004"></a>00004 <span class="comment">//This file is part of StimulGL.</span>
 <a name="l00005"></a>00005 <span class="comment">//StimulGL is free software: you can redistribute it and/or modify</span>
@@ -91,197 +91,205 @@
 <a name="l00049"></a>00049                 <span class="comment">//Experiment_Timer_Experiment   = 32</span>
 <a name="l00050"></a>00050         };
 <a name="l00051"></a>00051 
-<a name="l00055"></a><a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ce">00055</a>         <span class="keyword">enum</span> <a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ce">ExperimentParameterTypeName</a>
-<a name="l00056"></a>00056         {
-<a name="l00057"></a><a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea3d91a422798291af4cbac1f5b537012c">00057</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea3d91a422798291af4cbac1f5b537012c">Experiment_ParameterType_String</a>         = 0, 
-<a name="l00058"></a><a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea4ed3c085dbe23c747158216ae04a1680">00058</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea4ed3c085dbe23c747158216ae04a1680">Experiment_SubObject_StringArray</a>        = 1, 
-<a name="l00059"></a><a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceae95c5ada0b233248c13a6cd024302060">00059</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceae95c5ada0b233248c13a6cd024302060">Experiment_SubObject_Color</a>                      = 2, 
-<a name="l00060"></a><a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceae1a18650279ae9036bf0111c59c49079">00060</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceae1a18650279ae9036bf0111c59c49079">Experiment_SubObject_Integer</a>            = 3, 
-<a name="l00061"></a><a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea48c21034fab02dcc8691dd118303fe84">00061</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea48c21034fab02dcc8691dd118303fe84">Experiment_SubObject_Float</a>                      = 4, 
-<a name="l00062"></a><a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea726c47b055b95f2fa20ad3d755da787f">00062</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79cea726c47b055b95f2fa20ad3d755da787f">Experiment_SubObject_Double</a>                     = 5, 
-<a name="l00063"></a><a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceaba2822b0b4d688fa7fc48af341313ff6">00063</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#abd4e5a9ca38ff0d6921a4d371f4c79ceaba2822b0b4d688fa7fc48af341313ff6">Experiment_SubObject_Boolean</a>            = 6, 
-<a name="l00064"></a>00064         };
-<a name="l00065"></a>00065         
-<a name="l00069"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81">00069</a>         <span class="keyword">enum</span> <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81">ExperimentSubObjectState</a>
-<a name="l00070"></a>00070         {       
-<a name="l00071"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a66b52bff56bfbfbaf8adf897ad2211af">00071</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a66b52bff56bfbfbaf8adf897ad2211af">Experiment_SubObject_Constructing</a>       = 0, 
-<a name="l00072"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ab35fb7b6d09a04ebc2cc1c6a48473c1e">00072</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ab35fb7b6d09a04ebc2cc1c6a48473c1e">Experiment_SubObject_Initialized</a>        = 1, 
-<a name="l00073"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a2eb00428fe95428b95a39449d20c7305">00073</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a2eb00428fe95428b95a39449d20c7305">Experiment_SubObject_Started</a>            = 2, 
-<a name="l00074"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81aedf3bc778fc1ef68f4d233d18838cefe">00074</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81aedf3bc778fc1ef68f4d233d18838cefe">Experiment_SubObject_Abort</a>                      = 3, 
-<a name="l00075"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a51ba61af6d7c5e1d14aba63f0dc5ee69">00075</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a51ba61af6d7c5e1d14aba63f0dc5ee69">Experiment_SubObject_IsAborting</a>         = 4, 
-<a name="l00076"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81abbc95c439b027ea72dcc4b95c6e0c974">00076</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81abbc95c439b027ea72dcc4b95c6e0c974">Experiment_SubObject_Stop</a>                       = 5, 
-<a name="l00077"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a84a22ac64d0bf4aa5348936f4cbfa7a7">00077</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a84a22ac64d0bf4aa5348936f4cbfa7a7">Experiment_SubObject_IsStopping</a>         = 6, 
-<a name="l00078"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a07b8bf0c9890a638ee846387740818f3">00078</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a07b8bf0c9890a638ee846387740818f3">Experiment_SubObject_Stopped</a>            = 7, 
-<a name="l00079"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ae486e4af6f81229836376498ec719235">00079</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ae486e4af6f81229836376498ec719235">Experiment_SubObject_Destructing</a>        = 8, 
-<a name="l00080"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a86760da5b3c794c701ed88348146ac0a">00080</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a86760da5b3c794c701ed88348146ac0a">Experiment_SubObject_MaxState</a>           = 9  
-<a name="l00081"></a>00081         };
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083         <span class="keyword">enum</span> EXML_TAG_SECTIONS <span class="comment">//These are the main section Tag&#39;s</span>
-<a name="l00084"></a>00084         {
-<a name="l00085"></a>00085                 EXML_Declarations,
-<a name="l00086"></a>00086                 EXML_Actions,
-<a name="l00087"></a>00087                 EXML_Object,
-<a name="l00088"></a>00088                 EXML_Event
-<a name="l00089"></a>00089         };
+<a name="l00055"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81">00055</a>         <span class="keyword">enum</span> <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81">ExperimentSubObjectState</a>
+<a name="l00056"></a>00056         {       
+<a name="l00057"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a66b52bff56bfbfbaf8adf897ad2211af">00057</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a66b52bff56bfbfbaf8adf897ad2211af">Experiment_SubObject_Constructing</a>       = 0, 
+<a name="l00058"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ab35fb7b6d09a04ebc2cc1c6a48473c1e">00058</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ab35fb7b6d09a04ebc2cc1c6a48473c1e">Experiment_SubObject_Initialized</a>        = 1, 
+<a name="l00059"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a2eb00428fe95428b95a39449d20c7305">00059</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a2eb00428fe95428b95a39449d20c7305">Experiment_SubObject_Started</a>            = 2, 
+<a name="l00060"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81aedf3bc778fc1ef68f4d233d18838cefe">00060</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81aedf3bc778fc1ef68f4d233d18838cefe">Experiment_SubObject_Abort</a>                      = 3, 
+<a name="l00061"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a51ba61af6d7c5e1d14aba63f0dc5ee69">00061</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a51ba61af6d7c5e1d14aba63f0dc5ee69">Experiment_SubObject_IsAborting</a>         = 4, 
+<a name="l00062"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81abbc95c439b027ea72dcc4b95c6e0c974">00062</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81abbc95c439b027ea72dcc4b95c6e0c974">Experiment_SubObject_Stop</a>                       = 5, 
+<a name="l00063"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a84a22ac64d0bf4aa5348936f4cbfa7a7">00063</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a84a22ac64d0bf4aa5348936f4cbfa7a7">Experiment_SubObject_IsStopping</a>         = 6, 
+<a name="l00064"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a07b8bf0c9890a638ee846387740818f3">00064</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a07b8bf0c9890a638ee846387740818f3">Experiment_SubObject_Stopped</a>            = 7, 
+<a name="l00065"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ae486e4af6f81229836376498ec719235">00065</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81ae486e4af6f81229836376498ec719235">Experiment_SubObject_Destructing</a>        = 8, 
+<a name="l00066"></a><a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a86760da5b3c794c701ed88348146ac0a">00066</a>                 <a class="code" href="namespace_experiment_manager_name_space.html#aabc0dbe7da363c1d0ef8d5810637cf81a86760da5b3c794c701ed88348146ac0a">Experiment_SubObject_MaxState</a>           = 9  
+<a name="l00067"></a>00067         };
+<a name="l00068"></a>00068 
+<a name="l00069"></a>00069         <span class="keyword">enum</span> EXML_TAG_SECTIONS <span class="comment">//These are the main section Tag&#39;s</span>
+<a name="l00070"></a>00070         {
+<a name="l00071"></a>00071                 EXML_Declarations,
+<a name="l00072"></a>00072                 EXML_Actions,
+<a name="l00073"></a>00073                 EXML_Object,
+<a name="l00074"></a>00074                 EXML_Event
+<a name="l00075"></a>00075         };
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077         <span class="keyword">struct </span>EXML_DocVersion <span class="comment">//Structure to hold the version information</span>
+<a name="l00078"></a>00078         {
+<a name="l00079"></a>00079                 <span class="keywordtype">int</span> major;
+<a name="l00080"></a>00080                 <span class="keywordtype">int</span> minor;
+<a name="l00081"></a>00081                 <span class="keywordtype">int</span> version;
+<a name="l00082"></a>00082                 <span class="keywordtype">int</span> build;
+<a name="l00083"></a>00083         };
+<a name="l00084"></a>00084 
+<a name="l00085"></a>00085         <span class="keyword">typedef</span> <span class="keyword">struct </span>strcExperimentSubObjectStateHistory
+<a name="l00086"></a>00086         {
+<a name="l00087"></a>00087                 QList&lt;ExperimentManagerNameSpace::ExperimentSubObjectState&gt; nState;
+<a name="l00088"></a>00088                 QList&lt;QString&gt; sDateTimeStamp;
+<a name="l00089"></a>00089         } ExperimentSubObjectStateHistory;
 <a name="l00090"></a>00090 
-<a name="l00091"></a>00091         <span class="keyword">struct </span>EXML_DocVersion <span class="comment">//Structure to hold the version information</span>
-<a name="l00092"></a>00092         {
-<a name="l00093"></a>00093                 <span class="keywordtype">int</span> major;
-<a name="l00094"></a>00094                 <span class="keywordtype">int</span> minor;
-<a name="l00095"></a>00095                 <span class="keywordtype">int</span> version;
-<a name="l00096"></a>00096                 <span class="keywordtype">int</span> build;
-<a name="l00097"></a>00097         };
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099         <span class="keyword">typedef</span> <span class="keyword">struct </span>strcExperimentSubObjectStateHistory
-<a name="l00100"></a>00100         {
-<a name="l00101"></a>00101                 QList&lt;ExperimentManagerNameSpace::ExperimentSubObjectState&gt; nState;
-<a name="l00102"></a>00102                 QList&lt;QString&gt; sDateTimeStamp;
-<a name="l00103"></a>00103         } ExperimentSubObjectStateHistory;
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105 
-<a name="l00107"></a>00107 
-<a name="l00110"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html">00110</a>         <span class="keyword">struct </span><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html" title="The strcParsedParameterDefinition structure.">strcParsedParameterDefinition</a>
-<a name="l00111"></a>00111         {
-<a name="l00113"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#afbbf6b89144b748a9b13874af071c476">00113</a>                 <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#afbbf6b89144b748a9b13874af071c476" title="The default constructor of the structure.">strcParsedParameterDefinition</a>()
-<a name="l00114"></a>00114                 {
-<a name="l00115"></a>00115                         <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a435619aaf2122112f1822e93eb698023" title="A String that stores the value of the parameter.">sValue</a> = <span class="stringliteral">&quot;&lt;undefined&gt;&quot;</span>;
-<a name="l00116"></a>00116                         <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#ad8efa59e274fb005200652a8642c6d51" title="A Boolean value determing wheter the parameter has been changed since it&#39;s initialization.">bHasChanged</a> = <span class="keyword">true</span>;
-<a name="l00117"></a>00117                         <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a570465d70d6cb8426721778715b90db6" title="A Boolean value determing wheter the parameter already has been initialized.">bIsInitialized</a> = <span class="keyword">true</span>;
-<a name="l00118"></a>00118                         <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a607203de741820d99d42727a5b33c6d4" title="A Boolean value determing wheter the parameter is defined by the is custom (defined by the user)...">bIsCustom</a> = <span class="keyword">false</span>;
-<a name="l00119"></a>00119                 }       
-<a name="l00120"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a435619aaf2122112f1822e93eb698023">00120</a>                 QString <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a435619aaf2122112f1822e93eb698023" title="A String that stores the value of the parameter.">sValue</a>;          
-<a name="l00121"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#ad8efa59e274fb005200652a8642c6d51">00121</a>                 <span class="keywordtype">bool</span> <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#ad8efa59e274fb005200652a8642c6d51" title="A Boolean value determing wheter the parameter has been changed since it&#39;s initialization.">bHasChanged</a>;    
-<a name="l00122"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a570465d70d6cb8426721778715b90db6">00122</a>                 <span class="keywordtype">bool</span> <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a570465d70d6cb8426721778715b90db6" title="A Boolean value determing wheter the parameter already has been initialized.">bIsInitialized</a>; 
-<a name="l00123"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a607203de741820d99d42727a5b33c6d4">00123</a>                 <span class="keywordtype">bool</span> <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a607203de741820d99d42727a5b33c6d4" title="A Boolean value determing wheter the parameter is defined by the is custom (defined by the user)...">bIsCustom</a>;          
-<a name="l00124"></a>00124         };
-<a name="l00125"></a>00125 
-<a name="l00127"></a><a class="code" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">00127</a>         <span class="keyword">typedef</span> <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html" title="The strcParsedParameterDefinition structure.">strcParsedParameterDefinition</a> <a class="code" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">ParsedParameterDefinition</a>;
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129         <span class="keyword">typedef</span> QHash&lt;QString, ParsedParameterDefinition&gt; tParsedParameterList;
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131 <span class="preprocessor">        #define GLWIDGET_BACKGROUNDCOLOR                                &quot;backgroundcolor&quot;</span>
-<a name="l00132"></a>00132 <span class="preprocessor"></span><span class="preprocessor">        #define GLWIDGET_WIDTH_PIXEL_AMOUNT                             &quot;stimuluswidthspan&quot;</span>
-<a name="l00133"></a>00133 <span class="preprocessor"></span><span class="preprocessor">        #define GLWIDGET_HEIGHT_PIXEL_AMOUNT                    &quot;stimulusheightspan&quot;</span>
-<a name="l00134"></a>00134 <span class="preprocessor"></span>
-<a name="l00135"></a>00135 <span class="preprocessor">        #define QML2VIEWER_BACKGROUNDCOLOR                              &quot;backgroundcolor&quot;</span>
-<a name="l00136"></a>00136 <span class="preprocessor"></span><span class="preprocessor">        #define QML2VIEWER_WIDTH_PIXEL_AMOUNT                   &quot;stimuluswidthspan&quot;</span>
-<a name="l00137"></a>00137 <span class="preprocessor"></span><span class="preprocessor">        #define QML2VIEWER_HEIGHT_PIXEL_AMOUNT                  &quot;stimulusheightspan&quot;</span>
-<a name="l00138"></a>00138 <span class="preprocessor"></span>
-<a name="l00139"></a>00139 <span class="preprocessor">        #define FUNC_PAINTOBJECT                                                &quot;paintObject&quot;</span>
-<a name="l00140"></a>00140 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_PAINTOBJECT_FULL                                   FUNC_PAINTOBJECT &quot;(int,QObject *)&quot;</span>
-<a name="l00141"></a>00141 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETOBJECTID                                                &quot;setObjectID&quot;</span>
-<a name="l00142"></a>00142 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETOBJECTID_FULL                                   FUNC_SETOBJECTID &quot;(int)&quot;</span>
-<a name="l00143"></a>00143 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_INITOBJECT                                                 &quot;initObject&quot;</span>
-<a name="l00144"></a>00144 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_INITOBJECT_FULL                                    FUNC_INITOBJECT &quot;()&quot;</span>
-<a name="l00145"></a>00145 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_STARTOBJECT                                                &quot;startObject&quot;</span>
-<a name="l00146"></a>00146 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_STARTOBJECT_FULL                                   FUNC_STARTOBJECT &quot;()&quot;</span>
-<a name="l00147"></a>00147 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_STOPOBJECT                                                 &quot;stopObject&quot;</span>
-<a name="l00148"></a>00148 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_STOPOBJECT_FULL                                    FUNC_STOPOBJECT &quot;()&quot;</span>
-<a name="l00149"></a>00149 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETEXPERIMENTMANAGER                               &quot;setExperimentManager&quot;</span>
-<a name="l00150"></a>00150 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETEXPERIMENTMANAGER_FULL                  FUNC_SETEXPERIMENTMANAGER &quot;(ExperimentManager *)&quot; </span>
-<a name="l00151"></a>00151 <span class="preprocessor"></span>        <span class="comment">//#define FUNC_SETOBJECTCONFIGURATION                           &quot;setObjectConfiguration&quot;</span>
-<a name="l00152"></a>00152         <span class="comment">//#define FUNC_SETOBJECTCONFIGURATION_FULL              FUNC_SETOBJECTCONFIGURATION &quot;(QObject *)&quot;</span>
-<a name="l00153"></a>00153 <span class="preprocessor">        #define FUNC_INITOBJECTBLOCKTRIAL                               &quot;initObjectBlockTrial&quot;</span>
-<a name="l00154"></a>00154 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_INITOBJECTBLOCKTRIAL_FULL                  FUNC_INITOBJECTBLOCKTRIAL &quot;()&quot;</span>
-<a name="l00155"></a>00155 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_MAKETHISAVAILABLEINSCRIPT                  &quot;makeThisAvailableInScript&quot;</span>
-<a name="l00156"></a>00156 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_MAKETHISAVAILABLEINSCRIPT_FULL             FUNC_MAKETHISAVAILABLEINSCRIPT &quot;(QString,QObject *)&quot;</span>
-<a name="l00157"></a>00157 <span class="preprocessor"></span>
-<a name="l00158"></a>00158 <span class="preprocessor">        #define SIGNAL_USERCLOSE_FULL                                   &quot;UserWantsToClose(void)&quot;</span>
-<a name="l00159"></a>00159 <span class="preprocessor"></span><span class="preprocessor">        #define SIGNAL_OBJECTSTOP_FULL                                  &quot;ObjectShouldStop(void)&quot;</span>
-<a name="l00160"></a>00160 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_OBJECTSTATECHANGED_FULL                    &quot;ObjectStateHasChanged(ExperimentSubObjectState)&quot;</span>
-<a name="l00161"></a>00161 <span class="preprocessor"></span>        <span class="comment">//#define FUNC_SETBLOCKTRIALDOMNODELIST                 &quot;setBlockTrialDomNodeList&quot;</span>
-<a name="l00162"></a>00162         <span class="comment">//#define FUNC_SETBLOCKTRIALDOMNODELIST_FULL    FUNC_SETBLOCKTRIALDOMNODELIST &quot;(QDomNodeList*)&quot;</span>
-<a name="l00163"></a>00163 
-<a name="l00164"></a>00164 <span class="preprocessor">        #define FUNC_SETMETAOBJECT                                              &quot;setExperimentMetaObject&quot;</span>
-<a name="l00165"></a>00165 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETMETAOBJECT_FULL                                 FUNC_SETMETAOBJECT &quot;()&quot;</span>
-<a name="l00166"></a>00166 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETEXPERIMENTOBJECTID                              &quot;setExperimentObjectID&quot;</span>
-<a name="l00167"></a>00167 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETEXPERIMENTOBJECTID_FULL                 FUNC_SETEXPERIMENTOBJECTID &quot;(int)&quot;</span>
-<a name="l00168"></a>00168 <span class="preprocessor"></span>        <span class="comment">//#define FUNC_SETEXPERIMENTCONFIGURATION               &quot;setExperimentConfiguration&quot;</span>
-<a name="l00169"></a>00169         <span class="comment">//#define FUNC_SETEXPERIMENTCONFIGURATION_FULL  FUNC_SETEXPERIMENTCONFIGURATION &quot;(ExperimentConfiguration*)&quot;</span>
-<a name="l00170"></a>00170 <span class="preprocessor">        #define FUNC_OBJECT_INIT                                                &quot;initExperimentObject&quot;</span>
-<a name="l00171"></a>00171 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_OBJECT_START                                               &quot;startExperimentObject&quot;</span>
-<a name="l00172"></a>00172 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_OBJECT_STOP                                                &quot;stopExperimentObject&quot;</span>
-<a name="l00173"></a>00173 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_OBJECT_ABORT                                               &quot;abortExperimentObject&quot;</span>
-<a name="l00174"></a>00174 <span class="preprocessor"></span>        <span class="comment">//#define RETINOMAP_WIDGET_NAME                                 &quot;RetinoMap_glwidget&quot;</span>
-<a name="l00175"></a>00175         <span class="comment">//#define QML_WIDGET_NAME                                               &quot;qmlWidget&quot;</span>
-<a name="l00176"></a>00176 <span class="preprocessor">        #define QML2VIEWER_NAME                                                 &quot;QML2Viewer&quot;</span>
-<a name="l00177"></a>00177 <span class="preprocessor"></span><span class="preprocessor">        #define TRIGGERTIMER_NAME                                               &quot;TriggerTimer&quot;</span>
-<a name="l00178"></a>00178 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENTTIMER_NAME                                    &quot;ExperimentTimer&quot;</span>
-<a name="l00179"></a>00179 <span class="preprocessor"></span><span class="preprocessor">        #define RANDOMGENERATOR_NAME                                    &quot;RandomGenerator&quot;</span>
-<a name="l00180"></a>00180 <span class="preprocessor"></span><span class="preprocessor">        #define IMAGEPROCESSOR_NAME                                             &quot;ImageProcessor&quot;</span>
-<a name="l00181"></a>00181 <span class="preprocessor"></span><span class="preprocessor">        #define PRTFORMATMANAGER_NAME                                   &quot;PRTFormatManager&quot;</span>
-<a name="l00182"></a>00182 <span class="preprocessor"></span><span class="preprocessor">        #define CEXPERIMENTSTRUCTURE_NAME                               &quot;cExperimentStructure&quot;</span>
-<a name="l00183"></a>00183 <span class="preprocessor"></span><span class="preprocessor">        #define CEXPERIMENTSTRUCTURESTATE_NAME                  &quot;cExperimentStructureState&quot;</span>
-<a name="l00184"></a>00184 <span class="preprocessor"></span><span class="preprocessor">        #define CBLOCKSTRUCTURE_NAME                                    &quot;cBlockStructure&quot;</span>
-<a name="l00185"></a>00185 <span class="preprocessor"></span><span class="preprocessor">        #define CLOOPSTRUCTURE_NAME                                             &quot;cLoopStructure&quot;</span>
-<a name="l00186"></a>00186 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENTSTRUCTURE_NAME                                &quot;ExperimentStructure&quot;</span>
-<a name="l00187"></a>00187 <span class="preprocessor"></span><span class="preprocessor">        #define RETINOTOPYMAPPER_NAME                                   &quot;RetinotopyMapper&quot;</span>
-<a name="l00188"></a>00188 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENTMANAGER_NAME                                  &quot;ExperimentManager&quot;</span>
-<a name="l00189"></a>00189 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENTSTATE_NAME                                    &quot;ExperimentState&quot;</span>
-<a name="l00190"></a>00190 <span class="preprocessor"></span><span class="preprocessor">        #define MODULE_NAME                                                             &quot;Experiment Parser&quot;</span>
-<a name="l00191"></a>00191 <span class="preprocessor"></span><span class="preprocessor">        #define MAX_INVOKE_ARG_COUNT                                    10</span>
-<a name="l00192"></a>00192 <span class="preprocessor"></span>        <span class="comment">//#define MIN_SCREEN_UPDATE_TIME                                10</span>
-<a name="l00193"></a>00193         <span class="comment">//#define MAX_SCREEN_UPDATE_TIME                                16.6667f</span>
-<a name="l00194"></a>00194 
-<a name="l00195"></a>00195 <span class="preprocessor">        #define DEFAULT_OUTPUTFILE                              &quot;Out.txt&quot;</span>
-<a name="l00196"></a>00196 <span class="preprocessor"></span><span class="preprocessor">        #define ARGB_FORMAT_HEADER                              0xCAFE1234</span>
-<a name="l00197"></a>00197 <span class="preprocessor"></span><span class="preprocessor">        #define ARGB_FORMAT_HEADER_CONC                 0xCAFE5678</span>
-<a name="l00198"></a>00198 <span class="preprocessor"></span><span class="preprocessor">        #define DOUBLE_PI_VALUE                                 3.141592653589793238462643383279502884197</span>
-<a name="l00199"></a>00199 <span class="preprocessor"></span><span class="preprocessor">        #define ROOT_TAG                                                &quot;EXML&quot;</span>
-<a name="l00200"></a>00200 <span class="preprocessor"></span><span class="preprocessor">        #define VERSION_TAG                                             &quot;version&quot;</span>
-<a name="l00201"></a>00201 <span class="preprocessor"></span><span class="preprocessor">        #define BOOKMARK_TAG                                    &quot;bookmark&quot;</span>
-<a name="l00202"></a>00202 <span class="preprocessor"></span><span class="preprocessor">        #define ID_TAG                                                  &quot;ID&quot;</span>
-<a name="l00203"></a>00203 <span class="preprocessor"></span><span class="preprocessor">        #define OBJECT_TAG                                              &quot;object&quot;</span>
-<a name="l00204"></a>00204 <span class="preprocessor"></span><span class="preprocessor">        #define DEFINES_TAG                                             &quot;defines&quot;</span>
-<a name="l00205"></a>00205 <span class="preprocessor"></span><span class="preprocessor">        #define ACTIONS_TAG                                             &quot;actions&quot;</span>
-<a name="l00206"></a>00206 <span class="preprocessor"></span><span class="preprocessor">        #define LOOPS_TAG                                               &quot;loops&quot;</span>
-<a name="l00207"></a>00207 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_TAG                                                &quot;loop&quot;</span>
-<a name="l00208"></a>00208 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_NUMBER                                             &quot;loop_number&quot;   </span>
-<a name="l00209"></a>00209 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_AMOUNT_TAG                                 &quot;nr_of_loops&quot;</span>
-<a name="l00210"></a>00210 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_TARGETBLOCKID_TAG                  &quot;target_block&quot;</span>
-<a name="l00211"></a>00211 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCKTRIALS_TAG                                 &quot;blocks&quot;</span>
-<a name="l00212"></a>00212 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCK_TAG                                               &quot;block&quot;</span>
-<a name="l00213"></a>00213 <span class="preprocessor"></span><span class="preprocessor">        #define PARAMETER_TAG                                   &quot;parameter&quot;</span>
-<a name="l00214"></a>00214 <span class="preprocessor"></span><span class="preprocessor">        #define PARAMETERS_TAG                                  &quot;parameters&quot;</span>
-<a name="l00215"></a>00215 <span class="preprocessor"></span><span class="preprocessor">        #define CUSTOM_PARAMETERS_TAG                   &quot;custom_parameters&quot;</span>
-<a name="l00216"></a>00216 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCKNUMBER_TAG                                 &quot;block_number&quot;</span>
-<a name="l00217"></a>00217 <span class="preprocessor"></span><span class="preprocessor">        #define TRIALAMOUNT_TAG                                 &quot;nr_of_trials&quot;</span>
-<a name="l00218"></a>00218 <span class="preprocessor"></span><span class="preprocessor">        #define INTERNALTRIGGERAMOUNT_TAG               &quot;nr_of_internal_triggers&quot;</span>
-<a name="l00219"></a>00219 <span class="preprocessor"></span><span class="preprocessor">        #define EXTERNALTRIGGERAMOUNT_TAG               &quot;nr_of_external_triggers&quot;</span>
-<a name="l00220"></a>00220 <span class="preprocessor"></span><span class="preprocessor">        #define DECLARATIONS_TAG                                &quot;declarations&quot;</span>
-<a name="l00221"></a>00221 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TAG                                 &quot;connections&quot;</span>
-<a name="l00222"></a>00222 <span class="preprocessor"></span><span class="preprocessor">        #define INITIALIZATIONS_TAG                             &quot;initializations&quot;</span>
-<a name="l00223"></a>00223 <span class="preprocessor"></span><span class="preprocessor">        #define FINALIZATIONS_TAG                               &quot;finalizations&quot;</span>
-<a name="l00224"></a>00224 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TYPE_TAG                    &quot;type&quot;</span>
-<a name="l00225"></a>00225 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TYPE_SIGNAL_TAG             METHOD_TYPE_SIGNAL_TAG</span>
-<a name="l00226"></a>00226 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TYPE_SLOT_TAG               METHOD_TYPE_SLOT_TAG</span>
-<a name="l00227"></a>00227 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_SIGNATURE_TAG               &quot;signature&quot;</span>
-<a name="l00228"></a>00228 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TARGET_TAG                  &quot;target&quot;</span>
-<a name="l00229"></a>00229 <span class="preprocessor"></span><span class="preprocessor">        #define INIT_FINIT_TYPE_TAG                             &quot;type&quot;</span>
-<a name="l00230"></a>00230 <span class="preprocessor"></span><span class="preprocessor">        #define INIT_FINIT_TYPE_SLOT_TAG                METHOD_TYPE_SLOT_TAG</span>
-<a name="l00231"></a>00231 <span class="preprocessor"></span><span class="preprocessor">        #define INIT_FINIT_SIGNATURE_TAG                &quot;signature&quot;</span>
-<a name="l00232"></a>00232 <span class="preprocessor"></span><span class="preprocessor">        #define MEMBER_TYPE_TAG                                 &quot;type&quot;</span>
-<a name="l00233"></a>00233 <span class="preprocessor"></span><span class="preprocessor">        #define MEMBER_TYPE_SLOT_TAG                    METHOD_TYPE_SLOT_TAG</span>
-<a name="l00234"></a>00234 <span class="preprocessor"></span><span class="preprocessor">        #define DEBUGMODE_TAG                                   &quot;debugmode&quot;</span>
-<a name="l00235"></a>00235 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENT_TAG                                  &quot;experiment&quot;</span>
-<a name="l00236"></a>00236 <span class="preprocessor"></span><span class="preprocessor">        #define CLASS_TAG                                               &quot;class&quot;</span>
-<a name="l00237"></a>00237 <span class="preprocessor"></span><span class="preprocessor">        #define NAME_TAG                                                &quot;name&quot;</span>
-<a name="l00238"></a>00238 <span class="preprocessor"></span><span class="preprocessor">        #define VALUE_TAG                                               &quot;value&quot;</span>
-<a name="l00239"></a>00239 <span class="preprocessor"></span><span class="preprocessor">        #define HREF_TAG                                                &quot;href&quot;</span>
-<a name="l00240"></a>00240 <span class="preprocessor"></span><span class="preprocessor">        #define FOLDER_TAG                                              &quot;folder&quot;</span>
-<a name="l00241"></a>00241 <span class="preprocessor"></span><span class="preprocessor">        #define TITLE_TAG                                               &quot;title&quot;</span>
-<a name="l00242"></a>00242 <span class="preprocessor"></span><span class="preprocessor">        #define BOOL_FALSE_TAG                                  &quot;false&quot;</span>
-<a name="l00243"></a>00243 <span class="preprocessor"></span><span class="preprocessor">        #define BOOL_TRUE_TAG                                   &quot;true&quot;</span>
-<a name="l00244"></a>00244 <span class="preprocessor"></span><span class="preprocessor">        #define FOLDED_TAG                                              &quot;folded&quot;</span>
-<a name="l00245"></a>00245 <span class="preprocessor"></span><span class="preprocessor">        #define EVENT_TAG                                               &quot;event&quot;</span>
-<a name="l00246"></a>00246 <span class="preprocessor"></span>}
-<a name="l00247"></a>00247 
-<a name="l00248"></a>00248 <span class="preprocessor">#endif //EXPMANAGER_GLOBAL_H</span>
+<a name="l00091"></a>00091 
+<a name="l00093"></a>00093 
+<a name="l00096"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html">00096</a>         <span class="keyword">struct </span><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html" title="The strcParsedParameterDefinition structure.">strcParsedParameterDefinition</a>
+<a name="l00097"></a>00097         {
+<a name="l00099"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#afbbf6b89144b748a9b13874af071c476">00099</a>                 <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#afbbf6b89144b748a9b13874af071c476" title="The default constructor of the structure.">strcParsedParameterDefinition</a>()
+<a name="l00100"></a>00100                 {
+<a name="l00101"></a>00101                         <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a435619aaf2122112f1822e93eb698023" title="A String that stores the value of the parameter.">sValue</a> = <span class="stringliteral">&quot;&lt;undefined&gt;&quot;</span>;
+<a name="l00102"></a>00102                         <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#ad8efa59e274fb005200652a8642c6d51" title="A Boolean value determing wheter the parameter has been changed since it&#39;s initialization.">bHasChanged</a> = <span class="keyword">true</span>;
+<a name="l00103"></a>00103                         <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a570465d70d6cb8426721778715b90db6" title="A Boolean value determing wheter the parameter already has been initialized.">bIsInitialized</a> = <span class="keyword">true</span>;
+<a name="l00104"></a>00104                         <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a607203de741820d99d42727a5b33c6d4" title="A Boolean value determing wheter the parameter is defined by the is custom (defined by the user)...">bIsCustom</a> = <span class="keyword">false</span>;
+<a name="l00105"></a>00105                 }       
+<a name="l00106"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a435619aaf2122112f1822e93eb698023">00106</a>                 QString <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a435619aaf2122112f1822e93eb698023" title="A String that stores the value of the parameter.">sValue</a>;          
+<a name="l00107"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#ad8efa59e274fb005200652a8642c6d51">00107</a>                 <span class="keywordtype">bool</span> <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#ad8efa59e274fb005200652a8642c6d51" title="A Boolean value determing wheter the parameter has been changed since it&#39;s initialization.">bHasChanged</a>;    
+<a name="l00108"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a570465d70d6cb8426721778715b90db6">00108</a>                 <span class="keywordtype">bool</span> <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a570465d70d6cb8426721778715b90db6" title="A Boolean value determing wheter the parameter already has been initialized.">bIsInitialized</a>; 
+<a name="l00109"></a><a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a607203de741820d99d42727a5b33c6d4">00109</a>                 <span class="keywordtype">bool</span> <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html#a607203de741820d99d42727a5b33c6d4" title="A Boolean value determing wheter the parameter is defined by the is custom (defined by the user)...">bIsCustom</a>;          
+<a name="l00110"></a>00110         };
+<a name="l00111"></a>00111 
+<a name="l00113"></a><a class="code" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">00113</a>         <span class="keyword">typedef</span> <a class="code" href="struct_experiment_manager_name_space_1_1strc_parsed_parameter_definition.html" title="The strcParsedParameterDefinition structure.">strcParsedParameterDefinition</a> <a class="code" href="namespace_experiment_manager_name_space.html#a4d7f8db2759d9c2420df21a7cb60fc62">ParsedParameterDefinition</a>;
+<a name="l00114"></a>00114 
+<a name="l00115"></a>00115         <span class="keyword">typedef</span> QHash&lt;QString, ParsedParameterDefinition&gt; tParsedParameterList;
+<a name="l00116"></a>00116 
+<a name="l00117"></a>00117 <span class="preprocessor">        #define GLWIDGET_BACKGROUNDCOLOR                                &quot;backgroundcolor&quot;</span>
+<a name="l00118"></a>00118 <span class="preprocessor"></span><span class="preprocessor">        #define GLWIDGET_WIDTH_PIXEL_AMOUNT                             &quot;stimuluswidthspan&quot;</span>
+<a name="l00119"></a>00119 <span class="preprocessor"></span><span class="preprocessor">        #define GLWIDGET_HEIGHT_PIXEL_AMOUNT                    &quot;stimulusheightspan&quot;</span>
+<a name="l00120"></a>00120 <span class="preprocessor"></span>
+<a name="l00121"></a>00121 <span class="preprocessor">        #define QML2VIEWER_BACKGROUNDCOLOR                              &quot;backgroundcolor&quot;</span>
+<a name="l00122"></a>00122 <span class="preprocessor"></span><span class="preprocessor">        #define QML2VIEWER_WIDTH_PIXEL_AMOUNT                   &quot;stimuluswidthspan&quot;</span>
+<a name="l00123"></a>00123 <span class="preprocessor"></span><span class="preprocessor">        #define QML2VIEWER_HEIGHT_PIXEL_AMOUNT                  &quot;stimulusheightspan&quot;</span>
+<a name="l00124"></a>00124 <span class="preprocessor"></span>
+<a name="l00125"></a>00125 <span class="preprocessor">        #define FUNC_PAINTOBJECT                                                &quot;paintObject&quot;</span>
+<a name="l00126"></a>00126 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_PAINTOBJECT_FULL                                   FUNC_PAINTOBJECT &quot;(int,QObject *)&quot;</span>
+<a name="l00127"></a>00127 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETOBJECTID                                                &quot;setObjectID&quot;</span>
+<a name="l00128"></a>00128 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETOBJECTID_FULL                                   FUNC_SETOBJECTID &quot;(int)&quot;</span>
+<a name="l00129"></a>00129 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_INITOBJECT                                                 &quot;initObject&quot;</span>
+<a name="l00130"></a>00130 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_INITOBJECT_FULL                                    FUNC_INITOBJECT &quot;()&quot;</span>
+<a name="l00131"></a>00131 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_STARTOBJECT                                                &quot;startObject&quot;</span>
+<a name="l00132"></a>00132 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_STARTOBJECT_FULL                                   FUNC_STARTOBJECT &quot;()&quot;</span>
+<a name="l00133"></a>00133 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_STOPOBJECT                                                 &quot;stopObject&quot;</span>
+<a name="l00134"></a>00134 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_STOPOBJECT_FULL                                    FUNC_STOPOBJECT &quot;()&quot;</span>
+<a name="l00135"></a>00135 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETEXPERIMENTMANAGER                               &quot;setExperimentManager&quot;</span>
+<a name="l00136"></a>00136 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETEXPERIMENTMANAGER_FULL                  FUNC_SETEXPERIMENTMANAGER &quot;(ExperimentManager *)&quot; </span>
+<a name="l00137"></a>00137 <span class="preprocessor"></span>        <span class="comment">//#define FUNC_SETOBJECTCONFIGURATION                           &quot;setObjectConfiguration&quot;</span>
+<a name="l00138"></a>00138         <span class="comment">//#define FUNC_SETOBJECTCONFIGURATION_FULL              FUNC_SETOBJECTCONFIGURATION &quot;(QObject *)&quot;</span>
+<a name="l00139"></a>00139 <span class="preprocessor">        #define FUNC_INITOBJECTBLOCKTRIAL                               &quot;initObjectBlockTrial&quot;</span>
+<a name="l00140"></a>00140 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_INITOBJECTBLOCKTRIAL_FULL                  FUNC_INITOBJECTBLOCKTRIAL &quot;()&quot;</span>
+<a name="l00141"></a>00141 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_MAKETHISAVAILABLEINSCRIPT                  &quot;makeThisAvailableInScript&quot;</span>
+<a name="l00142"></a>00142 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_MAKETHISAVAILABLEINSCRIPT_FULL             FUNC_MAKETHISAVAILABLEINSCRIPT &quot;(QString,QObject *)&quot;</span>
+<a name="l00143"></a>00143 <span class="preprocessor"></span>
+<a name="l00144"></a>00144 <span class="preprocessor">        #define SIGNAL_USERCLOSE_FULL                                   &quot;UserWantsToClose(void)&quot;</span>
+<a name="l00145"></a>00145 <span class="preprocessor"></span><span class="preprocessor">        #define SIGNAL_OBJECTSTOP_FULL                                  &quot;ObjectShouldStop(void)&quot;</span>
+<a name="l00146"></a>00146 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_OBJECTSTATECHANGED_FULL                    &quot;ObjectStateHasChanged(ExperimentSubObjectState)&quot;</span>
+<a name="l00147"></a>00147 <span class="preprocessor"></span>        <span class="comment">//#define FUNC_SETBLOCKTRIALDOMNODELIST                 &quot;setBlockTrialDomNodeList&quot;</span>
+<a name="l00148"></a>00148         <span class="comment">//#define FUNC_SETBLOCKTRIALDOMNODELIST_FULL    FUNC_SETBLOCKTRIALDOMNODELIST &quot;(QDomNodeList*)&quot;</span>
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150 <span class="preprocessor">        #define FUNC_SETMETAOBJECT                                              &quot;setExperimentMetaObject&quot;</span>
+<a name="l00151"></a>00151 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETMETAOBJECT_FULL                                 FUNC_SETMETAOBJECT &quot;()&quot;</span>
+<a name="l00152"></a>00152 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETEXPERIMENTOBJECTID                              &quot;setExperimentObjectID&quot;</span>
+<a name="l00153"></a>00153 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_SETEXPERIMENTOBJECTID_FULL                 FUNC_SETEXPERIMENTOBJECTID &quot;(int)&quot;</span>
+<a name="l00154"></a>00154 <span class="preprocessor"></span>        <span class="comment">//#define FUNC_SETEXPERIMENTCONFIGURATION               &quot;setExperimentConfiguration&quot;</span>
+<a name="l00155"></a>00155         <span class="comment">//#define FUNC_SETEXPERIMENTCONFIGURATION_FULL  FUNC_SETEXPERIMENTCONFIGURATION &quot;(ExperimentConfiguration*)&quot;</span>
+<a name="l00156"></a>00156 <span class="preprocessor">        #define FUNC_OBJECT_INIT                                                &quot;initExperimentObject&quot;</span>
+<a name="l00157"></a>00157 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_OBJECT_START                                               &quot;startExperimentObject&quot;</span>
+<a name="l00158"></a>00158 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_OBJECT_STOP                                                &quot;stopExperimentObject&quot;</span>
+<a name="l00159"></a>00159 <span class="preprocessor"></span><span class="preprocessor">        #define FUNC_OBJECT_ABORT                                               &quot;abortExperimentObject&quot;</span>
+<a name="l00160"></a>00160 <span class="preprocessor"></span>        <span class="comment">//#define RETINOMAP_WIDGET_NAME                                 &quot;RetinoMap_glwidget&quot;</span>
+<a name="l00161"></a>00161         <span class="comment">//#define QML_WIDGET_NAME                                               &quot;qmlWidget&quot;</span>
+<a name="l00162"></a>00162 <span class="preprocessor">        #define QML2VIEWER_NAME                                                 &quot;QML2Viewer&quot;</span>
+<a name="l00163"></a>00163 <span class="preprocessor"></span><span class="preprocessor">        #define TRIGGERTIMER_NAME                                               &quot;TriggerTimer&quot;</span>
+<a name="l00164"></a>00164 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENTTIMER_NAME                                    &quot;ExperimentTimer&quot;</span>
+<a name="l00165"></a>00165 <span class="preprocessor"></span><span class="preprocessor">        #define RANDOMGENERATOR_NAME                                    &quot;RandomGenerator&quot;</span>
+<a name="l00166"></a>00166 <span class="preprocessor"></span><span class="preprocessor">        #define IMAGEPROCESSOR_NAME                                             &quot;ImageProcessor&quot;</span>
+<a name="l00167"></a>00167 <span class="preprocessor"></span><span class="preprocessor">        #define PRTFORMATMANAGER_NAME                                   &quot;PRTFormatManager&quot;</span>
+<a name="l00168"></a>00168 <span class="preprocessor"></span><span class="preprocessor">        #define CEXPERIMENTSTRUCTURE_NAME                               &quot;cExperimentStructure&quot;</span>
+<a name="l00169"></a>00169 <span class="preprocessor"></span><span class="preprocessor">        #define CEXPERIMENTSTRUCTURESTATE_NAME                  &quot;cExperimentStructureState&quot;</span>
+<a name="l00170"></a>00170 <span class="preprocessor"></span><span class="preprocessor">        #define CBLOCKSTRUCTURE_NAME                                    &quot;cBlockStructure&quot;</span>
+<a name="l00171"></a>00171 <span class="preprocessor"></span><span class="preprocessor">        #define CLOOPSTRUCTURE_NAME                                             &quot;cLoopStructure&quot;</span>
+<a name="l00172"></a>00172 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENTSTRUCTURE_NAME                                &quot;ExperimentStructure&quot;</span>
+<a name="l00173"></a>00173 <span class="preprocessor"></span><span class="preprocessor">        #define RETINOTOPYMAPPER_NAME                                   &quot;RetinotopyMapper&quot;</span>
+<a name="l00174"></a>00174 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENTMANAGER_NAME                                  &quot;ExperimentManager&quot;</span>
+<a name="l00175"></a>00175 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENTSTATE_NAME                                    &quot;ExperimentState&quot;</span>
+<a name="l00176"></a>00176 <span class="preprocessor"></span><span class="preprocessor">        #define MODULE_NAME                                                             &quot;Experiment Parser&quot;</span>
+<a name="l00177"></a>00177 <span class="preprocessor"></span><span class="preprocessor">        #define MAX_INVOKE_ARG_COUNT                                    10</span>
+<a name="l00178"></a>00178 <span class="preprocessor"></span>        <span class="comment">//#define MIN_SCREEN_UPDATE_TIME                                10</span>
+<a name="l00179"></a>00179         <span class="comment">//#define MAX_SCREEN_UPDATE_TIME                                16.6667f</span>
+<a name="l00180"></a>00180 
+<a name="l00181"></a>00181 <span class="preprocessor">        #define RETINOTOPYMAPPER_PARAMDEF_PATH                  &quot;:/resources/&quot; RETINOTOPYMAPPER_NAME &quot;.xdef&quot;</span>
+<a name="l00182"></a>00182 <span class="preprocessor"></span><span class="preprocessor">        #define QML2VIEWER_PARAMDEF_PATH                                &quot;:/resources/&quot; QML2VIEWER_NAME &quot;.xdef&quot;</span>
+<a name="l00183"></a>00183 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENT_PARAMDEF_PATH                                &quot;:/resources/ExperimentNode.xdef&quot;</span>
+<a name="l00184"></a>00184 <span class="preprocessor"></span><span class="preprocessor">        #define DECLARATIONS_OBJECT_TAG                                 DECLARATIONS_TAG &quot;_&quot; OBJECT_TAG</span>
+<a name="l00185"></a>00185 <span class="preprocessor"></span><span class="preprocessor">        #define DECLARATIONS_OBJECT_PARAMDEF_PATH               &quot;:/resources/DeclarationsObjectNode.xdef&quot;</span>
+<a name="l00186"></a>00186 <span class="preprocessor"></span><span class="preprocessor">        #define INITIALIZATIONS_OBJECT_TAG                              INITIALIZATIONS_TAG &quot;_&quot; OBJECT_TAG</span>
+<a name="l00187"></a>00187 <span class="preprocessor"></span><span class="preprocessor">        #define INITIALIZATIONS_OBJECT_PARAMDEF_PATH    &quot;:/resources/InitializationsObjectNode.xdef&quot;</span>
+<a name="l00188"></a>00188 <span class="preprocessor"></span><span class="preprocessor">        #define FINALIZATIONS_OBJECT_TAG                                FINALIZATIONS_TAG &quot;_&quot; OBJECT_TAG</span>
+<a name="l00189"></a>00189 <span class="preprocessor"></span><span class="preprocessor">        #define FINALIZATIONS_OBJECT_PARAMDEF_PATH              &quot;:/resources/FinalizationsObjectNode.xdef&quot;</span>
+<a name="l00190"></a>00190 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_OBJECT_TAG                                  CONNECTIONS_TAG &quot;_&quot; OBJECT_TAG</span>
+<a name="l00191"></a>00191 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_OBJECT_PARAMDEF_PATH                &quot;:/resources/ConnectionsObjectNode.xdef&quot;</span>
+<a name="l00192"></a>00192 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCK_OBJECT_PARAMDEF_PATH                              &quot;:/resources/BlockNode.xdef&quot;</span>
+<a name="l00193"></a>00193 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_OBJECT_PARAMDEF_PATH                               &quot;:/resources/BlockLoopNode.xdef&quot;</span>
+<a name="l00194"></a>00194 <span class="preprocessor"></span><span class="preprocessor">        #define INITIALIZATIONS_PARAMETER_TAG                   INITIALIZATIONS_TAG &quot;_&quot; PARAMETER_TAG</span>
+<a name="l00195"></a>00195 <span class="preprocessor"></span><span class="preprocessor">        #define INITIALIZATIONS_PARAMETER_PARAMDEF_PATH &quot;:/resources/InitializationsParameterNode.xdef&quot;</span>
+<a name="l00196"></a>00196 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCK_PARAMETER_TAG                                             BLOCK_TAG &quot;_&quot; PARAMETER_TAG</span>
+<a name="l00197"></a>00197 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCK_PARAMETER_PARAMDEF_PATH                   &quot;:/resources/BlockParameterNode.xdef&quot;</span>
+<a name="l00198"></a>00198 <span class="preprocessor"></span>
+<a name="l00199"></a>00199 
+<a name="l00200"></a>00200 <span class="preprocessor">        #define DEFAULT_OUTPUTFILE                              &quot;Out.txt&quot;</span>
+<a name="l00201"></a>00201 <span class="preprocessor"></span><span class="preprocessor">        #define ARGB_FORMAT_HEADER                              0xCAFE1234</span>
+<a name="l00202"></a>00202 <span class="preprocessor"></span><span class="preprocessor">        #define ARGB_FORMAT_HEADER_CONC                 0xCAFE5678</span>
+<a name="l00203"></a>00203 <span class="preprocessor"></span><span class="preprocessor">        #define DOUBLE_PI_VALUE                                 3.141592653589793238462643383279502884197</span>
+<a name="l00204"></a>00204 <span class="preprocessor"></span><span class="preprocessor">        #define ROOT_TAG                                                &quot;EXML&quot;</span>
+<a name="l00205"></a>00205 <span class="preprocessor"></span><span class="preprocessor">        #define VERSION_TAG                                             &quot;version&quot;</span>
+<a name="l00206"></a>00206 <span class="preprocessor"></span><span class="preprocessor">        #define BOOKMARK_TAG                                    &quot;bookmark&quot;</span>
+<a name="l00207"></a>00207 <span class="preprocessor"></span><span class="preprocessor">        #define ID_TAG                                                  &quot;ID&quot;</span>
+<a name="l00208"></a>00208 <span class="preprocessor"></span><span class="preprocessor">        #define OBJECT_TAG                                              &quot;object&quot;</span>
+<a name="l00209"></a>00209 <span class="preprocessor"></span><span class="preprocessor">        #define DEFINES_TAG                                             &quot;defines&quot;</span>
+<a name="l00210"></a>00210 <span class="preprocessor"></span><span class="preprocessor">        #define ACTIONS_TAG                                             &quot;actions&quot;</span>
+<a name="l00211"></a>00211 <span class="preprocessor"></span><span class="preprocessor">        #define LOOPS_TAG                                               &quot;loops&quot;</span>
+<a name="l00212"></a>00212 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_TAG                                                &quot;loop&quot;</span>
+<a name="l00213"></a>00213 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_NUMBER_TAG                                 &quot;loop_number&quot;   </span>
+<a name="l00214"></a>00214 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_AMOUNT_TAG                                 &quot;nr_of_loops&quot;</span>
+<a name="l00215"></a>00215 <span class="preprocessor"></span><span class="preprocessor">        #define LOOP_TARGETBLOCKID_TAG                  &quot;target_block&quot;</span>
+<a name="l00216"></a>00216 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCKTRIALS_TAG                                 &quot;blocks&quot;</span>
+<a name="l00217"></a>00217 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCK_TAG                                               &quot;block&quot;</span>
+<a name="l00218"></a>00218 <span class="preprocessor"></span><span class="preprocessor">        #define PARAMETER_TAG                                   &quot;parameter&quot;</span>
+<a name="l00219"></a>00219 <span class="preprocessor"></span><span class="preprocessor">        #define PARAMETERS_TAG                                  &quot;parameters&quot;</span>
+<a name="l00220"></a>00220 <span class="preprocessor"></span><span class="preprocessor">        #define CUSTOM_PARAMETERS_TAG                   &quot;custom_parameters&quot;</span>
+<a name="l00221"></a>00221 <span class="preprocessor"></span><span class="preprocessor">        #define BLOCKNUMBER_TAG                                 &quot;block_number&quot;</span>
+<a name="l00222"></a>00222 <span class="preprocessor"></span><span class="preprocessor">        #define TRIALAMOUNT_TAG                                 &quot;nr_of_trials&quot;</span>
+<a name="l00223"></a>00223 <span class="preprocessor"></span><span class="preprocessor">        #define INTERNALTRIGGERAMOUNT_TAG               &quot;nr_of_internal_triggers&quot;</span>
+<a name="l00224"></a>00224 <span class="preprocessor"></span><span class="preprocessor">        #define EXTERNALTRIGGERAMOUNT_TAG               &quot;nr_of_external_triggers&quot;</span>
+<a name="l00225"></a>00225 <span class="preprocessor"></span><span class="preprocessor">        #define DECLARATIONS_TAG                                &quot;declarations&quot;</span>
+<a name="l00226"></a>00226 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TAG                                 &quot;connections&quot;</span>
+<a name="l00227"></a>00227 <span class="preprocessor"></span><span class="preprocessor">        #define INITIALIZATIONS_TAG                             &quot;initializations&quot;</span>
+<a name="l00228"></a>00228 <span class="preprocessor"></span><span class="preprocessor">        #define FINALIZATIONS_TAG                               &quot;finalizations&quot;</span>
+<a name="l00229"></a>00229 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TYPE_TAG                    &quot;type&quot;</span>
+<a name="l00230"></a>00230 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TYPE_SIGNAL_TAG             METHOD_TYPE_SIGNAL_TAG</span>
+<a name="l00231"></a>00231 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TYPE_SLOT_TAG               METHOD_TYPE_SLOT_TAG</span>
+<a name="l00232"></a>00232 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_SIGNATURE_TAG               &quot;signature&quot;</span>
+<a name="l00233"></a>00233 <span class="preprocessor"></span><span class="preprocessor">        #define CONNECTIONS_TARGET_TAG                  &quot;target&quot;</span>
+<a name="l00234"></a>00234 <span class="preprocessor"></span><span class="preprocessor">        #define INIT_FINIT_TYPE_TAG                             &quot;type&quot;</span>
+<a name="l00235"></a>00235 <span class="preprocessor"></span><span class="preprocessor">        #define INIT_FINIT_TYPE_SLOT_TAG                METHOD_TYPE_SLOT_TAG</span>
+<a name="l00236"></a>00236 <span class="preprocessor"></span><span class="preprocessor">        #define INIT_FINIT_SIGNATURE_TAG                &quot;signature&quot;</span>
+<a name="l00237"></a>00237 <span class="preprocessor"></span><span class="preprocessor">        #define MEMBER_TYPE_TAG                                 &quot;type&quot;</span>
+<a name="l00238"></a>00238 <span class="preprocessor"></span><span class="preprocessor">        #define MEMBER_TYPE_SLOT_TAG                    METHOD_TYPE_SLOT_TAG</span>
+<a name="l00239"></a>00239 <span class="preprocessor"></span><span class="preprocessor">        #define DEBUGMODE_TAG                                   &quot;debugmode&quot;</span>
+<a name="l00240"></a>00240 <span class="preprocessor"></span><span class="preprocessor">        #define EXPERIMENT_TAG                                  &quot;experiment&quot;</span>
+<a name="l00241"></a>00241 <span class="preprocessor"></span><span class="preprocessor">        #define CLASS_TAG                                               &quot;class&quot;</span>
+<a name="l00242"></a>00242 <span class="preprocessor"></span><span class="preprocessor">        #define NAME_TAG                                                &quot;name&quot;</span>
+<a name="l00243"></a>00243 <span class="preprocessor"></span><span class="preprocessor">        #define VALUE_TAG                                               &quot;value&quot;</span>
+<a name="l00244"></a>00244 <span class="preprocessor"></span><span class="preprocessor">        #define HREF_TAG                                                &quot;href&quot;</span>
+<a name="l00245"></a>00245 <span class="preprocessor"></span><span class="preprocessor">        #define FOLDER_TAG                                              &quot;folder&quot;</span>
+<a name="l00246"></a>00246 <span class="preprocessor"></span><span class="preprocessor">        #define TITLE_TAG                                               &quot;title&quot;</span>
+<a name="l00247"></a>00247 <span class="preprocessor"></span><span class="preprocessor">        #define BOOL_FALSE_TAG                                  &quot;false&quot;</span>
+<a name="l00248"></a>00248 <span class="preprocessor"></span><span class="preprocessor">        #define BOOL_TRUE_TAG                                   &quot;true&quot;</span>
+<a name="l00249"></a>00249 <span class="preprocessor"></span><span class="preprocessor">        #define FOLDED_TAG                                              &quot;folded&quot;</span>
+<a name="l00250"></a>00250 <span class="preprocessor"></span><span class="preprocessor">        #define EVENT_TAG                                               &quot;event&quot;</span>
+<a name="l00251"></a>00251 <span class="preprocessor"></span>}
+<a name="l00252"></a>00252 
+<a name="l00253"></a>00253 <span class="preprocessor">#endif //EXPMANAGER_GLOBAL_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 8 2013 13:22:05 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 6 2014 14:17:48 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

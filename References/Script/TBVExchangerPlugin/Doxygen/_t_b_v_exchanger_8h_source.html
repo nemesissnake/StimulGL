@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Turbo BrainVoyager Exchanger script class
-   &#160;<span id="projectnumber">1.0.0.1</span>
+   &#160;<span id="projectnumber">1.1.0.1</span>
    </div>
    <div id="projectbrief">Turbo BrainVoyager Exchanger script class reference.</div>
   </td>
@@ -44,157 +44,163 @@
 <div class="title">TBVExchanger.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//TBVExchanger</span>
-<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2013  Sven Gijsen and Michael Luehrs</span>
-<a name="l00003"></a>00003 <span class="comment">//</span>
-<a name="l00004"></a>00004 <span class="comment">//This file is part of StimulGL.</span>
-<a name="l00005"></a>00005 <span class="comment">//StimulGL is free software: you can redistribute it and/or modify</span>
-<a name="l00006"></a>00006 <span class="comment">//it under the terms of the GNU General Public License as published by</span>
-<a name="l00007"></a>00007 <span class="comment">//the Free Software Foundation, either version 3 of the License, or</span>
-<a name="l00008"></a>00008 <span class="comment">//(at your option) any later version.</span>
-<a name="l00009"></a>00009 <span class="comment">//</span>
-<a name="l00010"></a>00010 <span class="comment">//This program is distributed in the hope that it will be useful,</span>
-<a name="l00011"></a>00011 <span class="comment">//but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<a name="l00012"></a>00012 <span class="comment">//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<a name="l00013"></a>00013 <span class="comment">//GNU General Public License for more details.</span>
-<a name="l00014"></a>00014 <span class="comment">//</span>
-<a name="l00015"></a>00015 <span class="comment">//You should have received a copy of the GNU General Public License</span>
-<a name="l00016"></a>00016 <span class="comment">//along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
-<a name="l00017"></a>00017 <span class="comment">//</span>
-<a name="l00018"></a>00018 
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//Copyright (C) 2014  Michael Luehrs, Brain Innovation B.V. and Sven Gijsen</span>
+<a name="l00002"></a>00002 <span class="comment">//</span>
+<a name="l00003"></a>00003 <span class="comment">//This file is part of StimulGL.</span>
+<a name="l00004"></a>00004 <span class="comment">//StimulGL is free software: you can redistribute it and/or modify</span>
+<a name="l00005"></a>00005 <span class="comment">//it under the terms of the GNU General Public License as published by</span>
+<a name="l00006"></a>00006 <span class="comment">//the Free Software Foundation, either version 3 of the License, or</span>
+<a name="l00007"></a>00007 <span class="comment">//(at your option) any later version.</span>
+<a name="l00008"></a>00008 <span class="comment">//</span>
+<a name="l00009"></a>00009 <span class="comment">//This program is distributed in the hope that it will be useful,</span>
+<a name="l00010"></a>00010 <span class="comment">//but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<a name="l00011"></a>00011 <span class="comment">//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<a name="l00012"></a>00012 <span class="comment">//GNU General Public License for more details.</span>
+<a name="l00013"></a>00013 <span class="comment">//</span>
+<a name="l00014"></a>00014 <span class="comment">//You should have received a copy of the GNU General Public License</span>
+<a name="l00015"></a>00015 <span class="comment">//along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<a name="l00016"></a>00016 <span class="comment">//</span>
+<a name="l00017"></a>00017 
+<a name="l00018"></a>00018 <span class="comment">//This file defines the script binding interface, all below function are scriptable except for the destructor</span>
 <a name="l00019"></a>00019 
-<a name="l00020"></a>00020 <span class="comment">//This file defines the script binding interface, all below function are scriptable except for the destructor</span>
-<a name="l00021"></a>00021 
-<a name="l00022"></a>00022 <span class="preprocessor">#ifndef TBVExchanger_H</span>
-<a name="l00023"></a>00023 <span class="preprocessor"></span><span class="preprocessor">#define TBVExchanger_H</span>
-<a name="l00024"></a>00024 <span class="preprocessor"></span><span class="preprocessor">#include &lt;QObject&gt;</span>
-<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;QString&gt;</span>
-<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;QtScript&gt;</span>
-<a name="l00027"></a>00027 <span class="preprocessor">#include &lt;QScriptable&gt;</span>
-<a name="l00028"></a>00028 <span class="preprocessor">#include &quot;./../../StimulGL/mainappinfo.h&quot;</span>
-<a name="l00029"></a>00029 <span class="preprocessor">#include &quot;tbvnetworkinterface.h&quot;</span>
-<a name="l00030"></a>00030 
-<a name="l00031"></a>00031 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T,<span class="keywordtype">unsigned</span> S&gt;
-<a name="l00032"></a>00032 <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> arraysize(<span class="keyword">const</span> T (&amp;v)[S]) { <span class="keywordflow">return</span> S; }
+<a name="l00020"></a>00020 <span class="preprocessor">#ifndef TBVExchanger_H</span>
+<a name="l00021"></a>00021 <span class="preprocessor"></span><span class="preprocessor">#define TBVExchanger_H</span>
+<a name="l00022"></a>00022 <span class="preprocessor"></span><span class="preprocessor">#include &lt;QObject&gt;</span>
+<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;QString&gt;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;QtScript&gt;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;QScriptable&gt;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include &quot;./../../StimulGL/mainappinfo.h&quot;</span>
+<a name="l00027"></a>00027 <span class="preprocessor">#include &quot;tbvnetworkinterface.h&quot;</span>
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T,<span class="keywordtype">unsigned</span> S&gt;
+<a name="l00030"></a>00030 <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> arraysize(<span class="keyword">const</span> T (&amp;v)[S]) { <span class="keywordflow">return</span> S; }
+<a name="l00031"></a>00031 
 <a name="l00033"></a>00033 
-<a name="l00035"></a>00035 
-<a name="l00038"></a><a class="code" href="class_t_b_v_exchanger.html">00038</a> <span class="keyword">class </span><a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a> : <span class="keyword">public</span> QObject, <span class="keyword">protected</span> QScriptable
-<a name="l00039"></a>00039 {
-<a name="l00040"></a>00040         Q_OBJECT
-<a name="l00041"></a>00041         <span class="comment">//Q_CLASSINFO(&quot;ScriptAPIClassName&quot;, &quot;TBVExchanger&quot;);//Can&#39;t use defines here!, moc doesn&#39;t handle defines, not needed here</span>
-<a name="l00042"></a>00042 
-<a name="l00043"></a>00043 signals:
-<a name="l00045"></a>00045 
-<a name="l00048"></a>00048         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#a2a751fc539b05bd64057b8236f31565a" title="executePreStep signal.">executePreStep</a>();
-<a name="l00050"></a>00050 
-<a name="l00053"></a>00053         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#afebf2c2685cdda96e39a8976b25bdef5" title="executePostStep signal.">executePostStep</a>();
-<a name="l00055"></a>00055 
-<a name="l00058"></a>00058         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#a49558d644de47718d39ade75fe4f0ec1" title="executePostRun signal.">executePostRun</a>();
-<a name="l00060"></a>00060 
-<a name="l00063"></a>00063         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#ac4bc5a245808424ed7f9e1dce3113cf2" title="disconnected signal.">disconnected</a>();
-<a name="l00065"></a>00065 
-<a name="l00068"></a>00068         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#a3261825e7021264b5afda05498a0e441" title="connected signal.">connected</a>();
-<a name="l00070"></a>00070 
-<a name="l00073"></a>00073         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#a4abd3cb7492ebcfae4e7e6bef3b16851" title="connectionError signal.">connectionError</a>(QString error);
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075 <span class="keyword">public</span>:
-<a name="l00076"></a>00076         <a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a>(QObject *parent = 0);
-<a name="l00077"></a>00077         ~<a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a>();
-<a name="l00078"></a>00078         <a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a>(<span class="keyword">const</span> <a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a>&amp; other ){Q_UNUSED(other);}<span class="comment">//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro</span>
+<a name="l00036"></a><a class="code" href="class_t_b_v_exchanger.html">00036</a> <span class="keyword">class </span><a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a> : <span class="keyword">public</span> QObject, <span class="keyword">protected</span> QScriptable
+<a name="l00037"></a>00037 {
+<a name="l00038"></a>00038         Q_OBJECT
+<a name="l00039"></a>00039         <span class="comment">//Q_CLASSINFO(&quot;ScriptAPIClassName&quot;, &quot;TBVExchanger&quot;);//Can&#39;t use defines here!, moc doesn&#39;t handle defines, not needed here</span>
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041 signals:
+<a name="l00043"></a>00043 
+<a name="l00046"></a>00046         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#a10f204b6a3f7c8ff71485bf0a290c299" title="executePreStep signal.">executePreStep</a>(<span class="keywordtype">int</span> timePoint);
+<a name="l00048"></a>00048 
+<a name="l00051"></a>00051         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#ac836fe2578f22e537b5150c635da8f29" title="executePostStep signal.">executePostStep</a>(<span class="keywordtype">int</span> timePoint);
+<a name="l00053"></a>00053 
+<a name="l00056"></a>00056         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#ac070bf5215b3a48ff4cc1465aeaded84" title="executePostRun signal.">executePostRun</a>(<span class="keywordtype">int</span> timePoint);
+<a name="l00058"></a>00058 
+<a name="l00061"></a>00061         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#ac4bc5a245808424ed7f9e1dce3113cf2" title="disconnected signal.">disconnected</a>();
+<a name="l00063"></a>00063 
+<a name="l00066"></a>00066         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#a3261825e7021264b5afda05498a0e441" title="connected signal.">connected</a>();
+<a name="l00068"></a>00068 
+<a name="l00071"></a>00071         <span class="keywordtype">void</span> <a class="code" href="class_t_b_v_exchanger.html#a4abd3cb7492ebcfae4e7e6bef3b16851" title="connectionError signal.">connectionError</a>(QString error);
+<a name="l00072"></a>00072 
+<a name="l00073"></a>00073 <span class="keyword">public</span>:
+<a name="l00074"></a>00074         <a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a>(<span class="keywordtype">bool</span> autoConnect = <span class="keyword">false</span>, <span class="keywordtype">bool</span> autoReconnect = <span class="keyword">true</span>, QObject *parent = 0);
+<a name="l00075"></a>00075         ~<a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a>();
+<a name="l00076"></a>00076         <a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a>(<span class="keyword">const</span> <a class="code" href="class_t_b_v_exchanger.html" title="The TBVExchanger class.">TBVExchanger</a>&amp; other ){Q_UNUSED(other);}<span class="comment">//TODO fill in copy constructor, should be used for the Q_DECLARE_METATYPE macro</span>
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078         <span class="keyword">static</span> QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
 <a name="l00079"></a>00079 
-<a name="l00080"></a>00080         <span class="keyword">static</span> QScriptValue ctor__extensionname(QScriptContext* context, QScriptEngine* engine);
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082 <span class="keyword">public</span> slots:
-<a name="l00083"></a>00083         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085         <span class="comment">//Basic Project Functions</span>
-<a name="l00087"></a>00087 <span class="comment"></span>
-<a name="l00090"></a><a class="code" href="class_t_b_v_exchanger.html#a4c2dabcf9dfc63678f4cdcd1b777b771">00090</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a4c2dabcf9dfc63678f4cdcd1b777b771" title="tGetCurrentTimePoint slot.">tGetCurrentTimePoint</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCurrentTimePoint();};
-<a name="l00092"></a>00092 
-<a name="l00095"></a><a class="code" href="class_t_b_v_exchanger.html#adadaf307ff4b3191db9e03d09e106e57">00095</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#adadaf307ff4b3191db9e03d09e106e57" title="tGetExpectedNrOfTimePoints slot.">tGetExpectedNrOfTimePoints</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetExpectedNrOfTimePoints();};
-<a name="l00097"></a>00097 
-<a name="l00100"></a><a class="code" href="class_t_b_v_exchanger.html#a11e9d70f301732015ed33601048c7377">00100</a>         QList&lt;int&gt; <a class="code" href="class_t_b_v_exchanger.html#a11e9d70f301732015ed33601048c7377" title="tGetDimsOfFunctionalData slot.">tGetDimsOfFunctionalData</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetDimsOfFunctionalData();};
-<a name="l00102"></a>00102 
-<a name="l00105"></a><a class="code" href="class_t_b_v_exchanger.html#a46711c37e40f410ec23a7c11009d13c6">00105</a>         QString <a class="code" href="class_t_b_v_exchanger.html#a46711c37e40f410ec23a7c11009d13c6" title="tGetProjectName slot.">tGetProjectName</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetProjectName();};
-<a name="l00107"></a>00107 
-<a name="l00110"></a><a class="code" href="class_t_b_v_exchanger.html#a3bc0718478a7c8d10a84fc89a7afcff6">00110</a>         QString <a class="code" href="class_t_b_v_exchanger.html#a3bc0718478a7c8d10a84fc89a7afcff6" title="tGetWatchFolder slot.">tGetWatchFolder</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetWatchFolder();};
-<a name="l00112"></a>00112 
-<a name="l00115"></a><a class="code" href="class_t_b_v_exchanger.html#aa096346e3b7f0fdab289c33e3cd68fd9">00115</a>         QString <a class="code" href="class_t_b_v_exchanger.html#aa096346e3b7f0fdab289c33e3cd68fd9" title="tGetTargetFolder slot.">tGetTargetFolder</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetTargetFolder();};
-<a name="l00117"></a>00117 
-<a name="l00120"></a><a class="code" href="class_t_b_v_exchanger.html#a2237edfb1f02b5b19557548afc6ae610">00120</a>         QString <a class="code" href="class_t_b_v_exchanger.html#a2237edfb1f02b5b19557548afc6ae610" title="tGetFeedbackFolder slot.">tGetFeedbackFolder</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetFeedbackFolder();};
-<a name="l00121"></a>00121 
-<a name="l00122"></a>00122 
-<a name="l00123"></a>00123         <span class="comment">//Protocol, DM, GLM Functions:</span>
-<a name="l00125"></a>00125 <span class="comment"></span>
-<a name="l00128"></a><a class="code" href="class_t_b_v_exchanger.html#a390db4d70fbad060665df627c8dc86b5">00128</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a390db4d70fbad060665df627c8dc86b5" title="tGetCurrentProtocolCondition slot.">tGetCurrentProtocolCondition</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCurrentProtocolCondition();};
-<a name="l00130"></a>00130 
-<a name="l00133"></a><a class="code" href="class_t_b_v_exchanger.html#a6334e6c180a54e8ee92806140e5da677">00133</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a6334e6c180a54e8ee92806140e5da677" title="tGetFullNrOfPredictors slot.">tGetFullNrOfPredictors</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetFullNrOfPredictors();};
-<a name="l00135"></a>00135 
-<a name="l00138"></a><a class="code" href="class_t_b_v_exchanger.html#a7dbcabf0cfa5219cac772a5b2ebdd852">00138</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a7dbcabf0cfa5219cac772a5b2ebdd852" title="tGetCurrentNrOfPredictors slot.">tGetCurrentNrOfPredictors</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCurrentNrOfPredictors();};
-<a name="l00140"></a>00140 
-<a name="l00143"></a><a class="code" href="class_t_b_v_exchanger.html#aa51973880e9be4349a7faf430a24e63a">00143</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#aa51973880e9be4349a7faf430a24e63a" title="tGetNrOfConfoundPredictors slot.">tGetNrOfConfoundPredictors</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNrOfConfoundPredictors();};
-<a name="l00145"></a>00145 
-<a name="l00148"></a><a class="code" href="class_t_b_v_exchanger.html#a5f419e7ef1914860045251a4a88aefea">00148</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#a5f419e7ef1914860045251a4a88aefea" title="tGetValueOfDesignMatrix slot.">tGetValueOfDesignMatrix</a>(<span class="keywordtype">int</span> pred, <span class="keywordtype">int</span> timepoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetValueOfDesignMatrix(pred, timepoint);};
-<a name="l00150"></a>00150 
-<a name="l00153"></a><a class="code" href="class_t_b_v_exchanger.html#a85ad4a88088bb3329c337468f32bd5ed">00153</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a85ad4a88088bb3329c337468f32bd5ed" title="tGetNrOfContrasts slot.">tGetNrOfContrasts</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNrOfContrasts();};
-<a name="l00154"></a>00154 
-<a name="l00155"></a>00155 
-<a name="l00156"></a>00156         <span class="comment">//ROI Functions</span>
-<a name="l00158"></a>00158 <span class="comment"></span>
-<a name="l00161"></a><a class="code" href="class_t_b_v_exchanger.html#af1645ea5fc4c49bba195b57bb9b045fd">00161</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#af1645ea5fc4c49bba195b57bb9b045fd" title="tGetNrOfROIs slot.">tGetNrOfROIs</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNrOfROIs();};
-<a name="l00163"></a>00163 
-<a name="l00166"></a><a class="code" href="class_t_b_v_exchanger.html#a6b96e908383eb5d7931b15b83d9fa41d">00166</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#a6b96e908383eb5d7931b15b83d9fa41d" title="tGetMeanOfROI slot.">tGetMeanOfROI</a>(<span class="keywordtype">int</span> roi) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetMeanOfROI(roi);};
-<a name="l00168"></a>00168 
-<a name="l00171"></a><a class="code" href="class_t_b_v_exchanger.html#ae115fcb085b3474462e212f2fe6cf21c">00171</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#ae115fcb085b3474462e212f2fe6cf21c" title="tGetNrOfVoxelsOfROI slot.">tGetNrOfVoxelsOfROI</a>(<span class="keywordtype">int</span> roi) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNrOfVoxelsOfROI(roi);};
-<a name="l00173"></a>00173 
-<a name="l00176"></a><a class="code" href="class_t_b_v_exchanger.html#acdbf3afb4e12ebc36d36f11a30b49c04">00176</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#acdbf3afb4e12ebc36d36f11a30b49c04" title="tGetBetaOfROI slot.">tGetBetaOfROI</a>(<span class="keywordtype">int</span> roi,<span class="keywordtype">int</span> beta) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetBetaOfROI(roi,beta);};
-<a name="l00178"></a>00178 
-<a name="l00181"></a><a class="code" href="class_t_b_v_exchanger.html#a262af6f0e8d56deb07b4287edc825c4e">00181</a>         QList&lt;int&gt; <a class="code" href="class_t_b_v_exchanger.html#a262af6f0e8d56deb07b4287edc825c4e" title="tGetCoordsOfVoxelOfROI slot.">tGetCoordsOfVoxelOfROI</a>(<span class="keywordtype">int</span> roi, <span class="keywordtype">int</span> voxel) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCoordsOfVoxelOfROI(roi, voxel);};
-<a name="l00183"></a>00183 
-<a name="l00186"></a><a class="code" href="class_t_b_v_exchanger.html#a8adf13cc027958dced3c23a815425a5f">00186</a>         QList&lt;int&gt; <a class="code" href="class_t_b_v_exchanger.html#a8adf13cc027958dced3c23a815425a5f" title="tGetAllCoordsOfVoxelsOfROI slot.">tGetAllCoordsOfVoxelsOfROI</a>(<span class="keywordtype">int</span> roi) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetAllCoordsOfVoxelsOfROI(roi);};
-<a name="l00187"></a>00187 
-<a name="l00188"></a>00188 
-<a name="l00189"></a>00189         <span class="comment">//Volume Data Access Functions</span>
-<a name="l00191"></a>00191 <span class="comment"></span>
-<a name="l00194"></a><a class="code" href="class_t_b_v_exchanger.html#a3cff402c546df7ab16d5ed60d0a4ad1b">00194</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#a3cff402c546df7ab16d5ed60d0a4ad1b" title="tGetValueOfVoxelAtTime slot.">tGetValueOfVoxelAtTime</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> z, <span class="keywordtype">int</span> timepoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetValueOfVoxelAtTime(x, y, z, timepoint);};
-<a name="l00196"></a>00196 
-<a name="l00199"></a><a class="code" href="class_t_b_v_exchanger.html#aae2e47440c925a9dc69db4410412a9dc">00199</a>         QList&lt;short&gt; <a class="code" href="class_t_b_v_exchanger.html#aae2e47440c925a9dc69db4410412a9dc" title="tGetTimeCourseData slot.">tGetTimeCourseData</a>(<span class="keywordtype">int</span> timepoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetTimeCourseData(timepoint);};
-<a name="l00201"></a>00201 
-<a name="l00204"></a><a class="code" href="class_t_b_v_exchanger.html#a9744267f8cd98ef44f7ee989a149575f">00204</a>         QList&lt;short&gt; <a class="code" href="class_t_b_v_exchanger.html#a9744267f8cd98ef44f7ee989a149575f" title="tGetRawTimeCourseData slot.">tGetRawTimeCourseData</a>(<span class="keywordtype">int</span> timepoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetRawTimeCourseData(timepoint);};
-<a name="l00206"></a>00206 
-<a name="l00209"></a><a class="code" href="class_t_b_v_exchanger.html#a5aa991b44256dca598796f82b07cffb1">00209</a>         <span class="keywordtype">double</span> <a class="code" href="class_t_b_v_exchanger.html#a5aa991b44256dca598796f82b07cffb1" title="tGetBetaOfVoxel slot.">tGetBetaOfVoxel</a>(<span class="keywordtype">int</span> beta, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> z) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetBetaOfVoxel(beta, x, y, z);};
-<a name="l00211"></a>00211 
-<a name="l00214"></a><a class="code" href="class_t_b_v_exchanger.html#afc1f83c08e8ab02dfffefdc86de90708">00214</a>         QList&lt;double&gt; <a class="code" href="class_t_b_v_exchanger.html#afc1f83c08e8ab02dfffefdc86de90708" title="tGetBetaMaps slot.">tGetBetaMaps</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetBetaMaps();};
-<a name="l00216"></a>00216 
-<a name="l00219"></a><a class="code" href="class_t_b_v_exchanger.html#a9e21790be8073d962bfdc7086023ed55">00219</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#a9e21790be8073d962bfdc7086023ed55" title="tGetMapValueOfVoxel slot.">tGetMapValueOfVoxel</a>(<span class="keywordtype">int</span> map, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> z) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetMapValueOfVoxel(map, x, y, z);};
-<a name="l00221"></a>00221 
-<a name="l00224"></a><a class="code" href="class_t_b_v_exchanger.html#ac0de85b59cb63a49205d39156183beec">00224</a>         QList&lt;float&gt; <a class="code" href="class_t_b_v_exchanger.html#ac0de85b59cb63a49205d39156183beec" title="tGetContrastMaps slot.">tGetContrastMaps</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetContrastMaps();};
-<a name="l00225"></a>00225 
-<a name="l00226"></a>00226 
-<a name="l00227"></a>00227         <span class="comment">//Connection functions</span>
-<a name="l00229"></a>00229 <span class="comment"></span>
-<a name="l00232"></a><a class="code" href="class_t_b_v_exchanger.html#a604f6e0cb863b69a034e27d251f869ad">00232</a>         <span class="keywordtype">bool</span> <a class="code" href="class_t_b_v_exchanger.html#a604f6e0cb863b69a034e27d251f869ad" title="connectToServer slot.">connectToServer</a>(QString sIPAddress,<span class="keywordtype">int</span> port) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;connectToServer(sIPAddress.toLatin1().data(),port);};
-<a name="l00234"></a>00234 
-<a name="l00237"></a><a class="code" href="class_t_b_v_exchanger.html#a54b6067531a3d5a21b12b848a2f71be2">00237</a>         <span class="keywordtype">bool</span> <a class="code" href="class_t_b_v_exchanger.html#a54b6067531a3d5a21b12b848a2f71be2" title="disconnectFromServer slot.">disconnectFromServer</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;disconnectFromServer();};
-<a name="l00239"></a>00239 
-<a name="l00242"></a>00242         <span class="keywordtype">bool</span> <a class="code" href="class_t_b_v_exchanger.html#a88b498ac1885b974713ee0b9b945b266" title="activateAutoConnection slot.">activateAutoConnection</a>();
-<a name="l00244"></a>00244 
-<a name="l00247"></a>00247         <span class="keywordtype">bool</span> <a class="code" href="class_t_b_v_exchanger.html#ad7d3cf437ba9a19ab470c402f17c677e" title="deactivateAutoConnection slot.">deactivateAutoConnection</a>();
-<a name="l00248"></a>00248 
-<a name="l00249"></a>00249 <span class="keyword">private</span>:
-<a name="l00250"></a>00250         <span class="keywordtype">bool</span> initialize();
-<a name="l00251"></a>00251 
-<a name="l00252"></a>00252         QScriptEngine* currentScriptEngine;
-<a name="l00253"></a>00253         <span class="keywordtype">short</span> m_ExampleProperty;
-<a name="l00254"></a>00254         TBVNetworkInterface *tbvNetwIntFace;
-<a name="l00255"></a>00255 };
-<a name="l00256"></a>00256 
-<a name="l00257"></a>00257 <span class="preprocessor">#endif // TBVExchanger_H</span>
+<a name="l00080"></a>00080 <span class="keyword">public</span> slots:
+<a name="l00081"></a>00081         <span class="keywordtype">bool</span> makeThisAvailableInScript(QString strObjectScriptName = <span class="stringliteral">&quot;&quot;</span>, QObject *engine = NULL);<span class="comment">//To make the objects (e.g. defined in a *.exml file) available in the script</span>
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083         <span class="comment">//Basic Project Functions</span>
+<a name="l00085"></a>00085 <span class="comment"></span>
+<a name="l00088"></a><a class="code" href="class_t_b_v_exchanger.html#a4c2dabcf9dfc63678f4cdcd1b777b771">00088</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a4c2dabcf9dfc63678f4cdcd1b777b771" title="tGetCurrentTimePoint slot.">tGetCurrentTimePoint</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCurrentTimePoint();};
+<a name="l00090"></a>00090 
+<a name="l00093"></a><a class="code" href="class_t_b_v_exchanger.html#adadaf307ff4b3191db9e03d09e106e57">00093</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#adadaf307ff4b3191db9e03d09e106e57" title="tGetExpectedNrOfTimePoints slot.">tGetExpectedNrOfTimePoints</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetExpectedNrOfTimePoints();};
+<a name="l00095"></a>00095 
+<a name="l00098"></a><a class="code" href="class_t_b_v_exchanger.html#a11e9d70f301732015ed33601048c7377">00098</a>         QList&lt;int&gt; <a class="code" href="class_t_b_v_exchanger.html#a11e9d70f301732015ed33601048c7377" title="tGetDimsOfFunctionalData slot.">tGetDimsOfFunctionalData</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetDimsOfFunctionalData();};
+<a name="l00100"></a>00100 
+<a name="l00103"></a><a class="code" href="class_t_b_v_exchanger.html#a46711c37e40f410ec23a7c11009d13c6">00103</a>         QString <a class="code" href="class_t_b_v_exchanger.html#a46711c37e40f410ec23a7c11009d13c6" title="tGetProjectName slot.">tGetProjectName</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetProjectName();};
+<a name="l00105"></a>00105 
+<a name="l00108"></a><a class="code" href="class_t_b_v_exchanger.html#a3bc0718478a7c8d10a84fc89a7afcff6">00108</a>         QString <a class="code" href="class_t_b_v_exchanger.html#a3bc0718478a7c8d10a84fc89a7afcff6" title="tGetWatchFolder slot.">tGetWatchFolder</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetWatchFolder();};
+<a name="l00110"></a>00110 
+<a name="l00113"></a><a class="code" href="class_t_b_v_exchanger.html#aa096346e3b7f0fdab289c33e3cd68fd9">00113</a>         QString <a class="code" href="class_t_b_v_exchanger.html#aa096346e3b7f0fdab289c33e3cd68fd9" title="tGetTargetFolder slot.">tGetTargetFolder</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetTargetFolder();};
+<a name="l00115"></a>00115 
+<a name="l00118"></a><a class="code" href="class_t_b_v_exchanger.html#a2237edfb1f02b5b19557548afc6ae610">00118</a>         QString <a class="code" href="class_t_b_v_exchanger.html#a2237edfb1f02b5b19557548afc6ae610" title="tGetFeedbackFolder slot.">tGetFeedbackFolder</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetFeedbackFolder();};
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120 
+<a name="l00121"></a>00121         <span class="comment">//Protocol, DM, GLM Functions:</span>
+<a name="l00123"></a>00123 <span class="comment"></span>
+<a name="l00126"></a><a class="code" href="class_t_b_v_exchanger.html#a390db4d70fbad060665df627c8dc86b5">00126</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a390db4d70fbad060665df627c8dc86b5" title="tGetCurrentProtocolCondition slot.">tGetCurrentProtocolCondition</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCurrentProtocolCondition();};
+<a name="l00128"></a>00128 
+<a name="l00131"></a><a class="code" href="class_t_b_v_exchanger.html#a6334e6c180a54e8ee92806140e5da677">00131</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a6334e6c180a54e8ee92806140e5da677" title="tGetFullNrOfPredictors slot.">tGetFullNrOfPredictors</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetFullNrOfPredictors();};
+<a name="l00133"></a>00133 
+<a name="l00136"></a><a class="code" href="class_t_b_v_exchanger.html#a7dbcabf0cfa5219cac772a5b2ebdd852">00136</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a7dbcabf0cfa5219cac772a5b2ebdd852" title="tGetCurrentNrOfPredictors slot.">tGetCurrentNrOfPredictors</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCurrentNrOfPredictors();};
+<a name="l00138"></a>00138 
+<a name="l00141"></a><a class="code" href="class_t_b_v_exchanger.html#aa51973880e9be4349a7faf430a24e63a">00141</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#aa51973880e9be4349a7faf430a24e63a" title="tGetNrOfConfoundPredictors slot.">tGetNrOfConfoundPredictors</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNrOfConfoundPredictors();};
+<a name="l00143"></a>00143 
+<a name="l00146"></a><a class="code" href="class_t_b_v_exchanger.html#a5f419e7ef1914860045251a4a88aefea">00146</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#a5f419e7ef1914860045251a4a88aefea" title="tGetValueOfDesignMatrix slot.">tGetValueOfDesignMatrix</a>(<span class="keywordtype">int</span> pred, <span class="keywordtype">int</span> timepoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetValueOfDesignMatrix(pred, timepoint);};
+<a name="l00148"></a>00148 
+<a name="l00151"></a><a class="code" href="class_t_b_v_exchanger.html#a85ad4a88088bb3329c337468f32bd5ed">00151</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a85ad4a88088bb3329c337468f32bd5ed" title="tGetNrOfContrasts slot.">tGetNrOfContrasts</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNrOfContrasts();};
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153 
+<a name="l00154"></a>00154         <span class="comment">//ROI Functions</span>
+<a name="l00156"></a>00156 <span class="comment"></span>
+<a name="l00159"></a><a class="code" href="class_t_b_v_exchanger.html#af1645ea5fc4c49bba195b57bb9b045fd">00159</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#af1645ea5fc4c49bba195b57bb9b045fd" title="tGetNrOfROIs slot.">tGetNrOfROIs</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNrOfROIs();};
+<a name="l00161"></a>00161 
+<a name="l00164"></a><a class="code" href="class_t_b_v_exchanger.html#a6b96e908383eb5d7931b15b83d9fa41d">00164</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#a6b96e908383eb5d7931b15b83d9fa41d" title="tGetMeanOfROI slot.">tGetMeanOfROI</a>(<span class="keywordtype">int</span> roi) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetMeanOfROI(roi);};
+<a name="l00166"></a>00166 
+<a name="l00169"></a><a class="code" href="class_t_b_v_exchanger.html#aa506f4d34937264436081f5bda18c3ce">00169</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#aa506f4d34937264436081f5bda18c3ce" title="tGetMeanOfROIAtTimePoint slot.">tGetMeanOfROIAtTimePoint</a>(<span class="keywordtype">int</span> roi, <span class="keywordtype">int</span> timePoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetMeanOfROIAtTimePoint(roi, timePoint);};
+<a name="l00171"></a>00171 
+<a name="l00174"></a><a class="code" href="class_t_b_v_exchanger.html#ae115fcb085b3474462e212f2fe6cf21c">00174</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#ae115fcb085b3474462e212f2fe6cf21c" title="tGetNrOfVoxelsOfROI slot.">tGetNrOfVoxelsOfROI</a>(<span class="keywordtype">int</span> roi) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNrOfVoxelsOfROI(roi);};
+<a name="l00176"></a>00176 
+<a name="l00179"></a><a class="code" href="class_t_b_v_exchanger.html#acdbf3afb4e12ebc36d36f11a30b49c04">00179</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#acdbf3afb4e12ebc36d36f11a30b49c04" title="tGetBetaOfROI slot.">tGetBetaOfROI</a>(<span class="keywordtype">int</span> roi,<span class="keywordtype">int</span> beta) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetBetaOfROI(roi,beta);};
+<a name="l00181"></a>00181 
+<a name="l00184"></a><a class="code" href="class_t_b_v_exchanger.html#a262af6f0e8d56deb07b4287edc825c4e">00184</a>         QList&lt;int&gt; <a class="code" href="class_t_b_v_exchanger.html#a262af6f0e8d56deb07b4287edc825c4e" title="tGetCoordsOfVoxelOfROI slot.">tGetCoordsOfVoxelOfROI</a>(<span class="keywordtype">int</span> roi, <span class="keywordtype">int</span> voxel) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCoordsOfVoxelOfROI(roi, voxel);};
+<a name="l00186"></a>00186 
+<a name="l00189"></a><a class="code" href="class_t_b_v_exchanger.html#a8adf13cc027958dced3c23a815425a5f">00189</a>         QList&lt;int&gt; <a class="code" href="class_t_b_v_exchanger.html#a8adf13cc027958dced3c23a815425a5f" title="tGetAllCoordsOfVoxelsOfROI slot.">tGetAllCoordsOfVoxelsOfROI</a>(<span class="keywordtype">int</span> roi) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetAllCoordsOfVoxelsOfROI(roi);};
+<a name="l00190"></a>00190 
+<a name="l00191"></a>00191 
+<a name="l00192"></a>00192         <span class="comment">//Volume Data Access Functions</span>
+<a name="l00194"></a>00194 <span class="comment"></span>
+<a name="l00197"></a><a class="code" href="class_t_b_v_exchanger.html#a3cff402c546df7ab16d5ed60d0a4ad1b">00197</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#a3cff402c546df7ab16d5ed60d0a4ad1b" title="tGetValueOfVoxelAtTime slot.">tGetValueOfVoxelAtTime</a>(<span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> z, <span class="keywordtype">int</span> timepoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetValueOfVoxelAtTime(x, y, z, timepoint);};
+<a name="l00199"></a>00199 
+<a name="l00202"></a><a class="code" href="class_t_b_v_exchanger.html#aae2e47440c925a9dc69db4410412a9dc">00202</a>         QList&lt;short&gt; <a class="code" href="class_t_b_v_exchanger.html#aae2e47440c925a9dc69db4410412a9dc" title="tGetTimeCourseData slot.">tGetTimeCourseData</a>(<span class="keywordtype">int</span> timepoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetTimeCourseData(timepoint);};
+<a name="l00204"></a>00204 
+<a name="l00207"></a><a class="code" href="class_t_b_v_exchanger.html#a9744267f8cd98ef44f7ee989a149575f">00207</a>         QList&lt;short&gt; <a class="code" href="class_t_b_v_exchanger.html#a9744267f8cd98ef44f7ee989a149575f" title="tGetRawTimeCourseData slot.">tGetRawTimeCourseData</a>(<span class="keywordtype">int</span> timepoint) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetRawTimeCourseData(timepoint);};
+<a name="l00209"></a>00209 
+<a name="l00212"></a><a class="code" href="class_t_b_v_exchanger.html#a5aa991b44256dca598796f82b07cffb1">00212</a>         <span class="keywordtype">double</span> <a class="code" href="class_t_b_v_exchanger.html#a5aa991b44256dca598796f82b07cffb1" title="tGetBetaOfVoxel slot.">tGetBetaOfVoxel</a>(<span class="keywordtype">int</span> beta, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> z) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetBetaOfVoxel(beta, x, y, z);};
+<a name="l00214"></a>00214 
+<a name="l00217"></a><a class="code" href="class_t_b_v_exchanger.html#afc1f83c08e8ab02dfffefdc86de90708">00217</a>         QList&lt;double&gt; <a class="code" href="class_t_b_v_exchanger.html#afc1f83c08e8ab02dfffefdc86de90708" title="tGetBetaMaps slot.">tGetBetaMaps</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetBetaMaps();};
+<a name="l00219"></a>00219 
+<a name="l00222"></a><a class="code" href="class_t_b_v_exchanger.html#a9e21790be8073d962bfdc7086023ed55">00222</a>         <span class="keywordtype">float</span> <a class="code" href="class_t_b_v_exchanger.html#a9e21790be8073d962bfdc7086023ed55" title="tGetMapValueOfVoxel slot.">tGetMapValueOfVoxel</a>(<span class="keywordtype">int</span> map, <span class="keywordtype">int</span> x, <span class="keywordtype">int</span> y, <span class="keywordtype">int</span> z) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetMapValueOfVoxel(map, x, y, z);};
+<a name="l00224"></a>00224 
+<a name="l00227"></a><a class="code" href="class_t_b_v_exchanger.html#ac0de85b59cb63a49205d39156183beec">00227</a>         QList&lt;float&gt; <a class="code" href="class_t_b_v_exchanger.html#ac0de85b59cb63a49205d39156183beec" title="tGetContrastMaps slot.">tGetContrastMaps</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetContrastMaps();};
+<a name="l00228"></a>00228 
+<a name="l00229"></a>00229 
+<a name="l00230"></a>00230         <span class="comment">//SVM Access Functions</span>
+<a name="l00232"></a>00232 <span class="comment"></span>
+<a name="l00235"></a><a class="code" href="class_t_b_v_exchanger.html#a3780f20a476c67bb39946b82c2777fd1">00235</a>         <span class="keywordtype">int</span> <a class="code" href="class_t_b_v_exchanger.html#a3780f20a476c67bb39946b82c2777fd1" title="tGetNumberOfClasses slot.">tGetNumberOfClasses</a>() { <span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetNumberOfClasses();};
+<a name="l00237"></a>00237 
+<a name="l00241"></a><a class="code" href="class_t_b_v_exchanger.html#ae4411ada7d176b37506fe8d2b069206a">00241</a>         QList&lt;float&gt; <a class="code" href="class_t_b_v_exchanger.html#ae4411ada7d176b37506fe8d2b069206a" title="tGetCurrentClassifierOutput slot.">tGetCurrentClassifierOutput</a>() { <span class="keywordflow">return</span> tbvNetwIntFace-&gt;tGetCurrentClassifierOutput();};
+<a name="l00242"></a>00242 
+<a name="l00243"></a>00243         <span class="comment">//Connection functions</span>
+<a name="l00245"></a>00245 <span class="comment"></span>
+<a name="l00248"></a><a class="code" href="class_t_b_v_exchanger.html#a604f6e0cb863b69a034e27d251f869ad">00248</a>         <span class="keywordtype">bool</span> <a class="code" href="class_t_b_v_exchanger.html#a604f6e0cb863b69a034e27d251f869ad" title="connectToServer slot.">connectToServer</a>(QString sIPAddress,<span class="keywordtype">int</span> port) {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;connectToServer(sIPAddress.toLatin1().data(),port);};
+<a name="l00250"></a>00250 
+<a name="l00253"></a><a class="code" href="class_t_b_v_exchanger.html#a54b6067531a3d5a21b12b848a2f71be2">00253</a>         <span class="keywordtype">bool</span> <a class="code" href="class_t_b_v_exchanger.html#a54b6067531a3d5a21b12b848a2f71be2" title="disconnectFromServer slot.">disconnectFromServer</a>() {<span class="keywordflow">return</span> tbvNetwIntFace-&gt;disconnectFromServer();};
+<a name="l00255"></a>00255 
+<a name="l00258"></a>00258         <span class="keywordtype">bool</span> <a class="code" href="class_t_b_v_exchanger.html#a88b498ac1885b974713ee0b9b945b266" title="activateAutoConnection slot.">activateAutoConnection</a>();
+<a name="l00260"></a>00260 
+<a name="l00263"></a>00263         <span class="keywordtype">bool</span> <a class="code" href="class_t_b_v_exchanger.html#ad7d3cf437ba9a19ab470c402f17c677e" title="deactivateAutoConnection slot.">deactivateAutoConnection</a>();
+<a name="l00264"></a>00264 
+<a name="l00265"></a>00265 <span class="keyword">private</span>:
+<a name="l00266"></a>00266         <span class="keywordtype">bool</span> initialize(<span class="keywordtype">bool</span> autoConnect, <span class="keywordtype">bool</span> autoReconnect);
+<a name="l00267"></a>00267 
+<a name="l00268"></a>00268         QScriptEngine* currentScriptEngine;
+<a name="l00269"></a>00269         <span class="keywordtype">short</span> m_ExampleProperty;
+<a name="l00270"></a>00270         TBVNetworkInterface *tbvNetwIntFace;
+<a name="l00271"></a>00271 };
+<a name="l00272"></a>00272 
+<a name="l00273"></a>00273 <span class="preprocessor">#endif // TBVExchanger_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 8 2013 13:22:09 for Turbo BrainVoyager Exchanger script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 6 2014 14:17:52 for Turbo BrainVoyager Exchanger script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

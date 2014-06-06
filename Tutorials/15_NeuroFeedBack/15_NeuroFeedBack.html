@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en_US" lang="en_US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="../../css/Default.css" rel="stylesheet" type="text/css" />
+<link href="../../google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script src="../../js/jquery.min.js" type="text/javascript"></script>
+<script src="../../js/jquery.tableofcontents.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/StimulGL.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../google-code-prettify/prettify.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+	var StimulGLInfo = new StimulGL_Information();
+	var DocTitle = StimulGLInfo.GetDocumentTitle(window.location.pathname);	
+	$(document).ready(function()
+		{ 
+			$("#toc").tableOfContents(
+				$("#toc_Area"),        // Scoped to div#toc_Area
+				{
+					startLevel: 2,    // H2 and up
+					depth:      4,    // H2 through H5,
+				}
+			); 
+			prettyPrint();			
+		}
+	);
+	document.write("<title>" + DocTitle + "</title>");	
+</script>
+</head>
+<body>
+<script type="text/javascript">StimulGLInfo.GetDocumentHeader(window.location.pathname)</script>
+<div id="toc_Area">
+<ul id="toc"></ul>
+<h2>Introduction</h2>
+<p>This tutorial (installed in the directory <em>StimulGL\examples\Tutorials\15_NeuroFeedBack</em>) shows an example of how you can make use of the default <a href="../../References/Script/TBVExchangerPlugin/Doxygen/class_t_b_v_exchanger.html">TBVExchanger plugin</a>, that can communicate with the <a href="http://www.brainvoyager.com/downloads/install_turbobrainvoyager.html" target="new">Turbo-BrainVoyager</a> (Version 3.2 or higher) software, and use this for creating a basic neurofeedback experiment.</p>
+<p><strong>Important!</strong> To successfully run this neurofeedback experiment we first have to make sure that we installed and configured the <a href="http://www.brainvoyager.com/downloads/install_turbobrainvoyager.html" target="new">Turbo-BrainVoyager</a> software correctly, for this please make use of the guidance of the Turbo-BrainVoyager <a href="http://www.brainvoyager.com/downloads/install_turbobrainvoyager.html" target="new">getting started guide</a>. <br />
+  Aside the <a href="../../References/Script/TBVExchangerPlugin/Doxygen/class_t_b_v_exchanger.html">TBVExchanger plugin</a> the script also makes use of a includes a common "<em>RealTimeFeedback.qs</em>" file that already implements the needed functionality for the communication with the <a href="http://www.brainvoyager.com/downloads/install_turbobrainvoyager.html" target="new">Turbo-BrainVoyager</a> software by making use of the <a href="../../References/Script/TBVExchangerPlugin/Doxygen/class_t_b_v_exchanger.html">TBVExchanger plugin</a>. Furthermore this included file itself also includes a common "<em>BasicQMLExperiment.qs</em>" file which supports the creation of experiments that make use of the <a href="http://qt-project.org/doc/qt-5/qmlapplications.html" target="new">QML language</a>.&nbsp;</p>
+<h2>Hands On</h2>
+<h3>The Motor Imagery experiment</h3>
+<p align="center"><img src="images/MotorImageryExperiment.png" alt="" width="324" height="274" /></p>
+<p>&nbsp; </p>
+<p>This Motor  Imagery experiment first tries to connect to the Turbo-BrainVoyager, on which  you have to execute the TCP/IP Data Export plugin, automatically over the TCP/IP  network. Turbo-BrainVoyager can run on the same computer as which is used for  running StimulGL. <br />
+An image of  a thermometer (which had 10 levels) will be presented in the center of a black  background (see figure). The surroundings of the thermometer indicates whether  the participant should perform hand movement (squeeze left hand; green) or  should rest (yellow). <br />
+This two  blocks last both for 20 seconds (10 triggers of 2 seconds) and they are  executed 10 times starting with the rest block.<br />
+Let's try  this:<br />
+On the  Turbo-BrainVoyager computer:</p>
+<ul>
+  <li>Start  Turbo-BrainVoyager</li>
+  <li>Go to &ldquo;Plugins&rdquo;  →&ldquo;TCP/IP Data Export -- Server&rdquo;. If you cannot see the plugin, please download  it from the BrainVoyager website.<strong></strong></li>
+  <li>In  the pop-up window that follows, enter port number &ldquo;55555&rdquo; and click on the &ldquo;OK&rdquo; button.</li>
+</ul>
+<p>On the  StimulGL computer:</p>
+<ul>
+  <li>Start  StimulGL</li>
+  <li>Open  the file<em> &quot;MotorImagery.qs&quot;</em> file from the directory <em>StimulGL\examples\Tutorials\15_NeuroFeedBack</em></li>
+  <li>Execute  this experiment file directly from within StimulGL by pressing the &lsquo;<em>F5</em>&rsquo; shortcut  key (<em>Execute</em>)</li>
+  <li>Select  &quot;<em>Testing_Mode</em>&quot; for the experiment mode</li>
+  <li>Press  the &lsquo;<em>Alt</em>&rsquo; key to unlock the experiment</li>
+</ul>
+<p>On the  Turbo-BrainVoyager computer:</p>
+<ul>
+  <li>Load  the experiment as described in the getting started guide.</li>
+  <li>To  test the setup we have to change the ForceTRDelay option in the Statistics tab  of the settings file to &ldquo;Yes&rdquo;. </li>
+  <li>Save  the settings and click on the Red record button in main user interface to start  the experiment.</li>
+</ul>
+<p>On the  StimulGL computer:</p>
+<ul>
+  <li>Press  the <em>'CTRL' + 't' </em>key combination to emulate the first experiment trigger  which starts the experiment in the selected &quot;<em>Testing_Mode</em>&quot;  that automatically emulates a trigger each 2 seconds.</li>
+  <li>Wait  20 seconds for the second (&quot;Feedback&quot;) block to execute and observe  how the the visual analogue scale gives a feedback about the brain activity  localized in the sma of the subject..</li>
+  <li>You  may use the <em>'CTRL' + &rsquo;a&rsquo;</em> (abort) key combination to abort the experiment  that is running.</li>
+</ul>
+<p>Let's  quickly examine the used <strong>Motor Imagery</strong> <strong>experiment</strong> files:</p>
+<ul>
+  <li>The  &quot;<em>MotorImagery.exml</em>&quot; file describes the <strong>experiment structure</strong>.  As explained above we can see that there are 2 blocks defined (&quot;Rest&quot;  and &quot;Feedback&quot;) which are executed after each other 10 times. Each  block lasts for 10 triggers which means that in testing mode each block takes  (10*2 seconds = ) 20 seconds.</li>
+  <li>The  &quot;<em>MotorImagery.qml</em>&quot; file describes the<strong> experiment visual  presentation</strong> and a function (&quot;<em>setTextAndBarLevelFunction()</em>&quot;)  that act as an interface between the <strong>experiment logic</strong> and the the  experiment visual presentation. This function accepts two parameters (<em>textString</em> and <em>nValue</em>) which are used to control the Visual Analogue Scale on the  screen while the experiment is running.</li>
+  <li>The  &quot;<em>MotorImagery.qs</em>&quot; script file describes the <strong>experiment  logic</strong>:</li>
+  <ul>
+    <li>The common &quot;<em>RealTimeFeedback.qs</em>&quot;  file is included for the needed functionality for the communication with the <a href="http://www.brainvoyager.com/downloads/install_turbobrainvoyager.html" target="new">Turbo-BrainVoyager</a> software by making use of the <a href="../../References/Script/TBVExchangerPlugin/Doxygen/class_t_b_v_exchanger.html">TBVExchanger plugin</a>.</li>
+    <li>An additional named  (&quot;MotorImagery&quot;) Output Window is added to the User Interface for  debugging and data logging purpose.</li>
+    <li>The to be used <em>MotorImagery.exml</em> and <em>MotorImagery.qml</em> file are set.</li>
+    <li>The <em>BasicExperiment.NewInitBlockTrial()</em> script function is overided and here is made sure that the &quot;<em>setTextAndBarLevelFunction()</em>&quot;  function defined in the <em>MotorImagery.qml</em> file is invoked at the each  time with the correct parameter values.</li>
+    <li>The <em>BasicExperiment.ExperimentStateChanged()</em> script function is overwritten and used to write some information to a Log  Output Window that is automatically saved to a file after the experiment is  aborted or stopped.</li>
+    <li>The <em>RealTimeFeedback.executePostStep()</em> script function which is called automatically by the<a href="../../References/Script/TBVExchangerPlugin/Doxygen/class_t_b_v_exchanger.html">TBVExchanger plugin</a> is used here to retrieve the mean value  of a pre-defined ROI by calling the <em>RealTimeFeedback.TBVExchangerObject.tGetMeanOfROI()</em> function and returning that value to a locally defined <em>CalculateAndStoreNewFeedBack(fRawValue)</em> function that further processes this value and, depending of the current  experiment block that is active, calls the &quot;<em>setTextAndBarLevelFunction()</em>&quot;  function defined in the <em>MotorImagery.qml</em> file with a mean calculated  value.</li>
+  </ul>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</body>
+</html>

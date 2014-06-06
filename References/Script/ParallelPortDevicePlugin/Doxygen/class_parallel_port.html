@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">Parallel Port Device script class
-   &#160;<span id="projectnumber">2.0.1.0</span>
+   &#160;<span id="projectnumber">2.1.1.0</span>
    </div>
    <div id="projectbrief">Parallel Port Device script class reference.</div>
   </td>
@@ -92,14 +92,14 @@ Signals</h2></td></tr>
 <tr class="memdesc:a1692e20b6bf32803b583cc422574471c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The CaptureThreadStarted Signal.  <a href="#a1692e20b6bf32803b583cc422574471c"></a><br/></td></tr>
 <tr class="memitem:ae4879e4a1fe35c5e851069b6b4e12b33"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_parallel_port.html#ae4879e4a1fe35c5e851069b6b4e12b33">CaptureThreadStopped</a> (QString)</td></tr>
 <tr class="memdesc:ae4879e4a1fe35c5e851069b6b4e12b33"><td class="mdescLeft">&#160;</td><td class="mdescRight">The CaptureThreadStopped Signal.  <a href="#ae4879e4a1fe35c5e851069b6b4e12b33"></a><br/></td></tr>
-<tr class="memitem:a77984e843487ceaac94ee2927951724c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_parallel_port.html#a77984e843487ceaac94ee2927951724c">CaptureThreadTriggered</a> (short PortValue)</td></tr>
-<tr class="memdesc:a77984e843487ceaac94ee2927951724c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The CaptureThreadTriggered Signal.  <a href="#a77984e843487ceaac94ee2927951724c"></a><br/></td></tr>
+<tr class="memitem:acc519fd8d7e81ec7f8b785a60347427d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_parallel_port.html#acc519fd8d7e81ec7f8b785a60347427d">CaptureThreadTriggered</a> (int PortValue)</td></tr>
+<tr class="memdesc:acc519fd8d7e81ec7f8b785a60347427d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The CaptureThreadTriggered Signal.  <a href="#acc519fd8d7e81ec7f8b785a60347427d"></a><br/></td></tr>
 <tr class="memitem:ae1ef33f87290040f4b54694977a23835"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_parallel_port.html#ae1ef33f87290040f4b54694977a23835">GenerateThreadStarted</a> (QString DateTimeStamp)</td></tr>
 <tr class="memdesc:ae1ef33f87290040f4b54694977a23835"><td class="mdescLeft">&#160;</td><td class="mdescRight">The GenerateThreadStarted Signal.  <a href="#ae1ef33f87290040f4b54694977a23835"></a><br/></td></tr>
 <tr class="memitem:a8c94ab9119a0b91e11daaf7d664754cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_parallel_port.html#a8c94ab9119a0b91e11daaf7d664754cc">GenerateThreadStopped</a> (QString)</td></tr>
 <tr class="memdesc:a8c94ab9119a0b91e11daaf7d664754cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The GenerateThreadStopped Signal.  <a href="#a8c94ab9119a0b91e11daaf7d664754cc"></a><br/></td></tr>
-<tr class="memitem:ad81583aa8878a58f921bfea6ebf1dd11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_parallel_port.html#ad81583aa8878a58f921bfea6ebf1dd11">GenerateThreadTriggered</a> (short PortValue)</td></tr>
-<tr class="memdesc:ad81583aa8878a58f921bfea6ebf1dd11"><td class="mdescLeft">&#160;</td><td class="mdescRight">The GenerateThreadTriggered Signal.  <a href="#ad81583aa8878a58f921bfea6ebf1dd11"></a><br/></td></tr>
+<tr class="memitem:ae1cade7f1666ca9ef98df4f2392508fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_parallel_port.html#ae1cade7f1666ca9ef98df4f2392508fe">GenerateThreadTriggered</a> (int PortValue)</td></tr>
+<tr class="memdesc:ae1cade7f1666ca9ef98df4f2392508fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">The GenerateThreadTriggered Signal.  <a href="#ae1cade7f1666ca9ef98df4f2392508fe"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a1329cb6d1ed3d7bea51b1c7bb8c8729c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_parallel_port.html#a1329cb6d1ed3d7bea51b1c7bb8c8729c">ParallelPort</a> (short BaseAddress=888, QObject *parent=0)</td></tr>
@@ -301,14 +301,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a77984e843487ceaac94ee2927951724c"></a>
+<a class="anchor" id="acc519fd8d7e81ec7f8b785a60347427d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class_parallel_port.html#a77984e843487ceaac94ee2927951724c">ParallelPort::CaptureThreadTriggered</a> </td>
+          <td class="memname">void <a class="el" href="class_parallel_port.html#acc519fd8d7e81ec7f8b785a60347427d">ParallelPort::CaptureThreadTriggered</a> </td>
           <td>(</td>
-          <td class="paramtype">short&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>PortValue</em></td><td>)</td>
           <td><code> [signal]</code></td>
         </tr>
@@ -465,14 +465,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad81583aa8878a58f921bfea6ebf1dd11"></a>
+<a class="anchor" id="ae1cade7f1666ca9ef98df4f2392508fe"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="class_parallel_port.html#ad81583aa8878a58f921bfea6ebf1dd11">ParallelPort::GenerateThreadTriggered</a> </td>
+          <td class="memname">void <a class="el" href="class_parallel_port.html#ae1cade7f1666ca9ef98df4f2392508fe">ParallelPort::GenerateThreadTriggered</a> </td>
           <td>(</td>
-          <td class="paramtype">short&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>PortValue</em></td><td>)</td>
           <td><code> [signal]</code></td>
         </tr>
@@ -878,7 +878,7 @@ Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 8 2013 13:22:06 for Parallel Port Device script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 6 2014 14:17:49 for Parallel Port Device script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

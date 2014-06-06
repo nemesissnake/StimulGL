@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">StimulGL QML Extensions
-   &#160;<span id="projectnumber">1.1</span>
+   &#160;<span id="projectnumber">1.2</span>
    </div>
    <div id="projectbrief">The StimulGL QML Extensions class references.</div>
   </td>
@@ -64,12 +64,16 @@ Public Slots</h2></td></tr>
 <tr class="memdesc:a83613c50a52acef5f8612a4fe4b1ad79"><td class="mdescLeft">&#160;</td><td class="mdescRight">createLightSource slot.  <a href="#a83613c50a52acef5f8612a4fe4b1ad79"></a><br/></td></tr>
 <tr class="memitem:a74b767d750ce5c74b6381f2899de64c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ogre_item.html#a74b767d750ce5c74b6381f2899de64c2">createSceneNode</a> (const QString &amp;sNodeName, const QString &amp;sEntityName, const float &amp;xPos, const float &amp;yPos, const float &amp;zPos)</td></tr>
 <tr class="memdesc:a74b767d750ce5c74b6381f2899de64c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">createSceneNode slot.  <a href="#a74b767d750ce5c74b6381f2899de64c2"></a><br/></td></tr>
+<tr class="memitem:a38483384730843b25c996fe71c5b26fc"><td class="memItemLeft" align="right" valign="top">QObject *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ogre_item.html#a38483384730843b25c996fe71c5b26fc">getLightSource</a> (const QString &amp;sLightName)</td></tr>
+<tr class="memdesc:a38483384730843b25c996fe71c5b26fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">getLightSource slot.  <a href="#a38483384730843b25c996fe71c5b26fc"></a><br/></td></tr>
 <tr class="memitem:a67996c8147b67da9bd0872158d2bab87"><td class="memItemLeft" align="right" valign="top">QVector3D&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ogre_item.html#a67996c8147b67da9bd0872158d2bab87">getObjectBoundingBoxCenter</a> (const QString &amp;sSceneNodeName, const QString &amp;sObjectName)</td></tr>
 <tr class="memdesc:a67996c8147b67da9bd0872158d2bab87"><td class="mdescLeft">&#160;</td><td class="mdescRight">getObjectBoundingBoxCenter slot.  <a href="#a67996c8147b67da9bd0872158d2bab87"></a><br/></td></tr>
 <tr class="memitem:aac31dd084351a3e1bd9dc2070de43d5a"><td class="memItemLeft" align="right" valign="top">QVector3D&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ogre_item.html#aac31dd084351a3e1bd9dc2070de43d5a">getObjectBoundingBoxSize</a> (const QString &amp;sSceneNodeName, const QString &amp;sObjectName)</td></tr>
 <tr class="memdesc:aac31dd084351a3e1bd9dc2070de43d5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">getObjectBoundingBoxSize slot.  <a href="#aac31dd084351a3e1bd9dc2070de43d5a"></a><br/></td></tr>
 <tr class="memitem:a643c480f3961f5bca2808688474c3781"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ogre_item.html#a643c480f3961f5bca2808688474c3781">setAmbientColor</a> (const int &amp;nRed, const int &amp;nGreen, const int &amp;nBlue, const int &amp;nAlpha=255)</td></tr>
 <tr class="memdesc:a643c480f3961f5bca2808688474c3781"><td class="mdescLeft">&#160;</td><td class="mdescRight">setAmbientColor slot.  <a href="#a643c480f3961f5bca2808688474c3781"></a><br/></td></tr>
+<tr class="memitem:a54f06174e6a27699052b13a4963320de"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ogre_item.html#a54f06174e6a27699052b13a4963320de">setMaterialName</a> (const QString &amp;sEntityName, const QString &amp;sMaterial)</td></tr>
+<tr class="memdesc:a54f06174e6a27699052b13a4963320de"><td class="mdescLeft">&#160;</td><td class="mdescRight">setMaterialName slot.  <a href="#a54f06174e6a27699052b13a4963320de"></a><br/></td></tr>
 <tr class="memitem:a122c5b65857dde7b4dd5fa8c42047a0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_ogre_item.html#a122c5b65857dde7b4dd5fa8c42047a0c">setObjectVisibility</a> (const QString &amp;sSceneNodeName, const QString &amp;sObjectName, const bool &amp;bVisible)</td></tr>
 <tr class="memdesc:a122c5b65857dde7b4dd5fa8c42047a0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">setObjectVisibility slot.  <a href="#a122c5b65857dde7b4dd5fa8c42047a0c"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="signals"></a>
@@ -274,6 +278,33 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a38483384730843b25c996fe71c5b26fc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QObject* <a class="el" href="class_ogre_item.html#a38483384730843b25c996fe71c5b26fc">OgreItem::getLightSource</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>sLightName</em></td><td>)</td>
+          <td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>getLightSource slot. </p>
+<p>This function returns a pointer to an QObject (OgreLightNode *) containing a specific light source defined by its name. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sLightName</td><td>a string value that contains the name of the light source </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a pointer to an QObject (OgreLightNode *) containing a specific light source, in case of a failure this function return a NULL value. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a67996c8147b67da9bd0872158d2bab87"></a>
 <div class="memitem">
 <div class="memproto">
@@ -440,6 +471,44 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a54f06174e6a27699052b13a4963320de"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="class_ogre_item.html#a54f06174e6a27699052b13a4963320de">OgreItem::setMaterialName</a> </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>sEntityName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>sMaterial</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [slot]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>setMaterialName slot. </p>
+<p>This function sets the material of an entity from the scene. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sEntityName</td><td>a string value that contains the name of the scene entity </td></tr>
+    <tr><td class="paramname">sMaterial</td><td>a string value that contains the material to use. This name should be the same as the (*.material) file which is present in the same directory as the (*.mesh) file and defines the material with provided material name. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns:</dt><dd>a boolean value determining whether the function executed successfully. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a122c5b65857dde7b4dd5fa8c42047a0c"></a>
 <div class="memitem">
 <div class="memproto">
@@ -505,7 +574,7 @@ Properties</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 8 2013 13:22:07 for StimulGL QML Extensions by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 6 2014 14:17:50 for StimulGL QML Extensions by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

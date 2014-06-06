@@ -17,7 +17,7 @@ var sBinairyPath;
 
 var sInstallerAppName = tr("StimulGL");//StimulGL
 var sInstallerConfiguration = tr("win32");//win32 or x64
-var sInstallerVersion = tr("2.1.0.0");//<Major>.<Minor>.<Build>.<Revision>
+var sInstallerVersion = tr("2.2.0.0");//<Major>.<Minor>.<Build>.<Revision>
 var sInstallerPlatform = tr("Windows");
 
 //var sQtDirectory_default = tr("C:/Qt/4.8.0");

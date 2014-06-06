@@ -183,7 +183,7 @@
         &quot;MovingBar&quot; or<br />
         &quot;MovingDots&quot; or<br />
         &quot;Fixation&quot;)<br />
-        (Deafult = &ldquo;PolarAngle&rdquo;)</p></td>
+        (Default = &ldquo;PolarAngle&rdquo;)</p></td>
       <td><p>With this parameter we can define the Retinotopic Mapping type we want to use.</p></td>
     </tr>
     <tr>
@@ -214,12 +214,12 @@
     </tr>
     <tr>
       <td><p>StimulusWidthSpan</p></td>
-      <td><p>Float value (default = the screen height, to make it square!)</p></td>
+      <td><p>Float value (default = 480 pixels)</p></td>
       <td><p>This parameter defines the width for the active stimuli area on the screen.</p></td>
     </tr>
     <tr>
       <td><p>StimulusHeightSpan</p></td>
-      <td><p>Float value (default = the screen height)</p></td>
+      <td><p>Float value (default = 480 pixels)</p></td>
       <td><p>This parameter defines the height for the active stimuli area on the screen.</p></td>
     </tr>
     <tr>
@@ -276,6 +276,11 @@
       <td><p>The number of rings inside the wedge along the wedge direction.</p></td>
     </tr>
     <tr>
+      <td><p>PolarWedgeSpan</p></td>
+      <td><p>Float value (&gt;0 &amp;&amp; &lt;=360) (default = 22.5)</p></td>
+      <td><p>The total wedge span angle in degrees.</p></td>
+    </tr> 
+    <tr>
       <td><p>PolarRotationDirection</p></td>
       <td><p>Integer value  (1 or -1) (default = 1)</p></td>
       <td><p>The rotation direction of the wedge, 1 = Clockwise, -1 = Counterclockwise rotation.</p></td>
@@ -287,7 +292,7 @@
     </tr>
     <tr>
       <td><p>CycleTriggerAmount</p></td>
-      <td><p>Integer value (&gt;0) (default = nr_of_internal_triggers)</p></td>
+      <td><p>Integer value (&gt;0) (default = 1)</p></td>
       <td><p>The duration of a full wedge cycle (360 degrees) in number of internal triggers, see above parameter.</p></td>
     </tr>
     <tr>
@@ -338,12 +343,12 @@
     </tr>
     <tr>
       <td><p>RandomizeTriggerStepsArray</p></td>
-      <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+      <td><p>None, One or more integer values (&gt;=0) seperated by a ',' (default = &quot;&quot;, empty array)</p></td>
       <td><p>This parameter is only taken into account if the 'RandomizeTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
     </tr>
     <tr>
       <td><p>EmptyTriggerStepsArray</p></td>
-      <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+      <td><p>None, One or more integer values (&gt;=0) seperated by a ',' (default = &quot;&quot;, empty array)</p></td>
       <td><p>This parameter is only taken into account if the 'EmptyTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
       </tr>
   </tbody>
@@ -586,12 +591,12 @@ rings are also equally divided over the wedge (B).</p>
     </tr>
     <tr>
       <td><p>RandomizeTriggerStepsArray</p></td>
-      <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+      <td><p>None, One or more integer values (&gt;=0) seperated by a ',' (default = &quot;&quot;, empty array)</p></td>
       <td><p>This parameter is only taken into account if the 'RandomizeTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
     </tr>
     <tr>
       <td><p>EmptyTriggerStepsArray</p></td>
-      <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+      <td><p>None, One or more integer values (&gt;=0) seperated by a ',' (default = &quot;&quot;, empty array)</p></td>
       <td><p>This parameter is only taken into account if the 'EmptyTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
     </tr>
   </tbody>
@@ -824,12 +829,12 @@ the bar width (in the direction of the fixation point). The bar angle remains th
   </tr>
   <tr>
     <td><p>RandomizeTriggerStepsArray</p></td>
-    <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+    <td><p>None, One or more integer values (&gt;=0) seperated by a ',' (default = &quot;&quot;, empty array)</p></td>
     <td><p>This parameter is only taken into account if the 'RandomizeTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
   </tr>
   <tr>
     <td><p>EmptyTriggerStepsArray</p></td>
-    <td><p>None, One or more integer values (&gt;=0) seperated by a ','</p></td>
+    <td><p>None, One or more integer values (&gt;=0) seperated by a ',' (default = &quot;&quot;, empty array)</p></td>
     <td><p>This parameter is only taken into account if the 'EmptyTriggerSteps' parameter is set to true. The default randomization is overridden by the value(s) defined here seperated by a comma. Each value refers to a specific index of the stimuli.</p></td>
   </tr>
   <br />
@@ -983,26 +988,6 @@ the screen a fixation point (red) is shown. </p>
     <th><p>Definition</p></td>
   </tr>
   <tr>
-    <td><p>CheckerColor1</p></td>
-    <td><p>HEX string representing a RGB color, see color format (default = #FFFFFF)</p></td>
-    <td><p>Use this parameter to change the color of the first checker</p></td>
-  </tr>
-  <tr>
-    <td><p>CheckerColor2</p></td>
-    <td><p>HEX string representing a RGB color, see color format (default = #000000)</p></td>
-    <td><p>Use this parameter to change the color of the second checker</p></td>
-  </tr>
-  <tr>
-    <td><p>FlickrFrequency</p></td>
-    <td><p>Float value (&gt;0.0) (default = 5)</p></td>
-    <td><p>The frequency of the flicker cycle(when the checkers change color). Ideally this value is equal to the StimuliRefreshRate parameter divided by an integer value</p></td>
-  </tr>
-  <tr>
-    <td><p>InternalTriggerDuration</p></td>
-    <td><p>Float value (&gt;0.0) (default = 2000.0)</p></td>
-    <td><p>The expected internal trigger period time duration, normally this is equal to the Trigger object interval time</p></td>
-  </tr>
-  <tr>
     <td><p>MovingDotsColor</p></td>
     <td><p>HEX string representing a RGB color, see color format (default = #FFFFFF)</p></td>
     <td><p>Use this parameter to change the color of the moving dots</p></td>
@@ -1051,12 +1036,12 @@ the screen a fixation point (red) is shown. </p>
   </tr>
   <tr>
     <td><p>MovingDotsHemiFieldWidth</p></td>
-    <td><p>Integer value (&gt;0) (default = StimulusWidthSpan/2)</p></td>
+    <td><p>Integer value (&gt;0) (default = 320)</p></td>
     <td><p>This defines the width of one Hemifield (including the MovingDotsPixelFromCenter), see the above yellow square.</p></td>
   </tr>
   <tr>
     <td><p>MovingDotsFieldHemiHeight</p></td>
-    <td><p>Integer value (&gt;0) (default = StimulusHeightSpan)</p></td>
+    <td><p>Integer value (&gt;0) (default = 240)</p></td>
     <td><p>This defines the height of one Hemifield, see the above yellow square.</p></td>
   </tr>
   <br />

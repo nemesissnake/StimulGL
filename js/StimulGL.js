@@ -34,7 +34,7 @@ function StimulGL_CreateArray(length)
 function StimulGL_Information()
 {
 	//alert('StimulGL constructor');
-	this.StimulGLReleases = [['2.0.0.2', '4.8.0', '1.0.0.1'], ['2.0.0.3', '4.8.0', '1.0.0.1'], ['2.1.0.0', '5.1.0', '1.0.0.1']];//, ['2.0.0.4', '4.8.0', '1.0.0.1']];
+	this.StimulGLReleases = [['2.0.0.2', '4.8.0', '1.0.0.1'], ['2.0.0.3', '4.8.0', '1.0.0.1'], ['2.1.0.0', '5.1.0', '1.0.0.1'], ['2.2.0.0', '5.1.0', '1.0.0.1']];//, ['2.0.0.4', '4.8.0', '1.0.0.1']];
 	var PropCounter = 0;
 	var AuthorCounter = 0;
 	var ComponentCounter = 0;
@@ -221,7 +221,48 @@ function StimulGL_Information()
 	this.DocumentAuditing[10] = ['SerialPortDevicePlugin.html','SerialPort Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
 	this.DocumentAuditing[11] = ['TCPNetworkServerPlugin.html','TCPNetwork Server Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
 	this.DocumentAuditing[12] = ['StimulGL_QMLExtensions.html','StimulGL QML Extensions Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];					
-	this.DocumentAuditing[13] = ['6_RetinoTopicMappingOutput.html','Retinotopic Mapping output files Tutorial','1.0.0.1','Oktober 2013','Sven Gijsen'];		
+	this.DocumentAuditing[13] = ['6_RetinoTopicMappingOutput.html','Retinotopic Mapping output files Tutorial','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	
+	//StimulGL version (2.2.0.0), latest release
+	///////////////////////////////////////////////////////////////
+	nNumberOfComponentChanges = 8;//See below, increment by adding new changes for this release!
+	tmpArray = StimulGL_CreateArray(1,nNumberOfComponentChanges,PropCounter);
+	this.componentVersioning.push.apply(this.componentVersioning, tmpArray)//		Name,	Version,  Product, StimGLVersionIndex, EXML, Device, Interface
+	this.componentVersioning[3][ExperimentManagerPlugin_Comp_Index] = 	['ExperimentManagerPlugin',	'2.2.0.0', '1.0.0.1', 3, '2.2.0.0', '1.2',  '1.2'];
+	this.componentVersioning[3][ParallelPortPlugin_Comp_Index] =        ['ParallelPortPlugin',      '2.1.1.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][SerialPortPlugin_Comp_Index] =          ['SerialPortPlugin',        '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][KeyBoardPlugin_Comp_Index] =            ['KeyBoardPlugin',          '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][USBHIDDevicePlugin_Comp_Index] =        ['USBHIDDevicePlugin',      '2.1.1.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][_extensionname_plugin_Comp_Index] =     ['_extensionname_plugin',   '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.2',     '1.0.0.1', 3, 'x',       'x',    'x'];
+	this.componentVersioning[3][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '2',       '1.0.0.1', 3, 'x',       'x',    'x'];
+	this.componentVersioning[3][FirebirdClientPlugin_Comp_Index] =      ['FireBirdClientPlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][PiezoStimDevicePlugin_Comp_Index] =     ['PiezoStimDevicePlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][TBVExchangerPlugin_Comp_Index] =        ['TBVExchangerPlugin',     '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][TCPNetworkServerPlugin_Comp_Index] =    ['TCPNetworkServerPlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+
+	this.DocumentAuditing = StimulGL_CreateArray(15, AuthorCounter); //Default constructor!
+	///////////////////////////////////////////////////////////////
+	this.DocumentAuditing[0][this.Doc_FileName_Index] = 'GettingStartedGuide.html';
+	this.DocumentAuditing[0][this.Doc_Title_Index] = 'Getting Started Guide';
+	this.DocumentAuditing[0][this.Doc_Version_Index] = '1.1.1.0';
+	this.DocumentAuditing[0][this.Doc_Date_Index] = 'June 2014';
+	this.DocumentAuditing[0][this.Doc_Authors_Index] = 'Sven Gijsen';
+	
+	this.DocumentAuditing[1] = ['PreBuildDevelopmentSetup.html','Pre Build Development Setup','1.0.1.0','September 2013','Sven Gijsen'];
+	this.DocumentAuditing[2] = ['ExperimentManagerPlugin.html','Experiment Manager Plug-in Documentation','1.1.1.0','June 2014','Sven Gijsen'];
+	this.DocumentAuditing[3] = ['ParallelPortDevicePlugin.html','Parallel Port Plug-in Documentation','2.1.0.2','June 2014','Sven Gijsen'];	
+	this.DocumentAuditing[4] = ['USBHIDDevicePlugin.html','USBHID Device Plug-in Documentation','2.0.0.2','September 2013','Sven Gijsen'];		
+	this.DocumentAuditing[5] = ['ExtensionPluginTemplate.html','Extension Plug-in Template Documentation','2.0.0.2','September 2013','Sven Gijsen'];	
+	this.DocumentAuditing[6] = ['TBVExchangerPlugin.html','Turbo-BrainVoyager Exchanger Plug-in Documentation','1.1.0.1','June 2014','Michael Luehrs'];
+	this.DocumentAuditing[7] = ['FireBirdClientPlugin.html','Firebird Client Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];		
+	this.DocumentAuditing[8] = ['KeyBoardDevicePlugin.html','Keyboard Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	this.DocumentAuditing[9] = ['PiezoStimDevicePlugin.html','PiezoStim Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	this.DocumentAuditing[10] = ['SerialPortDevicePlugin.html','SerialPort Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	this.DocumentAuditing[11] = ['TCPNetworkServerPlugin.html','TCPNetwork Server Device Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];	
+	this.DocumentAuditing[12] = ['StimulGL_QMLExtensions.html','StimulGL QML Extensions Plug-in Documentation','1.1.0.1','June 2014','Sven Gijsen'];					
+	this.DocumentAuditing[13] = ['6_RetinoTopicMappingOutput.html','Retinotopic Mapping output files Tutorial','1.1.0.1','June 2014','Sven Gijsen'];	
+	this.DocumentAuditing[14] = ['15_NeuroFeedBack.html','NeuroFeedback Tutorial (with TBVExchanger plugin)','1.1.0.1','June 2014','Sven Gijsen'];
 }
 
 StimulGL_Information.prototype.GetStrippedFileName = function (strFileUrl)//var strFileUrl=window.location.pathname;
@@ -414,7 +455,7 @@ StimulGL_Information.prototype.GetComponentExtensionInterfaceVersionByIndexes = 
 }
 
 StimulGL_Information.prototype.GetMainAppCopyrightString = function ()
-{ return 'Copyright (C) 2013'; }
+{ return 'Copyright (C) 2014'; }
 
 StimulGL_Information.prototype.GetMainAppCompanyName = function ()
 {	return 'MBIC, Maastricht Brain Imaging Center'; }

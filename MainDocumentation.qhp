@@ -9,6 +9,7 @@
 								<section title="Getting Started Guide" ref="./Tutorials/GettingStarted/GettingStartedGuide.html"></section>
 								<section title="Examples and Tutorials" ref="./Tutorials/index.html">
 									<section title="Retinotopic Mapping output files" ref="./Tutorials/6_RetinoTopicMappingOutput/6_RetinoTopicMappingOutput.html"></section>
+									<section title="NeuroFeedback Tutorial (with TBVExchanger plugin)" ref="./Tutorials/15_NeuroFeedBack/15_NeuroFeedBack.html"></section>
 								</section>
 		            
 		            <section title="Plugins" ref="./References/Plugins/PluginReference.html">
@@ -151,7 +152,10 @@
 						<file>Tutorials/images/*.gif</file>
 						<file>Tutorials/6_RetinoTopicMappingOutput/*.*</file>
 						<file>Tutorials/6_RetinoTopicMappingOutput/images/*.png</file>
-						<file>Tutorials/6_RetinoTopicMappingOutput/images/*.gif</file>						
+						<file>Tutorials/6_RetinoTopicMappingOutput/images/*.gif</file>
+						<file>Tutorials/15_NeuroFeedBack/*.*</file>
+						<file>Tutorials/15_NeuroFeedBack/images/*.png</file>
+						<file>Tutorials/15_NeuroFeedBack/images/*.gif</file>										
             </files>
         </filterSection>
     </QtHelpProject>

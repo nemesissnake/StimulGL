@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">ExperimentManager script class
-   &#160;<span id="projectnumber">2.1.0.0</span>
+   &#160;<span id="projectnumber">2.2.0.0</span>
    </div>
    <div id="projectbrief">The Experiment Manager script class reference.</div>
   </td>
@@ -45,7 +45,7 @@
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//ExperimentManagerplugin</span>
-<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2013  Sven Gijsen</span>
+<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2014  Sven Gijsen</span>
 <a name="l00003"></a>00003 <span class="comment">//</span>
 <a name="l00004"></a>00004 <span class="comment">//This file is part of StimulGL.</span>
 <a name="l00005"></a>00005 <span class="comment">//StimulGL is free software: you can redistribute it and/or modify</span>
@@ -178,135 +178,137 @@
 <a name="l00156"></a>00156         <span class="keywordtype">void</span> initializeMovingDotsStructures();
 <a name="l00157"></a>00157         QString booleanToParamString(<span class="keywordtype">bool</span> bValue);
 <a name="l00158"></a>00158         <span class="keywordtype">bool</span> paramStringToBool(QString sValue);
-<a name="l00159"></a>00159 
-<a name="l00160"></a>00160         QScriptValue *customScriptHandlerFunction;
-<a name="l00161"></a>00161         RetinotopyMapperWindow *retinoMapperWindow;
-<a name="l00162"></a>00162         <span class="keywordtype">int</span> nRefreshRate;
-<a name="l00163"></a>00163         <span class="comment">//int nRetinoID;                                                                //This variable stores the ObjectID used to identify the object</span>
-<a name="l00164"></a>00164         QString currentExpType;                                         <span class="comment">//The experiment type used, see RetinoMapExperimentType</span>
-<a name="l00165"></a>00165         <span class="keywordtype">bool</span> firstBlockTrialPaintFrame;                         <span class="comment">//To determine whether it&#39;s the first frame to paint from a new Block trial</span>
-<a name="l00166"></a>00166         QColor colorBackground;                                         <span class="comment">//The color of the background</span>
-<a name="l00167"></a>00167         QBrush brushBackground;                                         <span class="comment">//The background brush</span>
-<a name="l00168"></a>00168         QFont textFont;                                                         <span class="comment">//The font used for text(debug mode)</span>
-<a name="l00169"></a>00169         QPen textPen;                                                           <span class="comment">//The pen used for text(debug mode)</span>
-<a name="l00170"></a>00170         QColor whiteColor;                                                      <span class="comment">//The color used for the activation map (active)</span>
-<a name="l00171"></a>00171         QColor blackColor;                                                      <span class="comment">//The color used for the activation map (inactive)</span>
-<a name="l00172"></a>00172         QString textContent;                                            <span class="comment">//Variable to store the text string</span>
-<a name="l00173"></a>00173         QRectF rectScreenRes;                                           <span class="comment">//The screen resolution</span>
-<a name="l00174"></a>00174         <span class="keywordtype">float</span> flickrThreshold;                                          <span class="comment">//Variable for keeping track of the next flickr switch threshold time</span>
-<a name="l00175"></a>00175         <span class="keywordtype">float</span> flickrSpeedFreq;                                          <span class="comment">//The flickr speed frequency</span>
-<a name="l00176"></a>00176         <span class="keywordtype">int</span> flickrSwitch;                                                       <span class="comment">//Variable to store the current flickr state</span>
-<a name="l00177"></a>00177         <span class="keywordtype">int</span> cycleTriggerAmount;                                         <span class="comment">//The total block duration in amount of triggers</span>
-<a name="l00178"></a>00178         <span class="keywordtype">int</span> triggerDurationMsec;                                        <span class="comment">//The duration of one trigger in mSec</span>
-<a name="l00179"></a>00179         <span class="keywordtype">float</span> stimWidthPixelAmount;                                     <span class="comment">//The amount of visible stimuli pixels(height)</span>
-<a name="l00180"></a>00180         <span class="keywordtype">float</span> stimHeigthPixelAmount;                            <span class="comment">//The amount of visible stimuli pixels(width)</span>
-<a name="l00181"></a>00181         QColor fixationColor;                                           <span class="comment">//The color of the fixation dot/cross</span>
-<a name="l00182"></a>00182         <span class="keywordtype">int</span> fixationSize;                                                       <span class="comment">//The width of the fixation dot/cross</span>
-<a name="l00183"></a>00183         <span class="keywordtype">bool</span> showFixationPoint;                                         <span class="comment">//Should we show an fixation point?</span>
-<a name="l00184"></a>00184         <span class="keywordtype">bool</span> outputTriggerFrame;                                        <span class="comment">//Defines whether we should output(write to a *.png file) the first frame</span>
-<a name="l00185"></a>00185         <span class="keywordtype">bool</span> discreteTriggerSteps;                                      <span class="comment">//Defines whether the stimuli should run smooth or in discrete steps according to each trigger received</span>
-<a name="l00186"></a>00186         <span class="keywordtype">bool</span> randomizeTriggerSteps;                                     <span class="comment">//Defines whether the stimuli should randomize after each trigger received</span>
-<a name="l00187"></a>00187         <span class="keywordtype">bool</span> antiAliasing;                                                      <span class="comment">//Defines whether the anti-aliasing filter should be used for painting to the screen</span>
-<a name="l00188"></a>00188         <span class="comment">//int lastTriggerNumber;                                                //To keep track of the last trigger number</span>
-<a name="l00189"></a>00189         <span class="keywordtype">int</span> emptyTriggerSteps;                                          <span class="comment">//Defines the number of Trigger steps in which no stimuli should be presented</span>
-<a name="l00190"></a>00190         QStringList emptyTriggerStepsArray;
-<a name="l00191"></a>00191         QStringList randomizeTriggerStepsArray;
-<a name="l00192"></a>00192         <span class="keywordtype">bool</span> bNoChangesSinceLastFrame;
-<a name="l00193"></a>00193         <a class="code" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> *experimentManager;
-<a name="l00194"></a>00194 
-<a name="l00195"></a>00195         QColor movingDotsColor;
-<a name="l00196"></a>00196         QColor cCheckerColor1;
-<a name="l00197"></a>00197         QColor cCheckerColor2;
-<a name="l00198"></a>00198         Qt::PenStyle style;
-<a name="l00199"></a>00199         Qt::PenCapStyle flatCap;
-<a name="l00200"></a>00200         Qt::PenCapStyle roundCap;
-<a name="l00201"></a>00201         QString tmpParamValue;
-<a name="l00202"></a>00202         <span class="comment">//float fStimulusDiameter;</span>
-<a name="l00203"></a>00203         <span class="keywordtype">double</span> dStimulusDiameter;
-<a name="l00204"></a>00204         <span class="keywordtype">float</span> fTrialTimeProgress;
-<a name="l00205"></a>00205         <span class="keywordtype">float</span> fCortMagTrialTimeProgress;
-<a name="l00206"></a>00206         <span class="keywordtype">bool</span> bCreateActivationMap;
-<a name="l00207"></a>00207         <span class="keywordtype">int</span> currExpBlockTrialCycle;
-<a name="l00208"></a>00208         <span class="keywordtype">bool</span> nextNewCycleEntered;
-<a name="l00209"></a>00209         <span class="keywordtype">bool</span> nextNewBlockEntered;
-<a name="l00210"></a>00210         <span class="keywordtype">float</span> cortMagFactor;
-<a name="l00211"></a>00211         <span class="keywordtype">int</span> gapDiameter;
-<a name="l00212"></a>00212         <span class="keywordtype">float</span> wedgeSpanAngle;
-<a name="l00213"></a>00213         <span class="keywordtype">float</span> currentWedgeDiameter;
-<a name="l00214"></a>00214         <span class="keywordtype">float</span> currentCompleteWedgeDiameter;
-<a name="l00215"></a>00215         <span class="comment">//float currentSize;</span>
-<a name="l00216"></a>00216         <span class="keywordtype">double</span> dCurrentSize;
-<a name="l00217"></a>00217         <span class="keywordtype">float</span> currentOuterCompleteRingDiameter;
-<a name="l00218"></a>00218         <span class="keywordtype">float</span> currentXPoint;
-<a name="l00219"></a>00219         <span class="keywordtype">float</span> currentYPoint;
-<a name="l00220"></a>00220         <span class="keywordtype">float</span> currentStartAngle;
-<a name="l00221"></a>00221         <span class="keywordtype">bool</span> disableCortMagFac;
-<a name="l00222"></a>00222         <span class="keywordtype">bool</span> enableCortMagTiming;
-<a name="l00223"></a>00223         <span class="keywordtype">int</span> emptyTriggerLastIndex;
-<a name="l00224"></a>00224         <span class="keywordtype">int</span> emptyTriggerStepCount;
-<a name="l00225"></a>00225         <span class="keywordtype">bool</span> bAllTrialEmptyProcessed;
-<a name="l00226"></a>00226         <span class="comment">//bool allEmptyBlockTrialsProcessed;</span>
-<a name="l00227"></a>00227 
-<a name="l00228"></a>00228         <span class="comment">//Polar</span>
-<a name="l00229"></a>00229         <span class="keywordtype">float</span> polarWedgeSpan;
-<a name="l00230"></a>00230         <span class="keywordtype">int</span> polarWedgeNrChecks;
-<a name="l00231"></a>00231         <span class="keywordtype">int</span> polarWedgeNrRings;
-<a name="l00232"></a>00232         <span class="keywordtype">int</span> polarRotationDirection;
-<a name="l00233"></a>00233 
-<a name="l00234"></a>00234         <span class="comment">//Eccentricity</span>
-<a name="l00235"></a>00235         <span class="keywordtype">int</span> eccentricityNrChecks;
-<a name="l00236"></a>00236         <span class="keywordtype">int</span> eccentricityNrRings;
-<a name="l00237"></a>00237         <span class="keywordtype">int</span> eccentricityDirection;
-<a name="l00238"></a>00238         <span class="keywordtype">float</span> fCalculatedCortMagFacTimingConst;
-<a name="l00239"></a>00239 
-<a name="l00240"></a>00240         <span class="comment">//MovingBar</span>
-<a name="l00241"></a>00241         <span class="keywordtype">float</span> movingBarAngle;
-<a name="l00242"></a>00242         <span class="keywordtype">float</span> movingBarCoverage;
-<a name="l00243"></a>00243         <span class="keywordtype">float</span> movingBarHeight;
-<a name="l00244"></a>00244         <span class="keywordtype">int</span> movingBarWidthCheckAmount;
-<a name="l00245"></a>00245         <span class="keywordtype">int</span> movingBarHeightCheckAmount;
-<a name="l00246"></a>00246         <span class="keywordtype">int</span> movingBarDirection;
-<a name="l00247"></a>00247 
-<a name="l00248"></a>00248         <span class="keywordtype">float</span> movingDotsMinMoveSpeed;
-<a name="l00249"></a>00249         <span class="keywordtype">float</span> movingDotsMaxMoveSpeed;
-<a name="l00250"></a>00250         <span class="keywordtype">int</span> movingDotsMinMoveAngle;
-<a name="l00251"></a>00251         <span class="keywordtype">int</span> movingDotsMaxMoveAngle;
-<a name="l00252"></a>00252         <span class="keywordtype">int</span> movingDotsDotSize;
-<a name="l00253"></a>00253         QLineF movingDotsFirstHemiVisibleArea; <span class="comment">//The absolute area of the first visible hemisphere from the left-top to the right-bottom</span>
-<a name="l00254"></a>00254         <span class="keywordtype">int</span> movingDotsNrOfDots;
-<a name="l00255"></a>00255         <span class="keywordtype">bool</span> movingDotsIsStationary;
-<a name="l00256"></a>00256         QString movingDotsHemifieldPos;
-<a name="l00257"></a>00257         <span class="keywordtype">int</span> movingDotsPixelFromCenter;
-<a name="l00258"></a>00258         <span class="keywordtype">int</span> movingDotsHemiFieldWidth;
-<a name="l00259"></a>00259         <span class="keywordtype">int</span> movingDotsHemiFieldHeight;
-<a name="l00260"></a>00260         MovingDotsStructure movingDots;
-<a name="l00261"></a>00261         QString retinoOutputType;
-<a name="l00262"></a>00262         QString retinoOutputFormat;
-<a name="l00263"></a>00263         QPixmap StimulusResultImageFrame;
-<a name="l00264"></a>00264         QPixmap StimulusActivationMap;
-<a name="l00265"></a>00265         <a class="code" href="class_random_generator.html" title="The RandomGenerator class.">RandomGenerator</a> *randStimStateGenerator;                 <span class="comment">//To hold the Stimuli Trigger Step</span>
-<a name="l00266"></a>00266         <a class="code" href="class_random_generator.html" title="The RandomGenerator class.">RandomGenerator</a> *randEmptyStimGenerator;                 <span class="comment">//To hold the Empty Block Trials</span>
-<a name="l00267"></a>00267         <a class="code" href="class_random_generator.html" title="The RandomGenerator class.">RandomGenerator</a> *previousRandEmptyStimGenerator; <span class="comment">//To hold the processed Empty Block Trials</span>
-<a name="l00268"></a>00268         QScriptValue scriptVal1;
-<a name="l00269"></a>00269         QScriptValue scriptVal2;
-<a name="l00270"></a>00270         QRect rStimuliScreenArea;
-<a name="l00271"></a>00271 
-<a name="l00272"></a>00272         <span class="keywordtype">double</span> dAdditionalRefreshDelayTime;
-<a name="l00273"></a>00273         <span class="keywordtype">double</span> dWaitTime;
-<a name="l00274"></a>00274         <span class="comment">//double dLastPreSwapTime;</span>
-<a name="l00275"></a>00275 };
-<a name="l00276"></a>00276 
-<a name="l00277"></a>00277 Q_DECLARE_METATYPE(<a class="code" href="class_retinotopy_mapper.html" title="The RetinotopyMapper class.">RetinotopyMapper</a>)
-<a name="l00278"></a>00278 Q_DECLARE_METATYPE(<a class="code" href="class_retinotopy_mapper.html" title="The RetinotopyMapper class.">RetinotopyMapper</a>*)
-<a name="l00279"></a>00279 Q_DECLARE_METATYPE(QPixmap*)
-<a name="l00280"></a>00280 Q_DECLARE_METATYPE(QPainter*)
-<a name="l00281"></a>00281 
-<a name="l00282"></a>00282 <span class="preprocessor">#endif // RETINOTOPYMAPPER_H</span>
+<a name="l00159"></a>00159         <span class="keywordtype">void</span> adjustStimScreenArea();
+<a name="l00160"></a>00160 
+<a name="l00161"></a>00161         QScriptValue *customScriptHandlerFunction;
+<a name="l00162"></a>00162         RetinotopyMapperWindow *retinoMapperWindow;
+<a name="l00163"></a>00163         <span class="keywordtype">int</span> nRefreshRate;
+<a name="l00164"></a>00164         <span class="comment">//int nRetinoID;                                                                //This variable stores the ObjectID used to identify the object</span>
+<a name="l00165"></a>00165         QString currentExpType;                                         <span class="comment">//The experiment type used, see RetinoMapExperimentType</span>
+<a name="l00166"></a>00166         <span class="keywordtype">bool</span> firstBlockTrialPaintFrame;                         <span class="comment">//To determine whether it&#39;s the first frame to paint from a new Block trial</span>
+<a name="l00167"></a>00167         QColor colorBackground;                                         <span class="comment">//The color of the background</span>
+<a name="l00168"></a>00168         QBrush brushBackground;                                         <span class="comment">//The background brush</span>
+<a name="l00169"></a>00169         QFont textFont;                                                         <span class="comment">//The font used for text(debug mode)</span>
+<a name="l00170"></a>00170         QPen textPen;                                                           <span class="comment">//The pen used for text(debug mode)</span>
+<a name="l00171"></a>00171         QColor whiteColor;                                                      <span class="comment">//The color used for the activation map (active)</span>
+<a name="l00172"></a>00172         QColor blackColor;                                                      <span class="comment">//The color used for the activation map (inactive)</span>
+<a name="l00173"></a>00173         QString textContent;                                            <span class="comment">//Variable to store the text string</span>
+<a name="l00174"></a>00174         QRectF rectScreenRes;                                           <span class="comment">//The screen resolution</span>
+<a name="l00175"></a>00175         <span class="keywordtype">float</span> flickrThreshold;                                          <span class="comment">//Variable for keeping track of the next flickr switch threshold time</span>
+<a name="l00176"></a>00176         <span class="keywordtype">float</span> flickrSpeedFreq;                                          <span class="comment">//The flickr speed frequency</span>
+<a name="l00177"></a>00177         <span class="keywordtype">int</span> flickrSwitch;                                                       <span class="comment">//Variable to store the current flickr state</span>
+<a name="l00178"></a>00178         <span class="keywordtype">int</span> cycleTriggerAmount;                                         <span class="comment">//The total block duration in amount of triggers</span>
+<a name="l00179"></a>00179         <span class="keywordtype">int</span> triggerDurationMsec;                                        <span class="comment">//The duration of one trigger in mSec</span>
+<a name="l00180"></a>00180         <span class="keywordtype">float</span> stimWidthPixelAmount;                                     <span class="comment">//The amount of visible stimuli pixels(height)</span>
+<a name="l00181"></a>00181         <span class="keywordtype">float</span> stimHeightPixelAmount;                            <span class="comment">//The amount of visible stimuli pixels(width)</span>
+<a name="l00182"></a>00182         QColor fixationColor;                                           <span class="comment">//The color of the fixation dot/cross</span>
+<a name="l00183"></a>00183         <span class="keywordtype">int</span> fixationSize;                                                       <span class="comment">//The width of the fixation dot/cross</span>
+<a name="l00184"></a>00184         <span class="keywordtype">bool</span> showFixationPoint;                                         <span class="comment">//Should we show an fixation point?</span>
+<a name="l00185"></a>00185         <span class="keywordtype">bool</span> outputTriggerFrame;                                        <span class="comment">//Defines whether we should output(write to a *.png file) the first frame</span>
+<a name="l00186"></a>00186         <span class="keywordtype">bool</span> discreteTriggerSteps;                                      <span class="comment">//Defines whether the stimuli should run smooth or in discrete steps according to each trigger received</span>
+<a name="l00187"></a>00187         <span class="keywordtype">bool</span> randomizeTriggerSteps;                                     <span class="comment">//Defines whether the stimuli should randomize after each trigger received</span>
+<a name="l00188"></a>00188         <span class="keywordtype">bool</span> antiAliasing;                                                      <span class="comment">//Defines whether the anti-aliasing filter should be used for painting to the screen</span>
+<a name="l00189"></a>00189         <span class="comment">//int lastTriggerNumber;                                                //To keep track of the last trigger number</span>
+<a name="l00190"></a>00190         <span class="keywordtype">int</span> emptyTriggerSteps;                                          <span class="comment">//Defines the number of Trigger steps in which no stimuli should be presented</span>
+<a name="l00191"></a>00191         QStringList emptyTriggerStepsArray;
+<a name="l00192"></a>00192         QStringList randomizeTriggerStepsArray;
+<a name="l00193"></a>00193         <span class="keywordtype">bool</span> bNoChangesSinceLastFrame;
+<a name="l00194"></a>00194         <a class="code" href="class_experiment_manager.html" title="The ExperimentManager class.">ExperimentManager</a> *experimentManager;
+<a name="l00195"></a>00195         QScreen *sActiveStimScreen;
+<a name="l00196"></a>00196 
+<a name="l00197"></a>00197         QColor movingDotsColor;
+<a name="l00198"></a>00198         QColor cCheckerColor1;
+<a name="l00199"></a>00199         QColor cCheckerColor2;
+<a name="l00200"></a>00200         Qt::PenStyle style;
+<a name="l00201"></a>00201         Qt::PenCapStyle flatCap;
+<a name="l00202"></a>00202         Qt::PenCapStyle roundCap;
+<a name="l00203"></a>00203         QString tmpParamValue;
+<a name="l00204"></a>00204         <span class="comment">//float fStimulusDiameter;</span>
+<a name="l00205"></a>00205         <span class="keywordtype">double</span> dStimulusDiameter;
+<a name="l00206"></a>00206         <span class="keywordtype">float</span> fTrialTimeProgress;
+<a name="l00207"></a>00207         <span class="keywordtype">float</span> fCortMagTrialTimeProgress;
+<a name="l00208"></a>00208         <span class="keywordtype">bool</span> bCreateActivationMap;
+<a name="l00209"></a>00209         <span class="keywordtype">int</span> currExpBlockTrialCycle;
+<a name="l00210"></a>00210         <span class="keywordtype">bool</span> nextNewCycleEntered;
+<a name="l00211"></a>00211         <span class="keywordtype">bool</span> nextNewBlockEntered;
+<a name="l00212"></a>00212         <span class="keywordtype">float</span> cortMagFactor;
+<a name="l00213"></a>00213         <span class="keywordtype">int</span> gapDiameter;
+<a name="l00214"></a>00214         <span class="keywordtype">float</span> wedgeSpanAngle;
+<a name="l00215"></a>00215         <span class="keywordtype">float</span> currentWedgeDiameter;
+<a name="l00216"></a>00216         <span class="keywordtype">float</span> currentCompleteWedgeDiameter;
+<a name="l00217"></a>00217         <span class="comment">//float currentSize;</span>
+<a name="l00218"></a>00218         <span class="keywordtype">double</span> dCurrentSize;
+<a name="l00219"></a>00219         <span class="keywordtype">float</span> currentOuterCompleteRingDiameter;
+<a name="l00220"></a>00220         <span class="keywordtype">float</span> currentXPoint;
+<a name="l00221"></a>00221         <span class="keywordtype">float</span> currentYPoint;
+<a name="l00222"></a>00222         <span class="keywordtype">float</span> currentStartAngle;
+<a name="l00223"></a>00223         <span class="keywordtype">bool</span> disableCortMagFac;
+<a name="l00224"></a>00224         <span class="keywordtype">bool</span> enableCortMagTiming;
+<a name="l00225"></a>00225         <span class="keywordtype">int</span> emptyTriggerLastIndex;
+<a name="l00226"></a>00226         <span class="keywordtype">int</span> emptyTriggerStepCount;
+<a name="l00227"></a>00227         <span class="keywordtype">bool</span> bAllTrialEmptyProcessed;
+<a name="l00228"></a>00228         <span class="comment">//bool allEmptyBlockTrialsProcessed;</span>
+<a name="l00229"></a>00229 
+<a name="l00230"></a>00230         <span class="comment">//Polar</span>
+<a name="l00231"></a>00231         <span class="keywordtype">float</span> polarWedgeSpan;
+<a name="l00232"></a>00232         <span class="keywordtype">int</span> polarWedgeNrChecks;
+<a name="l00233"></a>00233         <span class="keywordtype">int</span> polarWedgeNrRings;
+<a name="l00234"></a>00234         <span class="keywordtype">int</span> polarRotationDirection;
+<a name="l00235"></a>00235 
+<a name="l00236"></a>00236         <span class="comment">//Eccentricity</span>
+<a name="l00237"></a>00237         <span class="keywordtype">int</span> eccentricityNrChecks;
+<a name="l00238"></a>00238         <span class="keywordtype">int</span> eccentricityNrRings;
+<a name="l00239"></a>00239         <span class="keywordtype">int</span> eccentricityDirection;
+<a name="l00240"></a>00240         <span class="keywordtype">float</span> fCalculatedCortMagFacTimingConst;
+<a name="l00241"></a>00241 
+<a name="l00242"></a>00242         <span class="comment">//MovingBar</span>
+<a name="l00243"></a>00243         <span class="keywordtype">float</span> movingBarAngle;
+<a name="l00244"></a>00244         <span class="keywordtype">float</span> movingBarCoverage;
+<a name="l00245"></a>00245         <span class="keywordtype">float</span> movingBarHeight;
+<a name="l00246"></a>00246         <span class="keywordtype">int</span> movingBarWidthCheckAmount;
+<a name="l00247"></a>00247         <span class="keywordtype">int</span> movingBarHeightCheckAmount;
+<a name="l00248"></a>00248         <span class="keywordtype">int</span> movingBarDirection;
+<a name="l00249"></a>00249 
+<a name="l00250"></a>00250         <span class="keywordtype">float</span> movingDotsMinMoveSpeed;
+<a name="l00251"></a>00251         <span class="keywordtype">float</span> movingDotsMaxMoveSpeed;
+<a name="l00252"></a>00252         <span class="keywordtype">int</span> movingDotsMinMoveAngle;
+<a name="l00253"></a>00253         <span class="keywordtype">int</span> movingDotsMaxMoveAngle;
+<a name="l00254"></a>00254         <span class="keywordtype">int</span> movingDotsDotSize;
+<a name="l00255"></a>00255         QLineF movingDotsFirstHemiVisibleArea; <span class="comment">//The absolute area of the first visible hemisphere from the left-top to the right-bottom</span>
+<a name="l00256"></a>00256         <span class="keywordtype">int</span> movingDotsNrOfDots;
+<a name="l00257"></a>00257         <span class="keywordtype">bool</span> movingDotsIsStationary;
+<a name="l00258"></a>00258         QString movingDotsHemifieldPos;
+<a name="l00259"></a>00259         <span class="keywordtype">int</span> movingDotsPixelFromCenter;
+<a name="l00260"></a>00260         <span class="keywordtype">int</span> movingDotsHemiFieldWidth;
+<a name="l00261"></a>00261         <span class="keywordtype">int</span> movingDotsHemiFieldHeight;
+<a name="l00262"></a>00262         MovingDotsStructure movingDots;
+<a name="l00263"></a>00263         QString retinoOutputType;
+<a name="l00264"></a>00264         QString retinoOutputFormat;
+<a name="l00265"></a>00265         QPixmap StimulusResultImageFrame;
+<a name="l00266"></a>00266         QPixmap StimulusActivationMap;
+<a name="l00267"></a>00267         <a class="code" href="class_random_generator.html" title="The RandomGenerator class.">RandomGenerator</a> *randStimStateGenerator;                 <span class="comment">//To hold the Stimuli Trigger Step</span>
+<a name="l00268"></a>00268         <a class="code" href="class_random_generator.html" title="The RandomGenerator class.">RandomGenerator</a> *randEmptyStimGenerator;                 <span class="comment">//To hold the Empty Block Trials</span>
+<a name="l00269"></a>00269         <a class="code" href="class_random_generator.html" title="The RandomGenerator class.">RandomGenerator</a> *previousRandEmptyStimGenerator; <span class="comment">//To hold the processed Empty Block Trials</span>
+<a name="l00270"></a>00270         QScriptValue scriptVal1;
+<a name="l00271"></a>00271         QScriptValue scriptVal2;
+<a name="l00272"></a>00272         QRect rStimuliScreenArea;
+<a name="l00273"></a>00273 
+<a name="l00274"></a>00274         <span class="keywordtype">double</span> dAdditionalRefreshDelayTime;
+<a name="l00275"></a>00275         <span class="keywordtype">double</span> dWaitTime;
+<a name="l00276"></a>00276         <span class="comment">//double dLastPreSwapTime;</span>
+<a name="l00277"></a>00277 };
+<a name="l00278"></a>00278 
+<a name="l00279"></a>00279 Q_DECLARE_METATYPE(<a class="code" href="class_retinotopy_mapper.html" title="The RetinotopyMapper class.">RetinotopyMapper</a>)
+<a name="l00280"></a>00280 Q_DECLARE_METATYPE(<a class="code" href="class_retinotopy_mapper.html" title="The RetinotopyMapper class.">RetinotopyMapper</a>*)
+<a name="l00281"></a>00281 Q_DECLARE_METATYPE(QPixmap*)
+<a name="l00282"></a>00282 Q_DECLARE_METATYPE(QPainter*)
+<a name="l00283"></a>00283 
+<a name="l00284"></a>00284 <span class="preprocessor">#endif // RETINOTOPYMAPPER_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 8 2013 13:22:05 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 6 2014 14:17:48 for ExperimentManager script class by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

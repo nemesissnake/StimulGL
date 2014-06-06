@@ -23,7 +23,7 @@
   
   <td style="padding-left: 0.5em;">
    <div id="projectname">StimulGL QML Extensions
-   &#160;<span id="projectnumber">1.1</span>
+   &#160;<span id="projectnumber">1.2</span>
    </div>
    <div id="projectbrief">The StimulGL QML Extensions class references.</div>
   </td>
@@ -45,7 +45,7 @@
 </div><!--header-->
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">//DefaultQMLPlugin</span>
-<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2013  Sven Gijsen</span>
+<a name="l00002"></a>00002 <span class="comment">//Copyright (C) 2014  Sven Gijsen</span>
 <a name="l00003"></a>00003 <span class="comment">//</span>
 <a name="l00004"></a>00004 <span class="comment">//This file is part of StimulGL.</span>
 <a name="l00005"></a>00005 <span class="comment">//StimulGL is free software: you can redistribute it and/or modify</span>
@@ -99,39 +99,43 @@
 <a name="l00081"></a>00081 
 <a name="l00088"></a>00088         <span class="keywordtype">bool</span> <a class="code" href="class_ogre_item.html#a83613c50a52acef5f8612a4fe4b1ad79" title="createLightSource slot.">createLightSource</a>(<span class="keyword">const</span> QString &amp;sLightName, <span class="keyword">const</span> <span class="keywordtype">float</span> &amp;xPos, <span class="keyword">const</span> <span class="keywordtype">float</span> &amp;yPos, <span class="keyword">const</span> <span class="keywordtype">float</span> &amp;zPos);
 <a name="l00090"></a>00090 
-<a name="l00097"></a>00097         <span class="keywordtype">bool</span> <a class="code" href="class_ogre_item.html#a643c480f3961f5bca2808688474c3781" title="setAmbientColor slot.">setAmbientColor</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nRed, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nGreen, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nBlue, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nAlpha = 255);
-<a name="l00099"></a>00099 
-<a name="l00104"></a>00104         QVector3D <a class="code" href="class_ogre_item.html#a67996c8147b67da9bd0872158d2bab87" title="getObjectBoundingBoxCenter slot.">getObjectBoundingBoxCenter</a>(<span class="keyword">const</span> QString &amp;sSceneNodeName, <span class="keyword">const</span> QString &amp;sObjectName);
-<a name="l00106"></a>00106 
-<a name="l00111"></a>00111         QVector3D <a class="code" href="class_ogre_item.html#aac31dd084351a3e1bd9dc2070de43d5a" title="getObjectBoundingBoxSize slot.">getObjectBoundingBoxSize</a>(<span class="keyword">const</span> QString &amp;sSceneNodeName, <span class="keyword">const</span> QString &amp;sObjectName);
+<a name="l00094"></a>00094         QObject *<a class="code" href="class_ogre_item.html#a38483384730843b25c996fe71c5b26fc" title="getLightSource slot.">getLightSource</a>(<span class="keyword">const</span> QString &amp;sLightName);
+<a name="l00096"></a>00096 
+<a name="l00102"></a>00102         <span class="keywordtype">bool</span> <a class="code" href="class_ogre_item.html#a54f06174e6a27699052b13a4963320de" title="setMaterialName slot.">setMaterialName</a>(<span class="keyword">const</span> QString &amp;sEntityName, <span class="keyword">const</span> QString &amp;sMaterial);
+<a name="l00104"></a>00104 
+<a name="l00111"></a>00111         <span class="keywordtype">bool</span> <a class="code" href="class_ogre_item.html#a643c480f3961f5bca2808688474c3781" title="setAmbientColor slot.">setAmbientColor</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nRed, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nGreen, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nBlue, <span class="keyword">const</span> <span class="keywordtype">int</span> &amp;nAlpha = 255);
 <a name="l00113"></a>00113 
-<a name="l00118"></a>00118         <span class="keywordtype">void</span> <a class="code" href="class_ogre_item.html#a122c5b65857dde7b4dd5fa8c42047a0c" title="setObjectVisibility slot.">setObjectVisibility</a>(<span class="keyword">const</span> QString &amp;sSceneNodeName, <span class="keyword">const</span> QString &amp;sObjectName, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;bVisible);
-<a name="l00119"></a>00119         <span class="comment">//bool setObjectAttachement(const QString &amp;sSceneNodeName, const QString &amp;sObjectName, const bool &amp;bAttachment);</span>
-<a name="l00120"></a>00120         <span class="comment">//void startRenderLoop();</span>
-<a name="l00121"></a>00121 
-<a name="l00122"></a>00122 <span class="keyword">protected</span>:
-<a name="l00123"></a>00123     <span class="keyword">virtual</span> QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
-<a name="l00124"></a>00124     <span class="keywordtype">void</span> timerEvent(QTimerEvent *);
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126 <span class="keyword">private</span>:
-<a name="l00127"></a>00127         <span class="keywordtype">bool</span> bIsPreInitializing;
-<a name="l00128"></a>00128         <span class="keywordtype">bool</span> bFirstUpdatePaintNode;
-<a name="l00129"></a>00129     <span class="keywordtype">int</span> m_timerID;
-<a name="l00130"></a>00130     QObject *m_camera;
-<a name="l00131"></a>00131         OgreNode *m_node;
-<a name="l00132"></a>00132         QList&lt;sTypeOgreResourcesStructure&gt; lResources;
-<a name="l00133"></a>00133         QList&lt;sEntityStructure&gt; lEntities;
-<a name="l00134"></a>00134         QList&lt;sSceneNodeStructure&gt; lSceneNodes;
-<a name="l00135"></a>00135         QList&lt;sLightSourceStructure&gt; lLightSources;
-<a name="l00136"></a>00136         QColor *cAmbientSceneColor;             
-<a name="l00137"></a>00137 };
-<a name="l00138"></a>00138 
-<a name="l00139"></a>00139 <span class="preprocessor">#endif // OGREITEM_H</span>
+<a name="l00118"></a>00118         QVector3D <a class="code" href="class_ogre_item.html#a67996c8147b67da9bd0872158d2bab87" title="getObjectBoundingBoxCenter slot.">getObjectBoundingBoxCenter</a>(<span class="keyword">const</span> QString &amp;sSceneNodeName, <span class="keyword">const</span> QString &amp;sObjectName);
+<a name="l00120"></a>00120 
+<a name="l00125"></a>00125         QVector3D <a class="code" href="class_ogre_item.html#aac31dd084351a3e1bd9dc2070de43d5a" title="getObjectBoundingBoxSize slot.">getObjectBoundingBoxSize</a>(<span class="keyword">const</span> QString &amp;sSceneNodeName, <span class="keyword">const</span> QString &amp;sObjectName);
+<a name="l00127"></a>00127 
+<a name="l00132"></a>00132         <span class="keywordtype">void</span> <a class="code" href="class_ogre_item.html#a122c5b65857dde7b4dd5fa8c42047a0c" title="setObjectVisibility slot.">setObjectVisibility</a>(<span class="keyword">const</span> QString &amp;sSceneNodeName, <span class="keyword">const</span> QString &amp;sObjectName, <span class="keyword">const</span> <span class="keywordtype">bool</span> &amp;bVisible);
+<a name="l00133"></a>00133         <span class="comment">//bool setObjectAttachement(const QString &amp;sSceneNodeName, const QString &amp;sObjectName, const bool &amp;bAttachment);</span>
+<a name="l00134"></a>00134         <span class="comment">//void startRenderLoop();</span>
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136 <span class="keyword">protected</span>:
+<a name="l00137"></a>00137     <span class="keyword">virtual</span> QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
+<a name="l00138"></a>00138     <span class="keywordtype">void</span> timerEvent(QTimerEvent *);
+<a name="l00139"></a>00139 
+<a name="l00140"></a>00140 <span class="keyword">private</span>:
+<a name="l00141"></a>00141         <span class="keywordtype">bool</span> bIsPreInitializing;
+<a name="l00142"></a>00142         <span class="keywordtype">bool</span> bFirstUpdatePaintNode;
+<a name="l00143"></a>00143     <span class="keywordtype">int</span> m_timerID;
+<a name="l00144"></a>00144     QObject *m_camera;
+<a name="l00145"></a>00145         OgreNode *m_node;
+<a name="l00146"></a>00146         QList&lt;sTypeOgreResourcesStructure&gt; lResources;
+<a name="l00147"></a>00147         QList&lt;sEntityStructure&gt; lEntities;
+<a name="l00148"></a>00148         QList&lt;sSceneNodeStructure&gt; lSceneNodes;
+<a name="l00149"></a>00149         QList&lt;sLightSourceStructure&gt; lLightSources;
+<a name="l00150"></a>00150         QColor *cAmbientSceneColor;             
+<a name="l00151"></a>00151 };
+<a name="l00152"></a>00152 
+<a name="l00153"></a>00153 <span class="preprocessor">#endif // OGREITEM_H</span>
 </pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 8 2013 13:22:07 for StimulGL QML Extensions by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 6 2014 14:17:50 for StimulGL QML Extensions by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>
