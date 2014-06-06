@@ -223,23 +223,23 @@ function StimulGL_Information()
 	this.DocumentAuditing[12] = ['StimulGL_QMLExtensions.html','StimulGL QML Extensions Plug-in Documentation','1.0.0.1','Oktober 2013','Sven Gijsen'];					
 	this.DocumentAuditing[13] = ['6_RetinoTopicMappingOutput.html','Retinotopic Mapping output files Tutorial','1.0.0.1','Oktober 2013','Sven Gijsen'];	
 	
-	//StimulGL version (2.2.0.0) latest release
+	//StimulGL version (2.2.0.0), latest release
 	///////////////////////////////////////////////////////////////
 	nNumberOfComponentChanges = 8;//See below, increment by adding new changes for this release!
 	tmpArray = StimulGL_CreateArray(1,nNumberOfComponentChanges,PropCounter);
 	this.componentVersioning.push.apply(this.componentVersioning, tmpArray)//		Name,	Version,  Product, StimGLVersionIndex, EXML, Device, Interface
-	this.componentVersioning[2][ExperimentManagerPlugin_Comp_Index] = 	['ExperimentManagerPlugin',	'2.2.0.0', '1.0.0.1', 3, '2.2.0.0', '1.2',  '1.2'];
-	this.componentVersioning[2][ParallelPortPlugin_Comp_Index] =        ['ParallelPortPlugin',      '2.1.1.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][SerialPortPlugin_Comp_Index] =          ['SerialPortPlugin',        '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][KeyBoardPlugin_Comp_Index] =            ['KeyBoardPlugin',          '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][USBHIDDevicePlugin_Comp_Index] =        ['USBHIDDevicePlugin',      '2.1.1.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][_extensionname_plugin_Comp_Index] =     ['_extensionname_plugin',   '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.2',     '1.0.0.1', 3, 'x',       'x',    'x'];
-	this.componentVersioning[2][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '2',       '1.0.0.1', 3, 'x',       'x',    'x'];
-	this.componentVersioning[2][FirebirdClientPlugin_Comp_Index] =      ['FireBirdClientPlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][PiezoStimDevicePlugin_Comp_Index] =     ['PiezoStimDevicePlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][TBVExchangerPlugin_Comp_Index] =        ['TBVExchangerPlugin',     '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
-	this.componentVersioning[2][TCPNetworkServerPlugin_Comp_Index] =    ['TCPNetworkServerPlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][ExperimentManagerPlugin_Comp_Index] = 	['ExperimentManagerPlugin',	'2.2.0.0', '1.0.0.1', 3, '2.2.0.0', '1.2',  '1.2'];
+	this.componentVersioning[3][ParallelPortPlugin_Comp_Index] =        ['ParallelPortPlugin',      '2.1.1.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][SerialPortPlugin_Comp_Index] =          ['SerialPortPlugin',        '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][KeyBoardPlugin_Comp_Index] =            ['KeyBoardPlugin',          '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][USBHIDDevicePlugin_Comp_Index] =        ['USBHIDDevicePlugin',      '2.1.1.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][_extensionname_plugin_Comp_Index] =     ['_extensionname_plugin',   '1.2.0.0', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][StimulGL_QMLExtensions_Comp_Index] =    ['StimulGL_QMLExtensions',  '1.2',     '1.0.0.1', 3, 'x',       'x',    'x'];
+	this.componentVersioning[3][MediaPlayer_Comp_Index] =               ['MediaPlayer',             '2',       '1.0.0.1', 3, 'x',       'x',    'x'];
+	this.componentVersioning[3][FirebirdClientPlugin_Comp_Index] =      ['FireBirdClientPlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][PiezoStimDevicePlugin_Comp_Index] =     ['PiezoStimDevicePlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][TBVExchangerPlugin_Comp_Index] =        ['TBVExchangerPlugin',     '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
+	this.componentVersioning[3][TCPNetworkServerPlugin_Comp_Index] =    ['TCPNetworkServerPlugin',      '1.1.0.1', '1.0.0.1', 3, 'x',       '1.2',  '1.2'];
 
 	this.DocumentAuditing = StimulGL_CreateArray(15, AuthorCounter); //Default constructor!
 	///////////////////////////////////////////////////////////////

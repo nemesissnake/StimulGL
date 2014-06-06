@@ -99,3 +99,6 @@ Install/examples/Tutorials/99. PluginExamples/TCPNetworkServer - Shortcut.lnk
 Install/examples/Tutorials/99. PluginExamples/USBHIDDevice - Shortcut.lnk
 Install/examples/Tutorials/99_PluginExamples/* - Shortcut.lnk
 Install/examples/Tutorials/11_ExperimentStructure_Editing/test.exml
+Install/examples/GettingStartedGuide/ExperimentManager/QtQuick2/finalResult.qmlproject
+source/plugins/*/*.vcxproj.user
+source/plugins/*/*.vcxproj.user

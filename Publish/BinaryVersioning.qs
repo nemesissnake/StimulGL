@@ -1,4 +1,4 @@
-var sScriptPath = StimulGL.getSelectedScriptFileLocation() + "/";
+var sScriptPath = StimulGL.getActiveDocumentFileLocation() + "/";
 var tmpString = new String();
 var sTimeObject = new Date();//gettime() returns Milliseconds since midnight January 1, 1970
 //Log(sTimeObject.toTimeString());

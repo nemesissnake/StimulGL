@@ -31,7 +31,7 @@ inline unsigned arraysize(const T (&v)[S]) { return S; }
 
 //!  The TBVExchanger class. 
 /*!
-  The TBVExchanger can be used to communicate with the Turbo-BrainVoyager software from Brain Innovation (see http://www.brainvoyager.com/products/turbobrainvoyager.html).
+  The TBVExchanger can be used to communicate with the Turbo-BrainVoyager software (3.2) from Brain Innovation (see http://www.brainvoyager.com/downloads/install_turbobrainvoyager.html).
 */
 class TBVExchanger : public QObject, protected QScriptable
 {

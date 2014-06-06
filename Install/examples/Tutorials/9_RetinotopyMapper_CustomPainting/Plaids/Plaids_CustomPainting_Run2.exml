@@ -6,7 +6,7 @@ Place you own text here..
 Attributes only apply to readonly non user data, like the ID
 -->
 
-<EXML version="2.1.0.0">
+<EXML version="2.2.0.0">
 
 	<defines>
 		<experiment ID="0">
